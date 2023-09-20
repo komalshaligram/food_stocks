@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
           builder: (context, state) {
             return state.when(splashWidget,
                 loaded: () {
-              Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+             // Navigator.pushNamed(context, RouteDefine.loginScreen.name);
                   return Container(color: Colors.amber,);
                 },
                 error: () => const Text('error is occured'),
@@ -37,11 +37,11 @@ class SplashScreen extends StatelessWidget {
       height: 100,
       width: 100,
       color: Colors.blue,
-      child:  SvgPicture.asset(
+     /* child:  SvgPicture.asset(
           AppImagePath.splashLogo,
           width: 500,
           height: 500,
-        )
+        )*/
     );
   }
 }

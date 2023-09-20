@@ -16,6 +16,7 @@ Future<void> main() async {
   await setupInjection();
   runApp(BlocProvider(
     create: (context) => SplashBloc(SplashState.initial()),
+    child: const MyApp(),
   ));
   runApp(const MyApp());
 }
