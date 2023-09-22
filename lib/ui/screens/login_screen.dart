@@ -1,19 +1,32 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/login/login_bloc.dart';
 
 class LogInRoute {
-  static Widget get route =>  LogInScreen();
+  static Widget get route => LogInScreen();
 }
 
 class LogInScreen extends StatelessWidget {
+  const LogInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(textDirection: TextDirection.rtl, child: BlocListener<LogInBloc, LogInState>(
-      listener: (context, state) {
-        /*   if (state.status == LoginStatus.success) {
+    return BlocProvider(
+      create: (context) => LogInBloc(LogInState.initial()),
+      child: LogInScreenWidget(),
+    );
+  }
+}
+
+
+class LogInScreenWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(textDirection: TextDirection.rtl,
+        child: BlocListener<LogInBloc, LogInState>(
+          listener: (context, state) {
+            /*   if (state.status == LoginStatus.success) {
           print('success');
         //  Navigator.of(context).pushReplacement(Home.route());
         }
@@ -24,10 +37,10 @@ class LogInScreen extends StatelessWidget {
             ),
           );
         }*/
-      },
-      child: Container(
-        color: Colors.red,
-      ),
-    ));
+          },
+          child: Container(
+            color: Colors.red,
+          ),
+        ));
   }
 }

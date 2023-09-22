@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
-import 'package:food_stock/data/injection.dart';
+
 import 'package:food_stock/routes/app_routes.dart';
 
 import 'package:get_it/get_it.dart';
@@ -11,15 +11,20 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 GetIt getIt = GetIt.instance;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await setupInjection();
-  runApp(BlocProvider(
-    create: (context) => SplashBloc(SplashState.initial()),
-    child: const MyApp(),
-  ));
-  runApp(const MyApp());
-}
+
+
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: BlocProvider(
+          create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
+          child: const MyApp(),
+        )),
+  ),
+);
+
 
 
 class MyApp extends StatelessWidget {

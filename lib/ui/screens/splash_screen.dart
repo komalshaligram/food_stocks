@@ -10,38 +10,52 @@ class SplashRoute {
 }
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: BlocBuilder<SplashBloc, SplashState>(
-          builder: (context, state) {
-            return state.when(splashWidget,
-                loaded: () {
-             // Navigator.pushNamed(context, RouteDefine.loginScreen.name);
-                  return Container(color: Colors.amber,);
-                },
-                error: () => const Text('error is occured'),
-                initial: splashWidget);
-          },
-        ),
+    return BlocProvider(
+      create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
+      child: const SplashScreenWidget(),
+    );
+  }
+}
+
+
+class SplashScreenWidget extends StatelessWidget {
+  const SplashScreenWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+   final screenHeight = MediaQuery.of(context).size.height;
+   final screenWidth = MediaQuery.of(context).size.width;
+    return BlocListener<SplashBloc, SplashState>(
+      listener: (context, state) {
+        if (state.isRedirected) {
+          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+        }
+      },
+      child: BlocBuilder<SplashBloc, SplashState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: Center(
+              child: SvgPicture.asset(
+                AppImagePath.splashLogo,
+                height: screenHeight * 0.12,
+                width: screenWidth * 0.47,
+              ),
+            ),
+          );
+        },
       ),
     );
-
   }
 
-  Widget splashWidget(){
-    return Container(
-      height: 100,
-      width: 100,
-      color: Colors.blue,
-     /* child:  SvgPicture.asset(
-          AppImagePath.splashLogo,
-          width: 500,
-          height: 500,
-        )*/
-    );
-  }
+/*  Widget splashWidget() {
+    return SvgPicture.asset(
+       AppImagePath.splashLogo,
+       width: screenHeight! * 0.13,
+       height: screenWidth! * 0.17,
+     );
+  }*/
 }
