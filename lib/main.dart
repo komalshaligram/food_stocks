@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: const Locale('he'),
+      locale: const Locale('en'),
       title: 'Food Stock',
       initialRoute: RouteDefine.splashScreen.name,
       theme: ThemeData(
