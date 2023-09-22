@@ -6,6 +6,7 @@ enum LoginStatus {
   loading,
 }
 
+/*
 @freezed
 class LogInState with _$LogInState {
    const factory LogInState({
@@ -18,4 +19,4 @@ class LogInState with _$LogInState {
   loginStatus:LoginStatus.loading,
     reqModel: LogInReqModel()
   );
-}
+}*/
