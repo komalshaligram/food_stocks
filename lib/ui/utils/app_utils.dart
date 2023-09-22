@@ -1,3 +1,4 @@
-class AppUtils{
-
+enum Language {
+  English,
+  Hebrew
 }
