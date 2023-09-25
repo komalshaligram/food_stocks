@@ -1,3 +1,4 @@
+/*
 part of 'profile_bloc.dart';
 
 
@@ -18,3 +19,4 @@ class ProfileEvent with _$ProfileEvent{
       ) = _pickProfilePicEvent;
 }
 
+*/

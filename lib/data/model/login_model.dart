@@ -1,3 +1,4 @@
+/*
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'login_model.freezed.dart';
@@ -17,4 +18,4 @@ class LogInReqModel with _$LogInReqModel {
 
   factory LogInReqModel.fromJson(Map<String,dynamic> json) =>
       _$LogInReqModelFromJson(json);
-}
+}*/
