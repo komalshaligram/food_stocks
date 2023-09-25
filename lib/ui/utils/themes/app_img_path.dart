@@ -1,4 +1,6 @@
 class AppImagePath {
+
+  ///svgs
   static const String splashLogo = 'assets/images/splash_logo.svg';
   static const String profile = 'assets/images/profile.svg';
   static const String wallet = 'assets/images/wallet.svg';
@@ -10,6 +12,8 @@ class AppImagePath {
   static const String credits = 'assets/images/credits.svg';
   static const String expense = 'assets/images/expense.svg';
   static const String orders = 'assets/images/orders.svg';
+
+  ///pngs
   static const String profileImage = 'assets/images/profile_image.png';
   static const String companyLogo = 'assets/images/company_logo.png';
   static const String product1 = 'assets/images/product1.png';

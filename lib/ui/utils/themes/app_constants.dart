@@ -2,6 +2,7 @@ class AppConstants{
 
   static const double buttonHeight = 50;
   static const double buttonHeightSmall = 20;
+static const double containerHeight = 40;
 
   static const double padding_10 = 10;
   static const double padding_20 = 20;

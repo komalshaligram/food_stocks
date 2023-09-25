@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-class AppStyles{
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
+
+class AppStyles {
   static const String _fontFamily = "Rubik";
   static TextStyle rkRegularTextStyle(
-      {Color color = const Color(0xFF929DAA), required double size, FontWeight fontWeight = FontWeight.normal}) {
+      {Color color = Colors.black,
+      required double size,
+      FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
-        fontFamily: _fontFamily,
-        color: color,
-        fontSize: size,
-        fontWeight: fontWeight,
-
+      fontFamily: _fontFamily,
+      color: color,
+      fontSize: size,
+      fontWeight: fontWeight,
     );
   }
 }

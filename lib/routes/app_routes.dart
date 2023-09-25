@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/login_screen.dart';
-import 'package:food_stock/ui/screens/menu_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 
@@ -27,6 +26,9 @@ enum RouteDefine {
   bottomNavScreen,
   homeScreen,
   menuScreen,
+  basketScreen,
+  walletScreen,
+  storeScreen
 
 }
 
@@ -46,6 +48,9 @@ class AppRouting {
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
       RouteDefine.menuScreen.name: (_) => MenuRoute.route,
+      RouteDefine.basketScreen.name: (_) => BasketRoute.route,
+      RouteDefine.walletScreen.name: (_) => WalletRoute.route,
+      RouteDefine.storeScreen.name: (_) => StoreRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

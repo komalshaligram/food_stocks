@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
-import '../widget/button_widget.dart';
+import '../widget/custom_button_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConnectRoute {
   static Widget get route => const ConnectScreen();
@@ -35,25 +36,22 @@ class ConnectScreen extends StatelessWidget {
                 SizedBox(
                   height: screenHeight * 0.07,
                 ),
-                ButtonScreen(
-                  buttonText: AppStrings.enrollmentString,
+                CustomButtonWidget(
+                  buttonText: AppLocalizations.of(context)!.enrollment,
                  bGColor: AppColors.mainColor,
                   onPressed: () {
                     Navigator.pushNamed(context, RouteDefine.profileScreen.name);
-
-                  },
+                    },
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: AppConstants.padding_20,
                 ),
-
-                ButtonScreen(
-                  buttonText: AppStrings.connectionString,
+                CustomButtonWidget(
+                  buttonText: AppLocalizations.of(context)!.connection,
                   fontColors: AppColors.mainColor,
                   onPressed: () {
                     Navigator.pushNamed(context, RouteDefine.profileScreen.name);
                   },
-
                 ),
               ],
             ),
