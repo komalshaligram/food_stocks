@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -146,7 +145,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   },
                 ),
                 ContainerScreen(name: AppStrings.businessNameString,),
-`
+
 
               ],
             ),
@@ -156,4 +155,3 @@ class ProfileScreenWidget extends StatelessWidget {
     );
   }
 }
-*/
