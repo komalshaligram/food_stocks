@@ -4,18 +4,18 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-class HttpUtil {
+class BaseApi {
   late Dio _dio;
 
-  static final HttpUtil _instance = HttpUtil._internal();
+  static final BaseApi _instance = BaseApi._internal();
 
-  factory HttpUtil() {
+  factory BaseApi() {
     return _instance;
   }
 
-  HttpUtil._internal() {
+  BaseApi._internal() {
     BaseOptions options = BaseOptions(
-        baseUrl: '',
+        baseUrl: 'https://dalsy.shaligraminfotech.com:6044/',
         connectTimeout: const Duration(milliseconds: 60000),
         receiveTimeout: const Duration(milliseconds: 60000),
         headers: {

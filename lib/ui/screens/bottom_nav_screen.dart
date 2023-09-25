@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_stock/ui/screens/basket_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/profile_screen.dart';
+import 'package:food_stock/ui/screens/store_screen.dart';
+import 'package:food_stock/ui/screens/wallet_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
@@ -118,9 +121,9 @@ class BottomNavScreenWidget extends StatelessWidget {
         index: state.index,
         children: const [
           ProfileScreen(),
-          ProfileScreen(),
-          ProfileScreen(),
-          ProfileScreen(),
+          WalletScreen(),
+          BasketScreen(),
+          StoreScreen(),
           HomeScreen(),
         ],
       ),

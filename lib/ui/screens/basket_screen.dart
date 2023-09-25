@@ -6,25 +6,25 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 
-class SplashRoute {
-  static Widget get route => const SplashScreen();
+class BasketRoute {
+  static Widget get route => const BasketScreen();
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class BasketScreen extends StatelessWidget {
+  const BasketScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
-      child: const SplashScreenWidget(),
+      child: const BasketScreenWidget(),
     );
   }
 }
 
 
-class SplashScreenWidget extends StatelessWidget {
-  const SplashScreenWidget({Key? key}) : super(key: key);
+class BasketScreenWidget extends StatelessWidget {
+  const BasketScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,7 @@ class SplashScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             body: Center(
-              child: SvgPicture.asset(
-                AppImagePath.splashLogo,
-                height: getScreenHeight(context) * 0.12,
-                width: getScreenWidth(context) * 0.47,
-              ),
+              child: Text('Basket Screen')
             ),
           );
         },
