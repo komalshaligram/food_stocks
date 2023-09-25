@@ -1,3 +1,4 @@
+/*
 part of 'login_bloc.dart';
 
 @freezed
@@ -7,4 +8,4 @@ class LogInEvent with _$LogInEvent{
       required String name,
       required String email,}
        ) = _LogInButtonPressedEvent;
-}
+}*/

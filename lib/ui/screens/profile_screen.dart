@@ -21,7 +21,9 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc(),
+
       child: ProfileScreenWidget(),
+
     );
   }
 }
@@ -38,6 +40,7 @@ class ProfileScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+
             leading: GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -45,6 +48,7 @@ class ProfileScreenWidget extends StatelessWidget {
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
               AppStrings.businessDetailsString,
+
               style: AppStyles.rkRegularTextStyle(
                   size: 16, color: Colors.black, fontWeight: FontWeight.w400),
             ),

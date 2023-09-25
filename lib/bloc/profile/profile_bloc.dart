@@ -20,6 +20,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
 
+
      if (event is _textFieldValidateEvent) {
          if(event.selectedBusiness.isEmpty){
            ScaffoldMessenger.of(event.context).showSnackBar(
@@ -79,6 +80,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(state.copyWith(image: image,isImagePick: true));
       }
       }
+
 
 
     });
