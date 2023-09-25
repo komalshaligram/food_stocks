@@ -48,11 +48,39 @@ class MenuScreenWidget extends StatelessWidget {
             ),
             body: SafeArea(
               child: Column(
-                children: [],
+                children: [
+                    menuTiles(title: AppLocalizations.of(context)!.my_orders, onTap: () {}),
+                    menuTiles(title: AppLocalizations.of(context)!.questions_and_answers, onTap: () {}),
+                    menuTiles(title: AppLocalizations.of(context)!.terms_of_use, onTap: () {}),
+                    menuTiles(title: AppLocalizations.of(context)!.contact, onTap: () {}),
+                    menuTiles(title: AppLocalizations.of(context)!.about_the_app, onTap: () {}),
+                ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget menuTiles({required title, required void Function() onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'data',
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),
+            ),
+            Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.blackColor,
+            ),
+          ],
+        ),
       ),
     );
   }

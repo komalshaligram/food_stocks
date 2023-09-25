@@ -9,13 +9,14 @@ class CustomButtonWidget extends StatelessWidget {
   final bool enable;
   final Color bGColor;
   final Color fontColors;
+  final double? height;
   CustomButtonWidget(
       {super.key,
       required this.buttonText,
       this.onPressed,
       this.enable = true,
       this.bGColor = Colors.white,
-      this.fontColors = Colors.white});
+      this.fontColors = Colors.white, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class CustomButtonWidget extends StatelessWidget {
           borderRadius:
               const BorderRadius.all(Radius.circular(AppConstants.padding_10))),
       child: MaterialButton(
-        height: AppConstants.buttonHeight,
+        height: height ?? AppConstants.buttonHeight,
         onPressed: enable ? onPressed : null,
         child: Text(
           buttonText,

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/button_widget.dart';
-import 'package:food_stock/ui/widget/common_button_widget.dart';
+import 'package:food_stock/ui/widget/custom_button_widget.dart';
+import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -135,11 +136,16 @@ class HomeScreenWidget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              SvgPicture.asset(
-                                AppImagePath.moreVertical,
-                                fit: BoxFit.scaleDown,
-                                width: 54,
-                                height: 54,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, RouteDefine.menuScreen.name);
+                                },
+                                child: SvgPicture.asset(
+                                  AppImagePath.menuVertical,
+                                  fit: BoxFit.scaleDown,
+                                  width: 54,
+                                  height: 54,
+                                ),
                               ),
                             ],
                           ),
@@ -328,7 +334,7 @@ class HomeScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Flexible(
-                                child: CommonButtonWidget(
+                                child: CustomTextIconButtonWidget(
                                   title:
                                       AppLocalizations.of(context)!.new_order,
                                   onPressed: () {},
@@ -336,7 +342,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               Flexible(
-                                child: CommonButtonWidget(
+                                child: CustomTextIconButtonWidget(
                                   title:
                                       AppLocalizations.of(context)!.my_basket,
                                   onPressed: () {},
@@ -450,9 +456,10 @@ class HomeScreenWidget extends StatelessWidget {
               overflow: TextOverflow.clip,
             ),
             5.height,
-            ButtonScreen(
+            CustomButtonWidget(
                 buttonText: "20${AppLocalizations.of(context)!.currency}",
                 bGColor: AppColors.mainColor,
+                height: 20,
                 onPressed: () {}),
           ],
         ),

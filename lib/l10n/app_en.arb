@@ -10,7 +10,6 @@
  "name_of_owner":"Name of owner",
  "continued":"Continued",
  "more_details":"More details",
- "name_of_owner":"Name of owner",
  "full_address":"full address",
  "email":"email",
  "fax":"Fax",
@@ -40,7 +39,11 @@
   "all_messages": "All messages",
   "messages": "Messages",
   "read_more": "read more",
-  "menu": "menu"
+  "menu": "menu",
+  "my_orders": "My orders",
+  "questions_and_answers": "Questions and Answers",
+  "terms_of_use": "Terms of Use",
+  "about_the_app": "About the app"
 
 
 

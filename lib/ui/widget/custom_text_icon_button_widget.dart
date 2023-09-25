@@ -6,7 +6,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../utils/themes/app_colors.dart';
 
-class CommonButtonWidget extends StatelessWidget {
+class CustomTextIconButtonWidget extends StatelessWidget {
   final String title;
   final void Function() onPressed;
   final String? svgImage;
@@ -14,7 +14,7 @@ class CommonButtonWidget extends StatelessWidget {
   final double? titleSize;
   final double? width;
 
-  const CommonButtonWidget(
+  const CustomTextIconButtonWidget(
       {super.key,
       required this.title,
       required this.onPressed,

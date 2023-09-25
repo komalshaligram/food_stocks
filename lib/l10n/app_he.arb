@@ -23,11 +23,9 @@
   "wednesday":"Wednesday",
   "thursday":"Thursday",
   "friday_and_holiday_eves":"Friday and holiday eves",
-  "name_of_owner":"Name of owner",
-   "contact":"contact",
+   "contact":"יצירת קשר",
     "id":"ID",
  "city":"City / settlement",
-  "enrollment": "הרשמה",
   "this_months_expenses": "הוצאות החודש",
   "this_months_orders": "הזמנות החודש",
   "general_framework": "מסגרת כללית",
@@ -41,7 +39,11 @@
   "all_messages": "כל ההודעות",
   "messages": "הודעות",
   "read more": "קרא עוד",
-  "menu": "תפריט"
+  "menu": "תפריט",
+  "my_orders": "ההזמנות שלי",
+  "questions_and_answers": "שאלות ותשובות",
+  "terms_of_use": "תנאי שימוש",
+  "about_the_app": "אודות האפליקציה"
 
 
  }
