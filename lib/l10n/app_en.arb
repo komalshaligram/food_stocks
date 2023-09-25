@@ -1,1 +1,18 @@
-{ "enrollment": "enrollment" }
+{
+    "enrollment": "enrollment",
+    "this_months_expenses": "This month's expenses",
+    "this_months_orders": "This month's orders",
+    "general_framework": "General framework",
+    "last_months_expenses": "Last month's expenses",
+    "balance_status": "Balance status",
+    "currency": "$",
+    "all_promotions": "All promotions",
+    "promotions": "promotions",
+    "my_basket": "my basket",
+    "new_order": "New order",
+    "all_messages": "All messages",
+    "messages": "Messages",
+    "read_more": "read more",
+    "menu": "menu"
+
+ }

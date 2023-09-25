@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     print(selectedLang.toString());
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: const Locale('en'),
+      locale: const Locale('he'),
       title: 'Food Stock',
       initialRoute: RouteDefine.splashScreen.name,
       supportedLocales: AppLocalizations.supportedLocales,

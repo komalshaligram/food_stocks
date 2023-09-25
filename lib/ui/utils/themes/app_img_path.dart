@@ -12,4 +12,7 @@ class AppImagePath {
   static const String orders = 'assets/images/orders.svg';
   static const String profileImage = 'assets/images/profile_image.png';
   static const String companyLogo = 'assets/images/company_logo.png';
+  static const String product1 = 'assets/images/product1.png';
+  static const String product2 = 'assets/images/product2.png';
+  static const String add = 'assets/images/add.svg';
 }

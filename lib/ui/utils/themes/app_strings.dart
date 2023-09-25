@@ -29,6 +29,19 @@ class AppStrings{
   static const  thursdayString = 'Thursday';    //יום חמישי
   static const  fridayAndHolidayEvesString = 'Friday and holiday eves'; //יום שישי וערבי חג
   static const  saturdayAndHolidaysString = 'Saturday and holidays'; //יום שבת וחגים
+  // static const thisMonthsExpensesString = "this_months_expenses";
+  // static const thisMonthsOrdersString = "this_months_orders";
+  // static const generalFrameworkString = "general_framework";
+  // static const lastMonthsExpensesString = "last_months_expenses";
+  // static const balanceStatusString = "balance_status";
+  // static const currencyString = "currency";
+  // static const allPromotionsString = "all_promotions";
+  // static const promotionsString = "promotions";
+  // static const myBasketString = "my_basket";
+  // static const newOrderString = "new_order";
+  // static const allMessagesString = "all_messages";
+  // static const messagesString = "messages";
+  // static const readMoreString = "read_more";
 
 
 

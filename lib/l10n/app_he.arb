@@ -1,1 +1,17 @@
-{ "enrollment": "הרשמה" }
+{
+    "enrollment": "הרשמה",
+    "this_months_expenses": "הוצאות החודש",
+    "this_months_orders": "הזמנות החודש",
+    "general_framework": "מסגרת כללית",
+    "last_months_expenses": "הוצאות חודש שעבר",
+    "balance_status": "מצב יתרה",
+    "currency": "₪",
+    "all_promotions": "כל המבצעים",
+    "promotions": "מבצעים",
+    "my_basket": "הסל שלי",
+    "new_order": "הזמנה חדשה",
+    "all_messages": "כל ההודעות",
+    "messages": "הודעות",
+    "read more": "קרא עוד",
+    "menu": "תפריט"
+}

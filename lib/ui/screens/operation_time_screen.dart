@@ -30,14 +30,14 @@ class OperationTimeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-       backgroundColor: AppColors.white,
+       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.whiteColor,
         elevation: 0,
         titleSpacing: 0,
         leadingWidth: 60,
-        title: Text(AppStrings.operationTimeString,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400,color: AppColors.black)),
-        leading:  Icon(Icons.arrow_back_ios ,color: AppColors.black, ),
+        title: Text(AppStrings.operationTimeString,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400,color: AppColors.blackColor)),
+        leading:  Icon(Icons.arrow_back_ios ,color: AppColors.blackColor, ),
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -69,10 +69,10 @@ class OperationTimeScreenWidget extends StatelessWidget {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.blue,
+                    color: AppColors.blueColor,
                     borderRadius: BorderRadius.circular(3),
                   ),
-                  child: Icon(Icons.add,color: AppColors.white),
+                  child: Icon(Icons.add,color: AppColors.whiteColor),
                 ),
                 Container(
                   height: 40,
@@ -81,7 +81,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                     border: Border.all(color: AppColors.borderColor),
                   ),
-                  child: Icon(Icons.add,color: AppColors.white),
+                  child: Icon(Icons.add,color: AppColors.whiteColor),
                 ),
 
                 Text(AppStrings.fromAnHourString,style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor,fontWeight: FontWeight.w400),)

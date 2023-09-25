@@ -109,7 +109,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.addressString,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
+                    fillColor: AppColors.whiteColor,
                     controller: state.addressController,
                     keyboardType: TextInputType.text,
                     hint: AppStrings.lifeGroceryStoreString,
@@ -119,7 +119,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.emailString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.emailController,
                       keyboardType: TextInputType.number,
                       hint: "152485",
@@ -128,7 +128,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.faxString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.faxController,
                       keyboardType: TextInputType.number,
                       hint: "ajsdjg",
@@ -141,7 +141,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     child: DottedBorder(
                       color: state.isImagePick
-                          ? AppColors.white
+                          ? AppColors.whiteColor
                           : AppColors.borderColor,
                       strokeWidth: state.isImagePick ? 0 : 2,
                       dashPattern: state.isImagePick ? [1, 0] : [5, 3],
@@ -166,7 +166,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     )
                                   : Icon(
                                       Icons.camera_alt_rounded,
-                                      color: AppColors.blue,
+                                      color: AppColors.blueColor,
                                       size: 30,
                                     )),
                           state.isImagePick
@@ -209,7 +209,7 @@ class ProfileScreenWidget extends StatelessWidget {
                    /*   Navigator.pushNamed(
                           context, RouteDefine.operationTimeScreen.name);*/
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,

@@ -107,7 +107,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           color: AppColors.borderColor)),
                                   child: Icon(
                                     Icons.camera_alt_rounded,
-                                    color: AppColors.blue,
+                                    color: AppColors.blueColor,
                                     size: 18,
                                   ),
                                 ),
@@ -170,7 +170,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.businessNameString,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
+                    fillColor: AppColors.whiteColor,
                     controller: state.businessNameController,
                     keyboardType: TextInputType.text,
                     // inputAction: TextInputAction.done,
@@ -181,7 +181,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.hpString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.hpController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
@@ -191,7 +191,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.ownerString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.ownerController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
@@ -201,7 +201,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.idString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.idController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
@@ -211,7 +211,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     name: AppStrings.contactString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.contactController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
@@ -238,7 +238,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       Navigator.pushNamed(
                           context, RouteDefine.profileScreen3.name);
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,

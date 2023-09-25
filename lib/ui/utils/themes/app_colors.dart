@@ -9,9 +9,10 @@ class AppColors{
   static Color blackColor = const Color(0xff000000);
   static Color pageColor = const Color(0xffF8F9FA);
   static Color textColor = const Color(0xffBFBFBF);
-  static Color shadowColor = const Color(0x4D000000);
+  static Color shadowColor = const Color(0xFF000000);
   static Color navSelectedColor = const Color(0xff868E96);
   static Color iconBGColor = const Color(0xffF6F6F6);
+  static Color redColor = const Color(0xffF03E3E);
 
 
 }

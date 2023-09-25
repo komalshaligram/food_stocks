@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/profile_screen.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
@@ -30,8 +31,6 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
       listener: (context, state) {},
@@ -40,11 +39,10 @@ class BottomNavScreenWidget extends StatelessWidget {
           return Scaffold(
             body: Stack(
               children: [
-                Positioned(
-                    child: _pageContainers(
-                        screenHeight: screenHeight,
-                        screenWidth: screenWidth,
-                        state: state)),
+                _pageContainers(
+                    screenHeight: getScreenHeight(context),
+                    screenWidth: getScreenWidth(context),
+                    state: state),
                 Positioned(
                   bottom: 30,
                   left: 24,
@@ -54,7 +52,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       boxShadow: [
-                        BoxShadow(color: AppColors.shadowColor, blurRadius: 10)
+                        BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: 10)
                       ],
                       borderRadius:
                           const BorderRadius.all(Radius.circular(100.0)),
