@@ -57,7 +57,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                         BoxShadow(color: AppColors.shadowColor, blurRadius: 10)
                       ],
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(100.0)),
+                      const BorderRadius.all(Radius.circular(100.0)),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Row(
@@ -108,8 +108,8 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   Widget _pageContainers(
       {required double screenHeight,
-      required double screenWidth,
-      required BottomNavState state}) {
+        required double screenWidth,
+        required BottomNavState state}) {
     return Container(
       height: screenHeight,
       width: screenWidth,
@@ -129,10 +129,10 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   Widget _navItem(
       {required int pos,
-      required String img,
-      bool isCart = false,
-      required void Function()? onTap,
-      required BottomNavState state}) {
+        required String img,
+        bool isCart = false,
+        required void Function()? onTap,
+        required BottomNavState state}) {
     return Stack(
       children: [
         Container(
@@ -150,43 +150,43 @@ class BottomNavScreenWidget extends StatelessWidget {
             onTap: onTap,
             child: Center(
                 child: SvgPicture.asset(
-              img,
-              height: 26,
-              width: 26,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  pos == state.index
-                      ? AppColors.whiteColor
-                      : AppColors.navSelectedColor,
-                  BlendMode.srcIn),
-            )),
+                  img,
+                  height: 26,
+                  width: 26,
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      pos == state.index
+                          ? AppColors.whiteColor
+                          : AppColors.navSelectedColor,
+                      BlendMode.srcIn),
+                )),
           ),
         ),
         isCart == false
             ? const SizedBox()
             : state.cartCount == 0
-                ? const SizedBox()
-                : Positioned(
-                    top: 5,
-                    right: 0,
-                    child: Container(
-                      height: 16,
-                      width: 24,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(100.0)),
-                        border:
-                            Border.all(color: AppColors.whiteColor, width: 1),
-                      ),
-                      child: Text(
-                        '${state.cartCount}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: 10, color: AppColors.whiteColor),
-                      ),
-                    ),
-                  )
+            ? const SizedBox()
+            : Positioned(
+          top: 5,
+          right: 0,
+          child: Container(
+            height: 16,
+            width: 24,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.mainColor,
+              borderRadius:
+              const BorderRadius.all(Radius.circular(100.0)),
+              border:
+              Border.all(color: AppColors.whiteColor, width: 1),
+            ),
+            child: Text(
+              '${state.cartCount}',
+              style: AppStyles.rkRegularTextStyle(
+                  size: 10, color: AppColors.whiteColor),
+            ),
+          ),
+        )
       ],
     );
   }

@@ -3,15 +3,12 @@ part of 'operation_time_bloc.dart';
 @freezed
 class OperationTimeState with _$OperationTimeState{
   const factory OperationTimeState({
-    required String? selectCity,
-
-
-
+    required String time,
 
   }) = _OperationTimeState;
 
   factory OperationTimeState.initial()=> OperationTimeState(
-    selectCity: 'q',
+    time:  '18:00',
 
   );
 

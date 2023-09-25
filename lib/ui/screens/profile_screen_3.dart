@@ -40,7 +40,7 @@ class ProfileScreenWidget extends StatelessWidget {
           appBar: AppBar(
             leading: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.profileScreen.name);
+                  Navigator.pop(context);
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
@@ -63,7 +63,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.cityString,
                   ),
                   DropdownButtonFormField<String>(
@@ -105,35 +105,35 @@ class ProfileScreenWidget extends StatelessWidget {
                       temp = tag;
                     },
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.addressString,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
+                    fillColor: AppColors.whiteColor,
                     controller: state.addressController,
                     keyboardType: TextInputType.text,
                     hint: AppStrings.lifeGroceryStoreString,
                     validator: 'text',
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.emailString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.emailController,
                       keyboardType: TextInputType.number,
                       hint: "152485",
                       validator: "number"),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.faxString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.faxController,
                       keyboardType: TextInputType.number,
                       hint: "ajsdjg",
                       validator: "text"),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.logoString,
                   ),
                   Container(
@@ -141,7 +141,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     child: DottedBorder(
                       color: state.isImagePick
-                          ? AppColors.white
+                          ? AppColors.whiteColor
                           : AppColors.borderColor,
                       strokeWidth: state.isImagePick ? 0 : 2,
                       dashPattern: state.isImagePick ? [1, 0] : [5, 3],
@@ -166,7 +166,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     )
                                   : Icon(
                                       Icons.camera_alt_rounded,
-                                      color: AppColors.blue,
+                                      color: AppColors.blueColor,
                                       size: 30,
                                     )),
                           state.isImagePick
@@ -191,7 +191,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   const SizedBox(
                     height: 130,
                   ),
-                  ButtonScreen(
+                  ButtonWidget(
                     buttonText: AppStrings.continueString,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
@@ -209,7 +209,7 @@ class ProfileScreenWidget extends StatelessWidget {
                    /*   Navigator.pushNamed(
                           context, RouteDefine.operationTimeScreen.name);*/
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,

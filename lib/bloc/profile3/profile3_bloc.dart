@@ -30,7 +30,7 @@ class Profile3Bloc extends Bloc<Profile3Event, Profile3State> {
         else if(event.address.isEmpty){
           ScaffoldMessenger.of(event.context).showSnackBar(
               SnackBar(
-                content: Text('enter address',style: AppStyles.rkRegularTextStyle(size: 14,color: AppColors.black),
+                content: Text('enter address',style: AppStyles.rkRegularTextStyle(size: 14,color: AppColors.blackColor),
                 ),backgroundColor: Colors.deepOrange,
               )
           );

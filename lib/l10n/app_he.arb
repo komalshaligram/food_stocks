@@ -1,1 +1,13 @@
-{ "enrollment": "הרשמה" }
+{ "enrollment": "הרשמה" ,
+  "continued" : "המשך" ,
+  "skip" : "דלג" ,
+  "forms_files" : "טפסים וקבצים" ,
+   "taken_down" : "הורד",
+   "promissory_note":"שטר חוב",
+   "personal_guarantee":"ערבות אישית",
+    "upload_photo" : "העלה תמונה",
+    "photo_tz": "צילום ת.ז.",
+    "business_certificate" : "תעודת עסק",
+     "camera" :"Camera",
+      "gallery" : "Gallery"
+}

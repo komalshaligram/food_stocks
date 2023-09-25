@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -22,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc(),
-      child: ProfileScreenWidget(),
+      child: const ProfileScreenWidget(),
     );
   }
 }
@@ -41,7 +40,7 @@ class ProfileScreenWidget extends StatelessWidget {
           appBar: AppBar(
             leading: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pop(context);
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
@@ -104,7 +103,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           color: AppColors.borderColor)),
                                   child: Icon(
                                     Icons.camera_alt_rounded,
-                                    color: AppColors.blue,
+                                    color: AppColors.blueColor,
                                     size: 18,
                                   ),
                                 ),
@@ -126,7 +125,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           color: AppColors.textColor),
                     ),
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.typeOfBusinessString,
                   ),
                   DropdownButtonFormField<String>(
@@ -163,52 +162,52 @@ class ProfileScreenWidget extends StatelessWidget {
                       temp = tag;
                     },
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.businessNameString,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
+                    fillColor: AppColors.whiteColor,
                     controller: state!.businessNameController,
                     keyboardType: TextInputType.text,
                     // inputAction: TextInputAction.done,
                     hint: AppStrings.lifeGroceryStoreString,
                     validator: '',
                   ),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.hpString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.hpController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
                       hint: "152485",
                       validator: ''),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.ownerString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.ownerController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
                       hint: "ajsdjg",
                       validator: ""),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.idString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.idController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
                       hint: "045896525",
                       validator: ""),
-                  ContainerScreen(
+                  ContainerWidget(
                     name: AppStrings.contactString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.contactController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
@@ -217,25 +216,23 @@ class ProfileScreenWidget extends StatelessWidget {
                   const SizedBox(
                     height: 40,
                   ),
-                  ButtonScreen(
+                  ButtonWidget(
                     buttonText: AppStrings.continueString,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-                      /*      context
+                      context
                           .read<ProfileBloc>()
                           .add(ProfileEvent.textFieldValidateEvent(
-                          businessName: state.businessNameController.text,
-                      contact: state.contactController.text,
-                      hp: state.hpController.text,
-                      id: state.idController.text,
-                      owner: state.ownerController.text,
-                      selectedBusiness: state.selectedBusiness!,
-                      context: context,
-                      ));*/
-                      Navigator.pushNamed(
-                          context, RouteDefine.profileScreen3.name);
+                            businessName: state.businessNameController.text,
+                            contact: state.contactController.text,
+                            hp: state.hpController.text,
+                            id: state.idController.text,
+                            owner: state.ownerController.text,
+                            selectedBusiness: state.selectedBusiness!,
+                            context: context,
+                          ));
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
-
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
-
-
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'bloc/file_upload/file_upload_bloc.dart';
 
 Language selectedLang = Language.Hebrew;
 
@@ -17,8 +15,15 @@ void main() => runApp(
     debugShowCheckedModeBanner: false,
     home: Directionality(
         textDirection: TextDirection.rtl,
-        child: BlocProvider(
-          create: (context) => SplashBloc(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => SplashBloc(),
+            ),
+            BlocProvider(
+              create: (context) => FileUploadBloc(),
+            ),
+          ],
           child: const MyApp(),
         ),
      ),
@@ -34,7 +39,7 @@ class MyApp extends StatelessWidget {
     print(selectedLang.toString());
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: const Locale('en'),
+      locale: const Locale('he'),
       title: 'Food Stock',
       initialRoute: RouteDefine.splashScreen.name,
       supportedLocales: AppLocalizations.supportedLocales,

@@ -35,7 +35,7 @@ class ConnectScreen extends StatelessWidget {
                 SizedBox(
                   height: screenHeight * 0.07,
                 ),
-                ButtonScreen(
+                ButtonWidget(
                   buttonText: AppStrings.enrollmentString,
                  bGColor: AppColors.mainColor,
                   onPressed: () {
@@ -47,7 +47,7 @@ class ConnectScreen extends StatelessWidget {
                   height: 20,
                 ),
 
-                ButtonScreen(
+                ButtonWidget(
                   buttonText: AppStrings.connectionString,
                   fontColors: AppColors.mainColor,
                   onPressed: () {

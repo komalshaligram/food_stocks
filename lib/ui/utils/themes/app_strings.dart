@@ -25,6 +25,7 @@ class AppStrings{
   static const  fromAnHourString = 'from an hour';       //משעה
   static const  sundayString = 'Sunday';       //יום ראשון
   static const  mondayString = 'Monday';       //יום שני
+  static const  tuesdayString = 'Tuesday';
   static const  wednesdayString = 'Wednesday';    //יום רביעי
   static const  thursdayString = 'Thursday';    //יום חמישי
   static const  fridayAndHolidayEvesString = 'Friday and holiday eves'; //יום שישי וערבי חג

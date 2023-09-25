@@ -3,31 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
-class ButtonScreen extends StatelessWidget {
+class ButtonWidget extends StatelessWidget {
   String buttonText;
   void Function()? onPressed;
-  bool enable;
   Color bGColor;
   Color fontColors;
-  ButtonScreen({super.key, required this.buttonText , this.onPressed , this.enable = true , this.bGColor = Colors.white,
-     this.fontColors = Colors.white
+  double height;
+  double width;
+  double fontSize;
+  double radius;
+  Color borderColor;
+  ButtonWidget({super.key, required this.buttonText , this.onPressed , this.bGColor = Colors.white,
+     this.fontColors = Colors.white , this.width = double.maxFinite,this.height = 50, this.fontSize = 18,
+    this.radius = 10, this.borderColor = Colors.white
    });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.maxFinite,
+      width: width,
       decoration:  BoxDecoration(
-        border: Border.all(color: AppColors.mainColor),
+        border: Border.all(color: borderColor),
           color: bGColor,
-          borderRadius: const BorderRadius.all(
-              Radius.circular(10))),
+          borderRadius:  BorderRadius.all(
+              Radius.circular(radius))),
       child: MaterialButton(
-        height: 50,
-        onPressed: enable ? onPressed :null,
+        height: height,
+        onPressed: onPressed,
         child: Text(
           buttonText,
-          style: AppStyles.rkRegularTextStyle(size: 18,color: fontColors,fontWeight: FontWeight.w400 ,
+          style: AppStyles.rkRegularTextStyle(size: fontSize,color: fontColors,fontWeight: FontWeight.w400 ,
           ),
         ),
       ),

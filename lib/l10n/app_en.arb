@@ -1,1 +1,14 @@
-{ "enrollment": "enrollment" }
+{ "enrollment": "enrollment",
+  "continued" : "Continued" ,
+  "skip" : "skip" ,
+  "forms_files" : "Forms and files" ,
+  "taken_down" : "taken down" ,
+  "promissory_note":"promissory note",
+  "personal_guarantee":"personal guarantee",
+  "upload_photo" : "Upload a photo" ,
+  "photo_tz":"photo of T.Z.",
+  "business_certificate":"business certificate" ,
+  "camera" :"Camera",
+  "gallery" : "Gallery"
+
+ }
