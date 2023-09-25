@@ -1,3 +1,4 @@
+/*
 part of 'profile_bloc.dart';
 
 
@@ -7,3 +8,4 @@ class ProfileEvent with _$ProfileEvent{
   factory ProfileEvent.dropDownEvent() = _dropDownEvent;
 }
 
+*/

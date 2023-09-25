@@ -1,6 +1,5 @@
+/*
 import 'package:bloc/bloc.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/login_model.dart';
 
@@ -10,13 +9,11 @@ part 'login_event.dart';
 part 'login_state.dart';
 part 'login_bloc.freezed.dart';
 
-
-
-
 class LogInBloc extends Bloc<LogInEvent, LogInState> {
  // final AuthRepository authRepository;
    LogInBloc(super.initialState);
 
+*/
 /*  Future<void> _handleLoginWithEmailAndPasswordEvent(
       LoginButtonPressedEvent event,
       Emitter<LogInState> emit,
@@ -31,5 +28,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
     } catch (e) {
       emit(state.copyWith(message: e.toString(), status: LoginStatus.failure));
     }
-  }*/
+  }*//*
+
 }
+*/

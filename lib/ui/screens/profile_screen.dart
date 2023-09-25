@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -18,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc(),
-      child:  ProfileScreenWidget(),
+      child:  const ProfileScreenWidget(),
     );
   }
 }
@@ -41,14 +42,12 @@ class ProfileScreenWidget extends StatelessWidget {
           appBar: AppBar(
             leading: const Icon(Icons.arrow_back_ios, color: Colors.black),
             title: Text(AppStrings.businessDetailsString,
-
               style: AppStyles.rkRegularTextStyle(
                   size: 16, color: Colors.black, fontWeight: FontWeight.w400),
             ),
             backgroundColor: Colors.white,
             titleSpacing: 0,
             elevation: 0,
-
           ),
           body: Padding(
             padding: const EdgeInsets.only(left: 38, right: 38),
@@ -147,7 +146,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   },
                 ),
                 ContainerScreen(name: AppStrings.businessNameString,),
-
+`
 
               ],
             ),
@@ -157,3 +156,4 @@ class ProfileScreenWidget extends StatelessWidget {
     );
   }
 }
+*/
