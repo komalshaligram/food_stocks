@@ -29,8 +29,6 @@ class FormFieldValidation {
     }
   }
 
-
-
   phoneNumField(String value) {
     RegExp regex = RegExp(
         r'(^\+{0,2}([\-\. ])?(\(?\d{0,3}\))?([\-\. ])?\(?\d{0,3}\)?([\-\. ])?\d{3}([\-\. ])?\d{4})');
@@ -41,13 +39,19 @@ class FormFieldValidation {
     }
   }
   simpleTextField(String value) {
-    if (value.length > 10) {
-      return false;
+    if (value.isEmpty) {
+      return 'enter value';
     } else {
-      return true;
+      return null;
 
     }
   }
-
+  simpleNumberField(String value) {
+    if (value.isEmpty) {
+      return 'enter value';
+    } else {
+      return null;
+    }
+  }
 
 }

@@ -5,5 +5,16 @@ part of 'profile_bloc.dart';
 class ProfileEvent with _$ProfileEvent{
 
   factory ProfileEvent.dropDownEvent() = _dropDownEvent;
+  factory ProfileEvent.textFieldValidateEvent({
+    required String businessName,
+    required String hp,
+    required String owner,
+    required String id,
+    required String contact,
+    required BuildContext context,
+    required String selectedBusiness,
+}) = _textFieldValidateEvent;
+  factory ProfileEvent.pickProfilePicEvent(
+      ) = _pickProfilePicEvent;
 }
 

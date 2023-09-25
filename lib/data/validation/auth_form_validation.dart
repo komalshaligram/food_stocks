@@ -21,6 +21,8 @@ class AuthFormValidation {
       case "text":
         return formFieldValidation.simpleTextField(value);
     // break;
+      case "number":
+        return formFieldValidation.simpleNumberField(value.toString());
 
     }
     return null;

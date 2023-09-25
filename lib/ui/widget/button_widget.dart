@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
-
-
 class ButtonScreen extends StatelessWidget {
   String buttonText;
   void Function()? onPressed;
@@ -23,7 +21,7 @@ class ButtonScreen extends StatelessWidget {
         border: Border.all(color: AppColors.mainColor),
           color: bGColor,
           borderRadius: const BorderRadius.all(
-              Radius.circular(15))),
+              Radius.circular(10))),
       child: MaterialButton(
         height: 50,
         onPressed: enable ? onPressed :null,
@@ -34,7 +32,5 @@ class ButtonScreen extends StatelessWidget {
         ),
       ),
     );
-
-
   }
 }

@@ -9,10 +9,13 @@ class ContainerScreen extends StatelessWidget {
    ContainerScreen({super.key,required this.name});
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40,
       width : MediaQuery.of(context).size.width,
-      child: Text(name,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400 , color: AppColors.textColor )),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10,bottom: 10),
+        child: Text(name,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400 , color: AppColors.textColor )),
+      ),
     );
   }
 }
