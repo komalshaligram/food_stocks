@@ -2,13 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../widget/button_widget.dart';
-import '../widget/container_widget.dart';
-import '../widget/textformfield_widget.dart';
+import '../widget/custom_button_widget.dart';
+import '../widget/custom_container_widget.dart';
+import '../widget/custom_form_field_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -40,17 +43,16 @@ class ProfileScreenWidget extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-
             leading: GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
-              AppStrings.businessDetailsString,
+              AppLocalizations.of(context)!.business_details,
 
               style: AppStyles.rkRegularTextStyle(
-                  size: 16, color: Colors.black, fontWeight: FontWeight.w400),
+                  size: AppConstants.smallFont, color: Colors.black, fontWeight: FontWeight.w400),
             ),
             backgroundColor: Colors.white,
             titleSpacing: 0,
@@ -107,7 +109,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           color: AppColors.borderColor)),
                                   child: Icon(
                                     Icons.camera_alt_rounded,
-                                    color: AppColors.blue,
+                                    color: AppColors.blueColor,
                                     size: 18,
                                   ),
                                 ),
@@ -122,20 +124,22 @@ class ProfileScreenWidget extends StatelessWidget {
                     width: screenWidth,
                     alignment: Alignment.center,
                     child: Text(
-                      AppStrings.profilePictureString,
+                      AppLocalizations.of(context)!.profile_picture,
                       style: AppStyles.rkRegularTextStyle(
                           size: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.textColor),
                     ),
                   ),
-                  ContainerScreen(
-                    name: AppStrings.typeOfBusinessString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.type_of_business,
                   ),
                   DropdownButtonFormField<String>(
+
                     icon: const Icon(Icons.keyboard_arrow_down),
                     alignment: Alignment.bottomCenter,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 8,right:8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(3.0),
                         borderSide: BorderSide(
@@ -143,7 +147,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    isExpanded: true,
+                   isExpanded: true,
                     elevation: 0,
                     //  borderRadius: BorderRadius.circular(3),
                     style: const TextStyle(
@@ -166,52 +170,52 @@ class ProfileScreenWidget extends StatelessWidget {
                       temp = tag;
                     },
                   ),
-                  ContainerScreen(
-                    name: AppStrings.businessNameString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.business_name,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
+                    fillColor: AppColors.whiteColor,
                     controller: state.businessNameController,
                     keyboardType: TextInputType.text,
                     // inputAction: TextInputAction.done,
-                    hint: AppStrings.lifeGroceryStoreString,
+                    hint: AppLocalizations.of(context)!.life_grocery_store,
                     validator: '',
                   ),
-                  ContainerScreen(
+                  CustomContainerWidget(
                     name: AppStrings.hpString,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.hpController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
                       hint: "152485",
                       validator: ''),
-                  ContainerScreen(
-                    name: AppStrings.ownerString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.name_of_owner,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.ownerController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
                       hint: "ajsdjg",
                       validator: ""),
-                  ContainerScreen(
-                    name: AppStrings.idString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.id,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.idController,
                       keyboardType: TextInputType.number,
                       // inputAction: TextInputAction.next,
                       hint: "045896525",
                       validator: ""),
-                  ContainerScreen(
-                    name: AppStrings.contactString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.contact,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
+                      fillColor: AppColors.whiteColor,
                       controller: state.contactController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
@@ -220,8 +224,8 @@ class ProfileScreenWidget extends StatelessWidget {
                   const SizedBox(
                     height: 40,
                   ),
-                  ButtonScreen(
-                    buttonText: AppStrings.continueString,
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.continued,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
                       /*      context
@@ -238,7 +242,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       Navigator.pushNamed(
                           context, RouteDefine.profileScreen3.name);
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,

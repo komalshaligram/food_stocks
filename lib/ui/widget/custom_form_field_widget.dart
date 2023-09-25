@@ -1,18 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../data/validation/auth_form_validation.dart';
+import 'package:food_stock/ui/utils/validation/auth_form_validation.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_styles.dart';
-
 
 class CustomFormField extends StatelessWidget {
   CustomFormField({
     Key? key,
     required TextEditingController controller,
     required TextInputType keyboardType,
- //   required TextInputAction inputAction,
+    //   required TextInputAction inputAction,
     required String hint,
     required String validator,
     required Color fillColor,
@@ -42,7 +39,7 @@ class CustomFormField extends StatelessWidget {
     this.inputformet,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
-     //   _inputAction = inputAction,
+        //   _inputAction = inputAction,
         _hint = hint,
         _validator = validator,
         _controller = controller,
@@ -55,7 +52,7 @@ class CustomFormField extends StatelessWidget {
   final bool? isEnabled;
   final List<TextInputFormatter>? inputformet;
   final TextInputType _keyboardType;
- // final TextInputAction _inputAction;
+  // final TextInputAction _inputAction;
   final String _hint;
   final Color _fillColor;
   final String? textFieldLabel;
@@ -85,16 +82,18 @@ class CustomFormField extends StatelessWidget {
       controller: _controller,
       inputFormatters: inputformet,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      style: AppStyles.rkRegularTextStyle(color: AppColors.black, size: 16,fontWeight: FontWeight.w400),
+      style: AppStyles.rkRegularTextStyle(
+          color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
       //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),
       maxLines: maxLines,
       enabled: isEnabled,
+
       keyboardType: _keyboardType,
       obscureText: isObscure,
       onChanged: onChangeValue,
       textCapitalization:
-      isCapitalized ? TextCapitalization.words : TextCapitalization.none,
-   //   textInputAction: _inputAction,
+          isCapitalized ? TextCapitalization.words : TextCapitalization.none,
+      //   textInputAction: _inputAction,
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
@@ -105,14 +104,18 @@ class CustomFormField extends StatelessWidget {
           suffixIcon: postIconBtn,
           prefixIcon: prefixIcon,
           suffix: suffixIcon,
+
           hintText: _hint,
           filled: true,
           //<-- SEE HERE
           fillColor: _fillColor,
-          hintStyle:  TextStyle(
+          hintStyle: TextStyle(
             color: AppColors.textColor,
           ),
-          errorStyle: TextStyle(color: AppColors.borderColor, height: height,fontWeight: FontWeight.w400),
+          errorStyle: TextStyle(
+              color: AppColors.borderColor,
+              height: height,
+              fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
               borderSide: BorderSide(
@@ -120,20 +123,16 @@ class CustomFormField extends StatelessWidget {
                 width: 1,
               )),
           //  contentPadding:  const EdgeInsets.fromLTRB(18.0, 22.0, 0.0, 0.0),
-          contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide:  BorderSide(
-                color: AppColors.borderColor
-            ),
+            borderSide: BorderSide(color: AppColors.borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: BorderSide(
-                color: AppColors.borderColor
-            ),
+            borderSide: BorderSide(color: AppColors.borderColor),
           ),
-         /*    errorBorder: OutlineInputBorder(
+          /*    errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide:  BorderSide(
               color: AppColors.borderColor,

@@ -33,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
            ScaffoldMessenger.of(event.context).showSnackBar(
                 SnackBar(
 
-                 content: Text('enter businessName name',style: AppStyles.rkRegularTextStyle(size: 14,color: AppColors.black),
+                 content: Text('enter businessName name',style: AppStyles.rkRegularTextStyle(size: 14,color: AppColors.blackColor),
                  ),backgroundColor: Colors.deepOrange,
                )
            );
@@ -88,3 +88,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
 
 }
+

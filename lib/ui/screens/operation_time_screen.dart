@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OperationTimeScreenRoute {
   static Widget get route => const OperationTimeScreen();
@@ -30,14 +32,14 @@ class OperationTimeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-       backgroundColor: AppColors.white,
+       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.whiteColor,
         elevation: 0,
         titleSpacing: 0,
         leadingWidth: 60,
-        title: Text(AppStrings.operationTimeString,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400,color: AppColors.black)),
-        leading:  Icon(Icons.arrow_back_ios ,color: AppColors.black, ),
+        title: Text(AppLocalizations.of(context)!.operation_time,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400,color: AppColors.blackColor)),
+        leading:  Icon(Icons.arrow_back_ios ,color: AppColors.blackColor, ),
       ),
       body: Padding(
         padding: EdgeInsets.only(
@@ -46,7 +48,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 20,
+              height: AppConstants.padding_20,
             ),
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -55,11 +57,11 @@ class OperationTimeScreenWidget extends StatelessWidget {
                  SizedBox(
                      width: 100,
                      height: 40,
-                     child: Text(AppStrings.toAnHourString,style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor,fontWeight: FontWeight.w400),)),
+                     child: Text(AppLocalizations.of(context)!.to_an_hour,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor),)),
                  SizedBox(
                      width: 100,
                      height: 40,
-                     child: Text(AppStrings.fromAnHourString,style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor,fontWeight: FontWeight.w400),))
+                     child: Text(AppLocalizations.of(context)!.from_an_hour,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor),))
                ],
              ),
             Row(
@@ -69,10 +71,10 @@ class OperationTimeScreenWidget extends StatelessWidget {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.blue,
+                    color: AppColors.blueColor,
                     borderRadius: BorderRadius.circular(3),
                   ),
-                  child: Icon(Icons.add,color: AppColors.white),
+                  child: Icon(Icons.add,color: AppColors.whiteColor),
                 ),
                 Container(
                   height: 40,
@@ -81,10 +83,10 @@ class OperationTimeScreenWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                     border: Border.all(color: AppColors.borderColor),
                   ),
-                  child: Icon(Icons.add,color: AppColors.white),
+                  child: Icon(Icons.add,color: AppColors.whiteColor),
                 ),
 
-                Text(AppStrings.fromAnHourString,style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor,fontWeight: FontWeight.w400),)
+                Text(AppLocalizations.of(context)!.from_an_hour,style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor,fontWeight: FontWeight.w400),)
               ],
             ),
           ],
