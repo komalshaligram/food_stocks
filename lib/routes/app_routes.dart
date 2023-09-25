@@ -27,8 +27,7 @@ class AppRouting {
       ///ADD ROUTE
       RouteDefine.splashScreen.name: (_) => SplashRoute.route,
       RouteDefine.connectScreen.name: (_) => ConnectRoute.route,
-      RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
-
+     // RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
     //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,

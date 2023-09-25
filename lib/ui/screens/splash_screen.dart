@@ -27,12 +27,12 @@ class SplashScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   final screenHeight = MediaQuery.of(context).size.height;
-   final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.isRedirected) {
-          Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(

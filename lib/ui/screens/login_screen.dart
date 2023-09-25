@@ -11,10 +11,7 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LogInBloc(LogInState.initial()),
-      child: LogInScreenWidget(),
-    );
+    return LogInScreenWidget();
   }
 }
 
@@ -23,24 +20,8 @@ class LogInScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(textDirection: TextDirection.rtl,
-        child: BlocListener<LogInBloc, LogInState>(
-          listener: (context, state) {
-            /*   if (state.status == LoginStatus.success) {
-          print('success');
-        //  Navigator.of(context).pushReplacement(Home.route());
-        }
-        if (state.status == LoginStatus.failure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-        }*/
-          },
-          child: Container(
-            color: Colors.red,
-          ),
-        ));
+    return Container(
+      color: Colors.blue,
+    );
   }
 }
