@@ -26,7 +26,13 @@
   "name_of_owner":"Name of owner",
    "contact":"contact",
     "id":"ID",
- "city":"City / settlement"
+ "city":"City / settlement",
+  "enter_your_phone":"הזן את מספר הטלפון שלך",
+   "phone":"טלפון",
+    "country":"מדינה",
+    "enter_the_code_sent_to_phone_num":"הזן את הקוד שנשלח למספר הטלפון שהזנת",
+     "not_receive_verification_code":"לא קיבלת קוד אימות ?",
+       "send_again":"שלח שוב"
 
 
  }

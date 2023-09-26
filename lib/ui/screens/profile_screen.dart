@@ -199,7 +199,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       controller: state.ownerController,
                       keyboardType: TextInputType.text,
                       //  inputAction: TextInputAction.next,
-                      hint: "ajsdjg",
+                      hint: "1234",
                       validator: ""),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.id,

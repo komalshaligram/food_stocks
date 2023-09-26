@@ -6,6 +6,7 @@ import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/login_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
+import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_screen.dart';
 import 'package:food_stock/ui/screens/wallet_screen.dart';
@@ -28,7 +29,8 @@ enum RouteDefine {
   homeScreen,
   basketScreen,
   walletScreen,
-  storeScreen
+  storeScreen,
+  otpScreen
 
 }
 
@@ -38,18 +40,16 @@ class AppRouting {
       ///ADD ROUTE
       RouteDefine.splashScreen.name: (_) => SplashRoute.route,
       RouteDefine.connectScreen.name: (_) => ConnectRoute.route,
-
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
       RouteDefine.profileScreen3.name: (_) => Profile3Route.route,
       RouteDefine.operationTimeScreen.name: (_) => OperationTimeScreenRoute.route,
-
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
-    //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
+      RouteDefine.otpScreen.name:(_)=>OTPRoute.route
     };
 
     final routeBuilder = routes[settings.name];
