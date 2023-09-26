@@ -8,6 +8,7 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/screens/store_screen.dart';
 import 'package:food_stock/ui/screens/wallet_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
@@ -34,8 +35,6 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
       listener: (context, state) {},
@@ -60,7 +59,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                         BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: 10)
                       ],
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(100.0)),
+                          const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Row(
@@ -116,7 +115,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     return Container(
       height: screenHeight,
       width: screenWidth,
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
       child: IndexedStack(
         index: state.index,
         children: const [
@@ -134,7 +133,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       {required int pos,
       required String img,
       bool isCart = false,
-      required void Function()? onTap,
+      required void Function() onTap,
       required BottomNavState state}) {
     return Stack(
       children: [
@@ -146,10 +145,10 @@ class BottomNavScreenWidget extends StatelessWidget {
               color: pos == state.index
                   ? AppColors.navSelectedColor
                   : AppColors.whiteColor,
-              borderRadius: const BorderRadius.all(Radius.circular(100.0))),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
           child: InkWell(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
+            // splashColor: Colors.transparent,
+            // highlightColor: Colors.transparent,
             onTap: onTap,
             child: Center(
                 child: SvgPicture.asset(
@@ -179,7 +178,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.mainColor,
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(100.0)),
+                            const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                         border:
                             Border.all(color: AppColors.whiteColor, width: 1),
                       ),

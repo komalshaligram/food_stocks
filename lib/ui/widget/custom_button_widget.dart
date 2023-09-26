@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
@@ -22,15 +21,15 @@ class CustomButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: height ?? AppConstants.buttonHeight,
       width: double.maxFinite,
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-          border: Border.all(color: AppColors.mainColor),
+          // border: Border.all(color: AppColors.mainColor),
           color: bGColor,
           borderRadius:
               BorderRadius.all(Radius.circular(radius ?? AppConstants.radius_10))),
       child: MaterialButton(
-        height: height ?? AppConstants.buttonHeight,
         onPressed: enable ? onPressed : null,
         child: Text(
           buttonText,

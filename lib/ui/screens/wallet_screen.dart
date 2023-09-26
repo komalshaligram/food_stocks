@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
+
+import '../utils/themes/app_colors.dart';
 
 class WalletRoute {
   static Widget get route => const WalletScreen();
@@ -16,7 +15,7 @@ class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
+      create: (context) => WalletBloc(),
       child: const WalletScreenWidget(),
     );
   }
@@ -28,15 +27,13 @@ class WalletScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SplashBloc, SplashState>(
+    return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {
-        if (state.isRedirected) {
-          Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
-        }
       },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: AppColors.pageColor,
             body: Center(
                 child: Text('Wallet Screen')
             ),

@@ -38,12 +38,23 @@
   "new_order": "הזמנה חדשה",
   "all_messages": "כל ההודעות",
   "messages": "הודעות",
-  "read more": "קרא עוד",
+  "read_more": "קרא עוד",
   "menu": "תפריט",
   "my_orders": "ההזמנות שלי",
   "questions_and_answers": "שאלות ותשובות",
   "terms_of_use": "תנאי שימוש",
-  "about_the_app": "אודות האפליקציה"
+  "about_the_app": "אודות האפליקציה",
+  "editing": "עריכה",
+  "delete": "מחק",
+  "message": "הוֹדָעָה",
+  "orders": "הזמנות",
+  "order_status": "סטטוס הזמנה",
+  "order_date": "תאריך הזמנה",
+  "providers": "ספקים",
+  "products": "מוצרים",
+ "awaiting_shipment": "ממתין למשלוח",
+ "received": "התקבל הכל"
+
 
 
  }

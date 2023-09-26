@@ -1,11 +1,18 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/about_app_screen.dart';
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
+import 'package:food_stock/ui/screens/contact_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/login_screen.dart';
+import 'package:food_stock/ui/screens/message_content_screen.dart';
+import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
+import 'package:food_stock/ui/screens/order_screen.dart';
+import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
+import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/connect_screen.dart';
@@ -32,7 +39,14 @@ enum RouteDefine {
   menuScreen,
   basketScreen,
   walletScreen,
-  storeScreen
+  storeScreen,
+  orderScreen,
+  termsOfUseScreen,
+  questionAndAnswerScreen,
+  contactScreen,
+  aboutAppScreen,
+  messageScreen,
+  messageContentScreen,
 
 }
 
@@ -55,6 +69,13 @@ class AppRouting {
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
+      RouteDefine.orderScreen.name: (_) => OrderRoute.route,
+      RouteDefine.termsOfUseScreen.name: (_) => TermsOfUseRoute.route,
+      RouteDefine.questionAndAnswerScreen.name: (_) => QuestionAndAnswerRoute.route,
+      RouteDefine.contactScreen.name: (_) => ContactRoute.route,
+      RouteDefine.aboutAppScreen.name: (_) => AboutAppRoute.route,
+      RouteDefine.messageScreen.name: (_) => MessageRoute.route,
+      RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

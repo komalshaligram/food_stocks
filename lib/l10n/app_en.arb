@@ -43,7 +43,17 @@
   "my_orders": "My orders",
   "questions_and_answers": "Questions and Answers",
   "terms_of_use": "Terms of Use",
-  "about_the_app": "About the app"
+  "about_the_app": "About the app",
+  "editing": "Editing",
+  "delete": "Delete",
+  "message": "Message",
+  "orders": "Orders",
+  "order_status": "Order Status",
+  "order_date": "Order Date",
+  "providers": "Providers",
+  "products": "Products",
+  "awaiting_shipment": "Awaiting Shipment",
+  "received": "Received"
 
 
 

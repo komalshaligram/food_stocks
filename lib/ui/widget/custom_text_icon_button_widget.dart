@@ -67,7 +67,7 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(100.0)),
+                          const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                     ),
                     child: Text(
                       '${cartCount == 0 ? '' : cartCount}',
