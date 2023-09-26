@@ -11,7 +11,6 @@
   "name_of_owner": "Name of owner",
   "continued": "Continued",
   "more_details": "More details",
-  "name_of_owner": "Name of owner",
   "full_address": "full address",
   "email": "email",
   "fax": "Fax",
@@ -54,7 +53,7 @@
   "providers": "Providers",
   "products": "Products",
   "awaiting_shipment": "Awaiting Shipment",
-  "received": "Received"
+  "received": "Received",
   "city": "City / settlement",
   "enter_your_phone": "Enter your phone number",
   "phone": "Phone",

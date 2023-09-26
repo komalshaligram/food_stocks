@@ -35,6 +35,7 @@ enum RouteDefine {
   operationTimeScreen,
   bottomNavScreen,
   homeScreen,
+  menuScreen,
   basketScreen,
   walletScreen,
   orderScreen,

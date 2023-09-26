@@ -14,6 +14,7 @@ class CommonAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
+      titleSpacing: 0,
       backgroundColor: Colors.transparent,
       leading: Container(
         padding: const EdgeInsets.all(AppConstants.padding_10),

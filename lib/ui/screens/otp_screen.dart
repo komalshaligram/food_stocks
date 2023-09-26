@@ -7,6 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
+
+import '../widget/common_app_bar.dart';
 
 class OTPRoute {
   static Widget get route => OTPScreen();
@@ -26,20 +29,15 @@ class OTPScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-            },
-            child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-        title: Text(
-          AppLocalizations.of(context)!.connection,
-          style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont, color: Colors.black),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+        child: CommonAppBar(
+          title: AppLocalizations.of(context)!.connection,
+          iconData: Icons.arrow_back_ios_sharp,
+          onTap: () {
+            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+          },
         ),
-        backgroundColor: Colors.white,
-        titleSpacing: 0,
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -53,32 +51,25 @@ class OTPScreenWidget extends StatelessWidget {
                       .enter_the_code_sent_to_phone_num,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: Colors.black)),
-              SizedBox(
-                height: 50,
-              ),
+              50.height,
               OtpTextField(
                 autoFocus: true,
                 decoration: InputDecoration(
                 //  border: Border.all(color: )
                 ),
 
-                numberOfFields: 5,
+                numberOfFields: 4,
                 cursorColor: AppColors.mainColor,
                 borderColor: AppColors.greyColor,
                 focusedBorderColor: AppColors.mainColor,
                 margin: EdgeInsets.all(8),
                 showCursor: false,
-
-                //set to true to show as box or false to show as dash
-                showFieldAsBox: true,
+                showFieldAsBox: false,
                 borderRadius: BorderRadius.circular(8),
                 textStyle: TextStyle(fontSize: 20),
-                //runs when a code is typed in
                 onCodeChanged: (String code) {
-                  //handle validation or checks here
                   print(code);
                 },
-                //runs when every textfield is filled
                 onSubmit: (String verificationCode) {
                   showDialog(
                       context: context,
@@ -90,9 +81,7 @@ class OTPScreenWidget extends StatelessWidget {
                       });
                 }, // end onSubmit
               ),
-              const SizedBox(
-                height: 40,
-              ),
+              40.height,
               CustomButtonWidget(
                 buttonText: AppLocalizations.of(context)!.continued,
                 bGColor: AppColors.mainColor,
@@ -101,16 +90,11 @@ class OTPScreenWidget extends StatelessWidget {
                 },
                 fontColors: AppColors.whiteColor,
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              20.height,
               Text(AppLocalizations.of(context)!.not_receive_verification_code,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: Colors.black)),
-
-              const SizedBox(
-                height: 20,
-              ),
+              20.height,
             ],
           ),
         ),

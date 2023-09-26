@@ -97,8 +97,8 @@ class CustomFormField extends StatelessWidget {
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
-      validator: (value) =>
-          AuthFormValidation().formValidation(value!, _validator),
+      // validator: (value) =>
+      //     AuthFormValidation().formValidation(value!, _validator),
       decoration: InputDecoration(
           labelStyle: TextStyle(color: AppColors.textColor),
           suffixIcon: postIconBtn,
