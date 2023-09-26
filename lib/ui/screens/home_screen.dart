@@ -5,6 +5,7 @@ import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -200,7 +201,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           width: 70,
                                           child: SfRadialGauge(
                                             backgroundColor: Colors.transparent,
-                                            animationDuration: 300,
+                                            // animationDuration: 300,
                                             axes: [
                                               RadialAxis(
                                                 minimum: 0,
@@ -237,7 +238,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 pointers: [
                                                   RangePointer(
                                                     color: AppColors.mainColor,
-                                                    enableAnimation: true,
+                                                    enableAnimation: false,
                                                     cornerStyle:
                                                         CornerStyle.bothCurve,
                                                     value: 7550,
@@ -320,7 +321,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   AppLocalizations.of(context)!.all_promotions,
                               onTap: () {}),
                           SizedBox(
-                            height: 217,
+                            height: 200,
                             child: ListView.builder(
                               itemCount: 10,
                               scrollDirection: Axis.horizontal,
@@ -459,7 +460,8 @@ class HomeScreenWidget extends StatelessWidget {
             CustomButtonWidget(
                 buttonText: "20${AppLocalizations.of(context)!.currency}",
                 bGColor: AppColors.mainColor,
-                height: 20,
+                height: 30,
+                radius: AppConstants.radius_3,
                 onPressed: () {}),
           ],
         ),

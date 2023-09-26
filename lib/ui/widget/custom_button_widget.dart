@@ -10,23 +10,25 @@ class CustomButtonWidget extends StatelessWidget {
   final Color bGColor;
   final Color fontColors;
   final double? height;
+  final double? radius;
   CustomButtonWidget(
       {super.key,
       required this.buttonText,
       this.onPressed,
       this.enable = true,
       this.bGColor = Colors.white,
-      this.fontColors = Colors.white, this.height});
+      this.fontColors = Colors.white, this.height, this.radius});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       width: double.maxFinite,
       decoration: BoxDecoration(
           border: Border.all(color: AppColors.mainColor),
           color: bGColor,
           borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.padding_10))),
+              BorderRadius.all(Radius.circular(radius ?? AppConstants.radius_10))),
       child: MaterialButton(
         height: height ?? AppConstants.buttonHeight,
         onPressed: enable ? onPressed : null,
