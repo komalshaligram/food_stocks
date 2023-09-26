@@ -11,6 +11,7 @@ import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
+import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
@@ -30,16 +31,12 @@ enum RouteDefine {
   registerScreen,
   connectScreen,
   profileScreen,
-
   profileScreen3,
   operationTimeScreen,
-
   bottomNavScreen,
   homeScreen,
-  menuScreen,
   basketScreen,
   walletScreen,
-  storeScreen,
   orderScreen,
   termsOfUseScreen,
   questionAndAnswerScreen,
@@ -47,6 +44,8 @@ enum RouteDefine {
   aboutAppScreen,
   messageScreen,
   messageContentScreen,
+  storeScreen,
+  otpScreen,
 
 }
 
@@ -76,6 +75,7 @@ class AppRouting {
       RouteDefine.aboutAppScreen.name: (_) => AboutAppRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
+      RouteDefine.otpScreen.name:(_)=>OTPRoute.route
     };
 
     final routeBuilder = routes[settings.name];

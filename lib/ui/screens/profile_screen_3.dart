@@ -134,7 +134,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       fillColor: AppColors.whiteColor,
                       controller: state.faxController,
                       keyboardType: TextInputType.number,
-                      hint: "ajsdjg",
+                      hint: "abc@fax",
                       validator: "text"),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.logo_image,

@@ -4,16 +4,16 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-class BaseApi {
+ class DioClient {
   late Dio _dio;
 
-  static final BaseApi _instance = BaseApi._internal();
+  static final DioClient _instance = DioClient._internal();
 
-  factory BaseApi() {
+  factory DioClient() {
     return _instance;
   }
 
-  BaseApi._internal() {
+  DioClient._internal() {
     BaseOptions options = BaseOptions(
         baseUrl: 'https://dalsy.shaligraminfotech.com:6044/',
         connectTimeout: const Duration(milliseconds: 60000),
@@ -239,3 +239,10 @@ void onError(ErrorEntity eInfo){
 
   }
 }
+
+/*
+class ApiController extends _BaseApi {
+  const ApiController() {
+    super.init(version:1);
+  }
+}*/

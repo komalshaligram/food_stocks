@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_stock/repository/auth_repo.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import '../../routes/app_routes.dart';
@@ -40,7 +41,7 @@ class ConnectScreen extends StatelessWidget {
                   buttonText: AppLocalizations.of(context)!.enrollment,
                  bGColor: AppColors.mainColor,
                   onPressed: () {
-                    Navigator.pushNamed(context, RouteDefine.profileScreen.name);
+                    Navigator.pushNamed(context, RouteDefine.loginScreen.name);
                     },
                 ),
                 const SizedBox(

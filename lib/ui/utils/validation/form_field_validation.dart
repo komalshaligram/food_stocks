@@ -1,10 +1,10 @@
-
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 
 class FormFieldValidation {
 
   emailField(String value) {
     RegExp regex = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+        r"^.+@[a-zA-Z]+\.[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$+");
     if (!regex.hasMatch(value)) {
       return false;
     } else {
@@ -15,9 +15,9 @@ class FormFieldValidation {
 
   String? validatePassword(String value) {
     RegExp regex =
-    RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{0,}$');
+    RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$');
     if (value.isEmpty) {
-      return "Password can't be empty";
+      return AppStrings.password_empty_error;
     } else {
       if (!regex.hasMatch(value)) {
         return 'Password must have A-Z, a-z, 0-9 and min. one special characters';
@@ -31,7 +31,7 @@ class FormFieldValidation {
 
   phoneNumField(String value) {
     RegExp regex = RegExp(
-        r'(^\+{0,2}([\-\. ])?(\(?\d{0,3}\))?([\-\. ])?\(?\d{0,3}\)?([\-\. ])?\d{3}([\-\. ])?\d{4})');
+        r'^(?:[+0]9)?[0-9]{10}$');
     if (value.length < 10 || !regex.hasMatch(value)) {
       return false;
     } else {
