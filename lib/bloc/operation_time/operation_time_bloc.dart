@@ -26,15 +26,18 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             });
         if (result != null) {
           String? selectedTime;
-          print(result);
-          var df = DateFormat("h:mm a");
+          var df = DateFormat("HH:mm");
           var dt = df.parse(result.format(event.context));
           selectedTime  =  DateFormat('HH:mm').format(dt);
-          emit(state.copyWith(time: selectedTime));
+          print(selectedTime);
+          if(event.index == 1 && event.openingIndex == 1){
+            emit(state.copyWith(time: selectedTime));
+          }
+          if(event.index == 1 && event.openingIndex == 0){
+            emit(state.copyWith(time: selectedTime));
+          }
         }
       }
-
-
     });
   }
 

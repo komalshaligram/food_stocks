@@ -48,7 +48,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
          else  if(event.owner.isEmpty){
            ScaffoldMessenger.of(event.context).showSnackBar(
                const SnackBar(
-                 content: Text('enter owener'),
+                 content: Text('enter owner'),
                )
            );
          }
@@ -71,18 +71,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
          }
       }
 
-      if (event is _pickProfilePicEvent) {
+      if (event is _profilePicFromCameraEvent) {
       File? image;
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
       image = File(pickedFile.path);
-      emit(state.copyWith(image: image,isImagePick: true));
+      emit(state.copyWith(image: image));
       }
       }
 
-
-
+     if (event is _profilePicFromGalleryEvent) {
+       File? image;
+       final picker = ImagePicker();
+       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+       if (pickedFile != null) {
+         image = File(pickedFile.path);
+         emit(state.copyWith(image: image));
+       }
+     }
     });
   }
 

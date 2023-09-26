@@ -7,9 +7,13 @@ import 'package:food_stock/ui/screens/login_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 
+import '../ui/screens/basket_screen.dart';
 import '../ui/screens/connect_screen.dart';
+import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/profile_screen_3.dart';
+import '../ui/screens/store_screen.dart';
+import '../ui/screens/wallet_screen.dart';
 
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
@@ -21,14 +25,13 @@ enum RouteDefine {
   profileScreen,
   profileScreen3,
   operationTimeScreen,
-  operationTimeScreen,
-
   bottomNavScreen,
   homeScreen,
   basketScreen,
   walletScreen,
-  storeScreen
+  storeScreen,
   fileUploadScreen
+
 
 }
 

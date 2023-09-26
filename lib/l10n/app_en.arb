@@ -10,7 +10,6 @@
  "name_of_owner":"Name of owner",
  "continued":"Continued",
  "more_details":"More details",
- "name_of_owner":"Name of owner",
  "full_address":"full address",
  "email":"email",
  "fax":"Fax",
@@ -32,13 +31,11 @@
    "taken_down" : "taken down" ,
    "promissory_note":"promissory note",
    "personal_guarantee":"personal guarantee",
-
    "photo_tz":"photo of T.Z.",
    "business_certificate":"business certificate" ,
-   "camera" :"Camera",
-   "gallery" : "Gallery"
-
-
-
-
+    "saturday_and_holidays":"Saturday and holidays",
+     "tuesday" : "Tuesday",
+     "hp" : "H.P.",
+     "gallery":"Gallery",
+        "camera" : "Camera"
   }

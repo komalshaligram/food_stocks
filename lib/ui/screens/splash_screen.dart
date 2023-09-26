@@ -31,7 +31,7 @@ class SplashScreenWidget extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.isRedirected) {
-          Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+          Navigator.pushNamed(context, RouteDefine.operationTimeScreen.name);
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(

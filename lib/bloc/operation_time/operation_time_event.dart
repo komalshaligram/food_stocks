@@ -5,7 +5,9 @@ part of 'operation_time_bloc.dart';
 class OperationTimeEvent with _$OperationTimeEvent{
 
   factory OperationTimeEvent.timePickerEvent({
-  required   BuildContext context
+    required BuildContext context,
+    required int openingIndex,
+    required int index
 }) = _timePickerEvent;
 
 

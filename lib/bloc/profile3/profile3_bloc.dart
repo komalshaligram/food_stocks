@@ -61,10 +61,22 @@ class Profile3Bloc extends Bloc<Profile3Event, Profile3State> {
           Navigator.pushNamed(event.context, RouteDefine.operationTimeScreen.name);
         }
       }
-           if (event is _pickLogoEvent)  {
+
+
+           if (event is _logoFromCameraEvent)  {
         File? image;
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(source: ImageSource.camera);
+        if (pickedFile != null) {
+          image = File(pickedFile.path);
+          emit(state.copyWith(image: image,isImagePick: true));
+        }
+      }
+
+      if (event is _logoFromGalleryEvent)  {
+        File? image;
+        final picker = ImagePicker();
+        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
         if (pickedFile != null) {
           image = File(pickedFile.path);
           emit(state.copyWith(image: image,isImagePick: true));

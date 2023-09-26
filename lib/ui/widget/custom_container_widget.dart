@@ -19,8 +19,9 @@ class CustomContainerWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name,style: AppStyles.rkRegularTextStyle(size: AppConstants.padding_10, color: AppColors.textColor)),
-            Text(' * ',style: AppStyles.rkRegularTextStyle(size: AppConstants.padding_10, color: Colors.red)),
+            Text(' * ',style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.red)),
+            Text(name,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+
           ],
         ),
       ),

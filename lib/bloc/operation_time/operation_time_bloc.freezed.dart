@@ -17,19 +17,24 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$OperationTimeEvent {
   BuildContext get context => throw _privateConstructorUsedError;
+  int get openingIndex => throw _privateConstructorUsedError;
+  int get index => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context) timePickerEvent,
+    required TResult Function(BuildContext context, int openingIndex, int index)
+        timePickerEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context)? timePickerEvent,
+    TResult? Function(BuildContext context, int openingIndex, int index)?
+        timePickerEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context)? timePickerEvent,
+    TResult Function(BuildContext context, int openingIndex, int index)?
+        timePickerEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -61,7 +66,7 @@ abstract class $OperationTimeEventCopyWith<$Res> {
           OperationTimeEvent value, $Res Function(OperationTimeEvent) then) =
       _$OperationTimeEventCopyWithImpl<$Res, OperationTimeEvent>;
   @useResult
-  $Res call({BuildContext context});
+  $Res call({BuildContext context, int openingIndex, int index});
 }
 
 /// @nodoc
@@ -78,12 +83,22 @@ class _$OperationTimeEventCopyWithImpl<$Res, $Val extends OperationTimeEvent>
   @override
   $Res call({
     Object? context = null,
+    Object? openingIndex = null,
+    Object? index = null,
   }) {
     return _then(_value.copyWith(
       context: null == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
               as BuildContext,
+      openingIndex: null == openingIndex
+          ? _value.openingIndex
+          : openingIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -96,7 +111,7 @@ abstract class _$$_timePickerEventCopyWith<$Res>
       __$$_timePickerEventCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({BuildContext context});
+  $Res call({BuildContext context, int openingIndex, int index});
 }
 
 /// @nodoc
@@ -111,12 +126,22 @@ class __$$_timePickerEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? context = null,
+    Object? openingIndex = null,
+    Object? index = null,
   }) {
     return _then(_$_timePickerEvent(
       context: null == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
               as BuildContext,
+      openingIndex: null == openingIndex
+          ? _value.openingIndex
+          : openingIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -124,14 +149,19 @@ class __$$_timePickerEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_timePickerEvent implements _timePickerEvent {
-  _$_timePickerEvent({required this.context});
+  _$_timePickerEvent(
+      {required this.context, required this.openingIndex, required this.index});
 
   @override
   final BuildContext context;
+  @override
+  final int openingIndex;
+  @override
+  final int index;
 
   @override
   String toString() {
-    return 'OperationTimeEvent.timePickerEvent(context: $context)';
+    return 'OperationTimeEvent.timePickerEvent(context: $context, openingIndex: $openingIndex, index: $index)';
   }
 
   @override
@@ -139,11 +169,14 @@ class _$_timePickerEvent implements _timePickerEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_timePickerEvent &&
-            (identical(other.context, context) || other.context == context));
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.openingIndex, openingIndex) ||
+                other.openingIndex == openingIndex) &&
+            (identical(other.index, index) || other.index == index));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, context);
+  int get hashCode => Object.hash(runtimeType, context, openingIndex, index);
 
   @JsonKey(ignore: true)
   @override
@@ -154,27 +187,30 @@ class _$_timePickerEvent implements _timePickerEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context) timePickerEvent,
+    required TResult Function(BuildContext context, int openingIndex, int index)
+        timePickerEvent,
   }) {
-    return timePickerEvent(context);
+    return timePickerEvent(context, openingIndex, index);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context)? timePickerEvent,
+    TResult? Function(BuildContext context, int openingIndex, int index)?
+        timePickerEvent,
   }) {
-    return timePickerEvent?.call(context);
+    return timePickerEvent?.call(context, openingIndex, index);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context)? timePickerEvent,
+    TResult Function(BuildContext context, int openingIndex, int index)?
+        timePickerEvent,
     required TResult orElse(),
   }) {
     if (timePickerEvent != null) {
-      return timePickerEvent(context);
+      return timePickerEvent(context, openingIndex, index);
     }
     return orElse();
   }
@@ -209,11 +245,17 @@ class _$_timePickerEvent implements _timePickerEvent {
 }
 
 abstract class _timePickerEvent implements OperationTimeEvent {
-  factory _timePickerEvent({required final BuildContext context}) =
-      _$_timePickerEvent;
+  factory _timePickerEvent(
+      {required final BuildContext context,
+      required final int openingIndex,
+      required final int index}) = _$_timePickerEvent;
 
   @override
   BuildContext get context;
+  @override
+  int get openingIndex;
+  @override
+  int get index;
   @override
   @JsonKey(ignore: true)
   _$$_timePickerEventCopyWith<_$_timePickerEvent> get copyWith =>

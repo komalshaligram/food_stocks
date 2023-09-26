@@ -34,6 +34,7 @@ class ProfileScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return BlocBuilder<Profile3Bloc, Profile3State>(
       builder: (context, state) {
         return Scaffold(
@@ -69,30 +70,23 @@ class ProfileScreenWidget extends StatelessWidget {
                   ),
                   DropdownButtonFormField<String>(
                     icon: const Icon(Icons.keyboard_arrow_down),
+                    alignment: Alignment.bottomCenter,
                     decoration: InputDecoration(
-
-                      isDense: true,
+                      contentPadding: EdgeInsets.only(left: 8, right: 8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(3.0),
                         borderSide: BorderSide(
                           color: AppColors.borderColor,
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(3),
-                          borderSide: BorderSide(
-                            color: AppColors.borderColor,
-                            width: 1,
-                          )),
                     ),
                     isExpanded: true,
                     elevation: 0,
-                    borderRadius: BorderRadius.circular(20),
+                    //  borderRadius: BorderRadius.circular(3),
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                     ),
-                    dropdownColor: AppColors.mainColor.withOpacity(0.1),
                     value: state.selectCity,
                     hint: const Text(
                       'select tag',
@@ -108,39 +102,48 @@ class ProfileScreenWidget extends StatelessWidget {
                       temp = tag;
                     },
                   ),
+
+                  const SizedBox(
+                    height: 7,
+                  ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.full_address,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.whiteColor,
                     controller: state.addressController,
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
-                    validator: 'text',
+                  ),
+                  const SizedBox(
+                    height: 7,
                   ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.email,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.whiteColor,
-                      controller: state.emailController,
-                      keyboardType: TextInputType.number,
-                      hint: "152485",
-                      validator: "number"),
+                    controller: state.emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    hint: "152485",
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.fax,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.whiteColor,
-                      controller: state.faxController,
-                      keyboardType: TextInputType.number,
-                      hint: "ajsdjg",
-                      validator: "text"),
+                    controller: state.faxController,
+                    keyboardType: TextInputType.number,
+                    hint: "ajsdjg",
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.logo_image,
                   ),
                   Container(
-                    height: 134,
+                    height: screenHeight * 0.2,
                     alignment: Alignment.center,
                     child: DottedBorder(
                       color: state.isImagePick
@@ -154,9 +157,55 @@ class ProfileScreenWidget extends StatelessWidget {
                         children: [
                           GestureDetector(
                               onTap: () {
-                                context
-                                    .read<Profile3Bloc>()
-                                    .add(Profile3Event.pickLogoEvent());
+                             //   alertDialog(context);
+                                showDialog(
+                                  context: context,
+                                  builder:(c1) {
+                                    return BlocBuilder<Profile3Bloc, Profile3State>(
+                                      builder: (c1, state) {
+                                        return AlertDialog(
+                                          title: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(AppLocalizations.of(context)!.upload_photo)),
+
+                                          actions:<Widget>[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                GestureDetector(
+                                                    onTap: (){
+
+                                                      context
+                                                          .read<Profile3Bloc>()
+                                                          .add(Profile3Event.logoFromCameraEvent());
+                                                      Navigator.of(c1).pop();
+
+                                                    },
+                                                    child: Icon(Icons.camera_alt_rounded)),
+                                                GestureDetector(
+                                                    onTap: (){
+
+                                                      context
+                                                          .read<Profile3Bloc>()
+                                                          .add(Profile3Event.logoFromGalleryEvent());
+                                                      Navigator.of(c1).pop();
+                                                    },
+                                                    child: Icon(Icons.photo)),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Text(AppLocalizations.of(context)!.camera),
+                                                Text(AppLocalizations.of(context)!.gallery),
+                                              ],
+                                            ),
+
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }, );
                               },
                               child: state.isImagePick
                                   ? SizedBox(
@@ -179,7 +228,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                     width: screenWidth,
                                     alignment: Alignment.center,
                                     child: Text(
-                                      AppLocalizations.of(context)!.upload_photo,
+                                      AppLocalizations.of(context)!
+                                          .upload_photo,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: 14,
                                           color: AppColors.textColor,
@@ -198,19 +248,14 @@ class ProfileScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.continued,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-                      context
-                          .read<Profile3Bloc>()
-                          .add(Profile3Event.textFieldValidateEvent(
-                          city: state.selectCity!,
-                          address: state.addressController.text,
-                          email: state.emailController.text,
-                          fax: state.faxController.text,
-                          image: state.image,
-                        context: context
-                      ));
-
-                   /*   Navigator.pushNamed(
-                          context, RouteDefine.operationTimeScreen.name);*/
+                      context.read<Profile3Bloc>().add(
+                          Profile3Event.textFieldValidateEvent(
+                              city: state.selectCity!,
+                              address: state.addressController.text,
+                              email: state.emailController.text,
+                              fax: state.faxController.text,
+                              image: state.image,
+                              context: context));
                     },
                     fontColors: AppColors.whiteColor,
                   ),
@@ -225,4 +270,50 @@ class ProfileScreenWidget extends StatelessWidget {
       },
     );
   }
+/*  void alertDialog(BuildContext context){
+    showDialog(
+      context: context,
+      builder:(c1) {
+        return BlocBuilder<Profile3Bloc, Profile3State>(
+          builder: (c1, state) {
+            return AlertDialog(
+              title: Align(
+                  alignment: Alignment.center,
+                  child: Text(AppLocalizations.of(context)!.upload_photo)),
+
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                        onTap: (){
+                          context
+                              .read<Profile3Bloc>()
+                              .add(Profile3Event.logoFromCameraEvent());
+                        },
+                        child: Icon(Icons.camera_alt_rounded)),
+                    GestureDetector(
+                        onTap: (){
+                          context
+                              .read<Profile3Bloc>()
+                              .add(Profile3Event.logoFromGalleryEvent());
+                        },
+                        child: Icon(Icons.photo)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(AppLocalizations.of(context)!.camera),
+                    Text(AppLocalizations.of(context)!.gallery),
+                  ],
+                ),
+
+              ],
+            );
+          },
+        );
+      }, );
+  }*/
+
 }

@@ -14,7 +14,10 @@ class ProfileEvent with _$ProfileEvent{
     required BuildContext context,
     required String selectedBusiness,
 }) = _textFieldValidateEvent;
-  factory ProfileEvent.pickProfilePicEvent(
-      ) = _pickProfilePicEvent;
+  factory ProfileEvent.profilePicFromCameraEvent(
+      ) = _profilePicFromCameraEvent;
+  factory ProfileEvent.profilePicFromGalleryEvent(
+      ) = _profilePicFromGalleryEvent;
+
 }
 

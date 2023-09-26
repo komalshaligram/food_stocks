@@ -5,8 +5,11 @@ part of 'profile3_bloc.dart';
 class Profile3Event with _$Profile3Event{
 
   factory Profile3Event.dropDownEvent() = _dropDownEvent;
-  factory Profile3Event.pickLogoEvent(
-      ) = _pickLogoEvent;
+  factory Profile3Event.logoFromCameraEvent(
+      ) = _logoFromCameraEvent;
+  factory Profile3Event.logoFromGalleryEvent(
+      ) = _logoFromGalleryEvent;
+
 
   factory Profile3Event.textFieldValidateEvent({
     required String city,

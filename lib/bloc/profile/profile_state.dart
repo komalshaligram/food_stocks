@@ -9,7 +9,6 @@ class ProfileState with _$ProfileState{
 
   const factory ProfileState({
     required File image,
-    required bool isImagePick,
     required String? selectedBusiness,
     required List<String> institutionalList,
     required TextEditingController businessNameController,
@@ -22,7 +21,6 @@ class ProfileState with _$ProfileState{
 
   factory ProfileState.initial()=> ProfileState(
     image: File(''),
-    isImagePick: false,
     selectedBusiness: 'q',
     institutionalList: ['q','b','c','d','e'],
     businessNameController: TextEditingController(),
