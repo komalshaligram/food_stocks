@@ -34,5 +34,5 @@ Future setupInjection() async {
 }*/
 
 Future _registerRepository() async {
-  //getIt.registerSingleton(AuthRepository());
+  getIt.registerSingleton(AuthRepository());
 }

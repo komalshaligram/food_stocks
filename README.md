@@ -15,7 +15,10 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-- for generating freeze class follow below command :
+# commands:
+
+- for generating freeze class run below command :
   flutter pub run build_runner watch --delete-conflicting-outputs
 
+- for generating localization run below command :
   flutter gen-l10n

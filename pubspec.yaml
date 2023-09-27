@@ -52,6 +52,7 @@ dependencies:
   easy_localization: ^3.0.3
   shared_preferences: ^2.2.1
   syncfusion_flutter_gauges: ^23.1.36
+  flutter_otp_text_field: ^1.1.1
   focus_detector: ^2.0.1
 
 
