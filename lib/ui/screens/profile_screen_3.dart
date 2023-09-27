@@ -31,7 +31,7 @@ class ProfileScreen3 extends StatelessWidget {
 
 class ProfileScreenWidget extends StatelessWidget {
    ProfileScreenWidget({super.key});
-  final String temp ='';
+   String temp ='';
 
 
   @override
