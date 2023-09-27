@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../widget/button_widget.dart';
-import '../widget/container_widget.dart';
-import '../widget/textformfield_widget.dart';
+import '../widget/custom_button_widget.dart';
+import '../widget/custom_container_widget.dart';
+import '../widget/custom_form_field_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -21,36 +22,36 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc(),
-
-      child: ProfileScreenWidget(),
-
+      child: ProfileScreenWidget(con: context,),
     );
   }
 }
 
 class ProfileScreenWidget extends StatelessWidget {
-  const ProfileScreenWidget({super.key});
-
+  final BuildContext con;
+   ProfileScreenWidget({required this.con,super.key});
+  String temp = '';
   @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+  Widget build(BuildContext c) {
+    final screenWidth = MediaQuery.of(c).size.width;
+    final screenHeight = MediaQuery.of(c).size.height;
 
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-
             leading: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pop(context);
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
-              AppStrings.businessDetailsString,
-
+              AppLocalizations.of(context)!.business_details,
               style: AppStyles.rkRegularTextStyle(
-                  size: 16, color: Colors.black, fontWeight: FontWeight.w400),
+                  size: AppConstants.smallFont,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400),
             ),
             backgroundColor: Colors.white,
             titleSpacing: 0,
@@ -66,6 +67,9 @@ class ProfileScreenWidget extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         height: 80,
                         width: screenWidth,
@@ -77,41 +81,82 @@ class ProfileScreenWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(200),
                             color: AppColors.mainColor.withOpacity(0.1),
                           ),
-                          child: state.isImagePick
-                              ? ClipRRect(
+                          child: state.image.path == ""
+                              ? const Icon(Icons.person)
+                              : ClipRRect(
                                   borderRadius: BorderRadius.circular(40),
                                   child: Image.file(File(state.image.path),
                                       fit: BoxFit.fill),
-                                )
-                              : const Icon(Icons.person),
+                                ),
                         ),
                       ),
                       Positioned(
-                        left: 188,
-                        top: 45,
+                        left: screenWidth * 0.44,
+                        top: screenHeight * 0.07,
                         child: GestureDetector(
-                          onTap: () {
-                            context
-                                .read<ProfileBloc>()
-                                .add(ProfileEvent.pickProfilePicEvent());
-                          },
-                          child: state.isImagePick
-                              ? const SizedBox()
-                              : Container(
-                                  width: 29,
-                                  height: 29,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: AppColors.borderColor)),
-                                  child: Icon(
-                                    Icons.camera_alt_rounded,
-                                    color: AppColors.blue,
-                                    size: 18,
-                                  ),
-                                ),
-                        ),
+                            onTap: () {
+                            //  alertDialog(con);
+                              showDialog(
+                                context: context,
+                                builder:(c1) {
+                                  return BlocBuilder<ProfileBloc, ProfileState>(
+                                    builder: (c1, state) {
+                                      return AlertDialog(
+                                        title: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(AppLocalizations.of(context)!.upload_photo)),
+                                        actions: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              GestureDetector(
+                                                  onTap: (){
+                                                    context
+                                                        .read<ProfileBloc>()
+                                                        .add(ProfileEvent.profilePicFromCameraEvent());
+                                                    Navigator.pop(c1);
+                                                  },
+                                                  child: Icon(Icons.camera_alt_rounded)),
+                                              GestureDetector(
+                                                  onTap: (){
+                                                    context
+                                                        .read<ProfileBloc>()
+                                                        .add(ProfileEvent.profilePicFromGalleryEvent());
+                                                    Navigator.pop(c1);
+                                                  },
+                                                  child: Icon(Icons.photo)),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(AppLocalizations.of(context)!.camera),
+                                              Text(AppLocalizations.of(context)!.gallery),
+                                            ],
+                                          ),
+
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }, );
+                            },
+                            child: state.image.path == ""
+                                ? Container(
+                                    width: 29,
+                                    height: 29,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: AppColors.borderColor)),
+                                    child: Icon(
+                                      Icons.camera_alt_rounded,
+                                      color: AppColors.blueColor,
+                                      size: 18,
+                                    ),
+                                  )
+                                : const SizedBox()),
                       ),
                     ],
                   ),
@@ -122,20 +167,21 @@ class ProfileScreenWidget extends StatelessWidget {
                     width: screenWidth,
                     alignment: Alignment.center,
                     child: Text(
-                      AppStrings.profilePictureString,
+                      AppLocalizations.of(context)!.profile_picture,
                       style: AppStyles.rkRegularTextStyle(
                           size: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.textColor),
                     ),
                   ),
-                  ContainerScreen(
-                    name: AppStrings.typeOfBusinessString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.type_of_business,
                   ),
                   DropdownButtonFormField<String>(
                     icon: const Icon(Icons.keyboard_arrow_down),
                     alignment: Alignment.bottomCenter,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 8, right: 8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(3.0),
                         borderSide: BorderSide(
@@ -162,66 +208,70 @@ class ProfileScreenWidget extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (tag) {
-                      var temp = state.selectedBusiness;
-                      temp = tag;
+                      temp = state.selectedBusiness!;
+                      temp = tag!;
                     },
                   ),
-                  ContainerScreen(
-                    name: AppStrings.businessNameString,
+                  SizedBox(
+                    height: 7,
+                  ),
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.business_name,
                   ),
                   CustomFormField(
-                    fillColor: AppColors.white,
                     controller: state.businessNameController,
                     keyboardType: TextInputType.text,
-                    // inputAction: TextInputAction.done,
-                    hint: AppStrings.lifeGroceryStoreString,
-                    validator: '',
+                    hint: AppLocalizations.of(context)!.life_grocery_store,
                   ),
-                  ContainerScreen(
-                    name: AppStrings.hpString,
+                  SizedBox(
+                    height: 7,
                   ),
-                  CustomFormField(
-                      fillColor: AppColors.white,
-                      controller: state.hpController,
-                      keyboardType: TextInputType.number,
-                      // inputAction: TextInputAction.next,
-                      hint: "152485",
-                      validator: ''),
-                  ContainerScreen(
-                    name: AppStrings.ownerString,
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.hp,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
-                      controller: state.ownerController,
-                      keyboardType: TextInputType.text,
-                      //  inputAction: TextInputAction.next,
-                      hint: "ajsdjg",
-                      validator: ""),
-                  ContainerScreen(
-                    name: AppStrings.idString,
+                    controller: state.hpController,
+                    keyboardType: TextInputType.number,
+                    hint: "152485",
+                  ),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.name_of_owner,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
-                      controller: state.idController,
-                      keyboardType: TextInputType.number,
-                      // inputAction: TextInputAction.next,
-                      hint: "045896525",
-                      validator: ""),
-                  ContainerScreen(
-                    name: AppStrings.contactString,
+                    controller: state.ownerController,
+                    keyboardType: TextInputType.text,
+                    hint: "ajsdjg",
+                  ),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.id,
                   ),
                   CustomFormField(
-                      fillColor: AppColors.white,
-                      controller: state.contactController,
-                      keyboardType: TextInputType.text,
-                      //  inputAction: TextInputAction.next,
-                      hint: "text",
-                      validator: ""),
+                    controller: state.idController,
+                    keyboardType: TextInputType.number,
+                    hint: "045896525",
+                  ),
+                  CustomContainerWidget(
+                    name: AppLocalizations.of(context)!.contact,
+                  ),
+                  SizedBox(
+                    height: 7,
+                  ),
+                  CustomFormField(
+                    controller: state.contactController,
+                    keyboardType: TextInputType.text,
+                    hint: "text",
+                  ),
                   const SizedBox(
                     height: 40,
                   ),
-                  ButtonScreen(
-                    buttonText: AppStrings.continueString,
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.continued,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
                       /*      context
@@ -238,7 +288,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       Navigator.pushNamed(
                           context, RouteDefine.profileScreen3.name);
                     },
-                    fontColors: AppColors.white,
+                    fontColors: AppColors.whiteColor,
                   ),
                   const SizedBox(
                     height: 20,
@@ -251,4 +301,55 @@ class ProfileScreenWidget extends StatelessWidget {
       },
     );
   }
+
+
+ /*  void alertDialog(BuildContext context , String image){
+
+     showDialog(
+       context: context,
+       builder:(c1) {
+         return BlocBuilder<ProfileBloc, ProfileState>(
+           builder: (c1, state) {
+             image = state.image.path;
+             print('dialog_____${state.image.path}');
+             return AlertDialog(
+               title: Align(
+                 alignment: Alignment.center,
+                   child: Text(AppLocalizations.of(context)!.upload_photo)),
+
+               actions: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: [
+                     GestureDetector(
+                         onTap: (){
+                           context
+                               .read<ProfileBloc>()
+                               .add(ProfileEvent.profilePicFromCameraEvent());
+                         },
+                         child: Icon(Icons.camera_alt_rounded)),
+                     GestureDetector(
+                         onTap: (){
+                           context
+                               .read<ProfileBloc>()
+                               .add(ProfileEvent.profilePicFromGalleryEvent());
+                         },
+                         child: Icon(Icons.photo)),
+                   ],
+                 ),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: [
+                   Text(AppLocalizations.of(context)!.camera),
+                     Text(AppLocalizations.of(context)!.gallery),
+                   ],
+                 ),
+
+               ],
+             );
+           },
+         );
+       }, );
+   }
+*/
 }

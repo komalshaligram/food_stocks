@@ -4,9 +4,9 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../utils/themes/app_colors.dart';
 
 
-class ContainerScreen extends StatelessWidget {
-  String name;
-   ContainerScreen({super.key,required this.name});
+class ContainerWidget extends StatelessWidget {
+  final String name;
+   ContainerWidget({super.key,required this.name});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
