@@ -67,45 +67,6 @@ class LogInScreenWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          flex: 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.borderColor,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_5))),
-                            padding: EdgeInsets.only(
-                                top: AppConstants.padding_5,
-                                bottom: AppConstants.padding_5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: AppConstants.padding_10),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.phone,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_14,
-                                        color: AppColors.blackColor),
-                                  ),
-                                ),
-                                CustomFormField(
-                                    fillColor: AppColors.whiteColor,
-                                    controller: phoneController,
-                                    keyboardType: TextInputType.number,
-                                    isBorderVisible: false,
-                                    textInputAction: TextInputAction.done,
-                                    hint: "152485",
-                                    validator: ''),
-                              ],
-                            ),
-                          ),
-                        ),
-                        10.width,
-                        Expanded(
                           flex: 1,
                           child: Container(
                             decoration: BoxDecoration(
@@ -123,7 +84,7 @@ class LogInScreenWidget extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      right: AppConstants.padding_10),
+                                      right: AppConstants.padding_10, left: AppConstants.padding_10),
                                   child: Text(
                                     AppLocalizations.of(context)!.country,
                                     style: AppStyles.rkRegularTextStyle(
@@ -139,7 +100,7 @@ class LogInScreenWidget extends StatelessWidget {
                                   alignment: Alignment.bottomCenter,
                                   decoration: InputDecoration(
                                       contentPadding:
-                                          EdgeInsets.only(left: 8, right: 8),
+                                      EdgeInsets.only(left: 10, right: 10),
                                       border: InputBorder.none),
                                   isExpanded: true,
                                   elevation: 0,
@@ -154,13 +115,52 @@ class LogInScreenWidget extends StatelessWidget {
                                   items: [
                                     DropdownMenuItem<String>(
                                       value: '+972',
-                                      child: Text('+972'),
+                                      child: Text('+972', textDirection: TextDirection.ltr,),
                                     )
                                   ].toList(),
                                   onChanged: (countryCode) {
                                     var temp = countryCode;
                                   },
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        10.width,
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.borderColor,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_5))),
+                            padding: EdgeInsets.only(
+                                top: AppConstants.padding_5,
+                                bottom: AppConstants.padding_5),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: AppConstants.padding_10, left: AppConstants.padding_10),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.phone,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor),
+                                  ),
+                                ),
+                                CustomFormField(
+                                    fillColor: AppColors.whiteColor,
+                                    controller: phoneController,
+                                    keyboardType: TextInputType.number,
+                                    isBorderVisible: false,
+                                    textInputAction: TextInputAction.done,
+                                    hint: "152485",
+                                    validator: ''),
                               ],
                             ),
                           ),

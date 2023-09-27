@@ -23,7 +23,7 @@ class OTPScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OtpBloc(),
+      create: (context) => OtpBloc()..add(OtpEvent.setOtpTimer()),
       child: OTPScreenWidget(),
     );
   }
@@ -45,6 +45,7 @@ class OTPScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.connection,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
+                  bloc.add(OtpEvent.cancelOtpTimerSubscription());
                   Navigator.pushNamed(context, RouteDefine.loginScreen.name);
                 },
               ),
@@ -68,7 +69,7 @@ class OTPScreenWidget extends StatelessWidget {
                       autoFocus: true,
                       fieldWidth: (getScreenWidth(context) -
                               (getScreenWidth(context) * 0.2)) /
-                          5,
+                          5.5,
                       decoration: InputDecoration(
                           //  border: Border.all(color: )
                           ),
@@ -76,11 +77,13 @@ class OTPScreenWidget extends StatelessWidget {
                       cursorColor: AppColors.mainColor,
                       borderColor: AppColors.greyColor,
                       focusedBorderColor: AppColors.mainColor,
-                      // margin: EdgeInsets.all(8),
                       showCursor: false,
                       showFieldAsBox: true,
                       borderRadius: BorderRadius.circular(8),
-                      textStyle: TextStyle(fontSize: 40),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_10),
+                      textStyle:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       onCodeChanged: (String code) {
                         print(code);
                       },
@@ -101,76 +104,70 @@ class OTPScreenWidget extends StatelessWidget {
                       buttonText: AppLocalizations.of(context)!.continued,
                       bGColor: AppColors.mainColor,
                       onPressed: () {
-                        // Navigator.pushNamed(
-                        //     context, RouteDefine.profileScreen3.name);
-                        bloc.add(OtpEvent.setOtpTimer());
+                        bloc.add(OtpEvent.cancelOtpTimerSubscription());
+                        Navigator.pushNamed(
+                            context, RouteDefine.homeScreen.name);
                       },
                       fontColors: AppColors.whiteColor,
                     ),
                     20.height,
-                    state.isOtpTimerVisible
-                        ? Center(
+                    Center(
                       child: Text(
                         AppLocalizations.of(context)!
                             .not_receive_verification_code,
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont, color: Colors.black),
                       ),
-                    ):
-                    0.width,
+                    ),
                     20.height,
-                    state.isOtpTimerVisible
-                        ? Container(
-                            width: double.maxFinite,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              border: Border.all(
-                                  color: AppColors.mainColor, width: 1),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10)),
-                            ),
-                            child: MaterialButton(
-                              elevation: 0,
-                              height: AppConstants.buttonHeight,
-                              onPressed: () {
-                                bloc.add(OtpEvent.setOtpTimer());
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 40,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                            color: AppColors.mainColor,
-                                            width: 1),
-                                        shape: BoxShape.circle),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_5),
-                                    child: Text(
-                                      '${state.otpTimer}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.mainColor),
-                                    ),
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context)!.send_again,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.mediumFont,
-                                        color: AppColors.mainColor),
-                                  ),
-                                  40.width,
-                                ],
+                    Container(
+                      width: double.maxFinite,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        border:
+                            Border.all(color: AppColors.mainColor, width: 1),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      child: MaterialButton(
+                        elevation: 0,
+                        height: AppConstants.buttonHeight,
+                        onPressed: () {
+                          bloc.add(OtpEvent.setOtpTimer());
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                      color: AppColors.mainColor, width: 1),
+                                  shape: BoxShape.circle),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_5),
+                              child: Text(
+                                '${state.otpTimer}',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_14,
+                                    color: AppColors.mainColor),
                               ),
                             ),
-                          )
-                        : 0.height,
+                            Text(
+                              AppLocalizations.of(context)!.send_again,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.mediumFont,
+                                  color: AppColors.mainColor),
+                            ),
+                            40.width,
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

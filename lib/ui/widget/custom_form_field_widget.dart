@@ -123,7 +123,7 @@ class CustomFormField extends StatelessWidget {
                 width: 1,
               ) : BorderSide.none) ,
           //  contentPadding:  const EdgeInsets.fromLTRB(18.0, 22.0, 0.0, 0.0),
-          contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+          contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
             borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,

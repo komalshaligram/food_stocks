@@ -14,7 +14,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     on<OtpEvent>((event, emit) {
       if(event is _SetOtpTimerEvent) {
         if(state.otpTimer == 0) {
-          emit(state.copyWith(isOtpTimerVisible: true, otpTimer: 30));
+          emit(state.copyWith(otpTimer: 30));
           _periodicOtpTimerSubscription =
               Stream.periodic(const Duration(seconds: 1), (x) => x).listen(
                     (_) => add(_UpdateTimerEvent()),
@@ -27,6 +27,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         } else {
           emit(state.copyWith(otpTimer: state.otpTimer - 1));
         }
+      } else if(event is _cancelTimerscriptionEvent) {
+        _periodicOtpTimerSubscription.cancel();
       }
     });
   }
