@@ -222,6 +222,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.businessNameController,
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
+                    fillColor: Colors.transparent,
                   ),
                   SizedBox(
                     height: 7,
@@ -233,6 +234,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.hpController,
                     keyboardType: TextInputType.number,
                     hint: "152485",
+                    fillColor: Colors.transparent,
                   ),
                   SizedBox(
                     height: 7,
@@ -244,6 +246,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.ownerController,
                     keyboardType: TextInputType.text,
                     hint: "ajsdjg",
+                    fillColor: Colors.transparent,
                   ),
                   SizedBox(
                     height: 7,
@@ -255,6 +258,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.idController,
                     keyboardType: TextInputType.number,
                     hint: "045896525",
+                    fillColor: Colors.transparent,
                   ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.contact,
@@ -266,6 +270,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.contactController,
                     keyboardType: TextInputType.text,
                     hint: "text",
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(
                     height: 40,

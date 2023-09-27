@@ -116,6 +116,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.addressController,
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(
                     height: 7,
@@ -127,6 +128,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.emailController,
                     keyboardType: TextInputType.emailAddress,
                     hint: "test2gmail.com",
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(
                     height: 7,
@@ -138,6 +140,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.faxController,
                     keyboardType: TextInputType.number,
                     hint: AppLocalizations.of(context)!.fax,
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(
                     height: 7,

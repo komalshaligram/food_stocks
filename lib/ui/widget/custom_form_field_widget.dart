@@ -11,7 +11,7 @@ class CustomFormField extends StatelessWidget {
     required TextInputType keyboardType,
     //   required TextInputAction inputAction,
     required String hint,
-    required String validator,
+    // required String validator,
     required Color fillColor,
     this.maxLimits,
     this.getxController,
@@ -42,7 +42,7 @@ class CustomFormField extends StatelessWidget {
         _fillColor = fillColor,
         //   _inputAction = inputAction,
         _hint = hint,
-        _validator = validator,
+        // _validator = validator,
         _controller = controller,
         super(key: key);
   final Widget? postIconBtn;
@@ -66,7 +66,7 @@ class CustomFormField extends StatelessWidget {
   final int maxLines;
   final int? maxLimits;
   final bool isLabelEnabled;
-  final String _validator;
+  // final String _validator;
   final String? filteringRegex;
   final bool isOtp;
   final bool isPassword;
