@@ -10,8 +10,8 @@ class AuthFormValidation {
         return formFieldValidation.emailField(value);
     // break;
 
-      case "password":
-        return formFieldValidation.validatePassword(value);
+      // case "password":
+      //   return formFieldValidation.validatePassword(value);
     // break;
 
       case "phoneNum":
