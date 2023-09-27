@@ -48,7 +48,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
            showSnackBar(event.context , 'enter contact');
          }
          else{
-           Navigator.pushNamed(event.context, RouteDefine.profileScreen3.name);
+           Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name);
          }
       }
 

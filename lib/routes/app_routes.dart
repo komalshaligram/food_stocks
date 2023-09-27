@@ -20,7 +20,7 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/profile_screen.dart';
-import '../ui/screens/profile_screen_3.dart';
+import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/store_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 
@@ -32,7 +32,7 @@ enum RouteDefine {
   registerScreen,
   connectScreen,
   profileScreen,
-  profileScreen3,
+  moreDetailsScreen,
   operationTimeScreen,
   bottomNavScreen,
   homeScreen,
@@ -61,7 +61,7 @@ class AppRouting {
       RouteDefine.connectScreen.name: (_) => ConnectRoute.route,
 
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
-      RouteDefine.profileScreen3.name: (_) => Profile3Route.route,
+      RouteDefine.moreDetailsScreen.name: (_) => MoreDetailsRoute.route,
       RouteDefine.operationTimeScreen.name: (_) => OperationTimeScreenRoute.route,
       RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
 

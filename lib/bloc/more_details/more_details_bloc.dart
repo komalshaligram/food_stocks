@@ -8,16 +8,16 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_styles.dart';
 
-part 'profile3_bloc.freezed.dart';
+part 'more_details_bloc.freezed.dart';
 
-part 'profile3_event.dart';
+part 'more_details_event.dart';
 
-part 'profile3_state.dart';
+part 'more_details_state.dart';
 
-class Profile3Bloc extends Bloc<Profile3Event, Profile3State> {
+class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
-  Profile3Bloc() : super(Profile3State.initial()) {
-    on<Profile3Event>((event, emit)  async {
+  MoreDetailsBloc() : super(MoreDetailsState.initial()) {
+    on<MoreDetailsEvent>((event, emit)  async {
 
       void showSnackBar(BuildContext context , String title) {
         final snackBar = SnackBar(

@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bloc/profile3/profile3_bloc.dart';
+import '../../bloc/more_details/more_details_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
@@ -12,33 +13,31 @@ import '../widget/custom_form_field_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class Profile3Route {
-  static Widget get route =>  ProfileScreen3();
+class MoreDetailsRoute {
+  static Widget get route =>  MoreDetailsScreen();
 }
 
-class ProfileScreen3 extends StatelessWidget {
+class MoreDetailsScreen extends StatelessWidget {
 
-   ProfileScreen3({super.key});
+   MoreDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => Profile3Bloc(),
-      child:  ProfileScreenWidget(),
+      create: (context) => MoreDetailsBloc(),
+      child:  MoreDetailsScreenWidget(),
     );
   }
 }
 
-class ProfileScreenWidget extends StatelessWidget {
-   ProfileScreenWidget({super.key});
-   String temp ='';
-
+class MoreDetailsScreenWidget extends StatelessWidget {
+   MoreDetailsScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return BlocBuilder<Profile3Bloc, Profile3State>(
+    return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -101,8 +100,6 @@ class ProfileScreenWidget extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (tag) {
-                      temp = state.selectCity!;
-                      temp = tag!;
                     },
                   ),
 
@@ -117,6 +114,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
                     fillColor: Colors.transparent,
+                    validator: AppStrings.addressValString,
                   ),
                   const SizedBox(
                     height: 7,
@@ -129,6 +127,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     hint: "test2gmail.com",
                     fillColor: Colors.transparent,
+                    validator: AppStrings.emailValString,
                   ),
                   const SizedBox(
                     height: 7,
@@ -141,6 +140,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     keyboardType: TextInputType.number,
                     hint: AppLocalizations.of(context)!.fax,
                     fillColor: Colors.transparent,
+                    validator: AppStrings.faxValString,
                   ),
                   const SizedBox(
                     height: 7,
@@ -207,8 +207,8 @@ class ProfileScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.continued,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-                      context.read<Profile3Bloc>().add(
-                          Profile3Event.textFieldValidateEvent(
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.textFieldValidateEvent(
                               city: state.selectCity!,
                               address: state.addressController.text,
                               email: state.emailController.text,
@@ -233,7 +233,7 @@ class ProfileScreenWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder:(c1) {
-        return BlocBuilder<Profile3Bloc, Profile3State>(
+        return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
           builder: (c1, state) {
             return AlertDialog(
               title: Align(
@@ -246,16 +246,16 @@ class ProfileScreenWidget extends StatelessWidget {
                     GestureDetector(
                         onTap: (){
                           context
-                              .read<Profile3Bloc>()
-                              .add(Profile3Event.logoFromCameraEvent());
+                              .read<MoreDetailsBloc>()
+                              .add(MoreDetailsEvent.logoFromCameraEvent());
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.camera_alt_rounded)),
                     GestureDetector(
                         onTap: (){
                           context
-                              .read<Profile3Bloc>()
-                              .add(Profile3Event.logoFromGalleryEvent());
+                              .read<MoreDetailsBloc>()
+                              .add(MoreDetailsEvent.logoFromGalleryEvent());
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.photo)),
