@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../routes/app_routes.dart';
@@ -18,43 +19,33 @@ class Profile3Bloc extends Bloc<Profile3Event, Profile3State> {
   Profile3Bloc() : super(Profile3State.initial()) {
     on<Profile3Event>((event, emit)  async {
 
+      void showSnackBar(BuildContext context , String title) {
+        final snackBar = SnackBar(
+          content: Text(title,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont , color: AppColors.whiteColor,fontWeight: FontWeight.w400),
+          ),
+          backgroundColor: AppColors.redColor,
+          padding: EdgeInsets.all(20),
+          behavior: SnackBarBehavior.floating,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
 
       if (event is _textFieldValidateEvent) {
         if(event.city.isEmpty){
-          ScaffoldMessenger.of(event.context).showSnackBar(
-              const SnackBar(
-                content: Text('enter city'),
-              )
-          );
+          showSnackBar(event.context , 'enter city');
         }
         else if(event.address.isEmpty){
-          ScaffoldMessenger.of(event.context).showSnackBar(
-              SnackBar(
-                content: Text('enter address',style: AppStyles.rkRegularTextStyle(size: 14,color: AppColors.blackColor),
-                ),backgroundColor: Colors.deepOrange,
-              )
-          );
+          showSnackBar(event.context , 'enter address');
         }
         else  if(event.email.isEmpty){
-          ScaffoldMessenger.of(event.context).showSnackBar(
-              const SnackBar(
-                content: Text('enter email'),
-              )
-          );
+          showSnackBar(event.context , 'enter email');
         }
         else  if(event.fax.isEmpty){
-          ScaffoldMessenger.of(event.context).showSnackBar(
-              const SnackBar(
-                content: Text('enter fax'),
-              )
-          );
+          showSnackBar(event.context , 'enter fax');
         }
         else  if(event.image.path == ''){
-          ScaffoldMessenger.of(event.context).showSnackBar(
-              const SnackBar(
-                content: Text('upload image'),
-              )
-          );
+          showSnackBar(event.context , 'upload photo');
         }
 
         else{

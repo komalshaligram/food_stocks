@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/operation_time/operation_time_bloc.dart';
 import 'package:food_stock/bloc/profile/profile_bloc.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -32,6 +33,10 @@ void main() =>
           BlocProvider(
             create: (context) => Profile3Bloc(),
           ),
+          BlocProvider(
+            create: (context) => OperationTimeBloc(),
+          ),
+
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

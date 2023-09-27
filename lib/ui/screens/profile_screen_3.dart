@@ -13,23 +13,26 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Profile3Route {
-  static Widget get route => const ProfileScreen3();
+  static Widget get route =>  ProfileScreen3();
 }
 
 class ProfileScreen3 extends StatelessWidget {
-  const ProfileScreen3({super.key});
+
+   ProfileScreen3({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => Profile3Bloc(),
-      child: const ProfileScreenWidget(),
+      child:  ProfileScreenWidget(),
     );
   }
 }
 
 class ProfileScreenWidget extends StatelessWidget {
-  const ProfileScreenWidget({super.key});
+   ProfileScreenWidget({super.key});
+  final String temp ='';
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +101,8 @@ class ProfileScreenWidget extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (tag) {
-                      var temp = state.selectCity;
-                      temp = tag;
+                      temp = state.selectCity!;
+                      temp = tag!;
                     },
                   ),
 
@@ -123,7 +126,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.emailController,
                     keyboardType: TextInputType.emailAddress,
-                    hint: "152485",
+                    hint: "test2gmail.com",
                   ),
                   const SizedBox(
                     height: 7,
@@ -134,13 +137,14 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.faxController,
                     keyboardType: TextInputType.number,
-                    hint: "ajsdjg",
+                    hint: AppLocalizations.of(context)!.fax,
                   ),
                   const SizedBox(
                     height: 7,
                   ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.logo_image,
+                    star: '',
                   ),
                   Container(
                     height: screenHeight * 0.2,
@@ -157,55 +161,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         children: [
                           GestureDetector(
                               onTap: () {
-                             //   alertDialog(context);
-                                showDialog(
-                                  context: context,
-                                  builder:(c1) {
-                                    return BlocBuilder<Profile3Bloc, Profile3State>(
-                                      builder: (c1, state) {
-                                        return AlertDialog(
-                                          title: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(AppLocalizations.of(context)!.upload_photo)),
-
-                                          actions:<Widget>[
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                              children: [
-                                                GestureDetector(
-                                                    onTap: (){
-
-                                                      context
-                                                          .read<Profile3Bloc>()
-                                                          .add(Profile3Event.logoFromCameraEvent());
-                                                      Navigator.of(c1).pop();
-
-                                                    },
-                                                    child: Icon(Icons.camera_alt_rounded)),
-                                                GestureDetector(
-                                                    onTap: (){
-
-                                                      context
-                                                          .read<Profile3Bloc>()
-                                                          .add(Profile3Event.logoFromGalleryEvent());
-                                                      Navigator.of(c1).pop();
-                                                    },
-                                                    child: Icon(Icons.photo)),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Text(AppLocalizations.of(context)!.camera),
-                                                Text(AppLocalizations.of(context)!.gallery),
-                                              ],
-                                            ),
-
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }, );
+                               alertDialog(context);
                               },
                               child: state.isImagePick
                                   ? SizedBox(
@@ -270,7 +226,7 @@ class ProfileScreenWidget extends StatelessWidget {
       },
     );
   }
-/*  void alertDialog(BuildContext context){
+ void alertDialog(BuildContext context){
     showDialog(
       context: context,
       builder:(c1) {
@@ -280,7 +236,6 @@ class ProfileScreenWidget extends StatelessWidget {
               title: Align(
                   alignment: Alignment.center,
                   child: Text(AppLocalizations.of(context)!.upload_photo)),
-
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -290,6 +245,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           context
                               .read<Profile3Bloc>()
                               .add(Profile3Event.logoFromCameraEvent());
+                          Navigator.pop(c1);
                         },
                         child: Icon(Icons.camera_alt_rounded)),
                     GestureDetector(
@@ -297,6 +253,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           context
                               .read<Profile3Bloc>()
                               .add(Profile3Event.logoFromGalleryEvent());
+                          Navigator.pop(c1);
                         },
                         child: Icon(Icons.photo)),
                   ],
@@ -314,6 +271,6 @@ class ProfileScreenWidget extends StatelessWidget {
           },
         );
       }, );
-  }*/
+  }
 
 }

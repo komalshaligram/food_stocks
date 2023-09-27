@@ -1,18 +1,16 @@
-
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
 class ButtonWidget extends StatelessWidget {
-  String buttonText;
-  void Function()? onPressed;
-  Color bGColor;
-  Color fontColors;
-  double height;
-  double width;
-  double fontSize;
-  double radius;
-  Color borderColor;
+ final String buttonText;
+ final void Function()? onPressed;
+ final Color bGColor;
+ final  Color fontColors;
+ final double height;
+ final double width;
+ final  double fontSize;
+ final  double radius;
+ final Color borderColor;
   ButtonWidget({super.key, required this.buttonText , this.onPressed , this.bGColor = Colors.white,
      this.fontColors = Colors.white , this.width = double.maxFinite,this.height = 50, this.fontSize = 18,
     this.radius = 10, this.borderColor = Colors.white
@@ -22,6 +20,7 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      alignment: Alignment.center,
       decoration:  BoxDecoration(
         border: Border.all(color: borderColor),
           color: bGColor,

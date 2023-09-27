@@ -29,8 +29,8 @@ class ProfileScreen extends StatelessWidget {
 
 class ProfileScreenWidget extends StatelessWidget {
   final BuildContext con;
-  const ProfileScreenWidget({required this.con,super.key});
-
+   ProfileScreenWidget({required this.con,super.key});
+  String temp = '';
   @override
   Widget build(BuildContext c) {
     final screenWidth = MediaQuery.of(c).size.width;
@@ -38,7 +38,6 @@ class ProfileScreenWidget extends StatelessWidget {
 
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        print('path_____${state.image.path}');
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -96,7 +95,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         top: screenHeight * 0.07,
                         child: GestureDetector(
                             onTap: () {
-                             // alertDialog(con , state.image.path);
+                            //  alertDialog(con);
                               showDialog(
                                 context: context,
                                 builder:(c1) {
@@ -209,8 +208,8 @@ class ProfileScreenWidget extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (tag) {
-                      var temp = state.selectedBusiness;
-                      temp = tag;
+                      temp = state.selectedBusiness!;
+                      temp = tag!;
                     },
                   ),
                   SizedBox(

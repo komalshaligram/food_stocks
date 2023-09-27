@@ -18,8 +18,9 @@ class OperationTimeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OperationTimeBloc(),
-      child: const OperationTimeScreenWidget(),
+      create: (context) => OperationTimeBloc()
+        ..add(OperationTimeEvent.defaultValueAddInListEvent()),
+      child: OperationTimeScreenWidget(),
     );
   }
 }
@@ -54,7 +55,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                  left: screenWidth * 0.04, right: screenWidth * 0.04),
+                  left: screenWidth * 0.04, right: screenWidth * 0.03),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -94,46 +95,46 @@ class OperationTimeScreenWidget extends StatelessWidget {
                   ),
                   OperationTimeRow(
                     dayString: AppLocalizations.of(context)!.sunday,
-                    index: 1,
+                    rowIndex: 0,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString: AppLocalizations.of(context)!.monday,
-                      index: 2),
+                      rowIndex: 1),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString: AppLocalizations.of(context)!.tuesday,
-                      index: 3),
+                      rowIndex: 2),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString: AppLocalizations.of(context)!.wednesday,
-                      index: 4),
+                      rowIndex: 3),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString: AppLocalizations.of(context)!.thursday,
-                      index: 5),
+                      rowIndex: 4),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString:
                           AppLocalizations.of(context)!.friday_and_holiday_eves,
-                      index: 6),
+                      rowIndex: 5),
                   const SizedBox(
                     height: 15,
                   ),
                   OperationTimeRow(
                       dayString:
                           AppLocalizations.of(context)!.saturday_and_holidays,
-                      index: 7),
+                      rowIndex: 6),
                   const SizedBox(
                     height: 20,
                   ),
@@ -174,18 +175,23 @@ class OperationTimeScreenWidget extends StatelessWidget {
 
 class OperationTimeRow extends StatelessWidget {
   final String dayString;
-  final int index;
+  final int rowIndex;
 
-  OperationTimeRow({super.key, required this.dayString, required this.index});
+  OperationTimeRow(
+      {super.key, required this.dayString, required this.rowIndex});
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<OperationTimeBloc, OperationTimeState>(
       builder: (context, state) {
         return Row(
           children: [
+            const SizedBox(
+              width: 13,
+            ),
             SizedBox(
-                width: 100,
+                width: 70,
                 child: Text(
                   dayString,
                   style: AppStyles.rkRegularTextStyle(
@@ -196,24 +202,88 @@ class OperationTimeRow extends StatelessWidget {
             const SizedBox(
               width: 15,
             ),
-            TimeContainer(openingIndex: 1, index: index),
-            const SizedBox(
-              width: 10,
-            ),
-            TimeContainer(openingIndex: 0, index: index),
-            const SizedBox(
-              width: 10,
-            ),
-            Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                color: AppColors.blueColor,
-                borderRadius: BorderRadius.circular(3),
+            SizedBox(
+              width: screenWidth * 0.67,
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: state.OperationTimeList.isNotEmpty
+                    ? state.OperationTimeList[rowIndex].data.length
+                    : 2,
+                itemBuilder: (context, index) {
+                  return state.OperationTimeList.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              TimeContainer(
+                                openingIndex: 1,
+                                index: index,
+                                rowIndex: rowIndex,
+                                dayString: dayString,
+                                time: state.OperationTimeList[rowIndex]
+                                    .data[index].openingTime,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              TimeContainer(
+                                openingIndex: 0,
+                                index: index,
+                                dayString: dayString,
+                                rowIndex: rowIndex,
+                                time: state.OperationTimeList[rowIndex]
+                                    .data[index].closingTime,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              index == 0
+                                  ? Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.blueColor,
+                                        borderRadius: BorderRadius.circular(3),
+                                      ),
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            context
+                                                .read<OperationTimeBloc>()
+                                                .add(OperationTimeEvent
+                                                    .addMoreTimeZoneEvent(
+                                                        rowIndex: rowIndex));
+                                          },
+                                          child: Icon(Icons.add,
+                                              color: AppColors.whiteColor)),
+                                    )
+                                  : Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.redColor,
+                                        borderRadius: BorderRadius.circular(3),
+                                      ),
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            context
+                                                .read<OperationTimeBloc>()
+                                                .add(OperationTimeEvent
+                                                    .deleteTimeZoneEvent(
+                                                  rowIndex: rowIndex,
+                                                  timeIndex: index,
+                                                ));
+                                          },
+                                          child: Icon(Icons.delete,
+                                              color: AppColors.whiteColor)),
+                                    ),
+                            ],
+                          ),
+                        )
+                      : SizedBox();
+                },
               ),
-              child: GestureDetector(
-                  onTap: () {},
-                  child: Icon(Icons.add, color: AppColors.whiteColor)),
             ),
           ],
         );
@@ -225,8 +295,17 @@ class OperationTimeRow extends StatelessWidget {
 class TimeContainer extends StatelessWidget {
   final int openingIndex;
   final int index;
+  final int rowIndex;
+  final String dayString;
+  final String time;
 
-  TimeContainer({super.key, required this.openingIndex, required this.index});
+  TimeContainer(
+      {super.key,
+      required this.openingIndex,
+      required this.index,
+      required this.dayString,
+      required this.time,
+      required this.rowIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -241,34 +320,30 @@ class TimeContainer extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                    index == 1 && openingIndex == 1
-                        ? index == 1 && openingIndex == 0
-                            ? state.time
-                            : state.time
-                        : "",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: 16,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.w400)),
-                GestureDetector(
-                    onTap: () {
-                      context
-                          .read<OperationTimeBloc>()
-                          .add(OperationTimeEvent.timePickerEvent(
-                            context: context,
-                            index: index,
-                            openingIndex: openingIndex,
-                          ));
-                    },
-                    child: Icon(
-                      CupertinoIcons.clock,
-                      color: AppColors.greyColor,
-                    )),
-              ],
+            child: GestureDetector(
+              onTap: () {
+                context.read<OperationTimeBloc>().add(
+                    OperationTimeEvent.timePickerEvent(
+                        context: context,
+                        rowIndex: rowIndex,
+                        timeIndex: index,
+                        openingIndex: openingIndex,
+                        time: time));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(time,
+                      style: AppStyles.rkRegularTextStyle(
+                          size: 16,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.w400)),
+                  Icon(
+                    CupertinoIcons.clock,
+                    color: AppColors.greyColor,
+                  ),
+                ],
+              ),
             ),
           ),
         );

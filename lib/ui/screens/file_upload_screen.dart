@@ -54,10 +54,10 @@ class FileUploadScreenWidget extends StatelessWidget {
             padding: EdgeInsets.only(
                 left: screenWidth * 0.1, right: screenWidth * 0.1),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
-                  height:30,
+                  height:10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +68,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                     ButtonWidget(
                       buttonText: AppLocalizations.of(context)!.taken_down,
                        height: 30,
-                       width: 85,
+                       width: 70,
                       fontSize: 16,
                       radius: 5,
                       bGColor: AppColors.blueColor,
@@ -80,61 +80,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  height: 134,
-                  alignment: Alignment.center,
-                  child: DottedBorder(
-                    color: state.promissoryNote.path == ""
-                        ? AppColors.borderColor
-                        : AppColors.whiteColor,
-                    strokeWidth:state.promissoryNote.path == "" ? 2 : 0,
-                    dashPattern:state.promissoryNote.path == "" ? [5,3] : [1, 0],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<FileUploadBloc>()
-                                  .add(FileUploadEvent.uploadFromCameraEvent(
-                                fileIndex: 1
-                              ));
-                            },
-                            child:  state.promissoryNote.path == ""
-                                ? Icon(
-                              Icons.camera_alt_rounded,
-                              color: AppColors.blueColor,
-                              size: 30,
-                            ) :SizedBox(
-                              height: 130,
-                              width: screenWidth,
-                              child: Image.file(
-                                File(state.promissoryNote.path),
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                                 ),
-                        state.promissoryNote.path == ""
-                            ? Align(
-                          child: Container(
-                            width: screenWidth,
-                            alignment: Alignment.center,
-                            child: Text(
-                              AppLocalizations.of(context)!.upload_photo,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 14,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ):const SizedBox()
-
-                      ],
-                    ),
-                  ),
-                ),
-
+                ContainerWidget(fileIndex: 1),
                  const SizedBox(
                   height: 30,
                 ),
@@ -146,72 +92,20 @@ class FileUploadScreenWidget extends StatelessWidget {
                     ButtonWidget(
                       buttonText: AppLocalizations.of(context)!.taken_down,
                       height: 30,
-                      width: 85,
+                      width: 70,
                       fontSize: 16,
                       radius: 5,
                       bGColor: AppColors.blueColor,
                       onPressed: (){},
                       fontColors: AppColors.whiteColor,
                     ),
+
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  height: 134,
-                  alignment: Alignment.center,
-                  child: DottedBorder(
-                    color: state.personalGuarantee.path == ""
-                        ? AppColors.borderColor
-                        : AppColors.whiteColor,
-                    strokeWidth:state.personalGuarantee.path == "" ? 2 : 0,
-                    dashPattern:state.personalGuarantee.path == "" ? [5,3] : [1, 0],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<FileUploadBloc>()
-                                  .add(FileUploadEvent.uploadFromCameraEvent(
-                                  fileIndex: 2
-                              ));
-                            },
-                            child:  state.personalGuarantee.path == ""
-                                ? Icon(
-                              Icons.camera_alt_rounded,
-                              color: AppColors.blueColor,
-                              size: 30,
-                            ) :SizedBox(
-                              height: 130,
-                              width: screenWidth,
-                              child: Image.file(
-                                File(state.personalGuarantee.path),
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                        ),
-                        state.personalGuarantee.path == ""
-                            ? Align(
-                          child: Container(
-                            width: screenWidth,
-                            alignment: Alignment.center,
-                            child: Text(
-                              AppLocalizations.of(context)!.upload_photo,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 14,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ):const SizedBox()
-
-                      ],
-                    ),
-                  ),
-                ),
+                ContainerWidget(fileIndex: 2),
                 const SizedBox(
                   height: 30,
                 ),
@@ -220,61 +114,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-                Container(
-                  height: 134,
-                  alignment: Alignment.center,
-                  child: DottedBorder(
-                    color: state.photoOfTZ.path == ""
-                        ? AppColors.borderColor
-                        : AppColors.whiteColor,
-                    strokeWidth:state.photoOfTZ.path == "" ? 2 : 0,
-                    dashPattern:state.photoOfTZ.path == "" ? [5,3] : [1, 0],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<FileUploadBloc>()
-                                  .add(FileUploadEvent.uploadFromCameraEvent(
-                                  fileIndex: 3
-                              ));
-                            },
-                            child:  state.photoOfTZ.path == ""
-                                ? Icon(
-                              Icons.camera_alt_rounded,
-                              color: AppColors.blueColor,
-                              size: 30,
-                            ) :SizedBox(
-                              height: 130,
-                              width: screenWidth,
-                              child: Image.file(
-                                File(state.photoOfTZ.path),
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                        ),
-                        state.photoOfTZ.path == ""
-                            ? Align(
-                          child: Container(
-                            width: screenWidth,
-                            alignment: Alignment.center,
-                            child: Text(
-                              AppLocalizations.of(context)!.upload_photo,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 14,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ):const SizedBox()
-
-                      ],
-                    ),
-                  ),
-                ),
-
+                ContainerWidget(fileIndex: 3),
                 const SizedBox(
                   height: 30,
                 ),
@@ -283,61 +123,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  height: 134,
-                  alignment: Alignment.center,
-                  child: DottedBorder(
-                    color: state.businessCertificate.path == ""
-                        ? AppColors.borderColor
-                        : AppColors.whiteColor,
-                    strokeWidth:state.businessCertificate.path == "" ? 2 : 0,
-                    dashPattern:state.businessCertificate.path == "" ? [5,3] : [1, 0],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<FileUploadBloc>()
-                                  .add(FileUploadEvent.uploadFromCameraEvent(
-                                  fileIndex: 4
-                              ));
-                            },
-                            child:  state.businessCertificate.path == ""
-                                ? Icon(
-                              Icons.camera_alt_rounded,
-                              color: AppColors.blueColor,
-                              size: 30,
-                            ) :SizedBox(
-                              height: 130,
-                              width: screenWidth,
-                              child: Image.file(
-                                File(state.businessCertificate.path),
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                        ),
-                        state.businessCertificate.path == ""
-                            ? Align(
-                          child: Container(
-                            width: screenWidth,
-                            alignment: Alignment.center,
-                            child: Text(
-                              AppLocalizations.of(context)!.upload_photo,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 14,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ):const SizedBox()
-
-                      ],
-                    ),
-                  ),
-                ),
-
+                ContainerWidget(fileIndex: 4),
                 const SizedBox(
                   height: 30,
                 ),
@@ -374,10 +160,252 @@ class FileUploadScreenWidget extends StatelessWidget {
   },
 );
   }
+
+
 }
 
 
 
+class ContainerWidget extends StatelessWidget {
+ final int fileIndex;
+   ContainerWidget({super.key , required this.fileIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    return  BlocBuilder<FileUploadBloc, FileUploadState>(
+  builder: (context, state) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Container(
+                  height: screenHeight * 0.2,
+                  alignment: Alignment.center,
+                  child: DottedBorder(
+                    color: state.promissoryNote.path == ""  && fileIndex == 1?
+                         AppColors.borderColor : state.personalGuarantee.path == ""  && fileIndex == 2?  AppColors.borderColor :
+                    state.photoOfTZ.path == "" && fileIndex == 3 ?  AppColors.borderColor :
+                    state.businessCertificate.path == "" && fileIndex == 4?  AppColors.borderColor :
+                         AppColors.whiteColor ,
+
+                 strokeWidth: state.promissoryNote.path == "" && fileIndex == 1?
+                 2 : state.personalGuarantee.path == "" && fileIndex == 2?  2 :
+                 state.photoOfTZ.path == "" && fileIndex == 3 ?  2 :
+                 state.businessCertificate.path == "" && fileIndex == 4 ?  2 :
+                 0,
+
+                    dashPattern: state.promissoryNote.path == "" && fileIndex == 1?
+                    [5,3]  : state.personalGuarantee.path == "" && fileIndex == 2?  [5,3]  :
+                    state.photoOfTZ.path == "" && fileIndex == 3?  [5,3]  :
+                    state.businessCertificate.path == "" && fileIndex == 4?  [5,3]  :
+                    [1,0] ,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              alertDialog(context,fileIndex);
+                            },
+                            child: state.promissoryNote.path != "" && fileIndex == 1
+                                ? SizedBox(
+                              height: 130,
+                              width: screenWidth,
+                              child: Image.file(
+                                File(state.promissoryNote.path),
+                                fit: BoxFit.fill,
+                              )
+                            ) :   state.personalGuarantee.path != "" && fileIndex == 2?
+                            SizedBox(
+                                height: 130,
+                                width: screenWidth,
+                                child: Image.file(
+                                  File(state.personalGuarantee.path),
+                                  fit: BoxFit.fill,
+                                )
+                            ):  state.photoOfTZ.path != "" && fileIndex == 3 ?
+                            SizedBox(
+                                height: 130,
+                                width: screenWidth,
+                                child: Image.file(
+                                  File(state.photoOfTZ.path),
+                                  fit: BoxFit.fill,
+                                )
+                            ) :  state.businessCertificate.path != "" && fileIndex == 4 ? SizedBox(
+                                height: 130,
+                                width: screenWidth,
+                                child: Image.file(
+                                  File(state.businessCertificate.path),
+                                  fit: BoxFit.fill,
+                                )
+                            )
+                                : Icon(
+                              Icons.camera_alt_rounded,
+                              color: AppColors.blueColor,
+                              size: 30,
+                            )
+                                 ),
+
+                        state.promissoryNote.path == "" &&  fileIndex == 1
+                            ? Container(
+                              width: screenWidth,
+                              alignment: Alignment.center,
+                              child: Text(
+                                AppLocalizations.of(context)!.upload_photo,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: 14,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ) : state.personalGuarantee.path == "" &&  fileIndex == 2 ? Container(
+                          width: screenWidth,
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppLocalizations.of(context)!.upload_photo,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: 14,
+                                color: AppColors.textColor,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ) :  state.photoOfTZ.path == "" &&  fileIndex == 3 ?
+                        Container(
+                          width: screenWidth,
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppLocalizations.of(context)!.upload_photo,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: 14,
+                                color: AppColors.textColor,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ) :state.businessCertificate.path == "" &&  fileIndex == 4 ?
+                        Container(
+                          width: screenWidth,
+                          alignment: Alignment.center,
+                          child: Text(
+                            AppLocalizations.of(context)!.upload_photo,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: 14,
+                                color: AppColors.textColor,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )
+                            :const SizedBox()
+
+                      ],
+                    ),
+                  ) ,
+                );
+  },
+);
+  }
+  void alertDialog(BuildContext context , int fileIndex){
+    showDialog(
+      context: context,
+      builder:(c1) {
+        return BlocBuilder<FileUploadBloc, FileUploadState>(
+          builder: (c1, state) {
+            return AlertDialog(
+              title: Align(
+                  alignment: Alignment.center,
+                  child: Text(AppLocalizations.of(context)!.upload_photo)),
+
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                        onTap: (){
+                          context
+                              .read<FileUploadBloc>()
+                              .add(FileUploadEvent.uploadFromCameraEvent(fileIndex: fileIndex));
+                          Navigator.pop(c1);
+                        },
+                        child: Icon(Icons.camera_alt_rounded)),
+                    GestureDetector(
+                        onTap: (){
+                          context
+                              .read<FileUploadBloc>()
+                              .add(FileUploadEvent.uploadFromGalleryEvent(fileIndex: fileIndex));
+                          Navigator.pop(c1);
+                        },
+                        child: Icon(Icons.photo)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(AppLocalizations.of(context)!.camera),
+                    Text(AppLocalizations.of(context)!.gallery),
+                  ],
+                ),
+
+              ],
+            );
+          },
+        );
+      }, );
+
+  }
+}
+
+
+
+
+
+/* Container(
+                  height: 134,
+                  alignment: Alignment.center,
+                  child: DottedBorder(
+                    color: state.businessCertificate.path == ""
+                        ? AppColors.borderColor
+                        : AppColors.whiteColor,
+                    strokeWidth:state.businessCertificate.path == "" ? 2 : 0,
+                    dashPattern:state.businessCertificate.path == "" ? [5,3] : [1, 0],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                            //  alertDialog(context,4);
+                           *//*   context
+                                  .read<FileUploadBloc>()
+                                  .add(FileUploadEvent.uploadFromCameraEvent(
+                                  fileIndex: 4
+                              ));*//*
+                            },
+                            child: state.businessCertificate.path == ""
+                                ? Icon(
+                              Icons.camera_alt_rounded,
+                              color: AppColors.blueColor,
+                              size: 30,
+                            ) :SizedBox(
+                              height: 130,
+                              width: screenWidth,
+                              child: Image.file(
+                                File(state.businessCertificate.path),
+                                fit: BoxFit.fill,
+                              ),
+                            )
+                        ),
+                        state.businessCertificate.path == ""
+                            ? Align(
+                          child: Container(
+                            width: screenWidth,
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppLocalizations.of(context)!.upload_photo,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: 14,
+                                  color: AppColors.textColor,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ):const SizedBox()
+
+                      ],
+                    ),
+                  ),
+                ),*/
 
 
  

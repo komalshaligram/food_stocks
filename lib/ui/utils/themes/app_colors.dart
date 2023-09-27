@@ -12,6 +12,7 @@ class AppColors{
   static Color navSelectedColor = const Color(0xff868E96);
   static Color iconBGColor = const Color(0xffF6F6F6);
   static Color greyColor = const Color(0xff828282);
+  static Color redColor = const Color(0xffFF4D4F);
 
 
 }

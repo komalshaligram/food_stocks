@@ -1,3 +1,4 @@
+/*
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'operation_time_model.freezed.dart';
@@ -11,9 +12,29 @@ class OperationTimeModel with _$OperationTimeModel {
     @JsonKey(name: 'dayString') String? dayString,
     @JsonKey(name: 'index') int? index,
     @JsonKey(name: 'openingTime') String? openingTime,
-    @JsonKey(name: 'openingIndex') String? openingIndex,
+    @JsonKey(name: 'openingIndex') int? openingIndex,
   }) = _OperationTimeModel;
 
   factory OperationTimeModel.fromJson(Map<String, dynamic> json) =>
       _$OperationTimeModelFromJson(json);
+}
+*/
+
+
+
+class OperationTimeModel{
+   List<timeData>data;
+  OperationTimeModel({
+     required this.data
+});
+
+  }
+
+class timeData {
+  String openingTime;
+  String closingTime;
+  timeData({
+     required this.openingTime,required this.closingTime
+  });
+
 }
