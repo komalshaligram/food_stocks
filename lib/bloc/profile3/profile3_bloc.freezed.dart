@@ -19,7 +19,8 @@ mixin _$Profile3Event {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dropDownEvent,
-    required TResult Function() pickLogoEvent,
+    required TResult Function() logoFromCameraEvent,
+    required TResult Function() logoFromGalleryEvent,
     required TResult Function(String city, String address, String email,
             String fax, File image, BuildContext context)
         textFieldValidateEvent,
@@ -28,7 +29,8 @@ mixin _$Profile3Event {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dropDownEvent,
-    TResult? Function()? pickLogoEvent,
+    TResult? Function()? logoFromCameraEvent,
+    TResult? Function()? logoFromGalleryEvent,
     TResult? Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -37,7 +39,8 @@ mixin _$Profile3Event {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dropDownEvent,
-    TResult Function()? pickLogoEvent,
+    TResult Function()? logoFromCameraEvent,
+    TResult Function()? logoFromGalleryEvent,
     TResult Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -47,7 +50,8 @@ mixin _$Profile3Event {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_dropDownEvent value) dropDownEvent,
-    required TResult Function(_pickLogoEvent value) pickLogoEvent,
+    required TResult Function(_logoFromCameraEvent value) logoFromCameraEvent,
+    required TResult Function(_logoFromGalleryEvent value) logoFromGalleryEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
   }) =>
@@ -55,14 +59,16 @@ mixin _$Profile3Event {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
-    TResult? Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult? Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult? Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
-    TResult Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
     required TResult orElse(),
   }) =>
@@ -126,7 +132,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dropDownEvent,
-    required TResult Function() pickLogoEvent,
+    required TResult Function() logoFromCameraEvent,
+    required TResult Function() logoFromGalleryEvent,
     required TResult Function(String city, String address, String email,
             String fax, File image, BuildContext context)
         textFieldValidateEvent,
@@ -138,7 +145,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dropDownEvent,
-    TResult? Function()? pickLogoEvent,
+    TResult? Function()? logoFromCameraEvent,
+    TResult? Function()? logoFromGalleryEvent,
     TResult? Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -150,7 +158,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dropDownEvent,
-    TResult Function()? pickLogoEvent,
+    TResult Function()? logoFromCameraEvent,
+    TResult Function()? logoFromGalleryEvent,
     TResult Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -166,7 +175,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_dropDownEvent value) dropDownEvent,
-    required TResult Function(_pickLogoEvent value) pickLogoEvent,
+    required TResult Function(_logoFromCameraEvent value) logoFromCameraEvent,
+    required TResult Function(_logoFromGalleryEvent value) logoFromGalleryEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
   }) {
@@ -177,7 +187,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
-    TResult? Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult? Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult? Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
   }) {
     return dropDownEvent?.call(this);
@@ -187,7 +198,8 @@ class _$_dropDownEvent implements _dropDownEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
-    TResult Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
     required TResult orElse(),
   }) {
@@ -203,35 +215,35 @@ abstract class _dropDownEvent implements Profile3Event {
 }
 
 /// @nodoc
-abstract class _$$_pickLogoEventCopyWith<$Res> {
-  factory _$$_pickLogoEventCopyWith(
-          _$_pickLogoEvent value, $Res Function(_$_pickLogoEvent) then) =
-      __$$_pickLogoEventCopyWithImpl<$Res>;
+abstract class _$$_logoFromCameraEventCopyWith<$Res> {
+  factory _$$_logoFromCameraEventCopyWith(_$_logoFromCameraEvent value,
+          $Res Function(_$_logoFromCameraEvent) then) =
+      __$$_logoFromCameraEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_pickLogoEventCopyWithImpl<$Res>
-    extends _$Profile3EventCopyWithImpl<$Res, _$_pickLogoEvent>
-    implements _$$_pickLogoEventCopyWith<$Res> {
-  __$$_pickLogoEventCopyWithImpl(
-      _$_pickLogoEvent _value, $Res Function(_$_pickLogoEvent) _then)
+class __$$_logoFromCameraEventCopyWithImpl<$Res>
+    extends _$Profile3EventCopyWithImpl<$Res, _$_logoFromCameraEvent>
+    implements _$$_logoFromCameraEventCopyWith<$Res> {
+  __$$_logoFromCameraEventCopyWithImpl(_$_logoFromCameraEvent _value,
+      $Res Function(_$_logoFromCameraEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_pickLogoEvent implements _pickLogoEvent {
-  _$_pickLogoEvent();
+class _$_logoFromCameraEvent implements _logoFromCameraEvent {
+  _$_logoFromCameraEvent();
 
   @override
   String toString() {
-    return 'Profile3Event.pickLogoEvent()';
+    return 'Profile3Event.logoFromCameraEvent()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_pickLogoEvent);
+        (other.runtimeType == runtimeType && other is _$_logoFromCameraEvent);
   }
 
   @override
@@ -241,38 +253,41 @@ class _$_pickLogoEvent implements _pickLogoEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dropDownEvent,
-    required TResult Function() pickLogoEvent,
+    required TResult Function() logoFromCameraEvent,
+    required TResult Function() logoFromGalleryEvent,
     required TResult Function(String city, String address, String email,
             String fax, File image, BuildContext context)
         textFieldValidateEvent,
   }) {
-    return pickLogoEvent();
+    return logoFromCameraEvent();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dropDownEvent,
-    TResult? Function()? pickLogoEvent,
+    TResult? Function()? logoFromCameraEvent,
+    TResult? Function()? logoFromGalleryEvent,
     TResult? Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
   }) {
-    return pickLogoEvent?.call();
+    return logoFromCameraEvent?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dropDownEvent,
-    TResult Function()? pickLogoEvent,
+    TResult Function()? logoFromCameraEvent,
+    TResult Function()? logoFromGalleryEvent,
     TResult Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
     required TResult orElse(),
   }) {
-    if (pickLogoEvent != null) {
-      return pickLogoEvent();
+    if (logoFromCameraEvent != null) {
+      return logoFromCameraEvent();
     }
     return orElse();
   }
@@ -281,40 +296,164 @@ class _$_pickLogoEvent implements _pickLogoEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_dropDownEvent value) dropDownEvent,
-    required TResult Function(_pickLogoEvent value) pickLogoEvent,
+    required TResult Function(_logoFromCameraEvent value) logoFromCameraEvent,
+    required TResult Function(_logoFromGalleryEvent value) logoFromGalleryEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
   }) {
-    return pickLogoEvent(this);
+    return logoFromCameraEvent(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
-    TResult? Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult? Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult? Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
   }) {
-    return pickLogoEvent?.call(this);
+    return logoFromCameraEvent?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
-    TResult Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
     required TResult orElse(),
   }) {
-    if (pickLogoEvent != null) {
-      return pickLogoEvent(this);
+    if (logoFromCameraEvent != null) {
+      return logoFromCameraEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _pickLogoEvent implements Profile3Event {
-  factory _pickLogoEvent() = _$_pickLogoEvent;
+abstract class _logoFromCameraEvent implements Profile3Event {
+  factory _logoFromCameraEvent() = _$_logoFromCameraEvent;
+}
+
+/// @nodoc
+abstract class _$$_logoFromGalleryEventCopyWith<$Res> {
+  factory _$$_logoFromGalleryEventCopyWith(_$_logoFromGalleryEvent value,
+          $Res Function(_$_logoFromGalleryEvent) then) =
+      __$$_logoFromGalleryEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_logoFromGalleryEventCopyWithImpl<$Res>
+    extends _$Profile3EventCopyWithImpl<$Res, _$_logoFromGalleryEvent>
+    implements _$$_logoFromGalleryEventCopyWith<$Res> {
+  __$$_logoFromGalleryEventCopyWithImpl(_$_logoFromGalleryEvent _value,
+      $Res Function(_$_logoFromGalleryEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_logoFromGalleryEvent implements _logoFromGalleryEvent {
+  _$_logoFromGalleryEvent();
+
+  @override
+  String toString() {
+    return 'Profile3Event.logoFromGalleryEvent()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_logoFromGalleryEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() dropDownEvent,
+    required TResult Function() logoFromCameraEvent,
+    required TResult Function() logoFromGalleryEvent,
+    required TResult Function(String city, String address, String email,
+            String fax, File image, BuildContext context)
+        textFieldValidateEvent,
+  }) {
+    return logoFromGalleryEvent();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? dropDownEvent,
+    TResult? Function()? logoFromCameraEvent,
+    TResult? Function()? logoFromGalleryEvent,
+    TResult? Function(String city, String address, String email, String fax,
+            File image, BuildContext context)?
+        textFieldValidateEvent,
+  }) {
+    return logoFromGalleryEvent?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? dropDownEvent,
+    TResult Function()? logoFromCameraEvent,
+    TResult Function()? logoFromGalleryEvent,
+    TResult Function(String city, String address, String email, String fax,
+            File image, BuildContext context)?
+        textFieldValidateEvent,
+    required TResult orElse(),
+  }) {
+    if (logoFromGalleryEvent != null) {
+      return logoFromGalleryEvent();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_dropDownEvent value) dropDownEvent,
+    required TResult Function(_logoFromCameraEvent value) logoFromCameraEvent,
+    required TResult Function(_logoFromGalleryEvent value) logoFromGalleryEvent,
+    required TResult Function(_textFieldValidateEvent value)
+        textFieldValidateEvent,
+  }) {
+    return logoFromGalleryEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_dropDownEvent value)? dropDownEvent,
+    TResult? Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult? Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
+    TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
+  }) {
+    return logoFromGalleryEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_dropDownEvent value)? dropDownEvent,
+    TResult Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
+    TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
+    required TResult orElse(),
+  }) {
+    if (logoFromGalleryEvent != null) {
+      return logoFromGalleryEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _logoFromGalleryEvent implements Profile3Event {
+  factory _logoFromGalleryEvent() = _$_logoFromGalleryEvent;
 }
 
 /// @nodoc
@@ -436,7 +575,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dropDownEvent,
-    required TResult Function() pickLogoEvent,
+    required TResult Function() logoFromCameraEvent,
+    required TResult Function() logoFromGalleryEvent,
     required TResult Function(String city, String address, String email,
             String fax, File image, BuildContext context)
         textFieldValidateEvent,
@@ -448,7 +588,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dropDownEvent,
-    TResult? Function()? pickLogoEvent,
+    TResult? Function()? logoFromCameraEvent,
+    TResult? Function()? logoFromGalleryEvent,
     TResult? Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -461,7 +602,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dropDownEvent,
-    TResult Function()? pickLogoEvent,
+    TResult Function()? logoFromCameraEvent,
+    TResult Function()? logoFromGalleryEvent,
     TResult Function(String city, String address, String email, String fax,
             File image, BuildContext context)?
         textFieldValidateEvent,
@@ -477,7 +619,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_dropDownEvent value) dropDownEvent,
-    required TResult Function(_pickLogoEvent value) pickLogoEvent,
+    required TResult Function(_logoFromCameraEvent value) logoFromCameraEvent,
+    required TResult Function(_logoFromGalleryEvent value) logoFromGalleryEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
   }) {
@@ -488,7 +631,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
-    TResult? Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult? Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult? Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
   }) {
     return textFieldValidateEvent?.call(this);
@@ -498,7 +642,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
-    TResult Function(_pickLogoEvent value)? pickLogoEvent,
+    TResult Function(_logoFromCameraEvent value)? logoFromCameraEvent,
+    TResult Function(_logoFromGalleryEvent value)? logoFromGalleryEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
     required TResult orElse(),
   }) {

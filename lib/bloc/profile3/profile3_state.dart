@@ -11,8 +11,6 @@ class Profile3State with _$Profile3State{
     required File image,
     required bool isImagePick,
 
-
-
   }) = _Profile3State;
 
   factory Profile3State.initial()=> Profile3State(

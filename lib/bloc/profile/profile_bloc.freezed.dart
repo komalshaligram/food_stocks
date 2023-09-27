@@ -28,7 +28,8 @@ mixin _$ProfileEvent {
             BuildContext context,
             String selectedBusiness)
         textFieldValidateEvent,
-    required TResult Function() pickProfilePicEvent,
+    required TResult Function() profilePicFromCameraEvent,
+    required TResult Function() profilePicFromGalleryEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -37,7 +38,8 @@ mixin _$ProfileEvent {
     TResult? Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult? Function()? pickProfilePicEvent,
+    TResult? Function()? profilePicFromCameraEvent,
+    TResult? Function()? profilePicFromGalleryEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,7 +48,8 @@ mixin _$ProfileEvent {
     TResult Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult Function()? pickProfilePicEvent,
+    TResult Function()? profilePicFromCameraEvent,
+    TResult Function()? profilePicFromGalleryEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -55,21 +58,30 @@ mixin _$ProfileEvent {
     required TResult Function(_dropDownEvent value) dropDownEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
-    required TResult Function(_pickProfilePicEvent value) pickProfilePicEvent,
+    required TResult Function(_profilePicFromCameraEvent value)
+        profilePicFromCameraEvent,
+    required TResult Function(_profilePicFromGalleryEvent value)
+        profilePicFromGalleryEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult? Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult? Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult? Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -141,7 +153,8 @@ class _$_dropDownEvent implements _dropDownEvent {
             BuildContext context,
             String selectedBusiness)
         textFieldValidateEvent,
-    required TResult Function() pickProfilePicEvent,
+    required TResult Function() profilePicFromCameraEvent,
+    required TResult Function() profilePicFromGalleryEvent,
   }) {
     return dropDownEvent();
   }
@@ -153,7 +166,8 @@ class _$_dropDownEvent implements _dropDownEvent {
     TResult? Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult? Function()? pickProfilePicEvent,
+    TResult? Function()? profilePicFromCameraEvent,
+    TResult? Function()? profilePicFromGalleryEvent,
   }) {
     return dropDownEvent?.call();
   }
@@ -165,7 +179,8 @@ class _$_dropDownEvent implements _dropDownEvent {
     TResult Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult Function()? pickProfilePicEvent,
+    TResult Function()? profilePicFromCameraEvent,
+    TResult Function()? profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
     if (dropDownEvent != null) {
@@ -180,7 +195,10 @@ class _$_dropDownEvent implements _dropDownEvent {
     required TResult Function(_dropDownEvent value) dropDownEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
-    required TResult Function(_pickProfilePicEvent value) pickProfilePicEvent,
+    required TResult Function(_profilePicFromCameraEvent value)
+        profilePicFromCameraEvent,
+    required TResult Function(_profilePicFromGalleryEvent value)
+        profilePicFromGalleryEvent,
   }) {
     return dropDownEvent(this);
   }
@@ -190,7 +208,10 @@ class _$_dropDownEvent implements _dropDownEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult? Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult? Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult? Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
   }) {
     return dropDownEvent?.call(this);
   }
@@ -200,7 +221,10 @@ class _$_dropDownEvent implements _dropDownEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
     if (dropDownEvent != null) {
@@ -354,7 +378,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
             BuildContext context,
             String selectedBusiness)
         textFieldValidateEvent,
-    required TResult Function() pickProfilePicEvent,
+    required TResult Function() profilePicFromCameraEvent,
+    required TResult Function() profilePicFromGalleryEvent,
   }) {
     return textFieldValidateEvent(
         businessName, hp, owner, id, contact, context, selectedBusiness);
@@ -367,7 +392,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
     TResult? Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult? Function()? pickProfilePicEvent,
+    TResult? Function()? profilePicFromCameraEvent,
+    TResult? Function()? profilePicFromGalleryEvent,
   }) {
     return textFieldValidateEvent?.call(
         businessName, hp, owner, id, contact, context, selectedBusiness);
@@ -380,7 +406,8 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
     TResult Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult Function()? pickProfilePicEvent,
+    TResult Function()? profilePicFromCameraEvent,
+    TResult Function()? profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
     if (textFieldValidateEvent != null) {
@@ -396,7 +423,10 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
     required TResult Function(_dropDownEvent value) dropDownEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
-    required TResult Function(_pickProfilePicEvent value) pickProfilePicEvent,
+    required TResult Function(_profilePicFromCameraEvent value)
+        profilePicFromCameraEvent,
+    required TResult Function(_profilePicFromGalleryEvent value)
+        profilePicFromGalleryEvent,
   }) {
     return textFieldValidateEvent(this);
   }
@@ -406,7 +436,10 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult? Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult? Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult? Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
   }) {
     return textFieldValidateEvent?.call(this);
   }
@@ -416,7 +449,10 @@ class _$_textFieldValidateEvent implements _textFieldValidateEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
     if (textFieldValidateEvent != null) {
@@ -449,35 +485,38 @@ abstract class _textFieldValidateEvent implements ProfileEvent {
 }
 
 /// @nodoc
-abstract class _$$_pickProfilePicEventCopyWith<$Res> {
-  factory _$$_pickProfilePicEventCopyWith(_$_pickProfilePicEvent value,
-          $Res Function(_$_pickProfilePicEvent) then) =
-      __$$_pickProfilePicEventCopyWithImpl<$Res>;
+abstract class _$$_profilePicFromCameraEventCopyWith<$Res> {
+  factory _$$_profilePicFromCameraEventCopyWith(
+          _$_profilePicFromCameraEvent value,
+          $Res Function(_$_profilePicFromCameraEvent) then) =
+      __$$_profilePicFromCameraEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_pickProfilePicEventCopyWithImpl<$Res>
-    extends _$ProfileEventCopyWithImpl<$Res, _$_pickProfilePicEvent>
-    implements _$$_pickProfilePicEventCopyWith<$Res> {
-  __$$_pickProfilePicEventCopyWithImpl(_$_pickProfilePicEvent _value,
-      $Res Function(_$_pickProfilePicEvent) _then)
+class __$$_profilePicFromCameraEventCopyWithImpl<$Res>
+    extends _$ProfileEventCopyWithImpl<$Res, _$_profilePicFromCameraEvent>
+    implements _$$_profilePicFromCameraEventCopyWith<$Res> {
+  __$$_profilePicFromCameraEventCopyWithImpl(
+      _$_profilePicFromCameraEvent _value,
+      $Res Function(_$_profilePicFromCameraEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_pickProfilePicEvent implements _pickProfilePicEvent {
-  _$_pickProfilePicEvent();
+class _$_profilePicFromCameraEvent implements _profilePicFromCameraEvent {
+  _$_profilePicFromCameraEvent();
 
   @override
   String toString() {
-    return 'ProfileEvent.pickProfilePicEvent()';
+    return 'ProfileEvent.profilePicFromCameraEvent()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_pickProfilePicEvent);
+        (other.runtimeType == runtimeType &&
+            other is _$_profilePicFromCameraEvent);
   }
 
   @override
@@ -496,9 +535,10 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
             BuildContext context,
             String selectedBusiness)
         textFieldValidateEvent,
-    required TResult Function() pickProfilePicEvent,
+    required TResult Function() profilePicFromCameraEvent,
+    required TResult Function() profilePicFromGalleryEvent,
   }) {
-    return pickProfilePicEvent();
+    return profilePicFromCameraEvent();
   }
 
   @override
@@ -508,9 +548,10 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
     TResult? Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult? Function()? pickProfilePicEvent,
+    TResult? Function()? profilePicFromCameraEvent,
+    TResult? Function()? profilePicFromGalleryEvent,
   }) {
-    return pickProfilePicEvent?.call();
+    return profilePicFromCameraEvent?.call();
   }
 
   @override
@@ -520,11 +561,12 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
     TResult Function(String businessName, String hp, String owner, String id,
             String contact, BuildContext context, String selectedBusiness)?
         textFieldValidateEvent,
-    TResult Function()? pickProfilePicEvent,
+    TResult Function()? profilePicFromCameraEvent,
+    TResult Function()? profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
-    if (pickProfilePicEvent != null) {
-      return pickProfilePicEvent();
+    if (profilePicFromCameraEvent != null) {
+      return profilePicFromCameraEvent();
     }
     return orElse();
   }
@@ -535,9 +577,12 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
     required TResult Function(_dropDownEvent value) dropDownEvent,
     required TResult Function(_textFieldValidateEvent value)
         textFieldValidateEvent,
-    required TResult Function(_pickProfilePicEvent value) pickProfilePicEvent,
+    required TResult Function(_profilePicFromCameraEvent value)
+        profilePicFromCameraEvent,
+    required TResult Function(_profilePicFromGalleryEvent value)
+        profilePicFromGalleryEvent,
   }) {
-    return pickProfilePicEvent(this);
+    return profilePicFromCameraEvent(this);
   }
 
   @override
@@ -545,9 +590,12 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_dropDownEvent value)? dropDownEvent,
     TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult? Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult? Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult? Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
   }) {
-    return pickProfilePicEvent?.call(this);
+    return profilePicFromCameraEvent?.call(this);
   }
 
   @override
@@ -555,24 +603,162 @@ class _$_pickProfilePicEvent implements _pickProfilePicEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_dropDownEvent value)? dropDownEvent,
     TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
-    TResult Function(_pickProfilePicEvent value)? pickProfilePicEvent,
+    TResult Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
     required TResult orElse(),
   }) {
-    if (pickProfilePicEvent != null) {
-      return pickProfilePicEvent(this);
+    if (profilePicFromCameraEvent != null) {
+      return profilePicFromCameraEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _pickProfilePicEvent implements ProfileEvent {
-  factory _pickProfilePicEvent() = _$_pickProfilePicEvent;
+abstract class _profilePicFromCameraEvent implements ProfileEvent {
+  factory _profilePicFromCameraEvent() = _$_profilePicFromCameraEvent;
+}
+
+/// @nodoc
+abstract class _$$_profilePicFromGalleryEventCopyWith<$Res> {
+  factory _$$_profilePicFromGalleryEventCopyWith(
+          _$_profilePicFromGalleryEvent value,
+          $Res Function(_$_profilePicFromGalleryEvent) then) =
+      __$$_profilePicFromGalleryEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_profilePicFromGalleryEventCopyWithImpl<$Res>
+    extends _$ProfileEventCopyWithImpl<$Res, _$_profilePicFromGalleryEvent>
+    implements _$$_profilePicFromGalleryEventCopyWith<$Res> {
+  __$$_profilePicFromGalleryEventCopyWithImpl(
+      _$_profilePicFromGalleryEvent _value,
+      $Res Function(_$_profilePicFromGalleryEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_profilePicFromGalleryEvent implements _profilePicFromGalleryEvent {
+  _$_profilePicFromGalleryEvent();
+
+  @override
+  String toString() {
+    return 'ProfileEvent.profilePicFromGalleryEvent()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_profilePicFromGalleryEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() dropDownEvent,
+    required TResult Function(
+            String businessName,
+            String hp,
+            String owner,
+            String id,
+            String contact,
+            BuildContext context,
+            String selectedBusiness)
+        textFieldValidateEvent,
+    required TResult Function() profilePicFromCameraEvent,
+    required TResult Function() profilePicFromGalleryEvent,
+  }) {
+    return profilePicFromGalleryEvent();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? dropDownEvent,
+    TResult? Function(String businessName, String hp, String owner, String id,
+            String contact, BuildContext context, String selectedBusiness)?
+        textFieldValidateEvent,
+    TResult? Function()? profilePicFromCameraEvent,
+    TResult? Function()? profilePicFromGalleryEvent,
+  }) {
+    return profilePicFromGalleryEvent?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? dropDownEvent,
+    TResult Function(String businessName, String hp, String owner, String id,
+            String contact, BuildContext context, String selectedBusiness)?
+        textFieldValidateEvent,
+    TResult Function()? profilePicFromCameraEvent,
+    TResult Function()? profilePicFromGalleryEvent,
+    required TResult orElse(),
+  }) {
+    if (profilePicFromGalleryEvent != null) {
+      return profilePicFromGalleryEvent();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_dropDownEvent value) dropDownEvent,
+    required TResult Function(_textFieldValidateEvent value)
+        textFieldValidateEvent,
+    required TResult Function(_profilePicFromCameraEvent value)
+        profilePicFromCameraEvent,
+    required TResult Function(_profilePicFromGalleryEvent value)
+        profilePicFromGalleryEvent,
+  }) {
+    return profilePicFromGalleryEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_dropDownEvent value)? dropDownEvent,
+    TResult? Function(_textFieldValidateEvent value)? textFieldValidateEvent,
+    TResult? Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult? Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
+  }) {
+    return profilePicFromGalleryEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_dropDownEvent value)? dropDownEvent,
+    TResult Function(_textFieldValidateEvent value)? textFieldValidateEvent,
+    TResult Function(_profilePicFromCameraEvent value)?
+        profilePicFromCameraEvent,
+    TResult Function(_profilePicFromGalleryEvent value)?
+        profilePicFromGalleryEvent,
+    required TResult orElse(),
+  }) {
+    if (profilePicFromGalleryEvent != null) {
+      return profilePicFromGalleryEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _profilePicFromGalleryEvent implements ProfileEvent {
+  factory _profilePicFromGalleryEvent() = _$_profilePicFromGalleryEvent;
 }
 
 /// @nodoc
 mixin _$ProfileState {
   File get image => throw _privateConstructorUsedError;
-  bool get isImagePick => throw _privateConstructorUsedError;
   String? get selectedBusiness => throw _privateConstructorUsedError;
   List<String> get institutionalList => throw _privateConstructorUsedError;
   TextEditingController get businessNameController =>
@@ -597,7 +783,6 @@ abstract class $ProfileStateCopyWith<$Res> {
   @useResult
   $Res call(
       {File image,
-      bool isImagePick,
       String? selectedBusiness,
       List<String> institutionalList,
       TextEditingController businessNameController,
@@ -621,7 +806,6 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
   @override
   $Res call({
     Object? image = null,
-    Object? isImagePick = null,
     Object? selectedBusiness = freezed,
     Object? institutionalList = null,
     Object? businessNameController = null,
@@ -635,10 +819,6 @@ class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as File,
-      isImagePick: null == isImagePick
-          ? _value.isImagePick
-          : isImagePick // ignore: cast_nullable_to_non_nullable
-              as bool,
       selectedBusiness: freezed == selectedBusiness
           ? _value.selectedBusiness
           : selectedBusiness // ignore: cast_nullable_to_non_nullable
@@ -681,7 +861,6 @@ abstract class _$$_ProfileStateCopyWith<$Res>
   @useResult
   $Res call(
       {File image,
-      bool isImagePick,
       String? selectedBusiness,
       List<String> institutionalList,
       TextEditingController businessNameController,
@@ -703,7 +882,6 @@ class __$$_ProfileStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? image = null,
-    Object? isImagePick = null,
     Object? selectedBusiness = freezed,
     Object? institutionalList = null,
     Object? businessNameController = null,
@@ -717,10 +895,6 @@ class __$$_ProfileStateCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as File,
-      isImagePick: null == isImagePick
-          ? _value.isImagePick
-          : isImagePick // ignore: cast_nullable_to_non_nullable
-              as bool,
       selectedBusiness: freezed == selectedBusiness
           ? _value.selectedBusiness
           : selectedBusiness // ignore: cast_nullable_to_non_nullable
@@ -758,7 +932,6 @@ class __$$_ProfileStateCopyWithImpl<$Res>
 class _$_ProfileState implements _ProfileState {
   const _$_ProfileState(
       {required this.image,
-      required this.isImagePick,
       required this.selectedBusiness,
       required final List<String> institutionalList,
       required this.businessNameController,
@@ -770,8 +943,6 @@ class _$_ProfileState implements _ProfileState {
 
   @override
   final File image;
-  @override
-  final bool isImagePick;
   @override
   final String? selectedBusiness;
   final List<String> _institutionalList;
@@ -796,7 +967,7 @@ class _$_ProfileState implements _ProfileState {
 
   @override
   String toString() {
-    return 'ProfileState(image: $image, isImagePick: $isImagePick, selectedBusiness: $selectedBusiness, institutionalList: $institutionalList, businessNameController: $businessNameController, hpController: $hpController, ownerController: $ownerController, idController: $idController, contactController: $contactController)';
+    return 'ProfileState(image: $image, selectedBusiness: $selectedBusiness, institutionalList: $institutionalList, businessNameController: $businessNameController, hpController: $hpController, ownerController: $ownerController, idController: $idController, contactController: $contactController)';
   }
 
   @override
@@ -805,8 +976,6 @@ class _$_ProfileState implements _ProfileState {
         (other.runtimeType == runtimeType &&
             other is _$_ProfileState &&
             (identical(other.image, image) || other.image == image) &&
-            (identical(other.isImagePick, isImagePick) ||
-                other.isImagePick == isImagePick) &&
             (identical(other.selectedBusiness, selectedBusiness) ||
                 other.selectedBusiness == selectedBusiness) &&
             const DeepCollectionEquality()
@@ -827,7 +996,6 @@ class _$_ProfileState implements _ProfileState {
   int get hashCode => Object.hash(
       runtimeType,
       image,
-      isImagePick,
       selectedBusiness,
       const DeepCollectionEquality().hash(_institutionalList),
       businessNameController,
@@ -846,7 +1014,6 @@ class _$_ProfileState implements _ProfileState {
 abstract class _ProfileState implements ProfileState {
   const factory _ProfileState(
           {required final File image,
-          required final bool isImagePick,
           required final String? selectedBusiness,
           required final List<String> institutionalList,
           required final TextEditingController businessNameController,
@@ -858,8 +1025,6 @@ abstract class _ProfileState implements ProfileState {
 
   @override
   File get image;
-  @override
-  bool get isImagePick;
   @override
   String? get selectedBusiness;
   @override

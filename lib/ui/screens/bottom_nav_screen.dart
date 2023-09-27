@@ -110,8 +110,8 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   Widget _pageContainers(
       {required double screenHeight,
-      required double screenWidth,
-      required BottomNavState state}) {
+        required double screenWidth,
+        required BottomNavState state}) {
     return Container(
       height: screenHeight,
       width: screenWidth,
@@ -152,16 +152,16 @@ class BottomNavScreenWidget extends StatelessWidget {
             onTap: onTap,
             child: Center(
                 child: SvgPicture.asset(
-              img,
-              height: 26,
-              width: 26,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  pos == state.index
-                      ? AppColors.whiteColor
-                      : AppColors.navSelectedColor,
-                  BlendMode.srcIn),
-            )),
+                  img,
+                  height: 26,
+                  width: 26,
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      pos == state.index
+                          ? AppColors.whiteColor
+                          : AppColors.navSelectedColor,
+                      BlendMode.srcIn),
+                )),
           ),
         ),
         isCart == false

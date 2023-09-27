@@ -18,6 +18,7 @@ import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
+import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/profile_screen_3.dart';
 import '../ui/screens/store_screen.dart';
@@ -47,6 +48,8 @@ enum RouteDefine {
   messageContentScreen,
   storeScreen,
   otpScreen,
+  fileUploadScreen
+
 
 }
 
@@ -60,6 +63,7 @@ class AppRouting {
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
       RouteDefine.profileScreen3.name: (_) => Profile3Route.route,
       RouteDefine.operationTimeScreen.name: (_) => OperationTimeScreenRoute.route,
+      RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
 
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
     //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,

@@ -4,7 +4,25 @@ part of 'operation_time_bloc.dart';
 @freezed
 class OperationTimeEvent with _$OperationTimeEvent{
 
-  factory OperationTimeEvent.dropDownEvent() = _dropDownEvent;
+  factory OperationTimeEvent.timePickerEvent({
+    required BuildContext context,
+    required int openingIndex,
+    required int rowIndex,
+    required int timeIndex,
+    required String time,
+}) = _timePickerEvent;
 
+  factory OperationTimeEvent.defaultValueAddInListEvent(
+  ) = _defaultValueAddInListEvent;
 
+  factory OperationTimeEvent.addMoreTimeZoneEvent({
+    required int rowIndex,
+}
+      ) = _addMoreTimeZoneEventEvent;
+
+  factory OperationTimeEvent.deleteTimeZoneEvent({
+    required int rowIndex,
+    required int timeIndex,
+  }
+      ) = _deleteTimeZoneEvent;
 }
