@@ -8,7 +8,6 @@ part 'log_in_bloc.freezed.dart';
 class LogInBloc extends Bloc<LogInEvent, LogInState> {
   LogInBloc() : super(const LogInState.initial()) {
     on<LogInEvent>((event, emit) {
-      // TODO: implement event handler
     });
   }
 }

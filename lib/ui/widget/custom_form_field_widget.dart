@@ -34,9 +34,10 @@ class CustomFormField extends StatelessWidget {
     this.isCapitalized = false,
     this.maxLines = 1,
     this.isLabelEnabled = true,
+    this.isBorderVisible = true,
     this.textFieldLabel,
     this.textFieldLabelSize,
-    this.inputformet,
+    this.inputformet, this.textInputAction,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
@@ -45,7 +46,7 @@ class CustomFormField extends StatelessWidget {
         _controller = controller,
         super(key: key);
   final Widget? postIconBtn;
-
+  final bool isBorderVisible;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final BoxConstraints? suffixIconConstraints;
@@ -69,6 +70,7 @@ class CustomFormField extends StatelessWidget {
   final String? filteringRegex;
   final bool isOtp;
   final bool isPassword;
+  final TextInputAction? textInputAction;
   final TextEditingController _controller;
   final ValueChanged<String>? getxController;
   final GestureTapCallback? onTap;
@@ -87,7 +89,7 @@ class CustomFormField extends StatelessWidget {
       //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),
       maxLines: maxLines,
       enabled: isEnabled,
-
+      textInputAction: textInputAction,
       keyboardType: _keyboardType,
       obscureText: isObscure,
       onChanged: onChangeValue,
@@ -104,10 +106,8 @@ class CustomFormField extends StatelessWidget {
           suffixIcon: postIconBtn,
           prefixIcon: prefixIcon,
           suffix: suffixIcon,
-
           hintText: _hint,
           filled: true,
-          //<-- SEE HERE
           fillColor: _fillColor,
           hintStyle: TextStyle(
             color: AppColors.textColor,
@@ -118,19 +118,19 @@ class CustomFormField extends StatelessWidget {
               fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide: BorderSide(
+              borderSide: isBorderVisible ? BorderSide(
                 color: AppColors.borderColor,
                 width: 1,
-              )),
+              ) : BorderSide.none) ,
           //  contentPadding:  const EdgeInsets.fromLTRB(18.0, 22.0, 0.0, 0.0),
           contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: BorderSide(color: AppColors.borderColor),
+            borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: BorderSide(color: AppColors.borderColor),
+            borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
           ),
           /*    errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -141,10 +141,10 @@ class CustomFormField extends StatelessWidget {
           ),*/
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: BorderSide(
+            borderSide: isBorderVisible ? BorderSide(
               color: AppColors.mainColor,
               width: 1,
-            ),
+            ) : BorderSide.none,
           )),
     );
   }
