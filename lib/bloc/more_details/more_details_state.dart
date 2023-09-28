@@ -14,8 +14,8 @@ class MoreDetailsState with _$MoreDetailsState{
   }) = _MoreDetailsState;
 
   factory MoreDetailsState.initial()=> MoreDetailsState(
-    selectCity: 'q',
-    institutionalList: ['q','b','c','d','e'],
+    selectCity: 'Acre',
+    institutionalList: ['Acre','Arad','Dimona','Hadera','Ness'],
     addressController: TextEditingController(),
     emailController: TextEditingController(),
     faxController: TextEditingController(),

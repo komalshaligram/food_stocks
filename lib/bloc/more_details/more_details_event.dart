@@ -4,9 +4,11 @@ part of 'more_details_bloc.dart';
 class MoreDetailsEvent with _$MoreDetailsEvent {
   factory MoreDetailsEvent.dropDownEvent() = _dropDownEvent;
 
-  factory MoreDetailsEvent.logoFromCameraEvent() = _logoFromCameraEvent;
+  factory MoreDetailsEvent.logoFromCameraEvent({required BuildContext context}) = _logoFromCameraEvent;
 
-  factory MoreDetailsEvent.logoFromGalleryEvent() = _logoFromGalleryEvent;
+  factory MoreDetailsEvent.logoFromGalleryEvent({required BuildContext context}) = _logoFromGalleryEvent;
+
+  factory MoreDetailsEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
 
   factory MoreDetailsEvent.textFieldValidateEvent(
       {required String city,
@@ -15,4 +17,7 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       required String fax,
       required File image,
       required BuildContext context}) = _textFieldValidateEvent;
+
+  factory MoreDetailsEvent.navigateToOperationTimeScreenEvent({required BuildContext context}) =
+  _navigateToOperationTimeScreenEvent;
 }

@@ -11,8 +11,10 @@ class AuthFormValidation {
       case AppStrings.emailValString:
         return formFieldValidation.emailField(value);
 
-      case "phoneNum":
-        return formFieldValidation.phoneNumField(value);
+      // case "phoneNum":
+      //   return formFieldValidation.phoneNumField(value);
+      case AppStrings.mobileValString:
+        return formFieldValidation.mobileField(value);
 
       case AppStrings.generalValString:
         return formFieldValidation.simpleTextField(value);

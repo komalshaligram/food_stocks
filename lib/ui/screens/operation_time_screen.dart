@@ -17,6 +17,9 @@ class OperationTimeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? data =
+    ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('data = $data');
     return BlocProvider(
       create: (context) => OperationTimeBloc()
         ..add(OperationTimeEvent.defaultValueAddInListEvent()),

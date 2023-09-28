@@ -1,7 +1,7 @@
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/error/failures.dart';
 import 'package:food_stock/data/res_model/login_res_model.dart';
-import 'package:food_stock/repository/login_repo.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:dartz/dartz.dart';
 
 class AuthRepository {
