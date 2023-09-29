@@ -41,12 +41,21 @@ dependencies:
   equatable: ^2.0.5
   dio: ^5.3.2
   get_it: ^7.6.0
-  build_runner: ^2.4.6
-  freezed: ^2.4.2
   flutter_localization: ^0.1.14
   intl: ^0.18.1
   flutter_svg: ^2.0.7
   connectivity_plus: ^4.0.1
+  dartz: ^0.10.1
+  dotted_border: ^2.0.0+3
+  image_picker: ^1.0.4
+
+  easy_localization: ^3.0.3
+  shared_preferences: ^2.2.1
+  syncfusion_flutter_gauges: ^23.1.36
+  flutter_otp_text_field: ^1.1.1
+  focus_detector: ^2.0.1
+  http_parser: ^4.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +68,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   json_serializable: ^6.7.1
+  build_runner: ^2.4.6
+  freezed: ^2.4.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,12 +81,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
 
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+     - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -89,11 +101,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: Rubik
+      fonts:
+         - asset: assets/fonts/Rubik-Black.ttf
+         - asset: assets/fonts/Rubik-Bold.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
