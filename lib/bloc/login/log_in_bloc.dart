@@ -34,18 +34,16 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           debugPrint('login response --- ${businessTypeModel}');
 
           if(response['status'] == 200){
+            debugPrint('login success');
             emit(state.copyWith(isLoginSuccess: true));
           }
           else{
-            emit(state.copyWith(isLoginFail: true , errorMessage: 'login failed'));
-            await Future.delayed(const Duration(milliseconds: 2));
-            emit(state.copyWith(isLoginFail: false));
+            emit(state.copyWith(isLoginSuccess: false , errorMessage: 'login failed'));
           }
 
         }  catch(e) {
-          emit(state.copyWith(isLoginFail: true , errorMessage: 'login failed' ));
-          await Future.delayed(const Duration(milliseconds: 2));
-          emit(state.copyWith(isLoginFail: false));
+          emit(state.copyWith(isLoginSuccess:false , errorMessage: 'login failed1' ));
+
 
         }
 

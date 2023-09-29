@@ -56,9 +56,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       }
 
-
-
-
        if(event is _uploadApiEvent){
 
        MultipartFile m = await MultipartFile.fromFile(event.documentPath,filename: event.documentPath.split('/').last,contentType: MediaType('image','png'),);

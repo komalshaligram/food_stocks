@@ -87,7 +87,7 @@ class AppRouting {
 
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
-      settings: RouteSettings(name: settings.name),
+      settings: RouteSettings(name: settings.name ,arguments: settings.arguments),
     );
   }
 }

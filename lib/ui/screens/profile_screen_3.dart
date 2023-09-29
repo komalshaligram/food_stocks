@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
-import '../../bloc/profile3/profile3_bloc.dart';
+import '../../bloc/more_details/more_details_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 
@@ -25,7 +25,7 @@ class ProfileScreen3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => Profile3Bloc(),
+      create: (context) => MoreDetailsBloc(),
       child:  ProfileScreenWidget(),
     );
   }
@@ -40,7 +40,7 @@ class ProfileScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return BlocBuilder<Profile3Bloc, Profile3State>(
+    return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -118,7 +118,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.addressController,
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
-                    fillColor: Colors.transparent,
+                    fillColor: Colors.transparent, validator: '',
 
                   ),
                   const SizedBox(
@@ -131,7 +131,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.emailController,
                     keyboardType: TextInputType.emailAddress,
                     hint: AppStrings.emailString,
-                    fillColor: Colors.transparent,
+                    fillColor: Colors.transparent, validator: '',
 
                   ),
                   const SizedBox(
@@ -144,7 +144,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     controller: state.faxController,
                     keyboardType: TextInputType.number,
                     hint: AppLocalizations.of(context)!.fax,
-                    fillColor: Colors.transparent,
+                    fillColor: Colors.transparent, validator: '',
                   ),
                   const SizedBox(
                     height: 7,
@@ -211,8 +211,8 @@ class ProfileScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.continued,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
-                      context.read<Profile3Bloc>().add(
-                          Profile3Event.textFieldValidateEvent(
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.textFieldValidateEvent(
                               city: state.selectCity!,
                               address: state.addressController.text,
                               email: state.emailController.text,
@@ -237,7 +237,7 @@ class ProfileScreenWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder:(c1) {
-        return BlocBuilder<Profile3Bloc, Profile3State>(
+        return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
           builder: (c1, state) {
             return AlertDialog(
               title: Align(
@@ -250,16 +250,16 @@ class ProfileScreenWidget extends StatelessWidget {
                     GestureDetector(
                         onTap: (){
                           context
-                              .read<Profile3Bloc>()
-                              .add(Profile3Event.logoFromCameraEvent());
+                              .read<MoreDetailsBloc>()
+                              .add(MoreDetailsEvent.logoFromCameraEvent(context: context));
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.camera_alt_rounded)),
                     GestureDetector(
                         onTap: (){
                           context
-                              .read<Profile3Bloc>()
-                              .add(Profile3Event.logoFromGalleryEvent());
+                              .read<MoreDetailsBloc>()
+                              .add(MoreDetailsEvent.logoFromGalleryEvent(context: context));
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.photo)),

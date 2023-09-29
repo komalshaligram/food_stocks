@@ -8,7 +8,7 @@ class AppStrings {
 
   static const androidString = 'Android';
   static const iosString = 'IOS';
-  static const messageContentString = 'messageContent';
+
 
   //api req param strings
   static const profileImageString = 'profile_img';

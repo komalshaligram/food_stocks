@@ -4,6 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../ui/utils/themes/app_urls.dart';
+
  class DioClient {
   late Dio _dio;
 
