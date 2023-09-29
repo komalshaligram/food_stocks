@@ -12,6 +12,10 @@ class AppStrings {
 
   //api req param strings
   static const profileImageString = 'profile_img';
+  static const promissoryNoteString = 'forms'/*'promissory_note'*/;
+  static const personalGuaranteeString = 'forms'/*'personal_guarantee'*/;
+  static const israelIdImageString = 'israel_id_image';
+  static const businessCertificateString = 'business_certificate';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -28,4 +32,8 @@ class AppStrings {
   //page parameters strings
   static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';
+
+  //toast strings
+  static const registerSuccessString = 'Registered Successfully!';
+  static const imageNotUploadString = 'Image not uploaded';
 }

@@ -205,44 +205,44 @@ mixin _$FileUploadEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int fileIndex, int imageSourceIndex)
-        uploadDocumentEvent,
-    required TResult Function(String documentPath) uploadApiEvent,
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(String documentPath, int fileIndex)
         deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
@@ -269,20 +269,20 @@ class _$FileUploadEventCopyWithImpl<$Res, $Val extends FileUploadEvent>
 }
 
 /// @nodoc
-abstract class _$$_uploadDocumentEventCopyWith<$Res> {
-  factory _$$_uploadDocumentEventCopyWith(_$_uploadDocumentEvent value,
-          $Res Function(_$_uploadDocumentEvent) then) =
-      __$$_uploadDocumentEventCopyWithImpl<$Res>;
+abstract class _$$_pickDocumentEventCopyWith<$Res> {
+  factory _$$_pickDocumentEventCopyWith(_$_pickDocumentEvent value,
+          $Res Function(_$_pickDocumentEvent) then) =
+      __$$_pickDocumentEventCopyWithImpl<$Res>;
   @useResult
   $Res call({int fileIndex, int imageSourceIndex});
 }
 
 /// @nodoc
-class __$$_uploadDocumentEventCopyWithImpl<$Res>
-    extends _$FileUploadEventCopyWithImpl<$Res, _$_uploadDocumentEvent>
-    implements _$$_uploadDocumentEventCopyWith<$Res> {
-  __$$_uploadDocumentEventCopyWithImpl(_$_uploadDocumentEvent _value,
-      $Res Function(_$_uploadDocumentEvent) _then)
+class __$$_pickDocumentEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_pickDocumentEvent>
+    implements _$$_pickDocumentEventCopyWith<$Res> {
+  __$$_pickDocumentEventCopyWithImpl(
+      _$_pickDocumentEvent _value, $Res Function(_$_pickDocumentEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -291,7 +291,7 @@ class __$$_uploadDocumentEventCopyWithImpl<$Res>
     Object? fileIndex = null,
     Object? imageSourceIndex = null,
   }) {
-    return _then(_$_uploadDocumentEvent(
+    return _then(_$_pickDocumentEvent(
       fileIndex: null == fileIndex
           ? _value.fileIndex
           : fileIndex // ignore: cast_nullable_to_non_nullable
@@ -306,8 +306,8 @@ class __$$_uploadDocumentEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_uploadDocumentEvent implements _uploadDocumentEvent {
-  _$_uploadDocumentEvent(
+class _$_pickDocumentEvent implements _pickDocumentEvent {
+  _$_pickDocumentEvent(
       {required this.fileIndex, required this.imageSourceIndex});
 
   @override
@@ -317,14 +317,14 @@ class _$_uploadDocumentEvent implements _uploadDocumentEvent {
 
   @override
   String toString() {
-    return 'FileUploadEvent.uploadDocumentEvent(fileIndex: $fileIndex, imageSourceIndex: $imageSourceIndex)';
+    return 'FileUploadEvent.pickDocumentEvent(fileIndex: $fileIndex, imageSourceIndex: $imageSourceIndex)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_uploadDocumentEvent &&
+            other is _$_pickDocumentEvent &&
             (identical(other.fileIndex, fileIndex) ||
                 other.fileIndex == fileIndex) &&
             (identical(other.imageSourceIndex, imageSourceIndex) ||
@@ -337,42 +337,42 @@ class _$_uploadDocumentEvent implements _uploadDocumentEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_uploadDocumentEventCopyWith<_$_uploadDocumentEvent> get copyWith =>
-      __$$_uploadDocumentEventCopyWithImpl<_$_uploadDocumentEvent>(
+  _$$_pickDocumentEventCopyWith<_$_pickDocumentEvent> get copyWith =>
+      __$$_pickDocumentEventCopyWithImpl<_$_pickDocumentEvent>(
           this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int fileIndex, int imageSourceIndex)
-        uploadDocumentEvent,
-    required TResult Function(String documentPath) uploadApiEvent,
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(String documentPath, int fileIndex)
         deleteFileEvent,
   }) {
-    return uploadDocumentEvent(fileIndex, imageSourceIndex);
+    return pickDocumentEvent(fileIndex, imageSourceIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) {
-    return uploadDocumentEvent?.call(fileIndex, imageSourceIndex);
+    return pickDocumentEvent?.call(fileIndex, imageSourceIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadDocumentEvent != null) {
-      return uploadDocumentEvent(fileIndex, imageSourceIndex);
+    if (pickDocumentEvent != null) {
+      return pickDocumentEvent(fileIndex, imageSourceIndex);
     }
     return orElse();
   }
@@ -380,47 +380,47 @@ class _$_uploadDocumentEvent implements _uploadDocumentEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) {
-    return uploadDocumentEvent(this);
+    return pickDocumentEvent(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) {
-    return uploadDocumentEvent?.call(this);
+    return pickDocumentEvent?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadDocumentEvent != null) {
-      return uploadDocumentEvent(this);
+    if (pickDocumentEvent != null) {
+      return pickDocumentEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _uploadDocumentEvent implements FileUploadEvent {
-  factory _uploadDocumentEvent(
+abstract class _pickDocumentEvent implements FileUploadEvent {
+  factory _pickDocumentEvent(
       {required final int fileIndex,
-      required final int imageSourceIndex}) = _$_uploadDocumentEvent;
+      required final int imageSourceIndex}) = _$_pickDocumentEvent;
 
   int get fileIndex;
   int get imageSourceIndex;
   @JsonKey(ignore: true)
-  _$$_uploadDocumentEventCopyWith<_$_uploadDocumentEvent> get copyWith =>
+  _$$_pickDocumentEventCopyWith<_$_pickDocumentEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -430,7 +430,7 @@ abstract class _$$_uploadApiEventCopyWith<$Res> {
           _$_uploadApiEvent value, $Res Function(_$_uploadApiEvent) then) =
       __$$_uploadApiEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String documentPath});
+  $Res call({BuildContext context});
 }
 
 /// @nodoc
@@ -444,13 +444,13 @@ class __$$_uploadApiEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? documentPath = null,
+    Object? context = null,
   }) {
     return _then(_$_uploadApiEvent(
-      documentPath: null == documentPath
-          ? _value.documentPath
-          : documentPath // ignore: cast_nullable_to_non_nullable
-              as String,
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
     ));
   }
 }
@@ -458,14 +458,14 @@ class __$$_uploadApiEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_uploadApiEvent implements _uploadApiEvent {
-  _$_uploadApiEvent({required this.documentPath});
+  _$_uploadApiEvent({required this.context});
 
   @override
-  final String documentPath;
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'FileUploadEvent.uploadApiEvent(documentPath: $documentPath)';
+    return 'FileUploadEvent.uploadApiEvent(context: $context)';
   }
 
   @override
@@ -473,12 +473,11 @@ class _$_uploadApiEvent implements _uploadApiEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_uploadApiEvent &&
-            (identical(other.documentPath, documentPath) ||
-                other.documentPath == documentPath));
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, documentPath);
+  int get hashCode => Object.hash(runtimeType, context);
 
   @JsonKey(ignore: true)
   @override
@@ -490,34 +489,34 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int fileIndex, int imageSourceIndex)
-        uploadDocumentEvent,
-    required TResult Function(String documentPath) uploadApiEvent,
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(String documentPath, int fileIndex)
         deleteFileEvent,
   }) {
-    return uploadApiEvent(documentPath);
+    return uploadApiEvent(context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) {
-    return uploadApiEvent?.call(documentPath);
+    return uploadApiEvent?.call(context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
     if (uploadApiEvent != null) {
-      return uploadApiEvent(documentPath);
+      return uploadApiEvent(context);
     }
     return orElse();
   }
@@ -525,7 +524,7 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) {
@@ -535,7 +534,7 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) {
@@ -545,7 +544,7 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
@@ -558,10 +557,10 @@ class _$_uploadApiEvent implements _uploadApiEvent {
 }
 
 abstract class _uploadApiEvent implements FileUploadEvent {
-  factory _uploadApiEvent({required final String documentPath}) =
+  factory _uploadApiEvent({required final BuildContext context}) =
       _$_uploadApiEvent;
 
-  String get documentPath;
+  BuildContext get context;
   @JsonKey(ignore: true)
   _$$_uploadApiEventCopyWith<_$_uploadApiEvent> get copyWith =>
       throw _privateConstructorUsedError;
@@ -642,8 +641,8 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int fileIndex, int imageSourceIndex)
-        uploadDocumentEvent,
-    required TResult Function(String documentPath) uploadApiEvent,
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(String documentPath, int fileIndex)
         deleteFileEvent,
   }) {
@@ -653,8 +652,8 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) {
     return deleteFileEvent?.call(documentPath, fileIndex);
@@ -663,8 +662,8 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
-    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
@@ -677,7 +676,7 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) {
@@ -687,7 +686,7 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) {
@@ -697,7 +696,7 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),

@@ -30,7 +30,7 @@ class BasketScreenWidget extends StatelessWidget {
     return BlocListener<BasketBloc, BasketState>(
       listener: (context, state) {
       },
-      child: BlocBuilder<SplashBloc, SplashState>(
+      child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
