@@ -30,7 +30,7 @@ class WalletScreenWidget extends StatelessWidget {
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {
       },
-      child: BlocBuilder<SplashBloc, SplashState>(
+      child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.pageColor,

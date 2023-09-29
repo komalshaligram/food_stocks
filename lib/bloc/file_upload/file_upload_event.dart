@@ -2,19 +2,13 @@ part of 'file_upload_bloc.dart';
 
 @freezed
 class FileUploadEvent with _$FileUploadEvent {
- factory FileUploadEvent.uploadDocumentEvent({
+ factory FileUploadEvent.pickDocumentEvent({
   required int fileIndex,
  required int imageSourceIndex,
-}) = _uploadDocumentEvent;
-
-/*
- factory FileUploadEvent.uploadFromGalleryEvent({
-  required int fileIndex,
-}) = _uploadFromGalleryEvent;
-*/
+}) = _pickDocumentEvent;
 
  factory FileUploadEvent.uploadApiEvent({
-  required String documentPath,
+  required BuildContext context,
  }) = _uploadApiEvent;
 
  factory FileUploadEvent.deleteFileEvent({
