@@ -13,4 +13,21 @@ class AppStyles {
       fontWeight: fontWeight,
     );
   }
+
+  static TextStyle rkBoldTextStyle(
+      {Color color = Colors.black,
+        required double size,
+        FontWeight fontWeight = FontWeight.normal}) {
+    return TextStyle(
+      fontFamily: _fontFamily,
+      color: color,
+      fontSize: size,
+      fontWeight: fontWeight,
+    );
+  }
+
+
+
 }
+
+

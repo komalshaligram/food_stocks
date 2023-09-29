@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/profile_model/profile_model.dart';
+
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -11,6 +11,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -101,15 +102,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         profileModel = ProfileModel(
             address: '',
             cityId: '60abf964173234001c903a05',
-            createdBy: '60abf964173234001c903a05',
             email: '',
-            firstName: '',
-            lastName: '',
+
             logo: '',
             phoneNumber: '1234567890',
             profileImage: imgUrl,
-            statusId: '6511399a482b14e37c254562',
-            updatedBy: '60abf964173234001c903a05',
+
             clientDetail: ClientDetail(
               bussinessId: int.tryParse(state.idController.text) ?? 0,
               bussinessName: state.businessNameController.text,
@@ -121,10 +119,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               fax: '',
               israelId: true,
               lastSeen: DateTime.now(),
-              monthlyCredits: 100,
               operationTime: OperationTime(),
               tokenId: '60abf964173234001c903a05',
-              clientTypeId: '',
+
             ),
             contactName: state.contactController.text);
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
