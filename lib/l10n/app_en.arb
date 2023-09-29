@@ -74,5 +74,10 @@
   "tuesday": "Tuesday",
   "hp": "H.P.",
   "gallery": "Gallery",
-  "camera": "Camera"
+  "camera": "Camera",
+  "all_categories": "All categories",
+  "categories": "Categories",
+  "organic_and_healthy": "Organic and healthy",
+  "meat and fish": "meat and fish",
+  "Dairy products": "Dairy products"
 }

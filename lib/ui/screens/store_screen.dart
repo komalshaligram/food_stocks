@@ -28,11 +28,11 @@ class StoreScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {},
-      child: BlocBuilder<SplashBloc, SplashState>(
+      child: BlocBuilder<StoreBloc, StoreState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
-            body: Center(child: Text('Store Screen')),
+            body: SafeArea(child: Center(child: Text('Store Screen'))),
           );
         },
       ),
