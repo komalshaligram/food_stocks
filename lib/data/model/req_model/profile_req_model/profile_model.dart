@@ -1,39 +1,48 @@
 // To parse this JSON data, do
 //
-//     final loginResModel = loginResModelFromMap(jsonString);
+//     final profileModel = profileModelFromJson(jsonString);
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'login_res_model.freezed.dart';
-part 'login_res_model.g.dart';
+import 'dart:convert';
 
+part 'profile_model.freezed.dart';
+part 'profile_model.g.dart';
+
+ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
+
+String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
 @freezed
-class LoginResModel with _$LoginResModel {
-  const factory LoginResModel({
+class ProfileModel with _$ProfileModel {
+  const factory ProfileModel({
     @JsonKey(name: "status")
     int? status,
+    @JsonKey(name: "data")
+    Data? data,
     @JsonKey(name: "message")
     String? message,
-    @JsonKey(name: "user")
-    User? user,
-    @JsonKey(name: "success")
-    bool? success,
-  }) = _LoginResModel;
+  }) = _ProfileModel;
 
-  factory LoginResModel.fromJson(Map<String, dynamic> json) => _$LoginResModelFromJson(json);
+  factory ProfileModel.fromJson(Map<String, dynamic> json) => _$ProfileModelFromJson(json);
 }
 
 @freezed
-class User with _$User {
-  const factory User({
-    @JsonKey(name: "isDeleted")
-    bool? isDeleted,
-    @JsonKey(name: "_id")
-    String? id,
+class Data with _$Data {
+  const factory Data({
+    @JsonKey(name: "ClientData")
+    ClientData? clientData,
+  }) = _Data;
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+}
+
+@freezed
+class ClientData with _$ClientData {
+  const factory ClientData({
     @JsonKey(name: "email")
     String? email,
     @JsonKey(name: "password")
-    String? password,
+    dynamic password,
     @JsonKey(name: "firstName")
     String? firstName,
     @JsonKey(name: "lastName")
@@ -50,6 +59,8 @@ class User with _$User {
     String? statusId,
     @JsonKey(name: "logo")
     String? logo,
+    @JsonKey(name: "profileImage")
+    String? profileImage,
     @JsonKey(name: "adminTypeId")
     String? adminTypeId,
     @JsonKey(name: "clientDetail")
@@ -58,15 +69,19 @@ class User with _$User {
     String? createdBy,
     @JsonKey(name: "updatedBy")
     String? updatedBy,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
+    @JsonKey(name: "_id")
+    String? id,
     @JsonKey(name: "createdAt")
     DateTime? createdAt,
     @JsonKey(name: "updatedAt")
     DateTime? updatedAt,
     @JsonKey(name: "__v")
     int? v,
-  }) = _User;
+  }) = _ClientData;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory ClientData.fromJson(Map<String, dynamic> json) => _$ClientDataFromJson(json);
 }
 
 @freezed

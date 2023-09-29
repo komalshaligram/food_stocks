@@ -212,8 +212,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         //         context: context));
                         if (state.image.path != '') {
                           if (_formKey.currentState?.validate() ?? false) {
-                            bloc.add(MoreDetailsEvent
-                                .navigateToOperationTimeScreenEvent(
+                            bloc.add(MoreDetailsEvent.navigateToOperationTimeScreenEvent(
                                     context: context));
                           }
                         } else {
