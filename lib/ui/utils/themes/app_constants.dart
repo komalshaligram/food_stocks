@@ -4,6 +4,7 @@ class AppConstants{
   static const double buttonHeightSmall = 20;
 static const double containerHeight = 40;
 static const double appBarHeight = 56;
+static const double textFormFieldHeight = 40;
 
   static const double padding_5 = 5;
   static const double padding_10 = 10;

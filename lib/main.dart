@@ -10,7 +10,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
 import 'bloc/file_upload/file_upload_bloc.dart';
-import 'bloc/profile3/profile3_bloc.dart';
 
 Language selectedLang = Language.Hebrew;
 
@@ -29,7 +28,7 @@ Language selectedLang = Language.Hebrew;
 //             create: (context) => ProfileBloc(),
 //           ),
 //           BlocProvider(
-//             create: (context) => Profile3Bloc(),
+//             create: (context) => MoreDetailsBloc(),
 //           ),
 //           BlocProvider(
 //             create: (context) => OperationTimeBloc(),

@@ -11,7 +11,7 @@ class CustomFormField extends StatelessWidget {
     required TextInputType keyboardType,
     //   required TextInputAction inputAction,
     required String hint,
-    // required String validator,
+    required String validator,
     required Color fillColor,
     this.maxLimits,
     this.getxController,
@@ -37,12 +37,13 @@ class CustomFormField extends StatelessWidget {
     this.isBorderVisible = true,
     this.textFieldLabel,
     this.textFieldLabelSize,
-    this.inputformet, this.textInputAction,
+    this.inputformet,
+    this.textInputAction,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
         _hint = hint,
-        // _validator = validator,
+        _validator = validator,
         _controller = controller,
         super(key: key);
   final Widget? postIconBtn;
@@ -53,6 +54,7 @@ class CustomFormField extends StatelessWidget {
   final bool? isEnabled;
   final List<TextInputFormatter>? inputformet;
   final TextInputType _keyboardType;
+
   // final TextInputAction _inputAction;
   final String _hint;
   final Color _fillColor;
@@ -66,7 +68,7 @@ class CustomFormField extends StatelessWidget {
   final int maxLines;
   final int? maxLimits;
   final bool isLabelEnabled;
-  // final String _validator;
+  final String _validator;
   final String? filteringRegex;
   final bool isOtp;
   final bool isPassword;
@@ -99,8 +101,8 @@ class CustomFormField extends StatelessWidget {
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
-      // validator: (value) =>
-      //     AuthFormValidation().formValidation(value!, _validator),
+      validator: (value) =>
+          AuthFormValidation().formValidation(value!, _validator),
       decoration: InputDecoration(
           labelStyle: TextStyle(color: AppColors.textColor),
           suffixIcon: postIconBtn,
@@ -113,38 +115,47 @@ class CustomFormField extends StatelessWidget {
             color: AppColors.textColor,
           ),
           errorStyle: TextStyle(
-              color: AppColors.borderColor,
+              color: AppColors.redColor,
               height: height,
               fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(3),
-              borderSide: isBorderVisible ? BorderSide(
-                color: AppColors.borderColor,
-                width: 1,
-              ) : BorderSide.none) ,
-          //  contentPadding:  const EdgeInsets.fromLTRB(18.0, 22.0, 0.0, 0.0),
+              borderSide: isBorderVisible
+                  ? BorderSide(
+                      color: AppColors.mainColor,
+                      width: 1,
+                    )
+                  : BorderSide.none),
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
+            borderSide: isBorderVisible
+                ? BorderSide(color: AppColors.borderColor)
+                : BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
+            borderSide: isBorderVisible
+                ? BorderSide(color: AppColors.borderColor)
+                : BorderSide.none,
           ),
-          /*    errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide:  BorderSide(
-              color: AppColors.borderColor,
-              width: 1,
-            ),
-          ),*/
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(3.0),
+            borderSide: isBorderVisible
+                ? BorderSide(
+                    color: AppColors.borderColor,
+                    width: 1,
+                  )
+                : BorderSide.none,
+          ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
-            borderSide: isBorderVisible ? BorderSide(
-              color: AppColors.mainColor,
-              width: 1,
-            ) : BorderSide.none,
+            borderSide: isBorderVisible
+                ? BorderSide(
+                    color: AppColors.redColor,
+                    width: 1,
+                  )
+                : BorderSide.none,
           )),
     );
   }

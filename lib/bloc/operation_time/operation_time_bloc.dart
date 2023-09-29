@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
+import '../../data/model/req_model/profile_model/profile_model.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_styles.dart';
@@ -14,6 +15,7 @@ part 'operation_time_state.dart';
 part 'operation_time_bloc.freezed.dart';
 
 class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
+  ProfileModel profileModel = ProfileModel();
   OperationTimeBloc() : super(OperationTimeState.initial()) {
     on<OperationTimeEvent>((event, emit) async {
       if (event is _defaultValueAddInListEvent) {
@@ -21,49 +23,49 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
         temp.add(
           OperationTimeModel(
             data: [
-              timeData(openingTime: '00:00', closingTime: '00:00'),
+              timeData(openingTime: '0:0', closingTime: '0:0'),
             ],
           ),
         );
@@ -155,7 +157,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         temp.addAll(state.OperationTimeList);
         temp[event.rowIndex]
             .data
-            .add(timeData(openingTime: '00:00', closingTime: '00:00'));
+            .add(timeData(openingTime: '0:0', closingTime: '0:0'));
         emit(state.copyWith(
             OperationTimeList: temp, isRefresh: !state.isRefresh));
       }
@@ -166,6 +168,9 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         temp[event.rowIndex].data.removeAt(event.timeIndex);
         emit(state.copyWith(
             OperationTimeList: temp, isRefresh: !state.isRefresh));
+      }else if (event is _getProfileModelEvent) {
+        profileModel = event.profileModel;
+        debugPrint('get contact name = ${profileModel.contactName}');
       }
     });
   }
