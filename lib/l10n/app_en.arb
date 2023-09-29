@@ -77,7 +77,14 @@
   "camera": "Camera",
   "all_categories": "All categories",
   "categories": "Categories",
-  "organic_and_healthy": "Organic and healthy",
-  "meat and fish": "meat and fish",
-  "Dairy products": "Dairy products"
+  "Recommended_for_you": "Recommended for you",
+  "all_recommended": "All recommended",
+  "from_your_previous_orders": "from your previous orders",
+  "everything": "Everything",
+  "search": "Search",
+  "note": "Note",
+  "add_to_order": "Add to order",
+  "sale": "מבצע",
+  "main": "main",
+  "for_payment": "for payment"
 }

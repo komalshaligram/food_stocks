@@ -13,6 +13,8 @@ class AppImagePath {
   static const String expense = 'assets/images/expense.svg';
   static const String orders = 'assets/images/orders.svg';
   static const String add = 'assets/images/add.svg';
+  static const String scan = 'assets/images/scan.svg';
+  static const String filter = 'assets/images/filter.svg';
 
   ///pngs
   static const String profileImage = 'assets/images/profile_image.png';
