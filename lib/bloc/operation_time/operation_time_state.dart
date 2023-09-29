@@ -10,7 +10,7 @@ class OperationTimeState with _$OperationTimeState{
   }) = _OperationTimeState;
 
   factory OperationTimeState.initial()=> OperationTimeState(
-    time:  '18:00',
+    time:  '0:0',
     OperationTimeList: [
 
     ],

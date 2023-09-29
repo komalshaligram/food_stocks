@@ -34,11 +34,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (pickedFile != null) {
           image = File(pickedFile.path);
           try {
-            // final response = await DioClient().post('/v1/auth/upload',
-            //     data: {
-            //       AppStrings.profileImageString:
-            //           await MultipartFile.fromFile(image.path)
-            //     });
             debugPrint('File = ${image.path}');
             final response = await DioClient().uploadFileProgressWithFormData(
               path: '/v1/auth/upload',
@@ -68,11 +63,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (pickedFile != null) {
           image = File(pickedFile.path);
           try {
-            // final response = await DioClient().post('/v1/auth/upload',
-            //     data: {
-            //       AppStrings.profileImageString:
-            //           await MultipartFile.fromFile(image.path)
-            //     });
             final response = await DioClient().uploadFileProgressWithFormData(
               path: '/v1/auth/upload',
               formData: FormData.fromMap(

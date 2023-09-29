@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
+import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
 
 class OperationTimeScreenRoute {
@@ -18,11 +21,12 @@ class OperationTimeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? data =
-    ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('data = $data');
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => OperationTimeBloc()
-        ..add(OperationTimeEvent.defaultValueAddInListEvent()),
+        ..add(OperationTimeEvent.defaultValueAddInListEvent())
+        ..add(OperationTimeEvent.getProfileModelEvent(
+            profileModel: data?[AppStrings.profileParamString])),
       child: OperationTimeScreenWidget(),
     );
   }
@@ -185,7 +189,6 @@ class OperationTimeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<OperationTimeBloc, OperationTimeState>(
       builder: (context, state) {
         return Row(
@@ -206,7 +209,7 @@ class OperationTimeRow extends StatelessWidget {
               width: 15,
             ),
             SizedBox(
-              width: screenWidth * 0.67,
+              width: getScreenWidth(context) * 0.67,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -322,7 +325,9 @@ class TimeContainer extends StatelessWidget {
             border: Border.all(color: AppColors.borderColor),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.symmetric(
+                vertical: AppConstants.padding_5,
+                horizontal: AppConstants.padding_10),
             child: GestureDetector(
               onTap: () {
                 context.read<OperationTimeBloc>().add(
@@ -336,11 +341,13 @@ class TimeContainer extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(time,
-                      style: AppStyles.rkRegularTextStyle(
-                          size: 16,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w400)),
+                  Expanded(
+                    child: Text(time == '0:0' ? '' : time,
+                        style: AppStyles.rkRegularTextStyle(
+                            size: 16,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.w400)),
+                  ),
                   Icon(
                     CupertinoIcons.clock,
                     color: AppColors.greyColor,

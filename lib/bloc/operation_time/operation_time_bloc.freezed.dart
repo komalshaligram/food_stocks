@@ -24,6 +24,7 @@ mixin _$OperationTimeEvent {
     required TResult Function() defaultValueAddInListEvent,
     required TResult Function(int rowIndex) addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -34,6 +35,7 @@ mixin _$OperationTimeEvent {
     TResult? Function()? defaultValueAddInListEvent,
     TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,6 +46,7 @@ mixin _$OperationTimeEvent {
     TResult Function()? defaultValueAddInListEvent,
     TResult Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -55,6 +58,7 @@ mixin _$OperationTimeEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -64,6 +68,7 @@ mixin _$OperationTimeEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,6 +78,7 @@ mixin _$OperationTimeEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -212,6 +218,7 @@ class _$_timePickerEvent implements _timePickerEvent {
     required TResult Function() defaultValueAddInListEvent,
     required TResult Function(int rowIndex) addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
   }) {
     return timePickerEvent(context, openingIndex, rowIndex, timeIndex, time);
   }
@@ -225,6 +232,7 @@ class _$_timePickerEvent implements _timePickerEvent {
     TResult? Function()? defaultValueAddInListEvent,
     TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
   }) {
     return timePickerEvent?.call(
         context, openingIndex, rowIndex, timeIndex, time);
@@ -239,6 +247,7 @@ class _$_timePickerEvent implements _timePickerEvent {
     TResult Function()? defaultValueAddInListEvent,
     TResult Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (timePickerEvent != null) {
@@ -256,6 +265,7 @@ class _$_timePickerEvent implements _timePickerEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
   }) {
     return timePickerEvent(this);
   }
@@ -268,6 +278,7 @@ class _$_timePickerEvent implements _timePickerEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
   }) {
     return timePickerEvent?.call(this);
   }
@@ -280,6 +291,7 @@ class _$_timePickerEvent implements _timePickerEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (timePickerEvent != null) {
@@ -355,6 +367,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
     required TResult Function() defaultValueAddInListEvent,
     required TResult Function(int rowIndex) addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
   }) {
     return defaultValueAddInListEvent();
   }
@@ -368,6 +381,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
     TResult? Function()? defaultValueAddInListEvent,
     TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
   }) {
     return defaultValueAddInListEvent?.call();
   }
@@ -381,6 +395,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
     TResult Function()? defaultValueAddInListEvent,
     TResult Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (defaultValueAddInListEvent != null) {
@@ -398,6 +413,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
   }) {
     return defaultValueAddInListEvent(this);
   }
@@ -410,6 +426,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
   }) {
     return defaultValueAddInListEvent?.call(this);
   }
@@ -422,6 +439,7 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (defaultValueAddInListEvent != null) {
@@ -509,6 +527,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
     required TResult Function() defaultValueAddInListEvent,
     required TResult Function(int rowIndex) addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
   }) {
     return addMoreTimeZoneEvent(rowIndex);
   }
@@ -522,6 +541,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
     TResult? Function()? defaultValueAddInListEvent,
     TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
   }) {
     return addMoreTimeZoneEvent?.call(rowIndex);
   }
@@ -535,6 +555,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
     TResult Function()? defaultValueAddInListEvent,
     TResult Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (addMoreTimeZoneEvent != null) {
@@ -552,6 +573,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
   }) {
     return addMoreTimeZoneEvent(this);
   }
@@ -564,6 +586,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
   }) {
     return addMoreTimeZoneEvent?.call(this);
   }
@@ -576,6 +599,7 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (addMoreTimeZoneEvent != null) {
@@ -676,6 +700,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
     required TResult Function() defaultValueAddInListEvent,
     required TResult Function(int rowIndex) addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
   }) {
     return deleteTimeZoneEvent(rowIndex, timeIndex);
   }
@@ -689,6 +714,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
     TResult? Function()? defaultValueAddInListEvent,
     TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
   }) {
     return deleteTimeZoneEvent?.call(rowIndex, timeIndex);
   }
@@ -702,6 +728,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
     TResult Function()? defaultValueAddInListEvent,
     TResult Function(int rowIndex)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (deleteTimeZoneEvent != null) {
@@ -719,6 +746,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
   }) {
     return deleteTimeZoneEvent(this);
   }
@@ -731,6 +759,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
   }) {
     return deleteTimeZoneEvent?.call(this);
   }
@@ -743,6 +772,7 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
     required TResult orElse(),
   }) {
     if (deleteTimeZoneEvent != null) {
@@ -761,6 +791,180 @@ abstract class _deleteTimeZoneEvent implements OperationTimeEvent {
   int get timeIndex;
   @JsonKey(ignore: true)
   _$$_deleteTimeZoneEventCopyWith<_$_deleteTimeZoneEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_getProfileModelEventCopyWith<$Res> {
+  factory _$$_getProfileModelEventCopyWith(_$_getProfileModelEvent value,
+          $Res Function(_$_getProfileModelEvent) then) =
+      __$$_getProfileModelEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ProfileModel profileModel});
+
+  $ProfileModelCopyWith<$Res> get profileModel;
+}
+
+/// @nodoc
+class __$$_getProfileModelEventCopyWithImpl<$Res>
+    extends _$OperationTimeEventCopyWithImpl<$Res, _$_getProfileModelEvent>
+    implements _$$_getProfileModelEventCopyWith<$Res> {
+  __$$_getProfileModelEventCopyWithImpl(_$_getProfileModelEvent _value,
+      $Res Function(_$_getProfileModelEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? profileModel = null,
+  }) {
+    return _then(_$_getProfileModelEvent(
+      profileModel: null == profileModel
+          ? _value.profileModel
+          : profileModel // ignore: cast_nullable_to_non_nullable
+              as ProfileModel,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileModelCopyWith<$Res> get profileModel {
+    return $ProfileModelCopyWith<$Res>(_value.profileModel, (value) {
+      return _then(_value.copyWith(profileModel: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$_getProfileModelEvent implements _getProfileModelEvent {
+  _$_getProfileModelEvent({required this.profileModel});
+
+  @override
+  final ProfileModel profileModel;
+
+  @override
+  String toString() {
+    return 'OperationTimeEvent.getProfileModelEvent(profileModel: $profileModel)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_getProfileModelEvent &&
+            (identical(other.profileModel, profileModel) ||
+                other.profileModel == profileModel));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, profileModel);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_getProfileModelEventCopyWith<_$_getProfileModelEvent> get copyWith =>
+      __$$_getProfileModelEventCopyWithImpl<_$_getProfileModelEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(BuildContext context, int openingIndex,
+            int rowIndex, int timeIndex, String time)
+        timePickerEvent,
+    required TResult Function() defaultValueAddInListEvent,
+    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+  }) {
+    return getProfileModelEvent(profileModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
+            int timeIndex, String time)?
+        timePickerEvent,
+    TResult? Function()? defaultValueAddInListEvent,
+    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+  }) {
+    return getProfileModelEvent?.call(profileModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(BuildContext context, int openingIndex, int rowIndex,
+            int timeIndex, String time)?
+        timePickerEvent,
+    TResult Function()? defaultValueAddInListEvent,
+    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileModelEvent != null) {
+      return getProfileModelEvent(profileModel);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_timePickerEvent value) timePickerEvent,
+    required TResult Function(_defaultValueAddInListEvent value)
+        defaultValueAddInListEvent,
+    required TResult Function(_addMoreTimeZoneEventEvent value)
+        addMoreTimeZoneEvent,
+    required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+  }) {
+    return getProfileModelEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_timePickerEvent value)? timePickerEvent,
+    TResult? Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+  }) {
+    return getProfileModelEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_timePickerEvent value)? timePickerEvent,
+    TResult Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileModelEvent != null) {
+      return getProfileModelEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _getProfileModelEvent implements OperationTimeEvent {
+  factory _getProfileModelEvent({required final ProfileModel profileModel}) =
+      _$_getProfileModelEvent;
+
+  ProfileModel get profileModel;
+  @JsonKey(ignore: true)
+  _$$_getProfileModelEventCopyWith<_$_getProfileModelEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

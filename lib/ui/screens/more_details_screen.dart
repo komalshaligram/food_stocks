@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -73,9 +74,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    20.height,
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.city,
                     ),
@@ -93,26 +92,20 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       ),
                       isExpanded: true,
                       elevation: 0,
-                      //  borderRadius: BorderRadius.circular(3),
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
                       ),
                       value: state.selectCity,
-                      hint: const Text(
-                        'select tag',
-                      ),
-                      items: state.institutionalList.map((tag) {
+                      items: state.institutionalList.map((cityName) {
                         return DropdownMenuItem<String>(
-                          value: tag,
-                          child: Text(tag),
+                          value: cityName,
+                          child: Text(cityName),
                         );
                       }).toList(),
                       onChanged: (tag) {},
                     ),
-                    const SizedBox(
-                      height: 7,
-                    ),
+                    7.height,
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.full_address,
                     ),
@@ -121,11 +114,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       keyboardType: TextInputType.text,
                       hint: AppLocalizations.of(context)!.life_grocery_store,
                       fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.next,
                       validator: AppStrings.addressValString,
                     ),
-                    const SizedBox(
-                      height: 7,
-                    ),
+                    7.height,
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.email,
                     ),
@@ -134,11 +126,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       hint: "test2gmail.com",
                       fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.next,
                       validator: AppStrings.emailValString,
                     ),
-                    const SizedBox(
-                      height: 7,
-                    ),
+                    7.height,
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.fax,
                     ),
@@ -147,11 +138,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       hint: AppLocalizations.of(context)!.fax,
                       fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.done,
                       validator: AppStrings.faxValString,
                     ),
-                    const SizedBox(
-                      height: 7,
-                    ),
+                    7.height,
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.logo_image,
                       star: '',
@@ -179,7 +169,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         width: screenWidth,
                                         child: Image.file(
                                           File(state.image.path),
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.cover,
                                         ),
                                       )
                                     : Icon(
@@ -207,9 +197,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 130,
-                    ),
+                    100.height,
                     CustomButtonWidget(
                       buttonText: AppLocalizations.of(context)!.continued,
                       bGColor: AppColors.mainColor,
@@ -237,9 +225,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       },
                       fontColors: AppColors.whiteColor,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    20.height,
                   ],
                 ),
               ),
