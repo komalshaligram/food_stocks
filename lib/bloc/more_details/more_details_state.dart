@@ -1,8 +1,8 @@
-part of 'profile3_bloc.dart';
+part of 'more_details_bloc.dart';
 
 @freezed
-class Profile3State with _$Profile3State{
-  const factory Profile3State({
+class MoreDetailsState with _$MoreDetailsState{
+  const factory MoreDetailsState({
     required String? selectCity,
     required List<String> institutionalList,
    required TextEditingController addressController,
@@ -11,11 +11,11 @@ class Profile3State with _$Profile3State{
     required File image,
     required bool isImagePick,
 
-  }) = _Profile3State;
+  }) = _MoreDetailsState;
 
-  factory Profile3State.initial()=> Profile3State(
-    selectCity: 'q',
-    institutionalList: ['q','b','c','d','e'],
+  factory MoreDetailsState.initial()=> MoreDetailsState(
+    selectCity: 'Acre',
+    institutionalList: ['Acre','Arad','Dimona','Hadera','Ness'],
     addressController: TextEditingController(),
     emailController: TextEditingController(),
     faxController: TextEditingController(),

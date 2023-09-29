@@ -25,4 +25,6 @@ class OperationTimeEvent with _$OperationTimeEvent{
     required int timeIndex,
   }
       ) = _deleteTimeZoneEvent;
+
+  factory OperationTimeEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
 }

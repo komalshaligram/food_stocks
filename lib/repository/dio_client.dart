@@ -1,9 +1,8 @@
 import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
-import '../ui/utils/themes/app_urls.dart';
 
  class DioClient {
   late Dio _dio;
@@ -38,7 +37,7 @@ import '../ui/utils/themes/app_urls.dart';
       return handler.next(options);
     }, onResponse: (response, handler) {
       if (kDebugMode) {
-       // print("app response data ${response.data}");
+        print("app response data ${response.data}");
       }
       return handler.next(response);
     }, onError: (DioException e, handler) {
@@ -68,7 +67,7 @@ import '../ui/utils/themes/app_urls.dart';
 
     var response = await _dio.post(path,
         data: data, queryParameters: queryParameters, options: requestOptions);
- // print('response.data___${response.data}');
+
     return response.data;
   }
 

@@ -1,3 +1,5 @@
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
+
 import 'form_field_validation.dart';
 
 class AuthFormValidation {
@@ -6,23 +8,43 @@ class AuthFormValidation {
   String? formValidation(String value, String field) {
     switch (field) {
 
-      case "email":
+      case AppStrings.emailValString:
         return formFieldValidation.emailField(value);
-    // break;
 
-      // case "password":
-      //   return formFieldValidation.validatePassword(value);
-    // break;
+      // case "phoneNum":
+      //   return formFieldValidation.phoneNumField(value);
+      case AppStrings.mobileValString:
+        return formFieldValidation.mobileField(value);
 
-      case "phoneNum":
-        return formFieldValidation.phoneNumField(value);
-    // break;
-
-      case "text":
+      case AppStrings.generalValString:
         return formFieldValidation.simpleTextField(value);
-    // break;
+
       case "number":
         return formFieldValidation.simpleNumberField(value.toString());
+
+      case AppStrings.businessNameValString:
+        return formFieldValidation.businessNameField(value);
+
+      case AppStrings.hpValString:
+        return formFieldValidation.hpField(value);
+
+      case AppStrings.ownerNameValString:
+        return formFieldValidation.ownerNameField(value);
+
+      case AppStrings.idValString:
+        return formFieldValidation.idField(value);
+
+      case AppStrings.contactNameValString:
+        return formFieldValidation.contactNameField(value);
+
+      case AppStrings.addressValString:
+        return formFieldValidation.addressNameField(value);
+
+      case AppStrings.emailValString:
+        return formFieldValidation.emailField(value);
+
+      case AppStrings.faxValString:
+        return formFieldValidation.faxField(value);
 
     }
     return null;

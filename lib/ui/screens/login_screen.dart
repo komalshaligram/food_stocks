@@ -22,7 +22,6 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     return BlocProvider(
       create: (context) => LogInBloc(),
       child: LogInScreenWidget(isRegister: temp['isRegister']),
@@ -175,6 +174,44 @@ class LogInScreenWidget extends StatelessWidget {
                                     var temp = countryCode;
                                   },
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        10.width,
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.borderColor,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_5))),
+                            padding: EdgeInsets.only(
+                                top: AppConstants.padding_5,
+                                bottom: AppConstants.padding_5),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: AppConstants.padding_10, left: AppConstants.padding_10),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.phone,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor),
+                                  ),
+                                ),
+                                CustomFormField(
+                                    fillColor: AppColors.whiteColor,
+                                    controller: phoneController,
+                                    keyboardType: TextInputType.number,
+                                    isBorderVisible: false,
+                                    textInputAction: TextInputAction.done,
+                                    hint: "152485"),
                               ],
                             ),
                           ),
