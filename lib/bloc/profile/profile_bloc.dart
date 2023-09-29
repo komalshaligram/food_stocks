@@ -11,7 +11,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/req_model/file_upload_model/file_upload_model.dart';
+import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 

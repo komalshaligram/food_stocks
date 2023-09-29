@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/req_model/file_upload_model/file_upload_model.dart';
+import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
