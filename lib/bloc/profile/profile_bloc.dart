@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/profile_model/profile_model.dart';
+
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -11,6 +11,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
