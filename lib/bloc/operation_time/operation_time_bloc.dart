@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
-
+import '../../data/model/res_model/profile_res_model/profile_res_model.dart' as res;
 import '../../repository/dio_client.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -182,19 +182,22 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         if (state.OperationTimeList[0].data[0].openingTime != '0:0' &&
             state.OperationTimeList[0].data[0].closingTime != '0:0') {
           ProfileModel reqMap = ProfileModel(
-              statusId: profileModel.statusId,
+             // statusId: profileModel.statusId,
               profileImage: profileModel.profileImage,
-              phoneNumber: '4563217850',
+              phoneNumber: '456321785',
               logo: profileModel.logo,
-              lastName: '',
-              firstName: '',
+             // lastName: '',
+             // firstName: '',
               cityId: profileModel.cityId,
               contactName: profileModel.contactName,
+              createdBy: '60abf964173234001c903a05',
+              updatedBy: '60abf964173234001c903a05',
               address: profileModel.address,
               email: profileModel.email,
               clientDetail: ClientDetail(
                 fax: profileModel.clientDetail?.fax,
-                //  clientTypeId: '60abf964173234001c903a05',
+                 clientTypeId: '60abf964173234001c903a05',
+
                 applicationVersion:
                     profileModel.clientDetail?.applicationVersion,
                 ownerName: profileModel.clientDetail?.ownerName,
@@ -203,7 +206,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
-                // monthlyCredits: 100,
+                monthlyCredits: 100,
                 operationTime: OperationTime(monday: [
                   Monday(
                     from: state.OperationTimeList[0].data[0].openingTime,
@@ -218,8 +221,8 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             final response = await DioClient()
                 .post('/v1/clients/createClient', data: reqMap);
 
-            ProfileModel profileResModel =
-                ProfileModel.fromJson(response);
+            res.ProfileResModel profileResModel =
+                res.ProfileResModel.fromJson(response);
 
             debugPrint('operation time response --- ${profileResModel}');
 
@@ -227,7 +230,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               emit(state.copyWith(isRegisterSuccess: true));
             } else {
               emit(state.copyWith(
-                  isRegisterFail: false, errorMessage: 'login failed'));
+                  isRegisterFail: false, errorMessage: 'Registration failed'));
               await Future.delayed(const Duration(seconds: 2));
               emit(state.copyWith(
                 isRegisterFail: false,
@@ -236,7 +239,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           } catch (e) {
             debugPrint(e.toString());
             emit(state.copyWith(
-                isRegisterFail: true, errorMessage: 'login failed1'));
+                isRegisterFail: true, errorMessage: 'Registration failed1'));
             await Future.delayed(const Duration(seconds: 2));
             emit(state.copyWith(
               isRegisterFail: false,

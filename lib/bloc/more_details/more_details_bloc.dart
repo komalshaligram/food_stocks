@@ -120,12 +120,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         }
       } else if (event is _navigateToOperationTimeScreenEvent) {
         ProfileModel newProfileModel = ProfileModel(
-            statusId: profileModel.statusId,
-            profileImage: profileModel.profileImage,
+      //      statusId: profileModel.statusId,
+           profileImage: profileModel.profileImage,
             phoneNumber: profileModel.phoneNumber,
             logo: imgUrl,
-            lastName: '',
-            firstName: '',
+         //   lastName: '',
+          //  firstName: '',
             cityId: profileModel.cityId,
             contactName: profileModel.contactName,
             address: state.addressController.text,
