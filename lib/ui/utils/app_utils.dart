@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -19,13 +19,14 @@ getScreenWidth(BuildContext context){
   return screenWidth;
 }
 
+
 void SnackBarShow(BuildContext context , String title  ,Color color) {
   final snackBar = SnackBar(
     content: Text(title,
       style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont , color: AppColors.whiteColor,fontWeight: FontWeight.w400),
     ),
     backgroundColor: color,
-    padding: EdgeInsets.all(20),
+    padding: EdgeInsets.all(AppConstants.padding_20),
     behavior: SnackBarBehavior.floating,
 
   );

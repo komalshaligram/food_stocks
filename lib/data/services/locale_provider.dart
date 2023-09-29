@@ -15,6 +15,9 @@ class LocaleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
   // void changeLocaleSettings(Locale newLocale) async {
   //   if(newLocale == Locale('en')) {
   //     _locale = Locale('en');

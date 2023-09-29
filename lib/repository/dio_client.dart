@@ -4,6 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../ui/utils/themes/app_urls.dart';
+
  class DioClient {
   late Dio _dio;
 
@@ -15,7 +17,7 @@ import 'package:flutter/foundation.dart';
 
   DioClient._internal() {
     BaseOptions options = BaseOptions(
-        baseUrl: 'http://192.168.1.80:3001/api',
+        baseUrl: AppUrls.baseUrl,
         connectTimeout: const Duration(milliseconds: 60000),
         receiveTimeout: const Duration(milliseconds: 60000),
         headers: {
@@ -112,18 +114,20 @@ import 'package:flutter/foundation.dart';
 
   }
 
+
+
   Future<Map<String, dynamic>> uploadFileProgressWithFormData(
       {required String path,
-        required FormData formData}) async {
+        required FormData formData,}) async {
     try {
       final response = await _dio.post(path,
         data: formData,
-        options: Options(
+       options: Options(
           receiveTimeout: const Duration(milliseconds: 60 * 1000),
         ),
       );
       return response.data as Map<String, dynamic>;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
   }
@@ -141,7 +145,7 @@ import 'package:flutter/foundation.dart';
         queryParameters: query,
       );
       return response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
   }
@@ -160,7 +164,7 @@ import 'package:flutter/foundation.dart';
       );
 
       return response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
   }
@@ -178,7 +182,7 @@ import 'package:flutter/foundation.dart';
         queryParameters: query,
       );
       return response.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
   }

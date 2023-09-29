@@ -1,5 +1,5 @@
 
-import 'package:food_stock/repository/auth_repo.dart';
+
 import 'package:get_it/get_it.dart';
 
 GetIt getIt = GetIt.instance;
@@ -34,5 +34,5 @@ Future setupInjection() async {
 }*/
 
 Future _registerRepository() async {
-  getIt.registerSingleton(AuthRepository());
+  //getIt.registerSingleton(AuthRepository());
 }

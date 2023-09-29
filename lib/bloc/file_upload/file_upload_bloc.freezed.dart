@@ -202,50 +202,51 @@ abstract class _FileUploadState implements FileUploadState {
 
 /// @nodoc
 mixin _$FileUploadEvent {
-  int get fileIndex => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex) uploadFromCameraEvent,
-    required TResult Function(int fileIndex) uploadFromGalleryEvent,
+    required TResult Function(int fileIndex, int imageSourceIndex)
+        uploadDocumentEvent,
+    required TResult Function(String documentPath) uploadApiEvent,
+    required TResult Function(String documentPath, int fileIndex)
+        deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex)? uploadFromCameraEvent,
-    TResult? Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex)? uploadFromCameraEvent,
-    TResult Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadFromCameraEvent value)
-        uploadFromCameraEvent,
-    required TResult Function(_uploadFromGalleryEvent value)
-        uploadFromGalleryEvent,
+    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult? Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $FileUploadEventCopyWith<FileUploadEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -254,8 +255,6 @@ abstract class $FileUploadEventCopyWith<$Res> {
   factory $FileUploadEventCopyWith(
           FileUploadEvent value, $Res Function(FileUploadEvent) then) =
       _$FileUploadEventCopyWithImpl<$Res, FileUploadEvent>;
-  @useResult
-  $Res call({int fileIndex});
 }
 
 /// @nodoc
@@ -267,49 +266,39 @@ class _$FileUploadEventCopyWithImpl<$Res, $Val extends FileUploadEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? fileIndex = null,
-  }) {
-    return _then(_value.copyWith(
-      fileIndex: null == fileIndex
-          ? _value.fileIndex
-          : fileIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$_uploadFromCameraEventCopyWith<$Res>
-    implements $FileUploadEventCopyWith<$Res> {
-  factory _$$_uploadFromCameraEventCopyWith(_$_uploadFromCameraEvent value,
-          $Res Function(_$_uploadFromCameraEvent) then) =
-      __$$_uploadFromCameraEventCopyWithImpl<$Res>;
-  @override
+abstract class _$$_uploadDocumentEventCopyWith<$Res> {
+  factory _$$_uploadDocumentEventCopyWith(_$_uploadDocumentEvent value,
+          $Res Function(_$_uploadDocumentEvent) then) =
+      __$$_uploadDocumentEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int fileIndex});
+  $Res call({int fileIndex, int imageSourceIndex});
 }
 
 /// @nodoc
-class __$$_uploadFromCameraEventCopyWithImpl<$Res>
-    extends _$FileUploadEventCopyWithImpl<$Res, _$_uploadFromCameraEvent>
-    implements _$$_uploadFromCameraEventCopyWith<$Res> {
-  __$$_uploadFromCameraEventCopyWithImpl(_$_uploadFromCameraEvent _value,
-      $Res Function(_$_uploadFromCameraEvent) _then)
+class __$$_uploadDocumentEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_uploadDocumentEvent>
+    implements _$$_uploadDocumentEventCopyWith<$Res> {
+  __$$_uploadDocumentEventCopyWithImpl(_$_uploadDocumentEvent _value,
+      $Res Function(_$_uploadDocumentEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? fileIndex = null,
+    Object? imageSourceIndex = null,
   }) {
-    return _then(_$_uploadFromCameraEvent(
+    return _then(_$_uploadDocumentEvent(
       fileIndex: null == fileIndex
           ? _value.fileIndex
           : fileIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      imageSourceIndex: null == imageSourceIndex
+          ? _value.imageSourceIndex
+          : imageSourceIndex // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -317,63 +306,73 @@ class __$$_uploadFromCameraEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_uploadFromCameraEvent implements _uploadFromCameraEvent {
-  _$_uploadFromCameraEvent({required this.fileIndex});
+class _$_uploadDocumentEvent implements _uploadDocumentEvent {
+  _$_uploadDocumentEvent(
+      {required this.fileIndex, required this.imageSourceIndex});
 
   @override
   final int fileIndex;
+  @override
+  final int imageSourceIndex;
 
   @override
   String toString() {
-    return 'FileUploadEvent.uploadFromCameraEvent(fileIndex: $fileIndex)';
+    return 'FileUploadEvent.uploadDocumentEvent(fileIndex: $fileIndex, imageSourceIndex: $imageSourceIndex)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_uploadFromCameraEvent &&
+            other is _$_uploadDocumentEvent &&
             (identical(other.fileIndex, fileIndex) ||
-                other.fileIndex == fileIndex));
+                other.fileIndex == fileIndex) &&
+            (identical(other.imageSourceIndex, imageSourceIndex) ||
+                other.imageSourceIndex == imageSourceIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, fileIndex);
+  int get hashCode => Object.hash(runtimeType, fileIndex, imageSourceIndex);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_uploadFromCameraEventCopyWith<_$_uploadFromCameraEvent> get copyWith =>
-      __$$_uploadFromCameraEventCopyWithImpl<_$_uploadFromCameraEvent>(
+  _$$_uploadDocumentEventCopyWith<_$_uploadDocumentEvent> get copyWith =>
+      __$$_uploadDocumentEventCopyWithImpl<_$_uploadDocumentEvent>(
           this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex) uploadFromCameraEvent,
-    required TResult Function(int fileIndex) uploadFromGalleryEvent,
+    required TResult Function(int fileIndex, int imageSourceIndex)
+        uploadDocumentEvent,
+    required TResult Function(String documentPath) uploadApiEvent,
+    required TResult Function(String documentPath, int fileIndex)
+        deleteFileEvent,
   }) {
-    return uploadFromCameraEvent(fileIndex);
+    return uploadDocumentEvent(fileIndex, imageSourceIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex)? uploadFromCameraEvent,
-    TResult? Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) {
-    return uploadFromCameraEvent?.call(fileIndex);
+    return uploadDocumentEvent?.call(fileIndex, imageSourceIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex)? uploadFromCameraEvent,
-    TResult Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadFromCameraEvent != null) {
-      return uploadFromCameraEvent(fileIndex);
+    if (uploadDocumentEvent != null) {
+      return uploadDocumentEvent(fileIndex, imageSourceIndex);
     }
     return orElse();
   }
@@ -381,74 +380,221 @@ class _$_uploadFromCameraEvent implements _uploadFromCameraEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadFromCameraEvent value)
-        uploadFromCameraEvent,
-    required TResult Function(_uploadFromGalleryEvent value)
-        uploadFromGalleryEvent,
+    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) {
-    return uploadFromCameraEvent(this);
+    return uploadDocumentEvent(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult? Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) {
-    return uploadFromCameraEvent?.call(this);
+    return uploadDocumentEvent?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadFromCameraEvent != null) {
-      return uploadFromCameraEvent(this);
+    if (uploadDocumentEvent != null) {
+      return uploadDocumentEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _uploadFromCameraEvent implements FileUploadEvent {
-  factory _uploadFromCameraEvent({required final int fileIndex}) =
-      _$_uploadFromCameraEvent;
+abstract class _uploadDocumentEvent implements FileUploadEvent {
+  factory _uploadDocumentEvent(
+      {required final int fileIndex,
+      required final int imageSourceIndex}) = _$_uploadDocumentEvent;
 
-  @override
   int get fileIndex;
-  @override
+  int get imageSourceIndex;
   @JsonKey(ignore: true)
-  _$$_uploadFromCameraEventCopyWith<_$_uploadFromCameraEvent> get copyWith =>
+  _$$_uploadDocumentEventCopyWith<_$_uploadDocumentEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_uploadFromGalleryEventCopyWith<$Res>
-    implements $FileUploadEventCopyWith<$Res> {
-  factory _$$_uploadFromGalleryEventCopyWith(_$_uploadFromGalleryEvent value,
-          $Res Function(_$_uploadFromGalleryEvent) then) =
-      __$$_uploadFromGalleryEventCopyWithImpl<$Res>;
-  @override
+abstract class _$$_uploadApiEventCopyWith<$Res> {
+  factory _$$_uploadApiEventCopyWith(
+          _$_uploadApiEvent value, $Res Function(_$_uploadApiEvent) then) =
+      __$$_uploadApiEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int fileIndex});
+  $Res call({String documentPath});
 }
 
 /// @nodoc
-class __$$_uploadFromGalleryEventCopyWithImpl<$Res>
-    extends _$FileUploadEventCopyWithImpl<$Res, _$_uploadFromGalleryEvent>
-    implements _$$_uploadFromGalleryEventCopyWith<$Res> {
-  __$$_uploadFromGalleryEventCopyWithImpl(_$_uploadFromGalleryEvent _value,
-      $Res Function(_$_uploadFromGalleryEvent) _then)
+class __$$_uploadApiEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_uploadApiEvent>
+    implements _$$_uploadApiEventCopyWith<$Res> {
+  __$$_uploadApiEventCopyWithImpl(
+      _$_uploadApiEvent _value, $Res Function(_$_uploadApiEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? documentPath = null,
+  }) {
+    return _then(_$_uploadApiEvent(
+      documentPath: null == documentPath
+          ? _value.documentPath
+          : documentPath // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_uploadApiEvent implements _uploadApiEvent {
+  _$_uploadApiEvent({required this.documentPath});
+
+  @override
+  final String documentPath;
+
+  @override
+  String toString() {
+    return 'FileUploadEvent.uploadApiEvent(documentPath: $documentPath)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_uploadApiEvent &&
+            (identical(other.documentPath, documentPath) ||
+                other.documentPath == documentPath));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, documentPath);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_uploadApiEventCopyWith<_$_uploadApiEvent> get copyWith =>
+      __$$_uploadApiEventCopyWithImpl<_$_uploadApiEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int fileIndex, int imageSourceIndex)
+        uploadDocumentEvent,
+    required TResult Function(String documentPath) uploadApiEvent,
+    required TResult Function(String documentPath, int fileIndex)
+        deleteFileEvent,
+  }) {
+    return uploadApiEvent(documentPath);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
+  }) {
+    return uploadApiEvent?.call(documentPath);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
+    required TResult orElse(),
+  }) {
+    if (uploadApiEvent != null) {
+      return uploadApiEvent(documentPath);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
+  }) {
+    return uploadApiEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+  }) {
+    return uploadApiEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    required TResult orElse(),
+  }) {
+    if (uploadApiEvent != null) {
+      return uploadApiEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _uploadApiEvent implements FileUploadEvent {
+  factory _uploadApiEvent({required final String documentPath}) =
+      _$_uploadApiEvent;
+
+  String get documentPath;
+  @JsonKey(ignore: true)
+  _$$_uploadApiEventCopyWith<_$_uploadApiEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_deleteFileEventCopyWith<$Res> {
+  factory _$$_deleteFileEventCopyWith(
+          _$_deleteFileEvent value, $Res Function(_$_deleteFileEvent) then) =
+      __$$_deleteFileEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String documentPath, int fileIndex});
+}
+
+/// @nodoc
+class __$$_deleteFileEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_deleteFileEvent>
+    implements _$$_deleteFileEventCopyWith<$Res> {
+  __$$_deleteFileEventCopyWithImpl(
+      _$_deleteFileEvent _value, $Res Function(_$_deleteFileEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? documentPath = null,
     Object? fileIndex = null,
   }) {
-    return _then(_$_uploadFromGalleryEvent(
+    return _then(_$_deleteFileEvent(
+      documentPath: null == documentPath
+          ? _value.documentPath
+          : documentPath // ignore: cast_nullable_to_non_nullable
+              as String,
       fileIndex: null == fileIndex
           ? _value.fileIndex
           : fileIndex // ignore: cast_nullable_to_non_nullable
@@ -459,63 +605,71 @@ class __$$_uploadFromGalleryEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_uploadFromGalleryEvent implements _uploadFromGalleryEvent {
-  _$_uploadFromGalleryEvent({required this.fileIndex});
+class _$_deleteFileEvent implements _deleteFileEvent {
+  _$_deleteFileEvent({required this.documentPath, required this.fileIndex});
 
+  @override
+  final String documentPath;
   @override
   final int fileIndex;
 
   @override
   String toString() {
-    return 'FileUploadEvent.uploadFromGalleryEvent(fileIndex: $fileIndex)';
+    return 'FileUploadEvent.deleteFileEvent(documentPath: $documentPath, fileIndex: $fileIndex)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_uploadFromGalleryEvent &&
+            other is _$_deleteFileEvent &&
+            (identical(other.documentPath, documentPath) ||
+                other.documentPath == documentPath) &&
             (identical(other.fileIndex, fileIndex) ||
                 other.fileIndex == fileIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, fileIndex);
+  int get hashCode => Object.hash(runtimeType, documentPath, fileIndex);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_uploadFromGalleryEventCopyWith<_$_uploadFromGalleryEvent> get copyWith =>
-      __$$_uploadFromGalleryEventCopyWithImpl<_$_uploadFromGalleryEvent>(
-          this, _$identity);
+  _$$_deleteFileEventCopyWith<_$_deleteFileEvent> get copyWith =>
+      __$$_deleteFileEventCopyWithImpl<_$_deleteFileEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex) uploadFromCameraEvent,
-    required TResult Function(int fileIndex) uploadFromGalleryEvent,
+    required TResult Function(int fileIndex, int imageSourceIndex)
+        uploadDocumentEvent,
+    required TResult Function(String documentPath) uploadApiEvent,
+    required TResult Function(String documentPath, int fileIndex)
+        deleteFileEvent,
   }) {
-    return uploadFromGalleryEvent(fileIndex);
+    return deleteFileEvent(documentPath, fileIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex)? uploadFromCameraEvent,
-    TResult? Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult? Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult? Function(String documentPath)? uploadApiEvent,
+    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
   }) {
-    return uploadFromGalleryEvent?.call(fileIndex);
+    return deleteFileEvent?.call(documentPath, fileIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex)? uploadFromCameraEvent,
-    TResult Function(int fileIndex)? uploadFromGalleryEvent,
+    TResult Function(int fileIndex, int imageSourceIndex)? uploadDocumentEvent,
+    TResult Function(String documentPath)? uploadApiEvent,
+    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadFromGalleryEvent != null) {
-      return uploadFromGalleryEvent(fileIndex);
+    if (deleteFileEvent != null) {
+      return deleteFileEvent(documentPath, fileIndex);
     }
     return orElse();
   }
@@ -523,45 +677,46 @@ class _$_uploadFromGalleryEvent implements _uploadFromGalleryEvent {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_uploadFromCameraEvent value)
-        uploadFromCameraEvent,
-    required TResult Function(_uploadFromGalleryEvent value)
-        uploadFromGalleryEvent,
+    required TResult Function(_uploadDocumentEvent value) uploadDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
   }) {
-    return uploadFromGalleryEvent(this);
+    return deleteFileEvent(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult? Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult? Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
   }) {
-    return uploadFromGalleryEvent?.call(this);
+    return deleteFileEvent?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_uploadFromCameraEvent value)? uploadFromCameraEvent,
-    TResult Function(_uploadFromGalleryEvent value)? uploadFromGalleryEvent,
+    TResult Function(_uploadDocumentEvent value)? uploadDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
     required TResult orElse(),
   }) {
-    if (uploadFromGalleryEvent != null) {
-      return uploadFromGalleryEvent(this);
+    if (deleteFileEvent != null) {
+      return deleteFileEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _uploadFromGalleryEvent implements FileUploadEvent {
-  factory _uploadFromGalleryEvent({required final int fileIndex}) =
-      _$_uploadFromGalleryEvent;
+abstract class _deleteFileEvent implements FileUploadEvent {
+  factory _deleteFileEvent(
+      {required final String documentPath,
+      required final int fileIndex}) = _$_deleteFileEvent;
 
-  @override
+  String get documentPath;
   int get fileIndex;
-  @override
   @JsonKey(ignore: true)
-  _$$_uploadFromGalleryEventCopyWith<_$_uploadFromGalleryEvent> get copyWith =>
+  _$$_deleteFileEventCopyWith<_$_deleteFileEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -32,6 +33,7 @@ class FileUploadScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    FileUploadBloc bloc = context.read<FileUploadBloc>();
     return BlocBuilder<FileUploadBloc, FileUploadState>(
   builder: (context, state) {
     return Scaffold(
@@ -41,7 +43,7 @@ class FileUploadScreenWidget extends StatelessWidget {
      elevation: 0,
      titleSpacing: 0,
      leadingWidth: 60,
-     title: Text(AppLocalizations.of(context)!.forms_files,style: AppStyles.rkRegularTextStyle(size: 16,fontWeight: FontWeight.w400,color: AppColors.blackColor)),
+     title: Text(AppLocalizations.of(context)!.forms_files,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,fontWeight: FontWeight.w400,color: AppColors.blackColor)),
      leading:  GestureDetector(
          onTap: (){
            Navigator.pop(context);
@@ -63,16 +65,18 @@ class FileUploadScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(AppLocalizations.of(context)!.promissory_note ,
-                      style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
 
                     ButtonWidget(
                       buttonText: AppLocalizations.of(context)!.taken_down,
                        height: 30,
                        width: 70,
-                      fontSize: 16,
-                      radius: 5,
+                      fontSize: AppConstants.smallFont,
+                      radius: AppConstants.radius_5,
                       bGColor: AppColors.blueColor,
-                      onPressed: (){},
+                      onPressed: (){
+                        bloc.add(FileUploadEvent.deleteFileEvent(fileIndex: 1,documentPath: state.promissoryNote.path));
+                      },
                       fontColors: AppColors.whiteColor,
                     ),
                   ],
@@ -88,15 +92,17 @@ class FileUploadScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(AppLocalizations.of(context)!.personal_guarantee,
-                        style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
                     ButtonWidget(
                       buttonText: AppLocalizations.of(context)!.taken_down,
                       height: 30,
                       width: 70,
-                      fontSize: 16,
-                      radius: 5,
+                      fontSize: AppConstants.smallFont,
+                      radius: AppConstants.radius_5,
                       bGColor: AppColors.blueColor,
-                      onPressed: (){},
+                      onPressed: (){
+                        bloc.add(FileUploadEvent.deleteFileEvent(fileIndex: 2,documentPath: state.personalGuarantee.path));
+                      },
                       fontColors: AppColors.whiteColor,
                     ),
 
@@ -109,8 +115,25 @@ class FileUploadScreenWidget extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-             Text(AppLocalizations.of(context)!.photo_tz,
-                    style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 Text(AppLocalizations.of(context)!.photo_tz,
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+                 ButtonWidget(
+                   buttonText: AppLocalizations.of(context)!.taken_down,
+                   height: 30,
+                   width: 70,
+                   fontSize: AppConstants.smallFont,
+                   radius: AppConstants.radius_5,
+                   bGColor: AppColors.blueColor,
+                   onPressed: (){
+                     bloc.add(FileUploadEvent.deleteFileEvent(fileIndex: 3,documentPath: state.photoOfTZ.path));
+                   },
+                   fontColors: AppColors.whiteColor,
+                 ),
+               ],
+             ),
               const SizedBox(
                 height: 10,
               ),
@@ -118,8 +141,25 @@ class FileUploadScreenWidget extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                Text(AppLocalizations.of(context)!.business_certificate,
-                    style: AppStyles.rkRegularTextStyle(size: 16,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context)!.business_certificate,
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.textColor ,fontWeight: FontWeight.w400)),
+                    ButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.taken_down,
+                      height: 30,
+                      width: 70,
+                      fontSize: AppConstants.smallFont,
+                      radius: AppConstants.radius_5,
+                      bGColor: AppColors.blueColor,
+                      onPressed: (){
+                        bloc.add(FileUploadEvent.deleteFileEvent(fileIndex: 4,documentPath: state.businessCertificate.path));
+                      },
+                      fontColors: AppColors.whiteColor,
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -251,7 +291,7 @@ class ContainerWidget extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.upload_photo,
                                 style: AppStyles.rkRegularTextStyle(
-                                    size: 14,
+                                    size: AppConstants.font_14,
                                     color: AppColors.textColor,
                                     fontWeight: FontWeight.w400),
                               ),
@@ -261,7 +301,7 @@ class ContainerWidget extends StatelessWidget {
                           child: Text(
                             AppLocalizations.of(context)!.upload_photo,
                             style: AppStyles.rkRegularTextStyle(
-                                size: 14,
+                                size: AppConstants.font_14,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -272,7 +312,7 @@ class ContainerWidget extends StatelessWidget {
                           child: Text(
                             AppLocalizations.of(context)!.upload_photo,
                             style: AppStyles.rkRegularTextStyle(
-                                size: 14,
+                                size: AppConstants.font_14,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -283,7 +323,7 @@ class ContainerWidget extends StatelessWidget {
                           child: Text(
                             AppLocalizations.of(context)!.upload_photo,
                             style: AppStyles.rkRegularTextStyle(
-                                size: 14,
+                                size: AppConstants.font_14,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -316,7 +356,7 @@ class ContainerWidget extends StatelessWidget {
                         onTap: (){
                           context
                               .read<FileUploadBloc>()
-                              .add(FileUploadEvent.uploadFromCameraEvent(fileIndex: fileIndex));
+                              .add(FileUploadEvent.uploadDocumentEvent(fileIndex: fileIndex ,imageSourceIndex: 1 ));
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.camera_alt_rounded)),
@@ -324,7 +364,7 @@ class ContainerWidget extends StatelessWidget {
                         onTap: (){
                           context
                               .read<FileUploadBloc>()
-                              .add(FileUploadEvent.uploadFromGalleryEvent(fileIndex: fileIndex));
+                              .add(FileUploadEvent.uploadDocumentEvent(fileIndex: fileIndex,imageSourceIndex: 2));
                           Navigator.pop(c1);
                         },
                         child: Icon(Icons.photo)),

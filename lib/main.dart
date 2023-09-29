@@ -8,9 +8,8 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'data/services/locale_provider.dart';
 import 'bloc/file_upload/file_upload_bloc.dart';
-
+import 'data/services/locale_provider.dart';
 Language selectedLang = Language.Hebrew;
 
 //
@@ -28,7 +27,7 @@ Language selectedLang = Language.Hebrew;
 //             create: (context) => ProfileBloc(),
 //           ),
 //           BlocProvider(
-//             create: (context) => MoreDetailsBloc(),
+//             create: (context) => Profile3Bloc(),
 //           ),
 //           BlocProvider(
 //             create: (context) => OperationTimeBloc(),
@@ -45,16 +44,21 @@ Language selectedLang = Language.Hebrew;
 //       ),
 //     );
 void main() => runApp(
-      MaterialApp(
+  MultiBlocProvider(
+    providers: [
+    BlocProvider(
+      create: (context) => FileUploadBloc(),
+          ),
+    ],
+
+  child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Directionality(
           textDirection: TextDirection.rtl,
-          child: BlocProvider(
-            create: (context) => SplashBloc(),
             child: const MyApp(),
-          ),
         ),
       ),
+),
     );
 
 class MyApp extends StatelessWidget {
@@ -63,7 +67,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
+      create: (context) => LocaleProvider()..setAppLocale(Locale('he')),
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(
