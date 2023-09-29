@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import '../../bloc/profile3/profile3_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -51,7 +53,7 @@ class ProfileScreenWidget extends StatelessWidget {
             title: Text(
               AppLocalizations.of(context)!.more_details,
               style: AppStyles.rkRegularTextStyle(
-                  size: 16, color: Colors.black, fontWeight: FontWeight.w400),
+                  size: AppConstants.smallFont, color: Colors.black, fontWeight: FontWeight.w400),
             ),
             backgroundColor: Colors.white,
             titleSpacing: 0,
@@ -75,9 +77,9 @@ class ProfileScreenWidget extends StatelessWidget {
                     icon: const Icon(Icons.keyboard_arrow_down),
                     alignment: Alignment.bottomCenter,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 8, right: 8),
+                      contentPadding: EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(3.0),
+                        borderRadius: BorderRadius.circular(AppConstants.radius_3),
                         borderSide: BorderSide(
                           color: AppColors.borderColor,
                         ),
@@ -87,12 +89,12 @@ class ProfileScreenWidget extends StatelessWidget {
                     elevation: 0,
                     //  borderRadius: BorderRadius.circular(3),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: AppConstants.smallFont,
                       color: Colors.black,
                     ),
                     value: state.selectCity,
                     hint: const Text(
-                      'select tag',
+                      AppStrings.selectTagString,
                     ),
                     items: state.institutionalList.map((tag) {
                       return DropdownMenuItem<String>(
@@ -117,6 +119,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
                     fillColor: Colors.transparent,
+
                   ),
                   const SizedBox(
                     height: 7,
@@ -127,8 +130,9 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.emailController,
                     keyboardType: TextInputType.emailAddress,
-                    hint: "test2gmail.com",
+                    hint: AppStrings.emailString,
                     fillColor: Colors.transparent,
+
                   ),
                   const SizedBox(
                     height: 7,

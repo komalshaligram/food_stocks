@@ -36,7 +36,7 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // HomeBloc bloc = context.read<HomeBloc>();
+  //   HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(

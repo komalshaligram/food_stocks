@@ -31,7 +31,7 @@ class SplashScreenWidget extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.isRedirected) {
-          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+          Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name);
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(

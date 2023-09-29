@@ -48,7 +48,7 @@ enum RouteDefine {
   messageContentScreen,
   storeScreen,
   otpScreen,
-  fileUploadScreen
+  fileUploadScreen,
 
 
 }
@@ -80,14 +80,14 @@ class AppRouting {
       RouteDefine.aboutAppScreen.name: (_) => AboutAppRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
-      RouteDefine.otpScreen.name:(_)=>OTPRoute.route
+      RouteDefine.otpScreen.name:(_)=> OTPRoute.route
     };
 
     final routeBuilder = routes[settings.name];
 
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
-      settings: RouteSettings(name: settings.name),
+      settings: RouteSettings(name: settings.name,arguments: settings.arguments),
     );
   }
 }

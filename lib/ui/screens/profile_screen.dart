@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
@@ -10,6 +11,7 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -71,20 +73,20 @@ class ProfileScreenWidget extends StatelessWidget {
                         height: 10,
                       ),
                       Container(
-                        height: 80,
+                        height: AppConstants.containerHeight_80,
                         width: screenWidth,
                         alignment: Alignment.center,
                         child: Container(
-                          height: 80,
-                          width: 80,
+                          height: AppConstants.containerHeight_80,
+                          width: AppConstants.containerHeight_80,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(200),
+                            borderRadius: BorderRadius.circular(AppConstants.radius_200),
                             color: AppColors.mainColor.withOpacity(0.1),
                           ),
                           child: state.image.path == ""
                               ? const Icon(Icons.person)
                               : ClipRRect(
-                                  borderRadius: BorderRadius.circular(40),
+                                  borderRadius: BorderRadius.circular(AppConstants.radius_40),
                                   child: Image.file(File(state.image.path),
                                       fit: BoxFit.fill),
                                 ),
@@ -147,7 +149,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     height: 29,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(AppConstants.radius_20),
                                         border: Border.all(
                                             color: AppColors.borderColor)),
                                     child: Icon(
@@ -199,7 +201,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     //dropdownColor: AppColors.mainColor.withOpacity(0.1),
                     value: state.selectedBusiness,
                     hint: const Text(
-                      'select tag',
+                      AppStrings.selectTagString,
                     ),
                     items: state.institutionalList.map((tag) {
                       return DropdownMenuItem<String>(
@@ -223,6 +225,7 @@ class ProfileScreenWidget extends StatelessWidget {
                     keyboardType: TextInputType.text,
                     hint: AppLocalizations.of(context)!.life_grocery_store,
                     fillColor: Colors.transparent,
+
                   ),
                   SizedBox(
                     height: 7,
@@ -233,8 +236,9 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.hpController,
                     keyboardType: TextInputType.number,
-                    hint: "152485",
+                    hint: AppStrings.numberString,
                     fillColor: Colors.transparent,
+
                   ),
                   SizedBox(
                     height: 7,
@@ -245,8 +249,9 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.ownerController,
                     keyboardType: TextInputType.text,
-                    hint: "ajsdjg",
+                    hint: AppStrings.hintString,
                     fillColor: Colors.transparent,
+
                   ),
                   SizedBox(
                     height: 7,
@@ -257,8 +262,9 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.idController,
                     keyboardType: TextInputType.number,
-                    hint: "045896525",
+                    hint: AppStrings.numberString,
                     fillColor: Colors.transparent,
+
                   ),
                   CustomContainerWidget(
                     name: AppLocalizations.of(context)!.contact,
@@ -269,8 +275,9 @@ class ProfileScreenWidget extends StatelessWidget {
                   CustomFormField(
                     controller: state.contactController,
                     keyboardType: TextInputType.text,
-                    hint: "text",
+                    hint: AppStrings.hintString,
                     fillColor: Colors.transparent,
+
                   ),
                   const SizedBox(
                     height: 40,
