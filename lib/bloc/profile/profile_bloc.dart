@@ -7,8 +7,10 @@ import 'package:food_stock/data/model/res_model/business_type_model/business_typ
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
@@ -27,67 +29,50 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
-      if (event is _profilePicFromCameraEvent) {
-        File? image;
-        final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(source: ImageSource.camera);
+      if (event is _pickProfileImageEvent) {
+        final pickedFile = await ImagePicker().pickImage(
+            source:
+                event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
-          image = File(pickedFile.path);
-          try {
-            debugPrint('File = ${image.path}');
-            final response = await DioClient().uploadFileProgressWithFormData(
-              path: '/v1/auth/upload',
-              formData: FormData.fromMap(
-                {
-                  AppStrings.profileImageString: await MultipartFile.fromFile(
-                      image.path,
-                      contentType: MediaType('image', 'png'))
-                },
-              ),
-            );
-            FileUploadModel profileImageModel =
-            FileUploadModel.fromJson(response);
-            debugPrint('img url = ${profileImageModel.profileImgFileName}');
-            if (profileImageModel.profileImgFileName != '') {
-              imgUrl = profileImageModel.profileImgFileName ?? '';
+          CroppedFile? croppedImage = await cropImage(
+              path: pickedFile.path, shape: CropStyle.circle, quality: 100);
+          String imageSize = getFileSizeString(
+              bytes:
+                  await File(croppedImage?.path ?? pickedFile.path).length());
+          if (int.parse(imageSize.split(' ').first) <= 500 &&
+              imageSize.split(' ').last == 'KB') {
+            try {
+              final response = await DioClient().uploadFileProgressWithFormData(
+                path: AppUrls.FileUploadUrl,
+                formData: FormData.fromMap(
+                  {
+                    AppStrings.profileImageString: await MultipartFile.fromFile(
+                        croppedImage?.path ?? pickedFile.path,
+                        contentType: MediaType('image', 'png'))
+                  },
+                ),
+              );
+              FileUploadModel profileImageModel =
+                  FileUploadModel.fromJson(response);
+              debugPrint('img url = ${profileImageModel.profileImgFileName}');
+              if (profileImageModel.profileImgFileName != '') {
+                imgUrl = profileImageModel.profileImgFileName ?? '';
+              }
+              emit(state.copyWith(
+                  image: File(croppedImage?.path ?? pickedFile.path)));
+            } on ServerException {
+              showSnackBar(event.context, AppStrings.imageNotSetString,
+                  AppColors.redColor);
             }
-            emit(state.copyWith(image: image));
-          } on ServerException {
-            SnackBarShow(event.context, 'image not upload', AppColors.redColor);
-          }
-        }
-      } else if (event is _profilePicFromGalleryEvent) {
-        File? image;
-        final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-        if (pickedFile != null) {
-          image = File(pickedFile.path);
-          try {
-            final response = await DioClient().uploadFileProgressWithFormData(
-              path: '/v1/auth/upload',
-              formData: FormData.fromMap(
-                {
-                  AppStrings.profileImageString: await MultipartFile.fromFile(
-                      image.path,
-                      contentType: MediaType('image', 'png'))
-                },
-              ),
-            );
-            FileUploadModel profileImageModel =
-            FileUploadModel.fromJson(response);
-            debugPrint('img url = ${profileImageModel.profileImgFileName}');
-            if (profileImageModel.profileImgFileName != '') {
-              imgUrl = profileImageModel.profileImgFileName ?? '';
-            }
-            emit(state.copyWith(image: image));
-          } on ServerException {
-            SnackBarShow(event.context, 'image not upload', AppColors.redColor);
+          } else {
+            showSnackBar(event.context, AppStrings.fileSizeLimit500KBString,
+                AppColors.redColor);
           }
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
           final response =
-              await DioClient().get(path: '/v1/settings/clientTypes');
+              await DioClient().get(path: AppUrls.businessTypesUrl);
           BusinessTypeModel businessTypeModel =
               BusinessTypeModel.fromJson(response);
           emit(state.copyWith(

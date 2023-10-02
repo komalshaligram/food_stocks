@@ -17,9 +17,13 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$FileUploadState {
   File get promissoryNote => throw _privateConstructorUsedError;
+  bool get isPromissoryNoteDocument => throw _privateConstructorUsedError;
   File get personalGuarantee => throw _privateConstructorUsedError;
+  bool get isPersonalGuaranteeDocument => throw _privateConstructorUsedError;
   File get photoOfTZ => throw _privateConstructorUsedError;
+  bool get isPhotoOfTZDocument => throw _privateConstructorUsedError;
   File get businessCertificate => throw _privateConstructorUsedError;
+  bool get isBusinessCertificateDocument => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FileUploadStateCopyWith<FileUploadState> get copyWith =>
@@ -34,9 +38,13 @@ abstract class $FileUploadStateCopyWith<$Res> {
   @useResult
   $Res call(
       {File promissoryNote,
+      bool isPromissoryNoteDocument,
       File personalGuarantee,
+      bool isPersonalGuaranteeDocument,
       File photoOfTZ,
-      File businessCertificate});
+      bool isPhotoOfTZDocument,
+      File businessCertificate,
+      bool isBusinessCertificateDocument});
 }
 
 /// @nodoc
@@ -53,27 +61,47 @@ class _$FileUploadStateCopyWithImpl<$Res, $Val extends FileUploadState>
   @override
   $Res call({
     Object? promissoryNote = null,
+    Object? isPromissoryNoteDocument = null,
     Object? personalGuarantee = null,
+    Object? isPersonalGuaranteeDocument = null,
     Object? photoOfTZ = null,
+    Object? isPhotoOfTZDocument = null,
     Object? businessCertificate = null,
+    Object? isBusinessCertificateDocument = null,
   }) {
     return _then(_value.copyWith(
       promissoryNote: null == promissoryNote
           ? _value.promissoryNote
           : promissoryNote // ignore: cast_nullable_to_non_nullable
               as File,
+      isPromissoryNoteDocument: null == isPromissoryNoteDocument
+          ? _value.isPromissoryNoteDocument
+          : isPromissoryNoteDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       personalGuarantee: null == personalGuarantee
           ? _value.personalGuarantee
           : personalGuarantee // ignore: cast_nullable_to_non_nullable
               as File,
+      isPersonalGuaranteeDocument: null == isPersonalGuaranteeDocument
+          ? _value.isPersonalGuaranteeDocument
+          : isPersonalGuaranteeDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       photoOfTZ: null == photoOfTZ
           ? _value.photoOfTZ
           : photoOfTZ // ignore: cast_nullable_to_non_nullable
               as File,
+      isPhotoOfTZDocument: null == isPhotoOfTZDocument
+          ? _value.isPhotoOfTZDocument
+          : isPhotoOfTZDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       businessCertificate: null == businessCertificate
           ? _value.businessCertificate
           : businessCertificate // ignore: cast_nullable_to_non_nullable
               as File,
+      isBusinessCertificateDocument: null == isBusinessCertificateDocument
+          ? _value.isBusinessCertificateDocument
+          : isBusinessCertificateDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -88,9 +116,13 @@ abstract class _$$_FileUploadStateCopyWith<$Res>
   @useResult
   $Res call(
       {File promissoryNote,
+      bool isPromissoryNoteDocument,
       File personalGuarantee,
+      bool isPersonalGuaranteeDocument,
       File photoOfTZ,
-      File businessCertificate});
+      bool isPhotoOfTZDocument,
+      File businessCertificate,
+      bool isBusinessCertificateDocument});
 }
 
 /// @nodoc
@@ -105,27 +137,47 @@ class __$$_FileUploadStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? promissoryNote = null,
+    Object? isPromissoryNoteDocument = null,
     Object? personalGuarantee = null,
+    Object? isPersonalGuaranteeDocument = null,
     Object? photoOfTZ = null,
+    Object? isPhotoOfTZDocument = null,
     Object? businessCertificate = null,
+    Object? isBusinessCertificateDocument = null,
   }) {
     return _then(_$_FileUploadState(
       promissoryNote: null == promissoryNote
           ? _value.promissoryNote
           : promissoryNote // ignore: cast_nullable_to_non_nullable
               as File,
+      isPromissoryNoteDocument: null == isPromissoryNoteDocument
+          ? _value.isPromissoryNoteDocument
+          : isPromissoryNoteDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       personalGuarantee: null == personalGuarantee
           ? _value.personalGuarantee
           : personalGuarantee // ignore: cast_nullable_to_non_nullable
               as File,
+      isPersonalGuaranteeDocument: null == isPersonalGuaranteeDocument
+          ? _value.isPersonalGuaranteeDocument
+          : isPersonalGuaranteeDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       photoOfTZ: null == photoOfTZ
           ? _value.photoOfTZ
           : photoOfTZ // ignore: cast_nullable_to_non_nullable
               as File,
+      isPhotoOfTZDocument: null == isPhotoOfTZDocument
+          ? _value.isPhotoOfTZDocument
+          : isPhotoOfTZDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       businessCertificate: null == businessCertificate
           ? _value.businessCertificate
           : businessCertificate // ignore: cast_nullable_to_non_nullable
               as File,
+      isBusinessCertificateDocument: null == isBusinessCertificateDocument
+          ? _value.isBusinessCertificateDocument
+          : isBusinessCertificateDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -135,22 +187,34 @@ class __$$_FileUploadStateCopyWithImpl<$Res>
 class _$_FileUploadState implements _FileUploadState {
   const _$_FileUploadState(
       {required this.promissoryNote,
+      required this.isPromissoryNoteDocument,
       required this.personalGuarantee,
+      required this.isPersonalGuaranteeDocument,
       required this.photoOfTZ,
-      required this.businessCertificate});
+      required this.isPhotoOfTZDocument,
+      required this.businessCertificate,
+      required this.isBusinessCertificateDocument});
 
   @override
   final File promissoryNote;
   @override
+  final bool isPromissoryNoteDocument;
+  @override
   final File personalGuarantee;
+  @override
+  final bool isPersonalGuaranteeDocument;
   @override
   final File photoOfTZ;
   @override
+  final bool isPhotoOfTZDocument;
+  @override
   final File businessCertificate;
+  @override
+  final bool isBusinessCertificateDocument;
 
   @override
   String toString() {
-    return 'FileUploadState(promissoryNote: $promissoryNote, personalGuarantee: $personalGuarantee, photoOfTZ: $photoOfTZ, businessCertificate: $businessCertificate)';
+    return 'FileUploadState(promissoryNote: $promissoryNote, isPromissoryNoteDocument: $isPromissoryNoteDocument, personalGuarantee: $personalGuarantee, isPersonalGuaranteeDocument: $isPersonalGuaranteeDocument, photoOfTZ: $photoOfTZ, isPhotoOfTZDocument: $isPhotoOfTZDocument, businessCertificate: $businessCertificate, isBusinessCertificateDocument: $isBusinessCertificateDocument)';
   }
 
   @override
@@ -160,17 +224,38 @@ class _$_FileUploadState implements _FileUploadState {
             other is _$_FileUploadState &&
             (identical(other.promissoryNote, promissoryNote) ||
                 other.promissoryNote == promissoryNote) &&
+            (identical(
+                    other.isPromissoryNoteDocument, isPromissoryNoteDocument) ||
+                other.isPromissoryNoteDocument == isPromissoryNoteDocument) &&
             (identical(other.personalGuarantee, personalGuarantee) ||
                 other.personalGuarantee == personalGuarantee) &&
+            (identical(other.isPersonalGuaranteeDocument,
+                    isPersonalGuaranteeDocument) ||
+                other.isPersonalGuaranteeDocument ==
+                    isPersonalGuaranteeDocument) &&
             (identical(other.photoOfTZ, photoOfTZ) ||
                 other.photoOfTZ == photoOfTZ) &&
+            (identical(other.isPhotoOfTZDocument, isPhotoOfTZDocument) ||
+                other.isPhotoOfTZDocument == isPhotoOfTZDocument) &&
             (identical(other.businessCertificate, businessCertificate) ||
-                other.businessCertificate == businessCertificate));
+                other.businessCertificate == businessCertificate) &&
+            (identical(other.isBusinessCertificateDocument,
+                    isBusinessCertificateDocument) ||
+                other.isBusinessCertificateDocument ==
+                    isBusinessCertificateDocument));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, promissoryNote,
-      personalGuarantee, photoOfTZ, businessCertificate);
+  int get hashCode => Object.hash(
+      runtimeType,
+      promissoryNote,
+      isPromissoryNoteDocument,
+      personalGuarantee,
+      isPersonalGuaranteeDocument,
+      photoOfTZ,
+      isPhotoOfTZDocument,
+      businessCertificate,
+      isBusinessCertificateDocument);
 
   @JsonKey(ignore: true)
   @override
@@ -182,18 +267,30 @@ class _$_FileUploadState implements _FileUploadState {
 abstract class _FileUploadState implements FileUploadState {
   const factory _FileUploadState(
       {required final File promissoryNote,
+      required final bool isPromissoryNoteDocument,
       required final File personalGuarantee,
+      required final bool isPersonalGuaranteeDocument,
       required final File photoOfTZ,
-      required final File businessCertificate}) = _$_FileUploadState;
+      required final bool isPhotoOfTZDocument,
+      required final File businessCertificate,
+      required final bool isBusinessCertificateDocument}) = _$_FileUploadState;
 
   @override
   File get promissoryNote;
   @override
+  bool get isPromissoryNoteDocument;
+  @override
   File get personalGuarantee;
+  @override
+  bool get isPersonalGuaranteeDocument;
   @override
   File get photoOfTZ;
   @override
+  bool get isPhotoOfTZDocument;
+  @override
   File get businessCertificate;
+  @override
+  bool get isBusinessCertificateDocument;
   @override
   @JsonKey(ignore: true)
   _$$_FileUploadStateCopyWith<_$_FileUploadState> get copyWith =>
@@ -204,25 +301,29 @@ abstract class _FileUploadState implements FileUploadState {
 mixin _$FileUploadEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex, int imageSourceIndex)
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
-    required TResult Function(String documentPath, int fileIndex)
-        deleteFileEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
-    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
-    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -274,7 +375,11 @@ abstract class _$$_pickDocumentEventCopyWith<$Res> {
           $Res Function(_$_pickDocumentEvent) then) =
       __$$_pickDocumentEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int fileIndex, int imageSourceIndex});
+  $Res call(
+      {BuildContext context,
+      int fileIndex,
+      bool isFromCamera,
+      bool isDocument});
 }
 
 /// @nodoc
@@ -288,18 +393,28 @@ class __$$_pickDocumentEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? context = null,
     Object? fileIndex = null,
-    Object? imageSourceIndex = null,
+    Object? isFromCamera = null,
+    Object? isDocument = null,
   }) {
     return _then(_$_pickDocumentEvent(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
       fileIndex: null == fileIndex
           ? _value.fileIndex
           : fileIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      imageSourceIndex: null == imageSourceIndex
-          ? _value.imageSourceIndex
-          : imageSourceIndex // ignore: cast_nullable_to_non_nullable
-              as int,
+      isFromCamera: null == isFromCamera
+          ? _value.isFromCamera
+          : isFromCamera // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isDocument: null == isDocument
+          ? _value.isDocument
+          : isDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -308,16 +423,23 @@ class __$$_pickDocumentEventCopyWithImpl<$Res>
 
 class _$_pickDocumentEvent implements _pickDocumentEvent {
   _$_pickDocumentEvent(
-      {required this.fileIndex, required this.imageSourceIndex});
+      {required this.context,
+      required this.fileIndex,
+      required this.isFromCamera,
+      required this.isDocument});
 
+  @override
+  final BuildContext context;
   @override
   final int fileIndex;
   @override
-  final int imageSourceIndex;
+  final bool isFromCamera;
+  @override
+  final bool isDocument;
 
   @override
   String toString() {
-    return 'FileUploadEvent.pickDocumentEvent(fileIndex: $fileIndex, imageSourceIndex: $imageSourceIndex)';
+    return 'FileUploadEvent.pickDocumentEvent(context: $context, fileIndex: $fileIndex, isFromCamera: $isFromCamera, isDocument: $isDocument)';
   }
 
   @override
@@ -325,14 +447,18 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_pickDocumentEvent &&
+            (identical(other.context, context) || other.context == context) &&
             (identical(other.fileIndex, fileIndex) ||
                 other.fileIndex == fileIndex) &&
-            (identical(other.imageSourceIndex, imageSourceIndex) ||
-                other.imageSourceIndex == imageSourceIndex));
+            (identical(other.isFromCamera, isFromCamera) ||
+                other.isFromCamera == isFromCamera) &&
+            (identical(other.isDocument, isDocument) ||
+                other.isDocument == isDocument));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, fileIndex, imageSourceIndex);
+  int get hashCode =>
+      Object.hash(runtimeType, context, fileIndex, isFromCamera, isDocument);
 
   @JsonKey(ignore: true)
   @override
@@ -344,35 +470,40 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex, int imageSourceIndex)
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
-    required TResult Function(String documentPath, int fileIndex)
-        deleteFileEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
   }) {
-    return pickDocumentEvent(fileIndex, imageSourceIndex);
+    return pickDocumentEvent(context, fileIndex, isFromCamera, isDocument);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
-    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
   }) {
-    return pickDocumentEvent?.call(fileIndex, imageSourceIndex);
+    return pickDocumentEvent?.call(
+        context, fileIndex, isFromCamera, isDocument);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
-    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
     if (pickDocumentEvent != null) {
-      return pickDocumentEvent(fileIndex, imageSourceIndex);
+      return pickDocumentEvent(context, fileIndex, isFromCamera, isDocument);
     }
     return orElse();
   }
@@ -414,11 +545,15 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
 
 abstract class _pickDocumentEvent implements FileUploadEvent {
   factory _pickDocumentEvent(
-      {required final int fileIndex,
-      required final int imageSourceIndex}) = _$_pickDocumentEvent;
+      {required final BuildContext context,
+      required final int fileIndex,
+      required final bool isFromCamera,
+      required final bool isDocument}) = _$_pickDocumentEvent;
 
+  BuildContext get context;
   int get fileIndex;
-  int get imageSourceIndex;
+  bool get isFromCamera;
+  bool get isDocument;
   @JsonKey(ignore: true)
   _$$_pickDocumentEventCopyWith<_$_pickDocumentEvent> get copyWith =>
       throw _privateConstructorUsedError;
@@ -488,11 +623,11 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex, int imageSourceIndex)
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
-    required TResult Function(String documentPath, int fileIndex)
-        deleteFileEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
   }) {
     return uploadApiEvent(context);
   }
@@ -500,9 +635,11 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
-    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
   }) {
     return uploadApiEvent?.call(context);
   }
@@ -510,9 +647,11 @@ class _$_uploadApiEvent implements _uploadApiEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
-    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
     if (uploadApiEvent != null) {
@@ -572,7 +711,7 @@ abstract class _$$_deleteFileEventCopyWith<$Res> {
           _$_deleteFileEvent value, $Res Function(_$_deleteFileEvent) then) =
       __$$_deleteFileEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String documentPath, int fileIndex});
+  $Res call({int fileIndex});
 }
 
 /// @nodoc
@@ -586,14 +725,9 @@ class __$$_deleteFileEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? documentPath = null,
     Object? fileIndex = null,
   }) {
     return _then(_$_deleteFileEvent(
-      documentPath: null == documentPath
-          ? _value.documentPath
-          : documentPath // ignore: cast_nullable_to_non_nullable
-              as String,
       fileIndex: null == fileIndex
           ? _value.fileIndex
           : fileIndex // ignore: cast_nullable_to_non_nullable
@@ -605,16 +739,15 @@ class __$$_deleteFileEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_deleteFileEvent implements _deleteFileEvent {
-  _$_deleteFileEvent({required this.documentPath, required this.fileIndex});
+  _$_deleteFileEvent({required this.fileIndex});
 
-  @override
-  final String documentPath;
+// required String documentPath,
   @override
   final int fileIndex;
 
   @override
   String toString() {
-    return 'FileUploadEvent.deleteFileEvent(documentPath: $documentPath, fileIndex: $fileIndex)';
+    return 'FileUploadEvent.deleteFileEvent(fileIndex: $fileIndex)';
   }
 
   @override
@@ -622,14 +755,12 @@ class _$_deleteFileEvent implements _deleteFileEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_deleteFileEvent &&
-            (identical(other.documentPath, documentPath) ||
-                other.documentPath == documentPath) &&
             (identical(other.fileIndex, fileIndex) ||
                 other.fileIndex == fileIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, documentPath, fileIndex);
+  int get hashCode => Object.hash(runtimeType, fileIndex);
 
   @JsonKey(ignore: true)
   @override
@@ -640,35 +771,39 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int fileIndex, int imageSourceIndex)
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
-    required TResult Function(String documentPath, int fileIndex)
-        deleteFileEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
   }) {
-    return deleteFileEvent(documentPath, fileIndex);
+    return deleteFileEvent(fileIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
-    TResult? Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
   }) {
-    return deleteFileEvent?.call(documentPath, fileIndex);
+    return deleteFileEvent?.call(fileIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int fileIndex, int imageSourceIndex)? pickDocumentEvent,
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
-    TResult Function(String documentPath, int fileIndex)? deleteFileEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
     required TResult orElse(),
   }) {
     if (deleteFileEvent != null) {
-      return deleteFileEvent(documentPath, fileIndex);
+      return deleteFileEvent(fileIndex);
     }
     return orElse();
   }
@@ -709,11 +844,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
 }
 
 abstract class _deleteFileEvent implements FileUploadEvent {
-  factory _deleteFileEvent(
-      {required final String documentPath,
-      required final int fileIndex}) = _$_deleteFileEvent;
+  factory _deleteFileEvent({required final int fileIndex}) = _$_deleteFileEvent;
 
-  String get documentPath;
+// required String documentPath,
   int get fileIndex;
   @JsonKey(ignore: true)
   _$$_deleteFileEventCopyWith<_$_deleteFileEvent> get copyWith =>

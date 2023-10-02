@@ -7,6 +7,8 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path/path.dart' as p;
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
@@ -24,26 +26,64 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
       if (event is _pickDocumentEvent) {
-        File? image;
-        final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(
-            source: event.imageSourceIndex == 1
-                ? ImageSource.camera
-                : ImageSource.gallery);
+        XFile? pickedFile;
+        if (event.isDocument) {
+          pickedFile = await ImagePicker().pickMedia(imageQuality: 100);
+        } else {
+          pickedFile = await ImagePicker().pickImage(
+              source: event.isFromCamera
+                  ? ImageSource.camera
+                  : ImageSource.gallery);
+        }
         if (pickedFile != null) {
-          image = File(pickedFile.path);
-
-          if (event.fileIndex == 1) {
-            emit(state.copyWith(promissoryNote: image));
+          debugPrint(
+              "mime ${p.extension(pickedFile.path)}\n${pickedFile.path}");
+          String fileType = p.extension(pickedFile.path);
+          CroppedFile? croppedImage;
+          if (fileType.contains('pdf') ||
+              fileType.contains('doc') ||
+              fileType.contains('docx')) {
+          } else if (fileType.contains('jpg') ||
+              fileType.contains('png') ||
+              fileType.contains('jpeg')) {
+            croppedImage = await cropImage(
+                path: pickedFile.path,
+                shape: CropStyle.rectangle,
+                quality: 100);
           }
-          if (event.fileIndex == 2) {
-            emit(state.copyWith(personalGuarantee: image));
-          }
-          if (event.fileIndex == 3) {
-            emit(state.copyWith(photoOfTZ: image));
-          }
-          if (event.fileIndex == 4) {
-            emit(state.copyWith(businessCertificate: image));
+          String fileSize = getFileSizeString(
+              bytes:
+                  await File(croppedImage?.path ?? pickedFile.path).length());
+          if (int.parse(fileSize.split(' ').first) <= 500 &&
+              fileSize.split(' ').last == 'KB') {
+            if (event.fileIndex == 1) {
+              emit(state.copyWith(
+                  promissoryNote: File(croppedImage?.path ?? pickedFile.path),
+                  isPromissoryNoteDocument:
+                      croppedImage == null ? true : false));
+            }
+            if (event.fileIndex == 2) {
+              emit(state.copyWith(
+                  personalGuarantee:
+                      File(croppedImage?.path ?? pickedFile.path),
+                  isPersonalGuaranteeDocument:
+                      croppedImage == null ? true : false));
+            }
+            if (event.fileIndex == 3) {
+              emit(state.copyWith(
+                  photoOfTZ: File(croppedImage?.path ?? pickedFile.path),
+                  isPhotoOfTZDocument: croppedImage == null ? true : false));
+            }
+            if (event.fileIndex == 4) {
+              emit(state.copyWith(
+                  businessCertificate:
+                      File(croppedImage?.path ?? pickedFile.path),
+                  isBusinessCertificateDocument:
+                      croppedImage == null ? true : false));
+            }
+          } else {
+            showSnackBar(event.context, AppStrings.fileSizeLimit500KBString,
+                AppColors.redColor);
           }
         }
       } else if (event is _uploadApiEvent) {
@@ -87,14 +127,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           );
           FileUploadModel fileUploadModel = FileUploadModel.fromJson(response);
           if (fileUploadModel.baseUrl?.isNotEmpty ?? false) {
-            SnackBarShow(event.context, AppStrings.registerSuccessString, AppColors.mainColor);
+            showSnackBar(event.context, AppStrings.registerSuccessString,
+                AppColors.mainColor);
             Navigator.pushNamed(
                 event.context, RouteDefine.bottomNavScreen.name);
           } else {
-
+            showSnackBar(event.context, AppStrings.filesNotUploadString,
+                AppColors.mainColor);
           }
         } on ServerException {
-          SnackBarShow(event.context, AppStrings.registerSuccessString, AppColors.redColor);
+          showSnackBar(event.context, AppStrings.registerSuccessString,
+              AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
         if (event.fileIndex == 1) {

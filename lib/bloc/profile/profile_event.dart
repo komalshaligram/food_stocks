@@ -6,10 +6,9 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.dropDownEvent() = _dropDownEvent;
 
-  factory ProfileEvent.profilePicFromCameraEvent({required BuildContext context}) = _profilePicFromCameraEvent;
-
-  factory ProfileEvent.profilePicFromGalleryEvent({required BuildContext context}) =
-      _profilePicFromGalleryEvent;
+  factory ProfileEvent.pickProfileImageEvent(
+      {required BuildContext context,
+      required bool isFromCamera}) = _pickProfileImageEvent;
 
   factory ProfileEvent.getBusinessTypeListEvent() = _getBusinessTypeListEvent;
 
