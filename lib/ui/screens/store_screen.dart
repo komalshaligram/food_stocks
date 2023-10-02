@@ -74,15 +74,24 @@ class StoreScreenWidget extends StatelessWidget {
                           child: TextField(
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
-                                  borderSide:
-                                      BorderSide(color: AppColors.greyColor),
-                                ),
-                                // icon: Icon(Icons.search, color: AppColors.greyColor,)
-                                constraints: BoxConstraints(maxHeight: 46),
-                                fillColor: AppColors.greyColor,
-                                helperText: AppLocalizations.of(context)!.sear),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_100)),
+                                borderSide: BorderSide(
+                                    color: AppColors.lightBorderColor,
+                                    width: 1),
+                              ),
+                              filled: true,
+
+                              // isDense: true,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.greyColor,
+                              ),
+                              hintText: AppLocalizations.of(context)!.search,
+                              constraints: BoxConstraints(maxHeight: 46),
+                              fillColor: AppColors.iconBGColor,
+                            ),
+                            // helperText: AppLocalizations.of(context)!.sear),
                           ),
                         ),
                         Expanded(
