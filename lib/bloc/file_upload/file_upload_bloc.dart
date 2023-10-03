@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
+
 
 part 'file_upload_state.dart';
 
@@ -96,20 +98,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         } on ServerException {
           SnackBarShow(event.context, AppStrings.registerSuccessString, AppColors.redColor);
         }
-      } else if (event is _deleteFileEvent) {
-        if (event.fileIndex == 1) {
-          emit(state.copyWith(promissoryNote: File('')));
-        }
-        if (event.fileIndex == 2) {
-          emit(state.copyWith(personalGuarantee: File('')));
-        }
-        if (event.fileIndex == 3) {
-          emit(state.copyWith(photoOfTZ: File('')));
-        }
-        if (event.fileIndex == 4) {
-          emit(state.copyWith(businessCertificate: File('')));
-        }
       }
-    });
+
+      else if (event is _downloadFileEvent) {
+
+      }
+      });
   }
 }

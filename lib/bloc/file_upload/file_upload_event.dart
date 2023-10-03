@@ -11,10 +11,9 @@ class FileUploadEvent with _$FileUploadEvent {
   required BuildContext context,
  }) = _uploadApiEvent;
 
- factory FileUploadEvent.deleteFileEvent({
+ factory FileUploadEvent.downloadFileEvent({
   required String documentPath,
-  required int fileIndex,
- }) = _deleteFileEvent;
+ }) = _downloadFileEvent;
 
 
 }

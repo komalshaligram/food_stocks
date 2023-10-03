@@ -38,7 +38,9 @@ class CustomFormField extends StatelessWidget {
     this.textFieldLabel,
     this.textFieldLabelSize,
     this.inputformet,
-    this.textInputAction,
+    this.autofocus = false,
+    this.textInputAction,  TextCapitalization textCapitalization = TextCapitalization.words,
+    this.cursorColor = Colors.white
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
@@ -54,6 +56,8 @@ class CustomFormField extends StatelessWidget {
   final bool? isEnabled;
   final List<TextInputFormatter>? inputformet;
   final TextInputType _keyboardType;
+  final bool autofocus;
+  final Color cursorColor;
 
   // final TextInputAction _inputAction;
   final String _hint;
@@ -95,12 +99,13 @@ class CustomFormField extends StatelessWidget {
       keyboardType: _keyboardType,
       obscureText: isObscure,
       onChanged: onChangeValue,
-      textCapitalization:
-          isCapitalized ? TextCapitalization.words : TextCapitalization.none,
+      textCapitalization: TextCapitalization.sentences,
       //   textInputAction: _inputAction,
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
+      autofocus: autofocus,
+      cursorColor: cursorColor,
       validator: (value) =>
           AuthFormValidation().formValidation(value!, _validator),
       decoration: InputDecoration(

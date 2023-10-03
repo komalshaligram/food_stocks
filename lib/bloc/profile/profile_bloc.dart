@@ -99,15 +99,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (event is _navigateToMoreDetailsScreenEvent) {
         final businessTypeId = state.businessTypeList.data;
         debugPrint('business type id = $businessTypeId');
+        debugPrint('phone Number = ${event.phoneNumber}');
+
         profileModel = ProfileModel(
             address: '',
             cityId: '60abf964173234001c903a05',
             email: '',
-
             logo: '',
-            phoneNumber: '1234567890',
+            phoneNumber: event.phoneNumber,
             profileImage: imgUrl,
-
             clientDetail: ClientDetail(
               bussinessId: int.tryParse(state.idController.text) ?? 0,
               bussinessName: state.businessNameController.text,

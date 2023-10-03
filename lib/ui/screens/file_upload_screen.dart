@@ -76,19 +76,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 size: AppConstants.smallFont,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400)),
-                        ButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.taken_down,
-                          height: 30,
-                          fontSize: AppConstants.smallFont,
-                          radius: AppConstants.radius_5,
-                          bGColor: AppColors.blueColor,
-                          onPressed: () {
-                            bloc.add(FileUploadEvent.deleteFileEvent(
-                                fileIndex: 1,
-                                documentPath: state.promissoryNote.path));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
                       ],
                     ),
                     10.height,
@@ -102,19 +89,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 size: AppConstants.smallFont,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400)),
-                        ButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.taken_down,
-                          height: 30,
-                          fontSize: AppConstants.smallFont,
-                          radius: AppConstants.radius_5,
-                          bGColor: AppColors.blueColor,
-                          onPressed: () {
-                            bloc.add(FileUploadEvent.deleteFileEvent(
-                                fileIndex: 2,
-                                documentPath: state.personalGuarantee.path));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
                       ],
                     ),
                     10.height,
@@ -128,19 +102,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 size: AppConstants.smallFont,
                                 color: AppColors.textColor,
                                 fontWeight: FontWeight.w400)),
-                        ButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.taken_down,
-                          height: 30,
-                          fontSize: AppConstants.smallFont,
-                          radius: AppConstants.radius_5,
-                          bGColor: AppColors.blueColor,
-                          onPressed: () {
-                            bloc.add(FileUploadEvent.deleteFileEvent(
-                                fileIndex: 3,
-                                documentPath: state.photoOfTZ.path));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
                       ],
                     ),
                     10.height,
@@ -161,8 +122,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                           radius: AppConstants.radius_5,
                           bGColor: AppColors.blueColor,
                           onPressed: () {
-                            bloc.add(FileUploadEvent.deleteFileEvent(
-                                fileIndex: 4,
+                            bloc.add(FileUploadEvent.downloadFileEvent(
                                 documentPath: state.businessCertificate.path));
                           },
                           fontColors: AppColors.whiteColor,

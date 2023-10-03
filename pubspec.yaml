@@ -55,6 +55,7 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   focus_detector: ^2.0.1
   http_parser: ^4.0.2
+  path_provider: ^2.1.1
 
 
 dev_dependencies:

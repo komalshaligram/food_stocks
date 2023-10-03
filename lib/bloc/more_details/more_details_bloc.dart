@@ -146,6 +146,23 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         Navigator.pushNamed(event.context, RouteDefine.operationTimeScreen.name,
             arguments: {AppStrings.profileParamString: newProfileModel});
       }
+   else if(event is _addFilterListEvent){
+         emit(state.copyWith(filterList: state.cityList));
+      }
+   else if(event is _citySearchEvent){
+    var filter = List<String>.of(state.cityList);
+    filter.retainWhere((e) => e.startsWith(event.search));
+     emit(state.copyWith(filterList: filter));
+
+      }
+      else if(event is _selectCityEvent){
+        emit(state.copyWith(city: event.city ,filterList: state.cityList ,isRefresh: !state.isRefresh));
+        state.cityController.clear();
+        Navigator.pop(event.context);
+
+      }
+
+
     });
   }
 }

@@ -22,18 +22,22 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+
     return BlocProvider(
       create: (context) =>
           ProfileBloc()..add(ProfileEvent.getBusinessTypeListEvent()),
-      child: ProfileScreenWidget(),
+      child: ProfileScreenWidget(contact: temp[AppStrings.contactString]),
     );
   }
 }
 
 class ProfileScreenWidget extends StatelessWidget {
+  final String contact;
+  ProfileScreenWidget({super.key ,  this.contact = ''});
   final _formKey = GlobalKey<FormState>();
 
-  ProfileScreenWidget({super.key});
+
 
   @override
   Widget build(BuildContext c) {
@@ -76,12 +80,12 @@ class ProfileScreenWidget extends StatelessWidget {
                       Stack(
                         children: [
                           Container(
-                            height: 80,
+                            height: AppConstants.containerHeight_80,
                             width: getScreenWidth(c),
                             alignment: Alignment.center,
                             child: Container(
-                              height: 80,
-                              width: 80,
+                              height: AppConstants.containerHeight_80,
+                              width: AppConstants.containerHeight_80,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(200),
                                 color: AppColors.mainColor.withOpacity(0.1),
@@ -89,7 +93,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               child: state.image.path == ""
                                   ? const Icon(Icons.person)
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
+                                      borderRadius: BorderRadius.circular(AppConstants.radius_40),
                                       child: Image.file(File(state.image.path),
                                           fit: BoxFit.fill),
                                     ),
@@ -97,7 +101,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           ),
                           Positioned(
                             left: getScreenWidth(c) * 0.44,
-                            top: getScreenHeight(c) * 0.07,
+                            top: getScreenHeight(c) * 0.05,
                             child: GestureDetector(
                               onTap: () {
                                 showDialog(
@@ -161,13 +165,13 @@ class ProfileScreenWidget extends StatelessWidget {
                                 height: 29,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(AppConstants.radius_20),
                                     border: Border.all(
                                         color: AppColors.borderColor)),
                                 child: Icon(
                                   Icons.camera_alt_rounded,
                                   color: AppColors.blueColor,
-                                  size: 18,
+                                  size: AppConstants.mediumFont,
                                 ),
                               ),
                             ),
@@ -181,7 +185,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         child: Text(
                           AppLocalizations.of(context)!.profile_picture,
                           style: AppStyles.rkRegularTextStyle(
-                              size: 14,
+                              size: AppConstants.font_14,
                               fontWeight: FontWeight.w400,
                               color: AppColors.textColor),
                         ),
@@ -226,7 +230,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           isExpanded: true,
                           elevation: 0,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppConstants.smallFont,
                             color: AppColors.blackColor,
                           ),
                           value: state.selectedBusinessType,
@@ -312,7 +316,10 @@ class ProfileScreenWidget extends StatelessWidget {
                               if (_formKey.currentState?.validate() ?? false) {
                                 bloc.add(ProfileEvent
                                     .navigateToMoreDetailsScreenEvent(
-                                        context: c));
+                                        context: c,
+                                  phoneNumber: contact
+
+                                ));
                               }
                             } else {
                               SnackBarShow(
@@ -341,53 +348,4 @@ class ProfileScreenWidget extends StatelessWidget {
     );
   }
 
-/*  void alertDialog(BuildContext context , String image){
-
-     showDialog(
-       context: context,
-       builder:(c1) {
-         return BlocBuilder<ProfileBloc, ProfileState>(
-           builder: (c1, state) {
-             image = state.image.path;
-             print('dialog_____${state.image.path}');
-             return AlertDialog(
-               title: Align(
-                 alignment: Alignment.center,
-                   child: Text(AppLocalizations.of(context)!.upload_photo)),
-
-               actions: [
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   children: [
-                     GestureDetector(
-                         onTap: (){
-                           context
-                               .read<ProfileBloc>()
-                               .add(ProfileEvent.profilePicFromCameraEvent());
-                         },
-                         child: Icon(Icons.camera_alt_rounded)),
-                     GestureDetector(
-                         onTap: (){
-                           context
-                               .read<ProfileBloc>()
-                               .add(ProfileEvent.profilePicFromGalleryEvent());
-                         },
-                         child: Icon(Icons.photo)),
-                   ],
-                 ),
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   children: [
-                   Text(AppLocalizations.of(context)!.camera),
-                     Text(AppLocalizations.of(context)!.gallery),
-                   ],
-                 ),
-
-               ],
-             );
-           },
-         );
-       }, );
-   }
-*/
 }
