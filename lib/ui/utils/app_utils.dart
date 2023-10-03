@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -19,7 +18,10 @@ getScreenWidth(BuildContext context) {
   return screenWidth;
 }
 
-void showSnackBar(BuildContext context, String title, Color color) {
+void showSnackBar(
+    {required BuildContext context,
+    required String title,
+    required Color bgColor}) {
   final snackBar = SnackBar(
     content: Text(
       title,
@@ -28,7 +30,7 @@ void showSnackBar(BuildContext context, String title, Color color) {
           color: AppColors.whiteColor,
           fontWeight: FontWeight.w400),
     ),
-    backgroundColor: color,
+    backgroundColor: bgColor,
     padding: EdgeInsets.all(AppConstants.padding_20),
     behavior: SnackBarBehavior.floating,
   );

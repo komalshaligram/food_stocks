@@ -9,14 +9,21 @@ class FileUploadEvent with _$FileUploadEvent {
     required bool isDocument,
   }) = _pickDocumentEvent;
 
- factory FileUploadEvent.uploadApiEvent({
-  required BuildContext context,
- }) = _uploadApiEvent;
+  factory FileUploadEvent.uploadApiEvent({
+    required BuildContext context,
+  }) = _uploadApiEvent;
 
- factory FileUploadEvent.deleteFileEvent({
-  // required String documentPath,
+  factory FileUploadEvent.deleteFileEvent({
+    // required String documentPath,
     required int fileIndex,
- }) = _deleteFileEvent;
+  }) = _deleteFileEvent;
 
+  factory FileUploadEvent.downloadFileEvent({
+    required BuildContext context,
+    required int fileIndex,
+  }) = _downloadFileEvent;
 
+  factory FileUploadEvent.getProfileFilesAndFormsEvent(
+      {required BuildContext context,
+      required bool isUpdate}) = _getProfileFilesAndFormsEvent;
 }

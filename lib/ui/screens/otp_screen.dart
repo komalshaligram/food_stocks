@@ -47,7 +47,10 @@ class OTPScreenWidget extends StatelessWidget {
           Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
         }
         if(state.isLoginFail){
-          showSnackBar(context, state.errorMessage, AppColors.redColor);
+          showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
           //  Navigator.pushNamed(context, RouteDefine.loginScreen.name);
         }
       },

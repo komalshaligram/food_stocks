@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -24,9 +25,23 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint(
+        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
     return BlocProvider(
-      create: (context) =>
-          ProfileBloc()..add(ProfileEvent.getBusinessTypeListEvent()),
+      create: (context) => ProfileBloc()
+        ..add(
+          ProfileEvent.getBusinessTypeListEvent(context: context),
+        )
+        ..add(
+          ProfileEvent.getProfileDetailsEvent(
+              context: context,
+              isUpdate:
+                  args?.containsKey(AppStrings.isUpdateParamString) ?? false
+                      ? true
+                      : false),
+        ),
       child: ProfileScreenWidget(),
     );
   }
@@ -228,19 +243,21 @@ class ProfileScreenWidget extends StatelessWidget {
                                 // );
                               },
                               child: Container(
-                                width: 29,
-                                height: 29,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: AppColors.borderColor)),
-                                child: Icon(
+                                  width: 29,
+                                  height: 29,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: AppColors.borderColor)),
+                                  child: SvgPicture.asset(AppImagePath.camera,
+                                      fit: BoxFit
+                                          .scaleDown) /*Icon(
                                   Icons.camera_alt_rounded,
                                   color: AppColors.blueColor,
                                   size: 18,
-                                ),
-                              ),
+                                ),*/
+                                  ),
                             ),
                           ),
                         ],
@@ -261,7 +278,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.type_of_business,
                       ),
                       SizedBox(
-                        height: AppConstants.textFormFieldHeight,
+                        // height: AppConstants.textFormFieldHeight,
                         child: DropdownButtonFormField<String>(
                           icon: Icon(
                             Icons.keyboard_arrow_down,
@@ -374,29 +391,36 @@ class ProfileScreenWidget extends StatelessWidget {
                       ),
                       40.height,
                       CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
+                        buttonText: state.isUpdate
+                            ? AppLocalizations.of(context)!.save
+                            : AppLocalizations.of(context)!.continued,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
-                          if (state.image.path != '') {
-                            if (state.selectedBusinessType.isEmpty ||
-                                state.selectedBusinessType != '') {
-                              if (_formKey.currentState?.validate() ?? false) {
+                          // if (state.image.path != '') {
+                          if (state.selectedBusinessType.isEmpty ||
+                              state.selectedBusinessType != '') {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              if (state.isUpdate) {
+                                bloc.add(ProfileEvent.updateProfileDetailsEvent(
+                                    context: c));
+                              } else {
                                 bloc.add(ProfileEvent
                                     .navigateToMoreDetailsScreenEvent(
                                         context: c));
                               }
-                            } else {
-                              showSnackBar(
-                                  context,
-                                  'Please select your business type',
-                                  AppColors.redColor);
                             }
                           } else {
                             showSnackBar(
-                                context,
-                                'Please select your profile photo',
-                                AppColors.redColor);
+                                context: context,
+                                title: 'Please select your business type',
+                                bgColor: AppColors.redColor);
                           }
+                          // } else {
+                          //   showSnackBar(
+                          //       context: context,
+                          //       title: 'Please select your profile photo',
+                          //       bgColor: AppColors.redColor);
+                          // }
                         },
                         fontColors: AppColors.whiteColor,
                       ),

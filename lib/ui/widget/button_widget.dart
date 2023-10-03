@@ -20,13 +20,13 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      height: height,
       alignment: Alignment.center,
       clipBehavior: Clip.hardEdge,
-      decoration:  BoxDecoration(
-        border: Border.all(color: borderColor),
+      decoration: BoxDecoration(
+          border: Border.all(color: borderColor),
           color: bGColor,
-          borderRadius:  BorderRadius.all(
-              Radius.circular(radius))),
+          borderRadius: BorderRadius.all(Radius.circular(radius))),
       child: MaterialButton(
         height: height,
         elevation: 0,

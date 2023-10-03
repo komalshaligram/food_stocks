@@ -97,7 +97,7 @@ class CustomFormField extends StatelessWidget {
           isCapitalized ? TextCapitalization.words : TextCapitalization.none,
       //   textInputAction: _inputAction,
       onTap: onTap,
-      onTapOutside: (event) => FocusScope.of(context).requestFocus(FocusNode()),
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
       validator: (value) =>

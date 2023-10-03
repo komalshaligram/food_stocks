@@ -31,7 +31,10 @@ class FileSelectionOptionWidget extends StatelessWidget {
               style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.mediumFont, color: AppColors.blackColor),
             ),
-            Icon(icon),
+            Icon(
+              icon,
+              color: AppColors.blueColor,
+            ),
           ],
         ),
       ),

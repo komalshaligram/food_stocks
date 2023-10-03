@@ -4,6 +4,7 @@ part of 'file_upload_bloc.dart';
 class FileUploadState with _$FileUploadState {
   const factory FileUploadState({
     required File promissoryNote,
+    required bool isUpdate,
     required bool isPromissoryNoteDocument,
     required File personalGuarantee,
     required bool isPersonalGuaranteeDocument,
@@ -14,7 +15,8 @@ class FileUploadState with _$FileUploadState {
   }) = _FileUploadState;
 
   factory FileUploadState.initial() => FileUploadState(
-        photoOfTZ: File(''),
+    photoOfTZ: File(''),
+        isUpdate: false,
         promissoryNote: File(''),
         personalGuarantee: File(''),
         businessCertificate: File(''),

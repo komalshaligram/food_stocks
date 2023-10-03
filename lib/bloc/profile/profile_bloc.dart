@@ -2,8 +2,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
+    as req;
 import 'package:food_stock/data/model/req_model/profile_model/profile_model.dart';
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
+import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
+    as resGet;
+import 'package:food_stock/data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
+    as reqUpdate;
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -61,28 +67,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(
                   image: File(croppedImage?.path ?? pickedFile.path)));
             } on ServerException {
-              showSnackBar(event.context, AppStrings.imageNotSetString,
-                  AppColors.redColor);
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.imageNotSetString,
+                  bgColor: AppColors.redColor);
             }
           } else {
-            showSnackBar(event.context, AppStrings.fileSizeLimit500KBString,
-                AppColors.redColor);
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.fileSizeLimit500KBString,
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-          final response =
-              await DioClient().get(path: AppUrls.businessTypesUrl);
-          BusinessTypeModel businessTypeModel =
-              BusinessTypeModel.fromJson(response);
+          final res = await DioClient().get(path: AppUrls.businessTypesUrl);
+          BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
-              businessTypeList: businessTypeModel,
+              businessTypeList: response,
               selectedBusinessType:
-                  businessTypeModel.data?.clientTypes?[0].businessType ?? ''));
-        } on ServerException {}
+                  response.data?.clientTypes?[0].businessType ?? ''));
+        } on ServerException {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.mainColor);
+        }
       } else if (event is _navigateToMoreDetailsScreenEvent) {
-        final businessTypeId = state.businessTypeList.data;
-        debugPrint('business type id = $businessTypeId');
         profileModel = ProfileModel(
             address: '',
             cityId: '60abf964173234001c903a05',
@@ -114,6 +125,90 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             contactName: state.contactController.text);
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
             arguments: {AppStrings.profileParamString: profileModel});
+      } else if (event is _getProfileDetailsEvent) {
+        emit(state.copyWith(isUpdate: event.isUpdate));
+        if (state.isUpdate) {
+          try {
+            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+                data: req.ProfileDetailsReqModel(id: "651bb2f9d2c8a6d5b1c1ff84")
+                    .toJson());
+            resGet.ProfileDetailsResModel response =
+                resGet.ProfileDetailsResModel.fromJson(res);
+            if (response.status == 200) {
+              emit(
+                state.copyWith(
+                  selectedBusinessType: response.data?.clients?.first
+                          .clientDetail?.clientTypes?.first.businessType ??
+                      state.selectedBusinessType,
+                  businessNameController: TextEditingController(
+                      text: response
+                          .data?.clients?.first.clientDetail?.bussinessName),
+                  hpController: TextEditingController(
+                      text:
+                          response.data?.clients?.first.clientDetail?.israelId),
+                  ownerNameController: TextEditingController(
+                      text: response
+                          .data?.clients?.first.clientDetail?.ownerName),
+                  idController: TextEditingController(
+                      text: response
+                          .data?.clients?.first.clientDetail?.bussinessId
+                          .toString()),
+                  contactController: TextEditingController(
+                      text: response.data?.clients?.first.contactName),
+                ),
+              );
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+            }
+          } on ServerException {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        }
+      } else if (event is _updateProfileDetailsEvent) {
+        ProfileModel updatedProfileModel = ProfileModel(
+          contactName: state.contactController.text,
+          clientDetail: ClientDetail(
+            clientTypeId: state.businessTypeList.data?.clientTypes
+                ?.firstWhere((businessType) =>
+                    businessType.businessType == state.selectedBusinessType)
+                .id,
+            bussinessId: int.tryParse(state.idController.text) ?? 0,
+            bussinessName: state.businessNameController.text,
+            ownerName: state.ownerNameController.text,
+          ),
+        );
+        try {
+          final res = await DioClient().put(
+              path:
+                  AppUrls.updateProfileDetailsUrl + "/651bb2f9d2c8a6d5b1c1ff84",
+              data: updatedProfileModel.toJson());
+
+          reqUpdate.ProfileDetailsUpdateResModel response =
+              reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
+          if (response.status == 200) {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.updateSuccessString,
+                bgColor: AppColors.redColor);
+            Navigator.pop(event.context);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } on ServerException {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
       }
     });
   }

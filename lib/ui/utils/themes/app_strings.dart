@@ -32,12 +32,21 @@ class AppStrings {
   //page parameters strings
   static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';
+  static const isUpdateParamString = 'isUpdateParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
+  static const updateSuccessString = 'Updated Successfully!';
+  static const somethingWrongString = 'Something is wrong, try again!';
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimit500KBString = 'File size must be less then 500KB';
   static const selectCompanyLogoString = 'Please select company logo';
+  static const selectValidDocumentFormatString =
+      'Please select only image and document files';
+  static const docDownloadString = 'Document download successfully!';
+  static const docDownloadAllowPermissionString =
+      'Please allow permission from settings';
+  static const uploadDocumentFirstString = 'Please upload document first';
 }

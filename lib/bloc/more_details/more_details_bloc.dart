@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
@@ -65,12 +64,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   image: File(croppedImage?.path ?? pickedFile.path),
                   isImagePick: true));
             } on ServerException {
-              showSnackBar(event.context, AppStrings.imageNotSetString,
-                  AppColors.redColor);
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.imageNotSetString,
+                  bgColor: AppColors.redColor);
             }
           } else {
-            showSnackBar(event.context, AppStrings.fileSizeLimit500KBString,
-                AppColors.redColor);
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.fileSizeLimit500KBString,
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _navigateToOperationTimeScreenEvent) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
@@ -50,6 +53,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 path: pickedFile.path,
                 shape: CropStyle.rectangle,
                 quality: 100);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.selectValidDocumentFormatString,
+                bgColor: AppColors.redColor);
+            return;
           }
           String fileSize = getFileSizeString(
               bytes:
@@ -82,8 +91,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                       croppedImage == null ? true : false));
             }
           } else {
-            showSnackBar(event.context, AppStrings.fileSizeLimit500KBString,
-                AppColors.redColor);
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.fileSizeLimit500KBString,
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _uploadApiEvent) {
@@ -115,10 +126,27 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           if (state.businessCertificate.path != '' ||
               state.businessCertificate.path.isNotEmpty) {
             files[AppStrings.businessCertificateString] =
-            await MultipartFile.fromFile(
+                await MultipartFile.fromFile(
               state.businessCertificate.path,
               contentType: MediaType('image', 'png'),
             );
+          }
+          if (files.isEmpty) {
+            if (state.isUpdate) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.updateSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.registerSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
+            }
+            return;
           }
           FormData formData = FormData.fromMap(files);
           final response = await DioClient().uploadFileProgressWithFormData(
@@ -127,17 +155,31 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           );
           FileUploadModel fileUploadModel = FileUploadModel.fromJson(response);
           if (fileUploadModel.baseUrl?.isNotEmpty ?? false) {
-            showSnackBar(event.context, AppStrings.registerSuccessString,
-                AppColors.mainColor);
-            Navigator.pushNamed(
-                event.context, RouteDefine.bottomNavScreen.name);
+            if (state.isUpdate) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.updateSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.registerSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
+            }
           } else {
-            showSnackBar(event.context, AppStrings.filesNotUploadString,
-                AppColors.mainColor);
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.filesNotUploadString,
+                bgColor: AppColors.mainColor);
           }
         } on ServerException {
-          showSnackBar(event.context, AppStrings.registerSuccessString,
-              AppColors.redColor);
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.registerSuccessString,
+              bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
         if (event.fileIndex == 1) {
@@ -152,6 +194,65 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         if (event.fileIndex == 4) {
           emit(state.copyWith(businessCertificate: File('')));
         }
+      } else if (event is _downloadFileEvent) {
+        if (state.businessCertificate.path != '') {
+          try {
+            Map<Permission, PermissionStatus> statuses = await [
+              Permission.storage,
+            ].request();
+
+            if (statuses[Permission.storage]!.isGranted) {
+              Directory dir;
+              if (defaultTargetPlatform == TargetPlatform.android) {
+                dir = Directory('/storage/emulated/0/Documents');
+              } else {
+                dir = await getApplicationDocumentsDirectory();
+              }
+              Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
+              File newFile = File(
+                  '${dir.path}/${p.basename(state.businessCertificate.path)}');
+              await newFile.writeAsBytes(fileBytes).then(
+                (value) {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.docDownloadString,
+                      bgColor: AppColors.mainColor);
+                },
+              );
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.docDownloadAllowPermissionString,
+                  bgColor: AppColors.redColor);
+            }
+          } catch (e) {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } else {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.uploadDocumentFirstString,
+              bgColor: AppColors.redColor);
+        }
+      } else if (event is _getProfileFilesAndFormsEvent) {
+        emit(state.copyWith(isUpdate: event.isUpdate));
+        //api call
+        // try {
+        //
+        //   final res = await DioClient().put(
+        //       path: AppUrls.updateProfileDetailsUrl,
+        //       data: {});
+        //
+        //
+        // } on ServerException {
+        //   showSnackBar(
+        //       context: event.context,
+        //       title: AppStrings.somethingWrongString,
+        //       bgColor: AppColors.redColor);
+        // }
       }
     });
   }

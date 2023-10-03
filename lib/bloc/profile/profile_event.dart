@@ -10,8 +10,16 @@ class ProfileEvent with _$ProfileEvent {
       {required BuildContext context,
       required bool isFromCamera}) = _pickProfileImageEvent;
 
-  factory ProfileEvent.getBusinessTypeListEvent() = _getBusinessTypeListEvent;
+  factory ProfileEvent.getBusinessTypeListEvent(
+      {required BuildContext context}) = _getBusinessTypeListEvent;
 
-  factory ProfileEvent.navigateToMoreDetailsScreenEvent({required BuildContext context}) =
-      _navigateToMoreDetailsScreenEvent;
+  factory ProfileEvent.navigateToMoreDetailsScreenEvent(
+      {required BuildContext context}) = _navigateToMoreDetailsScreenEvent;
+
+  factory ProfileEvent.getProfileDetailsEvent(
+      {required BuildContext context,
+      required bool isUpdate}) = _getProfileDetailsEvent;
+
+  factory ProfileEvent.updateProfileDetailsEvent(
+      {required BuildContext context}) = _updateProfileDetailsEvent;
 }

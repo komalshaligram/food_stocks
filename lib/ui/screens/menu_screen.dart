@@ -86,7 +86,8 @@ class MenuScreenWidget extends StatelessWidget {
               BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15), blurRadius: 10)
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10)
           ]),
       margin: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,

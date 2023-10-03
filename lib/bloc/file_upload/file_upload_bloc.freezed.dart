@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$FileUploadState {
   File get promissoryNote => throw _privateConstructorUsedError;
+  bool get isUpdate => throw _privateConstructorUsedError;
   bool get isPromissoryNoteDocument => throw _privateConstructorUsedError;
   File get personalGuarantee => throw _privateConstructorUsedError;
   bool get isPersonalGuaranteeDocument => throw _privateConstructorUsedError;
@@ -38,6 +39,7 @@ abstract class $FileUploadStateCopyWith<$Res> {
   @useResult
   $Res call(
       {File promissoryNote,
+      bool isUpdate,
       bool isPromissoryNoteDocument,
       File personalGuarantee,
       bool isPersonalGuaranteeDocument,
@@ -61,6 +63,7 @@ class _$FileUploadStateCopyWithImpl<$Res, $Val extends FileUploadState>
   @override
   $Res call({
     Object? promissoryNote = null,
+    Object? isUpdate = null,
     Object? isPromissoryNoteDocument = null,
     Object? personalGuarantee = null,
     Object? isPersonalGuaranteeDocument = null,
@@ -74,6 +77,10 @@ class _$FileUploadStateCopyWithImpl<$Res, $Val extends FileUploadState>
           ? _value.promissoryNote
           : promissoryNote // ignore: cast_nullable_to_non_nullable
               as File,
+      isUpdate: null == isUpdate
+          ? _value.isUpdate
+          : isUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
       isPromissoryNoteDocument: null == isPromissoryNoteDocument
           ? _value.isPromissoryNoteDocument
           : isPromissoryNoteDocument // ignore: cast_nullable_to_non_nullable
@@ -116,6 +123,7 @@ abstract class _$$_FileUploadStateCopyWith<$Res>
   @useResult
   $Res call(
       {File promissoryNote,
+      bool isUpdate,
       bool isPromissoryNoteDocument,
       File personalGuarantee,
       bool isPersonalGuaranteeDocument,
@@ -137,6 +145,7 @@ class __$$_FileUploadStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? promissoryNote = null,
+    Object? isUpdate = null,
     Object? isPromissoryNoteDocument = null,
     Object? personalGuarantee = null,
     Object? isPersonalGuaranteeDocument = null,
@@ -150,6 +159,10 @@ class __$$_FileUploadStateCopyWithImpl<$Res>
           ? _value.promissoryNote
           : promissoryNote // ignore: cast_nullable_to_non_nullable
               as File,
+      isUpdate: null == isUpdate
+          ? _value.isUpdate
+          : isUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
       isPromissoryNoteDocument: null == isPromissoryNoteDocument
           ? _value.isPromissoryNoteDocument
           : isPromissoryNoteDocument // ignore: cast_nullable_to_non_nullable
@@ -184,9 +197,12 @@ class __$$_FileUploadStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FileUploadState implements _FileUploadState {
+class _$_FileUploadState
+    with DiagnosticableTreeMixin
+    implements _FileUploadState {
   const _$_FileUploadState(
       {required this.promissoryNote,
+      required this.isUpdate,
       required this.isPromissoryNoteDocument,
       required this.personalGuarantee,
       required this.isPersonalGuaranteeDocument,
@@ -197,6 +213,8 @@ class _$_FileUploadState implements _FileUploadState {
 
   @override
   final File promissoryNote;
+  @override
+  final bool isUpdate;
   @override
   final bool isPromissoryNoteDocument;
   @override
@@ -213,8 +231,27 @@ class _$_FileUploadState implements _FileUploadState {
   final bool isBusinessCertificateDocument;
 
   @override
-  String toString() {
-    return 'FileUploadState(promissoryNote: $promissoryNote, isPromissoryNoteDocument: $isPromissoryNoteDocument, personalGuarantee: $personalGuarantee, isPersonalGuaranteeDocument: $isPersonalGuaranteeDocument, photoOfTZ: $photoOfTZ, isPhotoOfTZDocument: $isPhotoOfTZDocument, businessCertificate: $businessCertificate, isBusinessCertificateDocument: $isBusinessCertificateDocument)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FileUploadState(promissoryNote: $promissoryNote, isUpdate: $isUpdate, isPromissoryNoteDocument: $isPromissoryNoteDocument, personalGuarantee: $personalGuarantee, isPersonalGuaranteeDocument: $isPersonalGuaranteeDocument, photoOfTZ: $photoOfTZ, isPhotoOfTZDocument: $isPhotoOfTZDocument, businessCertificate: $businessCertificate, isBusinessCertificateDocument: $isBusinessCertificateDocument)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FileUploadState'))
+      ..add(DiagnosticsProperty('promissoryNote', promissoryNote))
+      ..add(DiagnosticsProperty('isUpdate', isUpdate))
+      ..add(DiagnosticsProperty(
+          'isPromissoryNoteDocument', isPromissoryNoteDocument))
+      ..add(DiagnosticsProperty('personalGuarantee', personalGuarantee))
+      ..add(DiagnosticsProperty(
+          'isPersonalGuaranteeDocument', isPersonalGuaranteeDocument))
+      ..add(DiagnosticsProperty('photoOfTZ', photoOfTZ))
+      ..add(DiagnosticsProperty('isPhotoOfTZDocument', isPhotoOfTZDocument))
+      ..add(DiagnosticsProperty('businessCertificate', businessCertificate))
+      ..add(DiagnosticsProperty(
+          'isBusinessCertificateDocument', isBusinessCertificateDocument));
   }
 
   @override
@@ -224,6 +261,8 @@ class _$_FileUploadState implements _FileUploadState {
             other is _$_FileUploadState &&
             (identical(other.promissoryNote, promissoryNote) ||
                 other.promissoryNote == promissoryNote) &&
+            (identical(other.isUpdate, isUpdate) ||
+                other.isUpdate == isUpdate) &&
             (identical(
                     other.isPromissoryNoteDocument, isPromissoryNoteDocument) ||
                 other.isPromissoryNoteDocument == isPromissoryNoteDocument) &&
@@ -249,6 +288,7 @@ class _$_FileUploadState implements _FileUploadState {
   int get hashCode => Object.hash(
       runtimeType,
       promissoryNote,
+      isUpdate,
       isPromissoryNoteDocument,
       personalGuarantee,
       isPersonalGuaranteeDocument,
@@ -267,6 +307,7 @@ class _$_FileUploadState implements _FileUploadState {
 abstract class _FileUploadState implements FileUploadState {
   const factory _FileUploadState(
       {required final File promissoryNote,
+      required final bool isUpdate,
       required final bool isPromissoryNoteDocument,
       required final File personalGuarantee,
       required final bool isPersonalGuaranteeDocument,
@@ -277,6 +318,8 @@ abstract class _FileUploadState implements FileUploadState {
 
   @override
   File get promissoryNote;
+  @override
+  bool get isUpdate;
   @override
   bool get isPromissoryNoteDocument;
   @override
@@ -306,6 +349,10 @@ mixin _$FileUploadEvent {
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -315,6 +362,9 @@ mixin _$FileUploadEvent {
         pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -324,6 +374,9 @@ mixin _$FileUploadEvent {
         pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -332,6 +385,9 @@ mixin _$FileUploadEvent {
     required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -339,6 +395,9 @@ mixin _$FileUploadEvent {
     TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -346,6 +405,9 @@ mixin _$FileUploadEvent {
     TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -421,7 +483,9 @@ class __$$_pickDocumentEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_pickDocumentEvent implements _pickDocumentEvent {
+class _$_pickDocumentEvent
+    with DiagnosticableTreeMixin
+    implements _pickDocumentEvent {
   _$_pickDocumentEvent(
       {required this.context,
       required this.fileIndex,
@@ -438,8 +502,19 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
   final bool isDocument;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FileUploadEvent.pickDocumentEvent(context: $context, fileIndex: $fileIndex, isFromCamera: $isFromCamera, isDocument: $isDocument)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FileUploadEvent.pickDocumentEvent'))
+      ..add(DiagnosticsProperty('context', context))
+      ..add(DiagnosticsProperty('fileIndex', fileIndex))
+      ..add(DiagnosticsProperty('isFromCamera', isFromCamera))
+      ..add(DiagnosticsProperty('isDocument', isDocument));
   }
 
   @override
@@ -475,6 +550,10 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
   }) {
     return pickDocumentEvent(context, fileIndex, isFromCamera, isDocument);
   }
@@ -487,6 +566,9 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
         pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
   }) {
     return pickDocumentEvent?.call(
         context, fileIndex, isFromCamera, isDocument);
@@ -500,6 +582,9 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
         pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (pickDocumentEvent != null) {
@@ -514,6 +599,9 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
     required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
   }) {
     return pickDocumentEvent(this);
   }
@@ -524,6 +612,9 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
     TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
   }) {
     return pickDocumentEvent?.call(this);
   }
@@ -534,6 +625,9 @@ class _$_pickDocumentEvent implements _pickDocumentEvent {
     TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (pickDocumentEvent != null) {
@@ -592,15 +686,25 @@ class __$$_uploadApiEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_uploadApiEvent implements _uploadApiEvent {
+class _$_uploadApiEvent
+    with DiagnosticableTreeMixin
+    implements _uploadApiEvent {
   _$_uploadApiEvent({required this.context});
 
   @override
   final BuildContext context;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FileUploadEvent.uploadApiEvent(context: $context)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FileUploadEvent.uploadApiEvent'))
+      ..add(DiagnosticsProperty('context', context));
   }
 
   @override
@@ -628,6 +732,10 @@ class _$_uploadApiEvent implements _uploadApiEvent {
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
   }) {
     return uploadApiEvent(context);
   }
@@ -640,6 +748,9 @@ class _$_uploadApiEvent implements _uploadApiEvent {
         pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
   }) {
     return uploadApiEvent?.call(context);
   }
@@ -652,6 +763,9 @@ class _$_uploadApiEvent implements _uploadApiEvent {
         pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (uploadApiEvent != null) {
@@ -666,6 +780,9 @@ class _$_uploadApiEvent implements _uploadApiEvent {
     required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
   }) {
     return uploadApiEvent(this);
   }
@@ -676,6 +793,9 @@ class _$_uploadApiEvent implements _uploadApiEvent {
     TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
   }) {
     return uploadApiEvent?.call(this);
   }
@@ -686,6 +806,9 @@ class _$_uploadApiEvent implements _uploadApiEvent {
     TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (uploadApiEvent != null) {
@@ -738,7 +861,9 @@ class __$$_deleteFileEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_deleteFileEvent implements _deleteFileEvent {
+class _$_deleteFileEvent
+    with DiagnosticableTreeMixin
+    implements _deleteFileEvent {
   _$_deleteFileEvent({required this.fileIndex});
 
 // required String documentPath,
@@ -746,8 +871,16 @@ class _$_deleteFileEvent implements _deleteFileEvent {
   final int fileIndex;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FileUploadEvent.deleteFileEvent(fileIndex: $fileIndex)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FileUploadEvent.deleteFileEvent'))
+      ..add(DiagnosticsProperty('fileIndex', fileIndex));
   }
 
   @override
@@ -776,6 +909,10 @@ class _$_deleteFileEvent implements _deleteFileEvent {
         pickDocumentEvent,
     required TResult Function(BuildContext context) uploadApiEvent,
     required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
   }) {
     return deleteFileEvent(fileIndex);
   }
@@ -788,6 +925,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
         pickDocumentEvent,
     TResult? Function(BuildContext context)? uploadApiEvent,
     TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
   }) {
     return deleteFileEvent?.call(fileIndex);
   }
@@ -800,6 +940,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
         pickDocumentEvent,
     TResult Function(BuildContext context)? uploadApiEvent,
     TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (deleteFileEvent != null) {
@@ -814,6 +957,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
     required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
     required TResult Function(_uploadApiEvent value) uploadApiEvent,
     required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
   }) {
     return deleteFileEvent(this);
   }
@@ -824,6 +970,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
     TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult? Function(_uploadApiEvent value)? uploadApiEvent,
     TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
   }) {
     return deleteFileEvent?.call(this);
   }
@@ -834,6 +983,9 @@ class _$_deleteFileEvent implements _deleteFileEvent {
     TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
     TResult Function(_uploadApiEvent value)? uploadApiEvent,
     TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
     required TResult orElse(),
   }) {
     if (deleteFileEvent != null) {
@@ -851,4 +1003,384 @@ abstract class _deleteFileEvent implements FileUploadEvent {
   @JsonKey(ignore: true)
   _$$_deleteFileEventCopyWith<_$_deleteFileEvent> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_downloadFileEventCopyWith<$Res> {
+  factory _$$_downloadFileEventCopyWith(_$_downloadFileEvent value,
+          $Res Function(_$_downloadFileEvent) then) =
+      __$$_downloadFileEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context, int fileIndex});
+}
+
+/// @nodoc
+class __$$_downloadFileEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_downloadFileEvent>
+    implements _$$_downloadFileEventCopyWith<$Res> {
+  __$$_downloadFileEventCopyWithImpl(
+      _$_downloadFileEvent _value, $Res Function(_$_downloadFileEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+    Object? fileIndex = null,
+  }) {
+    return _then(_$_downloadFileEvent(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+      fileIndex: null == fileIndex
+          ? _value.fileIndex
+          : fileIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_downloadFileEvent
+    with DiagnosticableTreeMixin
+    implements _downloadFileEvent {
+  _$_downloadFileEvent({required this.context, required this.fileIndex});
+
+  @override
+  final BuildContext context;
+  @override
+  final int fileIndex;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FileUploadEvent.downloadFileEvent(context: $context, fileIndex: $fileIndex)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FileUploadEvent.downloadFileEvent'))
+      ..add(DiagnosticsProperty('context', context))
+      ..add(DiagnosticsProperty('fileIndex', fileIndex));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_downloadFileEvent &&
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.fileIndex, fileIndex) ||
+                other.fileIndex == fileIndex));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context, fileIndex);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_downloadFileEventCopyWith<_$_downloadFileEvent> get copyWith =>
+      __$$_downloadFileEventCopyWithImpl<_$_downloadFileEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
+  }) {
+    return downloadFileEvent(context, fileIndex);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
+  }) {
+    return downloadFileEvent?.call(context, fileIndex);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
+    required TResult orElse(),
+  }) {
+    if (downloadFileEvent != null) {
+      return downloadFileEvent(context, fileIndex);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
+  }) {
+    return downloadFileEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
+  }) {
+    return downloadFileEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
+    required TResult orElse(),
+  }) {
+    if (downloadFileEvent != null) {
+      return downloadFileEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _downloadFileEvent implements FileUploadEvent {
+  factory _downloadFileEvent(
+      {required final BuildContext context,
+      required final int fileIndex}) = _$_downloadFileEvent;
+
+  BuildContext get context;
+  int get fileIndex;
+  @JsonKey(ignore: true)
+  _$$_downloadFileEventCopyWith<_$_downloadFileEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_getProfileFilesAndFormsEventCopyWith<$Res> {
+  factory _$$_getProfileFilesAndFormsEventCopyWith(
+          _$_getProfileFilesAndFormsEvent value,
+          $Res Function(_$_getProfileFilesAndFormsEvent) then) =
+      __$$_getProfileFilesAndFormsEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context, bool isUpdate});
+}
+
+/// @nodoc
+class __$$_getProfileFilesAndFormsEventCopyWithImpl<$Res>
+    extends _$FileUploadEventCopyWithImpl<$Res, _$_getProfileFilesAndFormsEvent>
+    implements _$$_getProfileFilesAndFormsEventCopyWith<$Res> {
+  __$$_getProfileFilesAndFormsEventCopyWithImpl(
+      _$_getProfileFilesAndFormsEvent _value,
+      $Res Function(_$_getProfileFilesAndFormsEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+    Object? isUpdate = null,
+  }) {
+    return _then(_$_getProfileFilesAndFormsEvent(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+      isUpdate: null == isUpdate
+          ? _value.isUpdate
+          : isUpdate // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_getProfileFilesAndFormsEvent
+    with DiagnosticableTreeMixin
+    implements _getProfileFilesAndFormsEvent {
+  _$_getProfileFilesAndFormsEvent(
+      {required this.context, required this.isUpdate});
+
+  @override
+  final BuildContext context;
+  @override
+  final bool isUpdate;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FileUploadEvent.getProfileFilesAndFormsEvent(context: $context, isUpdate: $isUpdate)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty(
+          'type', 'FileUploadEvent.getProfileFilesAndFormsEvent'))
+      ..add(DiagnosticsProperty('context', context))
+      ..add(DiagnosticsProperty('isUpdate', isUpdate));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_getProfileFilesAndFormsEvent &&
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.isUpdate, isUpdate) ||
+                other.isUpdate == isUpdate));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context, isUpdate);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_getProfileFilesAndFormsEventCopyWith<_$_getProfileFilesAndFormsEvent>
+      get copyWith => __$$_getProfileFilesAndFormsEventCopyWithImpl<
+          _$_getProfileFilesAndFormsEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(BuildContext context, int fileIndex,
+            bool isFromCamera, bool isDocument)
+        pickDocumentEvent,
+    required TResult Function(BuildContext context) uploadApiEvent,
+    required TResult Function(int fileIndex) deleteFileEvent,
+    required TResult Function(BuildContext context, int fileIndex)
+        downloadFileEvent,
+    required TResult Function(BuildContext context, bool isUpdate)
+        getProfileFilesAndFormsEvent,
+  }) {
+    return getProfileFilesAndFormsEvent(context, isUpdate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
+    TResult? Function(BuildContext context)? uploadApiEvent,
+    TResult? Function(int fileIndex)? deleteFileEvent,
+    TResult? Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult? Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
+  }) {
+    return getProfileFilesAndFormsEvent?.call(context, isUpdate);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(BuildContext context, int fileIndex, bool isFromCamera,
+            bool isDocument)?
+        pickDocumentEvent,
+    TResult Function(BuildContext context)? uploadApiEvent,
+    TResult Function(int fileIndex)? deleteFileEvent,
+    TResult Function(BuildContext context, int fileIndex)? downloadFileEvent,
+    TResult Function(BuildContext context, bool isUpdate)?
+        getProfileFilesAndFormsEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileFilesAndFormsEvent != null) {
+      return getProfileFilesAndFormsEvent(context, isUpdate);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_pickDocumentEvent value) pickDocumentEvent,
+    required TResult Function(_uploadApiEvent value) uploadApiEvent,
+    required TResult Function(_deleteFileEvent value) deleteFileEvent,
+    required TResult Function(_downloadFileEvent value) downloadFileEvent,
+    required TResult Function(_getProfileFilesAndFormsEvent value)
+        getProfileFilesAndFormsEvent,
+  }) {
+    return getProfileFilesAndFormsEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_pickDocumentEvent value)? pickDocumentEvent,
+    TResult? Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult? Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult? Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult? Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
+  }) {
+    return getProfileFilesAndFormsEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_pickDocumentEvent value)? pickDocumentEvent,
+    TResult Function(_uploadApiEvent value)? uploadApiEvent,
+    TResult Function(_deleteFileEvent value)? deleteFileEvent,
+    TResult Function(_downloadFileEvent value)? downloadFileEvent,
+    TResult Function(_getProfileFilesAndFormsEvent value)?
+        getProfileFilesAndFormsEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileFilesAndFormsEvent != null) {
+      return getProfileFilesAndFormsEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _getProfileFilesAndFormsEvent implements FileUploadEvent {
+  factory _getProfileFilesAndFormsEvent(
+      {required final BuildContext context,
+      required final bool isUpdate}) = _$_getProfileFilesAndFormsEvent;
+
+  BuildContext get context;
+  bool get isUpdate;
+  @JsonKey(ignore: true)
+  _$$_getProfileFilesAndFormsEventCopyWith<_$_getProfileFilesAndFormsEvent>
+      get copyWith => throw _privateConstructorUsedError;
 }

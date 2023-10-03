@@ -6,4 +6,6 @@ class AppUrls{
   static const String newUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String FileUploadUrl = '/v1/auth/upload';
   static const String businessTypesUrl = '/v1/settings/clientTypes';
+  static const String getProfileDetailsUrl = '/v1/admin/getAllClients';
+  static const String updateProfileDetailsUrl = '/v1/clients/updateClient';
 }
