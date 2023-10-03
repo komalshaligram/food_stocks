@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final loginResModel = loginResModelFromMap(jsonString);
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'login_res_model.freezed.dart';
@@ -10,13 +7,13 @@ part 'login_res_model.g.dart';
 @freezed
 class LoginResModel with _$LoginResModel {
   const factory LoginResModel({
-    @JsonKey(name: "status")
+
     int? status,
-    @JsonKey(name: "message")
+
     String? message,
-    @JsonKey(name: "user")
+
     User? user,
-    @JsonKey(name: "success")
+
     bool? success,
   }) = _LoginResModel;
 
@@ -26,31 +23,31 @@ class LoginResModel with _$LoginResModel {
 @freezed
 class User with _$User {
   const factory User({
-    @JsonKey(name: "isDeleted")
+
     bool? isDeleted,
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "email")
+
     String? email,
-    @JsonKey(name: "password")
+
     String? password,
-    @JsonKey(name: "firstName")
+
     String? firstName,
-    @JsonKey(name: "lastName")
+
     String? lastName,
-    @JsonKey(name: "phoneNumber")
+
     String? phoneNumber,
-    @JsonKey(name: "address")
+
     String? address,
-    @JsonKey(name: "cityId")
+
     String? cityId,
-    @JsonKey(name: "contactName")
+
     String? contactName,
-    @JsonKey(name: "statusId")
+
     String? statusId,
-    @JsonKey(name: "logo")
+
     String? logo,
-    @JsonKey(name: "adminTypeId")
+
     String? adminTypeId,
     @JsonKey(name: "clientDetail")
     ClientDetail? clientDetail,

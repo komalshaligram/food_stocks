@@ -3,7 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
-import '../../data/model/req_model/profile_model/profile_model.dart';
+import '../../data/model/req_model/profile_req_model/profile_model.dart';
+import '../../data/model/res_model/profile_res_model/profile_res_model.dart' as res;
+import '../../repository/dio_client.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_styles.dart';
@@ -16,6 +18,7 @@ part 'operation_time_bloc.freezed.dart';
 
 class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
   ProfileModel profileModel = ProfileModel();
+
   OperationTimeBloc() : super(OperationTimeState.initial()) {
     on<OperationTimeEvent>((event, emit) async {
       if (event is _defaultValueAddInListEvent) {
@@ -73,11 +76,14 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
       }
 
       if (event is _timePickerEvent) {
-
-        void showSnackBar(BuildContext context , String title) {
+        void showSnackBar(BuildContext context, String title) {
           final snackBar = SnackBar(
-            content: Text(title,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont , color: AppColors.whiteColor,fontWeight: FontWeight.w400),
+            content: Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont,
+                  color: AppColors.whiteColor,
+                  fontWeight: FontWeight.w400),
             ),
             backgroundColor: AppColors.redColor,
             padding: EdgeInsets.all(20),
@@ -85,7 +91,6 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-
 
         final TimeOfDay? result = await showTimePicker(
             context: event.context,
@@ -131,7 +136,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               temp[event.rowIndex].data.add(timeData(
                   openingTime: openingTime, closingTime: selectedTime));
             } else {
-            showSnackBar(event.context,'select proper timezone');
+              showSnackBar(event.context, 'select proper timezone');
             }
           } else {
             if (event.openingIndex == 1) {
@@ -144,7 +149,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               temp[event.rowIndex].data.add(timeData(
                   openingTime: openingTime, closingTime: selectedTime));
             } else {
-              showSnackBar(event.context,'select proper timezone');
+              showSnackBar(event.context, 'select proper timezone');
             }
           }
           emit(state.copyWith(
@@ -168,10 +173,89 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         temp[event.rowIndex].data.removeAt(event.timeIndex);
         emit(state.copyWith(
             OperationTimeList: temp, isRefresh: !state.isRefresh));
-      }else if (event is _getProfileModelEvent) {
+      } else if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         debugPrint('get contact name = ${profileModel.contactName}');
       }
+
+      if (event is _timeZoneApiEvent) {
+        if (state.OperationTimeList[0].data[0].openingTime != '0:0' &&
+            state.OperationTimeList[0].data[0].closingTime != '0:0') {
+          ProfileModel reqMap = ProfileModel(
+             // statusId: profileModel.statusId,
+              profileImage: profileModel.profileImage,
+              phoneNumber: '456321785',
+              logo: profileModel.logo,
+             // lastName: '',
+             // firstName: '',
+              cityId: profileModel.cityId,
+              contactName: profileModel.contactName,
+              createdBy: '60abf964173234001c903a05',
+              updatedBy: '60abf964173234001c903a05',
+              address: profileModel.address,
+              email: profileModel.email,
+              clientDetail: ClientDetail(
+                fax: profileModel.clientDetail?.fax,
+                 clientTypeId: '60abf964173234001c903a05',
+
+                applicationVersion:
+                    profileModel.clientDetail?.applicationVersion,
+                ownerName: profileModel.clientDetail?.ownerName,
+                bussinessName: profileModel.clientDetail?.bussinessName,
+                bussinessId: profileModel.clientDetail?.bussinessId,
+                deviceType: profileModel.clientDetail?.deviceType,
+                israelId: profileModel.clientDetail?.israelId,
+                lastSeen: DateTime.now(),
+                monthlyCredits: 100,
+                operationTime: OperationTime(monday: [
+                  Monday(
+                    from: state.OperationTimeList[0].data[0].openingTime,
+                    unitl: state.OperationTimeList[0].data[0].closingTime,
+                  ),
+                ]),
+                tokenId: profileModel.clientDetail?.tokenId,
+              ));
+
+          debugPrint('operation time reqMap + $reqMap');
+          try {
+            final response = await DioClient()
+                .post('/v1/clients/createClient', data: reqMap);
+
+            res.ProfileResModel profileResModel =
+                res.ProfileResModel.fromJson(response);
+
+            debugPrint('operation time response --- ${profileResModel}');
+
+            if (response['status'] == 200) {
+              emit(state.copyWith(isRegisterSuccess: true));
+            } else {
+              emit(state.copyWith(
+                  isRegisterFail: false, errorMessage: 'Registration failed'));
+              await Future.delayed(const Duration(seconds: 2));
+              emit(state.copyWith(
+                isRegisterFail: false,
+              ));
+            }
+          } catch (e) {
+            debugPrint(e.toString());
+            emit(state.copyWith(
+                isRegisterFail: true, errorMessage: 'Registration failed1'));
+            await Future.delayed(const Duration(seconds: 2));
+            emit(state.copyWith(
+              isRegisterFail: false,
+            ));
+          }
+        }
+        else{
+          emit(state.copyWith(
+              isRegisterFail: true, errorMessage: 'please select shiftTime'));
+          await Future.delayed(const Duration(seconds: 2));
+          emit(state.copyWith(
+            isRegisterFail: false,
+          ));
+        }
+      }
+
     });
   }
 }
