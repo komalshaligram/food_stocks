@@ -54,11 +54,12 @@ class LogInScreenWidget extends StatelessWidget {
               context, RouteDefine.otpScreen.name ,arguments: {AppStrings.contactString : phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
           });
+        }else{
+         showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
         }
-       else if(state.isLoginFail){
-         SnackBarShow(context ,state.errorMessage,AppColors.redColor);
-        // Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-       }
 
       },
       child: BlocBuilder<LogInBloc, LogInState>(

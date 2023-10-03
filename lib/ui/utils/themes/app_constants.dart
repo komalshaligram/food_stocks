@@ -32,4 +32,6 @@ static const double textFormFieldHeight = 40;
   static const double font_10 = 10;
   static const double font_12 = 12;
   static const double font_14 = 14;
+
+  static const double blur_10 = 10;
 }

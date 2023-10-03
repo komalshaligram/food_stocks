@@ -1,22 +1,28 @@
 part of 'file_upload_bloc.dart';
 
 @freezed
-class FileUploadState with _$FileUploadState{
-
+class FileUploadState with _$FileUploadState {
   const factory FileUploadState({
     required File promissoryNote,
+    required bool isUpdate,
+    required bool isPromissoryNoteDocument,
     required File personalGuarantee,
+    required bool isPersonalGuaranteeDocument,
     required File photoOfTZ,
+    required bool isPhotoOfTZDocument,
     required File businessCertificate,
-
+    required bool isBusinessCertificateDocument,
   }) = _FileUploadState;
 
-  factory FileUploadState.initial()=>  FileUploadState(
+  factory FileUploadState.initial() => FileUploadState(
     photoOfTZ: File(''),
-    promissoryNote: File(''),
-    personalGuarantee: File(''),
-    businessCertificate: File(''),
-
-  );
-
+        isUpdate: false,
+        promissoryNote: File(''),
+        personalGuarantee: File(''),
+        businessCertificate: File(''),
+        isPromissoryNoteDocument: false,
+        isPersonalGuaranteeDocument: false,
+        isPhotoOfTZDocument: false,
+        isBusinessCertificateDocument: false,
+      );
 }

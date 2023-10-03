@@ -6,7 +6,6 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 
-
 class SplashRoute {
   static Widget get route => const SplashScreen();
 }
@@ -40,8 +39,6 @@ class SplashScreenWidget extends StatelessWidget {
           Navigator.pushNamed(context, RouteDefine.connectScreen.name);
 
         }
-
-
       },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {

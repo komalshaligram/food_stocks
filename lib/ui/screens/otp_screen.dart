@@ -48,9 +48,12 @@ class OTPScreenWidget extends StatelessWidget {
           Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
         }
         if(state.isLoginFail){
-          SnackBarShow(context, state.errorMessage ,AppColors.redColor);
-          await Future.delayed(const Duration(seconds: 2));
-          Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+
+          showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
+            Navigator.pushNamed(context, RouteDefine.loginScreen.name);
         }
       },
       child: BlocBuilder<OtpBloc, OtpState>(

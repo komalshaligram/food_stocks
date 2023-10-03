@@ -65,7 +65,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   BoxShadow(
                                       color: AppColors.shadowColor
                                           .withOpacity(0.3),
-                                      blurRadius: 10)
+                                      blurRadius: AppConstants.blur_10)
                                 ],
                                 shape: BoxShape.circle,
                               ),
@@ -89,7 +89,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 BoxShadow(
                                     color:
                                         AppColors.shadowColor.withOpacity(0.3),
-                                    blurRadius: 10)
+                                    blurRadius: AppConstants.blur_10)
                               ],
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(AppConstants.radius_100))),
@@ -188,7 +188,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   BoxShadow(
                                       color: AppColors.shadowColor
                                           .withOpacity(0.15),
-                                      blurRadius: 10)
+                                      blurRadius: AppConstants.blur_10)
                                 ],
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(10.0))),
@@ -445,7 +445,7 @@ class HomeScreenWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: 10,
+              blurRadius: AppConstants.blur_10,
             ),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(10.0)),

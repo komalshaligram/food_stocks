@@ -44,7 +44,10 @@ class OperationTimeScreenWidget extends StatelessWidget {
           Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name);
         }
         if (state.isRegisterFail) {
-          SnackBarShow(context, state.errorMessage, AppColors.redColor);
+          showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
         }
       },
       child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
@@ -164,7 +167,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                             OperationTimeEvent.timeZoneApiEvent(
                                 isTimeOperation: false));
 
-                        /*  Navigator.pushNamed(
+                    /*  Navigator.pushNamed(
                           context, RouteDefine.fileUploadScreen.name);*/
                       },
                       bGColor: AppColors.whiteColor,

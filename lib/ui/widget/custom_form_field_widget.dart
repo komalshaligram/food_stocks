@@ -14,7 +14,6 @@ class CustomFormField extends StatelessWidget {
     required String validator,
     required Color fillColor,
     this.maxLimits,
-    this.getxController,
     this.onTap,
     this.onFieldSubmitted,
     this.onSaved,
@@ -78,7 +77,6 @@ class CustomFormField extends StatelessWidget {
   final bool isPassword;
   final TextInputAction? textInputAction;
   final TextEditingController _controller;
-  final ValueChanged<String>? getxController;
   final GestureTapCallback? onTap;
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
@@ -102,6 +100,7 @@ class CustomFormField extends StatelessWidget {
       textCapitalization: TextCapitalization.sentences,
       //   textInputAction: _inputAction,
       onTap: onTap,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       onFieldSubmitted: onFieldSubmitted,
       onSaved: onSaved,
       autofocus: autofocus,
