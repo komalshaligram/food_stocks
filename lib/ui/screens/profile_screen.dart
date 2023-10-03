@@ -22,7 +22,14 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map ;
+    if(temp[AppStrings.contactString] == null){
+      temp[AppStrings.contactString] = '';
+    }
+    else{
+      temp[AppStrings.contactString];
+    }
+
 
     return BlocProvider(
       create: (context) =>
@@ -251,8 +258,7 @@ class ProfileScreenWidget extends StatelessWidget {
                       CustomFormField(
                         controller: state.businessNameController,
                         keyboardType: TextInputType.text,
-                        hint:
-                            "" /*AppLocalizations.of(context)!.life_grocery_store*/,
+                        hint: "" /*AppLocalizations.of(context)!.life_grocery_store*/,
                         fillColor: Colors.transparent,
                         textInputAction: TextInputAction.next,
                         validator: AppStrings.businessNameValString,

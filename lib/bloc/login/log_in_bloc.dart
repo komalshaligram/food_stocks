@@ -51,6 +51,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               isLoginFail: false));
         }
       }
+      if(event is _validateMobileEvent){
+        emit(state.copyWith(mobileErrorMessage: event.errorMsg));
+      }
     });
   }
 }

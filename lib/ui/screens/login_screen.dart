@@ -8,10 +8,10 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
-import 'package:food_stock/ui/widget/custom_form_field_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/login/log_in_bloc.dart';
 import '../utils/themes/app_strings.dart';
+import '../utils/validation/auth_form_validation.dart';
 
 
 class LogInRoute {
@@ -24,6 +24,12 @@ class LogInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    if(temp[AppStrings.isRegisterString] == null){
+      temp[AppStrings.isRegisterString] = true;
+    }
+    else{
+      temp[AppStrings.isRegisterString];
+    }
     return BlocProvider(
       create: (context) => LogInBloc(),
       child: LogInScreenWidget(isRegister: temp[AppStrings.isRegisterString]),
@@ -38,7 +44,6 @@ class LogInScreenWidget extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
  final _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
@@ -49,10 +54,10 @@ class LogInScreenWidget extends StatelessWidget {
               context, RouteDefine.otpScreen.name ,arguments: {AppStrings.contactString : phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
           });
-        }else{
+        }
+       else if(state.isLoginFail){
          SnackBarShow(context ,state.errorMessage,AppColors.redColor);
-         await Future.delayed(const Duration(seconds: 1));
-         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+        // Navigator.pushNamed(context, RouteDefine.connectScreen.name);
        }
 
       },
@@ -101,7 +106,6 @@ class LogInScreenWidget extends StatelessWidget {
                                 top: AppConstants.padding_5,
                                 bottom: AppConstants.padding_5),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
@@ -114,14 +118,40 @@ class LogInScreenWidget extends StatelessWidget {
                                         color: AppColors.blackColor),
                                   ),
                                 ),
-                                CustomFormField(
-                                    fillColor: AppColors.whiteColor,
-                                    controller: phoneController,
-                                    keyboardType: TextInputType.number,
-                                    isBorderVisible: false,
-                                    textInputAction: TextInputAction.done,
-                                    hint: AppStrings.hintNumberString, validator: AppStrings.mobileValString,),
+
+                                TextFormField(
+                                  controller: phoneController,
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  keyboardType: TextInputType.number,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor, size: AppConstants.smallFont, fontWeight: FontWeight.w400),
+                                  validator: (value) {
+                                    context.read<LogInBloc>().add(LogInEvent.validateMobileEvent(errorMsg: AuthFormValidation().formValidation(value!, AppStrings.mobileValString) ?? ''));
+                                    return '';
+                                  },
+                                  decoration: InputDecoration(
+                                      errorStyle: TextStyle(
+                                          color: AppColors.redColor,
+                                          fontWeight: FontWeight.w400),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide:BorderSide.none),
+                                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:  BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                      )
+                                  ),
+                                ),
                               ],
+
                             ),
                           ),
                         ),
@@ -188,12 +218,18 @@ class LogInScreenWidget extends StatelessWidget {
                           ),
                         ],
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(state.mobileErrorMessage,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.redColor)),
+                        ],
+                      ),
                       30.height,
                       CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!.continued,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
-                          if(_formKey.currentState?.validate() ?? false){
+                          if(_formKey.currentState?.validate() ?? false || state.mobileErrorMessage.isNotEmpty){
                             context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(
                                 contactNumber: phoneController.text,
                                 isRegister: isRegister

@@ -40,7 +40,7 @@ class CustomFormField extends StatelessWidget {
     this.inputformet,
     this.autofocus = false,
     this.textInputAction,  TextCapitalization textCapitalization = TextCapitalization.words,
-    this.cursorColor = Colors.white
+    this.cursorColor = Colors.green
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
