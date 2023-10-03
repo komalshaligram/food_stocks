@@ -29,6 +29,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           LoginResModel businessTypeModel = LoginResModel.fromJson(response);
 
           debugPrint('login response --- ${businessTypeModel}');
+          print(response['status']);
 
           if (response['status'] == 200) {
             emit(state.copyWith(isLoginSuccess: true));
@@ -38,7 +39,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           } else {
             emit(state.copyWith(
                 isLoginFail: true, errorMessage: response['message']));
-            await Future.delayed(const Duration(seconds: 2));
             emit(state.copyWith(
                 isLoginFail: false));
 
@@ -46,7 +46,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         } catch (e) {
           emit(state.copyWith(
               isLoginFail: true, errorMessage: 'login failed'));
-          await Future.delayed(const Duration(seconds: 2));
           emit(state.copyWith(
               isLoginFail: false));
         }

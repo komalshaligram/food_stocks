@@ -116,8 +116,9 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                   .add(Monday(from: selectedTime, unitl: closingTime));
             } else if (event.openingIndex == 0) {
               if (temp[event.rowIndex].monday[event.timeIndex].from! == '0:0') {
-                SnackBarShow(
-                    event.context, 'select opening Time', AppColors.redColor);
+                showSnackBar(
+
+                    context: event.context, title: 'select opening Time', bgColor: AppColors.redColor);
               } else if (selectTimeZone.isAfter(start)) {
                 temp[event.rowIndex].monday.removeAt(event.timeIndex);
                 temp[event.rowIndex]
@@ -125,10 +126,10 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                     .add(Monday(from: openingTime, unitl: selectedTime));
               }
             } else {
-              SnackBarShow(
-                  event.context,
-                  'select opening time after previous closing time',
-                  AppColors.redColor);
+              showSnackBar(
+                  context: event.context,
+                  title: 'select opening time after previous closing time',
+                 bgColor:  AppColors.redColor);
             }
           } else {
             if (event.openingIndex == 1) {
@@ -138,18 +139,18 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                   .add(Monday(from: selectedTime, unitl: closingTime));
             } else if (event.openingIndex == 0) {
               if (temp[event.rowIndex].monday[event.timeIndex].from! == '0:0') {
-                SnackBarShow(
-                    event.context, 'select opening Time', AppColors.redColor);
+                showSnackBar(
+                    context: event.context,title:  'select opening Time', bgColor: AppColors.redColor);
               } else if (selectTimeZone.isAfter(start)) {
                 temp[event.rowIndex].monday.removeAt(event.timeIndex);
                 temp[event.rowIndex]
                     .monday
                     .add(Monday(from: openingTime, unitl: selectedTime));
               } else {
-                SnackBarShow(
-                    event.context,
-                    'select opening time after closing time',
-                    AppColors.redColor);
+                showSnackBar(
+                    context: event.context,
+                    title:'select opening time after closing time',
+                    bgColor:AppColors.redColor);
               }
             }
           }
@@ -173,8 +174,8 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
-            SnackBarShow(event.context, 'select previous shift time',
-                AppColors.redColor);
+            showSnackBar(context:event.context, title:'select previous shift time',
+                bgColor:AppColors.redColor);
           }
         } else {
           if (state.OperationTimeList[event.rowIndex].monday[0].from != '0:0' &&
@@ -184,8 +185,8 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
-            SnackBarShow(
-                event.context, 'select first shift time', AppColors.redColor);
+            showSnackBar(
+                context: event.context, title:'select first shift time', bgColor: AppColors.redColor);
           }
         }
       }

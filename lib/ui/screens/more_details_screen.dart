@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
 import '../../routes/app_routes.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 
 import '../utils/themes/app_constants.dart';

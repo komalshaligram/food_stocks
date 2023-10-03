@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,9 +52,6 @@ class ProfileScreen extends StatelessWidget {
                       ? true
                       : false),
         ),
-      child: ProfileScreenWidget(),
-      create: (context) =>
-          ProfileBloc()..add(ProfileEvent.getBusinessTypeListEvent()),
       child: ProfileScreenWidget(contact: temp[AppStrings.contactString]),
     );
   }
@@ -65,7 +62,6 @@ class ProfileScreenWidget extends StatelessWidget {
   ProfileScreenWidget({super.key ,  this.contact = ''});
   final _formKey = GlobalKey<FormState>();
 
-  ProfileScreenWidget({super.key});
 
   @override
   Widget build(BuildContext c) {

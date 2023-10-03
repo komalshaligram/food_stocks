@@ -48,13 +48,14 @@ class LogInScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
-
+        print(state.isLoginSuccess);
        if(state.isLoginSuccess){
           Navigator.pushNamed(
               context, RouteDefine.otpScreen.name ,arguments: {AppStrings.contactString : phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
           });
-        }else{
+        }
+       else if(state.isLoginFail){
          showSnackBar(
               context: context,
               title: state.errorMessage,
@@ -128,7 +129,7 @@ class LogInScreenWidget extends StatelessWidget {
                                       color: AppColors.blackColor, size: AppConstants.smallFont, fontWeight: FontWeight.w400),
                                   validator: (value) {
                                     context.read<LogInBloc>().add(LogInEvent.validateMobileEvent(errorMsg: AuthFormValidation().formValidation(value!, AppStrings.mobileValString) ?? ''));
-                                    return '';
+
                                   },
                                   decoration: InputDecoration(
                                       errorStyle: TextStyle(
