@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
-import 'package:food_stock/data/model/req_model/profile_model/profile_model.dart';
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
 import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
     as resGet;
