@@ -100,7 +100,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             email: '',
 
             logo: '',
-            phoneNumber: '1234567890',
+            phoneNumber: event.phoneNumber,
             profileImage: imgUrl,
 
             clientDetail: ClientDetail(

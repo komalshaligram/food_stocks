@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,6 +26,15 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map ;
+    if(temp[AppStrings.contactString] == null){
+      temp[AppStrings.contactString] = '';
+    }
+    else{
+      temp[AppStrings.contactString];
+    }
+
+
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint(
@@ -42,15 +52,16 @@ class ProfileScreen extends StatelessWidget {
                       ? true
                       : false),
         ),
-      child: ProfileScreenWidget(),
+      child: ProfileScreenWidget(contact: temp[AppStrings.contactString]),
     );
   }
 }
 
 class ProfileScreenWidget extends StatelessWidget {
+  final String contact;
+  ProfileScreenWidget({super.key ,  this.contact = ''});
   final _formKey = GlobalKey<FormState>();
 
-  ProfileScreenWidget({super.key});
 
   @override
   Widget build(BuildContext c) {
@@ -93,12 +104,12 @@ class ProfileScreenWidget extends StatelessWidget {
                       Stack(
                         children: [
                           Container(
-                            height: 80,
+                            height: AppConstants.containerHeight_80,
                             width: getScreenWidth(c),
                             alignment: Alignment.center,
                             child: Container(
-                              height: 80,
-                              width: 80,
+                              height: AppConstants.containerHeight_80,
+                              width: AppConstants.containerHeight_80,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(200),
                                 color: AppColors.mainColor.withOpacity(0.1),
@@ -116,7 +127,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           ),
                           Positioned(
                             left: getScreenWidth(c) * 0.44,
-                            top: getScreenHeight(c) * 0.07,
+                            top: getScreenHeight(c) * 0.05,
                             child: GestureDetector(
                               onTap: () {
                                 showModalBottomSheet(
@@ -269,7 +280,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         child: Text(
                           AppLocalizations.of(context)!.profile_picture,
                           style: AppStyles.rkRegularTextStyle(
-                              size: 14,
+                              size: AppConstants.font_14,
                               fontWeight: FontWeight.w400,
                               color: AppColors.textColor),
                         ),
@@ -314,7 +325,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           isExpanded: true,
                           elevation: 0,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppConstants.smallFont,
                             color: AppColors.blackColor,
                           ),
                           value: state.selectedBusinessType,
@@ -406,7 +417,10 @@ class ProfileScreenWidget extends StatelessWidget {
                               } else {
                                 bloc.add(ProfileEvent
                                     .navigateToMoreDetailsScreenEvent(
-                                        context: c));
+                                        context: c,
+                                  phoneNumber: contact
+
+                                ));
                               }
                             }
                           } else {
@@ -435,4 +449,54 @@ class ProfileScreenWidget extends StatelessWidget {
       ),
     );
   }
+
+/*  void alertDialog(BuildContext context , String image){
+
+     showDialog(
+       context: context,
+       builder:(c1) {
+         return BlocBuilder<ProfileBloc, ProfileState>(
+           builder: (c1, state) {
+             image = state.image.path;
+             print('dialog_____${state.image.path}');
+             return AlertDialog(
+               title: Align(
+                 alignment: Alignment.center,
+                   child: Text(AppLocalizations.of(context)!.upload_photo)),
+
+               actions: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: [
+                     GestureDetector(
+                         onTap: (){
+                           context
+                               .read<ProfileBloc>()
+                               .add(ProfileEvent.profilePicFromCameraEvent());
+                         },
+                         child: Icon(Icons.camera_alt_rounded)),
+                     GestureDetector(
+                         onTap: (){
+                           context
+                               .read<ProfileBloc>()
+                               .add(ProfileEvent.profilePicFromGalleryEvent());
+                         },
+                         child: Icon(Icons.photo)),
+                   ],
+                 ),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: [
+                   Text(AppLocalizations.of(context)!.camera),
+                     Text(AppLocalizations.of(context)!.gallery),
+                   ],
+                 ),
+
+               ],
+             );
+           },
+         );
+       }, );
+   }
+*/
 }

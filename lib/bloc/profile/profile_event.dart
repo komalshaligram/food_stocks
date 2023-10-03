@@ -14,7 +14,10 @@ class ProfileEvent with _$ProfileEvent {
       {required BuildContext context}) = _getBusinessTypeListEvent;
 
   factory ProfileEvent.navigateToMoreDetailsScreenEvent(
-      {required BuildContext context}) = _navigateToMoreDetailsScreenEvent;
+      {
+        required BuildContext context,
+        required String phoneNumber,
+      }) = _navigateToMoreDetailsScreenEvent;
 
   factory ProfileEvent.getProfileDetailsEvent(
       {required BuildContext context,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
-
 import '../utils/themes/app_colors.dart';
 
 class WalletRoute {

@@ -6,9 +6,9 @@ class AppStrings {
   static const numberString = '1234567896';
   static const hintString = '1234567896';
   static const cropImageString = 'Crop Image';
-
   static const androidString = 'Android';
   static const iosString = 'IOS';
+
 
   //api req param strings
   static const profileImageString = 'profile_img';
@@ -49,4 +49,13 @@ class AppStrings {
   static const docDownloadAllowPermissionString =
       'Please allow permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
+
+
+  //hint strings
+  static const hintNumberString = '1234567896';
+
+  //argument strings
+  static const isRegisterString = 'isRegister';
+  static const contactString = 'contact';
+
 }

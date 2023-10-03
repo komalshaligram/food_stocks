@@ -93,9 +93,9 @@ class ClientDetailRes with _$ClientDetailRes {
     List<OperationTimeRes>? operationTime,
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "createdBy")
+
     String? createdBy,
-    @JsonKey(name: "updatedBy")
+
     String? updatedBy,
 
 
@@ -109,6 +109,13 @@ class OperationTimeRes with _$OperationTimeRes {
   const factory OperationTimeRes({
     @JsonKey(name: "monday")
     List<MondayRes>? monday,
+    List<MondayRes>? tuesday,
+    List<MondayRes>? wednesday,
+    List<MondayRes>? thursday,
+    List<MondayRes>? fridayAndHolidayEves,
+    List<MondayRes>? saturdayAndHolidays,
+    List<MondayRes>? sunday,
+
   }) = _OperationTimeRes;
 
   factory OperationTimeRes.fromJson(Map<String, dynamic> json) => _$OperationTimeResFromJson(json);

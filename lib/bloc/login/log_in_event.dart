@@ -7,5 +7,9 @@ class LogInEvent with _$LogInEvent {
     required  String contactNumber,
     required bool isRegister,
   }) = _logInApiDataEvent;
+  factory LogInEvent.validateMobileEvent({
+    required  String errorMsg,
+
+  }) = _validateMobileEvent;
 
 }

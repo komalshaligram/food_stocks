@@ -5,11 +5,12 @@ part of 'operation_time_bloc.dart';
 class OperationTimeEvent with _$OperationTimeEvent{
 
   factory OperationTimeEvent.timePickerEvent({
-    required BuildContext context,
+    required BuildContext timePickerContext,
     required int openingIndex,
     required int rowIndex,
     required int timeIndex,
     required String time,
+    required BuildContext context,
 }) = _timePickerEvent;
 
   factory OperationTimeEvent.defaultValueAddInListEvent(
@@ -17,18 +18,25 @@ class OperationTimeEvent with _$OperationTimeEvent{
 
   factory OperationTimeEvent.addMoreTimeZoneEvent({
     required int rowIndex,
+    required BuildContext context,
 }
       ) = _addMoreTimeZoneEventEvent;
 
   factory OperationTimeEvent.deleteTimeZoneEvent({
     required int rowIndex,
     required int timeIndex,
+
   }
       ) = _deleteTimeZoneEvent;
 
   factory OperationTimeEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
 
-  factory OperationTimeEvent.timeZoneApiEvent(
+  factory OperationTimeEvent.timeZoneApiEvent({
+    required bool isTimeOperation,
+}
       ) = _timeZoneApiEvent;
+
+
+
 
 }

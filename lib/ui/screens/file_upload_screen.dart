@@ -800,6 +800,7 @@ class ContainerWidget extends StatelessWidget {
       },
     );
   }
+}
 
 // void showAlertDialogBox(BuildContext context, int fileIndex) {
 //   showDialog(
@@ -856,4 +857,4 @@ class ContainerWidget extends StatelessWidget {
 //     },
 //   );
 // }
-}
+

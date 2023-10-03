@@ -10,13 +10,15 @@ class CustomButtonWidget extends StatelessWidget {
   final Color fontColors;
   final double? height;
   final double? radius;
+  final Color borderColor;
+
   CustomButtonWidget(
       {super.key,
       required this.buttonText,
       this.onPressed,
       this.enable = true,
       this.bGColor = Colors.white,
-      this.fontColors = Colors.white, this.height, this.radius});
+      this.fontColors = Colors.white, this.height, this.radius, this.borderColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class CustomButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
           // border: Border.all(color: AppColors.mainColor),
           color: bGColor,
+          border: Border.all(color: borderColor),
           borderRadius:
               BorderRadius.all(Radius.circular(radius ?? AppConstants.radius_10))),
       child: MaterialButton(
