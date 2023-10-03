@@ -71,7 +71,8 @@ class OrderScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15), blurRadius: 10),
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
         ],
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
       ),

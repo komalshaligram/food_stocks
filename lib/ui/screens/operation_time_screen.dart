@@ -46,8 +46,11 @@ class OperationTimeScreenWidget extends StatelessWidget {
             context, RouteDefine.fileUploadScreen.name);
       }
       if(state.isRegisterFail) {
-        SnackBarShow(context, state.errorMessage, AppColors.redColor);
-      }
+        showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
+        }
   },
   child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
       builder: (context, state) {

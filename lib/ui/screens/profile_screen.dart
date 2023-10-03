@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -12,6 +13,8 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../widget/file_selection_option_widget.dart';
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -22,9 +25,23 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint(
+        "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
     return BlocProvider(
-      create: (context) =>
-          ProfileBloc()..add(ProfileEvent.getBusinessTypeListEvent()),
+      create: (context) => ProfileBloc()
+        ..add(
+          ProfileEvent.getBusinessTypeListEvent(context: context),
+        )
+        ..add(
+          ProfileEvent.getProfileDetailsEvent(
+              context: context,
+              isUpdate:
+                  args?.containsKey(AppStrings.isUpdateParamString) ?? false
+                      ? true
+                      : false),
+        ),
       child: ProfileScreenWidget(),
     );
   }
@@ -89,9 +106,11 @@ class ProfileScreenWidget extends StatelessWidget {
                               child: state.image.path == ""
                                   ? const Icon(Icons.person)
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: Image.file(File(state.image.path),
-                                          fit: BoxFit.fill),
+                                borderRadius: BorderRadius.circular(40),
+                                      child: Image.file(
+                                        state.image,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                             ),
                           ),
@@ -100,76 +119,145 @@ class ProfileScreenWidget extends StatelessWidget {
                             top: getScreenHeight(c) * 0.07,
                             child: GestureDetector(
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context1) {
-                                    return AlertDialog(
-                                      actionsPadding: EdgeInsets.only(
-                                          left: AppConstants.padding_15,
-                                          right: AppConstants.padding_15,
-                                          top: AppConstants.padding_15,
-                                          bottom: AppConstants.padding_30),
-                                      title: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .upload_photo)),
-                                      actions: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            GestureDetector(
-                                                onTap: () {
-                                                  bloc.add(ProfileEvent
-                                                      .profilePicFromCameraEvent(context: c));
-                                                  Navigator.pop(context1);
-                                                },
-                                                child: Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  color: AppColors.blackColor,
-                                                )),
-                                            GestureDetector(
-                                                onTap: () {
-                                                  bloc.add(ProfileEvent
-                                                      .profilePicFromGalleryEvent(context: c));
-                                                  Navigator.pop(context1);
-                                                },
-                                                child: Icon(
-                                                  Icons.photo,
-                                                  color: AppColors.blackColor,
-                                                )),
-                                          ],
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(
+                                                    AppConstants.radius_20),
+                                                topLeft: Radius.circular(
+                                                    AppConstants.radius_20)),
+                                          ),
+                                          clipBehavior: Clip.hardEdge,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  AppConstants.padding_30,
+                                              vertical:
+                                                  AppConstants.padding_20),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .upload_photo,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .normalFont,
+                                                        color: AppColors
+                                                            .blackColor,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                              ),
+                                              30.height,
+                                              FileSelectionOptionWidget(
+                                                  title: AppLocalizations.of(
+                                                          context)!
+                                                      .camera,
+                                                  icon: Icons.camera,
+                                                  onTap: () {
+                                                    bloc.add(ProfileEvent
+                                                        .pickProfileImageEvent(
+                                                            context: context,
+                                                            isFromCamera:
+                                                                true));
+                                                    Navigator.pop(context);
+                                                  }),
+                                              FileSelectionOptionWidget(
+                                                  title: AppLocalizations.of(
+                                                          context)!
+                                                      .gallery,
+                                                  icon: Icons.photo,
+                                                  onTap: () {
+                                                    bloc.add(ProfileEvent
+                                                        .pickProfileImageEvent(
+                                                            context: context,
+                                                            isFromCamera:
+                                                                false));
+                                                    Navigator.pop(context);
+                                                  }),
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(AppLocalizations.of(context)!
-                                                .camera),
-                                            Text(AppLocalizations.of(context)!
-                                                .gallery),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                    backgroundColor: Colors.transparent);
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (context1) {
+                                //     return AlertDialog(
+                                //       actionsPadding: EdgeInsets.only(
+                                //           left: AppConstants.padding_15,
+                                //           right: AppConstants.padding_15,
+                                //           top: AppConstants.padding_15,
+                                //           bottom: AppConstants.padding_30),
+                                //       title: Align(
+                                //           alignment: Alignment.center,
+                                //           child: Text(
+                                //               AppLocalizations.of(context)!
+                                //                   .upload_photo)),
+                                //       actions: [
+                                //         Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.spaceAround,
+                                //           children: [
+                                //             GestureDetector(
+                                //                 onTap: () {
+                                //                   bloc.add(ProfileEvent
+                                //                       .pickProfileImageEvent(
+                                //                           context: c,
+                                //                           isFromCamera: true));
+                                //                   Navigator.pop(context1);
+                                //                 },
+                                //                 child: Icon(
+                                //                   Icons.camera_alt_rounded,
+                                //                   color: AppColors.blackColor,
+                                //                 )),
+                                //             GestureDetector(
+                                //                 onTap: () {
+                                //                   bloc.add(ProfileEvent
+                                //                       .pickProfileImageEvent(
+                                //                           context: c,
+                                //                           isFromCamera: false));
+                                //                   Navigator.pop(context1);
+                                //                 },
+                                //                 child: Icon(
+                                //                   Icons.photo,
+                                //                   color: AppColors.blackColor,
+                                //                 )),
+                                //           ],
+                                //         ),
+                                //         Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.spaceAround,
+                                //           children: [
+                                //             Text(AppLocalizations.of(context)!
+                                //                 .camera),
+                                //             Text(AppLocalizations.of(context)!
+                                //                 .gallery),
+                                //           ],
+                                //         ),
+                                //       ],
+                                //     );
+                                //   },
+                                // );
                               },
                               child: Container(
-                                width: 29,
-                                height: 29,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: AppColors.borderColor)),
-                                child: Icon(
+                                  width: 29,
+                                  height: 29,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                          color: AppColors.borderColor)),
+                                  child: SvgPicture.asset(AppImagePath.camera,
+                                      fit: BoxFit
+                                          .scaleDown) /*Icon(
                                   Icons.camera_alt_rounded,
                                   color: AppColors.blueColor,
                                   size: 18,
-                                ),
-                              ),
+                                ),*/
+                                  ),
                             ),
                           ),
                         ],
@@ -190,7 +278,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         name: AppLocalizations.of(context)!.type_of_business,
                       ),
                       SizedBox(
-                        height: AppConstants.textFormFieldHeight,
+                        // height: AppConstants.textFormFieldHeight,
                         child: DropdownButtonFormField<String>(
                           icon: Icon(
                             Icons.keyboard_arrow_down,
@@ -303,29 +391,36 @@ class ProfileScreenWidget extends StatelessWidget {
                       ),
                       40.height,
                       CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
+                        buttonText: state.isUpdate
+                            ? AppLocalizations.of(context)!.save
+                            : AppLocalizations.of(context)!.continued,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
-                          if (state.image.path != '') {
-                            if (state.selectedBusinessType.isEmpty ||
-                                state.selectedBusinessType != '') {
-                              if (_formKey.currentState?.validate() ?? false) {
+                          // if (state.image.path != '') {
+                          if (state.selectedBusinessType.isEmpty ||
+                              state.selectedBusinessType != '') {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              if (state.isUpdate) {
+                                bloc.add(ProfileEvent.updateProfileDetailsEvent(
+                                    context: c));
+                              } else {
                                 bloc.add(ProfileEvent
                                     .navigateToMoreDetailsScreenEvent(
                                         context: c));
                               }
-                            } else {
-                              SnackBarShow(
-                                  context,
-                                  'Please select your business type',
-                                  AppColors.redColor);
                             }
                           } else {
-                            SnackBarShow(
-                                context,
-                                'Please select your profile photo',
-                                AppColors.redColor);
+                            showSnackBar(
+                                context: context,
+                                title: 'Please select your business type',
+                                bgColor: AppColors.redColor);
                           }
+                          // } else {
+                          //   showSnackBar(
+                          //       context: context,
+                          //       title: 'Please select your profile photo',
+                          //       bgColor: AppColors.redColor);
+                          // }
                         },
                         fontColors: AppColors.whiteColor,
                       ),
@@ -340,54 +435,4 @@ class ProfileScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-/*  void alertDialog(BuildContext context , String image){
-
-     showDialog(
-       context: context,
-       builder:(c1) {
-         return BlocBuilder<ProfileBloc, ProfileState>(
-           builder: (c1, state) {
-             image = state.image.path;
-             print('dialog_____${state.image.path}');
-             return AlertDialog(
-               title: Align(
-                 alignment: Alignment.center,
-                   child: Text(AppLocalizations.of(context)!.upload_photo)),
-
-               actions: [
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   children: [
-                     GestureDetector(
-                         onTap: (){
-                           context
-                               .read<ProfileBloc>()
-                               .add(ProfileEvent.profilePicFromCameraEvent());
-                         },
-                         child: Icon(Icons.camera_alt_rounded)),
-                     GestureDetector(
-                         onTap: (){
-                           context
-                               .read<ProfileBloc>()
-                               .add(ProfileEvent.profilePicFromGalleryEvent());
-                         },
-                         child: Icon(Icons.photo)),
-                   ],
-                 ),
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   children: [
-                   Text(AppLocalizations.of(context)!.camera),
-                     Text(AppLocalizations.of(context)!.gallery),
-                   ],
-                 ),
-
-               ],
-             );
-           },
-         );
-       }, );
-   }
-*/
 }

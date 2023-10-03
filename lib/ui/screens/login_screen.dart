@@ -48,8 +48,11 @@ class LogInScreenWidget extends StatelessWidget {
             "isRegister": isRegister
           });
         }else{
-         SnackBarShow(context ,state.errorMessage,AppColors.redColor);
-       }
+         showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
+        }
 
       },
       child: BlocBuilder<LogInBloc, LogInState>(

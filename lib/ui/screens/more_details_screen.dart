@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 
+import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
@@ -14,6 +14,8 @@ import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../widget/file_selection_option_widget.dart';
 
 class MoreDetailsRoute {
   static Widget get route => MoreDetailsScreen();
@@ -161,7 +163,70 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                           children: [
                             GestureDetector(
                                 onTap: () {
-                                  alertDialog(context);
+                                  // alertDialog(context);
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(
+                                                      AppConstants.radius_20),
+                                                  topLeft: Radius.circular(
+                                                      AppConstants.radius_20)),
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_30,
+                                                vertical:
+                                                    AppConstants.padding_20),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .upload_photo,
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .normalFont,
+                                                          color: AppColors
+                                                              .blackColor,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                                30.height,
+                                                FileSelectionOptionWidget(
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .camera,
+                                                    icon: Icons.camera,
+                                                    onTap: () {
+                                                      bloc.add(MoreDetailsEvent
+                                                          .pickLogoImageEvent(
+                                                              context: context,
+                                                              isFromCamera:
+                                                                  true));
+                                                      Navigator.pop(context);
+                                                    }),
+                                                FileSelectionOptionWidget(
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .gallery,
+                                                    icon: Icons.photo,
+                                                    onTap: () {
+                                                      bloc.add(MoreDetailsEvent
+                                                          .pickLogoImageEvent(
+                                                              context: context,
+                                                              isFromCamera:
+                                                                  false));
+                                                      Navigator.pop(context);
+                                                    }),
+                                              ],
+                                            ),
+                                          ),
+                                      backgroundColor: Colors.transparent);
                                 },
                                 child: state.isImagePick
                                     ? SizedBox(
@@ -197,29 +262,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    100.height,
+                    50.height,
                     CustomButtonWidget(
                       buttonText: AppLocalizations.of(context)!.continued,
                       bGColor: AppColors.mainColor,
                       onPressed: () {
-                        // context.read<MoreDetailsBloc>().add(
-                        //     MoreDetailsEvent.textFieldValidateEvent(
-                        //         city: state.selectCity!,
-                        //         address: state.addressController.text,
-                        //         email: state.emailController.text,
-                        //         fax: state.faxController.text,
-                        //         image: state.image,
-                        //         context: context));
-                        if (state.image.path != '') {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            bloc.add(MoreDetailsEvent.navigateToOperationTimeScreenEvent(
+                        if (_formKey.currentState?.validate() ?? false) {
+                            bloc.add(MoreDetailsEvent
+                                .navigateToOperationTimeScreenEvent(
                                     context: context));
-                          }
-                        } else {
-                          SnackBarShow(
-                              context,
-                              'Please select your profile photo',
-                              AppColors.redColor);
                         }
                       },
                       fontColors: AppColors.whiteColor,
@@ -240,6 +291,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       context: context,
       builder: (c1) {
         return AlertDialog(
+          actionsPadding: EdgeInsets.only(
+              left: AppConstants.padding_15,
+              right: AppConstants.padding_15,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_30),
           title: Align(
               alignment: Alignment.center,
               child: Text(AppLocalizations.of(context)!.upload_photo)),
@@ -249,17 +305,17 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                     onTap: () {
-                      context
-                          .read<MoreDetailsBloc>()
-                          .add(MoreDetailsEvent.logoFromCameraEvent(context: context));
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.pickLogoImageEvent(
+                              context: context, isFromCamera: true));
                       Navigator.pop(c1);
                     },
                     child: Icon(Icons.camera_alt_rounded)),
                 GestureDetector(
                     onTap: () {
-                      context
-                          .read<MoreDetailsBloc>()
-                          .add(MoreDetailsEvent.logoFromGalleryEvent(context: context));
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.pickLogoImageEvent(
+                              context: context, isFromCamera: false));
                       Navigator.pop(c1);
                     },
                     child: Icon(Icons.photo)),

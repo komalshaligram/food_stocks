@@ -4,6 +4,7 @@ part of 'profile_bloc.dart';
 class ProfileState with _$ProfileState {
   const factory ProfileState({
     required File image,
+    required bool isUpdate,
     required String selectedBusinessType,
     required BusinessTypeModel businessTypeList,
     required TextEditingController businessNameController,
@@ -14,7 +15,8 @@ class ProfileState with _$ProfileState {
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
-        image: File(''),
+    image: File(''),
+        isUpdate: false,
         selectedBusinessType: '',
         businessTypeList: BusinessTypeModel(),
         businessNameController: TextEditingController(),

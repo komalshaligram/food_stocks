@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
 
@@ -15,7 +16,6 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
-import '../../ui/utils/themes/app_styles.dart';
 
 part 'more_details_bloc.freezed.dart';
 
@@ -29,94 +29,52 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
   MoreDetailsBloc() : super(MoreDetailsState.initial()) {
     on<MoreDetailsEvent>((event, emit) async {
-      void showSnackBar(BuildContext context, String title) {
-        final snackBar = SnackBar(
-          content: Text(
-            title,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w400),
-          ),
-          backgroundColor: AppColors.redColor,
-          padding: EdgeInsets.all(20),
-          behavior: SnackBarBehavior.floating,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         debugPrint('get contact name = ${profileModel.contactName}');
-      } else if (event is _textFieldValidateEvent) {
-        if (event.city.isEmpty) {
-          showSnackBar(event.context, 'enter city');
-        } else if (event.address.isEmpty) {
-          showSnackBar(event.context, 'enter address');
-        } else if (event.email.isEmpty) {
-          showSnackBar(event.context, 'enter email');
-        } else if (event.fax.isEmpty) {
-          showSnackBar(event.context, 'enter fax');
-        } else if (event.image.path == '') {
-          showSnackBar(event.context, 'upload photo');
-        } else {
-          Navigator.pushNamed(
-              event.context, RouteDefine.operationTimeScreen.name);
-        }
-      } else if (event is _logoFromCameraEvent) {
-        File? image;
+      } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(source: ImageSource.camera);
+        final pickedFile = await picker.pickImage(
+            source:
+                event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
-          image = File(pickedFile.path);
-          try {
-            final response = await DioClient().uploadFileProgressWithFormData(
-              path: '/v1/auth/upload',
-              formData: FormData.fromMap(
-                {
-                  AppStrings.profileImageString: await MultipartFile.fromFile(
-                      image.path,
-                      contentType: MediaType('image', 'png'))
-                },
-              ),
-            );
-            FileUploadModel profileImageModel =
-                FileUploadModel.fromJson(response);
-            debugPrint('img url = ${profileImageModel.profileImgFileName}');
-            if (profileImageModel.profileImgFileName != '') {
-              imgUrl = profileImageModel.profileImgFileName ?? '';
+          CroppedFile? croppedImage = await cropImage(
+              path: pickedFile.path, shape: CropStyle.rectangle, quality: 100);
+          String imageSize = getFileSizeString(
+              bytes:
+                  await File(croppedImage?.path ?? pickedFile.path).length());
+          if (int.parse(imageSize.split(' ').first) <= 500 &&
+              imageSize.split(' ').last == 'KB') {
+            try {
+              final response = await DioClient().uploadFileProgressWithFormData(
+                path: AppUrls.FileUploadUrl,
+                formData: FormData.fromMap(
+                  {
+                    AppStrings.profileImageString: await MultipartFile.fromFile(
+                        croppedImage?.path ?? pickedFile.path,
+                        contentType: MediaType('image', 'png'))
+                  },
+                ),
+              );
+              FileUploadModel profileImageModel =
+                  FileUploadModel.fromJson(response);
+              if (profileImageModel.profileImgFileName != '') {
+                imgUrl = profileImageModel.profileImgFileName ?? '';
+              }
+              emit(state.copyWith(
+                  image: File(croppedImage?.path ?? pickedFile.path),
+                  isImagePick: true));
+            } on ServerException {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.imageNotSetString,
+                  bgColor: AppColors.redColor);
             }
-            emit(state.copyWith(image: image, isImagePick: true));
-          } on ServerException {
-            SnackBarShow(event.context, 'image not upload', AppColors.redColor);
-          }
-        }
-      } else if (event is _logoFromGalleryEvent) {
-        File? image;
-        final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-        if (pickedFile != null) {
-          image = File(pickedFile.path);
-          try {
-            final response = await DioClient().uploadFileProgressWithFormData(
-              path: '/v1/auth/upload',
-              formData: FormData.fromMap(
-                {
-                  AppStrings.profileImageString: await MultipartFile.fromFile(
-                      image.path,
-                      contentType: MediaType('image', 'png'))
-                },
-              ),
-            );
-            FileUploadModel profileImageModel =
-            FileUploadModel.fromJson(response);
-            debugPrint('img url = ${profileImageModel.profileImgFileName}');
-            if (profileImageModel.profileImgFileName != '') {
-              imgUrl = profileImageModel.profileImgFileName ?? '';
-            }
-            emit(state.copyWith(image: image, isImagePick: true));
-          } on ServerException {
-            SnackBarShow(event.context, 'image not upload', AppColors.redColor);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.fileSizeLimit500KBString,
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _navigateToOperationTimeScreenEvent) {
