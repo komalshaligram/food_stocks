@@ -58,6 +58,9 @@ dependencies:
   image_cropper: ^5.0.0
   permission_handler: ^11.0.0
   path_provider: ^2.1.1
+  in_app_update: ^4.2.1
+  firebase_crashlytics: ^3.3.6
+  firebase_core: ^2.16.0
 
 
 dev_dependencies:

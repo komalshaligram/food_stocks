@@ -9,5 +9,6 @@ class OtpEvent with _$OtpEvent {
     required String contact,
     required String otp,
     required bool isRegister,
+    required BuildContext context,
 }) = _otpApiEvent;
 }
