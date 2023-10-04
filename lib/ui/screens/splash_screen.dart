@@ -5,6 +5,9 @@ import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/storage/shared_preferences_helper.dart';
 
 class SplashRoute {
   static Widget get route => const SplashScreen();
@@ -31,23 +34,25 @@ class SplashScreenWidget extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if (state.isRedirected) {
-          /* SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          if(preferencesHelper.getUserLoggedIn()){
-            await Future.delayed(const Duration(seconds: 2));
-            Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
-          }*/
-          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-
+          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+              prefs: await SharedPreferences.getInstance());
+          if (preferencesHelper.getUserLoggedIn()) {
+            Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name);
+          } else {
+            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+          }
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(
-            body: Center(
-              child: SvgPicture.asset(
-                AppImagePath.splashLogo,
-                height: getScreenHeight(context) * 0.12,
-                width: getScreenWidth(context) * 0.47,
+            body: SafeArea(
+              child: Center(
+                child: SvgPicture.asset(
+                  AppImagePath.splashLogo,
+                  height: getScreenHeight(context) * 0.12,
+                  width: getScreenWidth(context) * 0.47,
+                ),
               ),
             ),
           );

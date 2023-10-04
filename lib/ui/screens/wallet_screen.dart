@@ -32,7 +32,7 @@ class WalletScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
-            body: Center(child: Text('Wallet Screen')),
+            body: SafeArea(child: Center(child: Text('Wallet Screen'))),
           );
         },
       ),

@@ -33,7 +33,7 @@ class BasketScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.pageColor,
-            body: Center(child: Text('Basket Screen')),
+            body: SafeArea(child: Center(child: Text('Basket Screen'))),
           );
         },
       ),
