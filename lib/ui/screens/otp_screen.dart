@@ -119,10 +119,8 @@ class OTPScreenWidget extends StatelessWidget {
                         if(isRegister == true){
                           Navigator.pushNamed(context, RouteDefine.profileScreen.name ,arguments:  {AppStrings.contactString : contact} );
                         }else{
-                          bloc.add(OtpEvent.otpApiEvent(contact: contact, otp: otpCode ,isRegister: isRegister));
+                          bloc.add(OtpEvent.otpApiEvent(contact: contact, otp: otpCode ,isRegister: isRegister,context: context));
                         }
-
-
                       },
                       fontColors: AppColors.whiteColor,
                     ),
@@ -193,6 +191,4 @@ class OTPScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-
 }

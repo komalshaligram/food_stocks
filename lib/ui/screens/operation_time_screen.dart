@@ -149,6 +149,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         onPressed: () {
                           context.read<OperationTimeBloc>().add(
                               OperationTimeEvent.timeZoneApiEvent(
+                                context: context,
                                   isTimeOperation: true));
 
                           /*Navigator.pushNamed(
@@ -165,6 +166,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                       onPressed: () {
                         context.read<OperationTimeBloc>().add(
                             OperationTimeEvent.timeZoneApiEvent(
+                              context: context,
                                 isTimeOperation: false));
 
                     /*  Navigator.pushNamed(

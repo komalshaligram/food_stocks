@@ -73,5 +73,6 @@
   "hp": "H.P.",
   "gallery": "Gallery",
   "camera": "Camera",
-  "save": "Save"
+  "logout":"Log Out",
+   "save": "Save"
 }
