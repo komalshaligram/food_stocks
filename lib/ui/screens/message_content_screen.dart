@@ -74,7 +74,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                       boxShadow: [
                         BoxShadow(
                             color: AppColors.shadowColor.withOpacity(0.15),
-                            blurRadius: 10)
+                            blurRadius: AppConstants.blur_10)
                       ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

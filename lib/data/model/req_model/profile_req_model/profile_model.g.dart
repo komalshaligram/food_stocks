@@ -78,11 +78,35 @@ _$_OperationTime _$$_OperationTimeFromJson(Map<String, dynamic> json) =>
       monday: (json['Monday'] as List<dynamic>?)
           ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
           .toList(),
+      tuesday: (json['tuesday'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      wednesday: (json['wednesday'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      thursday: (json['thursday'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      fridayAndHolidayEves: (json['fridayAndHolidayEves'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      saturdayAndHolidays: (json['saturdayAndHolidays'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      sunday: (json['sunday'] as List<dynamic>?)
+          ?.map((e) => Monday.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_OperationTimeToJson(_$_OperationTime instance) =>
     <String, dynamic>{
       'Monday': instance.monday,
+      'tuesday': instance.tuesday,
+      'wednesday': instance.wednesday,
+      'thursday': instance.thursday,
+      'fridayAndHolidayEves': instance.fridayAndHolidayEves,
+      'saturdayAndHolidays': instance.saturdayAndHolidays,
+      'sunday': instance.sunday,
     };
 
 _$_Monday _$$_MondayFromJson(Map<String, dynamic> json) => _$_Monday(

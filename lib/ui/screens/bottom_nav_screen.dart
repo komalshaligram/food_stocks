@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/screens/basket_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
-import 'package:food_stock/ui/screens/profile_screen.dart';
+import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/screens/store_screen.dart';
 import 'package:food_stock/ui/screens/wallet_screen.dart';
@@ -56,7 +56,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       boxShadow: [
-                        BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: 10)
+                        BoxShadow(
+                            color: AppColors.shadowColor.withOpacity(0.3),
+                            blurRadius: AppConstants.blur_10)
                       ],
                       borderRadius:
                           const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
@@ -119,7 +121,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       child: IndexedStack(
         index: state.index,
         children: const [
-          ProfileScreen(),
+          ProfileMenuScreen(),
           WalletScreen(),
           BasketScreen(),
           StoreScreen(),

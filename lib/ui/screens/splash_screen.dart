@@ -29,9 +29,15 @@ class SplashScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.isRedirected) {
+          /* SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          if(preferencesHelper.getUserLoggedIn()){
+            await Future.delayed(const Duration(seconds: 2));
+            Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+          }*/
           Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(

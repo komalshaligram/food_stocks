@@ -51,13 +51,13 @@ class User with _$User {
     String? adminTypeId,
     @JsonKey(name: "clientDetail")
     ClientDetail? clientDetail,
-    @JsonKey(name: "createdBy")
+
     String? createdBy,
-    @JsonKey(name: "updatedBy")
+
     String? updatedBy,
-    @JsonKey(name: "createdAt")
+
     DateTime? createdAt,
-    @JsonKey(name: "updatedAt")
+
     DateTime? updatedAt,
     @JsonKey(name: "__v")
     int? v,
@@ -69,35 +69,35 @@ class User with _$User {
 @freezed
 class ClientDetail with _$ClientDetail {
   const factory ClientDetail({
-    @JsonKey(name: "bussinessId")
+
     int? bussinessId,
-    @JsonKey(name: "bussinessName")
+
     String? bussinessName,
-    @JsonKey(name: "ownerName")
+
     String? ownerName,
-    @JsonKey(name: "clientTypeId")
+
     String? clientTypeId,
-    @JsonKey(name: "israelId")
+
     String? israelId,
-    @JsonKey(name: "tokenId")
+
     String? tokenId,
-    @JsonKey(name: "fax")
+
     String? fax,
-    @JsonKey(name: "lastSeen")
+
     DateTime? lastSeen,
-    @JsonKey(name: "monthlyCredits")
+
     int? monthlyCredits,
-    @JsonKey(name: "applicationVersion")
+
     String? applicationVersion,
-    @JsonKey(name: "deviceType")
+
     String? deviceType,
-    @JsonKey(name: "operationTime")
+
     List<OperationTime>? operationTime,
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "createdAt")
+
     DateTime? createdAt,
-    @JsonKey(name: "updatedAt")
+
     DateTime? updatedAt,
   }) = _ClientDetail;
 
@@ -117,9 +117,7 @@ class OperationTime with _$OperationTime {
 @freezed
 class Monday with _$Monday {
   const factory Monday({
-    @JsonKey(name: "from")
     String? from,
-    @JsonKey(name: "unitl")
     String? unitl,
   }) = _Monday;
 

@@ -74,4 +74,6 @@
   "gallery": "Gallery",
   "camera": "Camera",
   "logout":"Log Out"
+  "camera": "Camera",
+  "save": "Save"
 }

@@ -7,6 +7,7 @@ import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 
+import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/custom_button_widget.dart';
@@ -14,6 +15,8 @@ import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../widget/file_selection_option_widget.dart';
 
 class MoreDetailsRoute {
   static Widget get route => MoreDetailsScreen();
@@ -29,7 +32,7 @@ class MoreDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => MoreDetailsBloc()
         ..add(MoreDetailsEvent.getProfileModelEvent(
-            profileModel: data?[AppStrings.profileParamString])),
+            profileModel: data?[AppStrings.profileParamString]))..add(MoreDetailsEvent.addFilterListEvent()),
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -37,7 +40,7 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-
+ String city='';
   MoreDetailsScreenWidget({super.key});
 
   @override
@@ -67,7 +70,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                  left: screenWidth * 0.1, right: screenWidth * 0.1),
+                  left: getScreenWidth(context) * 0.1, right: screenWidth * 0.1),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -78,32 +81,91 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                     CustomContainerWidget(
                       name: AppLocalizations.of(context)!.city,
                     ),
-                    DropdownButtonFormField<String>(
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      alignment: Alignment.bottomCenter,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 8, right: 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(3.0),
-                          borderSide: BorderSide(
-                            color: AppColors.borderColor,
-                          ),
+                    GestureDetector(
+                      onTap: (){
+                               showModalBottomSheet(
+                            context: context,
+                                 isScrollControlled: true,
+                            shape: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                            builder: (c1) {
+                              return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
+                                   builder: (context, state) {
+                                return Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  height: getScreenHeight(context) * 0.9,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      7.height,
+                                      Container(
+                                        child: Text(AppLocalizations.of(context)!.city,style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,color: AppColors.blackColor,fontWeight: FontWeight.w400)),
+                                      ),
+                                      15.height,
+                                      CustomFormField(
+                                        prefixIcon: Icon(Icons.search,color: AppColors.mainColor),
+                                        onChangeValue: (value){
+                                          context.read<MoreDetailsBloc>()
+                                              .add(MoreDetailsEvent.citySearchEvent(
+                                            search: value,
+                                          ));
+                                        },
+                                        controller: state.cityController,
+                                        keyboardType: TextInputType.text,
+                                        hint: AppLocalizations.of(context)!.life_grocery_store,
+                                        fillColor: Colors.transparent,
+                                        textInputAction: TextInputAction.next,
+                                        validator: '',
+                                          textCapitalization: TextCapitalization.words,
+                                        autofocus: true,
+                                        cursorColor: AppColors.mainColor,
+                                      ),
+                                      7.height,
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: state.filterList.length,
+                                        itemBuilder: (context, index) {
+                                          city = state.city;
+                                          return Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: GestureDetector(
+                                              onTap: (){
+                                                context.read<MoreDetailsBloc>()
+                                                  .add(MoreDetailsEvent.selectCityEvent(
+                                                  city: state.filterList[index],
+                                                  context: c1
+                                                ));
+                                              },
+                                              child: Text(state.filterList[index],
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                               });
+                            },);
+                      },
+                      child: Container(
+                        height: 42,
+                        width: getScreenWidth(context),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.borderColor)
                         ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10,right: 10,top: 8),
+                          child: Text(city,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,
+                            color: AppColors.blackColor,fontWeight: FontWeight.w400
+                          ),
+                          ),
+                        ) ,
                       ),
-                      isExpanded: true,
-                      elevation: 0,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                      value: state.selectCity,
-                      items: state.institutionalList.map((cityName) {
-                        return DropdownMenuItem<String>(
-                          value: cityName,
-                          child: Text(cityName),
-                        );
-                      }).toList(),
-                      onChanged: (tag) {},
                     ),
                     7.height,
                     CustomContainerWidget(
@@ -161,7 +223,70 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                           children: [
                             GestureDetector(
                                 onTap: () {
-                                  alertDialog(context);
+                                  // alertDialog(context);
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(
+                                                      AppConstants.radius_20),
+                                                  topLeft: Radius.circular(
+                                                      AppConstants.radius_20)),
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_30,
+                                                vertical:
+                                                    AppConstants.padding_20),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .upload_photo,
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .normalFont,
+                                                          color: AppColors
+                                                              .blackColor,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                                30.height,
+                                                FileSelectionOptionWidget(
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .camera,
+                                                    icon: Icons.camera,
+                                                    onTap: () {
+                                                      bloc.add(MoreDetailsEvent
+                                                          .pickLogoImageEvent(
+                                                              context: context,
+                                                              isFromCamera:
+                                                                  true));
+                                                      Navigator.pop(context);
+                                                    }),
+                                                FileSelectionOptionWidget(
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .gallery,
+                                                    icon: Icons.photo,
+                                                    onTap: () {
+                                                      bloc.add(MoreDetailsEvent
+                                                          .pickLogoImageEvent(
+                                                              context: context,
+                                                              isFromCamera:
+                                                                  false));
+                                                      Navigator.pop(context);
+                                                    }),
+                                              ],
+                                            ),
+                                          ),
+                                      backgroundColor: Colors.transparent);
                                 },
                                 child: state.isImagePick
                                     ? SizedBox(
@@ -187,7 +312,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!
                                             .upload_photo,
                                         style: AppStyles.rkRegularTextStyle(
-                                            size: 14,
+                                            size: AppConstants.font_14,
                                             color: AppColors.textColor,
                                             fontWeight: FontWeight.w400),
                                       ),
@@ -197,29 +322,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    100.height,
+                    50.height,
                     CustomButtonWidget(
                       buttonText: AppLocalizations.of(context)!.continued,
                       bGColor: AppColors.mainColor,
                       onPressed: () {
-                        // context.read<MoreDetailsBloc>().add(
-                        //     MoreDetailsEvent.textFieldValidateEvent(
-                        //         city: state.selectCity!,
-                        //         address: state.addressController.text,
-                        //         email: state.emailController.text,
-                        //         fax: state.faxController.text,
-                        //         image: state.image,
-                        //         context: context));
-                        if (state.image.path != '') {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            bloc.add(MoreDetailsEvent.navigateToOperationTimeScreenEvent(
+                        if (_formKey.currentState?.validate() ?? false) {
+                            bloc.add(MoreDetailsEvent
+                                .navigateToOperationTimeScreenEvent(
                                     context: context));
-                          }
-                        } else {
-                          SnackBarShow(
-                              context,
-                              'Please select your profile photo',
-                              AppColors.redColor);
                         }
                       },
                       fontColors: AppColors.whiteColor,
@@ -240,6 +351,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       context: context,
       builder: (c1) {
         return AlertDialog(
+          actionsPadding: EdgeInsets.only(
+              left: AppConstants.padding_15,
+              right: AppConstants.padding_15,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_30),
           title: Align(
               alignment: Alignment.center,
               child: Text(AppLocalizations.of(context)!.upload_photo)),
@@ -249,17 +365,17 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                     onTap: () {
-                      context
-                          .read<MoreDetailsBloc>()
-                          .add(MoreDetailsEvent.logoFromCameraEvent(context: context));
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.pickLogoImageEvent(
+                              context: context, isFromCamera: true));
                       Navigator.pop(c1);
                     },
                     child: Icon(Icons.camera_alt_rounded)),
                 GestureDetector(
                     onTap: () {
-                      context
-                          .read<MoreDetailsBloc>()
-                          .add(MoreDetailsEvent.logoFromGalleryEvent(context: context));
+                      context.read<MoreDetailsBloc>().add(
+                          MoreDetailsEvent.pickLogoImageEvent(
+                              context: context, isFromCamera: false));
                       Navigator.pop(c1);
                     },
                     child: Icon(Icons.photo)),
