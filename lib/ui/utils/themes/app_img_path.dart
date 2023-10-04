@@ -15,6 +15,7 @@ class AppImagePath {
   static const String add = 'assets/images/add.svg';
   static const String scan = 'assets/images/scan.svg';
   static const String filter = 'assets/images/filter.svg';
+  static const String camera = 'assets/images/camera.svg';
 
   ///pngs
   static const String profileImage = 'assets/images/profile_image.png';

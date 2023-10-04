@@ -22,19 +22,23 @@ class OperationTimeModel with _$OperationTimeModel {
 
 
 
+import '../req_model/profile_req_model/profile_model.dart';
+
 class OperationTimeModel{
-   List<timeData>data;
+   List<Monday>monday;
   OperationTimeModel({
-     required this.data
+     required this.monday
 });
 
   }
 
-class timeData {
-  String openingTime;
-  String closingTime;
-  timeData({
-     required this.openingTime,required this.closingTime
-  });
+/*class Sunday {
+  String from;
+  String unitl;
+  Sunday({
+     required this.from,required this.unitl
+  });*/
 
-}
+
+
+

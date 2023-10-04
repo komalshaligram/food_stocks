@@ -10,6 +10,7 @@ import 'package:food_stock/ui/screens/message_content_screen.dart';
 import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/operation_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
+import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
@@ -20,7 +21,7 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/profile_screen.dart';
-import '../ui/screens/profile_screen_3.dart';
+import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/store_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 
@@ -32,7 +33,7 @@ enum RouteDefine {
   registerScreen,
   connectScreen,
   profileScreen,
-  profileScreen3,
+  moreDetailsScreen,
   operationTimeScreen,
   bottomNavScreen,
   homeScreen,
@@ -48,9 +49,8 @@ enum RouteDefine {
   messageContentScreen,
   storeScreen,
   otpScreen,
-  fileUploadScreen
-
-
+  fileUploadScreen,
+  profileMenuScreen,
 }
 
 class AppRouting {
@@ -61,7 +61,7 @@ class AppRouting {
       RouteDefine.connectScreen.name: (_) => ConnectRoute.route,
 
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
-      RouteDefine.profileScreen3.name: (_) => Profile3Route.route,
+      RouteDefine.moreDetailsScreen.name: (_) => MoreDetailsRoute.route,
       RouteDefine.operationTimeScreen.name: (_) => OperationTimeScreenRoute.route,
       RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
 
@@ -75,19 +75,21 @@ class AppRouting {
       RouteDefine.storeScreen.name: (_) => StoreRoute.route,
       RouteDefine.orderScreen.name: (_) => OrderRoute.route,
       RouteDefine.termsOfUseScreen.name: (_) => TermsOfUseRoute.route,
-      RouteDefine.questionAndAnswerScreen.name: (_) => QuestionAndAnswerRoute.route,
+      RouteDefine.questionAndAnswerScreen.name: (_) =>
+          QuestionAndAnswerRoute.route,
       RouteDefine.contactScreen.name: (_) => ContactRoute.route,
       RouteDefine.aboutAppScreen.name: (_) => AboutAppRoute.route,
       RouteDefine.messageScreen.name: (_) => MessageRoute.route,
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
-      RouteDefine.otpScreen.name:(_)=>OTPRoute.route
+      RouteDefine.otpScreen.name: (_) => OTPRoute.route,
+      RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
 
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
-      settings: RouteSettings(name: settings.name),
+      settings: RouteSettings(name: settings.name ,arguments: settings.arguments),
     );
   }
 }

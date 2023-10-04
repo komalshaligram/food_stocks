@@ -4,6 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../ui/utils/themes/app_urls.dart';
+
  class DioClient {
   late Dio _dio;
 
@@ -15,7 +17,7 @@ import 'package:flutter/foundation.dart';
 
   DioClient._internal() {
     BaseOptions options = BaseOptions(
-        baseUrl: 'https://dalsy.shaligraminfotech.com:6044/',
+        baseUrl: AppUrls.baseUrl,
         connectTimeout: const Duration(milliseconds: 60000),
         receiveTimeout: const Duration(milliseconds: 60000),
         headers: {
@@ -44,7 +46,7 @@ import 'package:flutter/foundation.dart';
       if (kDebugMode) {
         print("app error data $e");
       }
-      ErrorEntity eInfo = createErrorEntity(e);
+      ErrorEntity eInfo = _createErrorEntity(e);
       onError(eInfo);
     }));
   } //finish internal()
@@ -88,8 +90,8 @@ import 'package:flutter/foundation.dart';
         );
         print("STATUS ${response.statusCode} ${response.statusMessage}");
         return response.data;
-      } on DioError catch (e) {
-        throw createErrorEntity(e);
+      } on DioException catch (e) {
+        throw _createErrorEntity(e);
       }
     } else {
       print('error');
@@ -113,6 +115,23 @@ import 'package:flutter/foundation.dart';
   }
 
 
+
+  Future<Map<String, dynamic>> uploadFileProgressWithFormData(
+      {required String path,
+        required FormData formData,}) async {
+    try {
+      final response = await _dio.post(path,
+        data: formData,
+       options: Options(
+          receiveTimeout: const Duration(milliseconds: 60 * 1000),
+        ),
+      );
+      return response.data as Map<String, dynamic>;
+    } on DioException catch (e) {
+      throw _createErrorEntity(e);
+    }
+  }
+
   // PUT
   Future<Map<String, dynamic>> put({
     required String path,
@@ -126,8 +145,8 @@ import 'package:flutter/foundation.dart';
         queryParameters: query,
       );
       return response.data;
-    } on DioError catch (e) {
-      throw createErrorEntity(e);
+    } on DioException catch (e) {
+      throw _createErrorEntity(e);
     }
   }
 
@@ -145,8 +164,8 @@ import 'package:flutter/foundation.dart';
       );
 
       return response.data;
-    } on DioError catch (e) {
-      throw createErrorEntity(e);
+    } on DioException catch (e) {
+      throw _createErrorEntity(e);
     }
   }
 
@@ -163,8 +182,8 @@ import 'package:flutter/foundation.dart';
         queryParameters: query,
       );
       return response.data;
-    } on DioError catch (e) {
-      throw createErrorEntity(e);
+    } on DioException catch (e) {
+      throw _createErrorEntity(e);
     }
   }
 
@@ -184,7 +203,7 @@ class ErrorEntity implements Exception {
   }
 }
 
-ErrorEntity createErrorEntity(DioException error){
+ErrorEntity _createErrorEntity(DioException error){
   switch(error.type){
     case DioExceptionType.connectionTimeout:
       return ErrorEntity(code: -1, message: "Connection timed out");

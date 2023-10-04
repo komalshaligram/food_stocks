@@ -18,32 +18,39 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$OperationTimeEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context, int openingIndex,
-            int rowIndex, int timeIndex, String time)
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
         timePickerEvent,
     required TResult Function() defaultValueAddInListEvent,
-    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult? Function()? defaultValueAddInListEvent,
-    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult Function()? defaultValueAddInListEvent,
-    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -55,6 +62,8 @@ mixin _$OperationTimeEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -64,6 +73,8 @@ mixin _$OperationTimeEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,6 +84,8 @@ mixin _$OperationTimeEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -103,11 +116,12 @@ abstract class _$$_timePickerEventCopyWith<$Res> {
       __$$_timePickerEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {BuildContext context,
+      {BuildContext timePickerContext,
       int openingIndex,
       int rowIndex,
       int timeIndex,
-      String time});
+      String time,
+      BuildContext context});
 }
 
 /// @nodoc
@@ -121,16 +135,17 @@ class __$$_timePickerEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? context = null,
+    Object? timePickerContext = null,
     Object? openingIndex = null,
     Object? rowIndex = null,
     Object? timeIndex = null,
     Object? time = null,
+    Object? context = null,
   }) {
     return _then(_$_timePickerEvent(
-      context: null == context
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
+      timePickerContext: null == timePickerContext
+          ? _value.timePickerContext
+          : timePickerContext // ignore: cast_nullable_to_non_nullable
               as BuildContext,
       openingIndex: null == openingIndex
           ? _value.openingIndex
@@ -148,6 +163,10 @@ class __$$_timePickerEventCopyWithImpl<$Res>
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
               as String,
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
     ));
   }
 }
@@ -156,14 +175,15 @@ class __$$_timePickerEventCopyWithImpl<$Res>
 
 class _$_timePickerEvent implements _timePickerEvent {
   _$_timePickerEvent(
-      {required this.context,
+      {required this.timePickerContext,
       required this.openingIndex,
       required this.rowIndex,
       required this.timeIndex,
-      required this.time});
+      required this.time,
+      required this.context});
 
   @override
-  final BuildContext context;
+  final BuildContext timePickerContext;
   @override
   final int openingIndex;
   @override
@@ -172,10 +192,12 @@ class _$_timePickerEvent implements _timePickerEvent {
   final int timeIndex;
   @override
   final String time;
+  @override
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'OperationTimeEvent.timePickerEvent(context: $context, openingIndex: $openingIndex, rowIndex: $rowIndex, timeIndex: $timeIndex, time: $time)';
+    return 'OperationTimeEvent.timePickerEvent(timePickerContext: $timePickerContext, openingIndex: $openingIndex, rowIndex: $rowIndex, timeIndex: $timeIndex, time: $time, context: $context)';
   }
 
   @override
@@ -183,19 +205,21 @@ class _$_timePickerEvent implements _timePickerEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_timePickerEvent &&
-            (identical(other.context, context) || other.context == context) &&
+            (identical(other.timePickerContext, timePickerContext) ||
+                other.timePickerContext == timePickerContext) &&
             (identical(other.openingIndex, openingIndex) ||
                 other.openingIndex == openingIndex) &&
             (identical(other.rowIndex, rowIndex) ||
                 other.rowIndex == rowIndex) &&
             (identical(other.timeIndex, timeIndex) ||
                 other.timeIndex == timeIndex) &&
-            (identical(other.time, time) || other.time == time));
+            (identical(other.time, time) || other.time == time) &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, context, openingIndex, rowIndex, timeIndex, time);
+  int get hashCode => Object.hash(runtimeType, timePickerContext, openingIndex,
+      rowIndex, timeIndex, time, context);
 
   @JsonKey(ignore: true)
   @override
@@ -206,43 +230,52 @@ class _$_timePickerEvent implements _timePickerEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context, int openingIndex,
-            int rowIndex, int timeIndex, String time)
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
         timePickerEvent,
     required TResult Function() defaultValueAddInListEvent,
-    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
   }) {
-    return timePickerEvent(context, openingIndex, rowIndex, timeIndex, time);
+    return timePickerEvent(
+        timePickerContext, openingIndex, rowIndex, timeIndex, time, context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult? Function()? defaultValueAddInListEvent,
-    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
   }) {
     return timePickerEvent?.call(
-        context, openingIndex, rowIndex, timeIndex, time);
+        timePickerContext, openingIndex, rowIndex, timeIndex, time, context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult Function()? defaultValueAddInListEvent,
-    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (timePickerEvent != null) {
-      return timePickerEvent(context, openingIndex, rowIndex, timeIndex, time);
+      return timePickerEvent(
+          timePickerContext, openingIndex, rowIndex, timeIndex, time, context);
     }
     return orElse();
   }
@@ -256,6 +289,8 @@ class _$_timePickerEvent implements _timePickerEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
   }) {
     return timePickerEvent(this);
   }
@@ -268,6 +303,8 @@ class _$_timePickerEvent implements _timePickerEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
   }) {
     return timePickerEvent?.call(this);
   }
@@ -280,6 +317,8 @@ class _$_timePickerEvent implements _timePickerEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (timePickerEvent != null) {
@@ -291,17 +330,19 @@ class _$_timePickerEvent implements _timePickerEvent {
 
 abstract class _timePickerEvent implements OperationTimeEvent {
   factory _timePickerEvent(
-      {required final BuildContext context,
+      {required final BuildContext timePickerContext,
       required final int openingIndex,
       required final int rowIndex,
       required final int timeIndex,
-      required final String time}) = _$_timePickerEvent;
+      required final String time,
+      required final BuildContext context}) = _$_timePickerEvent;
 
-  BuildContext get context;
+  BuildContext get timePickerContext;
   int get openingIndex;
   int get rowIndex;
   int get timeIndex;
   String get time;
+  BuildContext get context;
   @JsonKey(ignore: true)
   _$$_timePickerEventCopyWith<_$_timePickerEvent> get copyWith =>
       throw _privateConstructorUsedError;
@@ -349,12 +390,15 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context, int openingIndex,
-            int rowIndex, int timeIndex, String time)
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
         timePickerEvent,
     required TResult Function() defaultValueAddInListEvent,
-    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
   }) {
     return defaultValueAddInListEvent();
   }
@@ -362,12 +406,14 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult? Function()? defaultValueAddInListEvent,
-    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
   }) {
     return defaultValueAddInListEvent?.call();
   }
@@ -375,12 +421,14 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult Function()? defaultValueAddInListEvent,
-    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (defaultValueAddInListEvent != null) {
@@ -398,6 +446,8 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
   }) {
     return defaultValueAddInListEvent(this);
   }
@@ -410,6 +460,8 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
   }) {
     return defaultValueAddInListEvent?.call(this);
   }
@@ -422,6 +474,8 @@ class _$_defaultValueAddInListEvent implements _defaultValueAddInListEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (defaultValueAddInListEvent != null) {
@@ -442,7 +496,7 @@ abstract class _$$_addMoreTimeZoneEventEventCopyWith<$Res> {
           $Res Function(_$_addMoreTimeZoneEventEvent) then) =
       __$$_addMoreTimeZoneEventEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int rowIndex});
+  $Res call({int rowIndex, BuildContext context});
 }
 
 /// @nodoc
@@ -458,12 +512,17 @@ class __$$_addMoreTimeZoneEventEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? rowIndex = null,
+    Object? context = null,
   }) {
     return _then(_$_addMoreTimeZoneEventEvent(
       rowIndex: null == rowIndex
           ? _value.rowIndex
           : rowIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
     ));
   }
 }
@@ -471,14 +530,16 @@ class __$$_addMoreTimeZoneEventEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
-  _$_addMoreTimeZoneEventEvent({required this.rowIndex});
+  _$_addMoreTimeZoneEventEvent({required this.rowIndex, required this.context});
 
   @override
   final int rowIndex;
+  @override
+  final BuildContext context;
 
   @override
   String toString() {
-    return 'OperationTimeEvent.addMoreTimeZoneEvent(rowIndex: $rowIndex)';
+    return 'OperationTimeEvent.addMoreTimeZoneEvent(rowIndex: $rowIndex, context: $context)';
   }
 
   @override
@@ -487,11 +548,12 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
         (other.runtimeType == runtimeType &&
             other is _$_addMoreTimeZoneEventEvent &&
             (identical(other.rowIndex, rowIndex) ||
-                other.rowIndex == rowIndex));
+                other.rowIndex == rowIndex) &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, rowIndex);
+  int get hashCode => Object.hash(runtimeType, rowIndex, context);
 
   @JsonKey(ignore: true)
   @override
@@ -503,42 +565,49 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context, int openingIndex,
-            int rowIndex, int timeIndex, String time)
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
         timePickerEvent,
     required TResult Function() defaultValueAddInListEvent,
-    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
   }) {
-    return addMoreTimeZoneEvent(rowIndex);
+    return addMoreTimeZoneEvent(rowIndex, context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult? Function()? defaultValueAddInListEvent,
-    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
   }) {
-    return addMoreTimeZoneEvent?.call(rowIndex);
+    return addMoreTimeZoneEvent?.call(rowIndex, context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult Function()? defaultValueAddInListEvent,
-    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (addMoreTimeZoneEvent != null) {
-      return addMoreTimeZoneEvent(rowIndex);
+      return addMoreTimeZoneEvent(rowIndex, context);
     }
     return orElse();
   }
@@ -552,6 +621,8 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
   }) {
     return addMoreTimeZoneEvent(this);
   }
@@ -564,6 +635,8 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
   }) {
     return addMoreTimeZoneEvent?.call(this);
   }
@@ -576,6 +649,8 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (addMoreTimeZoneEvent != null) {
@@ -586,10 +661,12 @@ class _$_addMoreTimeZoneEventEvent implements _addMoreTimeZoneEventEvent {
 }
 
 abstract class _addMoreTimeZoneEventEvent implements OperationTimeEvent {
-  factory _addMoreTimeZoneEventEvent({required final int rowIndex}) =
-      _$_addMoreTimeZoneEventEvent;
+  factory _addMoreTimeZoneEventEvent(
+      {required final int rowIndex,
+      required final BuildContext context}) = _$_addMoreTimeZoneEventEvent;
 
   int get rowIndex;
+  BuildContext get context;
   @JsonKey(ignore: true)
   _$$_addMoreTimeZoneEventEventCopyWith<_$_addMoreTimeZoneEventEvent>
       get copyWith => throw _privateConstructorUsedError;
@@ -670,12 +747,15 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(BuildContext context, int openingIndex,
-            int rowIndex, int timeIndex, String time)
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
         timePickerEvent,
     required TResult Function() defaultValueAddInListEvent,
-    required TResult Function(int rowIndex) addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
     required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
   }) {
     return deleteTimeZoneEvent(rowIndex, timeIndex);
   }
@@ -683,12 +763,14 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult? Function()? defaultValueAddInListEvent,
-    TResult? Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
   }) {
     return deleteTimeZoneEvent?.call(rowIndex, timeIndex);
   }
@@ -696,12 +778,14 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(BuildContext context, int openingIndex, int rowIndex,
-            int timeIndex, String time)?
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
         timePickerEvent,
     TResult Function()? defaultValueAddInListEvent,
-    TResult Function(int rowIndex)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
     TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (deleteTimeZoneEvent != null) {
@@ -719,6 +803,8 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
     required TResult Function(_addMoreTimeZoneEventEvent value)
         addMoreTimeZoneEvent,
     required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
   }) {
     return deleteTimeZoneEvent(this);
   }
@@ -731,6 +817,8 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
         defaultValueAddInListEvent,
     TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
   }) {
     return deleteTimeZoneEvent?.call(this);
   }
@@ -743,6 +831,8 @@ class _$_deleteTimeZoneEvent implements _deleteTimeZoneEvent {
         defaultValueAddInListEvent,
     TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
     TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
     required TResult orElse(),
   }) {
     if (deleteTimeZoneEvent != null) {
@@ -765,11 +855,365 @@ abstract class _deleteTimeZoneEvent implements OperationTimeEvent {
 }
 
 /// @nodoc
+abstract class _$$_getProfileModelEventCopyWith<$Res> {
+  factory _$$_getProfileModelEventCopyWith(_$_getProfileModelEvent value,
+          $Res Function(_$_getProfileModelEvent) then) =
+      __$$_getProfileModelEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ProfileModel profileModel});
+
+  $ProfileModelCopyWith<$Res> get profileModel;
+}
+
+/// @nodoc
+class __$$_getProfileModelEventCopyWithImpl<$Res>
+    extends _$OperationTimeEventCopyWithImpl<$Res, _$_getProfileModelEvent>
+    implements _$$_getProfileModelEventCopyWith<$Res> {
+  __$$_getProfileModelEventCopyWithImpl(_$_getProfileModelEvent _value,
+      $Res Function(_$_getProfileModelEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? profileModel = null,
+  }) {
+    return _then(_$_getProfileModelEvent(
+      profileModel: null == profileModel
+          ? _value.profileModel
+          : profileModel // ignore: cast_nullable_to_non_nullable
+              as ProfileModel,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileModelCopyWith<$Res> get profileModel {
+    return $ProfileModelCopyWith<$Res>(_value.profileModel, (value) {
+      return _then(_value.copyWith(profileModel: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$_getProfileModelEvent implements _getProfileModelEvent {
+  _$_getProfileModelEvent({required this.profileModel});
+
+  @override
+  final ProfileModel profileModel;
+
+  @override
+  String toString() {
+    return 'OperationTimeEvent.getProfileModelEvent(profileModel: $profileModel)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_getProfileModelEvent &&
+            (identical(other.profileModel, profileModel) ||
+                other.profileModel == profileModel));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, profileModel);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_getProfileModelEventCopyWith<_$_getProfileModelEvent> get copyWith =>
+      __$$_getProfileModelEventCopyWithImpl<_$_getProfileModelEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
+        timePickerEvent,
+    required TResult Function() defaultValueAddInListEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
+  }) {
+    return getProfileModelEvent(profileModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
+        timePickerEvent,
+    TResult? Function()? defaultValueAddInListEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
+  }) {
+    return getProfileModelEvent?.call(profileModel);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
+        timePickerEvent,
+    TResult Function()? defaultValueAddInListEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileModelEvent != null) {
+      return getProfileModelEvent(profileModel);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_timePickerEvent value) timePickerEvent,
+    required TResult Function(_defaultValueAddInListEvent value)
+        defaultValueAddInListEvent,
+    required TResult Function(_addMoreTimeZoneEventEvent value)
+        addMoreTimeZoneEvent,
+    required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
+  }) {
+    return getProfileModelEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_timePickerEvent value)? timePickerEvent,
+    TResult? Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
+  }) {
+    return getProfileModelEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_timePickerEvent value)? timePickerEvent,
+    TResult Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
+    required TResult orElse(),
+  }) {
+    if (getProfileModelEvent != null) {
+      return getProfileModelEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _getProfileModelEvent implements OperationTimeEvent {
+  factory _getProfileModelEvent({required final ProfileModel profileModel}) =
+      _$_getProfileModelEvent;
+
+  ProfileModel get profileModel;
+  @JsonKey(ignore: true)
+  _$$_getProfileModelEventCopyWith<_$_getProfileModelEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_timeZoneApiEventCopyWith<$Res> {
+  factory _$$_timeZoneApiEventCopyWith(
+          _$_timeZoneApiEvent value, $Res Function(_$_timeZoneApiEvent) then) =
+      __$$_timeZoneApiEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool isTimeOperation});
+}
+
+/// @nodoc
+class __$$_timeZoneApiEventCopyWithImpl<$Res>
+    extends _$OperationTimeEventCopyWithImpl<$Res, _$_timeZoneApiEvent>
+    implements _$$_timeZoneApiEventCopyWith<$Res> {
+  __$$_timeZoneApiEventCopyWithImpl(
+      _$_timeZoneApiEvent _value, $Res Function(_$_timeZoneApiEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isTimeOperation = null,
+  }) {
+    return _then(_$_timeZoneApiEvent(
+      isTimeOperation: null == isTimeOperation
+          ? _value.isTimeOperation
+          : isTimeOperation // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_timeZoneApiEvent implements _timeZoneApiEvent {
+  _$_timeZoneApiEvent({required this.isTimeOperation});
+
+  @override
+  final bool isTimeOperation;
+
+  @override
+  String toString() {
+    return 'OperationTimeEvent.timeZoneApiEvent(isTimeOperation: $isTimeOperation)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_timeZoneApiEvent &&
+            (identical(other.isTimeOperation, isTimeOperation) ||
+                other.isTimeOperation == isTimeOperation));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, isTimeOperation);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_timeZoneApiEventCopyWith<_$_timeZoneApiEvent> get copyWith =>
+      __$$_timeZoneApiEventCopyWithImpl<_$_timeZoneApiEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)
+        timePickerEvent,
+    required TResult Function() defaultValueAddInListEvent,
+    required TResult Function(int rowIndex, BuildContext context)
+        addMoreTimeZoneEvent,
+    required TResult Function(int rowIndex, int timeIndex) deleteTimeZoneEvent,
+    required TResult Function(ProfileModel profileModel) getProfileModelEvent,
+    required TResult Function(bool isTimeOperation) timeZoneApiEvent,
+  }) {
+    return timeZoneApiEvent(isTimeOperation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
+        timePickerEvent,
+    TResult? Function()? defaultValueAddInListEvent,
+    TResult? Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
+    TResult? Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult? Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult? Function(bool isTimeOperation)? timeZoneApiEvent,
+  }) {
+    return timeZoneApiEvent?.call(isTimeOperation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(BuildContext timePickerContext, int openingIndex,
+            int rowIndex, int timeIndex, String time, BuildContext context)?
+        timePickerEvent,
+    TResult Function()? defaultValueAddInListEvent,
+    TResult Function(int rowIndex, BuildContext context)? addMoreTimeZoneEvent,
+    TResult Function(int rowIndex, int timeIndex)? deleteTimeZoneEvent,
+    TResult Function(ProfileModel profileModel)? getProfileModelEvent,
+    TResult Function(bool isTimeOperation)? timeZoneApiEvent,
+    required TResult orElse(),
+  }) {
+    if (timeZoneApiEvent != null) {
+      return timeZoneApiEvent(isTimeOperation);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_timePickerEvent value) timePickerEvent,
+    required TResult Function(_defaultValueAddInListEvent value)
+        defaultValueAddInListEvent,
+    required TResult Function(_addMoreTimeZoneEventEvent value)
+        addMoreTimeZoneEvent,
+    required TResult Function(_deleteTimeZoneEvent value) deleteTimeZoneEvent,
+    required TResult Function(_getProfileModelEvent value) getProfileModelEvent,
+    required TResult Function(_timeZoneApiEvent value) timeZoneApiEvent,
+  }) {
+    return timeZoneApiEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_timePickerEvent value)? timePickerEvent,
+    TResult? Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult? Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult? Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult? Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult? Function(_timeZoneApiEvent value)? timeZoneApiEvent,
+  }) {
+    return timeZoneApiEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_timePickerEvent value)? timePickerEvent,
+    TResult Function(_defaultValueAddInListEvent value)?
+        defaultValueAddInListEvent,
+    TResult Function(_addMoreTimeZoneEventEvent value)? addMoreTimeZoneEvent,
+    TResult Function(_deleteTimeZoneEvent value)? deleteTimeZoneEvent,
+    TResult Function(_getProfileModelEvent value)? getProfileModelEvent,
+    TResult Function(_timeZoneApiEvent value)? timeZoneApiEvent,
+    required TResult orElse(),
+  }) {
+    if (timeZoneApiEvent != null) {
+      return timeZoneApiEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _timeZoneApiEvent implements OperationTimeEvent {
+  factory _timeZoneApiEvent({required final bool isTimeOperation}) =
+      _$_timeZoneApiEvent;
+
+  bool get isTimeOperation;
+  @JsonKey(ignore: true)
+  _$$_timeZoneApiEventCopyWith<_$_timeZoneApiEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$OperationTimeState {
   String get time => throw _privateConstructorUsedError;
   List<OperationTimeModel> get OperationTimeList =>
       throw _privateConstructorUsedError;
   bool get isRefresh => throw _privateConstructorUsedError;
+  bool get isRegisterSuccess => throw _privateConstructorUsedError;
+  bool get isRegisterFail => throw _privateConstructorUsedError;
+  String get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $OperationTimeStateCopyWith<OperationTimeState> get copyWith =>
@@ -785,7 +1229,10 @@ abstract class $OperationTimeStateCopyWith<$Res> {
   $Res call(
       {String time,
       List<OperationTimeModel> OperationTimeList,
-      bool isRefresh});
+      bool isRefresh,
+      bool isRegisterSuccess,
+      bool isRegisterFail,
+      String errorMessage});
 }
 
 /// @nodoc
@@ -804,6 +1251,9 @@ class _$OperationTimeStateCopyWithImpl<$Res, $Val extends OperationTimeState>
     Object? time = null,
     Object? OperationTimeList = null,
     Object? isRefresh = null,
+    Object? isRegisterSuccess = null,
+    Object? isRegisterFail = null,
+    Object? errorMessage = null,
   }) {
     return _then(_value.copyWith(
       time: null == time
@@ -818,6 +1268,18 @@ class _$OperationTimeStateCopyWithImpl<$Res, $Val extends OperationTimeState>
           ? _value.isRefresh
           : isRefresh // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRegisterSuccess: null == isRegisterSuccess
+          ? _value.isRegisterSuccess
+          : isRegisterSuccess // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isRegisterFail: null == isRegisterFail
+          ? _value.isRegisterFail
+          : isRegisterFail // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -833,7 +1295,10 @@ abstract class _$$_OperationTimeStateCopyWith<$Res>
   $Res call(
       {String time,
       List<OperationTimeModel> OperationTimeList,
-      bool isRefresh});
+      bool isRefresh,
+      bool isRegisterSuccess,
+      bool isRegisterFail,
+      String errorMessage});
 }
 
 /// @nodoc
@@ -850,6 +1315,9 @@ class __$$_OperationTimeStateCopyWithImpl<$Res>
     Object? time = null,
     Object? OperationTimeList = null,
     Object? isRefresh = null,
+    Object? isRegisterSuccess = null,
+    Object? isRegisterFail = null,
+    Object? errorMessage = null,
   }) {
     return _then(_$_OperationTimeState(
       time: null == time
@@ -864,6 +1332,18 @@ class __$$_OperationTimeStateCopyWithImpl<$Res>
           ? _value.isRefresh
           : isRefresh // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRegisterSuccess: null == isRegisterSuccess
+          ? _value.isRegisterSuccess
+          : isRegisterSuccess // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isRegisterFail: null == isRegisterFail
+          ? _value.isRegisterFail
+          : isRegisterFail // ignore: cast_nullable_to_non_nullable
+              as bool,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -874,7 +1354,10 @@ class _$_OperationTimeState implements _OperationTimeState {
   const _$_OperationTimeState(
       {required this.time,
       required final List<OperationTimeModel> OperationTimeList,
-      required this.isRefresh})
+      required this.isRefresh,
+      required this.isRegisterSuccess,
+      required this.isRegisterFail,
+      required this.errorMessage})
       : _OperationTimeList = OperationTimeList;
 
   @override
@@ -890,10 +1373,16 @@ class _$_OperationTimeState implements _OperationTimeState {
 
   @override
   final bool isRefresh;
+  @override
+  final bool isRegisterSuccess;
+  @override
+  final bool isRegisterFail;
+  @override
+  final String errorMessage;
 
   @override
   String toString() {
-    return 'OperationTimeState(time: $time, OperationTimeList: $OperationTimeList, isRefresh: $isRefresh)';
+    return 'OperationTimeState(time: $time, OperationTimeList: $OperationTimeList, isRefresh: $isRefresh, isRegisterSuccess: $isRegisterSuccess, isRegisterFail: $isRegisterFail, errorMessage: $errorMessage)';
   }
 
   @override
@@ -905,12 +1394,24 @@ class _$_OperationTimeState implements _OperationTimeState {
             const DeepCollectionEquality()
                 .equals(other._OperationTimeList, _OperationTimeList) &&
             (identical(other.isRefresh, isRefresh) ||
-                other.isRefresh == isRefresh));
+                other.isRefresh == isRefresh) &&
+            (identical(other.isRegisterSuccess, isRegisterSuccess) ||
+                other.isRegisterSuccess == isRegisterSuccess) &&
+            (identical(other.isRegisterFail, isRegisterFail) ||
+                other.isRegisterFail == isRegisterFail) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, time,
-      const DeepCollectionEquality().hash(_OperationTimeList), isRefresh);
+  int get hashCode => Object.hash(
+      runtimeType,
+      time,
+      const DeepCollectionEquality().hash(_OperationTimeList),
+      isRefresh,
+      isRegisterSuccess,
+      isRegisterFail,
+      errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -924,7 +1425,10 @@ abstract class _OperationTimeState implements OperationTimeState {
   const factory _OperationTimeState(
       {required final String time,
       required final List<OperationTimeModel> OperationTimeList,
-      required final bool isRefresh}) = _$_OperationTimeState;
+      required final bool isRefresh,
+      required final bool isRegisterSuccess,
+      required final bool isRegisterFail,
+      required final String errorMessage}) = _$_OperationTimeState;
 
   @override
   String get time;
@@ -932,6 +1436,12 @@ abstract class _OperationTimeState implements OperationTimeState {
   List<OperationTimeModel> get OperationTimeList;
   @override
   bool get isRefresh;
+  @override
+  bool get isRegisterSuccess;
+  @override
+  bool get isRegisterFail;
+  @override
+  String get errorMessage;
   @override
   @JsonKey(ignore: true)
   _$$_OperationTimeStateCopyWith<_$_OperationTimeState> get copyWith =>

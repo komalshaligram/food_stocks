@@ -1,23 +1,28 @@
 part of 'profile_bloc.dart';
 
-
 @freezed
-class ProfileEvent with _$ProfileEvent{
+class ProfileEvent with _$ProfileEvent {
+  const factory ProfileEvent.started() = _Started;
 
   factory ProfileEvent.dropDownEvent() = _dropDownEvent;
-  factory ProfileEvent.textFieldValidateEvent({
-    required String businessName,
-    required String hp,
-    required String owner,
-    required String id,
-    required String contact,
-    required BuildContext context,
-    required String selectedBusiness,
-}) = _textFieldValidateEvent;
-  factory ProfileEvent.profilePicFromCameraEvent(
-      ) = _profilePicFromCameraEvent;
-  factory ProfileEvent.profilePicFromGalleryEvent(
-      ) = _profilePicFromGalleryEvent;
 
+  factory ProfileEvent.pickProfileImageEvent(
+      {required BuildContext context,
+      required bool isFromCamera}) = _pickProfileImageEvent;
+
+  factory ProfileEvent.getBusinessTypeListEvent(
+      {required BuildContext context}) = _getBusinessTypeListEvent;
+
+  factory ProfileEvent.navigateToMoreDetailsScreenEvent(
+      {
+        required BuildContext context,
+        required String phoneNumber,
+      }) = _navigateToMoreDetailsScreenEvent;
+
+  factory ProfileEvent.getProfileDetailsEvent(
+      {required BuildContext context,
+      required bool isUpdate}) = _getProfileDetailsEvent;
+
+  factory ProfileEvent.updateProfileDetailsEvent(
+      {required BuildContext context}) = _updateProfileDetailsEvent;
 }
-

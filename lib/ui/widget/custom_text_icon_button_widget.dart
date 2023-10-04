@@ -30,7 +30,7 @@ class CustomTextIconButtonWidget extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
           color: AppColors.mainColor,
-          borderRadius: BorderRadius.circular(10.0)),
+          borderRadius: BorderRadius.circular(AppConstants.padding_10)),
       clipBehavior: Clip.hardEdge,
       child: MaterialButton(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -73,7 +73,7 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                       '${cartCount == 0 ? '' : cartCount}',
                       style: AppStyles.rkRegularTextStyle(
                         fontWeight: FontWeight.w100,
-                          size: 10, color: AppColors.mainColor),
+                          size: AppConstants.padding_10, color: AppColors.mainColor),
                     ),
                   ),
           ],

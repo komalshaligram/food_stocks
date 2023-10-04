@@ -54,6 +54,10 @@ dependencies:
   syncfusion_flutter_gauges: ^23.1.36
   flutter_otp_text_field: ^1.1.1
   focus_detector: ^2.0.1
+  http_parser: ^4.0.2
+  image_cropper: ^5.0.0
+  permission_handler: ^11.0.0
+  path_provider: ^2.1.1
 
 
 dev_dependencies:
@@ -103,8 +107,13 @@ flutter:
   fonts:
     - family: Rubik
       fonts:
-         - asset: assets/fonts/Rubik-Black.ttf
-         - asset: assets/fonts/Rubik-Bold.ttf
+         - asset: assets/fonts/Rubik-Light.ttf
+         - asset: assets/fonts/Rubik-Medium.ttf
+         - asset: assets/fonts/Rubik-Regular.ttf
+         - asset: assets/fonts/Rubik-BlackItalic.ttf
+         - asset: assets/fonts/Rubik-BoldItalic.ttf
+         - asset: assets/fonts/Rubik-VariableFont_wght.ttf
+
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

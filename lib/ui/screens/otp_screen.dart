@@ -10,7 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
+import '../utils/themes/app_strings.dart';
 import '../widget/common_app_bar.dart';
 
 class OTPRoute {
@@ -22,19 +22,40 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+
+
     return BlocProvider(
       create: (context) => OtpBloc()..add(OtpEvent.setOtpTimer()),
-      child: OTPScreenWidget(),
+      child: OTPScreenWidget(isRegister: temp[AppStrings.isRegisterString], contact: temp[AppStrings.contactString],),
     );
   }
 }
 
 class OTPScreenWidget extends StatelessWidget {
+  final bool isRegister;
+  final String contact;
+  OTPScreenWidget({required this.isRegister, required this.contact});
+
+  String otpCode = '';
+
   @override
   Widget build(BuildContext context) {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
-      listener: (context, state) {},
+      listener: (context, state) async {
+        if(state.isLoginSuccess){
+          Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+        }
+        if(state.isLoginFail){
+
+          showSnackBar(
+              context: context,
+              title: state.errorMessage,
+              bgColor: AppColors.redColor);
+            Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+        }
+      },
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
           return Scaffold(
@@ -71,7 +92,6 @@ class OTPScreenWidget extends StatelessWidget {
                               (getScreenWidth(context) * 0.2)) /
                           5.5,
                       decoration: InputDecoration(
-                          //  border: Border.all(color: )
                           ),
                       numberOfFields: 4,
                       cursorColor: AppColors.mainColor,
@@ -85,18 +105,10 @@ class OTPScreenWidget extends StatelessWidget {
                       textStyle:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       onCodeChanged: (String code) {
-                        print(code);
+
                       },
-                      onSubmit: (String verificationCode) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text("Verification Code"),
-                                content:
-                                    Text('Code entered is $verificationCode'),
-                              );
-                            });
+                      onSubmit: (verificationCode) {
+                        otpCode = verificationCode;
                       }, // end onSubmit
                     ),
                     30.height,
@@ -104,9 +116,13 @@ class OTPScreenWidget extends StatelessWidget {
                       buttonText: AppLocalizations.of(context)!.continued,
                       bGColor: AppColors.mainColor,
                       onPressed: () {
-                        bloc.add(OtpEvent.cancelOtpTimerSubscription());
-                        Navigator.pushNamed(
-                            context, RouteDefine.homeScreen.name);
+                        if(isRegister == true){
+                          Navigator.pushNamed(context, RouteDefine.profileScreen.name ,arguments:  {AppStrings.contactString : contact} );
+                        }else{
+                          bloc.add(OtpEvent.otpApiEvent(contact: contact, otp: otpCode ,isRegister: isRegister));
+                        }
+
+
                       },
                       fontColors: AppColors.whiteColor,
                     ),
@@ -177,4 +193,6 @@ class OTPScreenWidget extends StatelessWidget {
       ),
     );
   }
+
+
 }

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/operation_time/operation_time_bloc.dart';
-import 'package:food_stock/bloc/profile/profile_bloc.dart';
-import 'package:food_stock/bloc/splash/splash_bloc.dart';
+import 'package:food_stock/bloc/more_details/more_details_bloc.dart';
+import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
-import 'bloc/file_upload/file_upload_bloc.dart';
-import 'bloc/profile3/profile3_bloc.dart';
-
 Language selectedLang = Language.Hebrew;
 
 //
@@ -46,16 +42,21 @@ Language selectedLang = Language.Hebrew;
 //       ),
 //     );
 void main() => runApp(
-      MaterialApp(
+  MultiBlocProvider(
+    providers: [
+    BlocProvider(
+      create: (context) => MoreDetailsBloc()..add(MoreDetailsEvent.addFilterListEvent()),
+          ),
+    ],
+
+  child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Directionality(
           textDirection: TextDirection.rtl,
-          child: BlocProvider(
-            create: (context) => SplashBloc(),
             child: const MyApp(),
-          ),
         ),
       ),
+),
     );
 
 class MyApp extends StatelessWidget {
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
+      create: (context) => LocaleProvider()..setAppLocale(Locale('he')),
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
               actionTextColor: AppColors.textColor,
             ),
           ),
+          scrollBehavior: MyBehavior(),
           onGenerateRoute: AppRouting.generateRoute,
         );
       },
