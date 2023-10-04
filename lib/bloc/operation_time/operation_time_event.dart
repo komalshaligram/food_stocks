@@ -33,6 +33,7 @@ class OperationTimeEvent with _$OperationTimeEvent{
 
   factory OperationTimeEvent.timeZoneApiEvent({
     required bool isTimeOperation,
+    required BuildContext context,
 }
       ) = _timeZoneApiEvent;
 

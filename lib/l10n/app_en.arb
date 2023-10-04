@@ -78,4 +78,5 @@
   "total_order":"Total order" ,
   "delivery_date":"delivery date" ,
   "everything_was_received" :"Everything was received"
+  "logout":"Log Out"
 }

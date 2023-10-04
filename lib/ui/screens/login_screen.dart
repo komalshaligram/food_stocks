@@ -234,7 +234,7 @@ class LogInScreenWidget extends StatelessWidget {
                           if(_formKey.currentState?.validate() ?? false || state.mobileErrorMessage.isNotEmpty){
                             context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(
                                 contactNumber: phoneController.text,
-                                isRegister: isRegister
+                                isRegister: isRegister, context: context
                             ));
                           }
                         },

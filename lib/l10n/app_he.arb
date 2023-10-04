@@ -72,9 +72,10 @@
   "enter_the_code_sent_to_phone_num": "הזן את הקוד שנשלח למספר הטלפון שהזנת",
   "not_receive_verification_code": "לא קיבלת קוד אימות ?",
   "send_again": "שלח שוב",
-  "save": "שמור" ,
-  "name_provider": "שם ספק",
-  "total_order": "סה”כ הזמנה",
-    "delivery_date": "תאריך משלוח",
-     "everything_was_received" : "התקבל הכל"
+  "save": "שמור",
+     "logout":"Log Out",
+   "name_provider": "שם ספק",
+    "total_order": "סה”כ הזמנה",
+      "delivery_date": "תאריך משלוח",
+       "everything_was_received" : "התקבל הכל"
 }
