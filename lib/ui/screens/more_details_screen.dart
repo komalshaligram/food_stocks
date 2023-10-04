@@ -99,8 +99,18 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       7.height,
-                                      Container(
-                                        child: Text(AppLocalizations.of(context)!.city,style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,color: AppColors.blackColor,fontWeight: FontWeight.w400)),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: Text(AppLocalizations.of(context)!.city,style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,color: AppColors.blackColor,fontWeight: FontWeight.w400)),
+                                          ),
+                                          GestureDetector(
+                                              onTap: (){
+                                                Navigator.pop(c1);
+                                              },
+                                              child: Icon(Icons.close))
+                                        ],
                                       ),
                                       15.height,
                                       CustomFormField(

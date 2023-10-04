@@ -102,6 +102,9 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           var format = DateFormat("HH:mm");
           var start = format.parse(openingTime);
           var selectTimeZone = format.parse(selectedTime);
+          print(selectTimeZone);
+          print(start);
+          print(selectTimeZone.isAfter(start));
 
           if (event.timeIndex > 0) {
             previousClosingTime =
@@ -117,7 +120,6 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             } else if (event.openingIndex == 0) {
               if (temp[event.rowIndex].monday[event.timeIndex].from! == '0:0') {
                 showSnackBar(
-
                     context: event.context, title: 'select opening Time', bgColor: AppColors.redColor);
               } else if (selectTimeZone.isAfter(start)) {
                 temp[event.rowIndex].monday.removeAt(event.timeIndex);
@@ -125,13 +127,15 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                     .monday
                     .add(Monday(from: openingTime, unitl: selectedTime));
               }
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: 'select opening time after previous closing time',
-                 bgColor:  AppColors.redColor);
+              else {
+                showSnackBar(
+                    context: event.context,
+                    title: 'select closing time after opening time',
+                    bgColor:  AppColors.redColor);
+              }
             }
-          } else {
+          }
+          else {
             if (event.openingIndex == 1) {
               temp[event.rowIndex].monday.removeAt(event.timeIndex);
               temp[event.rowIndex]

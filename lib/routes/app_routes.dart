@@ -20,6 +20,7 @@ import '../ui/screens/basket_screen.dart';
 import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
+import '../ui/screens/order_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/store_screen.dart';
@@ -51,6 +52,7 @@ enum RouteDefine {
   otpScreen,
   fileUploadScreen,
   profileMenuScreen,
+  orderDetailsScreen
 }
 
 class AppRouting {
@@ -83,6 +85,7 @@ class AppRouting {
       RouteDefine.messageContentScreen.name: (_) => MessageContentRoute.route,
       RouteDefine.otpScreen.name: (_) => OTPRoute.route,
       RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
+      RouteDefine.orderDetailsScreen.name: (_) => OrderDetailsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

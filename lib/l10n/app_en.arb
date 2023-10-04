@@ -73,5 +73,9 @@
   "hp": "H.P.",
   "gallery": "Gallery",
   "camera": "Camera",
-  "save": "Save"
+  "save": "Save",
+  "name_provider":"name provider",
+  "total_order":"Total order" ,
+  "delivery_date":"delivery date" ,
+  "everything_was_received" :"Everything was received"
 }

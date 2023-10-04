@@ -223,7 +223,7 @@ class LogInScreenWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(state.mobileErrorMessage,style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,color: AppColors.redColor)),
+                          Text(state.mobileErrorMessage,style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14,color: AppColors.redColor)),
                         ],
                       ),
                       30.height,

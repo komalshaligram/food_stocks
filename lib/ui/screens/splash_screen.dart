@@ -36,7 +36,7 @@ class SplashScreenWidget extends StatelessWidget {
             await Future.delayed(const Duration(seconds: 2));
             Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
           }*/
-          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+          Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name);
 
         }
       },
