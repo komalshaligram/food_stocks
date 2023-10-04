@@ -1,4 +1,5 @@
 class AppStrings {
+  static const appName = 'Food Stock';
   static const hpString = '* H.P.';
   static const messageContentString = 'message_content';
   static const selectTagString = 'select tag';

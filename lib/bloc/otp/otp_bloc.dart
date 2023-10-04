@@ -51,9 +51,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
               preferencesHelper.setAuthToken(accessToken: response['authToken']['accessToken']);
               preferencesHelper.setAuthToken(accessToken: response['authToken']['refreshToken']);
+              _periodicOtpTimerSubscription.cancel();
               emit(state.copyWith(isLoginSuccess: true));
               debugPrint('________${preferencesHelper.getAuthToken()}');
               debugPrint('________${preferencesHelper.getRefreshToken()}');
+
             }
             else{
               emit(state.copyWith(isLoginFail: true ,errorMessage:response['message'] ));
