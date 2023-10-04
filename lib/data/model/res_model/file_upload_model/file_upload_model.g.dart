@@ -9,10 +9,11 @@ part of 'file_upload_model.dart';
 _$_FileUploadModel _$$_FileUploadModelFromJson(Map<String, dynamic> json) =>
     _$_FileUploadModel(
       baseUrl: json['BaseURL'] as String?,
-      formsFileName: json['formsFileName'] as String?,
+      personalGuaranteeFileName: json['personalGuaranteeFileName'] as String?,
+      promissoryNoteFileName: json['promissoryNoteFileName'] as String?,
       businessCertificateFileName:
-          json['business_certificateFileName'] as String?,
-      israelIdImageFileName: json['israel_id_imageFileName'] as String?,
+          json['businessCertificateFileName'] as String?,
+      israelIdImageFileName: json['israelIdImageFileName'] as String?,
       fullLogoFileName: json['full_logoFileName'] as String?,
       documentFileName: json['documentFileName'] as String?,
       logoFileName: json['logoFileName'] as String?,
@@ -22,9 +23,10 @@ _$_FileUploadModel _$$_FileUploadModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$_FileUploadModelToJson(_$_FileUploadModel instance) =>
     <String, dynamic>{
       'BaseURL': instance.baseUrl,
-      'formsFileName': instance.formsFileName,
-      'business_certificateFileName': instance.businessCertificateFileName,
-      'israel_id_imageFileName': instance.israelIdImageFileName,
+      'personalGuaranteeFileName': instance.personalGuaranteeFileName,
+      'promissoryNoteFileName': instance.promissoryNoteFileName,
+      'businessCertificateFileName': instance.businessCertificateFileName,
+      'israelIdImageFileName': instance.israelIdImageFileName,
       'full_logoFileName': instance.fullLogoFileName,
       'documentFileName': instance.documentFileName,
       'logoFileName': instance.logoFileName,
