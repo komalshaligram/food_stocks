@@ -10,6 +10,7 @@ class OperationTimeEvent with _$OperationTimeEvent{
     required int rowIndex,
     required int timeIndex,
     required String time,
+
 }) = _timePickerEvent;
 
   factory OperationTimeEvent.defaultValueAddInListEvent(
@@ -29,6 +30,7 @@ class OperationTimeEvent with _$OperationTimeEvent{
   factory OperationTimeEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
 
   factory OperationTimeEvent.timeZoneApiEvent(
+  {required BuildContext context}
       ) = _timeZoneApiEvent;
 
 }

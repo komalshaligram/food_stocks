@@ -190,7 +190,8 @@ class LogInScreenWidget extends StatelessWidget {
 
                         context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(
                                contactNumber: phoneController.text,
-                          isRegister: isRegister
+                          isRegister: isRegister,
+                          context: context
                         ));
                        /* Navigator.pushNamed(
                             context, RouteDefine.otpScreen.name);*/

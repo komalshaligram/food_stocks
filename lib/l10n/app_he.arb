@@ -71,5 +71,6 @@
          "country": "מדינה",
          "enter_the_code_sent_to_phone_num": "הזן את הקוד שנשלח למספר הטלפון שהזנת",
          "not_receive_verification_code": "לא קיבלת קוד אימות ?",
-         "send_again": "שלח שוב"
+         "send_again": "שלח שוב",
+          "logout":"Log Out"
  }

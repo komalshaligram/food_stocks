@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 
 import '../ui/utils/themes/app_urls.dart';
 
@@ -39,12 +41,12 @@ import '../ui/utils/themes/app_urls.dart';
       return handler.next(options);
     }, onResponse: (response, handler) {
       if (kDebugMode) {
-        print("app response data ${response.data}");
+        debugPrint("app response data ${response.data}");
       }
       return handler.next(response);
     }, onError: (DioException e, handler) {
       if (kDebugMode) {
-        print("app error data $e");
+        debugPrint("app error data $e");
       }
       ErrorEntity eInfo = _createErrorEntity(e);
       onError(eInfo);
@@ -57,20 +59,27 @@ import '../ui/utils/themes/app_urls.dart';
         Object? data,
         Map<String, dynamic>? queryParameters,
         Options? options,
+        BuildContext? context,
       }) async {
-    Options requestOptions = options ?? Options();
-    requestOptions.headers = requestOptions.headers ?? {};
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi ) {
+      try {
+        Options requestOptions = options ?? Options();
+        requestOptions.headers = requestOptions.headers ?? {};
 
-  /*  Map<String, dynamic>? authorization = getAuthorizationHeader();
+        var response = await _dio.post(path,
+            data: data, queryParameters: queryParameters, options: requestOptions);
 
-    if (authorization != null) {
-      requestOptions.headers!.addAll(authorization);
-    }*/
-
-    var response = await _dio.post(path,
-        data: data, queryParameters: queryParameters, options: requestOptions);
-
-    return response.data;
+        debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
+        return response.data;
+      } on DioException catch (e) {
+        throw _createErrorEntity(e);
+      }
+    } else {
+      debugPrint('error');
+      throw Exception("Network Error");
+    }
   }
 
   // GET
@@ -88,30 +97,15 @@ import '../ui/utils/themes/app_urls.dart';
           path,
           queryParameters: query,
         );
-        print("STATUS ${response.statusCode} ${response.statusMessage}");
+        debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
         return response.data;
       } on DioException catch (e) {
         throw _createErrorEntity(e);
       }
     } else {
-      print('error');
-     /* showDialog(
-        barrierColor: Colors.black26,
-        context: gn.Get.context!,
-        barrierDismissible: false,
-        builder: (context) {
-          return CustomAlertDialog(
-              title: 'No Internet connection',
-              btnString: "Okay",
-              forceDialog: true,
-              onTap: ()  {
-                gn.Get.back();
-              });
-        },
-      );*/
+      debugPrint('error');
       throw Exception("Network Error");
     }
-
   }
 
 
@@ -241,19 +235,19 @@ ErrorEntity _createErrorEntity(DioException error){
 }
 
 void onError(ErrorEntity eInfo){
-  print('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
+  debugPrint('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
   switch(eInfo.code){
     case 400:
-      print("Server syntax error");
+      debugPrint("Server syntax error");
       break;
     case 401:
-      print("You are denied to continue");
+      debugPrint("You are denied to continue");
       break;
     case 500:
-      print("Server internal error");
+      debugPrint("Server internal error");
       break;
     default:
-      print("Unknown error");
+      debugPrint("Unknown error");
       break;
 
   }

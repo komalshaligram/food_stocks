@@ -39,168 +39,162 @@ class OperationTimeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return BlocListener<OperationTimeBloc, OperationTimeState>(
-  listener: (context, state) {
-      if(state.isRegisterSuccess){
-        print(state.isRegisterSuccess);
-        Navigator.pushNamed(
-            context, RouteDefine.fileUploadScreen.name);
-      }
-      if(state.isRegisterFail) {
-        SnackBarShow(context, state.errorMessage, AppColors.redColor);
-      }
-  },
-  child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
+      listener: (context, state) {
+        if (state.isRegisterSuccess) {
+          print(state.isRegisterSuccess);
+          Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name);
+        }
+        if (state.isRegisterFail) {
+          SnackBarShow(context, state.errorMessage, AppColors.redColor);
+        }
+      },
+      child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
+        builder: (context, state) {
+          return Scaffold(
             backgroundColor: AppColors.whiteColor,
-            elevation: 0,
-            titleSpacing: 0,
-            leadingWidth: 60,
-            title: Text(AppLocalizations.of(context)!.operation_time,
-                style: AppStyles.rkRegularTextStyle(
-                    size: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.blackColor)),
-            leading: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: AppColors.blackColor,
-                )),
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: screenWidth * 0.04, right: screenWidth * 0.03),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                          width: 100,
-                          height: 40,
-                          child: Text(
-                            AppLocalizations.of(context)!.from_an_hour,
-                            style: AppStyles.rkRegularTextStyle(
-                                size: 16,
-                                color: AppColors.textColor,
-                                fontWeight: FontWeight.w400),
-                          )),
-                      SizedBox(
-                          width: 100,
-                          height: 40,
-                          child: Text(
-                            AppLocalizations.of(context)!.to_an_hour,
-                            style: AppStyles.rkRegularTextStyle(
-                                size: 16,
-                                color: AppColors.textColor,
-                                fontWeight: FontWeight.w400),
-                          )),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
-                  OperationTimeRow(
-                    dayString: AppLocalizations.of(context)!.sunday,
-                    rowIndex: 0,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.monday,
-                      rowIndex: 1),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.tuesday,
-                      rowIndex: 2),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.wednesday,
-                      rowIndex: 3),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.thursday,
-                      rowIndex: 4),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString:
-                          AppLocalizations.of(context)!.friday_and_holiday_eves,
-                      rowIndex: 5),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  OperationTimeRow(
-                      dayString:
-                          AppLocalizations.of(context)!.saturday_and_holidays,
-                      rowIndex: 6),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.continued,
-                    fontColors: AppColors.whiteColor,
-                    onPressed: () {
-                      context
-                          .read<OperationTimeBloc>()
-                          .add(OperationTimeEvent
-                          .timeZoneApiEvent(
-                      ));
-                      /*Navigator.pushNamed(
+            appBar: AppBar(
+              backgroundColor: AppColors.whiteColor,
+              elevation: 0,
+              titleSpacing: 0,
+              leadingWidth: 60,
+              title: Text(AppLocalizations.of(context)!.operation_time,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: 16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.blackColor)),
+              leading: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.blackColor,
+                  )),
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: screenWidth * 0.04, right: screenWidth * 0.03),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(
+                          width: 70,
+                        ),
+                        SizedBox(
+                            width: 100,
+                            height: 40,
+                            child: Text(
+                              AppLocalizations.of(context)!.from_an_hour,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: 16,
+                                  color: AppColors.textColor,
+                                  fontWeight: FontWeight.w400),
+                            )),
+                        SizedBox(
+                            width: 100,
+                            height: 40,
+                            child: Text(
+                              AppLocalizations.of(context)!.to_an_hour,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: 16,
+                                  color: AppColors.textColor,
+                                  fontWeight: FontWeight.w400),
+                            )),
+                        SizedBox(
+                          height: 30,
+                        ),
+                      ],
+                    ),
+                    OperationTimeRow(
+                      dayString: AppLocalizations.of(context)!.sunday,
+                      rowIndex: 0,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!.monday,
+                        rowIndex: 1),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!.tuesday,
+                        rowIndex: 2),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!.wednesday,
+                        rowIndex: 3),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!.thursday,
+                        rowIndex: 4),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!
+                            .friday_and_holiday_eves,
+                        rowIndex: 5),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    OperationTimeRow(
+                        dayString:
+                            AppLocalizations.of(context)!.saturday_and_holidays,
+                        rowIndex: 6),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.continued,
+                      fontColors: AppColors.whiteColor,
+                      onPressed: () {
+                        context.read<OperationTimeBloc>().add(
+                            OperationTimeEvent.timeZoneApiEvent(
+                                context: context));
+                        /*Navigator.pushNamed(
                           context, RouteDefine.fileUploadScreen.name);*/
-                    },
-                    bGColor: AppColors.mainColor,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.skip,
-                    fontColors: AppColors.mainColor,
-                    borderColor: AppColors.mainColor,
-                    onPressed: () {
-                      context
-                          .read<OperationTimeBloc>()
-                          .add(OperationTimeEvent
-                          .timeZoneApiEvent(
+                      },
+                      bGColor: AppColors.mainColor,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.skip,
+                      fontColors: AppColors.mainColor,
+                      borderColor: AppColors.mainColor,
+                      onPressed: () {
+                        context.read<OperationTimeBloc>().add(
+                            OperationTimeEvent.timeZoneApiEvent(
+                                context: context));
 
-                      ));
-
-                    /*  Navigator.pushNamed(
+                        /*  Navigator.pushNamed(
                           context, RouteDefine.fileUploadScreen.name);*/
-                    },
-                    bGColor: AppColors.whiteColor,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                ],
+                      },
+                      bGColor: AppColors.whiteColor,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
-    ),
-);
+          );
+        },
+      ),
+    );
   }
 }
 

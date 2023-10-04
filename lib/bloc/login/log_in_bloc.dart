@@ -22,7 +22,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         debugPrint('login reqMap + $reqMap');
         try {
           final response = await DioClient()
-              .post(AppUrls.existingUserLoginUrl, data: reqMap);
+              .post(AppUrls.existingUserLoginUrl, data: reqMap,context: event.context);
 
           LoginResModel businessTypeModel = LoginResModel.fromJson(response);
 

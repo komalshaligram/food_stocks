@@ -44,7 +44,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               contact: event.contact,otp:event.otp);
           debugPrint('otp req + $reqMap');
           try {
-            final response = await DioClient().post('/v1/auth/clientLogin',data: reqMap);
+            final response = await DioClient().post('/v1/auth/clientLogin',data: reqMap,context: event.context);
             print('otp response + $response');
 
             if(response['status'] == 200){
