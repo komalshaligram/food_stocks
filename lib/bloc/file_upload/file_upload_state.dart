@@ -3,7 +3,7 @@ part of 'file_upload_bloc.dart';
 @freezed
 class FileUploadState with _$FileUploadState {
   const factory FileUploadState({
-    required List<Map<String, dynamic>> filesAndFormsList,
+    required List<FormAndFileModel> formsAndFilesList,
     required File promissoryNote,
     required bool isUpdate,
     required bool isPromissoryNoteDocument,
@@ -16,7 +16,7 @@ class FileUploadState with _$FileUploadState {
   }) = _FileUploadState;
 
   factory FileUploadState.initial() => FileUploadState(
-    filesAndFormsList: [],
+    formsAndFilesList: <FormAndFileModel>[],
         photoOfTZ: File(''),
         isUpdate: false,
         promissoryNote: File(''),

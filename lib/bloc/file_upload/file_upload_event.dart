@@ -2,13 +2,13 @@ part of 'file_upload_bloc.dart';
 
 @freezed
 class FileUploadEvent with _$FileUploadEvent {
-  factory FileUploadEvent.getFilesDetailsEvent({
+  factory FileUploadEvent.getFilesListEvent({
     required BuildContext context,
-  }) = _getFilesDetailsEvent;
+  }) = _getFilesListEvent;
 
-  factory FileUploadEvent.getFormsDetailsEvent({
+  factory FileUploadEvent.getFormsListEvent({
     required BuildContext context,
-  }) = _getFormsDetailsEvent;
+  }) = _getFormsListEvent;
 
   factory FileUploadEvent.pickDocumentEvent({
     required BuildContext context,
@@ -22,8 +22,7 @@ class FileUploadEvent with _$FileUploadEvent {
   }) = _uploadApiEvent;
 
   factory FileUploadEvent.deleteFileEvent({
-    // required String documentPath,
-    required int fileIndex,
+    required int index,
   }) = _deleteFileEvent;
 
   factory FileUploadEvent.downloadFileEvent({

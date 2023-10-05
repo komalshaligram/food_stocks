@@ -19,7 +19,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
-import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
+import '../../data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 
@@ -59,12 +59,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   },
                 ),
               );
-              FileUploadModel profileImageModel =
-                  FileUploadModel.fromJson(response);
-              debugPrint('img url = ${profileImageModel.profileImgFileName}');
-              if (profileImageModel.profileImgFileName != '') {
-                imgUrl = profileImageModel.profileImgFileName ?? '';
-              }
+              FileUploadResModel profileImageModel =
+                  FileUploadResModel.fromJson(response);
+              // debugPrint('img url = ${profileImageModel.profileImgFileName}');
+              // if (profileImageModel.profileImgFileName != '') {
+              //   imgUrl = profileImageModel.profileImgFileName ?? '';
+              // }
               emit(state.copyWith(
                   image: File(croppedImage?.path ?? pickedFile.path)));
             } on ServerException {

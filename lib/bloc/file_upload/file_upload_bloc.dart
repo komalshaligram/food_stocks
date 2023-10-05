@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
+import 'package:food_stock/data/model/form_and_file_model.dart';
+import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
+import 'package:food_stock/data/model/res_model/files_res_model/files_res_model.dart';
+import 'package:food_stock/data/model/res_model/forms_res_model/forms_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
@@ -28,7 +31,63 @@ part 'file_upload_bloc.freezed.dart';
 class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
-      if (event is _pickDocumentEvent) {
+      if (event is _getFormsListEvent) {
+        try {
+          final res = await DioClient().get(path: AppUrls.formsListUrl);
+          FormsResModel response = FormsResModel.fromJson(res);
+          if (response.status == 200) {
+            List<FormAndFileModel> formsList =
+                state.formsAndFilesList.toList(growable: true);
+            int len = response.data?.clientForms?.toList().length ?? 0;
+            for (int i = 0; i < len; i++) {
+              formsList.add(FormAndFileModel(
+                  id: response.data?.clientForms?[i].id,
+                  isForm: true,
+                  name: response.data?.clientForms?[i].formName));
+              debugPrint('formList[$i] = ${formsList[i].name}');
+            }
+            emit(state.copyWith(formsAndFilesList: formsList));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } on ServerException {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
+      } else if (event is _getFilesListEvent) {
+        try {
+          final res = await DioClient().get(path: AppUrls.filesListUrl);
+          FilesResModel response = FilesResModel.fromJson(res);
+          if (response.status == 200) {
+            List<FormAndFileModel> filesList =
+                state.formsAndFilesList.toList(growable: true);
+            int len = response.data?.clientFiles?.toList().length ?? 0;
+            for (int i = 0; i < len; i++) {
+              filesList.add(FormAndFileModel(
+                  id: response.data?.clientFiles?[i].id,
+                  isForm: false,
+                  name: response.data?.clientFiles?[i].fileName));
+              debugPrint('fileList[$i] = ${filesList[i].name}');
+            }
+            emit(state.copyWith(formsAndFilesList: filesList));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } on ServerException {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
+      } else if (event is _pickDocumentEvent) {
         XFile? pickedFile;
         if (event.isDocument) {
           pickedFile = await ImagePicker().pickMedia(imageQuality: 100);
@@ -65,30 +124,35 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   await File(croppedImage?.path ?? pickedFile.path).length());
           if (int.parse(fileSize.split(' ').first) <= 500 &&
               fileSize.split(' ').last == 'KB') {
-            if (event.fileIndex == 1) {
-              emit(state.copyWith(
-                  promissoryNote: File(croppedImage?.path ?? pickedFile.path),
-                  isPromissoryNoteDocument:
-                      croppedImage == null ? true : false));
-            }
-            if (event.fileIndex == 2) {
-              emit(state.copyWith(
-                  personalGuarantee:
-                      File(croppedImage?.path ?? pickedFile.path),
-                  isPersonalGuaranteeDocument:
-                      croppedImage == null ? true : false));
-            }
-            if (event.fileIndex == 3) {
-              emit(state.copyWith(
-                  photoOfTZ: File(croppedImage?.path ?? pickedFile.path),
-                  isPhotoOfTZDocument: croppedImage == null ? true : false));
-            }
-            if (event.fileIndex == 4) {
-              emit(state.copyWith(
-                  businessCertificate:
-                      File(croppedImage?.path ?? pickedFile.path),
-                  isBusinessCertificateDocument:
-                      croppedImage == null ? true : false));
+            List<FormAndFileModel> formAndFileList =
+                state.formsAndFilesList.toList(growable: true);
+            FormData formData = FormData.fromMap({
+              formAndFileList[event.fileIndex].isForm ?? false
+                  ? AppStrings.formString
+                  : AppStrings.fileString: await MultipartFile.fromFile(
+                croppedImage?.path ?? pickedFile.path,
+                contentType: MediaType('image', 'png'),
+              )
+            });
+            debugPrint('file name = ${formAndFileList[event.fileIndex].name}');
+            final res = await DioClient().uploadFileProgressWithFormData(
+              path: AppUrls.FileUploadUrl,
+              formData: formData,
+            );
+            FileUploadResModel response = FileUploadResModel.fromJson(res);
+            if (response.baseUrl?.isNotEmpty ?? false) {
+              formAndFileList[event.fileIndex].url = response.filepath;
+              formAndFileList[event.fileIndex].localUrl =
+                  croppedImage?.path ?? pickedFile.path;
+              debugPrint(
+                  'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
+              emit(state.copyWith(formsAndFilesList: formAndFileList));
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: res[AppStrings.messageString] ??
+                      AppStrings.fileSizeLimit500KBString,
+                  bgColor: AppColors.redColor);
             }
           } else {
             showSnackBar(
@@ -98,104 +162,104 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
-        try {
-          Map<String, MultipartFile> files = {};
-          if (state.promissoryNote.path != '' ||
-              state.promissoryNote.path.isNotEmpty) {
-            files[AppStrings.promissoryNoteString] =
-            await MultipartFile.fromFile(
-              state.promissoryNote.path,
-              contentType: MediaType('image', 'png'),
-            );
-          }
-          if (state.personalGuarantee.path != '' ||
-              state.personalGuarantee.path.isNotEmpty) {
-            files[AppStrings.personalGuaranteeString] =
-            await MultipartFile.fromFile(
-              state.personalGuarantee.path,
-              contentType: MediaType('image', 'png'),
-            );
-          }
-          if (state.photoOfTZ.path != '' || state.photoOfTZ.path.isNotEmpty) {
-            files[AppStrings.israelIdImageString] =
-            await MultipartFile.fromFile(
-              state.photoOfTZ.path,
-              contentType: MediaType('image', 'png'),
-            );
-          }
-          if (state.businessCertificate.path != '' ||
-              state.businessCertificate.path.isNotEmpty) {
-            files[AppStrings.businessCertificateString] =
-                await MultipartFile.fromFile(
-              state.businessCertificate.path,
-              contentType: MediaType('image', 'png'),
-            );
-          }
-          if (files.isEmpty) {
-            if (state.isUpdate) {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
-            }
-            return;
-          }
-          FormData formData = FormData.fromMap(files);
-          final response = await DioClient().uploadFileProgressWithFormData(
-            path: AppUrls.FileUploadUrl,
-            formData: formData,
-          );
-          FileUploadModel fileUploadModel = FileUploadModel.fromJson(response);
-          if (fileUploadModel.baseUrl?.isNotEmpty ?? false) {
-            if (state.isUpdate) {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
-            }
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.filesNotUploadString,
-                bgColor: AppColors.mainColor);
-          }
-        } on ServerException {
-          showSnackBar(
-              context: event.context,
-              title: AppStrings.registerSuccessString,
-              bgColor: AppColors.redColor);
-        }
+        // try {
+        //   Map<String, MultipartFile> files = {};
+        //   if (state.promissoryNote.path != '' ||
+        //       state.promissoryNote.path.isNotEmpty) {
+        //     files[AppStrings.promissoryNoteString] =
+        //         await MultipartFile.fromFile(
+        //       state.promissoryNote.path,
+        //       contentType: MediaType('image', 'png'),
+        //     );
+        //   }
+        //   if (state.personalGuarantee.path != '' ||
+        //       state.personalGuarantee.path.isNotEmpty) {
+        //     files[AppStrings.personalGuaranteeString] =
+        //         await MultipartFile.fromFile(
+        //       state.personalGuarantee.path,
+        //       contentType: MediaType('image', 'png'),
+        //     );
+        //   }
+        //   if (state.photoOfTZ.path != '' || state.photoOfTZ.path.isNotEmpty) {
+        //     files[AppStrings.israelIdImageString] =
+        //         await MultipartFile.fromFile(
+        //       state.photoOfTZ.path,
+        //       contentType: MediaType('image', 'png'),
+        //     );
+        //   }
+        //   if (state.businessCertificate.path != '' ||
+        //       state.businessCertificate.path.isNotEmpty) {
+        //     files[AppStrings.businessCertificateString] =
+        //         await MultipartFile.fromFile(
+        //       state.businessCertificate.path,
+        //       contentType: MediaType('image', 'png'),
+        //     );
+        //   }
+        //   if (files.isEmpty) {
+        //     if (state.isUpdate) {
+        //       showSnackBar(
+        //           context: event.context,
+        //           title: AppStrings.updateSuccessString,
+        //           bgColor: AppColors.mainColor);
+        //       Navigator.pop(event.context);
+        //     } else {
+        //       showSnackBar(
+        //           context: event.context,
+        //           title: AppStrings.registerSuccessString,
+        //           bgColor: AppColors.mainColor);
+        //       Navigator.popUntil(event.context,
+        //           (route) => route.name == RouteDefine.connectScreen.name);
+        //       Navigator.pushNamed(
+        //           event.context, RouteDefine.bottomNavScreen.name);
+        //     }
+        //     return;
+        //   }
+        //   FormData formData = FormData.fromMap(files);
+        //   final response = await DioClient().uploadFileProgressWithFormData(
+        //     path: AppUrls.FileUploadUrl,
+        //     formData: formData,
+        //   );
+        //   FileUploadModel fileUploadModel = FileUploadModel.fromJson(response);
+        //   if (fileUploadModel.baseUrl?.isNotEmpty ?? false) {
+        //     if (state.isUpdate) {
+        //       showSnackBar(
+        //           context: event.context,
+        //           title: AppStrings.updateSuccessString,
+        //           bgColor: AppColors.mainColor);
+        //       Navigator.pop(event.context);
+        //     } else {
+        //       showSnackBar(
+        //           context: event.context,
+        //           title: AppStrings.registerSuccessString,
+        //           bgColor: AppColors.mainColor);
+        //       Navigator.popUntil(event.context,
+        //           (route) => route.name == RouteDefine.connectScreen.name);
+        //       Navigator.pushNamed(
+        //           event.context, RouteDefine.bottomNavScreen.name);
+        //     }
+        //   } else {
+        //     showSnackBar(
+        //         context: event.context,
+        //         title: AppStrings.filesNotUploadString,
+        //         bgColor: AppColors.mainColor);
+        //   }
+        // } on ServerException {
+        //   showSnackBar(
+        //       context: event.context,
+        //       title: AppStrings.registerSuccessString,
+        //       bgColor: AppColors.redColor);
+        // }
       } else if (event is _deleteFileEvent) {
-        if (event.fileIndex == 1) {
+        if (event.index == 1) {
           emit(state.copyWith(promissoryNote: File('')));
         }
-        if (event.fileIndex == 2) {
+        if (event.index == 2) {
           emit(state.copyWith(personalGuarantee: File('')));
         }
-        if (event.fileIndex == 3) {
+        if (event.index == 3) {
           emit(state.copyWith(photoOfTZ: File('')));
         }
-        if (event.fileIndex == 4) {
+        if (event.index == 4) {
           emit(state.copyWith(businessCertificate: File('')));
         }
       } else if (event is _downloadFileEvent) {

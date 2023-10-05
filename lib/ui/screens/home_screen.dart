@@ -217,7 +217,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           width: 70,
                                           child: SfRadialGauge(
                                             backgroundColor: Colors.transparent,
-                                            animationDuration: 300,
                                             axes: [
                                               RadialAxis(
                                                 minimum: 0,
@@ -256,6 +255,9 @@ class HomeScreenWidget extends StatelessWidget {
                                                   RangePointer(
                                                     color: AppColors.mainColor,
                                                     enableAnimation: true,
+                                                    animationDuration: 300,
+                                                    animationType:
+                                                        AnimationType.ease,
                                                     cornerStyle:
                                                         CornerStyle.bothCurve,
                                                     value: 7550,

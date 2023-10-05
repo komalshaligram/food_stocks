@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
-import 'package:food_stock/data/model/res_model/file_upload_model/file_upload_model.dart';
+import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
 import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
@@ -64,11 +64,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   },
                 ),
               );
-              FileUploadModel profileImageModel =
-                  FileUploadModel.fromJson(response);
-              if (profileImageModel.profileImgFileName != '') {
-                imgUrl = profileImageModel.profileImgFileName ?? '';
-              }
+              FileUploadResModel profileImageModel =
+                  FileUploadResModel.fromJson(response);
+              // if (profileImageModel.profileImgFileName != '') {
+              //   imgUrl = profileImageModel.profileImgFileName ?? '';
+              // }
               emit(state.copyWith(
                   image: File(croppedImage?.path ?? pickedFile.path),
                   isImagePick: true));
