@@ -180,9 +180,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                       width: 24,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                        color: AppColors.notificationColor,
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppConstants.radius_100)),
                         border:
                             Border.all(color: AppColors.whiteColor, width: 1),
                       ),
