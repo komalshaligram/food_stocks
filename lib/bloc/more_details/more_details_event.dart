@@ -10,8 +10,8 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
 
   factory MoreDetailsEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
 
-  factory MoreDetailsEvent.navigateToOperationTimeScreenEvent({required BuildContext context}) =
-  _navigateToOperationTimeScreenEvent;
+  factory MoreDetailsEvent.registrationApiEvent({required BuildContext context}) =
+  _registrationApiEvent;
 
   factory MoreDetailsEvent.addFilterListEvent() = _addFilterListEvent;
   factory MoreDetailsEvent.citySearchEvent({

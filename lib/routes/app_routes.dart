@@ -21,8 +21,10 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
+import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
+import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 
@@ -52,7 +54,9 @@ enum RouteDefine {
   otpScreen,
   fileUploadScreen,
   profileMenuScreen,
-  orderDetailsScreen
+  orderDetailsScreen,
+  productDetailsScreen,
+  shipmentVerificationScreen
 }
 
 class AppRouting {
@@ -86,6 +90,8 @@ class AppRouting {
       RouteDefine.otpScreen.name: (_) => OTPRoute.route,
       RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
       RouteDefine.orderDetailsScreen.name: (_) => OrderDetailsRoute.route,
+      RouteDefine.productDetailsScreen.name: (_) => ProductDetailsRoute.route,
+      RouteDefine.shipmentVerificationScreen.name: (_) => ShipmentVerificationRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

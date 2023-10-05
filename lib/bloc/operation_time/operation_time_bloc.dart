@@ -5,76 +5,88 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
-import '../../data/model/req_model/profile_req_model/profile_model.dart';
-import '../../data/model/res_model/profile_res_model/profile_res_model.dart' as res;
+import '../../data/model/req_model/operation_time/operation_time_req_model.dart';
+import '../../data/model/res_model/operation_time_model/operation_time_res_model.dart'
+    as res;
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 part 'operation_time_event.dart';
+
 part 'operation_time_state.dart';
+
 part 'operation_time_bloc.freezed.dart';
 
 class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
-  ProfileModel profileModel = ProfileModel();
-
   OperationTimeBloc() : super(OperationTimeState.initial()) {
     on<OperationTimeEvent>((event, emit) async {
-      List<Monday> sundayList = [];
-      List<Monday> mondayList = [];
-      List<Monday> tuesdayList = [];
-      List<Monday> wednesdayList = [];
-      List<Monday> thursdayList = [];
-      List<Monday> fridayAndHolidayEvesList = [];
-      List<Monday> saturdayAndHolidaysList = [];
+      List<Day> sundayList = [];
+      List<Day> mondayList = [];
+      List<Day> tuesdayList = [];
+      List<Day> wednesdayList = [];
+      List<Day> thursdayList = [];
+      List<Day> fridayAndHolidayEvesList = [];
+      List<Day> saturdayAndHolidaysList = [];
 
       if (event is _defaultValueAddInListEvent) {
         List<OperationTimeModel> temp = [];
         if (state.OperationTimeList.isEmpty) {
           temp.add(
             OperationTimeModel(
+              dayString: AppLocalizations.of(event.context)!.sunday,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
           temp.add(
             OperationTimeModel(
+              dayString: AppLocalizations.of(event.context)!.monday,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
           temp.add(
             OperationTimeModel(
+                dayString: AppLocalizations.of(event.context)!.tuesday,
+                monday: [
+                  Day(until: '00:00', from: '00:00'),
+                ]),
+          );
+          temp.add(
+            OperationTimeModel(
+              dayString: AppLocalizations.of(event.context)!.wednesday,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
           temp.add(
             OperationTimeModel(
+              dayString: AppLocalizations.of(event.context)!.thursday,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
           temp.add(
             OperationTimeModel(
+              dayString:
+                  AppLocalizations.of(event.context)!.friday_and_holiday_eves,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
           temp.add(
             OperationTimeModel(
+              dayString:
+                  AppLocalizations.of(event.context)!.saturday_and_holidays,
               monday: [
-                Monday(unitl: '0:0', from: '0:0'),
-              ],
-            ),
-          );
-          temp.add(
-            OperationTimeModel(
-              monday: [
-                Monday(unitl: '0:0', from: '0:0'),
+                Day(until: '00:00', from: '00:00'),
               ],
             ),
           );
@@ -96,19 +108,19 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           String openingTime =
               temp[event.rowIndex].monday[event.timeIndex].from!;
           String closingTime =
-              temp[event.rowIndex].monday[event.timeIndex].unitl!;
+              temp[event.rowIndex].monday[event.timeIndex].until!;
           String? previousClosingTime;
 
           var format = DateFormat("HH:mm");
           var start = format.parse(openingTime);
+          var end = format.parse(closingTime);
+
           var selectTimeZone = format.parse(selectedTime);
-          print(selectTimeZone);
-          print(start);
-          print(selectTimeZone.isAfter(start));
 
           if (event.timeIndex > 0) {
             previousClosingTime =
-                temp[event.rowIndex].monday[event.timeIndex - 1].unitl;
+                temp[event.rowIndex].monday[event.timeIndex - 1].until;
+
             var format = DateFormat("HH:mm");
             var preEnd = format.parse(previousClosingTime!);
 
@@ -116,45 +128,61 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               temp[event.rowIndex].monday.removeAt(event.timeIndex);
               temp[event.rowIndex]
                   .monday
-                  .add(Monday(from: selectedTime, unitl: closingTime));
+                  .add(Day(from: selectedTime, until: closingTime));
             } else if (event.openingIndex == 0) {
-              if (temp[event.rowIndex].monday[event.timeIndex].from! == '0:0') {
-                showSnackBar(
-                    context: event.context, title: 'select opening Time', bgColor: AppColors.redColor);
-              } else if (selectTimeZone.isAfter(start)) {
-                temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                temp[event.rowIndex]
-                    .monday
-                    .add(Monday(from: openingTime, unitl: selectedTime));
-              }
-              else {
+              if (temp[event.rowIndex].monday[event.timeIndex].from! ==
+                  '00:00') {
                 showSnackBar(
                     context: event.context,
-                    title: 'select closing time after opening time',
-                    bgColor:  AppColors.redColor);
-              }
-            }
-          }
-          else {
-            if (event.openingIndex == 1) {
-              temp[event.rowIndex].monday.removeAt(event.timeIndex);
-              temp[event.rowIndex]
-                  .monday
-                  .add(Monday(from: selectedTime, unitl: closingTime));
-            } else if (event.openingIndex == 0) {
-              if (temp[event.rowIndex].monday[event.timeIndex].from! == '0:0') {
-                showSnackBar(
-                    context: event.context,title:  'select opening Time', bgColor: AppColors.redColor);
+                    title: 'select opening Time',
+                    bgColor: AppColors.redColor);
               } else if (selectTimeZone.isAfter(start)) {
                 temp[event.rowIndex].monday.removeAt(event.timeIndex);
                 temp[event.rowIndex]
                     .monday
-                    .add(Monday(from: openingTime, unitl: selectedTime));
+                    .add(Day(from: openingTime, until: selectedTime));
               } else {
                 showSnackBar(
                     context: event.context,
-                    title:'select opening time after closing time',
-                    bgColor:AppColors.redColor);
+                    title: 'select closing time after opening time',
+                    bgColor: AppColors.redColor);
+              }
+            }
+          } else {
+            if (event.openingIndex == 1) {
+              if (closingTime != '00:00' && selectTimeZone.isBefore(end)) {
+                temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                temp[event.rowIndex]
+                    .monday
+                    .add(Day(from: selectedTime, until: closingTime));
+              } else if (closingTime == '00:00') {
+                temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                temp[event.rowIndex]
+                    .monday
+                    .add(Day(from: selectedTime, until: closingTime));
+              } else {
+                showSnackBar(
+                    context: event.context,
+                    title: 'select opening time before closing time',
+                    bgColor: AppColors.redColor);
+              }
+            } else if (event.openingIndex == 0) {
+              if (temp[event.rowIndex].monday[event.timeIndex].from! ==
+                  '00:00') {
+                showSnackBar(
+                    context: event.context,
+                    title: 'select opening Time',
+                    bgColor: AppColors.redColor);
+              } else if (selectTimeZone.isAfter(start)) {
+                temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                temp[event.rowIndex]
+                    .monday
+                    .add(Day(from: openingTime, until: selectedTime));
+              } else {
+                showSnackBar(
+                    context: event.context,
+                    title: 'select opening time after closing time',
+                    bgColor: AppColors.redColor);
               }
             }
           }
@@ -171,26 +199,31 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           int len = state.OperationTimeList[event.rowIndex].monday.length;
 
           if (state.OperationTimeList[event.rowIndex].monday[len - 1].from !=
-                  '0:0' &&
-              state.OperationTimeList[event.rowIndex].monday[len - 1].unitl !=
-                  '0:0') {
-            temp[event.rowIndex].monday.add(Monday(from: '0:0', unitl: '0:0'));
-            emit(state.copyWith(
-                OperationTimeList: temp, isRefresh: !state.isRefresh));
-          } else {
-            showSnackBar(context:event.context, title:'select previous shift time',
-                bgColor:AppColors.redColor);
-          }
-        } else {
-          if (state.OperationTimeList[event.rowIndex].monday[0].from != '0:0' &&
-              state.OperationTimeList[event.rowIndex].monday[0].unitl !=
-                  '0:0') {
-            temp[event.rowIndex].monday.add(Monday(from: '0:0', unitl: '0:0'));
+                  '00:00' &&
+              state.OperationTimeList[event.rowIndex].monday[len - 1].until !=
+                  '00:00') {
+            temp[event.rowIndex].monday.add(Day(from: '00:00', until: '00:00'));
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
             showSnackBar(
-                context: event.context, title:'select first shift time', bgColor: AppColors.redColor);
+                context: event.context,
+                title: 'select previous shift time',
+                bgColor: AppColors.redColor);
+          }
+        } else {
+          if (state.OperationTimeList[event.rowIndex].monday[0].from !=
+                  '00:00' &&
+              state.OperationTimeList[event.rowIndex].monday[0].until !=
+                  '00:00') {
+            temp[event.rowIndex].monday.add(Day(from: '00:00', until: '00:00'));
+            emit(state.copyWith(
+                OperationTimeList: temp, isRefresh: !state.isRefresh));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: 'select first shift time',
+                bgColor: AppColors.redColor);
           }
         }
       }
@@ -201,13 +234,9 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         temp[event.rowIndex].monday.removeAt(event.timeIndex);
         emit(state.copyWith(
             OperationTimeList: temp, isRefresh: !state.isRefresh));
-      } else if (event is _getProfileModelEvent) {
-        profileModel = event.profileModel;
-        debugPrint('get contact name = ${profileModel.contactName}');
       }
 
-      if (event is _timeZoneApiEvent) {
-        ProfileModel? reqMap;
+      if (event is _operationTimeApiEvent) {
         sundayList.addAll(
           state.OperationTimeList[0].monday,
         );
@@ -230,95 +259,114 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           state.OperationTimeList[6].monday,
         );
 
+        if (sundayList.first.from != '00:00' ||
+            mondayList.first.from != '00:00' &&
+                tuesdayList.first.from != '00:00' ||
+            wednesdayList.first.from != '00:00' ||
+            thursdayList.first.from != '00:00' ||
+            fridayAndHolidayEvesList.first.from != '00:00' ||
+            saturdayAndHolidaysList.first.from != '00:00') {
+          OperationTimeReqModel reqMap = OperationTimeReqModel(
+            operationTime: OperationTime(
+              sunday: sundayList,
+              monday: mondayList,
+              tuesday: tuesdayList,
+              wednesday: wednesdayList,
+              thursday: thursdayList,
+              fridayAndHolidayEves: fridayAndHolidayEvesList,
+              saturdayAndHolidays: saturdayAndHolidaysList,
+            ),
+          );
 
-        if (event.isTimeOperation && sundayList.first.from != '0:0' ||
-            mondayList.first.from != '0:0' && tuesdayList.first.from != '0:0' ||
-            wednesdayList.first.from != '0:0' ||
-            thursdayList.first.from != '0:0' ||
-            fridayAndHolidayEvesList.first.from != '0:0' ||
-            saturdayAndHolidaysList.first.from != '0:0') {
-          reqMap = ProfileModel(
-              // statusId: profileModel.statusId,
-              profileImage: profileModel.profileImage,
-              phoneNumber: profileModel.phoneNumber,
-              logo: profileModel.logo,
-              // lastName: '',
-              // firstName: '',
-              cityId: profileModel.cityId,
-              contactName: profileModel.contactName,
-              createdBy: '60abf964173234001c903a05',
-              updatedBy: '60abf964173234001c903a05',
-              address: profileModel.address,
-              email: profileModel.email,
-              clientDetail: ClientDetail(
-                fax: profileModel.clientDetail?.fax,
-                clientTypeId: '60abf964173234001c903a05',
-                applicationVersion:
-                    profileModel.clientDetail?.applicationVersion,
-                ownerName: profileModel.clientDetail?.ownerName,
-                bussinessName: profileModel.clientDetail?.bussinessName,
-                bussinessId: profileModel.clientDetail?.bussinessId,
-                deviceType: profileModel.clientDetail?.deviceType,
-                israelId: profileModel.clientDetail?.israelId,
-                lastSeen: DateTime.now(),
-                monthlyCredits: 100,
-                operationTime: OperationTime(
-                  sunday: sundayList,
-                  monday: mondayList,
-                  tuesday: tuesdayList,
-                  wednesday: wednesdayList,
-                  thursday: thursdayList,
-                  fridayAndHolidayEves: fridayAndHolidayEvesList,
-                  saturdayAndHolidays: saturdayAndHolidaysList,
-                ),
-                tokenId: profileModel.clientDetail?.tokenId,
-              ));
           debugPrint('operation time reqMap + $reqMap');
           try {
-            final response = await DioClient()
-                .post('/v1/clients/createClient', data: reqMap);
+            final response = await DioClient().post(
+                '/v1/clients/operationTime/65142f55c891fb10e5301f0e',
+                data: reqMap);
 
-            res.ProfileResModel profileResModel =
-                res.ProfileResModel.fromJson(response);
+            res.OperationTimeResModel operationTimeResModel =
+                res.OperationTimeResModel.fromJson(response);
 
-            debugPrint('operation time response --- ${profileResModel}');
+            debugPrint('operation time response --- ${operationTimeResModel}');
 
             if (response['status'] == 200) {
-              emit(state.copyWith(isRegisterSuccess: true));
-              await Future.delayed(const Duration(seconds: 2));
+              /*   emit(state.copyWith(isRegisterSuccess: true));
+
               emit(state.copyWith(
                 isRegisterSuccess: false,
-              ));
+              ));*/
+              Navigator.pushNamed(
+                  event.context, RouteDefine.fileUploadScreen.name);
             } else {
-              emit(state.copyWith(
+              showSnackBar(
+                  context: event.context,
+                  title: response['message'],
+                  bgColor: AppColors.redColor);
+              /*   emit(state.copyWith(
                   isRegisterFail: true, errorMessage: response['message']));
-              await Future.delayed(const Duration(seconds: 2));
+
               emit(state.copyWith(
                 isRegisterFail: false,
-              ));
+              ));*/
             }
           } catch (e) {
             debugPrint(e.toString());
             emit(state.copyWith(
                 isRegisterFail: true, errorMessage: e.toString()));
-            await Future.delayed(const Duration(seconds: 2));
             emit(state.copyWith(
               isRegisterFail: false,
             ));
           }
         } else {
-          if (event.isTimeOperation) {
-            emit(state.copyWith(
-                isRegisterFail: true, errorMessage: 'please select shiftTime'));
-            await Future.delayed(const Duration(seconds: 2));
-            emit(state.copyWith(
-              isRegisterFail: false,
-            ));
-          }
+          emit(state.copyWith(
+              isRegisterFail: true, errorMessage: 'please select shiftTime'));
+          emit(state.copyWith(
+            isRegisterFail: false,
+          ));
         }
+      }
+    });
+  }
+}
 
-        if (event.isTimeOperation == false) {
-          reqMap = ProfileModel(
+/*
+reqMap = ProfileModel(
+// statusId: profileModel.statusId,
+profileImage: profileModel.profileImage,
+phoneNumber: profileModel.phoneNumber,
+logo: profileModel.logo,
+// lastName: '',
+// firstName: '',
+cityId: profileModel.cityId,
+contactName: profileModel.contactName,
+createdBy: '60abf964173234001c903a05',
+updatedBy: '60abf964173234001c903a05',
+address: profileModel.address,
+email: profileModel.email,
+clientDetail: ClientDetail(
+fax: profileModel.clientDetail?.fax,
+clientTypeId: '60abf964173234001c903a05',
+applicationVersion:
+profileModel.clientDetail?.applicationVersion,
+ownerName: profileModel.clientDetail?.ownerName,
+bussinessName: profileModel.clientDetail?.bussinessName,
+bussinessId: profileModel.clientDetail?.bussinessId,
+deviceType: profileModel.clientDetail?.deviceType,
+israelId: profileModel.clientDetail?.israelId,
+lastSeen: DateTime.now(),
+monthlyCredits: 100,
+// operationTime: OperationTime(
+//   sunday: sundayList,
+//   monday: mondayList,
+//   tuesday: tuesdayList,
+//   wednesday: wednesdayList,
+//   thursday: thursdayList,
+//   fridayAndHolidayEves: fridayAndHolidayEvesList,
+//   saturdayAndHolidays: saturdayAndHolidaysList,
+// ),
+tokenId: profileModel.clientDetail?.tokenId,
+));*/
+/*      reqMap = ProfileModel(
               // statusId: profileModel.statusId,
               profileImage: profileModel.profileImage,
               phoneNumber: profileModel.phoneNumber,
@@ -343,45 +391,6 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
                 monthlyCredits: 100,
-                operationTime: OperationTime(),
+                //operationTime: OperationTime(),
                 tokenId: profileModel.clientDetail?.tokenId,
-              ));
-
-          debugPrint('operation time reqMap + $reqMap');
-          try {
-            final response = await DioClient()
-                .post('/v1/clients/createClient', data: reqMap,context: event.context);
-
-            res.ProfileResModel profileResModel =
-                res.ProfileResModel.fromJson(response);
-
-            debugPrint('operation time response --- ${profileResModel}');
-
-            if (response['status'] == 200) {
-              emit(state.copyWith(isRegisterSuccess: true));
-              await Future.delayed(const Duration(seconds: 2));
-              emit(state.copyWith(
-                isRegisterSuccess: false,
-              ));
-            } else {
-              emit(state.copyWith(
-                  isRegisterFail: true, errorMessage: response['message']));
-              await Future.delayed(const Duration(seconds: 2));
-              emit(state.copyWith(
-                isRegisterFail: false,
-              ));
-            }
-          } catch (e) {
-            debugPrint(e.toString());
-            emit(state.copyWith(
-                isRegisterFail: true, errorMessage: e.toString()));
-            await Future.delayed(const Duration(seconds: 2));
-            emit(state.copyWith(
-              isRegisterFail: false,
-            ));
-          }
-        }
-      }
-    });
-  }
-}
+              ));*/

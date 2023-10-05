@@ -11,6 +11,9 @@ class CommonOrderContentWidget extends StatelessWidget {
   final Color titleColor;
   final Color valueColor;
   final int? flexValue;
+  final double valueTextSize;
+  final FontWeight valueTextWeight;
+  final double columnPadding;
 
   const CommonOrderContentWidget(
       {super.key,
@@ -18,7 +21,11 @@ class CommonOrderContentWidget extends StatelessWidget {
       required this.value,
       required this.titleColor,
       required this.valueColor,
-      this.flexValue});
+      this.flexValue,
+      this.valueTextSize = 14,
+        this.valueTextWeight = FontWeight.bold,
+       this.columnPadding = 5,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class CommonOrderContentWidget extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(
               horizontal: AppConstants.padding_10,
-              vertical: AppConstants.padding_5),
+              vertical: columnPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -52,9 +59,9 @@ class CommonOrderContentWidget extends StatelessWidget {
               Text(
                 value,
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
+                    size: valueTextSize,
                     color: valueColor,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: valueTextWeight),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

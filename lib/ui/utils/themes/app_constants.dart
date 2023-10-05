@@ -14,6 +14,7 @@ static const double textFormFieldHeight = 40;
   static const double padding_20 = 20;
   static const double padding_30 = 30;
   static const double padding_8 = 8;
+  static const double padding_3 = 3;
 
 
   static const double radius_3 = 3;

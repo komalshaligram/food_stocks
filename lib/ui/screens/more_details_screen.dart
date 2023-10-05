@@ -40,7 +40,7 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
- String city='';
+  String city='';
   MoreDetailsScreenWidget({super.key});
 
   @override
@@ -339,7 +339,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
                             bloc.add(MoreDetailsEvent
-                                .navigateToOperationTimeScreenEvent(
+                                .registrationApiEvent(
                                     context: context));
                         }
                       },

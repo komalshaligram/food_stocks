@@ -77,6 +77,16 @@
   "name_provider":"name provider",
   "total_order":"Total order" ,
   "delivery_date":"delivery date" ,
-  "everything_was_received" :"Everything was received"
-  "logout":"Log Out"
+  "everything_was_received" :"Everything was received",
+  "logout":"Log Out",
+  "total" : "Total",
+  "awaiting_shipment" : "Awaiting shipment",
+  "supplier_order_number":"Supplier order number",
+  "driver_details" :"Driver details :",
+  "list_of_products_on_order" :"List of products on order",
+  "product_Name" :"Product Name",
+  "product_problem" : "Product problem",
+  "shipment_verification" : "Shipment verification",
+  "signature" : "signature"
+
 }

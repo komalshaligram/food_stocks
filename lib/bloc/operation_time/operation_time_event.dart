@@ -13,7 +13,9 @@ class OperationTimeEvent with _$OperationTimeEvent{
     required BuildContext context,
 }) = _timePickerEvent;
 
-  factory OperationTimeEvent.defaultValueAddInListEvent(
+  factory OperationTimeEvent.defaultValueAddInListEvent({
+    required BuildContext context,
+}
   ) = _defaultValueAddInListEvent;
 
   factory OperationTimeEvent.addMoreTimeZoneEvent({
@@ -29,13 +31,12 @@ class OperationTimeEvent with _$OperationTimeEvent{
   }
       ) = _deleteTimeZoneEvent;
 
-  factory OperationTimeEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
+ /* factory OperationTimeEvent.getProfileModelEvent(*//*{required ProfileModel profileModel}*//*) = _getProfileModelEvent;*/
 
-  factory OperationTimeEvent.timeZoneApiEvent({
-    required bool isTimeOperation,
+  factory OperationTimeEvent.operationTimeApiEvent({
     required BuildContext context,
 }
-      ) = _timeZoneApiEvent;
+      ) = _operationTimeApiEvent;
 
 
 

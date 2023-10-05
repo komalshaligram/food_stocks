@@ -8,7 +8,10 @@ class CommonAppBar extends StatelessWidget {
   final IconData iconData;
   final void Function()? onTap;
   final Widget? trailingWidget;
-  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget});
+  final double? width;
+  final double? height;
+
+  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget ,this.height,this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,10 @@ class CommonAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        trailingWidget ?? SizedBox(),
+        Container(
+            height: height,
+            width: width,
+            child: trailingWidget ?? SizedBox()),
         Padding(padding: EdgeInsets.all(AppConstants.padding_10)),
       ],
       title: Text(

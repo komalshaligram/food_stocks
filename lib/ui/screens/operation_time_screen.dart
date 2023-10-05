@@ -6,10 +6,10 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:intl/intl.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
 
 class OperationTimeScreenRoute {
@@ -21,13 +21,11 @@ class OperationTimeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? data =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+   /* Map<dynamic, dynamic>? data =
+        ModalRoute.of(context)?.settings.arguments as Map?;*/
     return BlocProvider(
       create: (context) => OperationTimeBloc()
-        ..add(OperationTimeEvent.defaultValueAddInListEvent())
-        ..add(OperationTimeEvent.getProfileModelEvent(
-            profileModel: data![AppStrings.profileParamString])),
+        ..add(OperationTimeEvent.defaultValueAddInListEvent(context: context)),
       child: OperationTimeScreenWidget(),
     );
   }
@@ -73,9 +71,9 @@ class OperationTimeScreenWidget extends StatelessWidget {
             ),
             body: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(
-                    left: getScreenWidth(context) * 0.03,
-                    right: getScreenWidth(context) * 0.03),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_5,
+                    vertical: AppConstants.padding_5),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +86,6 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         12.width,
                         SizedBox(
                             width: getScreenWidth(context) * 0.245,
-                            height: 40,
                             child: Text(
                               AppLocalizations.of(context)!.from_an_hour,
                               style: AppStyles.rkRegularTextStyle(
@@ -98,7 +95,6 @@ class OperationTimeScreenWidget extends StatelessWidget {
                             )),
                         SizedBox(
                             width: getScreenWidth(context) * 0.245,
-                            height: 40,
                             child: Text(
                               AppLocalizations.of(context)!.to_an_hour,
                               style: AppStyles.rkRegularTextStyle(
@@ -109,70 +105,51 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         10.height,
                       ],
                     ),
-                    OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.sunday,
-                      rowIndex: 0,
+                    ListView.builder(
+                      itemCount: state.OperationTimeList.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_3),
+                          child: OperationTimeRow(
+                            dayString: state.OperationTimeList[index].dayString,
+                            rowIndex: index,
+                          ),
+                        );
+                      },
                     ),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.monday,
-                        rowIndex: 1),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.tuesday,
-                        rowIndex: 2),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.wednesday,
-                        rowIndex: 3),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.thursday,
-                        rowIndex: 4),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!
-                            .friday_and_holiday_eves,
-                        rowIndex: 5),
-                    15.height,
-                    OperationTimeRow(
-                        dayString:
-                            AppLocalizations.of(context)!.saturday_and_holidays,
-                        rowIndex: 6),
                     20.height,
                     Padding(
                       padding:
-                          EdgeInsets.only(top: getScreenHeight(context) * 0.07),
+                          EdgeInsets.only(top: getScreenWidth(context) * 0.3,
+                              left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
                       child: ButtonWidget(
                         buttonText: AppLocalizations.of(context)!.continued,
                         fontColors: AppColors.whiteColor,
                         onPressed: () {
                           context.read<OperationTimeBloc>().add(
-                              OperationTimeEvent.timeZoneApiEvent(
-                                context: context,
-                                  isTimeOperation: true));
-
-                          /*Navigator.pushNamed(
-                            context, RouteDefine.fileUploadScreen.name);*/
+                              OperationTimeEvent.operationTimeApiEvent(
+                                  context: context));
                         },
                         bGColor: AppColors.mainColor,
                       ),
                     ),
                     20.height,
-                    ButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.skip,
-                      fontColors: AppColors.mainColor,
-                      borderColor: AppColors.mainColor,
-                      onPressed: () {
-                        context.read<OperationTimeBloc>().add(
-                            OperationTimeEvent.timeZoneApiEvent(
-                              context: context,
-                                isTimeOperation: false));
-
-                    /*  Navigator.pushNamed(
-                          context, RouteDefine.fileUploadScreen.name);*/
-                      },
-                      bGColor: AppColors.whiteColor,
+                    Padding(
+                      padding:
+                      EdgeInsets.only( left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
+                      child: ButtonWidget(
+                        buttonText: AppLocalizations.of(context)!.skip,
+                        fontColors: AppColors.mainColor,
+                        borderColor: AppColors.mainColor,
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, RouteDefine.fileUploadScreen.name);
+                        },
+                        bGColor: AppColors.whiteColor,
+                      ),
                     ),
                     20.height,
                   ],
@@ -201,8 +178,8 @@ class OperationTimeRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             13.height,
-            SizedBox(
-                width: 70,
+            Container(
+                width: getScreenWidth(context) * 0.15,
                 child: Text(
                   dayString,
                   style: AppStyles.rkRegularTextStyle(
@@ -226,7 +203,7 @@ class OperationTimeRow extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Row(
                             children: [
-                              TimeContainer(
+                             TimeContainer(
                                 openingIndex: 1,
                                 index: index,
                                 rowIndex: rowIndex,
@@ -241,7 +218,7 @@ class OperationTimeRow extends StatelessWidget {
                                 dayString: dayString,
                                 rowIndex: rowIndex,
                                 time: state.OperationTimeList[rowIndex]
-                                    .monday[index].unitl!,
+                                    .monday[index].until!,
                               ),
                               21.width,
                               index == 0
@@ -331,13 +308,13 @@ class TimeContainer extends StatelessWidget {
                 horizontal: AppConstants.padding_10),
             child: GestureDetector(
               onTap: () {
-                var time = '0:0';
+                var datetime = '00:00';
                 Duration initialTimer = const Duration();
                 showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext c1) {
                       return Container(
-                        height: 250,
+                        height: getScreenHeight(context) * 0.33,
                         padding: const EdgeInsets.only(top: 6.0),
                         color: AppColors.whiteColor,
                         child: DefaultTextStyle(
@@ -358,19 +335,23 @@ class TimeContainer extends StatelessWidget {
                                       onTimerDurationChanged:
                                           (Duration changeTimer) {
                                         initialTimer = changeTimer;
-                                        time =
-                                            '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
+                                        String  time = '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
+                                        var format = DateFormat("HH:mm");
+                                        var start = format.parse(time);
+                                         datetime = DateFormat.Hm().format(start);
                                       }),
                                   GestureDetector(
                                       onTap: () async {
+
                                         context.read<OperationTimeBloc>().add(
                                             OperationTimeEvent.timePickerEvent(
                                                 context: context,
                                                 rowIndex: rowIndex,
                                                 timeIndex: index,
                                                 openingIndex: openingIndex,
-                                                time: time,
-                                                timePickerContext: c1));
+                                                time: datetime,
+                                                timePickerContext: c1
+                                            ));
                                       },
                                       child: Text('ok')),
                                 ],
@@ -385,9 +366,9 @@ class TimeContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: Text(time.isEmpty ? '' : time,
+                    child: Text(time == '00:00' ? '' : time,
                         style: AppStyles.rkRegularTextStyle(
-                            size: 16,
+                            size: AppConstants.mediumFont,
                             color: AppColors.blackColor,
                             fontWeight: FontWeight.w400)),
                   ),

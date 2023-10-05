@@ -73,9 +73,20 @@
   "not_receive_verification_code": "לא קיבלת קוד אימות ?",
   "send_again": "שלח שוב",
   "save": "שמור",
-     "logout":"Log Out",
    "name_provider": "שם ספק",
     "total_order": "סה”כ הזמנה",
-      "delivery_date": "תאריך משלוח",
-       "everything_was_received" : "התקבל הכל"
+     "delivery_date": "תאריך משלוח",
+     "everything_was_received" : "התקבל הכל",
+     "logout": "Log Out",
+     "total" : "סה”כ",
+     "awaiting_shipment" : "ממתין למשלוח",
+    "supplier_order_number":"מספר הזמנת ספק",
+    "driver_details" :"פרטי נהג :",
+    "list_of_products_on_order" :"רשימת מוצרים בהזמנה",
+     "product_Name" :"שם המוצר",
+  "product_problem" : "בעיה במוצר",
+   "shipment_verification" : "אישור משלוח",
+   "signature" : "חתימה"
+
+
 }

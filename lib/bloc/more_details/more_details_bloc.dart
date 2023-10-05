@@ -10,7 +10,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/error/exceptions.dart';
-
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
@@ -77,7 +76,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 bgColor: AppColors.redColor);
           }
         }
-      } else if (event is _navigateToOperationTimeScreenEvent) {
+      } else if (event is _registrationApiEvent) {
         ProfileModel newProfileModel = ProfileModel(
       //      statusId: profileModel.statusId,
            profileImage: profileModel.profileImage,
@@ -101,6 +100,60 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               operationTime: OperationTime(),
               tokenId: profileModel.clientDetail?.tokenId,
             ));
+
+
+        debugPrint('operation time reqMap + $newProfileModel');
+        try {
+          final response = await DioClient().post(
+              '/v1/clients/operationTime/65142f55c891fb10e5301f0e',
+              data: newProfileModel);
+
+          // res.ProfileModel operationTimeResModel =
+          // res.OperationTimeResModel.fromJson(response);
+
+        //  debugPrint('operation time response --- ${operationTimeResModel}');
+
+          if (response['status'] == 200) {
+            /*   emit(state.copyWith(isRegisterSuccess: true));
+
+              emit(state.copyWith(
+                isRegisterSuccess: false,
+              ));*/
+            Navigator.pushNamed(
+                event.context, RouteDefine.fileUploadScreen.name);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response['message'],
+                bgColor: AppColors.redColor);
+            /*   emit(state.copyWith(
+                  isRegisterFail: true, errorMessage: response['message']));
+
+              emit(state.copyWith(
+                isRegisterFail: false,
+              ));*/
+          }
+        } catch (e) {
+          debugPrint(e.toString());
+          /*emit(state.copyWith(
+              isRegisterFail: true, errorMessage: e.toString()));
+          emit(state.copyWith(
+            isRegisterFail: false,
+          ));*/
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         Navigator.pushNamed(event.context, RouteDefine.operationTimeScreen.name,
             arguments: {AppStrings.profileParamString: newProfileModel});
       }
