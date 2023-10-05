@@ -29,7 +29,7 @@ class FormFieldValidation {
     if (value.trim().isEmpty) {
       return "mobile can't be Empty";
     } else if(!regex.hasMatch(value)) {
-      return "number must be 10 digit";
+      return "enter digits only";
     } else if (value.length < 10 || value.length > 10) {
       return "mobile must be 10 digit";
     } else {

@@ -69,7 +69,11 @@ class MenuScreenWidget extends StatelessWidget {
                       title: AppLocalizations.of(context)!.about_the_app,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.aboutAppScreen.name)),
-
+                  menuTiles(
+                      title: AppLocalizations.of(context)!.logout,
+                      onTap: () => context
+                          .read<MenuBloc>()
+                          .add(MenuEvent.logOutEvent(context: context))),
                 ],
               ),
             ),

@@ -33,32 +33,32 @@ class MessageContentScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  title: AppLocalizations.of(context)!.message,
-                  iconData: Icons.arrow_back_ios_sharp,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  trailingWidget: Center(
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        AppLocalizations.of(context)!.delete,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.mainColor,
-                        ),
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                title: AppLocalizations.of(context)!.message,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                trailingWidget: Center(
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Text(
+                      AppLocalizations.of(context)!.delete,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.mainColor,
                       ),
                     ),
                   ),
                 ),
               ),
-              body: SingleChildScrollView(
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
                 child: Container(
                   margin: EdgeInsets.only(
                       left: AppConstants.padding_10,

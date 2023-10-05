@@ -501,7 +501,8 @@ class HomeScreenWidget extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(5.0)),
           color: AppColors.iconBGColor),
       padding: const EdgeInsets.symmetric(
-          horizontal: 7.0, vertical: AppConstants.padding_10),
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_10),
       child: Row(
         children: [
           SvgPicture.asset(image),

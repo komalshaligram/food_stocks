@@ -34,20 +34,20 @@ class OrderScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<OrderBloc, OrderState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  title: AppLocalizations.of(context)!.orders,
-                  iconData: Icons.arrow_back_ios_sharp,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                title: AppLocalizations.of(context)!.orders,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-              body: ListView.builder(
+            ),
+            body: SafeArea(
+              child: ListView.builder(
                 itemCount: 4,
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),

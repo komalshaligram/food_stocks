@@ -8,20 +8,23 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context,
       required bool isFromCamera}) = _pickLogoImageEvent;
 
-  factory MoreDetailsEvent.getProfileModelEvent({required ProfileModel profileModel}) = _getProfileModelEvent;
+  factory MoreDetailsEvent.getProfileModelEvent(
+      {required ProfileModel profileModel}) = _getProfileModelEvent;
 
-  factory MoreDetailsEvent.navigateToOperationTimeScreenEvent({required BuildContext context}) =
-  _navigateToOperationTimeScreenEvent;
+  factory MoreDetailsEvent.navigateToOperationTimeScreenEvent(
+      {required BuildContext context}) = _navigateToOperationTimeScreenEvent;
 
   factory MoreDetailsEvent.addFilterListEvent() = _addFilterListEvent;
+
   factory MoreDetailsEvent.citySearchEvent({
     required String search,
-
-}) = _citySearchEvent;
+  }) = _citySearchEvent;
 
   factory MoreDetailsEvent.selectCityEvent({
     required String city,
-    required BuildContext context,
   }) = _selectCityEvent;
 
+  factory MoreDetailsEvent.getProfileMoreDetailsEvent(
+      {required BuildContext context,
+      required bool isUpdate}) = _getProfileMoreDetailsEvent;
 }

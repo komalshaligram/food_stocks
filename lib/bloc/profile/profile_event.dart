@@ -16,12 +16,12 @@ class ProfileEvent with _$ProfileEvent {
   factory ProfileEvent.navigateToMoreDetailsScreenEvent(
       {
         required BuildContext context,
-        required String phoneNumber,
       }) = _navigateToMoreDetailsScreenEvent;
 
   factory ProfileEvent.getProfileDetailsEvent(
       {required BuildContext context,
-      required bool isUpdate}) = _getProfileDetailsEvent;
+      required bool isUpdate,
+      required String mobileNo}) = _getProfileDetailsEvent;
 
   factory ProfileEvent.updateProfileDetailsEvent(
       {required BuildContext context}) = _updateProfileDetailsEvent;

@@ -73,6 +73,18 @@
   "hp": "H.P.",
   "gallery": "Gallery",
   "camera": "Camera",
-  "logout":"Log Out",
-   "save": "Save"
+  "logout": "Log Out",
+  "save": "Save",
+  "all_categories": "All categories",
+  "categories": "Categories",
+  "recommended_for_you": "Recommended for you",
+  "all_recommended": "All recommended",
+  "from_your_previous_orders": "from your previous orders",
+  "everything": "Everything",
+  "search": "Search",
+  "note": "Note",
+  "add_to_order": "Add to order",
+  "sale": "מבצע",
+  "main": "main",
+  "for_payment": "for payment"
 }
