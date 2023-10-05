@@ -37,10 +37,11 @@ class SplashScreenWidget extends StatelessWidget {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           if (preferencesHelper.getUserLoggedIn()) {
-            Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name);
+            Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
           } else {
             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
           }
+
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(

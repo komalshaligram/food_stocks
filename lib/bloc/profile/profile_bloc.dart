@@ -87,7 +87,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(
               businessTypeList: response,
               selectedBusinessType:
-                  response.data?.clientTypes?[0].businessType ?? ''));
+                  response.data?.ClientTypes?[0].businessType ?? ''));
         } on ServerException {
           showSnackBar(
               context: event.context,
@@ -170,7 +170,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ProfileModel updatedProfileModel = ProfileModel(
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
-            clientTypeId: state.businessTypeList.data?.clientTypes
+            clientTypeId: state.businessTypeList.data?.ClientTypes
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,

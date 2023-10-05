@@ -323,7 +323,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             ),
                             value: state.selectedBusinessType,
-                            items: state.businessTypeList.data?.clientTypes
+                            items: state.businessTypeList.data?.ClientTypes
                                 ?.map((businessType) {
                               return DropdownMenuItem<String>(
                                 value: businessType.businessType,
@@ -401,7 +401,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               : AppLocalizations.of(context)!.continued,
                           bGColor: AppColors.mainColor,
                           onPressed: () {
-                            if (state.image.path != '') {
+                        //    if (state.image.path != '') {
                               if (state.selectedBusinessType.isEmpty ||
                                   state.selectedBusinessType != '') {
                                 if (_formKey.currentState?.validate() ??
@@ -422,12 +422,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                     title: AppStrings.selectBusinessTypeString,
                                     bgColor: AppColors.redColor);
                               }
-                            } else {
+                            /*  }else {
                               showSnackBar(
                                   context: context,
                                   title: AppStrings.selectProfileImageString,
                                   bgColor: AppColors.redColor);
-                            }
+                            }*/
                           },
                           fontColors: AppColors.whiteColor,
                         ),

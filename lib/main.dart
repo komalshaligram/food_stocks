@@ -21,32 +21,33 @@ Language selectedLang = Language.Hebrew;
 
 
 void main() async {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+/*  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();*/
 
-    FlutterError.onError =
-        FirebaseCrashlytics.instance.recordFlutterFatalError;
+/*  FlutterError.onError =
+      FirebaseCrashlytics.instance.recordFlutterFatalError;*/
 
-    runApp(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => MoreDetailsBloc()..add(MoreDetailsEvent.addFilterListEvent()),
-          ),
-        ],
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MoreDetailsBloc()..add(MoreDetailsEvent.addFilterListEvent()),
+        ),
+      ],
 
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Directionality(
-            textDirection: TextDirection.rtl,
-            child: const MyApp(),
-          ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: const MyApp(),
         ),
       ),
-    );
+    ),
+  );
+/*  runZonedGuarded<Future<void>>(() async {
+
   }, (error, stack) =>
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));*/
 }
 
 /*void main() async {
