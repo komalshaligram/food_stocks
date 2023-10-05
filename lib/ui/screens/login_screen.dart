@@ -87,10 +87,10 @@ class LogInScreenWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
+                    /*  TextButton(
                         onPressed: () => throw Exception(),
                         child: const Text("Throw Test Exception"),
-                      ),
+                      ),*/
                       30.height,
                       Text(AppLocalizations.of(context)!.enter_your_phone,
                           style: AppStyles.rkRegularTextStyle(
@@ -215,7 +215,7 @@ class LogInScreenWidget extends StatelessWidget {
                                       )
                                     ].toList(),
                                     onChanged: (countryCode) {
-                                      var temp = countryCode;
+                                  //    var temp = countryCode;
                                     },
                                   ),
                                 ],
