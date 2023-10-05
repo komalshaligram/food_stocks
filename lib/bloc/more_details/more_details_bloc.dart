@@ -152,10 +152,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       } else if (event is _addFilterListEvent) {
         emit(state.copyWith(filterList: state.cityList));
       } else if (event is _citySearchEvent) {
+        List<String> list = state.cityList.where((city) => city.contains(event.search))
+          .toList();
+        print(list.length);
         emit(state.copyWith(
-            filterList: state.cityList
-                .where((city) => city.contains(event.search))
-                .toList()));
+            filterList: list));
       } else if (event is _selectCityEvent) {
         emit(state.copyWith(selectCity: event.city));
       } else if (event is _getProfileMoreDetailsEvent) {

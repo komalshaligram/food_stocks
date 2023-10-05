@@ -15,13 +15,14 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context}) = _navigateToOperationTimeScreenEvent;
 
   factory MoreDetailsEvent.addFilterListEvent() = _addFilterListEvent;
-
   factory MoreDetailsEvent.citySearchEvent({
     required String search,
-  }) = _citySearchEvent;
+
+}) = _citySearchEvent;
 
   factory MoreDetailsEvent.selectCityEvent({
     required String city,
+    required BuildContext context,
   }) = _selectCityEvent;
 
   factory MoreDetailsEvent.getProfileMoreDetailsEvent(

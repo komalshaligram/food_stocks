@@ -26,3 +26,4 @@ class ProfileState with _$ProfileState {
         contactController: TextEditingController(),
       );
 }
+

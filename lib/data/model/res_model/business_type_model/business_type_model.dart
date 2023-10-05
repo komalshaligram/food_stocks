@@ -22,7 +22,7 @@ class BusinessTypeModel with _$BusinessTypeModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    List<ClientType>? clientTypes,
+    List<ClientType>? ClientTypes,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
