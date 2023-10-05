@@ -33,20 +33,20 @@ class MenuScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MenuBloc, MenuState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  title: AppLocalizations.of(context)!.menu,
-                  iconData: Icons.close,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                title: AppLocalizations.of(context)!.menu,
+                iconData: Icons.close,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-              body: Column(
+            ),
+            body: SafeArea(
+              child: Column(
                 children: [
                   menuTiles(
                       title: AppLocalizations.of(context)!.my_orders,
@@ -69,7 +69,11 @@ class MenuScreenWidget extends StatelessWidget {
                       title: AppLocalizations.of(context)!.about_the_app,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.aboutAppScreen.name)),
-
+                  menuTiles(
+                      title: AppLocalizations.of(context)!.logout,
+                      onTap: () => context
+                          .read<MenuBloc>()
+                          .add(MenuEvent.logOutEvent(context: context))),
                 ],
               ),
             ),

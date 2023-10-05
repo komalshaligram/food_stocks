@@ -19,8 +19,9 @@ class ConnectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(left: 38,right: 38),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 38, right: 38),
           child: Center(
             child: Column(
               children: [
@@ -37,10 +38,11 @@ class ConnectScreen extends StatelessWidget {
                 ),
                 CustomButtonWidget(
                   buttonText: AppLocalizations.of(context)!.enrollment,
-                 bGColor: AppColors.mainColor,
+                  bGColor: AppColors.mainColor,
                   onPressed: () {
-                    Navigator.pushNamed(context, RouteDefine.loginScreen.name,arguments: {AppStrings.isRegisterString: true});
-                    },
+                    Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                        arguments: {AppStrings.isRegisterString: true});
+                  },
                 ),
                 const SizedBox(
                   height: AppConstants.padding_20,
@@ -50,13 +52,15 @@ class ConnectScreen extends StatelessWidget {
                   fontColors: AppColors.mainColor,
                   borderColor: AppColors.mainColor,
                   onPressed: () {
-                    Navigator.pushNamed(context, RouteDefine.loginScreen.name , arguments: {AppStrings.isRegisterString: false});
+                    Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                        arguments: {AppStrings.isRegisterString: false});
                   },
                 ),
               ],
             ),
           ),
         ),
+      ),
     );
   }
 }

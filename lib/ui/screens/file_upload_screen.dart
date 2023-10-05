@@ -69,8 +69,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                   color: AppColors.blackColor,
                 )),
           ),
-          body: SingleChildScrollView(
-            child: SafeArea(
+          body: SafeArea(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(
                     left: screenWidth * 0.1, right: screenWidth * 0.1),

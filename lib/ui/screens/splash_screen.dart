@@ -31,23 +31,26 @@ class SplashScreenWidget extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if (state.isRedirected) {
-          /* SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          if(preferencesHelper.getUserLoggedIn()){
-            await Future.delayed(const Duration(seconds: 2));
+          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+              prefs: await SharedPreferences.getInstance());
+          if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
-          }*/
-          Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name);
+          } else {
+            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+          }
 
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(
-            body: Center(
-              child: SvgPicture.asset(
-                AppImagePath.splashLogo,
-                height: getScreenHeight(context) * 0.12,
-                width: getScreenWidth(context) * 0.47,
+            body: SafeArea(
+              child: Center(
+                child: SvgPicture.asset(
+                  AppImagePath.splashLogo,
+                  height: getScreenHeight(context) * 0.12,
+                  width: getScreenWidth(context) * 0.47,
+                ),
               ),
             ),
           );

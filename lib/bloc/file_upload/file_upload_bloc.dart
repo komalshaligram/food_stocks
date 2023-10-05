@@ -143,6 +143,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
@@ -166,6 +168,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }

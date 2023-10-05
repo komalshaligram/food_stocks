@@ -32,6 +32,7 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileModel profileModel = ProfileModel();
   String imgUrl = '';
+  String mobileNo = '';
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
@@ -86,7 +87,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(
               businessTypeList: response,
               selectedBusinessType:
-                  response.data?.clientTypes?[0].businessType ?? ''));
+                  response.data?.ClientTypes?[0].businessType ?? ''));
         } on ServerException {
           showSnackBar(
               context: event.context,
@@ -98,11 +99,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             address: '',
             cityId: '60abf964173234001c903a05',
             email: '',
-
             logo: '',
-            phoneNumber: event.phoneNumber,
+            phoneNumber: mobileNo,
             profileImage: imgUrl,
-
             clientDetail: ClientDetail(
               bussinessId: int.tryParse(state.idController.text) ?? 0,
               bussinessName: state.businessNameController.text,
@@ -122,6 +121,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
             arguments: {AppStrings.profileParamString: profileModel});
       } else if (event is _getProfileDetailsEvent) {
+        mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
@@ -170,7 +170,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ProfileModel updatedProfileModel = ProfileModel(
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
-            clientTypeId: state.businessTypeList.data?.clientTypes
+            clientTypeId: state.businessTypeList.data?.ClientTypes
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,

@@ -6,10 +6,10 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:intl/intl.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
+import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
 
 class OperationTimeScreenRoute {
@@ -69,90 +69,96 @@ class OperationTimeScreenWidget extends StatelessWidget {
                     color: AppColors.blackColor,
                   )),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_5,
-                    vertical: AppConstants.padding_5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    20.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        50.height,
-                        12.width,
-                        SizedBox(
-                            width: getScreenWidth(context) * 0.245,
-                            child: Text(
-                              AppLocalizations.of(context)!.from_an_hour,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            )),
-                        SizedBox(
-                            width: getScreenWidth(context) * 0.245,
-                            child: Text(
-                              AppLocalizations.of(context)!.to_an_hour,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            )),
-                        10.height,
-                      ],
-                    ),
-                    ListView.builder(
-                      itemCount: state.OperationTimeList.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_3),
-                          child: OperationTimeRow(
-                            dayString: state.OperationTimeList[index].dayString,
-                            rowIndex: index,
-                          ),
-                        );
-                      },
-                    ),
-                    20.height,
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: getScreenWidth(context) * 0.3,
-                              left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
-                      child: ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
-                        fontColors: AppColors.whiteColor,
-                        onPressed: () {
-                          context.read<OperationTimeBloc>().add(
-                              OperationTimeEvent.operationTimeApiEvent(
-                                  context: context));
-                        },
-                        bGColor: AppColors.mainColor,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.padding_5,
+                      vertical: AppConstants.padding_5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      20.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          50.height,
+                          12.width,
+                          SizedBox(
+                              width: getScreenWidth(context) * 0.245,
+                              height: 40,
+                              child: Text(
+                                AppLocalizations.of(context)!.from_an_hour,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                          SizedBox(
+                              width: getScreenWidth(context) * 0.245,
+                              height: 40,
+                              child: Text(
+                                AppLocalizations.of(context)!.to_an_hour,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                          10.height,
+                        ],
                       ),
-                    ),
-                    20.height,
-                    Padding(
-                      padding:
-                      EdgeInsets.only( left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
-                      child: ButtonWidget(
+                      ListView.builder(
+                        itemCount: state.OperationTimeList.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_3),
+                            child: OperationTimeRow(
+                              dayString: state.OperationTimeList[index].dayString,
+                              rowIndex: index,
+                            ),
+                          );
+                        },
+                      ),
+                      20.height,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: getScreenHeight(context) * 0.07),
+                        child: ButtonWidget(
+                          buttonText: AppLocalizations.of(context)!.continued,
+                          fontColors: AppColors.whiteColor,
+                          onPressed: () {
+                            context.read<OperationTimeBloc>().add(
+                                OperationTimeEvent.timeZoneApiEvent(
+                                    context: context, isTimeOperation: true));
+
+                            /*Navigator.pushNamed(
+                              context, RouteDefine.fileUploadScreen.name);*/
+                          },
+                          bGColor: AppColors.mainColor,
+                        ),
+                      ),
+                      20.height,
+                      ButtonWidget(
                         buttonText: AppLocalizations.of(context)!.skip,
                         fontColors: AppColors.mainColor,
                         borderColor: AppColors.mainColor,
                         onPressed: () {
-                          Navigator.pushNamed(
-                              context, RouteDefine.fileUploadScreen.name);
+                          context.read<OperationTimeBloc>().add(
+                              OperationTimeEvent.timeZoneApiEvent(
+                                  context: context, isTimeOperation: false));
+
+                          /*  Navigator.pushNamed(
+                            context, RouteDefine.fileUploadScreen.name);*/
                         },
                         bGColor: AppColors.whiteColor,
                       ),
-                    ),
-                    20.height,
-                  ],
+                      20.height,
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -203,7 +209,7 @@ class OperationTimeRow extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Row(
                             children: [
-                             TimeContainer(
+                              TimeContainer(
                                 openingIndex: 1,
                                 index: index,
                                 rowIndex: rowIndex,
@@ -308,13 +314,13 @@ class TimeContainer extends StatelessWidget {
                 horizontal: AppConstants.padding_10),
             child: GestureDetector(
               onTap: () {
-                var datetime = '00:00';
+                var time = '0:0';
                 Duration initialTimer = const Duration();
                 showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext c1) {
                       return Container(
-                        height: getScreenHeight(context) * 0.33,
+                        height: 250,
                         padding: const EdgeInsets.only(top: 6.0),
                         color: AppColors.whiteColor,
                         child: DefaultTextStyle(
@@ -335,23 +341,19 @@ class TimeContainer extends StatelessWidget {
                                       onTimerDurationChanged:
                                           (Duration changeTimer) {
                                         initialTimer = changeTimer;
-                                        String  time = '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
-                                        var format = DateFormat("HH:mm");
-                                        var start = format.parse(time);
-                                         datetime = DateFormat.Hm().format(start);
+                                        time =
+                                            '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
                                       }),
                                   GestureDetector(
                                       onTap: () async {
-
                                         context.read<OperationTimeBloc>().add(
                                             OperationTimeEvent.timePickerEvent(
                                                 context: context,
                                                 rowIndex: rowIndex,
                                                 timeIndex: index,
                                                 openingIndex: openingIndex,
-                                                time: datetime,
-                                                timePickerContext: c1
-                                            ));
+                                                time: time,
+                                                timePickerContext: c1));
                                       },
                                       child: Text('ok')),
                                 ],
@@ -366,9 +368,9 @@ class TimeContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: Text(time == '00:00' ? '' : time,
+                    child: Text(time.isEmpty ? '' : time,
                         style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.mediumFont,
+                            size: 16,
                             color: AppColors.blackColor,
                             fontWeight: FontWeight.w400)),
                   ),
