@@ -129,7 +129,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             height: 16,
                                             width: 16,
                                             decoration: BoxDecoration(
-                                                color: AppColors.mainColor,
+                                                color:
+                                                    AppColors.notificationColor,
                                                 border: Border.all(
                                                     color: AppColors.whiteColor,
                                                     width: 1),

@@ -1,5 +1,3 @@
-
-
 class FormFieldValidation {
   String? emailField(String value) {
     RegExp regex = RegExp(
@@ -25,13 +23,17 @@ class FormFieldValidation {
   // }
 
   String? mobileField(String value) {
-    RegExp regex = RegExp(r'^(?=.*?[0-9]).{10}$');
+    RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
       return "mobile can't be Empty";
-    } else if(!regex.hasMatch(value)) {
+    } else if (value.length != 10) {
+      if (regex.hasMatch(value)) {
+        return "enter digits only";
+      } else {
+        return "mobile must be 10 digit";
+      }
+    } else if (regex.hasMatch(value)) {
       return "enter digits only";
-    } else if (value.length < 10 || value.length > 10) {
-      return "mobile must be 10 digit";
     } else {
       return null;
     }
@@ -81,7 +83,7 @@ class FormFieldValidation {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
     if (value.isEmpty) {
       return "id can't be empty";
-    } else if(!regex.hasMatch(value)) {
+    } else if (!regex.hasMatch(value)) {
       return "enter digits only";
     }
     return null;

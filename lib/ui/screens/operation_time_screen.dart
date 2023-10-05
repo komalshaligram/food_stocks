@@ -9,7 +9,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
-import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
 
 class OperationTimeScreenRoute {
@@ -132,8 +131,8 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           fontColors: AppColors.whiteColor,
                           onPressed: () {
                             context.read<OperationTimeBloc>().add(
-                                OperationTimeEvent.timeZoneApiEvent(
-                                    context: context, isTimeOperation: true));
+                                OperationTimeEvent.operationTimeApiEvent(
+                                    context: context));
 
                             /*Navigator.pushNamed(
                               context, RouteDefine.fileUploadScreen.name);*/
@@ -147,12 +146,12 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         fontColors: AppColors.mainColor,
                         borderColor: AppColors.mainColor,
                         onPressed: () {
-                          context.read<OperationTimeBloc>().add(
-                              OperationTimeEvent.timeZoneApiEvent(
-                                  context: context, isTimeOperation: false));
+                          // context.read<OperationTimeBloc>().add(
+                          //     OperationTimeEvent.timeZoneApiEvent(
+                          //         context: context, isTimeOperation: false));
 
-                          /*  Navigator.pushNamed(
-                            context, RouteDefine.fileUploadScreen.name);*/
+                          Navigator.pushNamed(
+                              context, RouteDefine.fileUploadScreen.name);
                         },
                         bGColor: AppColors.whiteColor,
                       ),
