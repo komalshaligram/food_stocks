@@ -266,6 +266,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SfSignaturePad(
                                 key: signatureGlobalKey,
@@ -279,10 +280,21 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImagePath.signature,
+                                  GestureDetector(
+                                    onTap: (){
+
+
+
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppImagePath.signature,
+                                    ),
                                   ),
-                                  Icon(Icons.delete_outline,color: AppColors.redColor,),
+                                  GestureDetector(
+                                      onTap: (){
+                                        signatureGlobalKey.currentState!.clear();
+                                      },
+                                      child: Icon(Icons.delete_outline,color: AppColors.redColor,size: 30)),
                                 ],
                               ),
                             ),
