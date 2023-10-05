@@ -47,7 +47,8 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
- String city='';
+  List<String> list = [];
+
   MoreDetailsScreenWidget({super.key});
 
   @override
@@ -186,7 +187,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       bloc.add(MoreDetailsEvent
                                                           .selectCityEvent(
                                                           city: list[
-                                                          index]));
+                                                          index], context: context));
                                                       Navigator.pop(
                                                           context1);
 

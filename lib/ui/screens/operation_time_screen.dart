@@ -132,11 +132,9 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           fontColors: AppColors.whiteColor,
                           onPressed: () {
                             context.read<OperationTimeBloc>().add(
-                                OperationTimeEvent.timeZoneApiEvent(
-                                    context: context, isTimeOperation: true));
+                                OperationTimeEvent.operationTimeApiEvent(
+                                    context: context));
 
-                            /*Navigator.pushNamed(
-                              context, RouteDefine.fileUploadScreen.name);*/
                           },
                           bGColor: AppColors.mainColor,
                         ),
@@ -147,12 +145,8 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         fontColors: AppColors.mainColor,
                         borderColor: AppColors.mainColor,
                         onPressed: () {
-                          context.read<OperationTimeBloc>().add(
-                              OperationTimeEvent.timeZoneApiEvent(
-                                  context: context, isTimeOperation: false));
-
-                          /*  Navigator.pushNamed(
-                            context, RouteDefine.fileUploadScreen.name);*/
+                           Navigator.pushNamed(
+                            context, RouteDefine.fileUploadScreen.name);
                         },
                         bGColor: AppColors.whiteColor,
                       ),

@@ -87,9 +87,7 @@
   "product_Name" :"Product Name",
   "product_problem" : "Product problem",
   "shipment_verification" : "Shipment verification",
-  "signature" : "signature"
-
-  "logout": "Log Out",
+  "signature" : "signature",
   "save": "Save",
   "all_categories": "All categories",
   "categories": "Categories",
