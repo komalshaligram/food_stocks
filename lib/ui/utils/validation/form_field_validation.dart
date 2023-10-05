@@ -103,6 +103,7 @@ class FormFieldValidation {
 
   String? faxField(String value) {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+
     if (value.isEmpty) {
       return "fax number can't be empty";
     } else if (!regex.hasMatch(value)) {

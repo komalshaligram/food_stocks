@@ -24,13 +24,13 @@ Map<String, dynamic> _$$_BusinessTypeModelToJson(
     };
 
 _$_Data _$$_DataFromJson(Map<String, dynamic> json) => _$_Data(
-      ClientTypes: (json['ClientTypes'] as List<dynamic>?)
+      clientTypes: (json['clientTypes'] as List<dynamic>?)
           ?.map((e) => ClientType.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$$_DataToJson(_$_Data instance) => <String, dynamic>{
-      'ClientTypes': instance.ClientTypes,
+      'clientTypes': instance.clientTypes,
     };
 
 _$_ClientType _$$_ClientTypeFromJson(Map<String, dynamic> json) =>

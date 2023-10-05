@@ -1,11 +1,8 @@
 import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-
 import '../ui/utils/themes/app_urls.dart';
 
  class DioClient {

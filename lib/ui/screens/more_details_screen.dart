@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
@@ -48,8 +47,7 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  List<String> list = [];
-
+ String city='';
   MoreDetailsScreenWidget({super.key});
 
   @override
@@ -58,7 +56,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
-
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: AppBar(
@@ -235,7 +232,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                               // textAlign: TextAlign.right,
                             ),
                           ),
-                        ),
+                        ) ,
                       ),
                       7.height,
                       CustomContainerWidget(

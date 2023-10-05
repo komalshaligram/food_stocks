@@ -73,7 +73,7 @@ class LogInScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.connection,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pushNamed(context, RouteDefine.connectScreen.name );
                 },
               ),
             ),

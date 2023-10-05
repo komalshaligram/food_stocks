@@ -21,13 +21,11 @@ class OperationTimeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? data =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+   /* Map<dynamic, dynamic>? data =
+        ModalRoute.of(context)?.settings.arguments as Map?;*/
     return BlocProvider(
       create: (context) => OperationTimeBloc()
-        ..add(OperationTimeEvent.defaultValueAddInListEvent())
-        ..add(OperationTimeEvent.getProfileModelEvent(
-            profileModel: data![AppStrings.profileParamString])),
+        ..add(OperationTimeEvent.defaultValueAddInListEvent(context: context)),
       child: OperationTimeScreenWidget(),
     );
   }
@@ -74,9 +72,9 @@ class OperationTimeScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: getScreenWidth(context) * 0.03,
-                      right: getScreenWidth(context) * 0.03),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.padding_5,
+                      vertical: AppConstants.padding_5),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,36 +108,21 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           10.height,
                         ],
                       ),
-                      OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.sunday,
-                        rowIndex: 0,
+                      ListView.builder(
+                        itemCount: state.OperationTimeList.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_3),
+                            child: OperationTimeRow(
+                              dayString: state.OperationTimeList[index].dayString,
+                              rowIndex: index,
+                            ),
+                          );
+                        },
                       ),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!.monday,
-                          rowIndex: 1),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!.tuesday,
-                          rowIndex: 2),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!.wednesday,
-                          rowIndex: 3),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!.thursday,
-                          rowIndex: 4),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!
-                              .friday_and_holiday_eves,
-                          rowIndex: 5),
-                      15.height,
-                      OperationTimeRow(
-                          dayString: AppLocalizations.of(context)!
-                              .saturday_and_holidays,
-                          rowIndex: 6),
                       20.height,
                       Padding(
                         padding: EdgeInsets.only(
@@ -201,8 +184,8 @@ class OperationTimeRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             13.height,
-            SizedBox(
-                width: 70,
+            Container(
+                width: getScreenWidth(context) * 0.15,
                 child: Text(
                   dayString,
                   style: AppStyles.rkRegularTextStyle(
@@ -241,7 +224,7 @@ class OperationTimeRow extends StatelessWidget {
                                 dayString: dayString,
                                 rowIndex: rowIndex,
                                 time: state.OperationTimeList[rowIndex]
-                                    .monday[index].unitl!,
+                                    .monday[index].until!,
                               ),
                               21.width,
                               index == 0

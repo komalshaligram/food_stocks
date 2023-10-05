@@ -22,12 +22,16 @@ class OperationTimeModel with _$OperationTimeModel {
 
 
 
-import '../req_model/profile_req_model/profile_model.dart';
+import '../req_model/operation_time/operation_time_req_model.dart';
+
 
 class OperationTimeModel{
-   List<Monday>monday;
+   List<Day>monday;
+   String dayString;
   OperationTimeModel({
-     required this.monday
+     required this.monday,
+    required this.dayString,
+
 });
 
   }
