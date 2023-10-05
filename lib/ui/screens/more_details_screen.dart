@@ -139,7 +139,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     .citySearchEvent(
                                                   search: value,
                                                 ));
-                                                list=state.cityList.where((city) => city.contains(value))
+                                                list = state.cityList
+                                                    .where((city) =>
+                                                        city.contains(value))
                                                     .toList();
                                                 print('length:${list.length}');
                                                 listNotifier.value = list;
@@ -187,7 +189,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       bloc.add(MoreDetailsEvent
                                                           .selectCityEvent(
                                                           city: list[
-                                                          index], context: context));
+                                                          index]));
                                                       Navigator.pop(
                                                           context1);
 

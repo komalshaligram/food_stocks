@@ -78,30 +78,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     10.height,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text(AppLocalizations.of(context)!.promissory_note,
-                    //         style: AppStyles.rkRegularTextStyle(
-                    //             size: AppConstants.smallFont,
-                    //             color: AppColors.textColor,
-                    //             fontWeight: FontWeight.w400)),
-                    //     // ButtonWidget(
-                    //     //   buttonText: AppLocalizations.of(context)!.taken_down,
-                    //     //   height: 30,
-                    //     //   fontSize: AppConstants.smallFont,
-                    //     //   radius: AppConstants.radius_5,
-                    //     //   bGColor: AppColors.blueColor,
-                    //     //   onPressed: () {
-                    //     //     bloc.add(FileUploadEvent.deleteFileEvent(
-                    //     //         fileIndex: 1,));
-                    //     //   },
-                    //     //   fontColors: AppColors.whiteColor,
-                    //     // ),
-                    //   ],
-                    // ),
-                    // 10.height,
-                    // ContainerWidget(fileIndex: 1),
                     buildFileUploadFields(
                       fileIndex: 1,
                       context: context,
@@ -109,98 +85,26 @@ class FileUploadScreenWidget extends StatelessWidget {
                       state: state,
                     ),
                     30.height,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text(AppLocalizations.of(context)!.personal_guarantee,
-                    //         style: AppStyles.rkRegularTextStyle(
-                    //             size: AppConstants.smallFont,
-                    //             color: AppColors.textColor,
-                    //             fontWeight: FontWeight.w400)),
-                    //     // ButtonWidget(
-                    //     //   buttonText: AppLocalizations.of(context)!.taken_down,
-                    //     //   height: 30,
-                    //     //   fontSize: AppConstants.smallFont,
-                    //     //   radius: AppConstants.radius_5,
-                    //     //   bGColor: AppColors.blueColor,
-                    //     //   onPressed: () {
-                    //     //     bloc.add(FileUploadEvent.deleteFileEvent(
-                    //     //         fileIndex: 2,));
-                    //     //   },
-                    //     //   fontColors: AppColors.whiteColor,
-                    //     // ),
-                    //   ],
-                    // ),
-                    // 10.height,
                     buildFileUploadFields(
                       fileIndex: 2,
                       context: context,
                       title: AppLocalizations.of(context)!.personal_guarantee,
                       state: state,
                     ),
-                    // ContainerWidget(fileIndex: 2),
                     30.height,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text(AppLocalizations.of(context)!.photo_tz,
-                    //         style: AppStyles.rkRegularTextStyle(
-                    //             size: AppConstants.smallFont,
-                    //             color: AppColors.textColor,
-                    //             fontWeight: FontWeight.w400)),
-                    //     ButtonWidget(
-                    //       buttonText: AppLocalizations.of(context)!.taken_down,
-                    //       height: 30,
-                    //       fontSize: AppConstants.smallFont,
-                    //       radius: AppConstants.radius_5,
-                    //       bGColor: AppColors.blueColor,
-                    //       onPressed: () {
-                    //         bloc.add(FileUploadEvent.deleteFileEvent(
-                    //             fileIndex: 3,));
-                    //       },
-                    //       fontColors: AppColors.whiteColor,
-                    //     ),
-                    //   ],
-                    // ),
-                    // 10.height,
                     buildFileUploadFields(
                       fileIndex: 3,
                       context: context,
                       title: AppLocalizations.of(context)!.photo_tz,
                       state: state,
                     ),
-                    // ContainerWidget(fileIndex: 3),
                     30.height,
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text(AppLocalizations.of(context)!.business_certificate,
-                    //         style: AppStyles.rkRegularTextStyle(
-                    //             size: AppConstants.smallFont,
-                    //             color: AppColors.textColor,
-                    //             fontWeight: FontWeight.w400)),
-                    //     // ButtonWidget(
-                    //     //   buttonText: AppLocalizations.of(context)!.taken_down,
-                    //     //   height: 30,
-                    //     //   fontSize: AppConstants.smallFont,
-                    //     //   radius: AppConstants.radius_5,
-                    //     //   bGColor: AppColors.blueColor,
-                    //     //   onPressed: () {
-                    //     //     bloc.add(FileUploadEvent.deleteFileEvent(
-                    //     //         fileIndex: 4,));
-                    //     //   },
-                    //     //   fontColors: AppColors.whiteColor,
-                    //     // ),
-                    //   ],
-                    // ),
-                    // 10.height,
                     buildFileUploadFields(
                       fileIndex: 4,
                       context: context,
                       title: AppLocalizations.of(context)!.business_certificate,
                       state: state,
                     ),
-                    // ContainerWidget(fileIndex: 4),
                     40.height,
                     ButtonWidget(
                       buttonText: state.isUpdate

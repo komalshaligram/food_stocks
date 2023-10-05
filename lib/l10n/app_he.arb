@@ -79,6 +79,7 @@
                 "total_order": "סה”כ הזמנה",
                  "delivery_date": "תאריך משלוח",
                  "everything_was_received" : "התקבל הכל",
+                 "logout": "Log Out",
                  "total" : "סה”כ",
                  "awaiting_shipment" : "ממתין למשלוח",
                 "supplier_order_number":"מספר הזמנת ספק",
