@@ -32,24 +32,25 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<QuestionAndAnswerBloc, QuestionAndAnswerState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  title: AppLocalizations.of(context)!.questions_and_answers,
-                  iconData: Icons.arrow_back_ios_sharp,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                title: AppLocalizations.of(context)!.questions_and_answers,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-              backgroundColor: AppColors.pageColor,
-              body: Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+            ),
+            backgroundColor: AppColors.pageColor,
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: AppConstants.padding_5),
                 child: ListView.builder(
                   shrinkWrap: true,
-                    itemCount: 3,
+                  itemCount: 3,
                   itemBuilder: (context, index) => qnaItem(index: index),
                 ),
               ),
@@ -75,28 +76,29 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
       ),
       clipBehavior: Clip.hardEdge,
       child: ExpansionTile(
-        childrenPadding:
-            const EdgeInsets.symmetric(vertical: 2.0),
+        childrenPadding: const EdgeInsets.symmetric(vertical: 2.0),
         tilePadding:
             const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
-        title: Text(
-          'ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש ?',
-          style: AppStyles.rkRegularTextStyle(
+        title: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+          child: Text(
+            'ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש ?',
+            style: AppStyles.rkRegularTextStyle(
               size: AppConstants.smallFont,
               color: AppColors.blackColor,
-              fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
         children: [
           Container(
             color: Colors.transparent,
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(AppConstants.padding_8),
             child: ListTile(
               title: Text(
                 "גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי מוסן מנת. להאמית קרהשק סכעיט דז מא, מנכםלמטכין נשואי מנורך. גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה -לתכי מורגם בורק? לתיג ישבעס.נולום ארווס סאפיאן - פוסיליס קוויס, אקווזמן נולום ארווס סאפיאן - פוסיליס קוויס, אקווזמן קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי לורם איפסום דולור סיט אמט",
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.bold),
+                    size: AppConstants.font_12, color: AppColors.blackColor),
               ),
             ),
           ),

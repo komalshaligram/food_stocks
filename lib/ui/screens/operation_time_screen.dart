@@ -71,111 +71,111 @@ class OperationTimeScreenWidget extends StatelessWidget {
                     color: AppColors.blackColor,
                   )),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getScreenWidth(context) * 0.03,
-                    right: getScreenWidth(context) * 0.03),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    20.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        50.height,
-                        12.width,
-                        SizedBox(
-                            width: getScreenWidth(context) * 0.245,
-                            height: 40,
-                            child: Text(
-                              AppLocalizations.of(context)!.from_an_hour,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            )),
-                        SizedBox(
-                            width: getScreenWidth(context) * 0.245,
-                            height: 40,
-                            child: Text(
-                              AppLocalizations.of(context)!.to_an_hour,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
-                                  fontWeight: FontWeight.w400),
-                            )),
-                        10.height,
-                      ],
-                    ),
-                    OperationTimeRow(
-                      dayString: AppLocalizations.of(context)!.sunday,
-                      rowIndex: 0,
-                    ),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.monday,
-                        rowIndex: 1),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.tuesday,
-                        rowIndex: 2),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.wednesday,
-                        rowIndex: 3),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!.thursday,
-                        rowIndex: 4),
-                    15.height,
-                    OperationTimeRow(
-                        dayString: AppLocalizations.of(context)!
-                            .friday_and_holiday_eves,
-                        rowIndex: 5),
-                    15.height,
-                    OperationTimeRow(
-                        dayString:
-                            AppLocalizations.of(context)!.saturday_and_holidays,
-                        rowIndex: 6),
-                    20.height,
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: getScreenHeight(context) * 0.07),
-                      child: ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
-                        fontColors: AppColors.whiteColor,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: getScreenWidth(context) * 0.03,
+                      right: getScreenWidth(context) * 0.03),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      20.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          50.height,
+                          12.width,
+                          SizedBox(
+                              width: getScreenWidth(context) * 0.245,
+                              height: 40,
+                              child: Text(
+                                AppLocalizations.of(context)!.from_an_hour,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                          SizedBox(
+                              width: getScreenWidth(context) * 0.245,
+                              height: 40,
+                              child: Text(
+                                AppLocalizations.of(context)!.to_an_hour,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                          10.height,
+                        ],
+                      ),
+                      OperationTimeRow(
+                        dayString: AppLocalizations.of(context)!.sunday,
+                        rowIndex: 0,
+                      ),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!.monday,
+                          rowIndex: 1),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!.tuesday,
+                          rowIndex: 2),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!.wednesday,
+                          rowIndex: 3),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!.thursday,
+                          rowIndex: 4),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!
+                              .friday_and_holiday_eves,
+                          rowIndex: 5),
+                      15.height,
+                      OperationTimeRow(
+                          dayString: AppLocalizations.of(context)!
+                              .saturday_and_holidays,
+                          rowIndex: 6),
+                      20.height,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: getScreenHeight(context) * 0.07),
+                        child: ButtonWidget(
+                          buttonText: AppLocalizations.of(context)!.continued,
+                          fontColors: AppColors.whiteColor,
+                          onPressed: () {
+                            context.read<OperationTimeBloc>().add(
+                                OperationTimeEvent.timeZoneApiEvent(
+                                    context: context, isTimeOperation: true));
+
+                            /*Navigator.pushNamed(
+                              context, RouteDefine.fileUploadScreen.name);*/
+                          },
+                          bGColor: AppColors.mainColor,
+                        ),
+                      ),
+                      20.height,
+                      ButtonWidget(
+                        buttonText: AppLocalizations.of(context)!.skip,
+                        fontColors: AppColors.mainColor,
+                        borderColor: AppColors.mainColor,
                         onPressed: () {
                           context.read<OperationTimeBloc>().add(
                               OperationTimeEvent.timeZoneApiEvent(
-                                context: context,
-                                  isTimeOperation: true));
+                                  context: context, isTimeOperation: false));
 
-                          /*Navigator.pushNamed(
+                          /*  Navigator.pushNamed(
                             context, RouteDefine.fileUploadScreen.name);*/
                         },
-                        bGColor: AppColors.mainColor,
+                        bGColor: AppColors.whiteColor,
                       ),
-                    ),
-                    20.height,
-                    ButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.skip,
-                      fontColors: AppColors.mainColor,
-                      borderColor: AppColors.mainColor,
-                      onPressed: () {
-                        context.read<OperationTimeBloc>().add(
-                            OperationTimeEvent.timeZoneApiEvent(
-                              context: context,
-                                isTimeOperation: false));
-
-                    /*  Navigator.pushNamed(
-                          context, RouteDefine.fileUploadScreen.name);*/
-                      },
-                      bGColor: AppColors.whiteColor,
-                    ),
-                    20.height,
-                  ],
+                      20.height,
+                    ],
+                  ),
                 ),
               ),
             ),

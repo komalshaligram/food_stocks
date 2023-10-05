@@ -22,12 +22,15 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-
+    final temp = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
 
     return BlocProvider(
       create: (context) => OtpBloc()..add(OtpEvent.setOtpTimer()),
-      child: OTPScreenWidget(isRegister: temp[AppStrings.isRegisterString], contact: temp[AppStrings.contactString],),
+      child: OTPScreenWidget(
+        isRegister: temp[AppStrings.isRegisterString],
+        contact: temp[AppStrings.contactString],
+      ),
     );
   }
 }
@@ -35,6 +38,7 @@ class OTPScreen extends StatelessWidget {
 class OTPScreenWidget extends StatelessWidget {
   final bool isRegister;
   final String contact;
+
   OTPScreenWidget({required this.isRegister, required this.contact});
 
   String otpCode = '';
@@ -44,16 +48,16 @@ class OTPScreenWidget extends StatelessWidget {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
-        if(state.isLoginSuccess){
+        if (state.isLoginSuccess) {
+          Navigator.popUntil(
+              context, (route) => route.name == RouteDefine.connectScreen.name);
           Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
         }
-        if(state.isLoginFail){
-
+        if (state.isLoginFail) {
           showSnackBar(
               context: context,
               title: state.errorMessage,
               bgColor: AppColors.redColor);
-            Navigator.pushNamed(context, RouteDefine.loginScreen.name);
         }
       },
       child: BlocBuilder<OtpBloc, OtpState>(
@@ -71,118 +75,129 @@ class OTPScreenWidget extends StatelessWidget {
                 },
               ),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: getScreenWidth(context) * 0.1,
-                    right: getScreenWidth(context) * 0.1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    30.height,
-                    Text(
-                        AppLocalizations.of(context)!
-                            .enter_the_code_sent_to_phone_num,
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont, color: Colors.black)),
-                    30.height,
-                    OtpTextField(
-                      autoFocus: true,
-                      fieldWidth: (getScreenWidth(context) -
-                              (getScreenWidth(context) * 0.2)) /
-                          5.5,
-                      decoration: InputDecoration(
-                          ),
-                      numberOfFields: 4,
-                      cursorColor: AppColors.mainColor,
-                      borderColor: AppColors.greyColor,
-                      focusedBorderColor: AppColors.mainColor,
-                      showCursor: false,
-                      showFieldAsBox: true,
-                      borderRadius: BorderRadius.circular(8),
-                      margin: EdgeInsets.symmetric(
-                          horizontal: AppConstants.padding_10),
-                      textStyle:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                      onCodeChanged: (String code) {
-
-                      },
-                      onSubmit: (verificationCode) {
-                        otpCode = verificationCode;
-                      }, // end onSubmit
-                    ),
-                    30.height,
-                    CustomButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.continued,
-                      bGColor: AppColors.mainColor,
-                      onPressed: () {
-                        if(isRegister == true){
-                          Navigator.pushNamed(context, RouteDefine.profileScreen.name ,arguments:  {AppStrings.contactString : contact} );
-                        }else{
-                          bloc.add(OtpEvent.otpApiEvent(contact: contact, otp: otpCode ,isRegister: isRegister,context: context));
-                        }
-                      },
-                      fontColors: AppColors.whiteColor,
-                    ),
-                    20.height,
-                    Center(
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .not_receive_verification_code,
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont, color: Colors.black),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: getScreenWidth(context) * 0.1,
+                      right: getScreenWidth(context) * 0.1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      30.height,
+                      Text(
+                          AppLocalizations.of(context)!
+                              .enter_the_code_sent_to_phone_num,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: Colors.black)),
+                      30.height,
+                      OtpTextField(
+                        autoFocus: true,
+                        fieldWidth: (getScreenWidth(context) -
+                                (getScreenWidth(context) * 0.2)) /
+                            5.5,
+                        decoration: InputDecoration(),
+                        numberOfFields: 4,
+                        cursorColor: AppColors.mainColor,
+                        borderColor: AppColors.greyColor,
+                        focusedBorderColor: AppColors.mainColor,
+                        showCursor: false,
+                        showFieldAsBox: true,
+                        borderRadius: BorderRadius.circular(8),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: AppConstants.padding_10),
+                        textStyle: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                        onCodeChanged: (String code) {},
+                        onSubmit: (verificationCode) {
+                          otpCode = verificationCode;
+                        }, // end onSubmit
                       ),
-                    ),
-                    20.height,
-                    Container(
-                      width: double.maxFinite,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        border:
-                            Border.all(color: AppColors.mainColor, width: 1),
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
-                      child: MaterialButton(
-                        elevation: 0,
-                        height: AppConstants.buttonHeight,
+                      30.height,
+                      CustomButtonWidget(
+                        buttonText: AppLocalizations.of(context)!.continued,
+                        bGColor: AppColors.mainColor,
                         onPressed: () {
-                          bloc.add(OtpEvent.setOtpTimer());
+                          if (isRegister == true) {
+                            Navigator.pushNamed(
+                                context, RouteDefine.profileScreen.name,
+                                arguments: {AppStrings.contactString: contact});
+                          } else {
+                            bloc.add(OtpEvent.otpApiEvent(
+                                contact: contact,
+                                otp: otpCode,
+                                isRegister: isRegister,
+                                context: context));
+                          }
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 40,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  border: Border.all(
-                                      color: AppColors.mainColor, width: 1),
-                                  shape: BoxShape.circle),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,
-                                  horizontal: AppConstants.padding_5),
-                              child: Text(
-                                '${state.otpTimer}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.mainColor),
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.send_again,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.mediumFont,
-                                  color: AppColors.mainColor),
-                            ),
-                            40.width,
-                          ],
+                        fontColors: AppColors.whiteColor,
+                      ),
+                      20.height,
+                      Center(
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .not_receive_verification_code,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: Colors.black),
                         ),
                       ),
-                    ),
-                  ],
+                      20.height,
+                      Container(
+                        width: double.maxFinite,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          color: state.otpTimer != 0
+                              ? AppColors.pageColor
+                              : AppColors.whiteColor,
+                          border:
+                              Border.all(color: AppColors.mainColor, width: 1),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                        child: MaterialButton(
+                          elevation: 0,
+                          height: AppConstants.buttonHeight,
+                          onPressed: state.otpTimer != 0
+                              ? null
+                              : () {
+                                  bloc.add(OtpEvent.setOtpTimer());
+                                },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 40,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border.all(
+                                        color: AppColors.mainColor, width: 1),
+                                    shape: BoxShape.circle),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_5,
+                                    horizontal: AppConstants.padding_5),
+                                child: Text(
+                                  '${state.otpTimer}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.mainColor),
+                                ),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!.send_again,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.mediumFont,
+                                    color: AppColors.mainColor),
+                              ),
+                              40.width,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -1,9 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 
@@ -27,12 +28,19 @@ class MoreDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? data =
+    Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => MoreDetailsBloc()
+        ..add(MoreDetailsEvent.addFilterListEvent())
+        ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
+            context: context,
+            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
+                ? true
+                : false))
         ..add(MoreDetailsEvent.getProfileModelEvent(
-            profileModel: data?[AppStrings.profileParamString]))..add(MoreDetailsEvent.addFilterListEvent()),
+            profileModel:
+                args?[AppStrings.profileParamString] ?? ProfileModel())),
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -40,22 +48,23 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
- String city='';
+  List<String> list = [];
+
   MoreDetailsScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final listNotifier = ValueNotifier<List<String>>([]);
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
+
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.pageColor,
           appBar: AppBar(
             leading: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.profileScreen.name);
+                  Navigator.pop(context);
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Text(
@@ -63,280 +72,369 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               style: AppStyles.rkRegularTextStyle(
                   size: 16, color: Colors.black, fontWeight: FontWeight.w400),
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             titleSpacing: 0,
             elevation: 0,
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: getScreenWidth(context) * 0.1, right: screenWidth * 0.1),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    20.height,
-                    CustomContainerWidget(
-                      name: AppLocalizations.of(context)!.city,
-                    ),
-                    GestureDetector(
-                      onTap: (){
-                               showModalBottomSheet(
-                            context: context,
-                                 isScrollControlled: true,
-                            shape: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                            builder: (c1) {
-                              return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
-                                   builder: (context, state) {
-                                return Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Container(
-                                  height: getScreenHeight(context) * 0.9,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      7.height,
-                                      Container(
-                                        child: Text(AppLocalizations.of(context)!.city,style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,color: AppColors.blackColor,fontWeight: FontWeight.w400)),
-                                      ),
-                                      15.height,
-                                      CustomFormField(
-                                        prefixIcon: Icon(Icons.search,color: AppColors.mainColor),
-                                        onChangeValue: (value){
-                                          context.read<MoreDetailsBloc>()
-                                              .add(MoreDetailsEvent.citySearchEvent(
-                                            search: value,
-                                          ));
-                                        },
-                                        controller: state.cityController,
-                                        keyboardType: TextInputType.text,
-                                        hint: AppLocalizations.of(context)!.life_grocery_store,
-                                        fillColor: Colors.transparent,
-                                        textInputAction: TextInputAction.next,
-                                        validator: '',
-                                          textCapitalization: TextCapitalization.words,
-                                        autofocus: true,
-                                        cursorColor: AppColors.mainColor,
-                                      ),
-                                      7.height,
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: state.filterList.length,
-                                        itemBuilder: (context, index) {
-                                          city = state.city;
-                                          return Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: GestureDetector(
-                                              onTap: (){
-                                                context.read<MoreDetailsBloc>()
-                                                  .add(MoreDetailsEvent.selectCityEvent(
-                                                  city: state.filterList[index],
-                                                  context: c1
-                                                ));
-                                              },
-                                              child: Text(state.filterList[index],
-                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                               });
-                            },);
-                      },
-                      child: Container(
-                        height: 42,
-                        width: getScreenWidth(context),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.borderColor)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10,right: 10,top: 8),
-                          child: Text(city,
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont,
-                            color: AppColors.blackColor,fontWeight: FontWeight.w400
-                          ),
-                          ),
-                        ) ,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: getScreenWidth(context) * 0.1,
+                    right: getScreenWidth(context) * 0.1),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      10.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.city,
                       ),
-                    ),
-                    7.height,
-                    CustomContainerWidget(
-                      name: AppLocalizations.of(context)!.full_address,
-                    ),
-                    CustomFormField(
-                      controller: state.addressController,
-                      keyboardType: TextInputType.text,
-                      hint: AppLocalizations.of(context)!.life_grocery_store,
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.addressValString,
-                    ),
-                    7.height,
-                    CustomContainerWidget(
-                      name: AppLocalizations.of(context)!.email,
-                    ),
-                    CustomFormField(
-                      controller: state.emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      hint: "test2gmail.com",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.emailValString,
-                    ),
-                    7.height,
-                    CustomContainerWidget(
-                      name: AppLocalizations.of(context)!.fax,
-                    ),
-                    CustomFormField(
-                      controller: state.faxController,
-                      keyboardType: TextInputType.number,
-                      hint: AppLocalizations.of(context)!.fax,
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.done,
-                      validator: AppStrings.faxValString,
-                    ),
-                    7.height,
-                    CustomContainerWidget(
-                      name: AppLocalizations.of(context)!.logo_image,
-                      star: '',
-                    ),
-                    Container(
-                      height: screenHeight * 0.2,
-                      alignment: Alignment.center,
-                      child: DottedBorder(
-                        color: state.isImagePick
-                            ? AppColors.whiteColor
-                            : AppColors.borderColor,
-                        strokeWidth: state.isImagePick ? 0 : 2,
-                        dashPattern: state.isImagePick ? [1, 0] : [5, 3],
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  // alertDialog(context);
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) => Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(
-                                                      AppConstants.radius_20),
-                                                  topLeft: Radius.circular(
-                                                      AppConstants.radius_20)),
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    AppConstants.padding_30,
-                                                vertical:
-                                                    AppConstants.padding_20),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight:
+                                        Radius.circular(AppConstants.radius_20),
+                                    topLeft: Radius.circular(
+                                        AppConstants.radius_20)),
+                                borderSide: BorderSide.none),
+                            builder: (context1) {
+                              return ValueListenableBuilder(
+                                  valueListenable: listNotifier,
+                                  builder: (context, _content, child) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Container(
+                                        height: getScreenHeight(context) * 0.9,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            7.height,
+                                            Container(
+                                              child: Text(
                                                   AppLocalizations.of(context)!
-                                                      .upload_photo,
+                                                      .city,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .normalFont,
-                                                          color: AppColors
-                                                              .blackColor,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                ),
-                                                30.height,
-                                                FileSelectionOptionWidget(
-                                                    title: AppLocalizations.of(
-                                                            context)!
-                                                        .camera,
-                                                    icon: Icons.camera,
-                                                    onTap: () {
-                                                      bloc.add(MoreDetailsEvent
-                                                          .pickLogoImageEvent(
-                                                              context: context,
-                                                              isFromCamera:
-                                                                  true));
-                                                      Navigator.pop(context);
-                                                    }),
-                                                FileSelectionOptionWidget(
-                                                    title: AppLocalizations.of(
-                                                            context)!
-                                                        .gallery,
-                                                    icon: Icons.photo,
-                                                    onTap: () {
-                                                      bloc.add(MoreDetailsEvent
-                                                          .pickLogoImageEvent(
-                                                              context: context,
-                                                              isFromCamera:
-                                                                  false));
-                                                      Navigator.pop(context);
-                                                    }),
-                                              ],
+                                                      size: AppConstants
+                                                          .mediumFont,
+                                                      color: AppColors
+                                                          .blackColor)),
                                             ),
-                                          ),
-                                      backgroundColor: Colors.transparent);
-                                },
-                                child: state.isImagePick
-                                    ? SizedBox(
-                                        height: 130,
-                                        width: screenWidth,
-                                        child: Image.file(
-                                          File(state.image.path),
-                                          fit: BoxFit.cover,
+                                            15.height,
+                                            CustomFormField(
+                                              prefixIcon: Icon(
+                                                Icons.search,
+                                                color: AppColors.borderColor,
+                                              ),
+                                              onChangeValue: (value) {
+                                                bloc.add(MoreDetailsEvent
+                                                    .citySearchEvent(
+                                                  search: value,
+                                                ));
+                                                list=state.cityList.where((city) => city.contains(value))
+                                                    .toList();
+                                                print('length:${list.length}');
+                                                listNotifier.value = list;
+                                              },
+                                              controller: state.cityController,
+                                              keyboardType: TextInputType.text,
+                                              hint: AppLocalizations.of(context)!
+                                                  .life_grocery_store,
+                                              fillColor: AppColors.whiteColor,
+                                              textInputAction:
+                                              TextInputAction.next,
+                                              validator: '',
+                                              textCapitalization:
+                                              TextCapitalization.words,
+                                              autofocus: true,
+                                              cursorColor: AppColors.mainColor,
+                                            ),
+                                            7.height,
+                                            list.isEmpty
+                                                ? Expanded(
+                                              child: Center(
+                                                child: Text(
+                                                  'Cities not available',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .smallFont,
+                                                      color: AppColors
+                                                          .textColor),
+                                                ),
+                                              ),
+                                            )
+                                                : ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount:
+                                              list.length,
+                                              itemBuilder:
+                                                  (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(
+                                                      10.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      bloc.add(MoreDetailsEvent
+                                                          .selectCityEvent(
+                                                          city: list[
+                                                          index]));
+                                                      Navigator.pop(
+                                                          context1);
+
+                                                    },
+                                                    child: Text(
+                                                      list[
+                                                      index],
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .mediumFont),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      )
-                                    : Icon(
-                                        Icons.camera_alt_rounded,
-                                        color: AppColors.blueColor,
-                                        size: 30,
-                                      )),
-                            state.isImagePick
-                                ? const SizedBox()
-                                : Align(
-                                    child: Container(
-                                      width: screenWidth,
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .upload_photo,
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_14,
-                                            color: AppColors.textColor,
-                                            fontWeight: FontWeight.w400),
                                       ),
-                                    ),
-                                  ),
-                          ],
+                                    );
+                                  });
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: 46,
+                          width: getScreenWidth(context),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_3)),
+                          ),
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_10),
+                            child: Text(
+                              state.selectCity,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.mediumFont,
+                                  color: AppColors.blackColor),
+                              // textAlign: TextAlign.right,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    50.height,
-                    CustomButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.continued,
-                      bGColor: AppColors.mainColor,
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                            bloc.add(MoreDetailsEvent
-                                .navigateToOperationTimeScreenEvent(
-                                    context: context));
-                        }
-                      },
-                      fontColors: AppColors.whiteColor,
-                    ),
-                    20.height,
-                  ],
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.full_address,
+                      ),
+                      CustomFormField(
+                        controller: state.addressController,
+                        keyboardType: TextInputType.text,
+                        hint: AppLocalizations.of(context)!.life_grocery_store,
+                        fillColor: AppColors.whiteColor,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.addressValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.email,
+                      ),
+                      CustomFormField(
+                        controller: state.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        hint: "test2gmail.com",
+                        fillColor: AppColors.whiteColor,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.emailValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.fax,
+                      ),
+                      CustomFormField(
+                        controller: state.faxController,
+                        keyboardType: TextInputType.number,
+                        hint: AppLocalizations.of(context)!.fax,
+                        fillColor: AppColors.whiteColor,
+                        textInputAction: TextInputAction.done,
+                        validator: AppStrings.faxValString,
+                      ),
+                      7.height,
+                      CustomContainerWidget(
+                        name: AppLocalizations.of(context)!.logo_image,
+                        star: '',
+                      ),
+                      Container(
+                        height: getScreenHeight(context) * 0.2,
+                        alignment: Alignment.center,
+                        child: DottedBorder(
+                          color: state.isImagePick
+                              ? AppColors.whiteColor
+                              : AppColors.borderColor,
+                          radius: Radius.circular(AppConstants.radius_3),
+                          borderType: BorderType.RRect,
+                          strokeWidth: state.isImagePick ? 0 : 1,
+                          dashPattern: state.isImagePick ? [1, 0] : [3, 2],
+                          child: Container(
+                            color: AppColors.whiteColor,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                    onTap: () {
+                                      // alertDialog(context);
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.whiteColor,
+                                                  borderRadius: BorderRadius.only(
+                                                      topRight: Radius.circular(
+                                                          AppConstants
+                                                              .radius_20),
+                                                      topLeft: Radius.circular(
+                                                          AppConstants
+                                                              .radius_20)),
+                                                ),
+                                                clipBehavior: Clip.hardEdge,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        AppConstants.padding_30,
+                                                    vertical: AppConstants
+                                                        .padding_20),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .upload_photo,
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .normalFont,
+                                                              color: AppColors
+                                                                  .blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                    ),
+                                                    30.height,
+                                                    FileSelectionOptionWidget(
+                                                        title:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .camera,
+                                                        icon: Icons.camera,
+                                                        onTap: () {
+                                                          bloc.add(MoreDetailsEvent
+                                                              .pickLogoImageEvent(
+                                                                  context:
+                                                                      context,
+                                                                  isFromCamera:
+                                                                      true));
+                                                          Navigator.pop(
+                                                              context);
+                                                        }),
+                                                    FileSelectionOptionWidget(
+                                                        title:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .gallery,
+                                                        icon: Icons.photo,
+                                                        onTap: () {
+                                                          bloc.add(MoreDetailsEvent
+                                                              .pickLogoImageEvent(
+                                                                  context:
+                                                                      context,
+                                                                  isFromCamera:
+                                                                      false));
+                                                          Navigator.pop(
+                                                              context);
+                                                        }),
+                                                  ],
+                                                ),
+                                              ),
+                                          backgroundColor: Colors.transparent);
+                                    },
+                                    child: state.isImagePick
+                                        ? SizedBox(
+                                            height: 130,
+                                            width: getScreenWidth(context),
+                                            child: Image.file(
+                                              File(state.image.path),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.camera_alt_rounded,
+                                            color: AppColors.blueColor,
+                                            size: 30,
+                                          )),
+                                state.isImagePick
+                                    ? const SizedBox()
+                                    : Align(
+                                        child: Container(
+                                          width: getScreenWidth(context),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .upload_photo,
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_14,
+                                                color: AppColors.textColor,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      50.height,
+                      CustomButtonWidget(
+                        buttonText: state.isUpdate
+                            ? AppLocalizations.of(context)!.save
+                            : AppLocalizations.of(context)!.continued,
+                        bGColor: AppColors.mainColor,
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            if (state.isUpdate) {
+                              if (state.image.path.isNotEmpty) {
+                                bloc.add(MoreDetailsEvent
+                                    .navigateToOperationTimeScreenEvent(
+                                        context: context));
+                              } else {
+                                showSnackBar(
+                                    context: context,
+                                    title: AppStrings.selectCompanyLogoString,
+                                    bgColor: AppColors.redColor);
+                              }
+                            }
+                          }
+                        },
+                        fontColors: AppColors.whiteColor,
+                      ),
+                      20.height,
+                    ],
+                  ),
                 ),
               ),
             ),

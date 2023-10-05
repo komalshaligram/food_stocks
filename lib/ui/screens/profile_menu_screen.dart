@@ -36,10 +36,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              body: Column(
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            body: SafeArea(
+              child: Column(
                 children: [
                   10.height,
                   Container(
