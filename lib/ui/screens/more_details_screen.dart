@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
@@ -58,7 +57,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
-
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: AppBar(
@@ -114,9 +112,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         height: getScreenHeight(context) * 0.9,
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             7.height,
                                             Container(
@@ -125,10 +123,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       .city,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .mediumFont,
-                                                      color: AppColors
-                                                          .blackColor)),
+                                                          size: AppConstants
+                                                              .mediumFont,
+                                                          color: AppColors
+                                                              .blackColor)),
                                             ),
                                             15.height,
                                             CustomFormField(
@@ -141,71 +139,73 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     .citySearchEvent(
                                                   search: value,
                                                 ));
-                                                list=state.cityList.where((city) => city.contains(value))
+                                                list = state.cityList
+                                                    .where((city) =>
+                                                        city.contains(value))
                                                     .toList();
                                                 print('length:${list.length}');
                                                 listNotifier.value = list;
                                               },
                                               controller: state.cityController,
                                               keyboardType: TextInputType.text,
-                                              hint: AppLocalizations.of(context)!
-                                                  .life_grocery_store,
+                                              hint:
+                                                  AppLocalizations.of(context)!
+                                                      .life_grocery_store,
                                               fillColor: AppColors.whiteColor,
                                               textInputAction:
-                                              TextInputAction.next,
+                                                  TextInputAction.next,
                                               validator: '',
                                               textCapitalization:
-                                              TextCapitalization.words,
+                                                  TextCapitalization.words,
                                               autofocus: true,
                                               cursorColor: AppColors.mainColor,
                                             ),
                                             7.height,
                                             list.isEmpty
                                                 ? Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'Cities not available',
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .smallFont,
-                                                      color: AppColors
-                                                          .textColor),
-                                                ),
-                                              ),
-                                            )
-                                                : ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount:
-                                              list.length,
-                                              itemBuilder:
-                                                  (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                  const EdgeInsets.all(
-                                                      10.0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      bloc.add(MoreDetailsEvent
-                                                          .selectCityEvent(
-                                                          city: list[
-                                                          index]));
-                                                      Navigator.pop(
-                                                          context1);
-
-                                                    },
-                                                    child: Text(
-                                                      list[
-                                                      index],
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .mediumFont),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Cities not available',
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                                size: AppConstants
+                                                                    .smallFont,
+                                                                color: AppColors
+                                                                    .textColor),
+                                                      ),
                                                     ),
+                                                  )
+                                                : ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount: list.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10.0),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            bloc.add(MoreDetailsEvent
+                                                                .selectCityEvent(
+                                                                    city: list[
+                                                                        index],
+                                                                    context:
+                                                                        context));
+                                                            Navigator.pop(
+                                                                context1);
+                                                          },
+                                                          child: Text(
+                                                            list[index],
+                                                            style: AppStyles
+                                                                .rkRegularTextStyle(
+                                                                    size: AppConstants
+                                                                        .mediumFont),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
-                                                );
-                                              },
-                                            ),
                                           ],
                                         ),
                                       ),

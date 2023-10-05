@@ -2,7 +2,15 @@ part of 'file_upload_bloc.dart';
 
 @freezed
 class FileUploadEvent with _$FileUploadEvent {
- factory FileUploadEvent.pickDocumentEvent({
+  factory FileUploadEvent.getFilesDetailsEvent({
+    required BuildContext context,
+  }) = _getFilesDetailsEvent;
+
+  factory FileUploadEvent.getFormsDetailsEvent({
+    required BuildContext context,
+  }) = _getFormsDetailsEvent;
+
+  factory FileUploadEvent.pickDocumentEvent({
     required BuildContext context,
     required int fileIndex,
     required bool isFromCamera,
@@ -23,7 +31,6 @@ class FileUploadEvent with _$FileUploadEvent {
     required int fileIndex,
   }) = _downloadFileEvent;
 
-  factory FileUploadEvent.getProfileFilesAndFormsEvent(
-      {required BuildContext context,
-      required bool isUpdate}) = _getProfileFilesAndFormsEvent;
+  factory FileUploadEvent.getProfileFilesAndFormsEvent({required BuildContext context,
+    required bool isUpdate}) = _getProfileFilesAndFormsEvent;
 }

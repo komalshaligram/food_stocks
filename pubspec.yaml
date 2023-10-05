@@ -48,6 +48,7 @@ dependencies:
   dartz: ^0.10.1
   dotted_border: ^2.0.0+3
   image_picker: ^1.0.4
+  syncfusion_flutter_signaturepad: ^23.1.39
 
   easy_localization: ^3.0.3
   shared_preferences: ^2.2.1

@@ -73,7 +73,7 @@ class LogInScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.connection,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pushNamed(context, RouteDefine.connectScreen.name );
                 },
               ),
             ),
@@ -251,16 +251,22 @@ class LogInScreenWidget extends StatelessWidget {
                         CustomButtonWidget(
                           buttonText: AppLocalizations.of(context)!.continued,
                           bGColor: AppColors.mainColor,
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ??
-                                false || state.mobileErrorMessage.isNotEmpty) {
-                              context.read<LogInBloc>().add(
-                                  LogInEvent.logInApiDataEvent(
-                                      contactNumber: phoneController.text,
-                                      isRegister: isRegister,
-                                      context: context));
-                            }
-                          },
+                          isLoading: state.isLoading,
+                          onPressed: state.isLoading
+                              ? null
+                              : () {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    if (state.mobileErrorMessage.isEmpty) {
+                                      context.read<LogInBloc>().add(
+                                          LogInEvent.logInApiDataEvent(
+                                              contactNumber:
+                                                  phoneController.text,
+                                              isRegister: isRegister,
+                                              context: context));
+                                    }
+                                  }
+                                },
                           fontColors: AppColors.whiteColor,
                         ),
                       ],

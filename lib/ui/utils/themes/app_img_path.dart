@@ -16,10 +16,13 @@ class AppImagePath {
   static const String scan = 'assets/images/scan.svg';
   static const String filter = 'assets/images/filter.svg';
   static const String camera = 'assets/images/camera.svg';
+  static const String signature = 'assets/images/signature.svg';
 
   ///pngs
   static const String profileImage = 'assets/images/profile_image.png';
   static const String companyLogo = 'assets/images/company_logo.png';
   static const String product1 = 'assets/images/product1.png';
   static const String product2 = 'assets/images/product2.png';
+  static const String product3 = 'assets/images/product3.png';
+
 }
