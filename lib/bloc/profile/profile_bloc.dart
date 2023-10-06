@@ -22,6 +22,7 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
+import '../../data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 
@@ -55,7 +56,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               imageSize.split(' ').last == 'KB') {
             try {
               final response = await DioClient().uploadFileProgressWithFormData(
-                path: AppUrls.FileUploadUrl,
+                path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
                     AppStrings.profileImageString: await MultipartFile.fromFile(
@@ -123,6 +124,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               israelId: true,
               lastSeen: DateTime.now(),
               tokenId: '60abf964173234001c903a05',
+
             ),
             contactName: state.contactController.text);
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,

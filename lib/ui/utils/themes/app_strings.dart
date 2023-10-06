@@ -10,13 +10,17 @@ class AppStrings {
   static const androidString = 'Android';
   static const iosString = 'IOS';
 
-
   //api req param strings
   static const profileImageString = 'profileImg';
   static const promissoryNoteString = 'promissoryNote';
   static const personalGuaranteeString = 'personalGuarantee';
   static const israelIdImageString = 'israelIdImage';
   static const businessCertificateString = 'businessCertificate';
+  static const messageString = 'message';
+  static const fileString = 'file';
+  static const filesString = 'files';
+  static const formString = 'form';
+  static const formsString = 'forms';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

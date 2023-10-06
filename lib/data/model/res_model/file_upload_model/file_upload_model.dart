@@ -15,7 +15,7 @@ String fileUploadModelToJson(FileUploadModel data) => json.encode(data.toJson())
 @freezed
 class FileUploadModel with _$FileUploadModel {
   const factory FileUploadModel({
-  /*  @JsonKey(name: "BaseURL") String? baseUrl,
+    @JsonKey(name: "BaseURL") String? baseUrl,
     @JsonKey(name: "personalGuaranteeFileName")
     String? personalGuaranteeFileName,
     @JsonKey(name: "promissoryNoteFileName") String? promissoryNoteFileName,
@@ -25,11 +25,7 @@ class FileUploadModel with _$FileUploadModel {
     @JsonKey(name: "full_logoFileName") String? fullLogoFileName,
     @JsonKey(name: "documentFileName") String? documentFileName,
     @JsonKey(name: "logoFileName") String? logoFileName,
-    @JsonKey(name: "profile_imgFileName") String? profileImgFileName,*/
-    @JsonKey(name: "baseURL")
-    String? baseUrl,
-    @JsonKey(name: "filepath")
-    String? filepath,
+    @JsonKey(name: "profile_imgFileName") String? profileImgFileName,
   }) = _FileUploadModel;
 
   factory FileUploadModel.fromJson(Map<String, dynamic> json) => _$FileUploadModelFromJson(json);
