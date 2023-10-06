@@ -3,9 +3,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/form_and_file_model.dart';
+import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';
 import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
 import 'package:food_stock/data/model/res_model/files_res_model/files_res_model.dart';
 import 'package:food_stock/data/model/res_model/forms_res_model/forms_res_model.dart';
+import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:http_parser/http_parser.dart';
@@ -16,6 +19,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -32,6 +36,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
       if (event is _getFormsListEvent) {
+        emit(state.copyWith(isLoading: true));
         try {
           final res = await DioClient().get(path: AppUrls.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
@@ -46,20 +51,24 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   name: response.data?.clientForms?[i].formName));
               debugPrint('formList[$i] = ${formsList[i].name}');
             }
-            emit(state.copyWith(formsAndFilesList: formsList));
+            emit(
+                state.copyWith(formsAndFilesList: formsList, isLoading: false));
           } else {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
+          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _getFilesListEvent) {
+        emit(state.copyWith(isLoading: true));
         try {
           final res = await DioClient().get(path: AppUrls.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
@@ -74,18 +83,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   name: response.data?.clientFiles?[i].fileName));
               debugPrint('fileList[$i] = ${filesList[i].name}');
             }
-            emit(state.copyWith(formsAndFilesList: filesList));
+            emit(
+                state.copyWith(formsAndFilesList: filesList, isLoading: false));
           } else {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
+          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _pickDocumentEvent) {
         XFile? pickedFile;
@@ -134,9 +146,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 contentType: MediaType('image', 'png'),
               )
             });
-            debugPrint('file name = ${formAndFileList[event.fileIndex].name}');
             final res = await DioClient().uploadFileProgressWithFormData(
-              path: AppUrls.FileUploadUrl,
+              path: AppUrls.fileUploadUrl,
               formData: formData,
             );
             FileUploadResModel response = FileUploadResModel.fromJson(res);
@@ -146,6 +157,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? pickedFile.path;
               debugPrint(
                   'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
+              emit(state.copyWith(formsAndFilesList: []));
               emit(state.copyWith(formsAndFilesList: formAndFileList));
             } else {
               showSnackBar(
@@ -162,93 +174,84 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
-        // try {
-        //   Map<String, MultipartFile> files = {};
-        //   if (state.promissoryNote.path != '' ||
-        //       state.promissoryNote.path.isNotEmpty) {
-        //     files[AppStrings.promissoryNoteString] =
-        //         await MultipartFile.fromFile(
-        //       state.promissoryNote.path,
-        //       contentType: MediaType('image', 'png'),
-        //     );
-        //   }
-        //   if (state.personalGuarantee.path != '' ||
-        //       state.personalGuarantee.path.isNotEmpty) {
-        //     files[AppStrings.personalGuaranteeString] =
-        //         await MultipartFile.fromFile(
-        //       state.personalGuarantee.path,
-        //       contentType: MediaType('image', 'png'),
-        //     );
-        //   }
-        //   if (state.photoOfTZ.path != '' || state.photoOfTZ.path.isNotEmpty) {
-        //     files[AppStrings.israelIdImageString] =
-        //         await MultipartFile.fromFile(
-        //       state.photoOfTZ.path,
-        //       contentType: MediaType('image', 'png'),
-        //     );
-        //   }
-        //   if (state.businessCertificate.path != '' ||
-        //       state.businessCertificate.path.isNotEmpty) {
-        //     files[AppStrings.businessCertificateString] =
-        //         await MultipartFile.fromFile(
-        //       state.businessCertificate.path,
-        //       contentType: MediaType('image', 'png'),
-        //     );
-        //   }
-        //   if (files.isEmpty) {
-        //     if (state.isUpdate) {
-        //       showSnackBar(
-        //           context: event.context,
-        //           title: AppStrings.updateSuccessString,
-        //           bgColor: AppColors.mainColor);
-        //       Navigator.pop(event.context);
-        //     } else {
-        //       showSnackBar(
-        //           context: event.context,
-        //           title: AppStrings.registerSuccessString,
-        //           bgColor: AppColors.mainColor);
-        //       Navigator.popUntil(event.context,
-        //           (route) => route.name == RouteDefine.connectScreen.name);
-        //       Navigator.pushNamed(
-        //           event.context, RouteDefine.bottomNavScreen.name);
-        //     }
-        //     return;
-        //   }
-        //   FormData formData = FormData.fromMap(files);
-        //   final response = await DioClient().uploadFileProgressWithFormData(
-        //     path: AppUrls.FileUploadUrl,
-        //     formData: formData,
-        //   );
-        //   FileUploadModel fileUploadModel = FileUploadModel.fromJson(response);
-        //   if (fileUploadModel.baseUrl?.isNotEmpty ?? false) {
-        //     if (state.isUpdate) {
-        //       showSnackBar(
-        //           context: event.context,
-        //           title: AppStrings.updateSuccessString,
-        //           bgColor: AppColors.mainColor);
-        //       Navigator.pop(event.context);
-        //     } else {
-        //       showSnackBar(
-        //           context: event.context,
-        //           title: AppStrings.registerSuccessString,
-        //           bgColor: AppColors.mainColor);
-        //       Navigator.popUntil(event.context,
-        //           (route) => route.name == RouteDefine.connectScreen.name);
-        //       Navigator.pushNamed(
-        //           event.context, RouteDefine.bottomNavScreen.name);
-        //     }
-        //   } else {
-        //     showSnackBar(
-        //         context: event.context,
-        //         title: AppStrings.filesNotUploadString,
-        //         bgColor: AppColors.mainColor);
-        //   }
-        // } on ServerException {
-        //   showSnackBar(
-        //       context: event.context,
-        //       title: AppStrings.registerSuccessString,
-        //       bgColor: AppColors.redColor);
-        // }
+        try {
+          Map<String, Map<String, dynamic>> formsAndFiles = {
+            AppStrings.formsString: {},
+            AppStrings.filesString: {}
+          };
+          for (int i = 0; i < state.formsAndFilesList.length; i++) {
+            debugPrint('url = ${state.formsAndFilesList[i].url}');
+            if (state.formsAndFilesList[i].url?.isNotEmpty ?? false) {
+              if (state.formsAndFilesList[i].isForm ?? false) {
+                formsAndFiles[AppStrings.formsString]
+                        ?[state.formsAndFilesList[i].id ?? ''] =
+                    state.formsAndFilesList[i].url ?? '';
+              } else {
+                formsAndFiles[AppStrings.filesString]
+                        ?[state.formsAndFilesList[i].id ?? ''] =
+                    state.formsAndFilesList[i].url ?? '';
+              }
+            }
+          }
+          debugPrint('req json = ${formsAndFiles}');
+          if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
+              (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
+            if (state.isUpdate) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.updateSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.registerSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
+            }
+            return;
+          }
+          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+              prefs: await SharedPreferences.getInstance());
+          debugPrint(
+              "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}");
+          final res = await DioClient().post(
+            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+            data: formsAndFiles,
+          );
+          FileUpdateResModel response = FileUpdateResModel.fromJson(res);
+          if (response.status == 200) {
+            if (state.isUpdate) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.updateSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.registerSuccessString,
+                  bgColor: AppColors.mainColor);
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
+            }
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
       } else if (event is _deleteFileEvent) {
         if (event.index == 1) {
           emit(state.copyWith(promissoryNote: File('')));
@@ -307,20 +310,45 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       } else if (event is _getProfileFilesAndFormsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
-        //api call
-        // try {
-        //
-        //   final res = await DioClient().put(
-        //       path: AppUrls.updateProfileDetailsUrl,
-        //       data: {});
-        //
-        //
-        // } on ServerException {
-        //   showSnackBar(
-        //       context: event.context,
-        //       title: AppStrings.somethingWrongString,
-        //       bgColor: AppColors.redColor);
-        // }
+        if (state.isUpdate) {
+          try {
+            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+                data: {'_id': '651bb2f9d2c8a6d5b1c1ff84'});
+            ProfileDetailsResModel response =
+                ProfileDetailsResModel.fromJson(res);
+
+            if (response.status == 200) {
+              List<FormAndFileModel> formsAndFilesList =
+                  state.formsAndFilesList.toList(growable: true);
+              for (int i = 0; i < formsAndFilesList.length; i++) {
+                if (res['data']['clients'][0]['clientDetail']['forms']
+                        [formsAndFilesList[i].id] !=
+                    null) {
+                  formsAndFilesList[i].url = res['data']['clients'][0]
+                      ['clientDetail']['forms'][formsAndFilesList[i].id];
+                } else if (res['data']['clients'][0]['clientDetail']['files']
+                        [formsAndFilesList[i].id] !=
+                    null) {
+                  formsAndFilesList[i].url = res['data']['clients'][0]
+                      ['clientDetail']['files'][formsAndFilesList[i].id];
+                }
+                debugPrint('url = ${formsAndFilesList[i].url}');
+              }
+              emit(state.copyWith(formsAndFilesList: []));
+              emit(state.copyWith(formsAndFilesList: formsAndFilesList));
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+            }
+          } on ServerException {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        }
       }
     });
   }

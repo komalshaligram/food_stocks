@@ -50,7 +50,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               imageSize.split(' ').last == 'KB') {
             try {
               final response = await DioClient().uploadFileProgressWithFormData(
-                path: AppUrls.FileUploadUrl,
+                path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
                     AppStrings.profileImageString: await MultipartFile.fromFile(

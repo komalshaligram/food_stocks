@@ -30,8 +30,7 @@ class FileUploadScreen extends StatelessWidget {
     debugPrint(
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
     return BlocProvider(
-      create: (context) =>
-      FileUploadBloc()
+      create: (context) => FileUploadBloc()
         ..add(FileUploadEvent.getFormsListEvent(context: context))
         ..add(FileUploadEvent.getFilesListEvent(context: context))
         ..add(FileUploadEvent.getProfileFilesAndFormsEvent(
@@ -82,37 +81,52 @@ class FileUploadScreenWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    state.formsAndFilesList.isEmpty
+                    state.isLoading
                         ? Container(
                             height: getScreenHeight(context),
                             width: getScreenWidth(context),
                             child: Center(
-                              child: Text(
-                                'No Files And Forms available',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
-                                    color: AppColors.textColor),
+                              child: CupertinoActivityIndicator(
+                                color: AppColors.blackColor,
                               ),
                             ),
                           )
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.formsAndFilesList.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return buildFormsAndFilesUploadFields(
-                                fileIndex: index,
-                                context: context,
-                                fileName:
-                                    state.formsAndFilesList[index].name ?? '',
-                                url: state.formsAndFilesList[index].localUrl ??
-                                    '',
-                                isDownloadable: state.formsAndFilesList[index]
-                                        .isDownloadable ??
-                                    false,
-                              );
-                            },
-                          ),
+                        : state.formsAndFilesList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context),
+                                width: getScreenWidth(context),
+                                child: Center(
+                                  child: Text(
+                                    'No Files And Forms available',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: state.formsAndFilesList.length,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return buildFormsAndFilesUploadFields(
+                                    fileIndex: index,
+                                    context: context,
+                                    fileName:
+                                        state.formsAndFilesList[index].name ??
+                                            '',
+                                    url: state.formsAndFilesList[index].url ??
+                                        '',
+                                    localUrl: state.formsAndFilesList[index]
+                                            .localUrl ??
+                                        '',
+                                    isDownloadable: state
+                                            .formsAndFilesList[index]
+                                            .isDownloadable ??
+                                        false,
+                                  );
+                                },
+                              ),
                     // 10.height,
                     // buildFileUploadFields(
                     //   fileIndex: 1,
@@ -189,6 +203,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String url,
     required bool isDownloadable,
+    required String localUrl,
   }) {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.padding_10),
@@ -211,17 +226,17 @@ class FileUploadScreenWidget extends StatelessWidget {
                 ),
                 isDownloadable
                     ? ButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.taken_down,
-                  fontSize: AppConstants.smallFont,
-                  radius: AppConstants.radius_5,
-                  bGColor: AppColors.blueColor,
-                  onPressed: () {
-                    context.read<FileUploadBloc>().add(
-                        FileUploadEvent.downloadFileEvent(
-                            context: context, fileIndex: 4));
-                  },
-                  fontColors: AppColors.whiteColor,
-                )
+                        buttonText: AppLocalizations.of(context)!.taken_down,
+                        fontSize: AppConstants.smallFont,
+                        radius: AppConstants.radius_5,
+                        bGColor: AppColors.blueColor,
+                        onPressed: () {
+                          context.read<FileUploadBloc>().add(
+                              FileUploadEvent.downloadFileEvent(
+                                  context: context, fileIndex: 4));
+                        },
+                        fontColors: AppColors.whiteColor,
+                      )
                     : 0.height,
               ],
             ),
@@ -242,83 +257,83 @@ class FileUploadScreenWidget extends StatelessWidget {
                     showModalBottomSheet(
                         context: context,
                         builder: (context1) => Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topRight:
-                                Radius.circular(AppConstants.radius_20),
-                                topLeft: Radius.circular(
-                                    AppConstants.radius_20)),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_30,
-                              vertical: AppConstants.padding_20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!.upload_photo,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.bold),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.only(
+                                    topRight:
+                                        Radius.circular(AppConstants.radius_20),
+                                    topLeft: Radius.circular(
+                                        AppConstants.radius_20)),
                               ),
-                              30.height,
-                              FileSelectionOptionWidget(
-                                  title:
-                                  AppLocalizations.of(context)!.camera,
-                                  icon: Icons.camera,
-                                  onTap: () {
-                                    context.read<FileUploadBloc>().add(
-                                        FileUploadEvent.pickDocumentEvent(
-                                            context: context,
-                                            isFromCamera: true,
-                                            fileIndex: fileIndex,
-                                            isDocument: false));
-                                    Navigator.pop(context1);
-                                  }),
-                              FileSelectionOptionWidget(
-                                  title:
-                                  AppLocalizations.of(context)!.gallery,
-                                  icon: Icons.photo,
-                                  onTap: () {
-                                    context.read<FileUploadBloc>().add(
-                                        FileUploadEvent.pickDocumentEvent(
-                                            context: context,
-                                            isFromCamera: false,
-                                            fileIndex: fileIndex,
-                                            isDocument: false));
-                                    Navigator.pop(context1);
-                                  }),
-                              FileSelectionOptionWidget(
-                                  title: "Document",
-                                  icon: Icons.file_open_rounded,
-                                  onTap: () {
-                                    context.read<FileUploadBloc>().add(
-                                        FileUploadEvent.pickDocumentEvent(
-                                            context: context,
-                                            isFromCamera: false,
-                                            fileIndex: fileIndex,
-                                            isDocument: true));
-                                    Navigator.pop(context);
-                                  }),
-                              FileSelectionOptionWidget(
-                                  title: AppLocalizations.of(context)!
-                                      .taken_down,
-                                  icon: Icons.delete,
-                                  onTap: () {
-                                    context.read<FileUploadBloc>().add(
+                              clipBehavior: Clip.hardEdge,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_30,
+                                  vertical: AppConstants.padding_20),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.upload_photo,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  30.height,
+                                  FileSelectionOptionWidget(
+                                      title:
+                                          AppLocalizations.of(context)!.camera,
+                                      icon: Icons.camera,
+                                      onTap: () {
+                                        context.read<FileUploadBloc>().add(
+                                            FileUploadEvent.pickDocumentEvent(
+                                                context: context,
+                                                isFromCamera: true,
+                                                fileIndex: fileIndex,
+                                                isDocument: false));
+                                        Navigator.pop(context1);
+                                      }),
+                                  FileSelectionOptionWidget(
+                                      title:
+                                          AppLocalizations.of(context)!.gallery,
+                                      icon: Icons.photo,
+                                      onTap: () {
+                                        context.read<FileUploadBloc>().add(
+                                            FileUploadEvent.pickDocumentEvent(
+                                                context: context,
+                                                isFromCamera: false,
+                                                fileIndex: fileIndex,
+                                                isDocument: false));
+                                        Navigator.pop(context1);
+                                      }),
+                                  FileSelectionOptionWidget(
+                                      title: "Document",
+                                      icon: Icons.file_open_rounded,
+                                      onTap: () {
+                                        context.read<FileUploadBloc>().add(
+                                            FileUploadEvent.pickDocumentEvent(
+                                                context: context,
+                                                isFromCamera: false,
+                                                fileIndex: fileIndex,
+                                                isDocument: true));
+                                        Navigator.pop(context);
+                                      }),
+                                  FileSelectionOptionWidget(
+                                      title: AppLocalizations.of(context)!
+                                          .taken_down,
+                                      icon: Icons.delete,
+                                      onTap: () {
+                                        context.read<FileUploadBloc>().add(
                                             FileUploadEvent.deleteFileEvent(
                                                 index: fileIndex));
                                         Navigator.pop(context);
                                       }),
-                            ],
-                          ),
-                        ),
+                                ],
+                              ),
+                            ),
                         backgroundColor: Colors.transparent);
                   },
-                  child: url != ""
+                  child: url.isNotEmpty
                       ? Container(
                           height: 150,
                           color: AppColors.whiteColor,
@@ -337,7 +352,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     ),
                                     5.height,
                                     Text(
-                                      "$fileName.${url.split('.').last}",
+                                      "${url.split('.').first.split('/').last}.${url.split('.').last}",
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.textColor,
@@ -347,11 +362,29 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     ),
                                   ],
                                 )
-                              : Image.file(
-                                  File(url),
-                                  fit: BoxFit.cover,
-                                  width: double.maxFinite,
-                                ),
+                              : url.contains('temp')
+                                  ? Image.file(
+                                      File(localUrl),
+                                      fit: BoxFit.cover,
+                                      width: double.maxFinite,
+                                    )
+                                  : Image.network(
+                                      "${AppUrls.baseFileUrl}$url",
+                                      fit: BoxFit.cover,
+                                      width: double.maxFinite,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: CupertinoActivityIndicator(
+                                              color: AppColors.blackColor,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
                         )
                       : Container(
                           height: 150,
@@ -692,257 +725,257 @@ class FileUploadScreenWidget extends StatelessWidget {
 // }
 }
 
-class ContainerWidget extends StatelessWidget {
-  final int fileIndex;
-
-  ContainerWidget({super.key, required this.fileIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<FileUploadBloc, FileUploadState>(
-      builder: (context, state) {
-        return Container(
-          height: getScreenHeight(context) * 0.2,
-          alignment: Alignment.center,
-          child: DottedBorder(
-            color: state.promissoryNote.path == "" && fileIndex == 1
-                ? AppColors.borderColor
-                : state.personalGuarantee.path == "" && fileIndex == 2
-                    ? AppColors.borderColor
-                    : state.photoOfTZ.path == "" && fileIndex == 3
-                        ? AppColors.borderColor
-                        : state.businessCertificate.path == "" && fileIndex == 4
-                            ? AppColors.borderColor
-                            : AppColors.whiteColor,
-            strokeWidth: state.promissoryNote.path == "" && fileIndex == 1
-                ? 2
-                : state.personalGuarantee.path == "" && fileIndex == 2
-                    ? 2
-                    : state.photoOfTZ.path == "" && fileIndex == 3
-                        ? 2
-                        : state.businessCertificate.path == "" && fileIndex == 4
-                            ? 2
-                            : 0,
-            dashPattern: state.promissoryNote.path == "" && fileIndex == 1
-                ? [5, 3]
-                : state.personalGuarantee.path == "" && fileIndex == 2
-                    ? [5, 3]
-                    : state.photoOfTZ.path == "" && fileIndex == 3
-                        ? [5, 3]
-                        : state.businessCertificate.path == "" && fileIndex == 4
-                            ? [5, 3]
-                            : [1, 0],
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(
-                                          AppConstants.radius_20),
-                                      topLeft: Radius.circular(
-                                          AppConstants.radius_20)),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConstants.padding_30,
-                                    vertical: AppConstants.padding_20),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .upload_photo,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.normalFont,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    30.height,
-                                    FileSelectionOptionWidget(
-                                        title: AppLocalizations.of(context)!
-                                            .camera,
-                                        icon: Icons.camera,
-                                        onTap: () {
-                                          context.read<FileUploadBloc>().add(
-                                              FileUploadEvent.pickDocumentEvent(
-                                                  context: context,
-                                                  isFromCamera: true,
-                                                  fileIndex: fileIndex,
-                                                  isDocument: false));
-                                          Navigator.pop(context);
-                                        }),
-                                    FileSelectionOptionWidget(
-                                        title: AppLocalizations.of(context)!
-                                            .gallery,
-                                        icon: Icons.photo,
-                                        onTap: () {
-                                          context.read<FileUploadBloc>().add(
-                                              FileUploadEvent.pickDocumentEvent(
-                                                  context: context,
-                                                  isFromCamera: false,
-                                                  fileIndex: fileIndex,
-                                                  isDocument: false));
-                                          Navigator.pop(context);
-                                        }),
-                                    FileSelectionOptionWidget(
-                                        title: AppLocalizations.of(context)!
-                                            .gallery,
-                                        icon: Icons.file_open_rounded,
-                                        onTap: () {
-                                          context.read<FileUploadBloc>().add(
-                                              FileUploadEvent.pickDocumentEvent(
-                                                  context: context,
-                                                  isFromCamera: false,
-                                                  fileIndex: fileIndex,
-                                                  isDocument: true));
-                                          Navigator.pop(context);
-                                        }),
-                                  ],
-                                ),
-                              ),
-                          backgroundColor: Colors.transparent);
-                      // showAlertDialogBox(context, fileIndex);
-                    },
-                    child: state.promissoryNote.path != "" && fileIndex == 1
-                        ? SizedBox(
-                            height: 130,
-                            width: getScreenWidth(context),
-                            child: state.isPromissoryNoteDocument
-                                ? Text(
-                                    state.promissoryNote.path.split('/').last)
-                                : Image.file(
-                                    File(state.promissoryNote.path),
-                                    fit: BoxFit.fill,
-                                  ))
-                        : state.personalGuarantee.path != "" && fileIndex == 2
-                            ? SizedBox(
-                                height: 130,
-                                width: getScreenWidth(context),
-                                child: state.isPersonalGuaranteeDocument
-                                    ? Text(state.personalGuarantee.path
-                                        .split('/')
-                                        .last)
-                                    : Image.file(
-                                        File(state.personalGuarantee.path),
-                                        fit: BoxFit.fill,
-                                      ))
-                            : state.photoOfTZ.path != "" && fileIndex == 3
-                                ? SizedBox(
-                                    height: 130,
-                                    width: getScreenWidth(context),
-                                    child: state.isPhotoOfTZDocument
-                                        ? Text(state.photoOfTZ.path
-                                            .split('/')
-                                            .last)
-                                        : Image.file(
-                                            File(state.photoOfTZ.path),
-                                            fit: BoxFit.fill,
-                                          ))
-                                : state.businessCertificate.path != "" &&
-                                        fileIndex == 4
-                                    ? SizedBox(
-                                        height: 130,
-                                        width: getScreenWidth(context),
-                                        child:
-                                            state.isBusinessCertificateDocument
-                                                ? Text(state
-                                                    .businessCertificate.path
-                                                    .split('/')
-                                                    .last)
-                                                : Image.file(
-                                                    File(state
-                                                        .businessCertificate
-                                                        .path),
-                                                    fit: BoxFit.fill,
-                                                  ))
-                                    : Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.camera_alt_rounded,
-                                            color: AppColors.blueColor,
-                                            size: 30,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .upload_photo,
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.font_14,
-                                                color: AppColors.textColor,
-                                                fontWeight: FontWeight.w400),
-                                            textAlign: TextAlign.center,
-                                          )
-                                        ],
-                                      )),
-                // state.promissoryNote.path == "" && fileIndex == 1
-                //     ? Container(
-                //         width: screenWidth,
-                //         alignment: Alignment.center,
-                //         child: Text(
-                //           AppLocalizations.of(context)!.upload_photo,
-                //           style: AppStyles.rkRegularTextStyle(
-                //               size: AppConstants.font_14,
-                //               color: AppColors.textColor,
-                //               fontWeight: FontWeight.w400),
-                //         ),
-                //       )
-                //     : state.personalGuarantee.path == "" && fileIndex == 2
-                //         ? Container(
-                //             width: screenWidth,
-                //             alignment: Alignment.center,
-                //             child: Text(
-                //               AppLocalizations.of(context)!.upload_photo,
-                //               style: AppStyles.rkRegularTextStyle(
-                //                   size: AppConstants.font_14,
-                //                   color: AppColors.textColor,
-                //                   fontWeight: FontWeight.w400),
-                //             ),
-                //           )
-                //         : state.photoOfTZ.path == "" && fileIndex == 3
-                //             ? Container(
-                //                 width: screenWidth,
-                //                 alignment: Alignment.center,
-                //                 child: Text(
-                //                   AppLocalizations.of(context)!.upload_photo,
-                //                   style: AppStyles.rkRegularTextStyle(
-                //                       size: AppConstants.font_14,
-                //                       color: AppColors.textColor,
-                //                       fontWeight: FontWeight.w400),
-                //                 ),
-                //               )
-                //             : state.businessCertificate.path == "" &&
-                //                     fileIndex == 4
-                //                 ? Container(
-                //                     width: screenWidth,
-                //                     alignment: Alignment.center,
-                //                     child: Text(
-                //                       AppLocalizations.of(context)!
-                //                           .upload_photo,
-                //                       style: AppStyles.rkRegularTextStyle(
-                //                           size: AppConstants.font_14,
-                //                           color: AppColors.textColor,
-                //                           fontWeight: FontWeight.w400),
-                //                     ),
-                //                   )
-                //                 : const SizedBox()
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
+// class ContainerWidget extends StatelessWidget {
+//   final int fileIndex;
+//
+//   ContainerWidget({super.key, required this.fileIndex});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<FileUploadBloc, FileUploadState>(
+//       builder: (context, state) {
+//         return Container(
+//           height: getScreenHeight(context) * 0.2,
+//           alignment: Alignment.center,
+//           child: DottedBorder(
+//             color: state.promissoryNote.path == "" && fileIndex == 1
+//                 ? AppColors.borderColor
+//                 : state.personalGuarantee.path == "" && fileIndex == 2
+//                     ? AppColors.borderColor
+//                     : state.photoOfTZ.path == "" && fileIndex == 3
+//                         ? AppColors.borderColor
+//                         : state.businessCertificate.path == "" && fileIndex == 4
+//                             ? AppColors.borderColor
+//                             : AppColors.whiteColor,
+//             strokeWidth: state.promissoryNote.path == "" && fileIndex == 1
+//                 ? 2
+//                 : state.personalGuarantee.path == "" && fileIndex == 2
+//                     ? 2
+//                     : state.photoOfTZ.path == "" && fileIndex == 3
+//                         ? 2
+//                         : state.businessCertificate.path == "" && fileIndex == 4
+//                             ? 2
+//                             : 0,
+//             dashPattern: state.promissoryNote.path == "" && fileIndex == 1
+//                 ? [5, 3]
+//                 : state.personalGuarantee.path == "" && fileIndex == 2
+//                     ? [5, 3]
+//                     : state.photoOfTZ.path == "" && fileIndex == 3
+//                         ? [5, 3]
+//                         : state.businessCertificate.path == "" && fileIndex == 4
+//                             ? [5, 3]
+//                             : [1, 0],
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 GestureDetector(
+//                     onTap: () {
+//                       showModalBottomSheet(
+//                           context: context,
+//                           builder: (context) => Container(
+//                                 decoration: BoxDecoration(
+//                                   color: AppColors.whiteColor,
+//                                   borderRadius: BorderRadius.only(
+//                                       topRight: Radius.circular(
+//                                           AppConstants.radius_20),
+//                                       topLeft: Radius.circular(
+//                                           AppConstants.radius_20)),
+//                                 ),
+//                                 clipBehavior: Clip.hardEdge,
+//                                 padding: EdgeInsets.symmetric(
+//                                     horizontal: AppConstants.padding_30,
+//                                     vertical: AppConstants.padding_20),
+//                                 child: Column(
+//                                   mainAxisSize: MainAxisSize.min,
+//                                   children: [
+//                                     Text(
+//                                       AppLocalizations.of(context)!
+//                                           .upload_photo,
+//                                       style: AppStyles.rkRegularTextStyle(
+//                                           size: AppConstants.normalFont,
+//                                           color: AppColors.blackColor,
+//                                           fontWeight: FontWeight.bold),
+//                                     ),
+//                                     30.height,
+//                                     FileSelectionOptionWidget(
+//                                         title: AppLocalizations.of(context)!
+//                                             .camera,
+//                                         icon: Icons.camera,
+//                                         onTap: () {
+//                                           context.read<FileUploadBloc>().add(
+//                                               FileUploadEvent.pickDocumentEvent(
+//                                                   context: context,
+//                                                   isFromCamera: true,
+//                                                   fileIndex: fileIndex,
+//                                                   isDocument: false));
+//                                           Navigator.pop(context);
+//                                         }),
+//                                     FileSelectionOptionWidget(
+//                                         title: AppLocalizations.of(context)!
+//                                             .gallery,
+//                                         icon: Icons.photo,
+//                                         onTap: () {
+//                                           context.read<FileUploadBloc>().add(
+//                                               FileUploadEvent.pickDocumentEvent(
+//                                                   context: context,
+//                                                   isFromCamera: false,
+//                                                   fileIndex: fileIndex,
+//                                                   isDocument: false));
+//                                           Navigator.pop(context);
+//                                         }),
+//                                     FileSelectionOptionWidget(
+//                                         title: AppLocalizations.of(context)!
+//                                             .gallery,
+//                                         icon: Icons.file_open_rounded,
+//                                         onTap: () {
+//                                           context.read<FileUploadBloc>().add(
+//                                               FileUploadEvent.pickDocumentEvent(
+//                                                   context: context,
+//                                                   isFromCamera: false,
+//                                                   fileIndex: fileIndex,
+//                                                   isDocument: true));
+//                                           Navigator.pop(context);
+//                                         }),
+//                                   ],
+//                                 ),
+//                               ),
+//                           backgroundColor: Colors.transparent);
+//                       // showAlertDialogBox(context, fileIndex);
+//                     },
+//                     child: state.promissoryNote.path != "" && fileIndex == 1
+//                         ? SizedBox(
+//                             height: 130,
+//                             width: getScreenWidth(context),
+//                             child: state.isPromissoryNoteDocument
+//                                 ? Text(
+//                                     state.promissoryNote.path.split('/').last)
+//                                 : Image.file(
+//                                     File(state.promissoryNote.path),
+//                                     fit: BoxFit.fill,
+//                                   ))
+//                         : state.personalGuarantee.path != "" && fileIndex == 2
+//                             ? SizedBox(
+//                                 height: 130,
+//                                 width: getScreenWidth(context),
+//                                 child: state.isPersonalGuaranteeDocument
+//                                     ? Text(state.personalGuarantee.path
+//                                         .split('/')
+//                                         .last)
+//                                     : Image.file(
+//                                         File(state.personalGuarantee.path),
+//                                         fit: BoxFit.fill,
+//                                       ))
+//                             : state.photoOfTZ.path != "" && fileIndex == 3
+//                                 ? SizedBox(
+//                                     height: 130,
+//                                     width: getScreenWidth(context),
+//                                     child: state.isPhotoOfTZDocument
+//                                         ? Text(state.photoOfTZ.path
+//                                             .split('/')
+//                                             .last)
+//                                         : Image.file(
+//                                             File(state.photoOfTZ.path),
+//                                             fit: BoxFit.fill,
+//                                           ))
+//                                 : state.businessCertificate.path != "" &&
+//                                         fileIndex == 4
+//                                     ? SizedBox(
+//                                         height: 130,
+//                                         width: getScreenWidth(context),
+//                                         child:
+//                                             state.isBusinessCertificateDocument
+//                                                 ? Text(state
+//                                                     .businessCertificate.path
+//                                                     .split('/')
+//                                                     .last)
+//                                                 : Image.file(
+//                                                     File(state
+//                                                         .businessCertificate
+//                                                         .path),
+//                                                     fit: BoxFit.fill,
+//                                                   ))
+//                                     : Column(
+//                                         crossAxisAlignment:
+//                                             CrossAxisAlignment.stretch,
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.center,
+//                                         children: [
+//                                           Icon(
+//                                             Icons.camera_alt_rounded,
+//                                             color: AppColors.blueColor,
+//                                             size: 30,
+//                                           ),
+//                                           Text(
+//                                             AppLocalizations.of(context)!
+//                                                 .upload_photo,
+//                                             style: AppStyles.rkRegularTextStyle(
+//                                                 size: AppConstants.font_14,
+//                                                 color: AppColors.textColor,
+//                                                 fontWeight: FontWeight.w400),
+//                                             textAlign: TextAlign.center,
+//                                           )
+//                                         ],
+//                                       )),
+//                 // state.promissoryNote.path == "" && fileIndex == 1
+//                 //     ? Container(
+//                 //         width: screenWidth,
+//                 //         alignment: Alignment.center,
+//                 //         child: Text(
+//                 //           AppLocalizations.of(context)!.upload_photo,
+//                 //           style: AppStyles.rkRegularTextStyle(
+//                 //               size: AppConstants.font_14,
+//                 //               color: AppColors.textColor,
+//                 //               fontWeight: FontWeight.w400),
+//                 //         ),
+//                 //       )
+//                 //     : state.personalGuarantee.path == "" && fileIndex == 2
+//                 //         ? Container(
+//                 //             width: screenWidth,
+//                 //             alignment: Alignment.center,
+//                 //             child: Text(
+//                 //               AppLocalizations.of(context)!.upload_photo,
+//                 //               style: AppStyles.rkRegularTextStyle(
+//                 //                   size: AppConstants.font_14,
+//                 //                   color: AppColors.textColor,
+//                 //                   fontWeight: FontWeight.w400),
+//                 //             ),
+//                 //           )
+//                 //         : state.photoOfTZ.path == "" && fileIndex == 3
+//                 //             ? Container(
+//                 //                 width: screenWidth,
+//                 //                 alignment: Alignment.center,
+//                 //                 child: Text(
+//                 //                   AppLocalizations.of(context)!.upload_photo,
+//                 //                   style: AppStyles.rkRegularTextStyle(
+//                 //                       size: AppConstants.font_14,
+//                 //                       color: AppColors.textColor,
+//                 //                       fontWeight: FontWeight.w400),
+//                 //                 ),
+//                 //               )
+//                 //             : state.businessCertificate.path == "" &&
+//                 //                     fileIndex == 4
+//                 //                 ? Container(
+//                 //                     width: screenWidth,
+//                 //                     alignment: Alignment.center,
+//                 //                     child: Text(
+//                 //                       AppLocalizations.of(context)!
+//                 //                           .upload_photo,
+//                 //                       style: AppStyles.rkRegularTextStyle(
+//                 //                           size: AppConstants.font_14,
+//                 //                           color: AppColors.textColor,
+//                 //                           fontWeight: FontWeight.w400),
+//                 //                     ),
+//                 //                   )
+//                 //                 : const SizedBox()
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 // void showAlertDialogBox(BuildContext context, int fileIndex) {
 //   showDialog(

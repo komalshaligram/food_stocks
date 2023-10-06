@@ -18,7 +18,9 @@ class AppStrings {
   static const businessCertificateString = 'businessCertificate';
   static const messageString = 'message';
   static const fileString = 'file';
+  static const filesString = 'files';
   static const formString = 'form';
+  static const formsString = 'forms';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

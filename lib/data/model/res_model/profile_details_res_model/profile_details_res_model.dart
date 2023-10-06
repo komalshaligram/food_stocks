@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'profile_details_res_model.freezed.dart';
-
 part 'profile_details_res_model.g.dart';
 
 ProfileDetailsResModel profileDetailsResModelFromJson(String str) =>
@@ -18,9 +17,9 @@ String profileDetailsResModelToJson(ProfileDetailsResModel data) =>
 @freezed
 class ProfileDetailsResModel with _$ProfileDetailsResModel {
   const factory ProfileDetailsResModel({
-    int? status,
-    Data? data,
-    String? message,
+    @JsonKey(name: "status") int? status,
+    @JsonKey(name: "data") Data? data,
+    @JsonKey(name: "message") String? message,
   }) = _ProfileDetailsResModel;
 
   factory ProfileDetailsResModel.fromJson(Map<String, dynamic> json) =>
@@ -30,10 +29,10 @@ class ProfileDetailsResModel with _$ProfileDetailsResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    List<Client>? clients,
-    int? totalRecords,
-    int? totalPages,
-    int? currentPage,
+    @JsonKey(name: "clients") List<Client>? clients,
+    @JsonKey(name: "totalRecords") int? totalRecords,
+    @JsonKey(name: "totalPages") int? totalPages,
+    @JsonKey(name: "currentPage") int? currentPage,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -43,17 +42,17 @@ class Data with _$Data {
 class Client with _$Client {
   const factory Client({
     @JsonKey(name: "_id") String? id,
-    String? email,
-    String? phoneNumber,
-    String? address,
-    String? contactName,
-    String? logo,
-    String? adminTypeId,
-    ClientDetail? clientDetail,
-    DateTime? updatedAt,
-    RoleDetails? roleDetails,
-    City? city,
-    Status? status,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "phoneNumber") String? phoneNumber,
+    @JsonKey(name: "address") String? address,
+    @JsonKey(name: "contactName") String? contactName,
+    @JsonKey(name: "logo") String? logo,
+    @JsonKey(name: "adminTypeId") String? adminTypeId,
+    @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "roleDetails") RoleDetails? roleDetails,
+    @JsonKey(name: "city") City? city,
+    @JsonKey(name: "status") Status? status,
   }) = _Client;
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
@@ -63,7 +62,7 @@ class Client with _$Client {
 class City with _$City {
   const factory City({
     @JsonKey(name: "_id") String? id,
-    String? cityName,
+    @JsonKey(name: "cityName") String? cityName,
   }) = _City;
 
   factory City.fromJson(Map<String, dynamic> json) => _$CityFromJson(json);
@@ -72,28 +71,30 @@ class City with _$City {
 @freezed
 class ClientDetail with _$ClientDetail {
   const factory ClientDetail({
-    int? bussinessId,
-    String? bussinessName,
-    String? ownerName,
-    String? clientTypeId,
-    String? israelId,
-    String? tokenId,
-    String? fax,
-    DateTime? lastSeen,
-    String? monthlyCredits,
-    String? applicationVersion,
-    String? deviceType,
-    List<OperationTime>? operationTime,
-    String? personalGuarantee,
-    String? promissoryNote,
-    String? businessCertificate,
-    String? israelIdImage,
+    @JsonKey(name: "bussinessId") int? bussinessId,
+    @JsonKey(name: "bussinessName") String? bussinessName,
+    @JsonKey(name: "ownerName") String? ownerName,
+    @JsonKey(name: "clientTypeId") String? clientTypeId,
+    @JsonKey(name: "israelId") String? israelId,
+    @JsonKey(name: "tokenId") String? tokenId,
+    @JsonKey(name: "fax") String? fax,
+    @JsonKey(name: "lastSeen") DateTime? lastSeen,
+    @JsonKey(name: "monthlyCredits") String? monthlyCredits,
+    @JsonKey(name: "applicationVersion") String? applicationVersion,
+    @JsonKey(name: "deviceType") String? deviceType,
+    @JsonKey(name: "operationTime") List<OperationTime>? operationTime,
+    @JsonKey(name: "personalGuarantee") String? personalGuarantee,
+    @JsonKey(name: "promissoryNote") String? promissoryNote,
+    @JsonKey(name: "businessCertificate") String? businessCertificate,
+    @JsonKey(name: "israelIdImage") String? israelIdImage,
+    @JsonKey(name: "forms") Forms? forms,
+    @JsonKey(name: "files") Files? files,
     @JsonKey(name: "_id") String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    List<ClientType>? clientTypes,
-    String? totalExpense,
-    String? expenseByMonth,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "clientTypes") List<ClientType>? clientTypes,
+    @JsonKey(name: "totalExpense") String? totalExpense,
+    @JsonKey(name: "expenseByMonth") String? expenseByMonth,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>
@@ -104,11 +105,11 @@ class ClientDetail with _$ClientDetail {
 class ClientType with _$ClientType {
   const factory ClientType({
     @JsonKey(name: "_id") String? id,
-    String? businessType,
-    String? createdBy,
-    String? updatedBy,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    @JsonKey(name: "businessType") String? businessType,
+    @JsonKey(name: "createdBy") String? createdBy,
+    @JsonKey(name: "updatedBy") String? updatedBy,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
   }) = _ClientType;
 
@@ -117,9 +118,34 @@ class ClientType with _$ClientType {
 }
 
 @freezed
+class Files with _$Files {
+  const factory Files({
+    @JsonKey(name: "651e7ccf30429b3f49e65f08")
+    String? the651E7Ccf30429B3F49E65F08,
+    @JsonKey(name: "651e7cec30429b3f49e65f0a")
+    String? the651E7Cec30429B3F49E65F0A,
+  }) = _Files;
+
+  factory Files.fromJson(Map<String, dynamic> json) => _$FilesFromJson(json);
+}
+
+@freezed
+class Forms with _$Forms {
+  const factory Forms({
+    @JsonKey(name: "651e7c0b30429b3f49e65f03")
+    String? the651E7C0B30429B3F49E65F03,
+    @JsonKey(name: "651e7c8130429b3f49e65f06")
+    String? the651E7C8130429B3F49E65F06,
+  }) = _Forms;
+
+  factory Forms.fromJson(Map<String, dynamic> json) => _$FormsFromJson(json);
+}
+
+@freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
-    @JsonKey(name: "Monday") List<Monday>? monday,
+    @JsonKey(name: "Monday") List<Day>? monday,
+    @JsonKey(name: "Tuesday") List<Day>? tuesday,
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>
@@ -127,20 +153,20 @@ class OperationTime with _$OperationTime {
 }
 
 @freezed
-class Monday with _$Monday {
-  const factory Monday({
-    String? from,
-    String? until,
-  }) = _Monday;
+class Day with _$Day {
+  const factory Day({
+    @JsonKey(name: "from") String? from,
+    @JsonKey(name: "until") String? until,
+  }) = _Day;
 
-  factory Monday.fromJson(Map<String, dynamic> json) => _$MondayFromJson(json);
+  factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
 }
 
 @freezed
 class RoleDetails with _$RoleDetails {
   const factory RoleDetails({
-    String? adminType,
-    String? status,
+    @JsonKey(name: "adminType") String? adminType,
+    @JsonKey(name: "status") String? status,
   }) = _RoleDetails;
 
   factory RoleDetails.fromJson(Map<String, dynamic> json) =>
@@ -151,7 +177,7 @@ class RoleDetails with _$RoleDetails {
 class Status with _$Status {
   const factory Status({
     @JsonKey(name: "_id") String? id,
-    String? statusName,
+    @JsonKey(name: "statusName") String? statusName,
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
