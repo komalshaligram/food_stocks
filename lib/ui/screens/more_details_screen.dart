@@ -399,14 +399,16 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               ),
                                           backgroundColor: Colors.transparent);
                                     },
-                                    child: state.isImagePick
+                                    child: state.isUpdate?SizedBox(
+                                      height: 130,
+                                      width: getScreenWidth(context),
+                                      child: Image.network(
+                                          state.companyLogo),
+                                    ) : state.isImagePick
                                         ? SizedBox(
                                             height: 130,
                                             width: getScreenWidth(context),
-                                            child: state.isUpdate
-                                                ? Image.network(
-                                                    state.companyLogo)
-                                                : Image.file(
+                                            child: Image.file(
                                                     File(state.image.path),
                                                     fit: BoxFit.cover,
                                                   ),
