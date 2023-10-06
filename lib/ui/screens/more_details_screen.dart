@@ -236,6 +236,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       ),
                                     );
                                   });
+
                             },
                           );
                         },

@@ -17,11 +17,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 
@@ -87,8 +85,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-
-          final res = await DioClient().get(path: AppUrls.businessTypesUrl);
+          final res = await DioClient().get(path: AppUrls.businessTypesUrl,context: event.context);
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
               businessTypeList: response,
@@ -124,6 +121,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               israelId: true,
               lastSeen: DateTime.now(),
               tokenId: '60abf964173234001c903a05',
+
             ),
             contactName: state.contactController.text);
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
@@ -192,6 +190,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           final res = await DioClient().post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: updatedProfileModel.toJson());
+
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
