@@ -3,10 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 
 part 'log_in_event.dart';
