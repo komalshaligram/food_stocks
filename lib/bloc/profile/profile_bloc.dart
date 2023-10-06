@@ -82,7 +82,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-          final res = await DioClient().get(path: AppUrls.businessTypesUrl);
+          final res = await DioClient().get(path: AppUrls.businessTypesUrl,context: event.context);
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
               businessTypeList: response,

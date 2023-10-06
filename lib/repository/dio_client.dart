@@ -3,9 +3,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:food_stock/ui/widget/common_alert_dialog.dart';
 import '../ui/utils/themes/app_urls.dart';
 
- class DioClient {
+class DioClient {
   late Dio _dio;
 
   static final DioClient _instance = DioClient._internal();
@@ -50,23 +52,24 @@ import '../ui/utils/themes/app_urls.dart';
     }));
   } //finish internal()
 
-
   Future post(
-      String path, {
-        Object? data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        BuildContext? context,
-      }) async {
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    BuildContext? context,
+  }) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi ) {
+        connectivityResult == ConnectivityResult.wifi) {
       try {
         Options requestOptions = options ?? Options();
         requestOptions.headers = requestOptions.headers ?? {};
 
         var response = await _dio.post(path,
-            data: data, queryParameters: queryParameters, options: requestOptions);
+            data: data,
+            queryParameters: queryParameters,
+            options: requestOptions);
 
         debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
         return response.data;
@@ -75,6 +78,17 @@ import '../ui/utils/themes/app_urls.dart';
       }
     } else {
       debugPrint('error');
+      showDialog(
+        context: context!,
+        builder: (context) => CommonAlertDialog(
+          title: "Network Error!",
+          subTitle: 'No Internet connection.',
+          negativeOnTap: () {
+            Navigator.pop(context);
+          },
+          positiveOnTap: () async {},
+        ),
+      );
       throw Exception("Network Error");
     }
   }
@@ -83,12 +97,12 @@ import '../ui/utils/themes/app_urls.dart';
   Future<Map<String, dynamic>> get({
     required String path,
     Map<String, dynamic>? query,
+    BuildContext? context,
   }) async {
-
     final connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi ) {
+        connectivityResult == ConnectivityResult.wifi) {
       try {
         final response = await _dio.get(
           path,
@@ -101,19 +115,31 @@ import '../ui/utils/themes/app_urls.dart';
       }
     } else {
       debugPrint('error');
+      debugPrint('error');
+      showDialog(
+        context: context!,
+        builder: (context) => CommonAlertDialog(
+          title: "Network Error!",
+          subTitle: 'No Internet connection.',
+          negativeOnTap: () {
+            Navigator.pop(context);
+          },
+          positiveOnTap: () async {},
+        ),
+      );
       throw Exception("Network Error");
     }
   }
 
-
-
-  Future<Map<String, dynamic>> uploadFileProgressWithFormData(
-      {required String path,
-        required FormData formData,}) async {
+  Future<Map<String, dynamic>> uploadFileProgressWithFormData({
+    required String path,
+    required FormData formData,
+  }) async {
     try {
-      final response = await _dio.post(path,
+      final response = await _dio.post(
+        path,
         data: formData,
-       options: Options(
+        options: Options(
           receiveTimeout: const Duration(milliseconds: 60 * 1000),
         ),
       );
@@ -177,7 +203,6 @@ import '../ui/utils/themes/app_urls.dart';
       throw _createErrorEntity(e);
     }
   }
-
 }
 
 class ErrorEntity implements Exception {
@@ -194,8 +219,8 @@ class ErrorEntity implements Exception {
   }
 }
 
-ErrorEntity _createErrorEntity(DioException error){
-  switch(error.type){
+ErrorEntity _createErrorEntity(DioException error) {
+  switch (error.type) {
     case DioExceptionType.connectionTimeout:
       return ErrorEntity(code: -1, message: "Connection timed out");
 
@@ -209,8 +234,7 @@ ErrorEntity _createErrorEntity(DioException error){
       return ErrorEntity(code: -1, message: "Bad SSL certificates");
 
     case DioExceptionType.badResponse:
-
-      switch(error.response!.statusCode){
+      switch (error.response!.statusCode) {
         case 400:
           return ErrorEntity(code: 400, message: "Bad request");
         case 401:
@@ -218,7 +242,8 @@ ErrorEntity _createErrorEntity(DioException error){
         case 500:
           return ErrorEntity(code: 500, message: "Server internal error");
       }
-      return ErrorEntity(code: error.response!.statusCode!, message: "Server bad response");
+      return ErrorEntity(
+          code: error.response!.statusCode!, message: "Server bad response");
 
     case DioExceptionType.cancel:
       return ErrorEntity(code: -1, message: "Server canceled it");
@@ -231,9 +256,9 @@ ErrorEntity _createErrorEntity(DioException error){
   }
 }
 
-void onError(ErrorEntity eInfo){
+void onError(ErrorEntity eInfo) {
   debugPrint('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
-  switch(eInfo.code){
+  switch (eInfo.code) {
     case 400:
       debugPrint("Server syntax error");
       break;
@@ -246,13 +271,5 @@ void onError(ErrorEntity eInfo){
     default:
       debugPrint("Unknown error");
       break;
-
   }
 }
-
-/*
-class ApiController extends _BaseApi {
-  const ApiController() {
-    super.init(version:1);
-  }
-}*/

@@ -8,8 +8,8 @@ class CommonAlertDialog extends StatelessWidget {
   final String subTitle;
   final void Function()? positiveOnTap;
   final void Function()? negativeOnTap;
-  final String positiveTitle;
-  final String negativeTitle;
+  final String? positiveTitle;
+  final String? negativeTitle;
 
   CommonAlertDialog({
     super.key,
@@ -17,8 +17,8 @@ class CommonAlertDialog extends StatelessWidget {
     required this.subTitle,
     this.positiveOnTap,
     this.negativeOnTap,
-    required this.positiveTitle,
-    required this.negativeTitle,
+    this.positiveTitle,
+    this.negativeTitle,
   });
 
   @override
@@ -44,41 +44,49 @@ class CommonAlertDialog extends StatelessWidget {
           bottom: AppConstants.padding_20,
           left: AppConstants.padding_20),
       actions: [
-        InkWell(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: positiveOnTap,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-            width: 80,
-            child: Text(
-              positiveTitle,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.mainColor.withOpacity(0.9),
-                  size: AppConstants.smallFont),
-            ),
-          ),
-        ),
-        InkWell(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: negativeOnTap,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-            alignment: Alignment.center,
-            width: 80,
-            decoration: BoxDecoration(
-                color: AppColors.mainColor.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(8.0)),
-            child: Text(
-              negativeTitle,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.whiteColor, size: AppConstants.smallFont),
-            ),
-          ),
-        ),
+        positiveTitle != null
+            ? InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: positiveOnTap,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  alignment: Alignment.center,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+                  width: 80,
+                  child: Text(
+                    positiveTitle ?? '',
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.mainColor.withOpacity(0.9),
+                        size: AppConstants.smallFont),
+                  ),
+                ),
+              )
+            : Container(),
+        negativeTitle != null
+            ? InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: negativeOnTap,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  alignment: Alignment.center,
+                  width: 80,
+                  decoration: BoxDecoration(
+                      color: AppColors.mainColor.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: Text(
+                    negativeTitle ?? '',
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.whiteColor,
+                        size: AppConstants.smallFont),
+                  ),
+                ),
+              )
+            : Container(),
       ],
     );
   }
