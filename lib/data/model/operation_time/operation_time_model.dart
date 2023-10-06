@@ -36,12 +36,6 @@ class OperationTimeModel{
 
   }
 
-/*class Sunday {
-  String from;
-  String unitl;
-  Sunday({
-     required this.from,required this.unitl
-  });*/
 
 
 

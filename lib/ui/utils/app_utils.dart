@@ -6,8 +6,6 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-enum Language { English, Hebrew }
-
 getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
   return screenHeight;
