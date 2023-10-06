@@ -4,9 +4,13 @@ class AppUrls {
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
   static const String newUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
+  static const String FileUploadUrl = '/v1/files/upload';
+  static const String RegistrationUrl = '/v1/clients/createClient';
+
   static const String fileUploadUrl = '/v1/files/upload';
   static const String fileUpdateUrl = '/v1/admin/updateFiles';
   static const String OperationTimeUrl = '/v1/clients/createClient';
+
   static const String businessTypesUrl = '/v1/settings/ClientTypes';
   static const String getProfileDetailsUrl = '/v1/admin/getAllClients';
   static const String updateProfileDetailsUrl = '/v1/clients/updateClient';
