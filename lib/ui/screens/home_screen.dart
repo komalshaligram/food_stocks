@@ -15,6 +15,7 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+
 class HomeRoute {
   static Widget get route => const HomeScreen();
 }
@@ -25,14 +26,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(),
-      child: const HomeScreenWidget(),
+      create: (context) => HomeBloc()..add(HomeEvent.getPreferencesDataEvent()),
+      child:  HomeScreenWidget(),
     );
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
-  const HomeScreenWidget({super.key});
+   HomeScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +71,12 @@ class HomeScreenWidget extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.hardEdge,
-                              child: Image.asset(
-                                AppImagePath.profileImage,
+                              child: Image.network(
+                                state.UserImageUrl,
                               ),
                             ),
-                            Image.asset(
-                              AppImagePath.companyLogo,
+                            Image.network(
+                              state.UserCompanyLogoUrl,
                               height: 60,
                             ),
                           ],

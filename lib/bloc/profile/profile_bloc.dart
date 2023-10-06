@@ -17,9 +17,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 
@@ -36,6 +38,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
+
       if (event is _pickProfileImageEvent) {
         final pickedFile = await ImagePicker().pickImage(
             source:
@@ -61,9 +66,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               );
               FileUploadModel profileImageModel =
                   FileUploadModel.fromJson(response);
-              debugPrint('img url = ${profileImageModel.profileImgFileName}');
-              if (profileImageModel.profileImgFileName != '') {
-                imgUrl = profileImageModel.profileImgFileName ?? '';
+              debugPrint('img url = ${profileImageModel.filepath}');
+              if (profileImageModel.filepath != '') {
+                imgUrl = profileImageModel.filepath ?? '';
               }
               emit(state.copyWith(
                   image: File(croppedImage?.path ?? pickedFile.path)));
@@ -82,6 +87,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
+
           final res = await DioClient().get(path: AppUrls.businessTypesUrl);
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
@@ -102,20 +108,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             logo: '',
             phoneNumber: mobileNo,
             profileImage: imgUrl,
+            createdBy: '60abf964173234001c903a05',
+            updatedBy: '60abf964173234001c903a05',
             clientDetail: ClientDetail(
               bussinessId: int.tryParse(state.idController.text) ?? 0,
               bussinessName: state.businessNameController.text,
               ownerName: state.ownerNameController.text,
+              clientTypeId: '60abf964173234001c903a05',
               applicationVersion: '1.0.0',
+              monthlyCredits: 100,
               deviceType: Platform.isAndroid
                   ? AppStrings.androidString
                   : AppStrings.iosString,
               fax: '',
               israelId: true,
               lastSeen: DateTime.now(),
-              operationTime: OperationTime(),
               tokenId: '60abf964173234001c903a05',
-
             ),
             contactName: state.contactController.text);
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
@@ -125,8 +133,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
+            emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
             final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: "651bb2f9d2c8a6d5b1c1ff84")
+                data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
@@ -180,11 +189,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           ),
         );
         try {
-          final res = await DioClient().put(
-              path:
-                  AppUrls.updateProfileDetailsUrl + "/651bb2f9d2c8a6d5b1c1ff84",
+          final res = await DioClient().post(
+              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: updatedProfileModel.toJson());
-
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {

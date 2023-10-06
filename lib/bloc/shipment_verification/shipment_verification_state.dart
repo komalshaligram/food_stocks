@@ -4,11 +4,11 @@ part of 'shipment_verification_bloc.dart';
 class ShipmentVerificationState with _$ShipmentVerificationState{
 
    factory ShipmentVerificationState({
-    required bool isSignaturePad,
+    required bool isSignaturePadActive,
 }) = _ShipmentVerificationState;
 
   factory ShipmentVerificationState.initial()=>  ShipmentVerificationState(
- isSignaturePad: false,
+ isSignaturePadActive: false,
 
   );
 

@@ -18,33 +18,34 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$HomeEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() started,
+    required TResult Function() getPreferencesDataEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
+    TResult? Function()? getPreferencesDataEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
+    TResult Function()? getPreferencesDataEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -68,34 +69,36 @@ class _$HomeEventCopyWithImpl<$Res, $Val extends HomeEvent>
 }
 
 /// @nodoc
-abstract class _$$_StartedCopyWith<$Res> {
-  factory _$$_StartedCopyWith(
-          _$_Started value, $Res Function(_$_Started) then) =
-      __$$_StartedCopyWithImpl<$Res>;
+abstract class _$$_getPreferencesDataEventCopyWith<$Res> {
+  factory _$$_getPreferencesDataEventCopyWith(_$_getPreferencesDataEvent value,
+          $Res Function(_$_getPreferencesDataEvent) then) =
+      __$$_getPreferencesDataEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_StartedCopyWithImpl<$Res>
-    extends _$HomeEventCopyWithImpl<$Res, _$_Started>
-    implements _$$_StartedCopyWith<$Res> {
-  __$$_StartedCopyWithImpl(_$_Started _value, $Res Function(_$_Started) _then)
+class __$$_getPreferencesDataEventCopyWithImpl<$Res>
+    extends _$HomeEventCopyWithImpl<$Res, _$_getPreferencesDataEvent>
+    implements _$$_getPreferencesDataEventCopyWith<$Res> {
+  __$$_getPreferencesDataEventCopyWithImpl(_$_getPreferencesDataEvent _value,
+      $Res Function(_$_getPreferencesDataEvent) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Started implements _Started {
-  const _$_Started();
+class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
+  const _$_getPreferencesDataEvent();
 
   @override
   String toString() {
-    return 'HomeEvent.started()';
+    return 'HomeEvent.getPreferencesDataEvent()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Started);
+        (other.runtimeType == runtimeType &&
+            other is _$_getPreferencesDataEvent);
   }
 
   @override
@@ -104,27 +107,27 @@ class _$_Started implements _Started {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() started,
+    required TResult Function() getPreferencesDataEvent,
   }) {
-    return started();
+    return getPreferencesDataEvent();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
+    TResult? Function()? getPreferencesDataEvent,
   }) {
-    return started?.call();
+    return getPreferencesDataEvent?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
+    TResult Function()? getPreferencesDataEvent,
     required TResult orElse(),
   }) {
-    if (started != null) {
-      return started();
+    if (getPreferencesDataEvent != null) {
+      return getPreferencesDataEvent();
     }
     return orElse();
   }
@@ -132,69 +135,44 @@ class _$_Started implements _Started {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
   }) {
-    return started(this);
+    return getPreferencesDataEvent(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
   }) {
-    return started?.call(this);
+    return getPreferencesDataEvent?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     required TResult orElse(),
   }) {
-    if (started != null) {
-      return started(this);
+    if (getPreferencesDataEvent != null) {
+      return getPreferencesDataEvent(this);
     }
     return orElse();
   }
 }
 
-abstract class _Started implements HomeEvent {
-  const factory _Started() = _$_Started;
+abstract class _getPreferencesDataEvent implements HomeEvent {
+  const factory _getPreferencesDataEvent() = _$_getPreferencesDataEvent;
 }
 
 /// @nodoc
 mixin _$HomeState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) =>
+  String get UserImageUrl => throw _privateConstructorUsedError;
+  String get UserCompanyLogoUrl => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $HomeStateCopyWith<HomeState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -202,6 +180,8 @@ mixin _$HomeState {
 abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res, HomeState>;
+  @useResult
+  $Res call({String UserImageUrl, String UserCompanyLogoUrl});
 }
 
 /// @nodoc
@@ -213,99 +193,112 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? UserImageUrl = null,
+    Object? UserCompanyLogoUrl = null,
+  }) {
+    return _then(_value.copyWith(
+      UserImageUrl: null == UserImageUrl
+          ? _value.UserImageUrl
+          : UserImageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      UserCompanyLogoUrl: null == UserCompanyLogoUrl
+          ? _value.UserCompanyLogoUrl
+          : UserCompanyLogoUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$_InitialCopyWith<$Res> {
-  factory _$$_InitialCopyWith(
-          _$_Initial value, $Res Function(_$_Initial) then) =
-      __$$_InitialCopyWithImpl<$Res>;
+abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
+  factory _$$_HomeStateCopyWith(
+          _$_HomeState value, $Res Function(_$_HomeState) then) =
+      __$$_HomeStateCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String UserImageUrl, String UserCompanyLogoUrl});
 }
 
 /// @nodoc
-class __$$_InitialCopyWithImpl<$Res>
-    extends _$HomeStateCopyWithImpl<$Res, _$_Initial>
-    implements _$$_InitialCopyWith<$Res> {
-  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
+class __$$_HomeStateCopyWithImpl<$Res>
+    extends _$HomeStateCopyWithImpl<$Res, _$_HomeState>
+    implements _$$_HomeStateCopyWith<$Res> {
+  __$$_HomeStateCopyWithImpl(
+      _$_HomeState _value, $Res Function(_$_HomeState) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? UserImageUrl = null,
+    Object? UserCompanyLogoUrl = null,
+  }) {
+    return _then(_$_HomeState(
+      UserImageUrl: null == UserImageUrl
+          ? _value.UserImageUrl
+          : UserImageUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      UserCompanyLogoUrl: null == UserCompanyLogoUrl
+          ? _value.UserCompanyLogoUrl
+          : UserCompanyLogoUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$_HomeState implements _HomeState {
+  const _$_HomeState(
+      {required this.UserImageUrl, required this.UserCompanyLogoUrl});
+
+  @override
+  final String UserImageUrl;
+  @override
+  final String UserCompanyLogoUrl;
 
   @override
   String toString() {
-    return 'HomeState.initial()';
+    return 'HomeState(UserImageUrl: $UserImageUrl, UserCompanyLogoUrl: $UserCompanyLogoUrl)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Initial);
+        (other.runtimeType == runtimeType &&
+            other is _$_HomeState &&
+            (identical(other.UserImageUrl, UserImageUrl) ||
+                other.UserImageUrl == UserImageUrl) &&
+            (identical(other.UserCompanyLogoUrl, UserCompanyLogoUrl) ||
+                other.UserCompanyLogoUrl == UserCompanyLogoUrl));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, UserImageUrl, UserCompanyLogoUrl);
 
+  @JsonKey(ignore: true)
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
+  @pragma('vm:prefer-inline')
+  _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
+      __$$_HomeStateCopyWithImpl<_$_HomeState>(this, _$identity);
 }
 
-abstract class _Initial implements HomeState {
-  const factory _Initial() = _$_Initial;
+abstract class _HomeState implements HomeState {
+  const factory _HomeState(
+      {required final String UserImageUrl,
+      required final String UserCompanyLogoUrl}) = _$_HomeState;
+
+  @override
+  String get UserImageUrl;
+  @override
+  String get UserCompanyLogoUrl;
+  @override
+  @JsonKey(ignore: true)
+  _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
+      throw _privateConstructorUsedError;
 }

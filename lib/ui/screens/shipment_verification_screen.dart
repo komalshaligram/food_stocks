@@ -33,14 +33,17 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
    ShipmentVerificationScreenWidget({super.key});
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
 
+
   @override
   Widget build(BuildContext context) {
+    ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
       },
       child: BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
         builder: (context, state) {
+
           return SafeArea(
               child: Scaffold(
                 appBar: PreferredSize(
@@ -268,13 +271,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SfSignaturePad(
+                            state.isSignaturePadActive ? SfSignaturePad(
                                 key: signatureGlobalKey,
                                 backgroundColor: Colors.white,
                                 strokeColor: Colors.black,
                                 minimumStrokeWidth: 1.0,
                                 maximumStrokeWidth: 4.0
-                            ),
+                            ) : SizedBox(),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Row(
@@ -282,9 +285,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: (){
-
-
-
+                                      bloc.add(ShipmentVerificationEvent.signatureEvent());
                                     },
                                     child: SvgPicture.asset(
                                       AppImagePath.signature,

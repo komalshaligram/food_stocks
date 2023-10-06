@@ -6,6 +6,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:intl/intl.dart';
 import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
@@ -21,18 +22,19 @@ class OperationTimeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   /* Map<dynamic, dynamic>? data =
-        ModalRoute.of(context)?.settings.arguments as Map?;*/
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => OperationTimeBloc()
         ..add(OperationTimeEvent.defaultValueAddInListEvent(context: context)),
-      child: OperationTimeScreenWidget(),
+      child: OperationTimeScreenWidget(id: args![AppStrings.idString]),
     );
   }
 }
 
 class OperationTimeScreenWidget extends StatelessWidget {
-  OperationTimeScreenWidget({super.key});
+  String id = '';
+  OperationTimeScreenWidget({super.key,required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -125,15 +127,19 @@ class OperationTimeScreenWidget extends StatelessWidget {
                       ),
                       20.height,
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: getScreenHeight(context) * 0.07),
+                        padding:
+                        EdgeInsets.only(top: getScreenWidth(context) * 0.3,
+                            left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
                         child: ButtonWidget(
                           buttonText: AppLocalizations.of(context)!.continued,
                           fontColors: AppColors.whiteColor,
                           onPressed: () {
                             context.read<OperationTimeBloc>().add(
                                 OperationTimeEvent.operationTimeApiEvent(
-                                    context: context));
+                                    context: context,
+                                  id: id,
+
+                                ));
 
                             /*Navigator.pushNamed(
                               context, RouteDefine.fileUploadScreen.name);*/
@@ -142,15 +148,19 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         ),
                       ),
                       20.height,
-                      ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.skip,
-                        fontColors: AppColors.mainColor,
-                        borderColor: AppColors.mainColor,
-                        onPressed: () {
-                           Navigator.pushNamed(
-                            context, RouteDefine.fileUploadScreen.name);
-                        },
-                        bGColor: AppColors.whiteColor,
+                      Padding(
+                        padding:
+                        EdgeInsets.only(left: getScreenWidth(context) * 0.08, right:getScreenWidth(context) * 0.08),
+                        child: ButtonWidget(
+                          buttonText: AppLocalizations.of(context)!.skip,
+                          fontColors: AppColors.mainColor,
+                          borderColor: AppColors.mainColor,
+                          onPressed: () {
+                             Navigator.pushNamed(
+                              context, RouteDefine.fileUploadScreen.name);
+                          },
+                          bGColor: AppColors.whiteColor,
+                        ),
                       ),
                       20.height,
                     ],
@@ -310,13 +320,13 @@ class TimeContainer extends StatelessWidget {
                 horizontal: AppConstants.padding_10),
             child: GestureDetector(
               onTap: () {
-                var time = '0:0';
+                var datetime = '00:00';
                 Duration initialTimer = const Duration();
                 showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext c1) {
                       return Container(
-                        height: 250,
+                        height: getScreenHeight(context) * 0.33,
                         padding: const EdgeInsets.only(top: 6.0),
                         color: AppColors.whiteColor,
                         child: DefaultTextStyle(
@@ -337,8 +347,10 @@ class TimeContainer extends StatelessWidget {
                                       onTimerDurationChanged:
                                           (Duration changeTimer) {
                                         initialTimer = changeTimer;
-                                        time =
-                                            '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
+                                        String  time = '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
+                                        var format = DateFormat("HH:mm");
+                                        var start = format.parse(time);
+                                         datetime = DateFormat.Hm().format(start);
                                       }),
                                   GestureDetector(
                                       onTap: () async {
@@ -348,8 +360,9 @@ class TimeContainer extends StatelessWidget {
                                                 rowIndex: rowIndex,
                                                 timeIndex: index,
                                                 openingIndex: openingIndex,
-                                                time: time,
-                                                timePickerContext: c1));
+                                                time: datetime,
+                                                timePickerContext: c1
+                                            ));
                                       },
                                       child: Text('ok')),
                                 ],
@@ -364,9 +377,9 @@ class TimeContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: Text(time.isEmpty ? '' : time,
+                    child: Text(time ==  '00:00' ? '' :time,
                         style: AppStyles.rkRegularTextStyle(
-                            size: 16,
+                            size: AppConstants.mediumFont,
                             color: AppColors.blackColor,
                             fontWeight: FontWeight.w400)),
                   ),

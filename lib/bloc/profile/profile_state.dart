@@ -12,6 +12,7 @@ class ProfileState with _$ProfileState {
     required TextEditingController ownerNameController,
     required TextEditingController idController,
     required TextEditingController contactController,
+    required String UserImageUrl,
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
@@ -24,6 +25,7 @@ class ProfileState with _$ProfileState {
         ownerNameController: TextEditingController(),
         idController: TextEditingController(),
         contactController: TextEditingController(),
+    UserImageUrl: ''
       );
 }
 

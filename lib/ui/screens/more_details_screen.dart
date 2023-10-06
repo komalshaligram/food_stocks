@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
+import '../../data/model/res_model/city_list_model/city_list_res_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 
@@ -38,8 +39,9 @@ class MoreDetailsScreen extends StatelessWidget {
                 ? true
                 : false))
         ..add(MoreDetailsEvent.getProfileModelEvent(
-            profileModel:
-                args?[AppStrings.profileParamString] ?? ProfileModel())),
+          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
+          context: context,
+        )),
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -47,13 +49,13 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  List<String> list = [];
+  List<City> list = [];
 
   MoreDetailsScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final listNotifier = ValueNotifier<List<String>>([]);
+    final listNotifier = ValueNotifier<List<City>>([]);
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
@@ -112,21 +114,34 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         height: getScreenHeight(context) * 0.9,
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             7.height,
-                                            Container(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .city,
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .mediumFont,
-                                                      color: AppColors
-                                                          .blackColor)),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .city,
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .mediumFont,
+                                                              color: AppColors
+                                                                  .blackColor)),
+                                                ),
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context1);
+                                                    },
+                                                    child: Icon(Icons.close))
+                                              ],
                                             ),
                                             15.height,
                                             CustomFormField(
@@ -139,73 +154,83 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     .citySearchEvent(
                                                   search: value,
                                                 ));
-                                                list = state.cityList
+                                                /*  list = state.cityListResModel.data!.cities!
                                                     .where((city) =>
                                                         city.contains(value))
+                                                    .toList();*/
+                                                list = state.cityListResModel!
+                                                    .data!.cities!
+                                                    .where((element) =>
+                                                        element.cityName ==
+                                                        value)
                                                     .toList();
-                                                print('length:${list.length}');
                                                 listNotifier.value = list;
                                               },
                                               controller: state.cityController,
                                               keyboardType: TextInputType.text,
-                                              hint: AppLocalizations.of(context)!
-                                                  .life_grocery_store,
+                                              hint:
+                                                  AppLocalizations.of(context)!
+                                                      .life_grocery_store,
                                               fillColor: AppColors.whiteColor,
                                               textInputAction:
-                                              TextInputAction.next,
+                                                  TextInputAction.next,
                                               validator: '',
                                               textCapitalization:
-                                              TextCapitalization.words,
+                                                  TextCapitalization.words,
                                               autofocus: true,
                                               cursorColor: AppColors.mainColor,
                                             ),
                                             7.height,
-                                            list.isEmpty
+                                            state.cityList.isEmpty
                                                 ? Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'Cities not available',
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .smallFont,
-                                                      color: AppColors
-                                                          .textColor),
-                                                ),
-                                              ),
-                                            )
-                                                : ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount:
-                                              list.length,
-                                              itemBuilder:
-                                                  (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                  const EdgeInsets.all(
-                                                      10.0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      bloc.add(MoreDetailsEvent
-                                                          .selectCityEvent(
-                                                          city: list[
-                                                          index]));
-                                                      Navigator.pop(
-                                                          context1);
-
-                                                    },
-                                                    child: Text(
-                                                      list[
-                                                      index],
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .mediumFont),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Cities not available',
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                                size: AppConstants
+                                                                    .smallFont,
+                                                                color: AppColors
+                                                                    .textColor),
+                                                      ),
                                                     ),
+                                                  )
+                                                : ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount:
+                                                        state.cityList.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10.0),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            bloc.add(MoreDetailsEvent
+                                                                .selectCityEvent(
+                                                                    city: state
+                                                                        .cityList[
+                                                                            index]
+                                                                        .toString(),
+                                                                    context:
+                                                                        context));
+                                                            Navigator.pop(
+                                                                context1);
+                                                          },
+                                                          child: Text(
+                                                            state
+                                                                .cityList[index]
+                                                                .toString(),
+                                                            style: AppStyles
+                                                                .rkRegularTextStyle(
+                                                                    size: AppConstants
+                                                                        .mediumFont),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
-                                                );
-                                              },
-                                            ),
                                           ],
                                         ),
                                       ),
@@ -235,7 +260,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                               // textAlign: TextAlign.right,
                             ),
                           ),
-                        ) ,
+                        ),
                       ),
                       7.height,
                       CustomContainerWidget(
@@ -377,10 +402,13 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         ? SizedBox(
                                             height: 130,
                                             width: getScreenWidth(context),
-                                            child: Image.file(
-                                              File(state.image.path),
-                                              fit: BoxFit.cover,
-                                            ),
+                                            child: state.isUpdate
+                                                ? Image.network(
+                                                    state.companyLogo)
+                                                : Image.file(
+                                                    File(state.image.path),
+                                                    fit: BoxFit.cover,
+                                                  ),
                                           )
                                         : Icon(
                                             Icons.camera_alt_rounded,
@@ -416,10 +444,13 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         bGColor: AppColors.mainColor,
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            if (state.isUpdate) {
+                            bloc.add(MoreDetailsEvent.registrationApiEvent(
+                                context: context));
+
+                            /*      if (state.isUpdate) {
                               if (state.image.path.isNotEmpty) {
                                 bloc.add(MoreDetailsEvent
-                                    .navigateToOperationTimeScreenEvent(
+                                    .registrationApiEvent(
                                         context: context));
                               } else {
                                 showSnackBar(
@@ -427,7 +458,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     title: AppStrings.selectCompanyLogoString,
                                     bgColor: AppColors.redColor);
                               }
-                            }
+                            }*/
                           }
                         },
                         fontColors: AppColors.whiteColor,

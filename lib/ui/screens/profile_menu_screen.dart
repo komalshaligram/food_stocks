@@ -9,7 +9,6 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../utils/themes/app_img_path.dart';
 
 class ProfileMenuRoute {
   static Widget get route => ProfileMenuScreen();
@@ -21,7 +20,7 @@ class ProfileMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileMenuBloc(),
+      create: (context) => ProfileMenuBloc()..add(ProfileMenuEvent.getPreferenceDataEvent()),
       child: ProfileMenuScreenWidget(),
     );
   }
@@ -61,8 +60,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           clipBehavior: Clip.hardEdge,
-                          child: Image.asset(
-                            AppImagePath.profileImage,
+                          child: Image.network(
+                            state.UserImageUrl,
                           ),
                         ),
                         20.width,
@@ -70,12 +69,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: Image.asset(
-                                AppImagePath.companyLogo,
+                              child: Image.network(
+                                state.UserCompanyLogoUrl,
                               ),
                             ),
                             Text(
-                              "Customer's Name",
+                             state.userName,
                               style: AppStyles.rkRegularTextStyle(
                                 size: 20,
                                 color: AppColors.textColor,

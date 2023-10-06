@@ -87,10 +87,7 @@
   "product_Name" :"Product Name",
   "product_problem" : "Product problem",
   "shipment_verification" : "Shipment verification",
-  "signature" : "signature"
-
-  "logout": "Log Out",
-  "save": "Save",
+  "signature" : "signature",
   "all_categories": "All categories",
   "categories": "Categories",
   "recommended_for_you": "Recommended for you",
@@ -100,7 +97,7 @@
   "search": "Search",
   "note": "Note",
   "add_to_order": "Add to order",
-  "sale": "מבצע",
+  "sale": "sale",
   "main": "main",
   "for_payment": "for payment"
 }

@@ -25,7 +25,6 @@ class SplashScreen extends StatelessWidget {
   }
 }
 
-
 class SplashScreenWidget extends StatelessWidget {
   const SplashScreenWidget({Key? key}) : super(key: key);
 
@@ -41,7 +40,6 @@ class SplashScreenWidget extends StatelessWidget {
           } else {
             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
           }
-
         }
       },
       child: BlocBuilder<SplashBloc, SplashState>(
@@ -61,5 +59,4 @@ class SplashScreenWidget extends StatelessWidget {
       ),
     );
   }
-
 }
