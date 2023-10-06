@@ -54,33 +54,33 @@ class HomeScreenWidget extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: AppColors.shadowColor
-                                          .withOpacity(0.3),
-                                      blurRadius: AppConstants.blur_10)
-                                ],
-                                shape: BoxShape.circle,
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                              child: Image.network(
-                                state.UserImageUrl,
-                              ),
-                            ),
-                            Image.network(
-                              state.UserCompanyLogoUrl,
-                              height: 60,
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        //     Container(
+                        //       height: 60,
+                        //       width: 60,
+                        //       decoration: BoxDecoration(
+                        //         color: AppColors.whiteColor,
+                        //         boxShadow: [
+                        //           BoxShadow(
+                        //               color: AppColors.shadowColor
+                        //                   .withOpacity(0.3),
+                        //               blurRadius: AppConstants.blur_10)
+                        //         ],
+                        //         shape: BoxShape.circle,
+                        //       ),
+                        //       clipBehavior: Clip.hardEdge,
+                        //       child: Image.network(
+                        //         state.UserImageUrl,
+                        //       ),
+                        //     ),
+                        //     Image.network(
+                        //       state.UserCompanyLogoUrl,
+                        //       height: 60,
+                        //     ),
+                        //   ],
+                        // ),
                         Container(
                           height: 60,
                           padding: const EdgeInsets.symmetric(horizontal: 3.0),

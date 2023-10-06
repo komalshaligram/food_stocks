@@ -9,6 +9,7 @@ class AppStrings {
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
+  static const tempString = 'temp';
 
   //api req param strings
   static const profileImageString = 'profileImg';

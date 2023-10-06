@@ -48,8 +48,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          // height: 60,
-                          // width: 60,
+                          height: 60,
+                          width: 60,
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             boxShadow: [
@@ -65,22 +65,27 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           ),
                         ),
                         20.width,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                state.UserCompanyLogoUrl,
+                        SizedBox(
+                          height: 60,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Image.network(
+                                  state.UserCompanyLogoUrl,
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
-                            ),
-                            Text(
-                             state.userName,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: 20,
-                                color: AppColors.textColor,
+                              3.height,
+                              Text(
+                                state.userName,
+                                style: AppStyles.rkRegularTextStyle(
+                                  size: 20,
+                                  color: AppColors.textColor,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         )
                       ],
                     ),
