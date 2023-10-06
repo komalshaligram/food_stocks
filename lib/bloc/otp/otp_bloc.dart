@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -52,25 +51,31 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();
+
+              String? imageUrl = AppUrls.baseUrlSplit + response.data!.user!.profileImage!;
+              String? logoUrl = AppUrls.baseUrlSplit + response.data!.user!.logo!;
+
+
               SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
+
+
               preferencesHelper.setAuthToken(
-                  accToken: response.authToken?.accessToken ?? '');
+                  accToken: response.data?.authToken?.accessToken ??'');
               preferencesHelper.setRefreshToken(
-                  refToken: response.authToken?.refreshToken ?? '');
-              preferencesHelper.setUserId(id: response.data?.id ?? '');
+                  refToken: response.data?.authToken?.accessToken ?? '');
+              preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
               preferencesHelper.setUserName(
-                  name: response.data?.clientDetail?.ownerName ?? '');
-              // preferencesHelper.setUserImageUrl(imageUrl: '');
-              // preferencesHelper.setUserCompanyLogoUrl(logoUrl: '');
+                  name: response.data?.user?.clientDetail?.ownerName ?? '');
+               preferencesHelper.setUserImageUrl(imageUrl: imageUrl);
+               preferencesHelper.setUserCompanyLogoUrl(logoUrl: logoUrl);
+
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               emit(state.copyWith(isLoginSuccess: true, isLoading: false));
-              // debugPrint('________${preferencesHelper.getAuthToken()}');
-              // debugPrint('________${preferencesHelper.getRefreshToken()}');
+
             } else {
-              emit(state.copyWith(
-                  isLoginFail: true, errorMessage: res['message']));
+              emit(state.copyWith(isLoginFail: true, errorMessage: res['message']));
               emit(state.copyWith(isLoginFail: false, isLoading: false));
             }
           } catch (e) {

@@ -14,8 +14,7 @@ class OperationTimeState with _$OperationTimeState{
 
   factory OperationTimeState.initial()=> OperationTimeState(
     time:  '0:0',
-    OperationTimeList: [
-    ],
+    OperationTimeList: [],
     isRefresh: false,
     isRegisterSuccess: false,
     errorMessage: '',

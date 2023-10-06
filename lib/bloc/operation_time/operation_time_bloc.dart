@@ -281,7 +281,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           debugPrint('operation time reqMap + $reqMap');
           try {
             final response = await DioClient().post(
-                '/v1/clients/operationTime/65142f55c891fb10e5301f0e',
+                '/v1/clients/operationTime/${event.id}',
                 data: reqMap);
 
             res.OperationTimeResModel operationTimeResModel =

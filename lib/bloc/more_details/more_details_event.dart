@@ -9,10 +9,14 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       required bool isFromCamera}) = _pickLogoImageEvent;
 
   factory MoreDetailsEvent.getProfileModelEvent(
-      {required ProfileModel profileModel}) = _getProfileModelEvent;
+      {
+        required ProfileModel profileModel,
+        required BuildContext context,
 
-  factory MoreDetailsEvent.navigateToOperationTimeScreenEvent(
-      {required BuildContext context}) = _navigateToOperationTimeScreenEvent;
+      }) = _getProfileModelEvent;
+
+  factory MoreDetailsEvent.registrationApiEvent(
+      {required BuildContext context}) = _registrationApiEvent;
 
   factory MoreDetailsEvent.addFilterListEvent() = _addFilterListEvent;
   factory MoreDetailsEvent.citySearchEvent({

@@ -8,7 +8,9 @@ part 'shipment_verification_bloc.freezed.dart';
 class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentVerificationState> {
   ShipmentVerificationBloc() : super(ShipmentVerificationState.initial()) {
     on<ShipmentVerificationEvent>((event, emit) async {
-
+       if(event is _signatureEvent){
+         emit(state.copyWith(isSignaturePadActive: true));
+       }
     });
   }
 }

@@ -57,8 +57,8 @@ class ProfileScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext c) {
-    ProfileBloc bloc = c.read<ProfileBloc>();
+  Widget build(BuildContext context1) {
+    ProfileBloc bloc = context1.read<ProfileBloc>();
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {},
       child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -86,8 +86,8 @@ class ProfileScreenWidget extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.only(
-                      left: getScreenWidth(c) * 0.1,
-                      right: getScreenWidth(c) * 0.1),
+                      left: getScreenWidth(context1) * 0.1,
+                      right: getScreenWidth(context1) * 0.1),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -99,7 +99,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           children: [
                             Container(
                               height: AppConstants.containerHeight_80,
-                              width: getScreenWidth(c),
+                              width: getScreenWidth(context1),
                               alignment: Alignment.center,
                               child: Container(
                                 height: AppConstants.containerHeight_80,
@@ -108,7 +108,9 @@ class ProfileScreenWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(200),
                                   color: AppColors.mainColor.withOpacity(0.1),
                                 ),
-                                child: state.image.path == ""
+                                child: state.isUpdate ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Image.network(state.UserImageUrl)):state.image.path == ""
                                     ? const Icon(Icons.person)
                                     : ClipRRect(
                                         borderRadius: BorderRadius.circular(40),
@@ -120,8 +122,8 @@ class ProfileScreenWidget extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              left: getScreenWidth(c) * 0.43,
-                              top: getScreenHeight(c) * 0.07,
+                              left: getScreenWidth(context1) * 0.44,
+                              top: getScreenHeight(context1) * 0.05,
                               child: GestureDetector(
                                 onTap: () {
                                   showModalBottomSheet(
@@ -159,8 +161,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                 30.height,
                                                 FileSelectionOptionWidget(
                                                     title: AppLocalizations.of(
-                                                            context)!
-                                                        .camera,
+                                                            context)!.camera,
                                                     icon: Icons.camera,
                                                     onTap: () {
                                                       bloc.add(ProfileEvent
@@ -269,7 +270,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         3.height,
                         Container(
-                          width: getScreenWidth(c),
+                          width: getScreenWidth(context1),
                           alignment: Alignment.center,
                           child: Text(
                             AppLocalizations.of(context)!.profile_picture,
@@ -409,11 +410,11 @@ class ProfileScreenWidget extends StatelessWidget {
                                   if (state.isUpdate) {
                                     bloc.add(
                                         ProfileEvent.updateProfileDetailsEvent(
-                                            context: c));
+                                            context: context1));
                                   } else {
                                     bloc.add(ProfileEvent
                                         .navigateToMoreDetailsScreenEvent(
-                                            context: c));
+                                            context: context1));
                                   }
                                 }
                               } else {

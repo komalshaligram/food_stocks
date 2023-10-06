@@ -48,7 +48,7 @@ class LogInScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
-        print(state.isLoginSuccess);
+
        if(state.isLoginSuccess){
           Navigator.pushNamed(
               context, RouteDefine.otpScreen.name ,arguments: {AppStrings.contactString : phoneController.text.toString(),

@@ -11,7 +11,7 @@ class AppStrings {
   static const iosString = 'IOS';
 
   //api req param strings
-  static const profileImageString = 'profile_img';
+  static const profileImageString = 'profileImg';
   static const promissoryNoteString = 'promissoryNote';
   static const personalGuaranteeString = 'personalGuarantee';
   static const israelIdImageString = 'israelIdImage';
@@ -64,5 +64,6 @@ class AppStrings {
   //argument strings
   static const isRegisterString = 'isRegister';
   static const contactString = 'contact';
+  static const idString = 'id';
 
 }

@@ -1,3 +1,5 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'profile_res_model.freezed.dart';
 part 'profile_res_model.g.dart';
@@ -6,11 +8,11 @@ part 'profile_res_model.g.dart';
 @freezed
 class ProfileResModel with _$ProfileResModel {
   const factory ProfileResModel({
-
+    @JsonKey(name: "status")
     int? status,
-
+    @JsonKey(name: "data")
     Data? data,
-
+    @JsonKey(name: "message")
     String? message,
   }) = _ProfileResModel;
 
@@ -20,115 +22,91 @@ class ProfileResModel with _$ProfileResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-
-    ClientData? clientData,
+    @JsonKey(name: "client")
+    Client? client,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
 @freezed
-class ClientData with _$ClientData {
-  const factory ClientData({
-
-    String? email,
-
-    dynamic password,
-
-    String? phoneNumber,
-
-    String? address,
-
-    String? cityId,
-
-    String? contactName,
-
-    String? statusId,
-
-    String? logo,
-
-    String? adminTypeId,
-
-    @JsonKey(name: "clientDetail")
-    ClientDetailRes? clientDetail,
-
-    bool? isDeleted,
+class Client with _$Client {
+  const factory Client({
     @JsonKey(name: "_id")
     String? id,
-
-
+    @JsonKey(name: "email")
+    String? email,
+    @JsonKey(name: "password")
+    dynamic password,
+    @JsonKey(name: "phoneNumber")
+    String? phoneNumber,
+    @JsonKey(name: "address")
+    String? address,
+    @JsonKey(name: "cityId")
+    String? cityId,
+    @JsonKey(name: "contactName")
+    String? contactName,
+    @JsonKey(name: "statusId")
+    String? statusId,
+    @JsonKey(name: "logo")
+    String? logo,
+    @JsonKey(name: "profileImage")
+    String? profileImage,
+    @JsonKey(name: "adminTypeId")
+    String? adminTypeId,
+    @JsonKey(name: "clientDetail")
+    ClientDetail? clientDetail,
+    @JsonKey(name: "createdBy")
+    String? createdBy,
+    @JsonKey(name: "updatedBy")
+    String? updatedBy,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
+    @JsonKey(name: "createdAt")
+    DateTime? createdAt,
+    @JsonKey(name: "updatedAt")
+    DateTime? updatedAt,
     @JsonKey(name: "__v")
     int? v,
-  }) = _ClientData;
+  }) = _Client;
 
-  factory ClientData.fromJson(Map<String, dynamic> json) => _$ClientDataFromJson(json);
+  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 }
 
 @freezed
-class ClientDetailRes with _$ClientDetailRes {
-  const factory ClientDetailRes({
-
+class ClientDetail with _$ClientDetail {
+  const factory ClientDetail({
+    @JsonKey(name: "bussinessId")
     int? bussinessId,
-
+    @JsonKey(name: "bussinessName")
     String? bussinessName,
-
+    @JsonKey(name: "ownerName")
     String? ownerName,
-
+    @JsonKey(name: "clientTypeId")
     String? clientTypeId,
-
+    @JsonKey(name: "israelId")
     String? israelId,
-
+    @JsonKey(name: "tokenId")
     String? tokenId,
-
+    @JsonKey(name: "fax")
     String? fax,
-
+    @JsonKey(name: "lastSeen")
     DateTime? lastSeen,
-
+    @JsonKey(name: "monthlyCredits")
     int? monthlyCredits,
-
+    @JsonKey(name: "applicationVersion")
     String? applicationVersion,
-
+    @JsonKey(name: "deviceType")
     String? deviceType,
     @JsonKey(name: "operationTime")
-    List<OperationTimeRes>? operationTime,
+    List<dynamic>? operationTime,
     @JsonKey(name: "_id")
     String? id,
+    @JsonKey(name: "createdAt")
+    DateTime? createdAt,
+    @JsonKey(name: "updatedAt")
+    DateTime? updatedAt,
+  }) = _ClientDetail;
 
-    String? createdBy,
-
-    String? updatedBy,
-
-
-  }) = _ClientDetailRes;
-
-  factory ClientDetailRes.fromJson(Map<String, dynamic> json) => _$ClientDetailResFromJson(json);
-}
-
-@freezed
-class OperationTimeRes with _$OperationTimeRes {
-  const factory OperationTimeRes({
-    @JsonKey(name: "monday")
-    List<MondayRes>? monday,
-    List<MondayRes>? tuesday,
-    List<MondayRes>? wednesday,
-    List<MondayRes>? thursday,
-    List<MondayRes>? fridayAndHolidayEves,
-    List<MondayRes>? saturdayAndHolidays,
-    List<MondayRes>? sunday,
-
-  }) = _OperationTimeRes;
-
-  factory OperationTimeRes.fromJson(Map<String, dynamic> json) => _$OperationTimeResFromJson(json);
-}
-
-@freezed
-class MondayRes with _$MondayRes {
-  const factory MondayRes({
-
-    String? from,
-
-    String? unitl,
-  }) = _MondayRes;
-
-  factory MondayRes.fromJson(Map<String, dynamic> json) => _$MondayResFromJson(json);
+  factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
