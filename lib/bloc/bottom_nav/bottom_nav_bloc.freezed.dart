@@ -20,18 +20,21 @@ mixin _$BottomNavEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
     required TResult Function() changeCartCount,
+    required TResult Function() setNavigationCount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
     TResult? Function()? changeCartCount,
+    TResult? Function()? setNavigationCount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
     TResult Function()? changeCartCount,
+    TResult Function()? setNavigationCount,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$BottomNavEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_ChangeCartCountEvent value) changeCartCount,
+    required TResult Function(_SetNavigationEvent value) setNavigationCount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult? Function(_SetNavigationEvent value)? setNavigationCount,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult Function(_SetNavigationEvent value)? setNavigationCount,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -140,6 +146,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
     required TResult Function() changeCartCount,
+    required TResult Function() setNavigationCount,
   }) {
     return changePage(index);
   }
@@ -149,6 +156,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
     TResult? Function()? changeCartCount,
+    TResult? Function()? setNavigationCount,
   }) {
     return changePage?.call(index);
   }
@@ -158,6 +166,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
     TResult Function()? changeCartCount,
+    TResult Function()? setNavigationCount,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -171,6 +180,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_ChangeCartCountEvent value) changeCartCount,
+    required TResult Function(_SetNavigationEvent value) setNavigationCount,
   }) {
     return changePage(this);
   }
@@ -180,6 +190,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult? Function(_SetNavigationEvent value)? setNavigationCount,
   }) {
     return changePage?.call(this);
   }
@@ -189,6 +200,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult Function(_SetNavigationEvent value)? setNavigationCount,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -247,6 +259,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
     required TResult Function() changeCartCount,
+    required TResult Function() setNavigationCount,
   }) {
     return changeCartCount();
   }
@@ -256,6 +269,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
     TResult? Function()? changeCartCount,
+    TResult? Function()? setNavigationCount,
   }) {
     return changeCartCount?.call();
   }
@@ -265,6 +279,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
     TResult Function()? changeCartCount,
+    TResult Function()? setNavigationCount,
     required TResult orElse(),
   }) {
     if (changeCartCount != null) {
@@ -278,6 +293,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_ChangeCartCountEvent value) changeCartCount,
+    required TResult Function(_SetNavigationEvent value) setNavigationCount,
   }) {
     return changeCartCount(this);
   }
@@ -287,6 +303,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult? Function(_SetNavigationEvent value)? setNavigationCount,
   }) {
     return changeCartCount?.call(this);
   }
@@ -296,6 +313,7 @@ class _$_ChangeCartCountEvent implements _ChangeCartCountEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult Function(_SetNavigationEvent value)? setNavigationCount,
     required TResult orElse(),
   }) {
     if (changeCartCount != null) {
@@ -310,9 +328,118 @@ abstract class _ChangeCartCountEvent implements BottomNavEvent {
 }
 
 /// @nodoc
+abstract class _$$_SetNavigationEventCopyWith<$Res> {
+  factory _$$_SetNavigationEventCopyWith(_$_SetNavigationEvent value,
+          $Res Function(_$_SetNavigationEvent) then) =
+      __$$_SetNavigationEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_SetNavigationEventCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$_SetNavigationEvent>
+    implements _$$_SetNavigationEventCopyWith<$Res> {
+  __$$_SetNavigationEventCopyWithImpl(
+      _$_SetNavigationEvent _value, $Res Function(_$_SetNavigationEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_SetNavigationEvent implements _SetNavigationEvent {
+  _$_SetNavigationEvent();
+
+  @override
+  String toString() {
+    return 'BottomNavEvent.setNavigationCount()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_SetNavigationEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int index) changePage,
+    required TResult Function() changeCartCount,
+    required TResult Function() setNavigationCount,
+  }) {
+    return setNavigationCount();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int index)? changePage,
+    TResult? Function()? changeCartCount,
+    TResult? Function()? setNavigationCount,
+  }) {
+    return setNavigationCount?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int index)? changePage,
+    TResult Function()? changeCartCount,
+    TResult Function()? setNavigationCount,
+    required TResult orElse(),
+  }) {
+    if (setNavigationCount != null) {
+      return setNavigationCount();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ChangePageEvent value) changePage,
+    required TResult Function(_ChangeCartCountEvent value) changeCartCount,
+    required TResult Function(_SetNavigationEvent value) setNavigationCount,
+  }) {
+    return setNavigationCount(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ChangePageEvent value)? changePage,
+    TResult? Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult? Function(_SetNavigationEvent value)? setNavigationCount,
+  }) {
+    return setNavigationCount?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ChangePageEvent value)? changePage,
+    TResult Function(_ChangeCartCountEvent value)? changeCartCount,
+    TResult Function(_SetNavigationEvent value)? setNavigationCount,
+    required TResult orElse(),
+  }) {
+    if (setNavigationCount != null) {
+      return setNavigationCount(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SetNavigationEvent implements BottomNavEvent {
+  factory _SetNavigationEvent() = _$_SetNavigationEvent;
+}
+
+/// @nodoc
 mixin _$BottomNavState {
   int get index => throw _privateConstructorUsedError;
   int get cartCount => throw _privateConstructorUsedError;
+  bool get isHome => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -325,7 +452,7 @@ abstract class $BottomNavStateCopyWith<$Res> {
           BottomNavState value, $Res Function(BottomNavState) then) =
       _$BottomNavStateCopyWithImpl<$Res, BottomNavState>;
   @useResult
-  $Res call({int index, int cartCount});
+  $Res call({int index, int cartCount, bool isHome});
 }
 
 /// @nodoc
@@ -343,6 +470,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
   $Res call({
     Object? index = null,
     Object? cartCount = null,
+    Object? isHome = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -353,6 +481,10 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.cartCount
           : cartCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isHome: null == isHome
+          ? _value.isHome
+          : isHome // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -365,7 +497,7 @@ abstract class _$$_BottomNavStateCopyWith<$Res>
       __$$_BottomNavStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int index, int cartCount});
+  $Res call({int index, int cartCount, bool isHome});
 }
 
 /// @nodoc
@@ -381,6 +513,7 @@ class __$$_BottomNavStateCopyWithImpl<$Res>
   $Res call({
     Object? index = null,
     Object? cartCount = null,
+    Object? isHome = null,
   }) {
     return _then(_$_BottomNavState(
       index: null == index
@@ -391,6 +524,10 @@ class __$$_BottomNavStateCopyWithImpl<$Res>
           ? _value.cartCount
           : cartCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isHome: null == isHome
+          ? _value.isHome
+          : isHome // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -398,16 +535,19 @@ class __$$_BottomNavStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_BottomNavState implements _BottomNavState {
-  const _$_BottomNavState({required this.index, required this.cartCount});
+  const _$_BottomNavState(
+      {required this.index, required this.cartCount, required this.isHome});
 
   @override
   final int index;
   @override
   final int cartCount;
+  @override
+  final bool isHome;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isHome: $isHome)';
   }
 
   @override
@@ -417,11 +557,12 @@ class _$_BottomNavState implements _BottomNavState {
             other is _$_BottomNavState &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.cartCount, cartCount) ||
-                other.cartCount == cartCount));
+                other.cartCount == cartCount) &&
+            (identical(other.isHome, isHome) || other.isHome == isHome));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index, cartCount);
+  int get hashCode => Object.hash(runtimeType, index, cartCount, isHome);
 
   @JsonKey(ignore: true)
   @override
@@ -433,12 +574,15 @@ class _$_BottomNavState implements _BottomNavState {
 abstract class _BottomNavState implements BottomNavState {
   const factory _BottomNavState(
       {required final int index,
-      required final int cartCount}) = _$_BottomNavState;
+      required final int cartCount,
+      required final bool isHome}) = _$_BottomNavState;
 
   @override
   int get index;
   @override
   int get cartCount;
+  @override
+  bool get isHome;
   @override
   @JsonKey(ignore: true)
   _$$_BottomNavStateCopyWith<_$_BottomNavState> get copyWith =>

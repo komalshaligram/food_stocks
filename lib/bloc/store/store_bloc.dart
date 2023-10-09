@@ -6,8 +6,11 @@ part 'store_state.dart';
 part 'store_bloc.freezed.dart';
 
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
-  StoreBloc() : super(const StoreState.initial()) {
+  StoreBloc() : super(StoreState.initial()) {
     on<StoreEvent>((event, emit) {
+      if (event is _ChangeCategoryExpansion) {
+        emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
+      }
     });
   }
 }
