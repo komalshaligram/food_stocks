@@ -51,6 +51,7 @@ class HomeScreenWidget extends StatelessWidget {
                   //appbar
                   Padding(
                     padding: const EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
                         horizontal: AppConstants.padding_10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,7 +172,6 @@ class HomeScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  10.height,
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
