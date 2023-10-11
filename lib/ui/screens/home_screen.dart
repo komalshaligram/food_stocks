@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +15,7 @@ import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
+import '../utils/themes/app_urls.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -56,34 +57,50 @@ class HomeScreenWidget extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Row(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-                        //     Container(
-                        //       height: 60,
-                        //       width: 60,
-                        //       decoration: BoxDecoration(
-                        //         color: AppColors.whiteColor,
-                        //         boxShadow: [
-                        //           BoxShadow(
-                        //               color: AppColors.shadowColor
-                        //                   .withOpacity(0.3),
-                        //               blurRadius: AppConstants.blur_10)
-                        //         ],
-                        //         shape: BoxShape.circle,
-                        //       ),
-                        //       clipBehavior: Clip.hardEdge,
-                        //       // child: Image.network(
-                        //       //   state.UserImageUrl,
-                        //       // ),
-                        //     ),
-                        //     // Image.network(
-                        //     //   state.UserCompanyLogoUrl,
-                        //     //   height: 60,
-                        //     //   fit: BoxFit.fitHeight,
-                        //     // ),
-                        //   ],
-                        // ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppColors.shadowColor
+                                          .withOpacity(0.3),
+                                      blurRadius: AppConstants.blur_10)
+                                ],
+                                shape: BoxShape.circle,
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child:  state.UserImageUrl.isNotEmpty
+                                  ? ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                                  imageUrl: '${AppUrls.baseFileUrl}' +
+                                      '${state.UserImageUrl}',
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                                  : SizedBox(),
+                            ),
+                            15.width,
+                            state.UserCompanyLogoUrl.isNotEmpty
+                                ? CachedNetworkImage(
+                              placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                              imageUrl: '${AppUrls.baseFileUrl}' +
+                                  '${state.UserCompanyLogoUrl}',
+                              height: 50,
+                              width: getScreenWidth(context) * 0.35,
+                              fit: BoxFit.fill,
+                            )
+                                : SizedBox(),
+                          ],
+                        ),
                         Container(
                           height: 60,
                           padding: const EdgeInsets.symmetric(horizontal: 3.0),
@@ -143,10 +160,10 @@ class HomeScreenWidget extends StatelessWidget {
                                             child: Text('4',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
-                                                    size:
-                                                    AppConstants.font_8,
-                                                    color: AppColors
-                                                        .whiteColor)),
+                                                        size:
+                                                            AppConstants.font_8,
+                                                        color: AppColors
+                                                            .whiteColor)),
                                           ))
                                     ],
                                   ),
@@ -172,6 +189,7 @@ class HomeScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                  10.height,
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -202,7 +220,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     flex: 1,
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
@@ -231,10 +249,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                 // radiusFactor: 0.8,
                                                 axisLineStyle: AxisLineStyle(
                                                     thicknessUnit:
-                                                    GaugeSizeUnit.factor,
+                                                        GaugeSizeUnit.factor,
                                                     thickness: 0.2,
                                                     color:
-                                                    AppColors.borderColor),
+                                                        AppColors.borderColor),
                                                 annotations: [
                                                   GaugeAnnotation(
                                                     angle: 270,
@@ -242,15 +260,15 @@ class HomeScreenWidget extends StatelessWidget {
                                                       '7550\n${AppLocalizations.of(context)!.currency}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .blackColor,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w600),
+                                                              size: AppConstants
+                                                                  .font_14,
+                                                              color: AppColors
+                                                                  .blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
                                                       textAlign:
-                                                      TextAlign.center,
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 ],
@@ -260,9 +278,9 @@ class HomeScreenWidget extends StatelessWidget {
                                                     enableAnimation: true,
                                                     animationDuration: 300,
                                                     animationType:
-                                                    AnimationType.ease,
+                                                        AnimationType.ease,
                                                     cornerStyle:
-                                                    CornerStyle.bothCurve,
+                                                        CornerStyle.bothCurve,
                                                     value: 7550,
                                                     width: 6,
                                                   ),
@@ -286,10 +304,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 image: AppImagePath.credits,
                                                 title: AppLocalizations.of(
-                                                    context)!
+                                                        context)!
                                                     .general_framework,
                                                 value:
-                                                '20,000${AppLocalizations.of(context)!.currency}'),
+                                                    '20,000${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -297,10 +315,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 image: AppImagePath.expense,
                                                 title: AppLocalizations.of(
-                                                    context)!
+                                                        context)!
                                                     .this_months_expenses,
                                                 value:
-                                                '7,550${AppLocalizations.of(context)!.currency}'),
+                                                    '7,550${AppLocalizations.of(context)!.currency}'),
                                           ),
                                         ],
                                       ),
@@ -315,7 +333,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context)!
                                                     .last_months_expenses,
                                                 value:
-                                                '18,360${AppLocalizations.of(context)!.currency}'),
+                                                    '18,360${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -323,7 +341,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 image: AppImagePath.orders,
                                                 title: AppLocalizations.of(
-                                                    context)!
+                                                        context)!
                                                     .this_months_orders,
                                                 value: '23'),
                                           ),
@@ -336,12 +354,12 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                           ),
                           20.height,
-                          titleRowWidget(
+                     /*     titleRowWidget(
                               context: context,
-                              title: AppLocalizations.of(context)!.sales,
+                              title: AppLocalizations.of(context)!.promotions,
                               allContentTitle:
-                                  AppLocalizations.of(context)!.all_sales,
-                              onTap: () {}),
+                                  AppLocalizations.of(context)!.all_promotions,
+                              onTap: () {}),*/
                           SizedBox(
                             height: 200,
                             child: ListView.builder(
@@ -359,7 +377,7 @@ class HomeScreenWidget extends StatelessWidget {
                               Flexible(
                                 child: CustomTextIconButtonWidget(
                                   title:
-                                  AppLocalizations.of(context)!.new_order,
+                                      AppLocalizations.of(context)!.new_order,
                                   onPressed: () {},
                                   svgImage: AppImagePath.add,
                                 ),
@@ -367,7 +385,7 @@ class HomeScreenWidget extends StatelessWidget {
                               Flexible(
                                 child: CustomTextIconButtonWidget(
                                   title:
-                                  AppLocalizations.of(context)!.my_basket,
+                                      AppLocalizations.of(context)!.my_basket,
                                   onPressed: () {},
                                   svgImage: AppImagePath.cart,
                                   cartCount: 12,
@@ -380,7 +398,7 @@ class HomeScreenWidget extends StatelessWidget {
                               context: context,
                               title: AppLocalizations.of(context)!.messages,
                               allContentTitle:
-                              AppLocalizations.of(context)!.all_messages,
+                                  AppLocalizations.of(context)!.all_messages,
                               onTap: () {
                                 Navigator.pushNamed(context, RouteDefine.messageScreen.name);
                               }),

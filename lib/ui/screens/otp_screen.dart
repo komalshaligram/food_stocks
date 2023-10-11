@@ -119,16 +119,21 @@ class OTPScreenWidget extends StatelessWidget {
                         buttonText: AppLocalizations.of(context)!.continued,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
-                          if (isRegister == true) {
-                            Navigator.pushNamed(
-                                context, RouteDefine.profileScreen.name,
-                                arguments: {AppStrings.contactString: contact});
-                          } else {
-                            bloc.add(OtpEvent.otpApiEvent(
-                                contact: contact,
-                                otp: otpCode,
-                                isRegister: isRegister,
-                                context: context));
+                          if(otpCode.length == 4){
+                            if (isRegister == true) {
+                              Navigator.pushNamed(
+                                  context, RouteDefine.profileScreen.name,
+                                  arguments: {AppStrings.contactString: contact});
+                            } else {
+                              bloc.add(OtpEvent.otpApiEvent(
+                                  contact: contact,
+                                  otp: otpCode,
+                                  isRegister: isRegister,
+                                  context: context));
+                            }
+                          }
+                          else{
+                            showSnackBar(context: context, title: AppStrings.enterOtpString, bgColor: AppColors.redColor);
                           }
                         },
                         fontColors: AppColors.whiteColor,

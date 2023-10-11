@@ -62,14 +62,15 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               cityListResModel.data!.cities!.forEach((element) {
                 temp.add(element.cityName.toString());
               });
+              emit(state.copyWith(cityList: temp));
 
               emit(state.copyWith(
-                  cityList: temp,
+                  filterList: temp,
                   cityListResModel: cityListResModel,
                   selectCity: cityListResModel.data!.cities!.first.cityName
                       .toString()));
             } else {
-              debugPrint('message____${response['message']}');
+              debugPrint('cityListResModel____${cityListResModel}');
             }
           } catch (e) {
             debugPrint(e.toString());
@@ -198,11 +199,21 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
+              preferences.setUserImageUrl(
+                  imageUrl:
+                      profileResModel.data!.client!.profileImage.toString());
+              preferences.setUserCompanyLogoUrl(
+                  logoUrl: profileResModel.data!.client!.logo.toString());
+              preferences.setUserName(
+                  name: profileResModel.data!.client!.clientDetail!.ownerName
+                      .toString());
+              preferences.setUserId(
+                  id: profileResModel.data!.client!.id.toString());
+
               Navigator.pushNamed(
-                  event.context, RouteDefine.operationTimeScreen.name,
-                  arguments: {
-                    AppStrings.idString: profileResModel.data!.client!.id
-                  });
+                event.context,
+                RouteDefine.operationTimeScreen.name,
+              );
             } else {
               showSnackBar(
                   context: event.context,
@@ -223,6 +234,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         List<String> list = state.cityList
             .where((city) => city.contains(event.search))
             .toList();
+        print(list.length);
         emit(state.copyWith(filterList: list));
       } else if (event is _selectCityEvent) {
         emit(state.copyWith(selectCity: event.city));
@@ -241,8 +253,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 'update city : ${response.data?.clients?.first.city?.cityName}');
             if (response.status == 200) {
               emit(state.copyWith(
-                // selectCity: response.data?.clients?.first.city?.cityName ??
-                //     state.selectCity,
+                selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),
                 emailController: TextEditingController(

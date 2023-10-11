@@ -33,10 +33,19 @@ class OperationTimeEvent with _$OperationTimeEvent{
 
   factory OperationTimeEvent.operationTimeApiEvent({
     required BuildContext context,
-    required String id,
 }
       ) = _operationTimeApiEvent;
 
+  factory OperationTimeEvent.getOperationTimeListEvent({
+    required BuildContext context,
+
+}
+      ) = _getOperationTimeListEvent;
+
+  factory OperationTimeEvent.getOperationTimeDetailsEvent({
+    required bool isUpdate,
+  }
+      ) = _getOperationTimeDetailsEvent;
 
 
 

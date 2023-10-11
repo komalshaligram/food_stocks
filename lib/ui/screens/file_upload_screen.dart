@@ -7,7 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -148,7 +150,14 @@ class FileUploadScreenWidget extends StatelessWidget {
                             fontColors: AppColors.mainColor,
                             borderColor: AppColors.mainColor,
                             width: double.maxFinite,
-                            onPressed: () {
+                            onPressed: () async {
+                              SharedPreferencesHelper preferencesHelper =
+                                  SharedPreferencesHelper(
+                                      prefs: await SharedPreferences
+                                          .getInstance());
+
+                              preferencesHelper.setUserLoggedIn(
+                                  isLoggedIn: true);
                               showSnackBar(
                                   context: context,
                                   title: AppStrings.registerSuccessString,

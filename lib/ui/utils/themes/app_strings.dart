@@ -9,6 +9,7 @@ class AppStrings {
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
+  static const timeString = '00:00';
   static const tempString = 'temp';
 
   //api req param strings
@@ -58,6 +59,17 @@ class AppStrings {
   static const docDownloadAllowPermissionString =
       'Please allow permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
+  static const openingTimeAfterPreviousClosingString = 'Please select opening time after previous closing time';
+  static const openingTimeAfterClosingString = 'Please select opening time before closing time';
+  static const closingTimeAfterOpeningString = 'Please select closing time after opening time';
+  static const selectOpeningString = 'Please select opening Time';
+  static const selectPreviousShiftString = 'Please select previous shift time';
+  static const selectFirstShiftString = 'Please select first shift time';
+  static const selectShiftTimeString = 'please select shiftTime';
+  static const enterOtpString = 'Please enter otp';
+  static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
+  static const fillUpClosingTimeString = 'Please fill up closing time';
+
 
   //hint strings
   static const hintNumberString = '1234567896';
