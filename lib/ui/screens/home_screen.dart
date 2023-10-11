@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -353,12 +354,12 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                           ),
                           20.height,
-                          titleRowWidget(
+                     /*     titleRowWidget(
                               context: context,
                               title: AppLocalizations.of(context)!.promotions,
                               allContentTitle:
                                   AppLocalizations.of(context)!.all_promotions,
-                              onTap: () {}),
+                              onTap: () {}),*/
                           SizedBox(
                             height: 200,
                             child: ListView.builder(
