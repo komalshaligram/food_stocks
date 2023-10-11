@@ -216,12 +216,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
+          debugPrint("userId:${preferencesHelper.getUserId()}");
           debugPrint(
               "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}");
           final res = await DioClient().post(
             "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
+          debugPrint('res:$res');
           FileUpdateResModel response = FileUpdateResModel.fromJson(res);
           if (response.status == 200) {
             if (state.isUpdate) {

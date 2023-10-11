@@ -20,6 +20,5 @@ class AppUrls {
       '/v1/clients/operationTime/6516c0e5f7ac43c56eb097b1';
   static const String operationTimeUrl = '/v1/clients/operationTime';
   static const String cityListUrl = '/v1/settings/Cities';
-  static const String baseUrlSplit = 'http://192.168.1.80:3001/';
 
 }

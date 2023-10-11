@@ -181,6 +181,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   context: context,
                                   title: AppStrings.registerSuccessString,
                                   bgColor: AppColors.mainColor);
+                              Navigator.popUntil(context,
+                                      (route) => route.name == RouteDefine.connectScreen.name);
                               Navigator.pushNamed(
                                   context, RouteDefine.bottomNavScreen.name);
                             },

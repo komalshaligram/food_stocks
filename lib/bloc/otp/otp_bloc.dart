@@ -52,8 +52,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();
 
-              String? imageUrl = AppUrls.baseUrlSplit + response.data!.user!.profileImage!;
-              String? logoUrl = AppUrls.baseUrlSplit + response.data!.user!.logo!;
+              String? imageUrl = AppUrls.baseFileUrl + response.data!.user!.profileImage!;
+              String? logoUrl = AppUrls.baseFileUrl + response.data!.user!.logo!;
 
 
               SharedPreferencesHelper preferencesHelper =

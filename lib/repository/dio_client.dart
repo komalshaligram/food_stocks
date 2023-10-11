@@ -1,18 +1,22 @@
 import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:food_stock/ui/widget/common_alert_dialog.dart';
 import '../ui/utils/themes/app_urls.dart';
 
 class DioClient {
   late Dio _dio;
 
+
   static final DioClient _instance = DioClient._internal();
 
   factory DioClient() {
+
     return _instance;
   }
 
@@ -39,8 +43,11 @@ class DioClient {
       // print("app request data ${options.data}");
       return handler.next(options);
     }, onResponse: (response, handler) {
+      response.statusCode= 201;
       if (kDebugMode) {
         debugPrint("app response data ${response.data}");
+      }else if(response.statusCode!=200){
+        debugPrint("Errorr!!!! ${response.data}");
       }
       return handler.next(response);
     }, onError: (DioException e, handler) {
@@ -256,10 +263,11 @@ ErrorEntity _createErrorEntity(DioException error) {
   }
 }
 
-void onError(ErrorEntity eInfo) {
+void onError(ErrorEntity eInfo/*,BuildContext context*/) {
   debugPrint('error.code -> ${eInfo.code}, error.message -> ${eInfo.message}');
   switch (eInfo.code) {
     case 400:
+     // showSnackBar(context: context, title: "Server syntax error", bgColor: AppColors.redColor);
       debugPrint("Server syntax error");
       break;
     case 401:
