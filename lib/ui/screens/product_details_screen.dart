@@ -268,9 +268,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               horizontal: AppConstants.padding_30),
           color: AppColors.pageColor,
          child: CustomButtonWidget(
-           buttonText: AppLocalizations.of(context)!.continued,
-           bGColor: AppColors.mainColor,
-         ),
+           buttonText: AppLocalizations.of(context)!.next,
+                  bGColor: AppColors.mainColor,
+                ),
         ),
       ),
 

@@ -39,26 +39,16 @@ class ProfileModel with _$ProfileModel {
 @freezed
 class ClientDetail with _$ClientDetail {
   const factory ClientDetail({
-    @JsonKey(name: "bussinessId")
-    int? bussinessId,
-    @JsonKey(name: "bussinessName")
-    String? bussinessName,
-    @JsonKey(name: "ownerName")
-    String? ownerName,
-    @JsonKey(name: "clientTypeId")
-    String? clientTypeId,
-    @JsonKey(name: "israelId")
-    bool? israelId,
-    @JsonKey(name: "tokenId")
-    String? tokenId,
-    @JsonKey(name: "fax")
-    String? fax,
-    @JsonKey(name: "lastSeen")
-    DateTime? lastSeen,
-    @JsonKey(name: "monthlyCredits")
-    int? monthlyCredits,
-    @JsonKey(name: "applicationVersion")
-    String? applicationVersion,
+    @JsonKey(name: "bussinessId") int? bussinessId,
+    @JsonKey(name: "bussinessName") String? bussinessName,
+    @JsonKey(name: "ownerName") String? ownerName,
+    @JsonKey(name: "clientTypeId") String? clientTypeId,
+    @JsonKey(name: "israelId") String? israelId,
+    @JsonKey(name: "tokenId") String? tokenId,
+    @JsonKey(name: "fax") String? fax,
+    @JsonKey(name: "lastSeen") DateTime? lastSeen,
+    @JsonKey(name: "monthlyCredits") int? monthlyCredits,
+    @JsonKey(name: "applicationVersion") String? applicationVersion,
     @JsonKey(name: "deviceType")
     String? deviceType,
   }) = _ClientDetail;

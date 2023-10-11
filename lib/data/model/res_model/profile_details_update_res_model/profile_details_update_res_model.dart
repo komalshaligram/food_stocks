@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'profile_details_update_res_model.freezed.dart';
-
 part 'profile_details_update_res_model.g.dart';
 
 ProfileDetailsUpdateResModel profileDetailsUpdateResModelFromJson(String str) =>
@@ -30,26 +29,24 @@ class ProfileDetailsUpdateResModel with _$ProfileDetailsUpdateResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    @JsonKey(name: "UpdateClientData") UpdateClientData? updateClientData,
+    @JsonKey(name: "client") Client? client,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
 @freezed
-class UpdateClientData with _$UpdateClientData {
-  const factory UpdateClientData({
+class Client with _$Client {
+  const factory Client({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "email") String? email,
-    @JsonKey(name: "password") dynamic password,
-    @JsonKey(name: "firstName") String? firstName,
-    @JsonKey(name: "lastName") String? lastName,
     @JsonKey(name: "phoneNumber") String? phoneNumber,
     @JsonKey(name: "address") String? address,
     @JsonKey(name: "cityId") String? cityId,
     @JsonKey(name: "contactName") String? contactName,
     @JsonKey(name: "statusId") String? statusId,
     @JsonKey(name: "logo") String? logo,
+    @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
     @JsonKey(name: "createdBy") String? createdBy,
@@ -58,10 +55,9 @@ class UpdateClientData with _$UpdateClientData {
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
-  }) = _UpdateClientData;
+  }) = _Client;
 
-  factory UpdateClientData.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClientDataFromJson(json);
+  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 }
 
 @freezed
@@ -79,10 +75,6 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "applicationVersion") String? applicationVersion,
     @JsonKey(name: "deviceType") String? deviceType,
     @JsonKey(name: "operationTime") List<OperationTime>? operationTime,
-    @JsonKey(name: "personalGuarantee") String? personalGuarantee,
-    @JsonKey(name: "promissoryNote") String? promissoryNote,
-    @JsonKey(name: "businessCertificate") String? businessCertificate,
-    @JsonKey(name: "israelIdImage") String? israelIdImage,
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
@@ -102,7 +94,6 @@ class OperationTime with _$OperationTime {
     List<Day>? thursday,
     List<Day>? fridayAndHolidayEves,
     List<Day>? saturdayAndHolidays,
-
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>

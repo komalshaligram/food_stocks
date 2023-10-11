@@ -55,7 +55,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     return BlocBuilder<FileUploadBloc, FileUploadState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColors.pageColor,
+          backgroundColor: AppColors.whiteColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -132,8 +132,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                     40.height,
                     ButtonWidget(
                       buttonText: state.isUpdate
-                          ? AppLocalizations.of(context)!.save
-                          : AppLocalizations.of(context)!.continued,
+                          ? AppLocalizations.of(context)!.save.toUpperCase()
+                          : AppLocalizations.of(context)!.next.toUpperCase(),
                       fontColors: AppColors.whiteColor,
                       width: double.maxFinite,
                       onPressed: () {
@@ -142,22 +142,23 @@ class FileUploadScreenWidget extends StatelessWidget {
                       },
                       bGColor: AppColors.mainColor,
                     ),
-                    10.height,
+                    20.height,
                     state.isUpdate
                         ? 0.width
                         : ButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.skip,
+                            buttonText: AppLocalizations.of(context)!
+                                .skip
+                                .toUpperCase(),
                             fontColors: AppColors.mainColor,
                             borderColor: AppColors.mainColor,
                             width: double.maxFinite,
                             onPressed: () async {
-                              SharedPreferencesHelper preferencesHelper =
-                                  SharedPreferencesHelper(
-                                      prefs: await SharedPreferences
-                                          .getInstance());
-
-                              preferencesHelper.setUserLoggedIn(
-                                  isLoggedIn: true);
+                              // SharedPreferencesHelper preferencesHelper =
+                              //     SharedPreferencesHelper(
+                              //         prefs: await SharedPreferences
+                              //             .getInstance());
+                              // preferencesHelper.setUserLoggedIn(
+                              //     isLoggedIn: true);
                               showSnackBar(
                                   context: context,
                                   title: AppStrings.registerSuccessString,
@@ -197,6 +198,7 @@ class FileUploadScreenWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          10.height,
           SizedBox(
             height: 35,
             child: Row(
@@ -210,16 +212,16 @@ class FileUploadScreenWidget extends StatelessWidget {
                       color: AppColors.textColor,
                       fontWeight: FontWeight.w400),
                 ),
-                isDownloadable
+                isDownloadable && url.isNotEmpty
                     ? ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.taken_down,
+                  buttonText: AppLocalizations.of(context)!.download,
                         fontSize: AppConstants.smallFont,
                         radius: AppConstants.radius_5,
                         bGColor: AppColors.blueColor,
                         onPressed: () {
                           context.read<FileUploadBloc>().add(
                               FileUploadEvent.downloadFileEvent(
-                                  context: context, fileIndex: 4));
+                                  context: context, fileIndex: fileIndex));
                         },
                         fontColors: AppColors.whiteColor,
                       )
@@ -227,7 +229,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               ],
             ),
           ),
-          10.height,
+          5.height,
           DottedBorder(
             color: AppColors.borderColor,
             strokeWidth: 1,
@@ -263,13 +265,13 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w600),
                                   ),
                                   30.height,
                                   FileSelectionOptionWidget(
                                       title:
                                           AppLocalizations.of(context)!.camera,
-                                      icon: Icons.camera,
+                                      icon: Icons.camera_alt_rounded,
                                       onTap: () {
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
@@ -279,6 +281,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: false));
                                         Navigator.pop(context1);
                                       }),
+                                  Container(
+                                    height: 1,
+                                    width: getScreenWidth(context),
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.5),
+                                  ),
                                   FileSelectionOptionWidget(
                                       title:
                                           AppLocalizations.of(context)!.gallery,
@@ -292,6 +300,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: false));
                                         Navigator.pop(context1);
                                       }),
+                                  Container(
+                                    height: 1,
+                                    width: getScreenWidth(context),
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.5),
+                                  ),
                                   FileSelectionOptionWidget(
                                       title: "Document",
                                       icon: Icons.file_open_rounded,
@@ -304,13 +318,20 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: true));
                                         Navigator.pop(context);
                                       }),
+                                  Container(
+                                    height: 1,
+                                    width: getScreenWidth(context),
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.5),
+                                  ),
                                   FileSelectionOptionWidget(
-                                      title: AppLocalizations.of(context)!
-                                          .taken_down,
+                                      title:
+                                          AppLocalizations.of(context)!.remove,
                                       icon: Icons.delete,
                                       onTap: () {
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.deleteFileEvent(
+                                                context: context,
                                                 index: fileIndex));
                                         Navigator.pop(context);
                                       }),

@@ -98,7 +98,7 @@ class StoreScreenWidget extends StatelessWidget {
                             subTitle: AppLocalizations.of(context)!.all_sales,
                             onTap: () {}),
                         SizedBox(
-                          height: 185,
+                          height: 190,
                           child: ListView.builder(
                             itemCount: 10,
                             shrinkWrap: true,
@@ -128,7 +128,7 @@ class StoreScreenWidget extends StatelessWidget {
                             subTitle: AppLocalizations.of(context)!.more,
                             onTap: () {}),
                         SizedBox(
-                          height: 185,
+                          height: 190,
                           child: ListView.builder(
                             itemCount: 10,
                             shrinkWrap: true,
@@ -326,7 +326,7 @@ class StoreScreenWidget extends StatelessWidget {
       required void Function() onButtonTap,
       required void Function() onTap}) {
     return Container(
-      height: 165,
+      height: 170,
       width: 140,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
@@ -378,6 +378,7 @@ class StoreScreenWidget extends StatelessWidget {
                 title:
                     "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                 onPressed: () {},
+                // height: 35,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,

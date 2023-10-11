@@ -15,6 +15,5 @@ class AppUrls {
   static const String filesListUrl = '/v1/settings/ClientFiles';
   static const String operationTimeUrl = '/v1/clients/operationTime';
   static const String cityListUrl = '/v1/settings/Cities';
-
-
+  static const String removeFileUrl = '/v1/files/remove';
 }

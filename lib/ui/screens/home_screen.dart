@@ -16,6 +16,7 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_product_button_widget.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -79,11 +80,16 @@ class HomeScreenWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                                  imageUrl: '${AppUrls.baseFileUrl}' +
-                                      '${state.UserImageUrl}',
-                                  fit: BoxFit.fill,
-                                ),
+                                            const CircularProgressIndicator(),
+                                        imageUrl:
+                                            '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) {
+                                          return Container(
+                                            color: AppColors.whiteColor,
+                                          );
+                                        },
+                                      ),
                               )
                                   : SizedBox(),
                             ),
@@ -91,13 +97,18 @@ class HomeScreenWidget extends StatelessWidget {
                             state.UserCompanyLogoUrl.isNotEmpty
                                 ? CachedNetworkImage(
                               placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                              imageUrl: '${AppUrls.baseFileUrl}' +
-                                  '${state.UserCompanyLogoUrl}',
-                              height: 50,
-                              width: getScreenWidth(context) * 0.35,
-                              fit: BoxFit.fill,
-                            )
+                                        const CircularProgressIndicator(),
+                                    imageUrl:
+                                        '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
+                                    height: 50,
+                                    width: getScreenWidth(context) * 0.35,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) {
+                                      return Container(
+                                        color: AppColors.whiteColor,
+                                      );
+                                    },
+                                  )
                                 : SizedBox(),
                           ],
                         ),
@@ -354,14 +365,14 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                           ),
                           20.height,
-                     /*     titleRowWidget(
+                          titleRowWidget(
                               context: context,
-                              title: AppLocalizations.of(context)!.promotions,
+                              title: AppLocalizations.of(context)!.sales,
                               allContentTitle:
-                                  AppLocalizations.of(context)!.all_promotions,
-                              onTap: () {}),*/
+                                  AppLocalizations.of(context)!.all_sales,
+                              onTap: () {}),
                           SizedBox(
-                            height: 200,
+                            height: 190,
                             child: ListView.builder(
                               itemCount: 10,
                               scrollDirection: Axis.horizontal,
@@ -489,27 +500,33 @@ class HomeScreenWidget extends StatelessWidget {
               ),
               5.height,
               Text(
-                AppLocalizations.of(context)!.enrollment,
+                AppLocalizations.of(context)!.next,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_12,
                     color: AppColors.redColor,
                     fontWeight: FontWeight.w600),
               ),
               5.height,
-              Text(
-                "Buy 2 units of a variety of flat salted pretzels for a price of 250 grams",
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_10, color: AppColors.blackColor),
-                maxLines: 3,
-                overflow: TextOverflow.clip,
+              Expanded(
+                child: Text(
+                  "Buy 2 units of a variety of flat salted pretzels for a price of 250 grams",
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_10, color: AppColors.blackColor),
+                  maxLines: 3,
+                  overflow: TextOverflow.clip,
+                ),
               ),
               5.height,
-              CustomButtonWidget(
-                  buttonText: "20${AppLocalizations.of(context)!.currency}",
-                  bGColor: AppColors.mainColor,
-                  height: 30,
-                  radius: AppConstants.radius_3,
-                  onPressed: () {}),
+              Center(
+                child: CommonProductButtonWidget(
+                  title: "20${AppLocalizations.of(context)!.currency}",
+                  onPressed: () {},
+                  textColor: AppColors.whiteColor,
+                  bgColor: AppColors.mainColor,
+                  borderRadius: AppConstants.radius_3,
+                  textSize: AppConstants.font_12,
+                ),
+              ),
             ],
           ),
         ),

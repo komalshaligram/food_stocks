@@ -63,7 +63,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
           list = [...state.cityList];
         }
         return Scaffold(
-          backgroundColor: AppColors.pageColor,
+          backgroundColor: AppColors.whiteColor,
           appBar: AppBar(
             leading: GestureDetector(
                 onTap: () {
@@ -168,7 +168,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               keyboardType: TextInputType.text,
                                               hint:
                                                   AppLocalizations.of(context)!
-                                                      .life_grocery_store,
+                                                      .city,
                                               fillColor: AppColors.whiteColor,
                                               textInputAction:
                                                   TextInputAction.next,
@@ -179,11 +179,12 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               cursorColor: AppColors.mainColor,
                                             ),
                                             7.height,
-                                            list.isEmpty
+                                            list.length == 0
                                                 ? Expanded(
                                                     child: Center(
                                                       child: Text(
-                                                        'Cities not available',
+                                                        AppStrings
+                                                            .cityNotFoundString,
                                                         style: AppStyles
                                                             .rkRegularTextStyle(
                                                                 size: AppConstants
@@ -242,17 +243,19 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                             borderRadius: BorderRadius.all(
                                 Radius.circular(AppConstants.radius_3)),
                           ),
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_10),
-                            child: Text(
-                              state.selectCity,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.mediumFont,
-                                  color: AppColors.blackColor),
-                              // textAlign: TextAlign.right,
-                            ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.selectCity,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.mediumFont,
+                                    color: AppColors.blackColor),
+                                // textAlign: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -351,7 +354,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                   .blackColor,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .bold),
+                                                                      .w600),
                                                     ),
                                                     30.height,
                                                     FileSelectionOptionWidget(
@@ -488,7 +491,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       CustomButtonWidget(
                         buttonText: state.isUpdate
                             ? AppLocalizations.of(context)!.save
-                            : AppLocalizations.of(context)!.continued,
+                            : AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
