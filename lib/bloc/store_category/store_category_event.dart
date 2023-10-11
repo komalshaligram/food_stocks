@@ -2,9 +2,9 @@ part of 'store_category_bloc.dart';
 
 @freezed
 class StoreCategoryEvent with _$StoreCategoryEvent {
-  const factory StoreCategoryEvent.changeCategoryExpansion({bool? isOpened}) =
-      _ChangeCategoryExpansion;
+  const factory StoreCategoryEvent.changeCategoryExpansionEvent(
+      {bool? isOpened}) = _ChangeCategoryExpansionEvent;
 
-  const factory StoreCategoryEvent.showCategoryOrSubCategory({bool? isOpened}) =
-      _ShowCategoryOrSubCategory;
+  const factory StoreCategoryEvent.changeTopNavigationEvent(
+      {required int index}) = _ChangeTopNavigationEvent;
 }

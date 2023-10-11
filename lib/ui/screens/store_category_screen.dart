@@ -40,29 +40,23 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     90.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'main',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.mainColor),
-                        ),
-                      ],
-                    )
+                    buildTopNavigation(navList: <String>[
+                      AppLocalizations.of(context)!.home,
+                      'category',
+                      'subcategory'
+                    ])
                   ],
                 ),
               ),
               CommonProductCategoryWidget(
                 isCategoryExpand: state.isCategoryExpand,
                 onFilterTap: () {
-                  bloc.add(StoreCategoryEvent.changeCategoryExpansion());
+                  bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                 },
                 onScanTap: () {},
                 controller: TextEditingController(),
                 onOutSideTap: () {
-                  bloc.add(StoreCategoryEvent.changeCategoryExpansion(
+                  bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
                       isOpened: true));
                 },
                 onCatListItemTap: () {},
@@ -71,6 +65,48 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTopNavigation({required List<String> navList}) {
+    return Container(
+      height: 50,
+      padding: EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_10),
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: navList.length,
+        itemBuilder: (context, index) => index == navList.length - 1
+            ? Text(
+                navList[index],
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              )
+            : GestureDetector(
+                onTap: () {
+                  // BlocProvider.of<StoreCategoryBloc>(context).add();
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      navList[index],
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          color: AppColors.mainColor),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      color: AppColors.mainColor,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }

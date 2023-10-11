@@ -10,13 +10,13 @@ part 'store_category_bloc.freezed.dart';
 class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   StoreCategoryBloc() : super(StoreCategoryState.initial()) {
     on<StoreCategoryEvent>((event, emit) {
-      if (event is _ChangeCategoryExpansion) {
+      if (event is _ChangeCategoryExpansionEvent) {
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: false));
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _ShowCategoryOrSubCategory) {}
+      } else if (event is _ChangeTopNavigationEvent) {}
     });
   }
 }
