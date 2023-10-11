@@ -5,7 +5,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/product_details/product_details_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
@@ -251,14 +250,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       color:  AppColors.blackColor ,
                       fontWeight: FontWeight.w400),),
               ),
-              ListView.builder(
-                itemCount: 7,
+              state.productList.isNotEmpty ? ListView.builder(
+                itemCount: state.productList.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                 itemBuilder: (context, index) =>
                     productListItem(index: index, context: context),
-              ),
+              ) : SizedBox(),
 
             ],
           ),
@@ -271,10 +270,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
          child: CustomButtonWidget(
            buttonText: AppLocalizations.of(context)!.continued,
            bGColor: AppColors.mainColor,
-
-
-
-
          ),
         ),
       ),
@@ -306,7 +301,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       child: Row(
         children: [
           Checkbox(
-              value: state.isCheckBox,
+              value: state.productList[index].isProductIssue,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(3.0),
               ),
@@ -319,12 +314,12 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               }
               ),
           Image.asset(
-            AppImagePath.product3,
+            state.productList[index].productImage!,
             width: 50,
             height: 50,
           ),
           10.width,
-          Text(AppLocalizations.of(context)!.product_Name,
+          Text(state.productList[index].productName!,
             style: TextStyle(
                 color: AppColors.blackColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
           ),

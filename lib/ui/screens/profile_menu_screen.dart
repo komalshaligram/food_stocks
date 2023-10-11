@@ -1,14 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import '../utils/themes/app_urls.dart';
 
 class ProfileMenuRoute {
   static Widget get route => ProfileMenuScreen();
@@ -20,7 +22,8 @@ class ProfileMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileMenuBloc()..add(ProfileMenuEvent.getPreferenceDataEvent()),
+      create: (context) =>
+          ProfileMenuBloc()..add(ProfileMenuEvent.getPreferenceDataEvent()),
       child: ProfileMenuScreenWidget(),
     );
   }
@@ -42,7 +45,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 children: [
                   10.height,
                   Container(
-                    height: 70,
+                    height: 80,
                     padding: EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_10),
                     child: Row(
@@ -60,27 +63,43 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           clipBehavior: Clip.hardEdge,
-                          child: Image.network(
-                            state.UserImageUrl,
-                          ),
+                          child: state.UserImageUrl.isNotEmpty ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: CachedNetworkImage(
+                              imageUrl: '${AppUrls.baseFileUrl}' +
+                                  '${state.UserImageUrl}',
+                              fit: BoxFit.fill,
+                            ),
+                          ) : SizedBox(),
                         ),
-                        20.width,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                state.UserCompanyLogoUrl,
+                        25.width,
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: AppConstants.padding_20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 34,
+                                width: getScreenHeight(context) * 0.18,
+                                child: state.UserCompanyLogoUrl.isNotEmpty
+                                    ? CachedNetworkImage(
+                                        imageUrl: '${AppUrls.baseFileUrl}' +
+                                            '${state.UserCompanyLogoUrl}',
+                                        fit: BoxFit.fill,
+                                      )
+                                    : SizedBox(),
                               ),
-                            ),
-                            Text(
-                             state.userName,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: 20,
-                                color: AppColors.textColor,
+                              5.height,
+                              Text(
+                                state.userName,
+                                style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.mediumFont,
+                                  color: AppColors.greyColor,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         )
                       ],
                     ),

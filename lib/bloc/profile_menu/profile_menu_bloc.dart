@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +18,15 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
 
+        debugPrint('UserImageUrl  ${preferences.getUserImageUrl()}');
+        debugPrint('username   ${preferences.getUserName()}');
+        debugPrint('logo  ${preferences.getUserCompanyLogoUrl()}');
       emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
       emit(state.copyWith(UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
       emit(state.copyWith(userName: preferences.getUserName()));
     }
+
+
     });
   }
 }

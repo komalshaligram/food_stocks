@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +15,7 @@ import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
+import '../utils/themes/app_urls.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -27,17 +28,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()..add(HomeEvent.getPreferencesDataEvent()),
-      child:  HomeScreenWidget(),
+      child: HomeScreenWidget(),
     );
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
-   HomeScreenWidget({super.key});
+  HomeScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-  //   HomeBloc bloc = context.read<HomeBloc>();
+    //   HomeBloc bloc = context.read<HomeBloc>();
+
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -71,14 +73,31 @@ class HomeScreenWidget extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.hardEdge,
-                              child: Image.network(
-                                state.UserImageUrl,
-                              ),
+                              child: state.UserImageUrl.isNotEmpty
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        imageUrl: '${AppUrls.baseFileUrl}' +
+                                            '${state.UserImageUrl}',
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )
+                                  : SizedBox(),
                             ),
-                            Image.network(
-                              state.UserCompanyLogoUrl,
-                              height: 60,
-                            ),
+                            15.width,
+                            state.UserCompanyLogoUrl.isNotEmpty
+                                ? CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    imageUrl: '${AppUrls.baseFileUrl}' +
+                                        '${state.UserCompanyLogoUrl}',
+                                    height: 50,
+                                    width: getScreenWidth(context) * 0.35,
+                                    fit: BoxFit.fill,
+                                  )
+                                : SizedBox(),
                           ],
                         ),
                         Container(
@@ -112,7 +131,8 @@ class HomeScreenWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(AppConstants.radius_100)),
                                   onTap: () {
-                                    Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                                    Navigator.pushNamed(context,
+                                        RouteDefine.messageScreen.name);
                                   },
                                   child: Stack(
                                     fit: StackFit.expand,
@@ -380,7 +400,8 @@ class HomeScreenWidget extends StatelessWidget {
                               allContentTitle:
                                   AppLocalizations.of(context)!.all_messages,
                               onTap: () {
-                                Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                                Navigator.pushNamed(
+                                    context, RouteDefine.messageScreen.name);
                               }),
                           10.height,
                           ListView.builder(
@@ -569,8 +590,7 @@ class HomeScreenWidget extends StatelessWidget {
                 Text(
                   'גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.',
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10,
-                      color: AppColors.blackColor),
+                      size: AppConstants.font_10, color: AppColors.blackColor),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -583,7 +603,11 @@ class HomeScreenWidget extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {AppStrings.messageContentString: index});
+                        Navigator.pushNamed(
+                            context, RouteDefine.messageContentScreen.name,
+                            arguments: {
+                              AppStrings.messageContentString: index
+                            });
                       },
                       child: Text(
                         AppLocalizations.of(context)!.read_more,

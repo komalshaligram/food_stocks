@@ -95,7 +95,14 @@ class ClientDetail with _$ClientDetail {
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
-    @JsonKey(name: "Monday") List<Monday>? monday,
+    List<Day>? sunday,
+    List<Day>? monday,
+    List<Day>? tuesday,
+    List<Day>? wednesday,
+    List<Day>? thursday,
+    List<Day>? fridayAndHolidayEves,
+    List<Day>? saturdayAndHolidays,
+
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>
@@ -103,11 +110,11 @@ class OperationTime with _$OperationTime {
 }
 
 @freezed
-class Monday with _$Monday {
-  const factory Monday({
+class Day with _$Day {
+  const factory Day({
     @JsonKey(name: "from") String? from,
     @JsonKey(name: "until") String? until,
-  }) = _Monday;
+  }) = _Day;
 
-  factory Monday.fromJson(Map<String, dynamic> json) => _$MondayFromJson(json);
+  factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
 }

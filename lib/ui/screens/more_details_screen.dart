@@ -4,13 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
-import '../../data/model/res_model/city_list_model/city_list_res_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
-
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
+import '../utils/themes/app_urls.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -49,16 +48,20 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  List<City> list = [];
+  List<String> list = [];
 
   MoreDetailsScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final listNotifier = ValueNotifier<List<City>>([]);
+    final listNotifier = ValueNotifier<List<String>>([]);
+
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
       builder: (context, state) {
+        if (list.isEmpty) {
+          list = [...state.cityList];
+        }
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: AppBar(
@@ -154,16 +157,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     .citySearchEvent(
                                                   search: value,
                                                 ));
-                                                /*  list = state.cityListResModel.data!.cities!
+                                                list = state.cityList
                                                     .where((city) =>
                                                         city.contains(value))
-                                                    .toList();*/
-                                                list = state.cityListResModel!
-                                                    .data!.cities!
-                                                    .where((element) =>
-                                                        element.cityName ==
-                                                        value)
                                                     .toList();
+                                                print('length:${list.length}');
                                                 listNotifier.value = list;
                                               },
                                               controller: state.cityController,
@@ -181,7 +179,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               cursorColor: AppColors.mainColor,
                                             ),
                                             7.height,
-                                            state.cityList.isEmpty
+                                            list.isEmpty
                                                 ? Expanded(
                                                     child: Center(
                                                       child: Text(
@@ -197,8 +195,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                   )
                                                 : ListView.builder(
                                                     shrinkWrap: true,
-                                                    itemCount:
-                                                        state.cityList.length,
+                                                    itemCount: list.length,
                                                     itemBuilder:
                                                         (context, index) {
                                                       return Padding(
@@ -209,18 +206,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                           onTap: () {
                                                             bloc.add(MoreDetailsEvent
                                                                 .selectCityEvent(
-                                                                    city: state
-                                                                        .cityList[
-                                                                            index]
-                                                                        .toString(),
+                                                                    city: list[
+                                                                        index],
                                                                     context:
                                                                         context));
                                                             Navigator.pop(
                                                                 context1);
                                                           },
                                                           child: Text(
-                                                            state
-                                                                .cityList[index]
+                                                            list[index]
                                                                 .toString(),
                                                             style: AppStyles
                                                                 .rkRegularTextStyle(
@@ -236,7 +230,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       ),
                                     );
                                   });
-
                             },
                           );
                         },
@@ -323,7 +316,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                     onTap: () {
-                                      // alertDialog(context);
                                       showModalBottomSheet(
                                           context: context,
                                           builder: (context) => Container(
@@ -399,41 +391,94 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               ),
                                           backgroundColor: Colors.transparent);
                                     },
-                                    child: state.isUpdate?SizedBox(
-                                      height: 130,
-                                      width: getScreenWidth(context),
-                                      child: Image.network(
-                                          state.companyLogo),
-                                    ) : state.isImagePick
-                                        ? SizedBox(
-                                            height: 130,
-                                            width: getScreenWidth(context),
-                                            child: Image.file(
-                                                    File(state.image.path),
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                    child: state.isUpdate
+                                        ? state.companyLogo.isNotEmpty
+                                            ? state.image.path != ''
+                                                ? SizedBox(
+                                                    height: getScreenHeight(
+                                                            context) *
+                                                        0.18,
+                                                    width:
+                                                        getScreenWidth(context),
+                                                    child: Image.file(
+                                                      File(state.image.path),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : SizedBox(
+                                                    height: getScreenHeight(
+                                                            context) *
+                                                        0.19,
+                                                    width:
+                                                        getScreenWidth(context),
+                                                    child: Image.network(
+                                                      '${AppUrls.baseFileUrl}' +
+                                                          '${state.companyLogo}',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  )
+                                            : Icon(
+                                                Icons.camera_alt_rounded,
+                                                color: AppColors.blueColor,
+                                                size: 30,
+                                              )
+                                        : state.isImagePick
+                                            ? SizedBox(
+                                                height:
+                                                    getScreenHeight(context) *
+                                                        0.18,
+                                                width: getScreenWidth(context),
+                                                child: Image.file(
+                                                  File(state.image.path),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              )
+                                            : Icon(
+                                                Icons.camera_alt_rounded,
+                                                color: AppColors.blueColor,
+                                                size: 30,
+                                              )),
+                                state.isUpdate
+                                    ? state.companyLogo.isNotEmpty
+                                        ? SizedBox()
+                                        : Align(
+                                            child: Container(
+                                              width: getScreenWidth(context),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .upload_photo,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color:
+                                                            AppColors.textColor,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                              ),
+                                            ),
                                           )
-                                        : Icon(
-                                            Icons.camera_alt_rounded,
-                                            color: AppColors.blueColor,
-                                            size: 30,
-                                          )),
-                                state.isImagePick
-                                    ? const SizedBox()
-                                    : Align(
-                                        child: Container(
-                                          width: getScreenWidth(context),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            AppLocalizations.of(context)!
-                                                .upload_photo,
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.font_14,
-                                                color: AppColors.textColor,
-                                                fontWeight: FontWeight.w400),
+                                    : state.isImagePick
+                                        ? const SizedBox()
+                                        : Align(
+                                            child: Container(
+                                              width: getScreenWidth(context),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .upload_photo,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color:
+                                                            AppColors.textColor,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
                               ],
                             ),
                           ),

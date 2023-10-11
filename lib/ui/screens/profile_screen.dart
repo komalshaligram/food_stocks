@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/profile/profile_bloc.dart';
+import '../utils/themes/app_urls.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -108,9 +109,17 @@ class ProfileScreenWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(200),
                                   color: AppColors.mainColor.withOpacity(0.1),
                                 ),
-                                child: state.isUpdate ? ClipRRect(
+                                child: state.isUpdate ? state.image.path != '' ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(40),
+                                  child: Image.file(
+                                    state.image,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ):ClipRRect(
                                     borderRadius: BorderRadius.circular(40),
-                                    child: Image.network(state.UserImageUrl)):state.image.path == ""
+                                    child:  Image.network('${AppUrls.baseFileUrl}'+'${state.UserImageUrl}',
+                                    fit: BoxFit.fill,
+                                    )):state.image.path == ""
                                     ? const Icon(Icons.person)
                                     : ClipRRect(
                                         borderRadius: BorderRadius.circular(40),
@@ -118,7 +127,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           state.image,
                                           fit: BoxFit.cover,
                                         ),
-                                      ),
+                                      )
                               ),
                             ),
                             Positioned(
@@ -402,7 +411,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               : AppLocalizations.of(context)!.continued,
                           bGColor: AppColors.mainColor,
                           onPressed: () {
-                        //    if (state.image.path != '') {
+                            if (state.image.path != '') {
                               if (state.selectedBusinessType.isEmpty ||
                                   state.selectedBusinessType != '') {
                                 if (_formKey.currentState?.validate() ??
@@ -423,12 +432,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                     title: AppStrings.selectBusinessTypeString,
                                     bgColor: AppColors.redColor);
                               }
-                            /*  }else {
+                             }else {
                               showSnackBar(
                                   context: context,
                                   title: AppStrings.selectProfileImageString,
                                   bgColor: AppColors.redColor);
-                            }*/
+                            }
                           },
                           fontColors: AppColors.whiteColor,
                         ),

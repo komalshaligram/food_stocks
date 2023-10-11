@@ -35,6 +35,7 @@ part 'file_upload_bloc.freezed.dart';
 class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
+
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -207,6 +208,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
+
+              SharedPreferencesHelper preferencesHelper =
+              SharedPreferencesHelper(
+                  prefs: await SharedPreferences.getInstance());
+
+              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
