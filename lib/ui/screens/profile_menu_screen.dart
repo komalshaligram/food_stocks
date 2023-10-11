@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -51,8 +49,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          // height: 60,
-                          // width: 60,
+                          height: 60,
+                          width: 60,
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             boxShadow: [
@@ -72,30 +70,24 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             ),
                           ) : SizedBox(),
                         ),
-                        25.width,
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: AppConstants.padding_20),
+                        20.width,
+                        SizedBox(
+                          height: 60,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 34,
-                                width: getScreenHeight(context) * 0.18,
-                                child: state.UserCompanyLogoUrl.isNotEmpty
-                                    ? CachedNetworkImage(
-                                        imageUrl: '${AppUrls.baseFileUrl}' +
-                                            '${state.UserCompanyLogoUrl}',
-                                        fit: BoxFit.fill,
-                                      )
-                                    : SizedBox(),
+                              Expanded(
+                                child: Image.network(
+                                  state.UserCompanyLogoUrl,
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
-                              5.height,
+                              3.height,
                               Text(
                                 state.userName,
                                 style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.mediumFont,
-                                  color: AppColors.greyColor,
+                                  size: 20,
+                                  color: AppColors.textColor,
                                 ),
                               ),
                             ],

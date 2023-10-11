@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,23 +27,23 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()..add(HomeEvent.getPreferencesDataEvent()),
-      child: HomeScreenWidget(),
+      child:  HomeScreenWidget(),
     );
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
-  HomeScreenWidget({super.key});
+   HomeScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    //   HomeBloc bloc = context.read<HomeBloc>();
-
+  //   HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Column(
@@ -52,6 +51,7 @@ class HomeScreenWidget extends StatelessWidget {
                   //appbar
                   Padding(
                     padding: const EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
                         horizontal: AppConstants.padding_10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,30 +73,30 @@ class HomeScreenWidget extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.hardEdge,
-                              child: state.UserImageUrl.isNotEmpty
+                              child:  state.UserImageUrl.isNotEmpty
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                        imageUrl: '${AppUrls.baseFileUrl}' +
-                                            '${state.UserImageUrl}',
-                                        fit: BoxFit.fill,
-                                      ),
-                                    )
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                                  imageUrl: '${AppUrls.baseFileUrl}' +
+                                      '${state.UserImageUrl}',
+                                  fit: BoxFit.fill,
+                                ),
+                              )
                                   : SizedBox(),
                             ),
                             15.width,
                             state.UserCompanyLogoUrl.isNotEmpty
                                 ? CachedNetworkImage(
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                    imageUrl: '${AppUrls.baseFileUrl}' +
-                                        '${state.UserCompanyLogoUrl}',
-                                    height: 50,
-                                    width: getScreenWidth(context) * 0.35,
-                                    fit: BoxFit.fill,
-                                  )
+                              placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                              imageUrl: '${AppUrls.baseFileUrl}' +
+                                  '${state.UserCompanyLogoUrl}',
+                              height: 50,
+                              width: getScreenWidth(context) * 0.35,
+                              fit: BoxFit.fill,
+                            )
                                 : SizedBox(),
                           ],
                         ),
@@ -131,8 +131,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(AppConstants.radius_100)),
                                   onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.messageScreen.name);
+                                    Navigator.pushNamed(context, RouteDefine.messageScreen.name);
                                   },
                                   child: Stack(
                                     fit: StackFit.expand,
@@ -151,7 +150,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             width: 16,
                                             decoration: BoxDecoration(
                                                 color:
-                                                    AppColors.notificationColor,
+                                                AppColors.notificationColor,
                                                 border: Border.all(
                                                     color: AppColors.whiteColor,
                                                     width: 1),
@@ -330,7 +329,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 image: AppImagePath.expense,
                                                 title: AppLocalizations.of(
-                                                        context)!
+                                                    context)!
                                                     .last_months_expenses,
                                                 value:
                                                     '18,360${AppLocalizations.of(context)!.currency}'),
@@ -400,8 +399,7 @@ class HomeScreenWidget extends StatelessWidget {
                               allContentTitle:
                                   AppLocalizations.of(context)!.all_messages,
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context, RouteDefine.messageScreen.name);
+                                Navigator.pushNamed(context, RouteDefine.messageScreen.name);
                               }),
                           10.height,
                           ListView.builder(
@@ -590,7 +588,8 @@ class HomeScreenWidget extends StatelessWidget {
                 Text(
                   'גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.',
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.blackColor),
+                      size: AppConstants.font_10,
+                      color: AppColors.blackColor),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -603,11 +602,7 @@ class HomeScreenWidget extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, RouteDefine.messageContentScreen.name,
-                            arguments: {
-                              AppStrings.messageContentString: index
-                            });
+                        Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {AppStrings.messageContentString: index});
                       },
                       child: Text(
                         AppLocalizations.of(context)!.read_more,

@@ -73,8 +73,11 @@ class FormFieldValidation {
   }
 
   String? ownerNameField(String value) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.isEmpty) {
       return 'enter business owner name';
+    } else if (regex.hasMatch(value)) {
+      return 'enter alphabets only';
     }
     return null;
   }
@@ -90,8 +93,11 @@ class FormFieldValidation {
   }
 
   String? contactNameField(String value) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.isEmpty) {
       return "enter contact name";
+    } else if (regex.hasMatch(value)) {
+      return 'enter alphabets only';
     }
     return null;
   }

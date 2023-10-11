@@ -10,6 +10,7 @@ class AppStrings {
   static const androidString = 'Android';
   static const iosString = 'IOS';
   static const timeString = '00:00';
+  static const tempString = 'temp';
 
   //api req param strings
   static const profileImageString = 'profileImg';

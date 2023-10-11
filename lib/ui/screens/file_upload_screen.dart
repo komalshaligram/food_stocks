@@ -85,7 +85,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                   children: [
                     state.isLoading
                         ? Container(
-                            height: getScreenHeight(context),
+                            height: getScreenHeight(context) - 56,
                             width: getScreenWidth(context),
                             child: Center(
                               child: CupertinoActivityIndicator(
@@ -129,34 +129,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   );
                                 },
                               ),
-                    // 10.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 1,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.promissory_note,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 2,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.personal_guarantee,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 3,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.photo_tz,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 4,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.business_certificate,
-                    //   state: state,
-                    // ),
                     40.height,
                     ButtonWidget(
                       buttonText: state.isUpdate
@@ -190,7 +162,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   context: context,
                                   title: AppStrings.registerSuccessString,
                                   bgColor: AppColors.mainColor);
-
                               Navigator.popUntil(
                                   context,
                                   (route) =>
@@ -377,7 +348,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     ),
                                   ],
                                 )
-                              : url.contains('temp')
+                              : url.contains(AppStrings.tempString)
                                   ? Image.file(
                                       File(localUrl),
                                       fit: BoxFit.cover,
@@ -398,6 +369,17 @@ class FileUploadScreenWidget extends StatelessWidget {
                                             ),
                                           );
                                         }
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Center(
+                                          child: Text(
+                                            'Failed to load',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor),
+                                          ),
+                                        );
                                       },
                                     ),
                         )
