@@ -144,8 +144,15 @@ class Forms with _$Forms {
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
-    @JsonKey(name: "Monday") List<Day>? monday,
-    @JsonKey(name: "Tuesday") List<Day>? tuesday,
+
+    List<Day>? sunday,
+   List<Day>? monday,
+   List<Day>? tuesday,
+    List<Day>? wednesday,
+    List<Day>? thursday,
+    List<Day>? fridayAndHolidayEves,
+    List<Day>? saturdayAndHolidays,
+
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>

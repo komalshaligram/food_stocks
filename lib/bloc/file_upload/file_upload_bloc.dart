@@ -35,6 +35,7 @@ part 'file_upload_bloc.freezed.dart';
 class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
+
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -182,18 +183,24 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           for (int i = 0; i < state.formsAndFilesList.length; i++) {
             debugPrint('url = ${state.formsAndFilesList[i].url}');
             if (state.formsAndFilesList[i].url?.isNotEmpty ?? false) {
-              if (state.formsAndFilesList[i].isForm ?? false) {
+              if ((state.formsAndFilesList[i].isForm ?? false) &&
+                  (state.formsAndFilesList[i].url
+                          ?.contains(AppStrings.tempString) ??
+                      false)) {
                 formsAndFiles[AppStrings.formsString]
                         ?[state.formsAndFilesList[i].id ?? ''] =
                     state.formsAndFilesList[i].url ?? '';
-              } else {
+              } else if ((state.formsAndFilesList[i].isForm == false) &&
+                  (state.formsAndFilesList[i].url
+                          ?.contains(AppStrings.tempString) ??
+                      false)) {
                 formsAndFiles[AppStrings.filesString]
                         ?[state.formsAndFilesList[i].id ?? ''] =
                     state.formsAndFilesList[i].url ?? '';
               }
             }
           }
-          debugPrint('req json = ${formsAndFiles}');
+          debugPrint('update url list = ${formsAndFiles}');
           if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
               (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
             if (state.isUpdate) {
@@ -207,6 +214,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
+
+              SharedPreferencesHelper preferencesHelper =
+              SharedPreferencesHelper(
+                  prefs: await SharedPreferences.getInstance());
+
+              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
@@ -255,20 +268,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
-        if (event.index == 1) {
-          emit(state.copyWith(promissoryNote: File('')));
-        }
-        if (event.index == 2) {
-          emit(state.copyWith(personalGuarantee: File('')));
-        }
-        if (event.index == 3) {
-          emit(state.copyWith(photoOfTZ: File('')));
-        }
-        if (event.index == 4) {
-          emit(state.copyWith(businessCertificate: File('')));
-        }
+        List<FormAndFileModel> formsAndFilesList =
+            state.formsAndFilesList.toList(growable: true);
+        formsAndFilesList[event.index].localUrl = '';
+        formsAndFilesList[event.index].url = '';
+        emit(state.copyWith(formsAndFilesList: []));
+        emit(state.copyWith(formsAndFilesList: formsAndFilesList));
       } else if (event is _downloadFileEvent) {
-        if (state.businessCertificate.path != '') {
+        if (true) {
           try {
             Map<Permission, PermissionStatus> statuses = await [
               Permission.storage,
@@ -281,17 +288,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               } else {
                 dir = await getApplicationDocumentsDirectory();
               }
-              Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
-              File newFile = File(
-                  '${dir.path}/${p.basename(state.businessCertificate.path)}');
-              await newFile.writeAsBytes(fileBytes).then(
-                (value) {
-                  showSnackBar(
-                      context: event.context,
-                      title: AppStrings.docDownloadString,
-                      bgColor: AppColors.mainColor);
-                },
-              );
+              // Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
+              // File newFile = File(
+              //     '${dir.path}/${p.basename(state.businessCertificate.path)}');
+              // await newFile.writeAsBytes(fileBytes).then(
+              //   (value) {
+              //     showSnackBar(
+              //         context: event.context,
+              //         title: AppStrings.docDownloadString,
+              //         bgColor: AppColors.mainColor);
+              //   },
+              // );
             } else {
               showSnackBar(
                   context: event.context,

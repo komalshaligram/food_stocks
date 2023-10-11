@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +15,7 @@ import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
+import '../utils/themes/app_urls.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -43,6 +44,7 @@ class HomeScreenWidget extends StatelessWidget {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Column(
@@ -50,6 +52,7 @@ class HomeScreenWidget extends StatelessWidget {
                   //appbar
                   Padding(
                     padding: const EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10,
                         horizontal: AppConstants.padding_10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,14 +74,31 @@ class HomeScreenWidget extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.hardEdge,
-                              child: Image.network(
-                                state.UserImageUrl,
-                              ),
+                              child:  state.UserImageUrl.isNotEmpty
+                                  ? ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                                  imageUrl: '${AppUrls.baseFileUrl}' +
+                                      '${state.UserImageUrl}',
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                                  : SizedBox(),
                             ),
-                            Image.network(
-                              state.UserCompanyLogoUrl,
-                              height: 60,
-                            ),
+                            15.width,
+                            state.UserCompanyLogoUrl.isNotEmpty
+                                ? CachedNetworkImage(
+                              placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                              imageUrl: '${AppUrls.baseFileUrl}' +
+                                  '${state.UserCompanyLogoUrl}',
+                              height: 50,
+                              width: getScreenWidth(context) * 0.35,
+                              fit: BoxFit.fill,
+                            )
+                                : SizedBox(),
                           ],
                         ),
                         Container(
@@ -131,7 +151,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             width: 16,
                                             decoration: BoxDecoration(
                                                 color:
-                                                    AppColors.notificationColor,
+                                                AppColors.notificationColor,
                                                 border: Border.all(
                                                     color: AppColors.whiteColor,
                                                     width: 1),
@@ -310,7 +330,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 context: context,
                                                 image: AppImagePath.expense,
                                                 title: AppLocalizations.of(
-                                                        context)!
+                                                    context)!
                                                     .last_months_expenses,
                                                 value:
                                                     '18,360${AppLocalizations.of(context)!.currency}'),
@@ -334,12 +354,12 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                           ),
                           20.height,
-                          titleRowWidget(
+                     /*     titleRowWidget(
                               context: context,
                               title: AppLocalizations.of(context)!.promotions,
                               allContentTitle:
                                   AppLocalizations.of(context)!.all_promotions,
-                              onTap: () {}),
+                              onTap: () {}),*/
                           SizedBox(
                             height: 200,
                             child: ListView.builder(

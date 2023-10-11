@@ -14,6 +14,7 @@ import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
+import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
 import '../ui/screens/basket_screen.dart';
@@ -56,7 +57,8 @@ enum RouteDefine {
   profileMenuScreen,
   orderDetailsScreen,
   productDetailsScreen,
-  shipmentVerificationScreen
+  shipmentVerificationScreen,
+  storeCategoryScreen,
 }
 
 class AppRouting {
@@ -91,7 +93,9 @@ class AppRouting {
       RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
       RouteDefine.orderDetailsScreen.name: (_) => OrderDetailsRoute.route,
       RouteDefine.productDetailsScreen.name: (_) => ProductDetailsRoute.route,
-      RouteDefine.shipmentVerificationScreen.name: (_) => ShipmentVerificationRoute.route,
+      RouteDefine.shipmentVerificationScreen.name: (_) =>
+          ShipmentVerificationRoute.route,
+      RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

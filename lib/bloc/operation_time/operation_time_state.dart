@@ -9,16 +9,19 @@ class OperationTimeState with _$OperationTimeState{
     required bool isRegisterSuccess,
     required bool isRegisterFail,
     required String errorMessage,
+    required bool isUpdate,
+
 
   }) = _OperationTimeState;
 
   factory OperationTimeState.initial()=> OperationTimeState(
-    time:  '0:0',
+    time:  AppStrings.timeString,
     OperationTimeList: [],
     isRefresh: false,
     isRegisterSuccess: false,
     errorMessage: '',
     isRegisterFail: false,
+    isUpdate:false,
   );
 
 }

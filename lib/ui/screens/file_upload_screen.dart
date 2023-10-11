@@ -7,7 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -83,7 +85,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                   children: [
                     state.isLoading
                         ? Container(
-                            height: getScreenHeight(context),
+                            height: getScreenHeight(context) - 56,
                             width: getScreenWidth(context),
                             child: Center(
                               child: CupertinoActivityIndicator(
@@ -127,34 +129,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   );
                                 },
                               ),
-                    // 10.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 1,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.promissory_note,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 2,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.personal_guarantee,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 3,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.photo_tz,
-                    //   state: state,
-                    // ),
-                    // 30.height,
-                    // buildFileUploadFields(
-                    //   fileIndex: 4,
-                    //   context: context,
-                    //   title: AppLocalizations.of(context)!.business_certificate,
-                    //   state: state,
-                    // ),
                     40.height,
                     ButtonWidget(
                       buttonText: state.isUpdate
@@ -176,13 +150,23 @@ class FileUploadScreenWidget extends StatelessWidget {
                             fontColors: AppColors.mainColor,
                             borderColor: AppColors.mainColor,
                             width: double.maxFinite,
-                            onPressed: () {
+                            onPressed: () async {
+                              SharedPreferencesHelper preferencesHelper =
+                                  SharedPreferencesHelper(
+                                      prefs: await SharedPreferences
+                                          .getInstance());
+
+                              preferencesHelper.setUserLoggedIn(
+                                  isLoggedIn: true);
                               showSnackBar(
                                   context: context,
                                   title: AppStrings.registerSuccessString,
                                   bgColor: AppColors.mainColor);
-                              Navigator.popUntil(context,
-                                      (route) => route.name == RouteDefine.connectScreen.name);
+                              Navigator.popUntil(
+                                  context,
+                                  (route) =>
+                                      route.name ==
+                                      RouteDefine.connectScreen.name);
                               Navigator.pushNamed(
                                   context, RouteDefine.bottomNavScreen.name);
                             },
@@ -364,7 +348,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     ),
                                   ],
                                 )
-                              : url.contains('temp')
+                              : url.contains(AppStrings.tempString)
                                   ? Image.file(
                                       File(localUrl),
                                       fit: BoxFit.cover,
@@ -385,6 +369,17 @@ class FileUploadScreenWidget extends StatelessWidget {
                                             ),
                                           );
                                         }
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Center(
+                                          child: Text(
+                                            'Failed to load',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor),
+                                          ),
+                                        );
                                       },
                                     ),
                         )

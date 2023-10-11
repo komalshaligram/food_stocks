@@ -1,17 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/error/exceptions.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
 import '../../data/model/req_model/operation_time/operation_time_req_model.dart';
+import '../../data/model/req_model/update_req_model.dart' as update;
 import '../../data/model/res_model/operation_time_model/operation_time_res_model.dart'
     as res;
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../ui/utils/themes/app_strings.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
+    as resGet;
+import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
+    as req;
+import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
+    as reqUpdate;
 
 part 'operation_time_event.dart';
 
@@ -22,14 +34,100 @@ part 'operation_time_bloc.freezed.dart';
 class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
   OperationTimeBloc() : super(OperationTimeState.initial()) {
     on<OperationTimeEvent>((event, emit) async {
-      List<Day> sundayList = [];
-      List<Day> mondayList = [];
-      List<Day> tuesdayList = [];
-      List<Day> wednesdayList = [];
-      List<Day> thursdayList = [];
-      List<Day> fridayAndHolidayEvesList = [];
-      List<Day> saturdayAndHolidaysList = [];
+      SharedPreferencesHelper preferences =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
 
+      List<Day>? sundayList = [];
+      List<Day>? mondayList = [];
+      List<Day>? tuesdayList = [];
+      List<Day>? wednesdayList = [];
+      List<Day>? thursdayList = [];
+      List<Day>? fridayAndHolidayEvesList = [];
+      List<Day>? saturdayAndHolidaysList = [];
+
+      if (event is _getOperationTimeDetailsEvent) {
+        emit(state.copyWith(isUpdate: event.isUpdate));
+      }
+
+      if (event is _getOperationTimeListEvent) {
+        if (state.isUpdate) {
+          try {
+            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+                data: req.ProfileDetailsReqModel(id: preferences.getUserId())
+                    .toJson());
+            response = resGet.ProfileDetailsResModel.fromJson(res);
+            debugPrint('response_______$response');
+            debugPrint('operation time : ${response.data?.clients?.first.clientDetail!.operationTime![0].tuesday}');
+
+            if (response.status == 200) {
+              List<OperationTimeModel> temp1 = state.OperationTimeList;
+              var sundayRs = response
+                  .data!.clients!.first.clientDetail!.operationTime![0].sunday!;
+              var mondayRs = response
+                  .data!.clients!.first.clientDetail!.operationTime![0].monday!;
+              var tuesdayRs = response.data!.clients!.first.clientDetail!
+                  .operationTime![0].tuesday!;
+              var wednesdayRs = response.data!.clients!.first.clientDetail!
+                  .operationTime![0].wednesday!;
+              var thursdayRs = response.data!.clients!.first.clientDetail!
+                  .operationTime![0].thursday!;
+              var fridayAndHolidayEvesRs = response.data!.clients!.first
+                  .clientDetail!.operationTime![0].fridayAndHolidayEves!;
+              var saturdayAndHolidaysRs = response.data!.clients!.first
+                  .clientDetail!.operationTime![0].saturdayAndHolidays!;
+
+              List<Day> sundayList = sundayRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+
+              List<Day> mondayList = mondayRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+
+              List<Day> tuesdayList = tuesdayRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+              List<Day> wednesdayList = wednesdayRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+
+              List<Day> thursdayList = thursdayRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+
+              List<Day> fridayAndHolidayEvesList =
+                  fridayAndHolidayEvesRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+
+              List<Day> saturdayAndHolidaysList =
+                  saturdayAndHolidaysRs.map((e) {
+                return Day(from: e.from, until: e.until);
+              }).toList();
+              temp1[0].monday = sundayList;
+              temp1[1].monday = mondayList;
+              temp1[2].monday = tuesdayList;
+              temp1[3].monday = wednesdayList;
+              temp1[4].monday = thursdayList;
+              temp1[5].monday = fridayAndHolidayEvesList;
+              temp1[6].monday = saturdayAndHolidaysList;
+              emit(state.copyWith(
+                  OperationTimeList: temp1, isRefresh: !state.isRefresh));
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+            }
+          } on ServerException {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        }
+      }
       if (event is _defaultValueAddInListEvent) {
         List<OperationTimeModel> temp = [];
         if (state.OperationTimeList.isEmpty) {
@@ -37,7 +135,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             OperationTimeModel(
               dayString: AppLocalizations.of(event.context)!.sunday,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -45,7 +143,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             OperationTimeModel(
               dayString: AppLocalizations.of(event.context)!.monday,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -53,14 +151,16 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             OperationTimeModel(
                 dayString: AppLocalizations.of(event.context)!.tuesday,
                 monday: [
-                  Day(until: '00:00', from: '00:00'),
+                  Day(
+                      until: AppStrings.timeString,
+                      from: AppStrings.timeString),
                 ]),
           );
           temp.add(
             OperationTimeModel(
               dayString: AppLocalizations.of(event.context)!.wednesday,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -68,7 +168,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             OperationTimeModel(
               dayString: AppLocalizations.of(event.context)!.thursday,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -77,7 +177,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               dayString:
                   AppLocalizations.of(event.context)!.friday_and_holiday_eves,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -86,7 +186,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               dayString:
                   AppLocalizations.of(event.context)!.saturday_and_holidays,
               monday: [
-                Day(until: '00:00', from: '00:00'),
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
             ),
           );
@@ -116,78 +216,109 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
           var end = format.parse(closingTime);
 
           var selectTimeZone = format.parse(selectedTime);
+          if (selectedTime != AppStrings.timeString) {
+            if (event.timeIndex > 0) {
+              previousClosingTime =
+                  temp[event.rowIndex].monday[event.timeIndex - 1].until;
 
-          if (event.timeIndex > 0) {
-            previousClosingTime =
-                temp[event.rowIndex].monday[event.timeIndex - 1].until;
+              var format = DateFormat("HH:mm");
+              var preEnd = format.parse(previousClosingTime!);
 
-            var format = DateFormat("HH:mm");
-            var preEnd = format.parse(previousClosingTime!);
-
-            if (event.openingIndex == 1 && selectTimeZone.isAfter(preEnd)) {
-              temp[event.rowIndex].monday.removeAt(event.timeIndex);
-              temp[event.rowIndex]
-                  .monday
-                  .add(Day(from: selectedTime, until: closingTime));
-            } else if (event.openingIndex == 0) {
-              if (temp[event.rowIndex].monday[event.timeIndex].from! ==
-                  '00:00') {
-                showSnackBar(
-                    context: event.context,
-                    title: 'select opening Time',
-                    bgColor: AppColors.redColor);
-              } else if (selectTimeZone.isAfter(start)) {
-                temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                temp[event.rowIndex]
-                    .monday
-                    .add(Day(from: openingTime, until: selectedTime));
-              } else {
-                showSnackBar(
-                    context: event.context,
-                    title: 'select closing time after opening time',
-                    bgColor: AppColors.redColor);
+              if (event.openingIndex == 1) {
+                if (closingTime == AppStrings.timeString &&
+                    selectTimeZone.isAfter(preEnd)) {
+                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                  temp[event.rowIndex]
+                      .monday
+                      .add(Day(from: selectedTime, until: closingTime));
+                } else if (closingTime != AppStrings.timeString) {
+                  if (selectTimeZone.isAfter(preEnd) &&
+                      selectTimeZone.isBefore(end)) {
+                    temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                    temp[event.rowIndex]
+                        .monday
+                        .add(Day(from: selectedTime, until: closingTime));
+                  } else if (selectTimeZone.isBefore(preEnd)) {
+                    showSnackBar(
+                        context: event.context,
+                        title: AppStrings.openingTimeAfterPreviousClosingString,
+                        bgColor: AppColors.redColor);
+                  } else {
+                    showSnackBar(
+                        context: event.context,
+                        title: AppStrings.openingTimeAfterClosingString,
+                        bgColor: AppColors.redColor);
+                  }
+                } else {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.openingTimeAfterPreviousClosingString,
+                      bgColor: AppColors.redColor);
+                }
+              } else if (event.openingIndex == 0) {
+                if (openingTime == AppStrings.timeString) {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.selectOpeningString,
+                      bgColor: AppColors.redColor);
+                } else if (selectTimeZone.isAfter(start)) {
+                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                  temp[event.rowIndex]
+                      .monday
+                      .add(Day(from: openingTime, until: selectedTime));
+                } else {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.closingTimeAfterOpeningString,
+                      bgColor: AppColors.redColor);
+                }
+              }
+            } else {
+              if (event.openingIndex == 1) {
+                if (closingTime != AppStrings.timeString &&
+                    selectTimeZone.isBefore(end)) {
+                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                  temp[event.rowIndex]
+                      .monday
+                      .add(Day(from: selectedTime, until: closingTime));
+                } else if (closingTime == AppStrings.timeString) {
+                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                  temp[event.rowIndex]
+                      .monday
+                      .add(Day(from: selectedTime, until: closingTime));
+                } else {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.openingTimeAfterClosingString,
+                      bgColor: AppColors.redColor);
+                }
+              } else if (event.openingIndex == 0) {
+                if (openingTime == AppStrings.timeString) {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.selectOpeningString,
+                      bgColor: AppColors.redColor);
+                } else if (selectTimeZone.isAfter(start)) {
+                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
+                  temp[event.rowIndex]
+                      .monday
+                      .add(Day(from: openingTime, until: selectedTime));
+                } else {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.closingTimeAfterOpeningString,
+                      bgColor: AppColors.redColor);
+                }
               }
             }
+            emit(state.copyWith(
+                OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
-            if (event.openingIndex == 1) {
-              if (closingTime != '00:00' && selectTimeZone.isBefore(end)) {
-                temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                temp[event.rowIndex]
-                    .monday
-                    .add(Day(from: selectedTime, until: closingTime));
-              } else if (closingTime == '00:00') {
-                temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                temp[event.rowIndex]
-                    .monday
-                    .add(Day(from: selectedTime, until: closingTime));
-              } else {
-                showSnackBar(
-                    context: event.context,
-                    title: 'select opening time before closing time',
-                    bgColor: AppColors.redColor);
-              }
-            } else if (event.openingIndex == 0) {
-              if (temp[event.rowIndex].monday[event.timeIndex].from! ==
-                  '00:00') {
-                showSnackBar(
-                    context: event.context,
-                    title: 'select opening Time',
-                    bgColor: AppColors.redColor);
-              } else if (selectTimeZone.isAfter(start)) {
-                temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                temp[event.rowIndex]
-                    .monday
-                    .add(Day(from: openingTime, until: selectedTime));
-              } else {
-                showSnackBar(
-                    context: event.context,
-                    title: 'select opening time after closing time',
-                    bgColor: AppColors.redColor);
-              }
-            }
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.selectTimeMoreThen0String,
+                bgColor: AppColors.redColor);
           }
-          emit(state.copyWith(
-              OperationTimeList: temp, isRefresh: !state.isRefresh));
         }
       }
 
@@ -197,32 +328,33 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
 
         if (state.OperationTimeList[event.rowIndex].monday.length > 1) {
           int len = state.OperationTimeList[event.rowIndex].monday.length;
-
           if (state.OperationTimeList[event.rowIndex].monday[len - 1].from !=
-                  '00:00' &&
+                  AppStrings.timeString &&
               state.OperationTimeList[event.rowIndex].monday[len - 1].until !=
-                  '00:00') {
-            temp[event.rowIndex].monday.add(Day(from: '00:00', until: '00:00'));
+                  AppStrings.timeString) {
+            temp[event.rowIndex].monday.add(
+                Day(from: AppStrings.timeString, until: AppStrings.timeString));
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
             showSnackBar(
                 context: event.context,
-                title: 'select previous shift time',
+                title: AppStrings.selectPreviousShiftString,
                 bgColor: AppColors.redColor);
           }
         } else {
           if (state.OperationTimeList[event.rowIndex].monday[0].from !=
-                  '00:00' &&
+                  AppStrings.timeString &&
               state.OperationTimeList[event.rowIndex].monday[0].until !=
-                  '00:00') {
-            temp[event.rowIndex].monday.add(Day(from: '00:00', until: '00:00'));
+                  AppStrings.timeString) {
+            temp[event.rowIndex].monday.add(
+                Day(from: AppStrings.timeString, until: AppStrings.timeString));
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
             showSnackBar(
                 context: event.context,
-                title: 'select first shift time',
+                title: AppStrings.selectFirstShiftString,
                 bgColor: AppColors.redColor);
           }
         }
@@ -237,160 +369,205 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
       }
 
       if (event is _operationTimeApiEvent) {
-        sundayList.addAll(
-          state.OperationTimeList[0].monday,
-        );
-        mondayList.addAll(
-          state.OperationTimeList[1].monday,
-        );
-        tuesdayList.addAll(
-          state.OperationTimeList[2].monday,
-        );
-        wednesdayList.addAll(
-          state.OperationTimeList[3].monday,
-        );
-        thursdayList.addAll(
-          state.OperationTimeList[4].monday,
-        );
-        fridayAndHolidayEvesList.addAll(
-          state.OperationTimeList[5].monday,
-        );
-        saturdayAndHolidaysList.addAll(
-          state.OperationTimeList[6].monday,
-        );
-
-        if (sundayList.first.from != '00:00' ||
-            mondayList.first.from != '00:00' &&
-                tuesdayList.first.from != '00:00' ||
-            wednesdayList.first.from != '00:00' ||
-            thursdayList.first.from != '00:00' ||
-            fridayAndHolidayEvesList.first.from != '00:00' ||
-            saturdayAndHolidaysList.first.from != '00:00') {
-          OperationTimeReqModel reqMap = OperationTimeReqModel(
-            operationTime: OperationTime(
-              sunday: sundayList,
-              monday: mondayList,
-              tuesday: tuesdayList,
-              wednesday: wednesdayList,
-              thursday: thursdayList,
-              fridayAndHolidayEves: fridayAndHolidayEvesList,
-              saturdayAndHolidays: saturdayAndHolidaysList,
-            ),
-          );
-
-          debugPrint('operation time reqMap + $reqMap');
-          try {
-            final response = await DioClient().post(
-                '/v1/clients/operationTime/${event.id}',
-                data: reqMap);
-
-            res.OperationTimeResModel operationTimeResModel =
-                res.OperationTimeResModel.fromJson(response);
-
-            debugPrint('operation time response --- ${operationTimeResModel}');
-
-            if (response['status'] == 200) {
-              /*   emit(state.copyWith(isRegisterSuccess: true));
-
-              emit(state.copyWith(
-                isRegisterSuccess: false,
-              ));*/
-              Navigator.pushNamed(
-                  event.context, RouteDefine.fileUploadScreen.name);
-            } else {
+        bool isSnackbarActive = false;
+        for (int i = 0; i < state.OperationTimeList.length; i++) {
+          if (state.OperationTimeList[i].monday[0].until ==
+                  AppStrings.timeString &&
+              state.OperationTimeList[i].monday[0].from !=
+                  AppStrings.timeString) {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.fillUpClosingTimeString,
+                bgColor: AppColors.redColor);
+            isSnackbarActive = true;
+          }
+          for (int j = 1; j < state.OperationTimeList[i].monday.length; j++) {
+            if (state.OperationTimeList[i].monday[j] ==
+                Day(
+                    from: AppStrings.timeString,
+                    until: AppStrings.timeString)) {
+              state.OperationTimeList[i].monday.removeAt(j);
+            } else if (state.OperationTimeList[i].monday[j].until ==
+                    AppStrings.timeString &&
+                state.OperationTimeList[i].monday[j].from !=
+                    AppStrings.timeString) {
               showSnackBar(
                   context: event.context,
-                  title: response['message'],
+                  title: AppStrings.fillUpClosingTimeString,
                   bgColor: AppColors.redColor);
-              /*   emit(state.copyWith(
-                  isRegisterFail: true, errorMessage: response['message']));
+              isSnackbarActive = true;
+            }
+          }
+        }
 
+        if (isSnackbarActive == false) {
+          sundayList.addAll(
+            state.OperationTimeList[0].monday,
+          );
+          mondayList.addAll(
+            state.OperationTimeList[1].monday,
+          );
+          tuesdayList.addAll(
+            state.OperationTimeList[2].monday,
+          );
+          wednesdayList.addAll(
+            state.OperationTimeList[3].monday,
+          );
+          thursdayList.addAll(
+            state.OperationTimeList[4].monday,
+          );
+          fridayAndHolidayEvesList.addAll(
+            state.OperationTimeList[5].monday,
+          );
+          saturdayAndHolidaysList.addAll(
+            state.OperationTimeList[6].monday,
+          );
+
+          if (!state.isUpdate) {
+            if (sundayList.first.from != AppStrings.timeString ||
+                mondayList.first.from != AppStrings.timeString &&
+                    tuesdayList.first.from != AppStrings.timeString ||
+                wednesdayList.first.from != AppStrings.timeString ||
+                thursdayList.first.from != AppStrings.timeString ||
+                fridayAndHolidayEvesList.first.from != AppStrings.timeString ||
+                saturdayAndHolidaysList.first.from != AppStrings.timeString) {
+              OperationTimeReqModel reqMap = OperationTimeReqModel(
+                operationTime: OperationTime(
+                  sunday: sundayList,
+                  monday: mondayList,
+                  tuesday: tuesdayList,
+                  wednesday: wednesdayList,
+                  thursday: thursdayList,
+                  fridayAndHolidayEves: fridayAndHolidayEvesList,
+                  saturdayAndHolidays: saturdayAndHolidaysList,
+                ),
+              );
+
+              debugPrint('operation time reqMap + $reqMap');
+              try {
+                print(
+                    '_maydd_______${AppUrls.operationTimeUrl + '/' + preferences.getUserId()}');
+
+                final response1 = await DioClient().post(
+                    AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
+                    //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
+                    data: reqMap);
+                res.OperationTimeResModel operationTimeResModel =
+                    res.OperationTimeResModel.fromJson(response1);
+
+                debugPrint(
+                    'operation time response --- ${operationTimeResModel}');
+
+                if (response1['status'] == 200) {
+                  emit(state.copyWith(isRegisterSuccess: true));
+
+                  emit(state.copyWith(
+                    isRegisterSuccess: false,
+                  ));
+                  Navigator.pushNamed(
+                      event.context, RouteDefine.fileUploadScreen.name);
+                } else {
+                  showSnackBar(
+                      context: event.context,
+                      title: response1['message'],
+                      bgColor: AppColors.redColor);
+                  emit(state.copyWith(
+                      isRegisterFail: true,
+                      errorMessage: response1['message']));
+
+                  emit(state.copyWith(
+                    isRegisterFail: false,
+                  ));
+                }
+              } catch (e) {
+                debugPrint(e.toString());
+                emit(state.copyWith(
+                    isRegisterFail: true, errorMessage: e.toString()));
+                emit(state.copyWith(
+                  isRegisterFail: false,
+                ));
+              }
+            } else {
+              emit(state.copyWith(
+                  isRegisterFail: true,
+                  errorMessage: AppStrings.selectShiftTimeString));
               emit(state.copyWith(
                 isRegisterFail: false,
-              ));*/
+              ));
             }
-          } catch (e) {
-            debugPrint(e.toString());
-            emit(state.copyWith(
-                isRegisterFail: true, errorMessage: e.toString()));
-            emit(state.copyWith(
-              isRegisterFail: false,
-            ));
+          } else {
+            update.UpdateReqModel reqMap = update.UpdateReqModel(
+                email: 'test@jglfkgfjhs.dgd',
+                phoneNumber: '6498573612',
+                address: '123 Main St',
+                cityId: '6511302f482b14e37c254527',
+                logo:
+                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
+                contactName: 'John Smith',
+                profileImage:
+                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
+                clientDetail: update.ClientDetail(
+                  bussinessId: 559,
+                  lastSeen: '2023-09-27T12:00:00.000Z',
+                  monthlyCredits: 100,
+                  bussinessName: 'Xfhg',
+                  ownerName: 'Jane Doe',
+                  fax: '555-1234',
+                  clientTypeId: '65117f58fc0c530f43e8b72a',
+                  israelId: '65117f58fc0c530f43e8b72a',
+                  tokenId: '65117f58fc0c530f43e8b72a',
+                  applicationVersion: '',
+                  deviceType: '',
+                  operationTime: update.OperationTime(
+                    sunday: sundayList,
+                    monday: mondayList,
+                    tuesday: tuesdayList,
+                    wednesday: wednesdayList,
+                    thursday: thursdayList,
+                    fridayAndHolidayEves: fridayAndHolidayEvesList,
+                    saturdayAndHolidays: saturdayAndHolidaysList,
+                  ),
+                )
+                // logo: imgUrl,
+                );
+
+            try {
+              final res = await DioClient().post(
+                  AppUrls.updateProfileDetailsUrl +
+                      "/" +
+                      preferences.getUserId(),
+                  data: reqMap.toJson());
+              print(
+                  '___url___${AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId()}');
+//651bb2f9d2c8a6d5b1c1ff84
+              debugPrint('operation update req _____${reqMap}');
+
+              reqUpdate.ProfileDetailsUpdateResModel res1 =
+                  reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
+
+              debugPrint('operation update res _____${res1}');
+              if (res1.status == 200) {
+                print('skjdksd');
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.updateSuccessString,
+                    bgColor: AppColors.redColor);
+                Navigator.pop(event.context);
+              } else {
+                showSnackBar(
+                    context: event.context,
+                    title: res1.message ?? AppStrings.somethingWrongString,
+                    bgColor: AppColors.redColor);
+              }
+            } on ServerException {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+            }
           }
-        } else {
-          emit(state.copyWith(
-              isRegisterFail: true, errorMessage: 'please select shiftTime'));
-          emit(state.copyWith(
-            isRegisterFail: false,
-          ));
         }
       }
     });
   }
 }
-
-/*
-reqMap = ProfileModel(
-// statusId: profileModel.statusId,
-profileImage: profileModel.profileImage,
-phoneNumber: profileModel.phoneNumber,
-logo: profileModel.logo,
-// lastName: '',
-// firstName: '',
-cityId: profileModel.cityId,
-contactName: profileModel.contactName,
-createdBy: '60abf964173234001c903a05',
-updatedBy: '60abf964173234001c903a05',
-address: profileModel.address,
-email: profileModel.email,
-clientDetail: ClientDetail(
-fax: profileModel.clientDetail?.fax,
-clientTypeId: '60abf964173234001c903a05',
-applicationVersion:
-profileModel.clientDetail?.applicationVersion,
-ownerName: profileModel.clientDetail?.ownerName,
-bussinessName: profileModel.clientDetail?.bussinessName,
-bussinessId: profileModel.clientDetail?.bussinessId,
-deviceType: profileModel.clientDetail?.deviceType,
-israelId: profileModel.clientDetail?.israelId,
-lastSeen: DateTime.now(),
-monthlyCredits: 100,
-// operationTime: OperationTime(
-//   sunday: sundayList,
-//   monday: mondayList,
-//   tuesday: tuesdayList,
-//   wednesday: wednesdayList,
-//   thursday: thursdayList,
-//   fridayAndHolidayEves: fridayAndHolidayEvesList,
-//   saturdayAndHolidays: saturdayAndHolidaysList,
-// ),
-tokenId: profileModel.clientDetail?.tokenId,
-));*/
-/*      reqMap = ProfileModel(
-              // statusId: profileModel.statusId,
-              profileImage: profileModel.profileImage,
-              phoneNumber: profileModel.phoneNumber,
-              logo: profileModel.logo,
-              // lastName: '',
-              // firstName: '',
-              cityId: profileModel.cityId,
-              contactName: profileModel.contactName,
-              createdBy: '60abf964173234001c903a05',
-              updatedBy: '60abf964173234001c903a05',
-              address: profileModel.address,
-              email: profileModel.email,
-              clientDetail: ClientDetail(
-                fax: profileModel.clientDetail?.fax,
-                clientTypeId: '60abf964173234001c903a05',
-                applicationVersion:
-                    profileModel.clientDetail?.applicationVersion,
-                ownerName: profileModel.clientDetail?.ownerName,
-                bussinessName: profileModel.clientDetail?.bussinessName,
-                bussinessId: profileModel.clientDetail?.bussinessId,
-                deviceType: profileModel.clientDetail?.deviceType,
-                israelId: profileModel.clientDetail?.israelId,
-                lastSeen: DateTime.now(),
-                monthlyCredits: 100,
-                //operationTime: OperationTime(),
-                tokenId: profileModel.clientDetail?.tokenId,
-              ));*/

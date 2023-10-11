@@ -41,6 +41,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Stack(
                 children: [
@@ -49,7 +50,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       screenWidth: getScreenWidth(context),
                       state: state),
                   Positioned(
-                    bottom: 30,
+                    bottom: 25,
                     left: 24,
                     right: 24,
                     child: Container(
@@ -119,7 +120,6 @@ class BottomNavScreenWidget extends StatelessWidget {
     return Container(
       height: screenHeight,
       width: screenWidth,
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
       child: IndexedStack(
         index: state.index,
         children: const [

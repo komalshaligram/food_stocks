@@ -27,12 +27,20 @@ import '../req_model/operation_time/operation_time_req_model.dart';
 
 class OperationTimeModel{
    List<Day>monday;
-   String dayString;
+   String dayString = '';
   OperationTimeModel({
      required this.monday,
     required this.dayString,
 
 });
+   OperationTimeModel.fromJson(Map<String, dynamic> json)
+       : monday = json['monday'],
+         dayString = json['dayString'];
+
+   Map<String, dynamic> toJson() => {
+     'monday': monday,
+     'dayString': dayString,
+   };
 
   }
 
