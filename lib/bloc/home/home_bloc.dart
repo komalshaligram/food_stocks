@@ -18,9 +18,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             prefs: await SharedPreferences.getInstance());
 
         debugPrint(
-            'getUserImageUrl______${AppUrls.baseFileUrl}${preferences.getUserImageUrl()}');
+            'getUserImageUrl   ${AppUrls.baseFileUrl}${preferences.getUserImageUrl()}');
         debugPrint(
-            'getUserCompanyLogoUrl______${preferences.getUserCompanyLogoUrl()}');
+            'getUserCompanyLogoUrl   ${preferences.getUserCompanyLogoUrl()}');
 
         emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
         emit(state.copyWith(

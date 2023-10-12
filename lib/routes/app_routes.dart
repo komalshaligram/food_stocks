@@ -22,6 +22,7 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
+import '../ui/screens/order_summary_screen.dart';
 import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
@@ -38,7 +39,7 @@ enum RouteDefine {
   connectScreen,
   profileScreen,
   moreDetailsScreen,
-  operationTimeScreen,
+  activityTimeScreen,
   bottomNavScreen,
   homeScreen,
   menuScreen,
@@ -59,6 +60,7 @@ enum RouteDefine {
   productDetailsScreen,
   shipmentVerificationScreen,
   storeCategoryScreen,
+  orderSummaryScreen,
 }
 
 class AppRouting {
@@ -70,7 +72,7 @@ class AppRouting {
 
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
       RouteDefine.moreDetailsScreen.name: (_) => MoreDetailsRoute.route,
-      RouteDefine.operationTimeScreen.name: (_) => OperationTimeScreenRoute.route,
+      RouteDefine.activityTimeScreen.name: (_) => ActivityTimeScreenRoute.route,
       RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
 
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
@@ -96,6 +98,7 @@ class AppRouting {
       RouteDefine.shipmentVerificationScreen.name: (_) =>
           ShipmentVerificationRoute.route,
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
+      RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

@@ -42,6 +42,7 @@ class SharedPreferencesHelper {
     await prefs.setString(userId, id);
   }
 
+
   Future<void> setUserName({required String name}) async {
     await prefs.setString(userName, name);
   }

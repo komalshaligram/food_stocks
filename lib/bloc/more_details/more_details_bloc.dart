@@ -174,6 +174,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               createdBy: profileModel.createdBy,
               updatedBy: profileModel.updatedBy,
               clientDetail: ClientDetail(
+                monthlyCredits: 100,
                 fax: state.faxController.text,
                 applicationVersion:
                     profileModel.clientDetail?.applicationVersion,
@@ -184,13 +185,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
-                tokenId: profileModel.clientDetail?.tokenId,
+                tokenId:"" /*profileModel.clientDetail?.tokenId*/,
               ));
 
-          debugPrint('profile reqMap + $reqMap');
+          debugPrint('profile reqMap + ${reqMap.toJson()}');
           try {
             final response =
-                await DioClient().post(AppUrls.RegistrationUrl, data: reqMap);
+                await DioClient().post(
+                    AppUrls.RegistrationUrl,
+                    data: reqMap,
+
+                );
+            print('response____$response');
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -210,7 +216,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
               Navigator.pushNamed(
                 event.context,
-                RouteDefine.operationTimeScreen.name,
+                RouteDefine.activityTimeScreen.name,
               );
             } else {
               showSnackBar(

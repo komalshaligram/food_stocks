@@ -128,7 +128,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                AppLocalizations.of(context)!.name_provider,
+                                AppLocalizations.of(context)!.supplier_name,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.font_14,
                                     color: AppColors.blackColor,
@@ -299,7 +299,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                       onTap: (){
                                         signatureGlobalKey.currentState!.clear();
                                       },
-                                      child: Icon(Icons.delete_outline,color: AppColors.redColor,size: 30)),
+                                      child: SvgPicture.asset(
+                                        AppImagePath.deleteRed,
+                                      ),),
                                 ],
                               ),
                             ),
@@ -322,7 +324,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                               horizontal: AppConstants.padding_30),
                           color: AppColors.pageColor,
                           child: CustomButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.save,
+                            buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
                             bGColor: AppColors.mainColor,
                           ),
                         ),

@@ -438,8 +438,8 @@ class ProfileScreenWidget extends StatelessWidget {
                         40.height,
                         CustomButtonWidget(
                           buttonText: state.isUpdate
-                              ? AppLocalizations.of(context)!.save
-                              : AppLocalizations.of(context)!.next,
+                              ? AppLocalizations.of(context)!.save.toUpperCase()
+                              : AppLocalizations.of(context)!.next.toUpperCase(),
                           bGColor: AppColors.mainColor,
                           onPressed: () {
                             if (state.image.path != '') {
