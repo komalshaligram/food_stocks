@@ -71,7 +71,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 imgUrl = profileImageModel.filepath ?? '';
               }
               emit(state.copyWith(
-                  image: File(croppedImage?.path ?? pickedFile.path)));
+                  image: File(croppedImage?.path ?? pickedFile.path),
+                  UserImageUrl: profileImageModel.filepath ?? ''));
             } on ServerException {
               showSnackBar(
                   context: event.context,
@@ -105,8 +106,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         profileModel = ProfileModel(
           phoneNumber: mobileNo,
           profileImage: imgUrl,
-          createdBy: '60abf964173234001c903a05',
-          updatedBy: '60abf964173234001c903a05',
+          // createdBy: '60abf964173234001c903a05',
+          // updatedBy: '60abf964173234001c903a05',
           clientDetail: ClientDetail(
             bussinessId: int.tryParse(state.idController.text) ?? 0,
             bussinessName: state.businessNameController.text,
@@ -115,13 +116,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
-            applicationVersion: '1.0.0',
-            monthlyCredits: 100,
+            // applicationVersion: '1.0.0',
+            // monthlyCredits: 100,
             israelId: state.hpController.text,
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
                 : AppStrings.iosString,
-            lastSeen: DateTime.now(),
           ),
           contactName: state.contactController.text,
         );
@@ -139,8 +139,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
+              debugPrint(
+                  'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
+                  UserImageUrl:
+                      response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
                           ?.firstWhere((businessType) =>
                               businessType.id ==
@@ -153,7 +157,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                          response.data?.clients?.first.clientDetail?.israelId),
+                      response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -186,13 +190,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             clientTypeId: state.businessTypeList.data?.clientTypes
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
-                .businessType,
+                .id,
             bussinessId: int.tryParse(state.idController.text) ?? 0,
             bussinessName: state.businessNameController.text,
             ownerName: state.ownerNameController.text,
+            israelId: state.hpController.text,
           ),
         );
         try {
+          debugPrint('profile req = ${updatedProfileModel.toJson()}');
+          emit(state.copyWith(isLoading: true));
           final res = await DioClient().post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: updatedProfileModel.toJson());
@@ -200,18 +207,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
+            emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.updateSuccessString,
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           } else {
+            emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
+          emit(state.copyWith(isLoading: false));
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,

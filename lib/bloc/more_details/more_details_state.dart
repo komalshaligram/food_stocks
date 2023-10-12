@@ -13,12 +13,13 @@ class MoreDetailsState with _$MoreDetailsState {
     required TextEditingController cityController,
     required File image,
     required bool isImagePick,
+    required bool isLoading,
     required CityListResModel? cityListResModel,
     required String companyLogo,
   }) = _MoreDetailsState;
 
   factory MoreDetailsState.initial() => MoreDetailsState(
-        selectCity: '',
+    selectCity: '',
         cityList: [],
         isUpdate: false,
         addressController: TextEditingController(),
@@ -26,10 +27,10 @@ class MoreDetailsState with _$MoreDetailsState {
         faxController: TextEditingController(),
         image: File(''),
         isImagePick: false,
+        isLoading: false,
         cityController: TextEditingController(),
         filterList: [],
-    cityListResModel: CityListResModel(),
-    companyLogo: '',
-
+        cityListResModel: CityListResModel(),
+        companyLogo: '',
       );
 }

@@ -10,7 +10,8 @@ import '../../data/error/exceptions.dart';
 
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
-import '../../data/model/req_model/update_req_model.dart' as update;
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
+    as update;
 
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
 import '../../data/storage/shared_preferences_helper.dart';
@@ -495,18 +496,19 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               ));
             }
           } else {
-            update.ProfileUpdateReqModel reqMap = update.ProfileUpdateReqModel(
-                email: 'test@jglfkgfjhs.dgd',
-                phoneNumber: '6498573612',
-                address: '123 Main St',
-                cityId: '6511302f482b14e37c254527',
-                logo:
-                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
-                contactName: 'John Smith',
-                profileImage:
-                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
-                clientDetail: update.ClientDetail(
-                  bussinessId: 559,
+            update.ProfileDetailsUpdateReqModel reqMap =
+                update.ProfileDetailsUpdateReqModel(
+                    email: 'test@jglfkgfjhs.dgd',
+                    phoneNumber: '6498573612',
+                    address: '123 Main St',
+                    cityId: '6511302f482b14e37c254527',
+                    logo:
+                        'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
+                    contactName: 'John Smith',
+                    profileImage:
+                        'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
+                    clientDetail: update.ClientDetail(
+                      bussinessId: 559,
                   lastSeen: '2023-09-27T12:00:00.000Z',
                   monthlyCredits: 100,
                   bussinessName: 'Xfhg',

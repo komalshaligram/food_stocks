@@ -47,6 +47,7 @@ class Client with _$Client {
     @JsonKey(name: "address") String? address,
     @JsonKey(name: "contactName") String? contactName,
     @JsonKey(name: "logo") String? logo,
+    @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,

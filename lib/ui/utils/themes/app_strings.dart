@@ -13,6 +13,7 @@ class AppStrings {
   static const tempString = 'temp';
   static const cityNotFoundString = 'Cities not available';
   static const okString = 'ok';
+  static const failedToLoadString = 'Failed to load';
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -59,7 +60,7 @@ class AppStrings {
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
       'Please select only image and document files';
-  static const docDownloadString = 'Document download successfully!';
+  static const downloadString = 'Download successfully!';
   static const downloadFailedString = 'Failed to download';
   static const docDownloadAllowPermissionString =
       'Please allow permission from settings';

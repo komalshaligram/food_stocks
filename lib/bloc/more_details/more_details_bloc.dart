@@ -44,42 +44,32 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
-          profileModel = event.profileModel;
-          try {
-            final response = await DioClient().get(path: AppUrls.cityListUrl);
-
-            CityListResModel cityListResModel =
-                CityListResModel.fromJson(response);
-
-            debugPrint('city list response --- ${cityListResModel}');
-            debugPrint(
-                'city  --- ${cityListResModel.data!.cities![0].cityName}');
-
-            if (cityListResModel.status == 200) {
-              List<String> temp = [];
-
-              cityListResModel.data!.cities!.forEach((element) {
-                temp.add(element.cityName.toString());
-              });
-              emit(state.copyWith(cityList: temp));
-
-              emit(state.copyWith(
-                  filterList: temp,
-                  cityListResModel: cityListResModel,
-                  selectCity: cityListResModel.data!.cities!.first.cityName
-                      .toString()));
-            } else {
-              debugPrint('cityListResModel____${cityListResModel}');
-            }
-          } catch (e) {
-            debugPrint(e.toString());
-            showSnackBar(
-                context: event.context,
-                title: e.toString(),
-                bgColor: AppColors.redColor);
+        profileModel = event.profileModel;
+        try {
+          final response = await DioClient().get(path: AppUrls.cityListUrl);
+          CityListResModel cityListResModel =
+              CityListResModel.fromJson(response);
+          if (cityListResModel.status == 200) {
+            List<String> temp = [];
+            cityListResModel.data!.cities!.forEach((element) {
+              temp.add(element.cityName.toString());
+            });
+            emit(state.copyWith(cityList: temp));
+            emit(state.copyWith(
+                filterList: temp,
+                cityListResModel: cityListResModel,
+                selectCity:
+                    cityListResModel.data!.cities!.first.cityName.toString()));
+          } else {
+            debugPrint('cityListResModel____${cityListResModel}');
           }
-
-        debugPrint('get contact name = ${profileModel.contactName}');
+        } catch (e) {
+          debugPrint(e.toString());
+          showSnackBar(
+              context: event.context,
+              title: e.toString(),
+              bgColor: AppColors.redColor);
+        }
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(
@@ -108,10 +98,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   FileUploadModel.fromJson(response);
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
+                emit(state.copyWith(
+                    image: File(croppedImage?.path ?? pickedFile.path),
+                    isImagePick: true,
+                    companyLogo: profileImageModel.filepath ?? ''));
               }
-              emit(state.copyWith(
-                  image: File(croppedImage?.path ?? pickedFile.path),
-                  isImagePick: true));
             } on ServerException {
               showSnackBar(
                   context: event.context,
@@ -135,25 +126,29 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             // logo: imgUrl,
           );
           try {
+            emit(state.copyWith(isLoading: true));
             final res = await DioClient().post(
-                AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+                "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
                 data: updatedProfileModel.toJson());
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == 200) {
+              emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
                   title: AppStrings.updateSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
             } else {
+              emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
+            emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
@@ -171,12 +166,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               contactName: profileModel.contactName,
               address: state.addressController.text,
               email: state.emailController.text,
-              createdBy: profileModel.createdBy,
-              updatedBy: profileModel.updatedBy,
               clientDetail: ClientDetail(
                 fax: state.faxController.text,
-                applicationVersion:
-                    profileModel.clientDetail?.applicationVersion,
                 ownerName: profileModel.clientDetail?.ownerName,
                 clientTypeId: profileModel.clientDetail?.clientTypeId,
                 bussinessName: profileModel.clientDetail?.bussinessName,
@@ -184,11 +175,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
-                tokenId: profileModel.clientDetail?.tokenId,
               ));
 
           debugPrint('profile reqMap + $reqMap');
           try {
+            emit(state.copyWith(isLoading: true));
             final response =
                 await DioClient().post(AppUrls.RegistrationUrl, data: reqMap);
 
@@ -207,12 +198,13 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                       .toString());
               preferences.setUserId(
                   id: profileResModel.data!.client!.id.toString());
-
+              emit(state.copyWith(isLoading: false));
               Navigator.pushNamed(
                 event.context,
                 RouteDefine.operationTimeScreen.name,
               );
             } else {
+              emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
                   title: response['message'],
@@ -220,6 +212,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             }
           } catch (e) {
             debugPrint(e.toString());
+            emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: e.toString(),
@@ -247,9 +240,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
-            debugPrint(
-                'update city : ${response.data?.clients?.first.city?.cityName}');
             if (response.status == 200) {
+              debugPrint(
+                  'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
                 selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
@@ -258,7 +251,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                     text: response.data?.clients?.first.email),
                 faxController: TextEditingController(
                     text: response.data?.clients?.first.clientDetail?.fax),
-                // image: File(response.data?.clients?.first.logo ?? ''),
+                companyLogo: response.data?.clients?.first.logo ?? '',
               ));
             } else {
               showSnackBar(

@@ -90,8 +90,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                      const CupertinoActivityIndicator(),
+                                  placeholder: (context, url) => Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.whiteColor,
+                                          border: Border.all(
+                                              color: AppColors.borderColor
+                                                  .withOpacity(0.5),
+                                              width: 1)),
+                                      alignment: Alignment.center,
+                                      child:
+                                          const CupertinoActivityIndicator()),
                                   imageUrl:
                                       "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
                                   height: 50,
@@ -99,7 +107,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
                                     return Container(
-                                      color: AppColors.whiteColor,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.whiteColor,
+                                          border: Border.all(
+                                              color: AppColors.borderColor
+                                                  .withOpacity(0.5),
+                                              width: 1)),
                                     );
                                   },
                                 ),
