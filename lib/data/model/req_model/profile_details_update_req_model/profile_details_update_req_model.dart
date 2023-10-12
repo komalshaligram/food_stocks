@@ -1,36 +1,25 @@
-
-
 import 'package:food_stock/data/model/req_model/operation_time/operation_time_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'profile_details_update_req_model.freezed.dart';
 
-part 'update_req_model.freezed.dart';
-part 'update_req_model.g.dart';
-
-
+part 'profile_details_update_req_model.g.dart';
 
 @freezed
-class UpdateReqModel with _$UpdateReqModel {
-  const factory UpdateReqModel({
-    @JsonKey(name: "email")
-    String? email,
-    @JsonKey(name: "phoneNumber")
-    String? phoneNumber,
-    @JsonKey(name: "address")
-    String? address,
-    @JsonKey(name: "cityId")
-    String? cityId,
-    @JsonKey(name: "logo")
-    String? logo,
-    @JsonKey(name: "profileImage")
-    String? profileImage,
-    @JsonKey(name: "contactName")
-    String? contactName,
-    @JsonKey(name: "clientDetail")
-    ClientDetail? clientDetail,
-  }) = _UpdateReqModel;
+class ProfileUpdateReqModel with _$ProfileUpdateReqModel {
+  const factory ProfileUpdateReqModel({
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "phoneNumber") String? phoneNumber,
+    @JsonKey(name: "address") String? address,
+    @JsonKey(name: "cityId") String? cityId,
+    @JsonKey(name: "logo") String? logo,
+    @JsonKey(name: "profileImage") String? profileImage,
+    @JsonKey(name: "contactName") String? contactName,
+    @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
+  }) = _ProfileUpdateReqModel;
 
-  factory UpdateReqModel.fromJson(Map<String, dynamic> json) => _$UpdateReqModelFromJson(json);
+  factory ProfileUpdateReqModel.fromJson(Map<String, dynamic> json) =>
+      _$ProfileUpdateReqModelFromJson(json);
 }
 
 @freezed

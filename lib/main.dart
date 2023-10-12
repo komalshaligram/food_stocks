@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/more_details/more_details_bloc.dart';
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
@@ -21,19 +19,11 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
     runApp(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) =>
-                MoreDetailsBloc()..add(MoreDetailsEvent.addFilterListEvent()),
-          ),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Directionality(
-            textDirection: TextDirection.rtl,
-            child: const MyApp(),
-          ),
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: const MyApp(),
         ),
       ),
     );

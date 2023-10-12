@@ -11,6 +11,8 @@ class AppStrings {
   static const iosString = 'IOS';
   static const timeString = '00:00';
   static const tempString = 'temp';
+  static const cityNotFoundString = 'Cities not available';
+  static const okString = 'ok';
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -23,6 +25,7 @@ class AppStrings {
   static const filesString = 'files';
   static const formString = 'form';
   static const formsString = 'forms';
+  static const idParamString = '_id';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -44,6 +47,7 @@ class AppStrings {
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
+  static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
   static const imageNotUploadString = 'Image not uploaded';
@@ -56,12 +60,16 @@ class AppStrings {
   static const selectValidDocumentFormatString =
       'Please select only image and document files';
   static const docDownloadString = 'Document download successfully!';
+  static const downloadFailedString = 'Failed to download';
   static const docDownloadAllowPermissionString =
       'Please allow permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
-  static const openingTimeAfterPreviousClosingString = 'Please select opening time after previous closing time';
-  static const openingTimeAfterClosingString = 'Please select opening time before closing time';
-  static const closingTimeAfterOpeningString = 'Please select closing time after opening time';
+  static const openingTimeAfterPreviousClosingString =
+      'Please select opening time after previous closing time';
+  static const openingTimeAfterClosingString =
+      'Please select opening time before closing time';
+  static const closingTimeAfterOpeningString =
+      'Please select closing time after opening time';
   static const selectOpeningString = 'Please select opening Time';
   static const selectPreviousShiftString = 'Please select previous shift time';
   static const selectFirstShiftString = 'Please select first shift time';

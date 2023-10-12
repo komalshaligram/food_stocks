@@ -1,10 +1,12 @@
-part of 'operation_time_bloc.dart';
+
+part of 'activity_time_bloc.dart';
+
 
 @freezed
-class OperationTimeState with _$OperationTimeState{
-  const factory OperationTimeState({
+class ActivityTimeState with _$ActivityTimeState{
+  const factory ActivityTimeState({
     required String time,
-   required List<OperationTimeModel> OperationTimeList,
+   required List<ActivityTimeModel> OperationTimeList,
     required bool isRefresh,
     required bool isRegisterSuccess,
     required bool isRegisterFail,
@@ -12,9 +14,9 @@ class OperationTimeState with _$OperationTimeState{
     required bool isUpdate,
 
 
-  }) = _OperationTimeState;
+  }) = _ActivityTimeState;
 
-  factory OperationTimeState.initial()=> OperationTimeState(
+  factory ActivityTimeState.initial()=> ActivityTimeState(
     time:  AppStrings.timeString,
     OperationTimeList: [],
     isRefresh: false,

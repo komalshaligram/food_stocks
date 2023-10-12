@@ -6,6 +6,7 @@ class ProductDetailsModel{
    int? productWeight;
    int? productPrice;
    bool isProductIssue;
+   bool isDelete;
 
   ProductDetailsModel({
     this.isProductIssue = false,
@@ -13,6 +14,7 @@ class ProductDetailsModel{
     required this.productName,
     required this.productPrice,
     required this.productWeight,
+    this.isDelete = false,
   });
 
 

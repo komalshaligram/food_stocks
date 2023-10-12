@@ -47,6 +47,7 @@ class CommonProductButtonWidget extends StatelessWidget {
               Radius.circular(borderRadius ?? AppConstants.radius_10))),
       child: MaterialButton(
         elevation: 0,
+        height: height ?? AppConstants.buttonHeightSmall,
         minWidth: width,
         onPressed: isLoading ? null : onPressed,
         child: isLoading

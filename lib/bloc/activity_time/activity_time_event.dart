@@ -1,10 +1,10 @@
-part of 'operation_time_bloc.dart';
+part of 'activity_time_bloc.dart';
 
 
 @freezed
-class OperationTimeEvent with _$OperationTimeEvent{
+class ActivityTimeEvent with _$ActivityTimeEvent{
 
-  factory OperationTimeEvent.timePickerEvent({
+  factory ActivityTimeEvent.timePickerEvent({
     required BuildContext timePickerContext,
     required int openingIndex,
     required int rowIndex,
@@ -13,36 +13,36 @@ class OperationTimeEvent with _$OperationTimeEvent{
     required BuildContext context,
 }) = _timePickerEvent;
 
-  factory OperationTimeEvent.defaultValueAddInListEvent({
+  factory ActivityTimeEvent.defaultValueAddInListEvent({
     required BuildContext context,
 }
   ) = _defaultValueAddInListEvent;
 
-  factory OperationTimeEvent.addMoreTimeZoneEvent({
+  factory ActivityTimeEvent.addMoreTimeZoneEvent({
     required int rowIndex,
     required BuildContext context,
 }
       ) = _addMoreTimeZoneEventEvent;
 
-  factory OperationTimeEvent.deleteTimeZoneEvent({
+  factory ActivityTimeEvent.deleteTimeZoneEvent({
     required int rowIndex,
     required int timeIndex,
 
   }
       ) = _deleteTimeZoneEvent;
 
-  factory OperationTimeEvent.operationTimeApiEvent({
+  factory ActivityTimeEvent.operationTimeApiEvent({
     required BuildContext context,
 }
       ) = _operationTimeApiEvent;
 
-  factory OperationTimeEvent.getOperationTimeListEvent({
+  factory ActivityTimeEvent.getOperationTimeListEvent({
     required BuildContext context,
 
 }
       ) = _getOperationTimeListEvent;
 
-  factory OperationTimeEvent.getOperationTimeDetailsEvent({
+  factory ActivityTimeEvent.getOperationTimeDetailsEvent({
     required bool isUpdate,
   }
       ) = _getOperationTimeDetailsEvent;

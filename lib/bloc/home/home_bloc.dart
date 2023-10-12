@@ -17,12 +17,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
 
-        debugPrint('getUserImageUrl______${AppUrls.baseFileUrl}'+'${preferences.getUserImageUrl()}');
-
-        debugPrint('getUserCompanyLogoUrl______${preferences.getUserCompanyLogoUrl()}');
+        debugPrint(
+            'getUserImageUrl______${AppUrls.baseFileUrl}${preferences.getUserImageUrl()}');
+        debugPrint(
+            'getUserCompanyLogoUrl______${preferences.getUserCompanyLogoUrl()}');
 
         emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
-        emit(state.copyWith(UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
+        emit(state.copyWith(
+            UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
       }
     });
   }

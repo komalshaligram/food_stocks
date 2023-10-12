@@ -88,7 +88,6 @@ class CustomFormField extends StatelessWidget {
       controller: _controller,
       inputFormatters: inputformet,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-
       style: AppStyles.rkRegularTextStyle(
           color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
       //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),

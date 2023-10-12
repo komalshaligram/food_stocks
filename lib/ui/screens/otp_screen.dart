@@ -67,7 +67,9 @@ class OTPScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.connection,
+                title: isRegister
+                    ? AppLocalizations.of(context)!.register
+                    : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
@@ -97,14 +99,19 @@ class OTPScreenWidget extends StatelessWidget {
                         fieldWidth: (getScreenWidth(context) -
                                 (getScreenWidth(context) * 0.2)) /
                             5.5,
-                        decoration: InputDecoration(),
                         numberOfFields: 4,
+                        borderWidth: 1,
+                        disabledBorderColor: AppColors.borderColor,
+                        enabledBorderColor: AppColors.borderColor,
+                        fillColor: AppColors.whiteColor,
                         cursorColor: AppColors.mainColor,
                         borderColor: AppColors.greyColor,
                         focusedBorderColor: AppColors.mainColor,
                         showCursor: false,
+                        keyboardType: TextInputType.number,
                         showFieldAsBox: true,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_5),
                         margin: EdgeInsets.symmetric(
                             horizontal: AppConstants.padding_10),
                         textStyle: TextStyle(
@@ -114,28 +121,35 @@ class OTPScreenWidget extends StatelessWidget {
                           otpCode = verificationCode;
                         }, // end onSubmit
                       ),
-                      30.height,
+                      15.height,
                       CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
+                        buttonText: AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
-                        onPressed: () {
-                          if(otpCode.length == 4){
-                            if (isRegister == true) {
-                              Navigator.pushNamed(
-                                  context, RouteDefine.profileScreen.name,
-                                  arguments: {AppStrings.contactString: contact});
-                            } else {
-                              bloc.add(OtpEvent.otpApiEvent(
-                                  contact: contact,
-                                  otp: otpCode,
-                                  isRegister: isRegister,
-                                  context: context));
-                            }
-                          }
-                          else{
-                            showSnackBar(context: context, title: AppStrings.enterOtpString, bgColor: AppColors.redColor);
-                          }
-                        },
+                        isLoading: state.isLoading,
+                        onPressed: state.isLoading
+                            ? null
+                            : () {
+                                if (otpCode.length == 4) {
+                                  if (isRegister == true) {
+                                    Navigator.pushNamed(
+                                        context, RouteDefine.profileScreen.name,
+                                        arguments: {
+                                          AppStrings.contactString: contact
+                                        });
+                                  } else {
+                                    bloc.add(OtpEvent.otpApiEvent(
+                                        contact: contact,
+                                        otp: otpCode,
+                                        isRegister: isRegister,
+                                        context: context));
+                                  }
+                                } else {
+                                  showSnackBar(
+                                      context: context,
+                                      title: AppStrings.enterOtpString,
+                                      bgColor: AppColors.redColor);
+                                }
+                              },
                         fontColors: AppColors.whiteColor,
                       ),
                       20.height,
@@ -191,7 +205,9 @@ class OTPScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context)!.send_again,
+                                AppLocalizations.of(context)!
+                                    .send_again
+                                    .toUpperCase(),
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.mediumFont,
                                     color: AppColors.mainColor),

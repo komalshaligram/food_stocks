@@ -26,17 +26,20 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         try {
           LoginReqModel reqMap = LoginReqModel(
               contact: event.contactNumber, isRegistration: event.isRegister);
-          final res = await DioClient().post(AppUrls.existingUserLoginUrl,
-              data: reqMap, context: event.context,
-
+          debugPrint(
+              'login req = ${event.contactNumber}___${event.isRegister}');
+          final res = await DioClient().post(
+            AppUrls.existingUserLoginUrl,
+            data: reqMap,
+            context: event.context,
           );
+          debugPrint('login res = $res');
           LoginResModel response = LoginResModel.fromJson(res);
 
           debugPrint('LoginReqModel --- ${response}');
           debugPrint('login response --- ${response}');
 
           if (response.status == 200) {
-
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
