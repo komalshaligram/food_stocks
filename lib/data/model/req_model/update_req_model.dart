@@ -1,8 +1,8 @@
 
 
-import 'package:food_stock/data/model/req_model/operation_time/operation_time_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../req_model/activity_time/activity_time_req_model.dart';
 
 part 'update_req_model.freezed.dart';
 part 'update_req_model.g.dart';

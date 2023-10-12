@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_urls.dart';
 
 class ProfileMenuRoute {
@@ -77,11 +78,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Image.network(
-                                  state.UserCompanyLogoUrl,
-                                  fit: BoxFit.fitHeight,
-                                ),
+                              SizedBox(
+                                height: 33,
+                                width: getScreenHeight(context) * 0.18,
+                                child: state.UserCompanyLogoUrl.isNotEmpty
+                                    ? CachedNetworkImage(
+                                  imageUrl: '${AppUrls.baseFileUrl}' +
+                                      '${state.UserCompanyLogoUrl}',
+                                  fit: BoxFit.fill,
+                                )
+                                    : SizedBox(),
                               ),
                               3.height,
                               Text(
@@ -113,7 +119,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             arguments: {AppStrings.isUpdateParamString: true});
                       }),
                   profileMenuTiles(
-                      title: AppLocalizations.of(context)!.operation_time,
+                      title: AppLocalizations.of(context)!.activity_time,
                       onTap: () {
                         Navigator.pushNamed(
                             context, RouteDefine.operationTimeScreen.name,

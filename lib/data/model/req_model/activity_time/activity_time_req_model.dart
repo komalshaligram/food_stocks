@@ -1,16 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'operation_time_req_model.freezed.dart';
-part 'operation_time_req_model.g.dart';
+part 'activity_time_req_model.freezed.dart';
+part 'activity_time_req_model.g.dart';
 
 
 
 @freezed
-class OperationTimeReqModel with _$OperationTimeReqModel {
-  const factory OperationTimeReqModel({
+class ActivityTimeReqModel with _$ActivityTimeReqModel {
+  const factory ActivityTimeReqModel({
     OperationTime? operationTime,
-  }) = _OperationTimeReqModel;
+  }) = _ActivityTimeReqModel;
 
-  factory OperationTimeReqModel.fromJson(Map<String, dynamic> json) => _$OperationTimeReqModelFromJson(json);
+  factory ActivityTimeReqModel.fromJson(Map<String, dynamic> json) => _$ActivityTimeReqModelFromJson(json);
 }
 
 @freezed

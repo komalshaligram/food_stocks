@@ -133,7 +133,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                     ButtonWidget(
                       buttonText: state.isUpdate
                           ? AppLocalizations.of(context)!.save
-                          : AppLocalizations.of(context)!.continued,
+                          : AppLocalizations.of(context)!.next,
                       fontColors: AppColors.whiteColor,
                       width: double.maxFinite,
                       onPressed: () {

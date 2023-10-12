@@ -44,7 +44,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
-        if (!state.isUpdate) {
+
           profileModel = event.profileModel;
           try {
             final response = await DioClient().get(path: AppUrls.cityListUrl);
@@ -79,7 +79,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 title: e.toString(),
                 bgColor: AppColors.redColor);
           }
-        }
+
         debugPrint('get contact name = ${profileModel.contactName}');
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();

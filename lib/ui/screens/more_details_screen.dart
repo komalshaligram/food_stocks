@@ -488,7 +488,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       CustomButtonWidget(
                         buttonText: state.isUpdate
                             ? AppLocalizations.of(context)!.save
-                            : AppLocalizations.of(context)!.continued,
+                            : AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {

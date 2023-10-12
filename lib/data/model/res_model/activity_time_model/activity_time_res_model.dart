@@ -1,21 +1,21 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-part 'operation_time_res_model.freezed.dart';
-part 'operation_time_res_model.g.dart';
+part 'activity_time_res_model.freezed.dart';
+part 'activity_time_res_model.g.dart';
 
 
 @freezed
-class OperationTimeResModel with _$OperationTimeResModel {
-  const factory OperationTimeResModel({
+class ActivityTimeResModel with _$ActivityTimeResModel{
+  const factory ActivityTimeResModel({
     @JsonKey(name: "status")
     int? status,
     @JsonKey(name: "data")
     Data? data,
     @JsonKey(name: "message")
     String? message,
-  }) = _OperationTimeResModel;
+  }) = _ActivityTimeResModel;
 
-  factory OperationTimeResModel.fromJson(Map<String, dynamic> json) => _$OperationTimeResModelFromJson(json);
+  factory ActivityTimeResModel.fromJson(Map<String, dynamic> json) => _$ActivityTimeResModelFromJson(json);
 }
 
 @freezed

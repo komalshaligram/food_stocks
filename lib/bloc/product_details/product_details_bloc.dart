@@ -11,11 +11,15 @@ part 'product_details_bloc.freezed.dart';
 class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   ProductDetailsBloc() : super( ProductDetailsState.initial()) {
     on<ProductDetailsEvent>((event, emit) {
-      if(event is _checkBoxEvent){
-        emit(state.copyWith(isCheckBox: !state.isCheckBox));
-      }
+
       if(event is _productProblemEvent){
-        emit(state.copyWith(isProductProblem: !state.isProductProblem));
+        List<ProductDetailsModel> temp = state.productList;
+      temp[event.index].isProductIssue = event.isProductProblem;
+        emit(state.copyWith(productList: temp , isRefresh: !state.isRefresh));
+      }
+
+      if(event is _radioButtonEvent){
+      emit(state.copyWith(selectedRadioTile: event.selectRadioTile));
       }
     });
   }

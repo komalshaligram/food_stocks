@@ -116,7 +116,7 @@ class OTPScreenWidget extends StatelessWidget {
                       ),
                       30.height,
                       CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.continued,
+                        buttonText: AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
                         onPressed: () {
                           if(otpCode.length == 4){

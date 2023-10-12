@@ -249,7 +249,7 @@ class LogInScreenWidget extends StatelessWidget {
                         ),
                         30.height,
                         CustomButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.continued,
+                          buttonText: AppLocalizations.of(context)!.next,
                           bGColor: AppColors.mainColor,
                           isLoading: state.isLoading,
                           onPressed: state.isLoading
