@@ -34,7 +34,7 @@ class SplashScreenWidget extends StatelessWidget {
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
-          print(preferencesHelper.getUserLoggedIn());
+          debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name);

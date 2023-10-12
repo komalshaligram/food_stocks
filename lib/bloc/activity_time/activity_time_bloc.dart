@@ -495,8 +495,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               ));
             }
           } else {
-            update.UpdateReqModel reqMap = update.UpdateReqModel(
-  /*              email: 'test@jglfkgfjhs.dgd',
+            update.ProfileUpdateReqModel reqMap = update.ProfileUpdateReqModel(
+                email: 'test@jglfkgfjhs.dgd',
                 phoneNumber: '6498573612',
                 address: '123 Main St',
                 cityId: '6511302f482b14e37c254527',
@@ -504,9 +504,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
                 contactName: 'John Smith',
                 profileImage:
-                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',*/
+                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
                 clientDetail: update.ClientDetail(
-             /*     bussinessId: 559,
+                  bussinessId: 559,
                   lastSeen: '2023-09-27T12:00:00.000Z',
                   monthlyCredits: 100,
                   bussinessName: 'Xfhg',
@@ -516,7 +516,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   israelId: '65117f58fc0c530f43e8b72a',
                   tokenId: '65117f58fc0c530f43e8b72a',
                   applicationVersion: '',
-                  deviceType: '',*/
+                  deviceType: '',
                   operationTime: update.OperationTime(
                     sunday: sundayList,
                     monday: mondayList,

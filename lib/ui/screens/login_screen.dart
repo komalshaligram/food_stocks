@@ -13,7 +13,6 @@ import '../../bloc/login/log_in_bloc.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/validation/auth_form_validation.dart';
 
-
 class LogInRoute {
   static Widget get route => LogInScreen();
 }
@@ -23,11 +22,11 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp =  (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-    if(temp[AppStrings.isRegisterString] == null){
+    final temp = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    if (temp[AppStrings.isRegisterString] == null) {
       temp[AppStrings.isRegisterString] = true;
-    }
-    else{
+    } else {
       temp[AppStrings.isRegisterString];
     }
     return BlocProvider(
@@ -38,30 +37,28 @@ class LogInScreen extends StatelessWidget {
 }
 
 class LogInScreenWidget extends StatelessWidget {
- final bool isRegister;
- LogInScreenWidget({required this.isRegister});
+  final bool isRegister;
+
+  LogInScreenWidget({required this.isRegister});
 
   final TextEditingController phoneController = TextEditingController();
- final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
-
-       if(state.isLoginSuccess){
-          Navigator.pushNamed(
-              context, RouteDefine.otpScreen.name ,arguments: {AppStrings.contactString : phoneController.text.toString(),
+        if (state.isLoginSuccess) {
+          Navigator.pushNamed(context, RouteDefine.otpScreen.name, arguments: {
+            AppStrings.contactString: phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
           });
-        }
-       else if(state.isLoginFail){
-         showSnackBar(
+        } else if (state.isLoginFail) {
+          showSnackBar(
               context: context,
               title: state.errorMessage,
               bgColor: AppColors.redColor);
         }
-
       },
       child: BlocBuilder<LogInBloc, LogInState>(
         builder: (context, state) {
@@ -70,10 +67,12 @@ class LogInScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.connection,
+                title: isRegister
+                    ? AppLocalizations.of(context)!.register
+                    : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name );
+                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 },
               ),
             ),
@@ -206,6 +205,8 @@ class LogInScreenWidget extends StatelessWidget {
                                       ),
                                       alignment: Alignment.bottomCenter,
                                       decoration: InputDecoration(
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
                                           contentPadding: EdgeInsets.only(
                                               left: 10, right: 10),
                                           border: InputBorder.none),
@@ -216,9 +217,7 @@ class LogInScreenWidget extends StatelessWidget {
                                         color: Colors.black,
                                       ),
                                       value: '+972',
-                                      // hint: const Text(
-                                      //   'select tag',
-                                      // ),
+                                      focusColor: Colors.transparent,
                                       items: [
                                         DropdownMenuItem<String>(
                                           value: '+972',
@@ -228,9 +227,7 @@ class LogInScreenWidget extends StatelessWidget {
                                           ),
                                         )
                                       ].toList(),
-                                      onChanged: (countryCode) {
-                                        var temp = countryCode;
-                                      },
+                                      onChanged: (countryCode) {},
                                     ),
                                   ],
                                 ),
@@ -238,16 +235,17 @@ class LogInScreenWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(state.mobileErrorMessage,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.redColor)),
-                          ],
-                        ),
-                        30.height,
+                        state.mobileErrorMessage.isEmpty
+                            ? 15.height
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(state.mobileErrorMessage,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.redColor)),
+                                ],
+                              ),
                         CustomButtonWidget(
                           buttonText: AppLocalizations.of(context)!.next,
                           bGColor: AppColors.mainColor,
@@ -280,6 +278,4 @@ class LogInScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-
 }

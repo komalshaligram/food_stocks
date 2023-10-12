@@ -3,11 +3,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/form_and_file_model.dart';
+import 'package:food_stock/data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';
 import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
 import 'package:food_stock/data/model/res_model/files_res_model/files_res_model.dart';
 import 'package:food_stock/data/model/res_model/forms_res_model/forms_res_model.dart';
 import 'package:food_stock/data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import 'package:food_stock/data/model/res_model/remove_form_and_file_res_model/remove_form_and_file_res_model.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -35,7 +37,6 @@ part 'file_upload_bloc.freezed.dart';
 class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
-
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -49,6 +50,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               formsList.add(FormAndFileModel(
                   id: response.data?.clientForms?[i].id,
                   isForm: true,
+                  isDownloadable: true,
                   name: response.data?.clientForms?[i].formName));
               debugPrint('formList[$i] = ${formsList[i].name}');
             }
@@ -81,6 +83,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               filesList.add(FormAndFileModel(
                   id: response.data?.clientFiles?[i].id,
                   isForm: false,
+                  // isDownloadable: true,
                   name: response.data?.clientFiles?[i].fileName));
               debugPrint('fileList[$i] = ${filesList[i].name}');
             }
@@ -213,11 +216,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.mainColor);
+                  bgColor: AppColors.redColor);
 
               SharedPreferencesHelper preferencesHelper =
-              SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
+                  SharedPreferencesHelper(
+                      prefs: await SharedPreferences.getInstance());
 
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               Navigator.popUntil(event.context,
@@ -247,7 +250,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.mainColor);
+                  bgColor: AppColors.redColor);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
@@ -257,7 +260,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         } on ServerException {
           showSnackBar(
@@ -268,59 +271,122 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _deleteFileEvent) {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
-        formsAndFilesList[event.index].localUrl = '';
-        formsAndFilesList[event.index].url = '';
-        emit(state.copyWith(formsAndFilesList: []));
-        emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-      } else if (event is _downloadFileEvent) {
-        if (true) {
-          try {
-            Map<Permission, PermissionStatus> statuses = await [
-              Permission.storage,
-            ].request();
-
-            if (statuses[Permission.storage]!.isGranted) {
-              Directory dir;
-              if (defaultTargetPlatform == TargetPlatform.android) {
-                dir = Directory('/storage/emulated/0/Documents');
-              } else {
-                dir = await getApplicationDocumentsDirectory();
-              }
-              // Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
-              // File newFile = File(
-              //     '${dir.path}/${p.basename(state.businessCertificate.path)}');
-              // await newFile.writeAsBytes(fileBytes).then(
-              //   (value) {
-              //     showSnackBar(
-              //         context: event.context,
-              //         title: AppStrings.docDownloadString,
-              //         bgColor: AppColors.mainColor);
-              //   },
-              // );
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.docDownloadAllowPermissionString,
-                  bgColor: AppColors.redColor);
-            }
-          } catch (e) {
+        try {
+          RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
+              path: formsAndFilesList[event.index].url);
+          debugPrint('delete file req = ${reqModel.path}');
+          final res =
+              await DioClient().post(AppUrls.removeFileUrl, data: reqModel);
+          RemoveFormAndFileResModel response =
+              RemoveFormAndFileResModel.fromJson(res);
+          debugPrint('delete file res = ${response.message}');
+          if (response.status == 200) {
+            formsAndFilesList[event.index].localUrl = '';
+            formsAndFilesList[event.index].url = '';
+            emit(state.copyWith(formsAndFilesList: []));
+            emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: response.message ?? AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
           }
-        } else {
+        } catch (e) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.uploadDocumentFirstString,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
+      } else if (event is _downloadFileEvent) {
+        try {
+          Map<Permission, PermissionStatus> statuses = await [
+            Permission.storage,
+          ].request();
+
+          if (statuses[Permission.storage]!.isGranted) {
+            Directory dir;
+            if (defaultTargetPlatform == TargetPlatform.android) {
+              dir = Directory('/storage/emulated/0/Documents');
+            } else {
+              dir = await getApplicationDocumentsDirectory();
+            }
+            // debugPrint('download start ${state.formsAndFilesList[event.fileIndex].url ?? 'as'}');
+            // final taskId = await FlutterDownloader.enqueue(
+            //   url: state.formsAndFilesList[event.fileIndex].url ?? '',
+            //   headers: {}, // optional: header send with url (auth token etc)
+            //   savedDir: '$dir/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}',
+            //   showNotification: false, // show download progress in status bar (for Android)
+            //   openFileFromNotification: false, // click on notification to open downloaded file (for Android)
+            // );
+            // debugPrint('download = $taskId');
+            HttpClient httpClient = new HttpClient();
+            File file;
+            String filePath = '';
+            try {
+              var request = await httpClient.getUrl(Uri.parse(
+                  "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}"));
+              var response = await request.close();
+              if (response.statusCode == 200) {
+                Uint8List fileBytes =
+                    await consolidateHttpClientResponseBytes(response);
+                filePath =
+                    '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}';
+                file = File(filePath);
+                await file.writeAsBytes(fileBytes).then((value) {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.docDownloadString,
+                      bgColor: AppColors.mainColor);
+                });
+              } else {
+                filePath = 'Error code: ' + response.statusCode.toString();
+                debugPrint('download ${filePath}');
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.downloadFailedString,
+                    bgColor: AppColors.redColor);
+              }
+            } catch (ex) {
+              filePath = 'Can not fetch url';
+            }
+            // Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
+            // File newFile = File(
+            //     '${dir.path}/${p.basename(state.businessCertificate.path)}');
+            // await newFile.writeAsBytes(fileBytes).then(
+            //   (value) {
+            //     showSnackBar(
+            //         context: event.context,
+            //         title: AppStrings.docDownloadString,
+            //         bgColor: AppColors.mainColor);
+            //   },
+            // );
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.docDownloadAllowPermissionString,
+                bgColor: AppColors.redColor);
+          }
+        } catch (e) {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
         }
       } else if (event is _getProfileFilesAndFormsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
-                data: {'_id': '651bb2f9d2c8a6d5b1c1ff84'});
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+            final res =
+                await DioClient().post(AppUrls.getProfileDetailsUrl, data: {
+              AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
+                  preferencesHelper.getUserId()
+            });
             ProfileDetailsResModel response =
                 ProfileDetailsResModel.fromJson(res);
 
@@ -332,12 +398,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         [formsAndFilesList[i].id] !=
                     null) {
                   formsAndFilesList[i].url = res['data']['clients'][0]
-                      ['clientDetail']['forms'][formsAndFilesList[i].id];
+                  ['clientDetail']['forms'][formsAndFilesList[i].id];
                 } else if (res['data']['clients'][0]['clientDetail']['files']
-                        [formsAndFilesList[i].id] !=
+                [formsAndFilesList[i].id] !=
                     null) {
                   formsAndFilesList[i].url = res['data']['clients'][0]
-                      ['clientDetail']['files'][formsAndFilesList[i].id];
+                  ['clientDetail']['files'][formsAndFilesList[i].id];
                 }
                 debugPrint('url = ${formsAndFilesList[i].url}');
               }

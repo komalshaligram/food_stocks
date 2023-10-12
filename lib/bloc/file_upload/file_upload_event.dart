@@ -23,6 +23,7 @@ class FileUploadEvent with _$FileUploadEvent {
 
   factory FileUploadEvent.deleteFileEvent({
     required int index,
+    required BuildContext context,
   }) = _deleteFileEvent;
 
   factory FileUploadEvent.downloadFileEvent({

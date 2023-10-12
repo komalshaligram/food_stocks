@@ -8,6 +8,7 @@ class CustomButtonWidget extends StatelessWidget {
   final void Function()? onPressed;
   final bool enable;
   final Color bGColor;
+  final Color? loadingColor;
   final Color fontColors;
   final double? height;
   final double? radius;
@@ -24,7 +25,8 @@ class CustomButtonWidget extends StatelessWidget {
       this.fontColors = Colors.white,
       this.height,
       this.radius,
-      this.borderColor = Colors.white});
+      this.borderColor = Colors.white,
+      this.loadingColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +43,11 @@ class CustomButtonWidget extends StatelessWidget {
       child: MaterialButton(
         onPressed: enable ? onPressed : null,
         child: isLoading
-            ? CupertinoActivityIndicator()
+            ? CupertinoActivityIndicator(
+                color: loadingColor,
+              )
             : Text(
-                buttonText,
+                buttonText.toUpperCase(),
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.mediumFont, color: fontColors),
               ),

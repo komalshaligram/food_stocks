@@ -38,8 +38,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
-      SharedPreferencesHelper preferences = SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _pickProfileImageEvent) {
         final pickedFile = await ImagePicker().pickImage(
@@ -87,12 +87,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-          final res = await DioClient().get(path: AppUrls.businessTypesUrl,context: event.context);
+          final res = await DioClient()
+              .get(path: AppUrls.businessTypesUrl, context: event.context);
+          debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
               businessTypeList: response,
               selectedBusinessType:
-                  response.data?.ClientTypes?[0].businessType ?? ''));
+                  response.data?.clientTypes?[0].businessType ?? ''));
         } on ServerException {
           showSnackBar(
               context: event.context,
@@ -101,31 +103,27 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _navigateToMoreDetailsScreenEvent) {
         profileModel = ProfileModel(
-            address: '',
-            cityId: '',
-            email: '',
-            logo: '',
-            phoneNumber: mobileNo,
-            profileImage: imgUrl,
-            createdBy: '60abf964173234001c903a05',
-            updatedBy: '60abf964173234001c903a05',
-            clientDetail: ClientDetail(
-              bussinessId: int.tryParse(state.idController.text) ?? 0,
-              bussinessName: state.businessNameController.text,
-              ownerName: state.ownerNameController.text,
-              clientTypeId: '60abf964173234001c903a05',
-              applicationVersion: '1.0.0',
-              monthlyCredits: 100,
-              deviceType: Platform.isAndroid
-                  ? AppStrings.androidString
-                  : AppStrings.iosString,
-              fax: '',
-              israelId: true,
-              lastSeen: DateTime.now(),
-              tokenId: '60abf964173234001c903a05',
-
-            ),
-            contactName: state.contactController.text,
+          phoneNumber: mobileNo,
+          profileImage: imgUrl,
+          createdBy: '60abf964173234001c903a05',
+          updatedBy: '60abf964173234001c903a05',
+          clientDetail: ClientDetail(
+            bussinessId: int.tryParse(state.idController.text) ?? 0,
+            bussinessName: state.businessNameController.text,
+            ownerName: state.ownerNameController.text,
+            clientTypeId: state.businessTypeList.data?.clientTypes
+                ?.firstWhere((businessType) =>
+                    businessType.businessType == state.selectedBusinessType)
+                .id,
+            applicationVersion: '1.0.0',
+            monthlyCredits: 100,
+            israelId: state.hpController.text,
+            deviceType: Platform.isAndroid
+                ? AppStrings.androidString
+                : AppStrings.iosString,
+            lastSeen: DateTime.now(),
+          ),
+          contactName: state.contactController.text,
         );
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
             arguments: {AppStrings.profileParamString: profileModel});
@@ -143,8 +141,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             if (response.status == 200) {
               emit(
                 state.copyWith(
-                  selectedBusinessType: response.data?.clients?.first
-                          .clientDetail?.clientTypes?.first.businessType ??
+                  selectedBusinessType: state.businessTypeList.data?.clientTypes
+                          ?.firstWhere((businessType) =>
+                              businessType.id ==
+                              response.data?.clients?.first.clientDetail
+                                  ?.clientTypeId)
+                          .businessType ??
                       state.selectedBusinessType,
                   businessNameController: TextEditingController(
                       text: response
@@ -178,12 +180,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _updateProfileDetailsEvent) {
         ProfileModel updatedProfileModel = ProfileModel(
+          profileImage: imgUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
-            clientTypeId: state.businessTypeList.data?.ClientTypes
+            clientTypeId: state.businessTypeList.data?.clientTypes
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
-                .id,
+                .businessType,
             bussinessId: int.tryParse(state.idController.text) ?? 0,
             bussinessName: state.businessNameController.text,
             ownerName: state.ownerNameController.text,
