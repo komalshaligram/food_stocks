@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -98,7 +97,7 @@ class StoreScreenWidget extends StatelessWidget {
                             subTitle: AppLocalizations.of(context)!.all_sales,
                             onTap: () {}),
                         SizedBox(
-                          height: 185,
+                          height: 190,
                           child: ListView.builder(
                             itemCount: 10,
                             shrinkWrap: true,
@@ -128,7 +127,7 @@ class StoreScreenWidget extends StatelessWidget {
                             subTitle: AppLocalizations.of(context)!.more,
                             onTap: () {}),
                         SizedBox(
-                          height: 185,
+                          height: 190,
                           child: ListView.builder(
                             itemCount: 10,
                             shrinkWrap: true,
@@ -326,7 +325,7 @@ class StoreScreenWidget extends StatelessWidget {
       required void Function() onButtonTap,
       required void Function() onTap}) {
     return Container(
-      height: 165,
+      height: 170,
       width: 140,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
@@ -378,6 +377,7 @@ class StoreScreenWidget extends StatelessWidget {
                 title:
                     "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                 onPressed: () {},
+                // height: 35,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,

@@ -44,7 +44,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
-        if (!state.isUpdate) {
           profileModel = event.profileModel;
           try {
             final response = await DioClient().get(path: AppUrls.cityListUrl);
@@ -79,8 +78,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 title: e.toString(),
                 bgColor: AppColors.redColor);
           }
-        }
-        debugPrint('get contact name = ${profileModel.contactName}');
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(
@@ -146,7 +143,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.redColor);
+                  bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
             } else {
               showSnackBar(
@@ -186,7 +183,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
                 tokenId: profileModel.clientDetail?.tokenId,
-                monthlyCredits: 100,
               ));
 
           debugPrint('profile reqMap + $reqMap');

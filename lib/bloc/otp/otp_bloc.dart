@@ -40,14 +40,15 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       }
 
       if (event is _otpApiEvent) {
-        if (event.otp.isNotEmpty) {
+        if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
             OtpReqModel reqMap =
                 OtpReqModel(contact: event.contact, otp: event.otp);
+            debugPrint('otp req = ${event.contact}___${event.otp}');
             final res =
                 await DioClient().post(AppUrls.loginOTPUrl, data: reqMap);
-            debugPrint('otp response + $res');
+            debugPrint('otp res = $res');
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
 
             if (response.status == 200) {
@@ -57,7 +58,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
               preferencesHelper.setAuthToken(
-                  accToken: response.data?.authToken?.accessToken ??'');
+                  accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(
                   refToken: response.data?.authToken?.refreshToken ?? '');
               preferencesHelper.setUserId(id: response.data?.user?.id ?? '');

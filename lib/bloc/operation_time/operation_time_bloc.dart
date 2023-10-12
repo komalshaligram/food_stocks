@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/operation_time/operation_time_model.dart';
 import '../../data/model/req_model/operation_time/operation_time_req_model.dart';
-import '../../data/model/req_model/update_req_model.dart' as update;
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
+    as update;
 import '../../data/model/res_model/operation_time_model/operation_time_res_model.dart'
     as res;
 import '../../data/storage/shared_preferences_helper.dart';
@@ -496,7 +497,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
               ));
             }
           } else {
-            update.UpdateReqModel reqMap = update.UpdateReqModel(
+            update.ProfileUpdateReqModel reqMap = update.ProfileUpdateReqModel(
                 email: 'test@jglfkgfjhs.dgd',
                 phoneNumber: '6498573612',
                 address: '123 Main St',

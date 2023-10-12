@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_urls.dart';
 
 class ProfileMenuRoute {
@@ -42,7 +44,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: Column(
                 children: [
-                  10.height,
+                  20.height,
                   Container(
                     height: 80,
                     padding: EdgeInsets.symmetric(
@@ -50,8 +52,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          height: 60,
-                          width: 60,
+                          height: 80,
+                          width: 80,
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             boxShadow: [
@@ -62,25 +64,44 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           clipBehavior: Clip.hardEdge,
-                          child: state.UserImageUrl.isNotEmpty ? ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: CachedNetworkImage(
-                              imageUrl: '${AppUrls.baseFileUrl}' +
-                                  '${state.UserImageUrl}',
-                              fit: BoxFit.fill,
-                            ),
-                          ) : SizedBox(),
+                          child: state.UserImageUrl.isNotEmpty
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                    fit: BoxFit.fill,
+                                    placeholder: (context, url) =>
+                                        CupertinoActivityIndicator(),
+                                    errorWidget: (context, url, error) {
+                                      return Container(
+                                        color: AppColors.whiteColor,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : SizedBox(),
                         ),
                         20.width,
                         SizedBox(
-                          height: 60,
+                          height: 80,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: Image.network(
-                                  state.UserCompanyLogoUrl,
-                                  fit: BoxFit.fitHeight,
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                      const CupertinoActivityIndicator(),
+                                  imageUrl:
+                                      "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                                  height: 50,
+                                  width: getScreenWidth(context) * 0.35,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return Container(
+                                      color: AppColors.whiteColor,
+                                    );
+                                  },
                                 ),
                               ),
                               3.height,

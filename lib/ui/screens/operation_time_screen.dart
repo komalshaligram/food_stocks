@@ -64,9 +64,9 @@ class OperationTimeScreenWidget extends StatelessWidget {
       child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.pageColor,
+            backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
-              backgroundColor: AppColors.pageColor,
+              backgroundColor: Colors.transparent,
               elevation: 0,
               titleSpacing: 0,
               leadingWidth: 60,
@@ -141,7 +141,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                             )
                           : SizedBox(),
                       SizedBox(
-                        height: getScreenHeight(context) * 0.18,
+                        height: getScreenHeight(context) * 0.19,
                       ),
                     ],
                   ),
@@ -149,7 +149,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
               ),
             ),
             bottomSheet: BottomSheet(
-              backgroundColor: AppColors.pageColor,
+              backgroundColor: AppColors.whiteColor,
               onClosing: () {},
               builder: (BuildContext context) {
                 return Column(
@@ -162,9 +162,10 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           right: getScreenWidth(context) * 0.08),
                       child: ButtonWidget(
                         buttonText: state.isUpdate
-                            ? AppLocalizations.of(context)!.save
-                            : AppLocalizations.of(context)!.continued,
+                            ? AppLocalizations.of(context)!.save.toUpperCase()
+                            : AppLocalizations.of(context)!.next.toUpperCase(),
                         fontColors: AppColors.whiteColor,
+                        width: double.maxFinite,
                         onPressed: () {
                           context
                               .read<OperationTimeBloc>()
@@ -183,9 +184,12 @@ class OperationTimeScreenWidget extends StatelessWidget {
                                 left: getScreenWidth(context) * 0.08,
                                 right: getScreenWidth(context) * 0.08),
                             child: ButtonWidget(
-                              buttonText: AppLocalizations.of(context)!.skip,
+                              buttonText: AppLocalizations.of(context)!
+                                  .skip
+                                  .toUpperCase(),
                               fontColors: AppColors.mainColor,
                               borderColor: AppColors.mainColor,
+                              width: double.maxFinite,
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, RouteDefine.fileUploadScreen.name);
@@ -376,9 +380,15 @@ class TimeContainer extends StatelessWidget {
                     context: context,
                     builder: (BuildContext c1) {
                       return Container(
-                        height: getScreenHeight(context) * 0.33,
+                        // height: getScreenHeight(context) * 0.33,
                         padding: EdgeInsets.only(top: 6.0),
-                        color: AppColors.whiteColor,
+                        decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(AppConstants.radius_20),
+                                topRight:
+                                    Radius.circular(AppConstants.padding_20))),
                         child: DefaultTextStyle(
                           style: TextStyle(
                             color: AppColors.blackColor,
@@ -389,6 +399,7 @@ class TimeContainer extends StatelessWidget {
                             child: SafeArea(
                               top: false,
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SizedBox(
                                     height: 200,
@@ -404,7 +415,7 @@ class TimeContainer extends StatelessWidget {
                                         onDateTimeChanged: (value) {
                                           final DateTime time = value;
                                           final DateFormat formatter =
-                                              DateFormat('HH:mm');
+                                          DateFormat('HH:mm');
                                           datetime = formatter.format(time);
                                         }),
                                   ),
@@ -419,7 +430,19 @@ class TimeContainer extends StatelessWidget {
                                                 time: datetime,
                                                 timePickerContext: c1));
                                       },
-                                      child: Text('ok')),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: AppColors.borderColor
+                                                  .withOpacity(0.6),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(
+                                                      AppConstants.radius_5))),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  AppConstants.padding_30,
+                                              vertical: AppConstants.padding_5),
+                                          child: Text(AppStrings.okString))),
+                                  10.height,
                                 ],
                               ),
                             ),
