@@ -69,6 +69,7 @@ class AppStrings {
   static const enterOtpString = 'Please enter otp';
   static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
   static const fillUpClosingTimeString = 'Please fill up closing time';
+  static const noInternetConnection = 'No Internet Connection';
 
 
   //hint strings

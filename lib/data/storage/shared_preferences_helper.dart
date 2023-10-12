@@ -2,13 +2,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
   static const String lang = "lang";
-  static const String userLoggedIn = "LOGGED_IN";
+  static const String userLoggedIn = "loggedIn";
   static const String accessToken = "accessToken";
   static const String refreshToken = "refreshToken";
   static const String userId = "userId";
   static const String userName = "userName";
   static const String userImage = "userImage";
   static const String userCompanyLogo = "companyLogo";
+  static const String appVersion = 'appVersion';
+  static const String fcmToken = 'fcmToken';
 
   final SharedPreferences prefs;
 
@@ -42,6 +44,13 @@ class SharedPreferencesHelper {
     await prefs.setString(userId, id);
   }
 
+  Future<void> setAppVersion({required String version}) async {
+    await prefs.setString(appVersion, version);
+  }
+
+  Future<void> setFCMToken({required String fcmToken}) async {
+    await prefs.setString(fcmToken, fcmToken);
+  }
   Future<void> setUserName({required String name}) async {
     await prefs.setString(userName, name);
   }
@@ -65,6 +74,10 @@ class SharedPreferencesHelper {
   String getAuthToken() {
     return prefs.getString(accessToken) ?? '';
   }
+  String getFCMToken() {
+    return prefs.getString(fcmToken) ?? '';
+  }
+
 
   String getRefreshToken() {
     return prefs.getString(refreshToken) ?? '';
@@ -72,6 +85,10 @@ class SharedPreferencesHelper {
 
   String getUserId() {
     return prefs.getString(userId) ?? '';
+  }
+
+  String getAppVersion(){
+    return prefs.getString(appVersion)??'1.0.0';
   }
 
   String getUserName() {

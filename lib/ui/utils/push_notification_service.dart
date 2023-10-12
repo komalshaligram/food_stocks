@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationService {
   Future<void> setupInteractedMessage() async {
@@ -33,7 +35,11 @@ class PushNotificationService {
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
-    print("APNS Token: ${await FirebaseMessaging.instance.getAPNSToken()}");
+    String? fcmToken  = await FirebaseMessaging.instance.getToken();
+    print("FCM Token: ${fcmToken}");
+    SharedPreferencesHelper preferences = SharedPreferencesHelper(
+        prefs: await SharedPreferences.getInstance());
+    preferences.setFCMToken(fcmToken: fcmToken!);
     const InitializationSettings initSettings =
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(

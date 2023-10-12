@@ -5,6 +5,7 @@ import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/storage/shared_preferences_helper.dart';
@@ -36,6 +37,10 @@ class SplashScreenWidget extends StatelessWidget {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           print(preferencesHelper.getUserLoggedIn());
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          debugPrint("package info : ${packageInfo.toString()}");
+          String version = packageInfo.version;
+          preferencesHelper.setAppVersion(version: version);
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name);

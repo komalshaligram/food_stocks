@@ -1,10 +1,16 @@
+
 import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/widget/common_alert_dialog.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
+
+import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import '../ui/utils/themes/app_urls.dart';
 
 class DioClient {
@@ -13,6 +19,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
 
   factory DioClient() {
+    // _context = context;
     return _instance;
   }
 
@@ -33,6 +40,7 @@ class DioClient {
         },
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json);
+
     _dio = Dio(options);
 
     _dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
@@ -42,9 +50,7 @@ class DioClient {
       if (kDebugMode) {
         debugPrint("app response data ${response.data}");
       }
-      if(response.statusCode!=200){
-        debugPrint("Errorr!!!! ${response.data}");
-      }
+
       return handler.next(response);
     }, onError: (DioException e, handler) {
       if (kDebugMode) {
@@ -75,29 +81,31 @@ class DioClient {
             options: requestOptions);
 
         debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
-        return response.data;
+        if (response.statusCode != 200) {
+          debugPrint("Errorr!!!! ${response.data}");
+          return showSnackBar(
+              context: context!,
+              title: response.statusMessage ?? AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        } else {
+          return response.data;
+        }
       } on DioException catch (e) {
         throw _createErrorEntity(e);
       }
     } else {
-      debugPrint('error');
+      debugPrint('no internet');
       showDialog(
         context: context!,
-        builder: (context) => CommonAlertDialog(
-          title: "Network Error!",
-          subTitle: 'No Internet connection.',
-          negativeOnTap: () {
-            Navigator.pop(context);
-          },
-          positiveOnTap: () async {},
-        ),
+        builder: (context) => NoInternetDialog(positiveOnTap: () {
+          Navigator.pop(context);
+        }),
       );
-      throw Exception("Network Error");
     }
   }
 
   // GET
-  Future<Map<String, dynamic>> get({
+  Future get({
     required String path,
     Map<String, dynamic>? query,
     BuildContext? context,
@@ -112,32 +120,33 @@ class DioClient {
           queryParameters: query,
         );
         debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
-        return response.data;
+        if (response.statusCode != 200) {
+          debugPrint("Errorr!!!! ${response.data}");
+          return showSnackBar(
+              context: context!,
+              title: response.statusMessage ?? AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        } else {
+          return response.data;
+        }
       } on DioException catch (e) {
         throw _createErrorEntity(e);
       }
     } else {
-      debugPrint('error');
-      debugPrint('error');
+      debugPrint('no internet');
       showDialog(
         context: context!,
-        builder: (context) => CommonAlertDialog(
-          title: "Network Error!",
-          subTitle: 'No Internet connection.',
-          negativeOnTap: () {
-            Navigator.pop(context);
-          },
-          positiveOnTap: () async {},
-        ),
+        builder: (context) => NoInternetDialog(positiveOnTap: () {
+          Navigator.pop(context);
+        }),
       );
-      throw Exception("Network Error");
     }
   }
 
-  Future<Map<String, dynamic>> uploadFileProgressWithFormData({
-    required String path,
-    required FormData formData,
-  }) async {
+  Future uploadFileProgressWithFormData(
+      {required String path,
+      required FormData formData,
+      required BuildContext context}) async {
     try {
       final response = await _dio.post(
         path,
@@ -146,7 +155,15 @@ class DioClient {
           receiveTimeout: const Duration(milliseconds: 60 * 1000),
         ),
       );
-      return response.data as Map<String, dynamic>;
+      if (response.statusCode != 200) {
+        debugPrint("Errorr!!!! ${response.data}");
+        return showSnackBar(
+            context: context,
+            title: response.statusMessage ?? AppStrings.somethingWrongString,
+            bgColor: AppColors.redColor);
+      } else {
+        return response.data as Map<String, dynamic>;
+      }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
@@ -189,19 +206,28 @@ class DioClient {
     }
   }
 
-  // PATCH
-  Future<Map<String, dynamic>?> delete({
-    required String path,
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? query,
-  }) async {
+  // delete
+  Future delete(
+      {required String path,
+      Map<String, dynamic>? data,
+      Map<String, dynamic>? query,
+      required BuildContext context}) async {
     try {
       final response = await _dio.delete(
         path,
         data: data,
         queryParameters: query,
       );
-      return response.data;
+      if (response.statusCode != 200) {
+        debugPrint("Errorr!!!! ${response.data}");
+        return showSnackBar(
+            context: context,
+            title: response.statusMessage ?? AppStrings.somethingWrongString,
+            bgColor: AppColors.redColor);
+      } else {
+        return response.data as Map<String, dynamic>;
+      }
+
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
@@ -225,6 +251,7 @@ class ErrorEntity implements Exception {
 ErrorEntity _createErrorEntity(DioException error) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
+   //   showSnackBar(context: context, title: title, bgColor: bgColor);
       return ErrorEntity(code: -1, message: "Connection timed out");
 
     case DioExceptionType.sendTimeout:

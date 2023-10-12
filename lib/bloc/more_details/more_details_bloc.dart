@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,6 +98,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             try {
               final response = await DioClient().uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
+                context: event.context,
                 formData: FormData.fromMap(
                   {
                     AppStrings.profileImageString: await MultipartFile.fromFile(

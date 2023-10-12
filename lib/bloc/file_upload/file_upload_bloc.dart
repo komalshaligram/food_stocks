@@ -148,6 +148,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               )
             });
             final res = await DioClient().uploadFileProgressWithFormData(
+              context: event.context,
               path: AppUrls.fileUploadUrl,
               formData: formData,
             );

@@ -16,6 +16,7 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
 
+
     await PushNotificationService().setupInteractedMessage();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

@@ -55,6 +55,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               imageSize.split(' ').last == 'KB') {
             try {
               final response = await DioClient().uploadFileProgressWithFormData(
+                context: event.context,
                 path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
@@ -100,6 +101,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               bgColor: AppColors.mainColor);
         }
       } else if (event is _navigateToMoreDetailsScreenEvent) {
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
         profileModel = ProfileModel(
             address: '',
             cityId: '',
@@ -122,8 +125,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               fax: '',
               israelId: true,
               lastSeen: DateTime.now(),
-              tokenId: '60abf964173234001c903a05',
-
+              tokenId:preferencesHelper.getFCMToken(), ///need to remove this
             ),
             contactName: state.contactController.text,
         );
