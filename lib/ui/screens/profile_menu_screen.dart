@@ -134,7 +134,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             arguments: {AppStrings.isUpdateParamString: true});
                       }),
                   profileMenuTiles(
-                      title: AppLocalizations.of(context)!.operation_time,
+                      title: AppLocalizations.of(context)!.activity_time,
                       onTap: () {
                         Navigator.pushNamed(
                             context, RouteDefine.operationTimeScreen.name,

@@ -8,7 +8,7 @@ import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/login_screen.dart';
 import 'package:food_stock/ui/screens/message_content_screen.dart';
 import 'package:food_stock/ui/screens/message_screen.dart';
-import 'package:food_stock/ui/screens/operation_time_screen.dart';
+import 'package:food_stock/ui/screens/activity_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';

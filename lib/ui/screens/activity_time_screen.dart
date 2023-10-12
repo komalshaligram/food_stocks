@@ -7,8 +7,8 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:intl/intl.dart';
-import '../../bloc/operation_time/operation_time_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../bloc/activity_time/activity_time_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
@@ -27,16 +27,16 @@ class OperationTimeScreen extends StatelessWidget {
     debugPrint(
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
     return BlocProvider(
-      create: (context) => OperationTimeBloc()
-        ..add(OperationTimeEvent.getOperationTimeDetailsEvent(
+      create: (context) => ActivityTimeBloc()
+        ..add(ActivityTimeEvent.getOperationTimeDetailsEvent(
           isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
               ? true
               : false,
         ))
-        ..add(OperationTimeEvent.defaultValueAddInListEvent(
+        ..add(ActivityTimeEvent.defaultValueAddInListEvent(
           context: context,
         ))
-        ..add(OperationTimeEvent.getOperationTimeListEvent(
+        ..add(ActivityTimeEvent.getOperationTimeListEvent(
           context: context,
         )),
       child: OperationTimeScreenWidget(),
@@ -49,7 +49,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OperationTimeBloc, OperationTimeState>(
+    return BlocListener<ActivityTimeBloc, ActivityTimeState>(
       listener: (context, state) {
         if (state.isRegisterSuccess) {
           Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name);
@@ -61,7 +61,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
               bgColor: AppColors.redColor);
         }
       },
-      child: BlocBuilder<OperationTimeBloc, OperationTimeState>(
+      child: BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
@@ -70,7 +70,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               leadingWidth: 60,
-              title: Text(AppLocalizations.of(context)!.operation_time,
+              title: Text(AppLocalizations.of(context)!.activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       fontWeight: FontWeight.w400,
@@ -97,22 +97,22 @@ class OperationTimeScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           50.height,
-                          12.width,
+                          40.width,
                           SizedBox(
-                              width: getScreenWidth(context) * 0.245,
+                              width: getScreenWidth(context) * 0.24,
                               height: 20,
                               child: Text(
-                                AppLocalizations.of(context)!.from_an_hour,
+                                AppLocalizations.of(context)!.from_time,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
                                     fontWeight: FontWeight.w400),
                               )),
                           SizedBox(
-                              width: getScreenWidth(context) * 0.245,
+                              width: getScreenWidth(context) * 0.24,
                               height: 20,
                               child: Text(
-                                AppLocalizations.of(context)!.to_an_hour,
+                                AppLocalizations.of(context)!.until_time,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
@@ -141,7 +141,8 @@ class OperationTimeScreenWidget extends StatelessWidget {
                             )
                           : SizedBox(),
                       SizedBox(
-                        height: getScreenHeight(context) * 0.19,
+                        height: getScreenHeight(context) * 0.20,
+
                       ),
                     ],
                   ),
@@ -162,14 +163,14 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           right: getScreenWidth(context) * 0.08),
                       child: ButtonWidget(
                         buttonText: state.isUpdate
-                            ? AppLocalizations.of(context)!.save.toUpperCase()
-                            : AppLocalizations.of(context)!.next.toUpperCase(),
+                            ? AppLocalizations.of(context)!.save
+                            : AppLocalizations.of(context)!.next,
                         fontColors: AppColors.whiteColor,
                         width: double.maxFinite,
                         onPressed: () {
                           context
-                              .read<OperationTimeBloc>()
-                              .add(OperationTimeEvent.operationTimeApiEvent(
+                              .read<ActivityTimeBloc>()
+                              .add(ActivityTimeEvent.operationTimeApiEvent(
                                 context: context,
                               ));
                         },
@@ -218,10 +219,10 @@ class OperationTimeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OperationTimeBloc, OperationTimeState>(
+    return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
       builder: (context, state) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             13.height,
             Expanded(
@@ -235,7 +236,7 @@ class OperationTimeRow extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: state.OperationTimeList.isNotEmpty
                             ? state.OperationTimeList[rowIndex].monday.length
-                            : 2,
+                            : 0,
                         itemBuilder: (context, index) {
                           return state.OperationTimeList.isNotEmpty
                               ? Padding(
@@ -245,7 +246,7 @@ class OperationTimeRow extends StatelessWidget {
                                       index == 0
                                           ? Container(
                                               width: getScreenWidth(context) *
-                                                  0.15,
+                                                  0.18,
                                               child: Text(
                                                 dayString,
                                                 style: AppStyles
@@ -259,9 +260,11 @@ class OperationTimeRow extends StatelessWidget {
                                               ))
                                           : Container(
                                               width: getScreenWidth(context) *
-                                                  0.15,
+                                                  0.18,
                                             ),
-                                      20.width,
+                                    SizedBox(
+                                      width: getScreenWidth(context) * 0.04,
+                                    ),
                                       TimeContainer(
                                         openingIndex: 1,
                                         index: index,
@@ -270,7 +273,7 @@ class OperationTimeRow extends StatelessWidget {
                                         time: state.OperationTimeList[rowIndex]
                                             .monday[index].from!,
                                       ),
-                                      21.width,
+                                      15.width,
                                       TimeContainer(
                                         openingIndex: 0,
                                         index: index,
@@ -279,7 +282,7 @@ class OperationTimeRow extends StatelessWidget {
                                         time: state.OperationTimeList[rowIndex]
                                             .monday[index].until!,
                                       ),
-                                      21.width,
+                                     15.width,
                                       index == 0
                                           ? Container(
                                               height: 40,
@@ -293,8 +296,8 @@ class OperationTimeRow extends StatelessWidget {
                                                   onTap: () {
                                                     context
                                                         .read<
-                                                            OperationTimeBloc>()
-                                                        .add(OperationTimeEvent
+                                                        ActivityTimeBloc>()
+                                                        .add(ActivityTimeEvent
                                                             .addMoreTimeZoneEvent(
                                                           rowIndex: rowIndex,
                                                           context: context,
@@ -316,8 +319,8 @@ class OperationTimeRow extends StatelessWidget {
                                                   onTap: () {
                                                     context
                                                         .read<
-                                                            OperationTimeBloc>()
-                                                        .add(OperationTimeEvent
+                                                        ActivityTimeBloc>()
+                                                        .add(ActivityTimeEvent
                                                             .deleteTimeZoneEvent(
                                                           rowIndex: rowIndex,
                                                           timeIndex: index,
@@ -360,11 +363,11 @@ class TimeContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OperationTimeBloc, OperationTimeState>(
+    return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
       builder: (context, state) {
         return Container(
           height: 40,
-          width: getScreenWidth(context) * 0.245,
+          width: getScreenWidth(context) * 0.25,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(3),
               border: Border.all(color: AppColors.borderColor),
@@ -402,7 +405,7 @@ class TimeContainer extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SizedBox(
-                                    height: 200,
+                                    height: getScreenHeight(context) * 0.25,
                                     child: CupertinoDatePicker(
                                         minuteInterval: 30,
                                         initialDateTime: DateTime.now().add(
@@ -415,14 +418,14 @@ class TimeContainer extends StatelessWidget {
                                         onDateTimeChanged: (value) {
                                           final DateTime time = value;
                                           final DateFormat formatter =
-                                          DateFormat('HH:mm');
+                                              DateFormat('HH:mm');
                                           datetime = formatter.format(time);
                                         }),
                                   ),
                                   GestureDetector(
                                       onTap: () async {
-                                        context.read<OperationTimeBloc>().add(
-                                            OperationTimeEvent.timePickerEvent(
+                                        context.read<ActivityTimeBloc>().add(
+                                            ActivityTimeEvent.timePickerEvent(
                                                 context: context,
                                                 rowIndex: rowIndex,
                                                 timeIndex: index,

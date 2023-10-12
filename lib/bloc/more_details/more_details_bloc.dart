@@ -78,6 +78,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 title: e.toString(),
                 bgColor: AppColors.redColor);
           }
+
+        debugPrint('get contact name = ${profileModel.contactName}');
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(

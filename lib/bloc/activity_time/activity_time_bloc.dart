@@ -7,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/operation_time/operation_time_model.dart';
-import '../../data/model/req_model/operation_time/operation_time_req_model.dart';
-import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
-    as update;
-import '../../data/model/res_model/operation_time_model/operation_time_res_model.dart'
-    as res;
+
+import '../../data/model/activity_time/activity_time_model.dart';
+import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
+import '../../data/model/req_model/update_req_model.dart' as update;
+
+import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -26,15 +26,15 @@ import 'package:food_stock/data/model/req_model/profile_details_req_model/profil
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
 
-part 'operation_time_event.dart';
+part 'activity_time_event.dart';
 
-part 'operation_time_state.dart';
+part 'activity_time_state.dart';
 
-part 'operation_time_bloc.freezed.dart';
+part 'activity_time_bloc.freezed.dart';
 
-class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
-  OperationTimeBloc() : super(OperationTimeState.initial()) {
-    on<OperationTimeEvent>((event, emit) async {
+class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
+  ActivityTimeBloc() : super(ActivityTimeState.initial()) {
+    on<ActivityTimeEvent>((event, emit) async {
       SharedPreferencesHelper preferences =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
@@ -59,67 +59,67 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
-            debugPrint('operation time : ${response.data?.clients?.first.clientDetail!.operationTime![0].tuesday}');
+            if( response.data!.clients!.first.clientDetail!.operationTime!.isNotEmpty){
+              if (response.status == 200) {
+                List<ActivityTimeModel> temp1 = state.OperationTimeList;
+                var sundayRs = response
+                    .data!.clients!.first.clientDetail!.operationTime![0].sunday!;
+                var mondayRs = response
+                    .data!.clients!.first.clientDetail!.operationTime![0].monday!;
+                var tuesdayRs = response.data!.clients!.first.clientDetail!
+                    .operationTime![0].tuesday!;
+                var wednesdayRs = response.data!.clients!.first.clientDetail!
+                    .operationTime![0].wednesday!;
+                var thursdayRs = response.data!.clients!.first.clientDetail!
+                    .operationTime![0].thursday!;
+                var fridayAndHolidayEvesRs = response.data!.clients!.first
+                    .clientDetail!.operationTime![0].fridayAndHolidayEves!;
+                var saturdayAndHolidaysRs = response.data!.clients!.first
+                    .clientDetail!.operationTime![0].saturdayAndHolidays!;
 
-            if (response.status == 200) {
-              List<OperationTimeModel> temp1 = state.OperationTimeList;
-              var sundayRs = response
-                  .data!.clients!.first.clientDetail!.operationTime![0].sunday!;
-              var mondayRs = response
-                  .data!.clients!.first.clientDetail!.operationTime![0].monday!;
-              var tuesdayRs = response.data!.clients!.first.clientDetail!
-                  .operationTime![0].tuesday!;
-              var wednesdayRs = response.data!.clients!.first.clientDetail!
-                  .operationTime![0].wednesday!;
-              var thursdayRs = response.data!.clients!.first.clientDetail!
-                  .operationTime![0].thursday!;
-              var fridayAndHolidayEvesRs = response.data!.clients!.first
-                  .clientDetail!.operationTime![0].fridayAndHolidayEves!;
-              var saturdayAndHolidaysRs = response.data!.clients!.first
-                  .clientDetail!.operationTime![0].saturdayAndHolidays!;
+                List<Day> sundayList = sundayRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
 
-              List<Day> sundayList = sundayRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
+                List<Day> mondayList = mondayRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
 
-              List<Day> mondayList = mondayRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
+                List<Day> tuesdayList = tuesdayRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
+                List<Day> wednesdayList = wednesdayRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
 
-              List<Day> tuesdayList = tuesdayRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
-              List<Day> wednesdayList = wednesdayRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
+                List<Day> thursdayList = thursdayRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
 
-              List<Day> thursdayList = thursdayRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
+                List<Day> fridayAndHolidayEvesList =
+                fridayAndHolidayEvesRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
 
-              List<Day> fridayAndHolidayEvesList =
-                  fridayAndHolidayEvesRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
-
-              List<Day> saturdayAndHolidaysList =
-                  saturdayAndHolidaysRs.map((e) {
-                return Day(from: e.from, until: e.until);
-              }).toList();
-              temp1[0].monday = sundayList;
-              temp1[1].monday = mondayList;
-              temp1[2].monday = tuesdayList;
-              temp1[3].monday = wednesdayList;
-              temp1[4].monday = thursdayList;
-              temp1[5].monday = fridayAndHolidayEvesList;
-              temp1[6].monday = saturdayAndHolidaysList;
-              emit(state.copyWith(
-                  OperationTimeList: temp1, isRefresh: !state.isRefresh));
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
+                List<Day> saturdayAndHolidaysList =
+                saturdayAndHolidaysRs.map((e) {
+                  return Day(from: e.from, until: e.until);
+                }).toList();
+                temp1[0].monday = sundayList;
+                temp1[1].monday = mondayList;
+                temp1[2].monday = tuesdayList;
+                temp1[3].monday = wednesdayList;
+                temp1[4].monday = thursdayList;
+                temp1[5].monday = fridayAndHolidayEvesList;
+                temp1[6].monday = saturdayAndHolidaysList;
+                emit(state.copyWith(
+                    OperationTimeList: temp1, isRefresh: !state.isRefresh));
+              } else {
+                showSnackBar(
+                    context: event.context,
+                    title: response.message ?? AppStrings.somethingWrongString,
+                    bgColor: AppColors.redColor);
+              }
             }
           } on ServerException {
             showSnackBar(
@@ -130,10 +130,10 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         }
       }
       if (event is _defaultValueAddInListEvent) {
-        List<OperationTimeModel> temp = [];
+        List<ActivityTimeModel> temp = [];
         if (state.OperationTimeList.isEmpty) {
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString: AppLocalizations.of(event.context)!.sunday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
@@ -141,7 +141,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             ),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString: AppLocalizations.of(event.context)!.monday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
@@ -149,7 +149,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             ),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
                 dayString: AppLocalizations.of(event.context)!.tuesday,
                 monday: [
                   Day(
@@ -158,7 +158,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                 ]),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString: AppLocalizations.of(event.context)!.wednesday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
@@ -166,7 +166,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             ),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString: AppLocalizations.of(event.context)!.thursday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
@@ -174,7 +174,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             ),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString:
                   AppLocalizations.of(event.context)!.friday_and_holiday_eves,
               monday: [
@@ -183,7 +183,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
             ),
           );
           temp.add(
-            OperationTimeModel(
+            ActivityTimeModel(
               dayString:
                   AppLocalizations.of(event.context)!.saturday_and_holidays,
               monday: [
@@ -203,7 +203,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
         if (state.time.isNotEmpty) {
           String? selectedTime;
           selectedTime = state.time;
-          List<OperationTimeModel> temp = [];
+          List<ActivityTimeModel> temp = [];
 
           temp.addAll(state.OperationTimeList);
           String openingTime =
@@ -324,7 +324,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
       }
 
       if (event is _addMoreTimeZoneEventEvent) {
-        List<OperationTimeModel> temp = [];
+        List<ActivityTimeModel> temp = [];
         temp.addAll(state.OperationTimeList);
 
         if (state.OperationTimeList[event.rowIndex].monday.length > 1) {
@@ -362,7 +362,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
       }
 
       if (event is _deleteTimeZoneEvent) {
-        List<OperationTimeModel> temp = [];
+        List<ActivityTimeModel> temp = [];
         temp.addAll(state.OperationTimeList);
         temp[event.rowIndex].monday.removeAt(event.timeIndex);
         emit(state.copyWith(
@@ -432,7 +432,7 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
                 thursdayList.first.from != AppStrings.timeString ||
                 fridayAndHolidayEvesList.first.from != AppStrings.timeString ||
                 saturdayAndHolidaysList.first.from != AppStrings.timeString) {
-              OperationTimeReqModel reqMap = OperationTimeReqModel(
+              ActivityTimeReqModel reqMap = ActivityTimeReqModel(
                 operationTime: OperationTime(
                   sunday: sundayList,
                   monday: mondayList,
@@ -446,15 +446,13 @@ class OperationTimeBloc extends Bloc<OperationTimeEvent, OperationTimeState> {
 
               debugPrint('operation time reqMap + $reqMap');
               try {
-                print(
-                    '_maydd_______${AppUrls.operationTimeUrl + '/' + preferences.getUserId()}');
 
                 final response1 = await DioClient().post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
                     //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
-                res.OperationTimeResModel operationTimeResModel =
-                    res.OperationTimeResModel.fromJson(response1);
+                res.ActivityTimeResModel operationTimeResModel =
+                    res.ActivityTimeResModel.fromJson(response1);
 
                 debugPrint(
                     'operation time response --- ${operationTimeResModel}');

@@ -145,8 +145,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                         ? 0.width
                         : ButtonWidget(
                             buttonText: AppLocalizations.of(context)!
-                                .skip
-                                .toUpperCase(),
+                                .skip,
                             fontColors: AppColors.mainColor,
                             borderColor: AppColors.mainColor,
                             width: double.maxFinite,
@@ -196,7 +195,6 @@ class FileUploadScreenWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          10.height,
           SizedBox(
             height: 35,
             child: Row(
@@ -227,7 +225,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               ],
             ),
           ),
-          5.height,
+          10.height,
           DottedBorder(
             color: AppColors.borderColor,
             strokeWidth: 1,

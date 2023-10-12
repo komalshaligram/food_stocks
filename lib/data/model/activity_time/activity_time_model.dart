@@ -22,18 +22,20 @@ class OperationTimeModel with _$OperationTimeModel {
 
 
 
-import '../req_model/operation_time/operation_time_req_model.dart';
 
 
-class OperationTimeModel{
+
+import '../req_model/activity_time/activity_time_req_model.dart';
+
+class ActivityTimeModel{
    List<Day>monday;
    String dayString = '';
-  OperationTimeModel({
+  ActivityTimeModel({
      required this.monday,
     required this.dayString,
 
 });
-   OperationTimeModel.fromJson(Map<String, dynamic> json)
+   ActivityTimeModel.fromJson(Map<String, dynamic> json)
        : monday = json['monday'],
          dayString = json['dayString'];
 

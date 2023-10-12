@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -37,6 +39,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
+    var bytes ;
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -285,7 +288,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: (){
-                                      bloc.add(ShipmentVerificationEvent.signatureEvent());
+                                      bloc.add(ShipmentVerificationEvent.signatureEvent(
+                                      ));
                                     },
                                     child: SvgPicture.asset(
                                       AppImagePath.signature,
@@ -303,19 +307,32 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_20,
-                            horizontal: AppConstants.padding_30),
-                        color: AppColors.pageColor,
-                        child: CustomButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.save,
-                          bGColor: AppColors.mainColor,
+                    GestureDetector(
+                      onTap: () async{
+                        final Image = await signatureGlobalKey.currentState!.toImage();
+                         bytes = await Image.toByteData(format: ui.ImageByteFormat.png);
+                         print(bytes);
+
+                      },
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_20,
+                              horizontal: AppConstants.padding_30),
+                          color: AppColors.pageColor,
+                          child: CustomButtonWidget(
+                            buttonText: AppLocalizations.of(context)!.save,
+                            bGColor: AppColors.mainColor,
+                          ),
                         ),
                       ),
+
                     ),
+                 /*   bytes != null ? Container(
+                      color: Colors.grey[300],
+                      child: Image.memory(bytes!.buffer.asUint8List()),
+                    ) : SizedBox(),*/
 
                   ],
                 ),
@@ -326,3 +343,6 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
     );
   }
 }
+
+
+
