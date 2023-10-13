@@ -18,6 +18,7 @@ class AppImagePath {
   static const String camera = 'assets/images/camera.svg';
   static const String signature = 'assets/images/signature.svg';
   static const String delete = 'assets/images/delete.svg';
+  static const String deleteRed = 'assets/images/delete_red.svg';
 
   ///pngs
   static const String profileImage = 'assets/images/profile_image.png';

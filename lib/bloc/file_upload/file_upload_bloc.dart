@@ -40,7 +40,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient().get(path: AppUrls.formsListUrl);
+          final res = await DioClient(event.context).get(path: AppUrls.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> formsList =
@@ -73,7 +73,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient().get(path: AppUrls.filesListUrl);
+          final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> filesList =
@@ -153,7 +153,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             try {
               emit(state.copyWith(
                   isUploadLoading: true, uploadIndex: event.fileIndex));
-              final res = await DioClient().uploadFileProgressWithFormData(
+              final res = await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: formData,
               );
@@ -251,7 +251,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
 
-          final res = await DioClient().post(
+          final res = await DioClient(event.context).post(
             "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
@@ -298,7 +298,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               path: formsAndFilesList[event.index].url);
           debugPrint('delete file req = ${reqModel.path}');
           final res =
-              await DioClient().post(AppUrls.removeFileUrl, data: reqModel);
+              await DioClient(event.context).post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
           debugPrint('delete file res = ${response.message}');
@@ -405,7 +405,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             final res =
-                await DioClient().post(AppUrls.getProfileDetailsUrl, data: {
+                await DioClient(event.context).post(AppUrls.getProfileDetailsUrl, data: {
               AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
                   preferencesHelper.getUserId()
             });

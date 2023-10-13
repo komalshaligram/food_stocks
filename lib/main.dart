@@ -13,6 +13,8 @@ import 'data/services/locale_provider.dart';
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+
     await PushNotificationService().setupInteractedMessage();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
+      create: (context) => LocaleProvider()..setAppLocale(Locale('he')),
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(

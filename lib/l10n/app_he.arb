@@ -110,5 +110,9 @@
   "the_product_arrived_missing": "המוצר הגיע חסר",
   "another_product_problem": "בעיה נוספת במוצר",
   "add_text": "הוסף טקסט",
-  "submit": "שלח"
+  "submit": "שלח",
+  "empty": "ריק",
+  "order_summary": "סיכום הזמנה",
+  "supplier_name": "שם ספק",
+  "send_order": "שלח הזמנה"
 }
