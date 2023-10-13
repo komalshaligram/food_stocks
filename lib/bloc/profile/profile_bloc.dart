@@ -54,8 +54,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (int.parse(imageSize.split(' ').first) <= 500 &&
               imageSize.split(' ').last == 'KB') {
             try {
-              final response = await DioClient().uploadFileProgressWithFormData(
-                context: event.context,
+              final response = await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
@@ -88,8 +87,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-          final res = await DioClient()
-              .get(path: AppUrls.businessTypesUrl, context: event.context);
+          final res = await DioClient(event.context)
+              .get(path: AppUrls.businessTypesUrl);
           debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
           emit(state.copyWith(
@@ -123,7 +122,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ? AppStrings.androidString
                 : AppStrings.iosString,
             lastSeen: DateTime.now(),
-            tokenId:preferencesHelper.getFCMToken(), ///need to remove this
+            tokenId:preferences.getFCMToken(), ///need to remove this
           ),
           contactName: state.contactController.text,
         );
@@ -135,7 +134,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (state.isUpdate) {
           try {
             emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
@@ -191,7 +190,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           ),
         );
         try {
-          final res = await DioClient().post(
+          final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: updatedProfileModel.toJson());
 

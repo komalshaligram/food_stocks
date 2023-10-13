@@ -10,8 +10,9 @@ import '../../data/error/exceptions.dart';
 
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
-import '../../data/model/req_model/update_req_model.dart' as update;
 
+
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart' as update;
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -54,7 +55,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _getOperationTimeListEvent) {
         if (state.isUpdate) {
           try {
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
@@ -447,7 +448,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               debugPrint('operation time reqMap + $reqMap');
               try {
 
-                final response1 = await DioClient().post(
+                final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
                     //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
@@ -495,7 +496,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               ));
             }
           } else {
-            update.ProfileUpdateReqModel reqMap = update.ProfileUpdateReqModel(
+            update.ProfileDetailsUpdateReqModel reqMap = update.ProfileDetailsUpdateReqModel(
                 email: 'test@jglfkgfjhs.dgd',
                 phoneNumber: '6498573612',
                 address: '123 Main St',
@@ -531,7 +532,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 );
 
             try {
-              final res = await DioClient().post(
+              final res = await DioClient(event.context).post(
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),

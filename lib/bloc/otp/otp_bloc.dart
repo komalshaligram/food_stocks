@@ -47,7 +47,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 OtpReqModel(contact: event.contact, otp: event.otp);
             debugPrint('otp req = ${event.contact}___${event.otp}');
             final res =
-                await DioClient().post(AppUrls.loginOTPUrl, data: reqMap);
+                await DioClient(event.context).post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
 

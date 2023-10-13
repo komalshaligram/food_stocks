@@ -1,13 +1,14 @@
-import 'package:food_stock/data/model/req_model/operation_time/operation_time_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../activity_time/activity_time_req_model.dart';
 
 part 'profile_details_update_req_model.freezed.dart';
 
 part 'profile_details_update_req_model.g.dart';
 
 @freezed
-class ProfileUpdateReqModel with _$ProfileUpdateReqModel {
-  const factory ProfileUpdateReqModel({
+class ProfileDetailsUpdateReqModel with _$ProfileDetailsUpdateReqModel {
+  const factory ProfileDetailsUpdateReqModel({
     @JsonKey(name: "email") String? email,
     @JsonKey(name: "phoneNumber") String? phoneNumber,
     @JsonKey(name: "address") String? address,
@@ -16,10 +17,10 @@ class ProfileUpdateReqModel with _$ProfileUpdateReqModel {
     @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "contactName") String? contactName,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
-  }) = _ProfileUpdateReqModel;
+  }) = _ProfileDetailsUpdateReqModel;
 
-  factory ProfileUpdateReqModel.fromJson(Map<String, dynamic> json) =>
-      _$ProfileUpdateReqModelFromJson(json);
+  factory ProfileDetailsUpdateReqModel.fromJson(Map<String, dynamic> json) =>
+      _$ProfileDetailsUpdateReqModelFromJson(json);
 }
 
 @freezed

@@ -47,7 +47,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       if (event is _getProfileModelEvent) {
           profileModel = event.profileModel;
           try {
-            final response = await DioClient().get(path: AppUrls.cityListUrl);
+            final response = await DioClient(event.context).get(path: AppUrls.cityListUrl,);
 
             CityListResModel cityListResModel =
                 CityListResModel.fromJson(response);
@@ -95,9 +95,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           if (int.parse(imageSize.split(' ').first) <= 500 &&
               imageSize.split(' ').last == 'KB') {
             try {
-              final response = await DioClient().uploadFileProgressWithFormData(
+              final response = await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
-                context: event.context,
                 formData: FormData.fromMap(
                   {
                     AppStrings.profileImageString: await MultipartFile.fromFile(
@@ -137,7 +136,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             // logo: imgUrl,
           );
           try {
-            final res = await DioClient().post(
+            final res = await DioClient(event.context).post(
                 AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
                 data: updatedProfileModel.toJson());
 
@@ -192,7 +191,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           debugPrint('profile reqMap + $reqMap');
           try {
             final response =
-                await DioClient().post(AppUrls.RegistrationUrl, data: reqMap);
+                await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -244,7 +243,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(
                 companyLogo: preferences.getUserCompanyLogoUrl()));
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
