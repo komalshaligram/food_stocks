@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,10 +184,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
                 lastSeen: DateTime.now(),
-                tokenId: profileModel.clientDetail?.tokenId,
+                tokenId:"" /*profileModel.clientDetail?.tokenId*/,
               ));
 
-          debugPrint('profile reqMap + $reqMap');
+          debugPrint('profile reqMap + ${reqMap.toJson()}');
           try {
             final response =
                 await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
@@ -211,7 +210,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
               Navigator.pushNamed(
                 event.context,
-                RouteDefine.operationTimeScreen.name,
+                RouteDefine.activityTimeScreen.name,
               );
             } else {
               showSnackBar(

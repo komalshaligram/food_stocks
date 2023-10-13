@@ -31,21 +31,21 @@ class ActivityTimeEvent with _$ActivityTimeEvent{
   }
       ) = _deleteTimeZoneEvent;
 
-  factory ActivityTimeEvent.operationTimeApiEvent({
+  factory ActivityTimeEvent.activityTimeApiEvent({
     required BuildContext context,
 }
-      ) = _operationTimeApiEvent;
+      ) = _activityTimeApiEvent;
 
-  factory ActivityTimeEvent.getOperationTimeListEvent({
+  factory ActivityTimeEvent.getActivityTimeListEvent({
     required BuildContext context,
 
 }
-      ) = _getOperationTimeListEvent;
+      ) = _getActivityTimeListEvent;
 
-  factory ActivityTimeEvent.getOperationTimeDetailsEvent({
+  factory ActivityTimeEvent.getActivityTimeDetailsEvent({
     required bool isUpdate,
   }
-      ) = _getOperationTimeDetailsEvent;
+      ) = _getActivityTimeDetailsEvent;
 
 
 

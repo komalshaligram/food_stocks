@@ -78,8 +78,6 @@ class HomeScreenWidget extends StatelessWidget {
                                   ? ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
                                         imageUrl:
                                             '${AppUrls.baseFileUrl}${state.UserImageUrl}',
                                         fit: BoxFit.cover,
@@ -95,13 +93,11 @@ class HomeScreenWidget extends StatelessWidget {
                             15.width,
                             state.UserCompanyLogoUrl.isNotEmpty
                                 ? CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
                                     imageUrl:
                                         '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
                                     height: 50,
                                     width: getScreenWidth(context) * 0.35,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     errorWidget: (context, url, error) {
                                       return Container(
                                         color: AppColors.whiteColor,

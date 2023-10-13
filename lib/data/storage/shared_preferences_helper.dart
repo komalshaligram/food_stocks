@@ -51,6 +51,7 @@ class SharedPreferencesHelper {
   Future<void> setFCMToken({required String fcmToken}) async {
     await prefs.setString(fcmToken, fcmToken);
   }
+
   Future<void> setUserName({required String name}) async {
     await prefs.setString(userName, name);
   }

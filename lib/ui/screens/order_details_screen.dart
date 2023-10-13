@@ -129,7 +129,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                AppLocalizations.of(context)!.name_provider,
+                AppLocalizations.of(context)!.supplier_name,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_14,
                     color: AppColors.blackColor,

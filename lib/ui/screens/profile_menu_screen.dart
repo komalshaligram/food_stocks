@@ -99,7 +99,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
                                     return Container(
-                                      color: AppColors.whiteColor,
+                                      color: AppColors.pageColor,
                                     );
                                   },
                                 ),
@@ -137,7 +137,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                       title: AppLocalizations.of(context)!.activity_time,
                       onTap: () {
                         Navigator.pushNamed(
-                            context, RouteDefine.operationTimeScreen.name,
+                            context, RouteDefine.activityTimeScreen.name,
                             arguments: {AppStrings.isUpdateParamString: true});
                       }),
                   profileMenuTiles(

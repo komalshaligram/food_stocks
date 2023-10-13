@@ -69,4 +69,3 @@ class OperationTime with _$OperationTime {
 
   factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);
 }
-

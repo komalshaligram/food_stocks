@@ -26,6 +26,7 @@ class DioClient {
         receiveTimeout: const Duration(milliseconds: 60000),
         headers: {
           HttpHeaders.acceptHeader: Headers.jsonContentType,
+          HttpHeaders.authorizationHeader: 'Bearer 1'
         },
         validateStatus: (status) {
           if (status == 401) {
