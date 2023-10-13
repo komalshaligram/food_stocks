@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 import '../../data/model/product_details/product_details_model.dart';
 import '../../ui/utils/themes/app_img_path.dart';
 
@@ -11,7 +13,34 @@ part 'basket_bloc.freezed.dart';
 class BasketBloc extends Bloc<BasketEvent, BasketState> {
   BasketBloc() : super( BasketState.initial()) {
     on<BasketEvent>((event, emit) {
-      // TODO: implement event handler
+
+      if(event is _productIncrementEvent){
+        List<ProductDetailsModel> temp = state.basketProductList;
+        temp[event.listIndex].productWeight = event.productWeight + 1;
+        print('productWeight  ${temp[event.listIndex].productWeight}');
+        emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
+      }
+
+      if(event is _productDecrementEvent){
+        List<ProductDetailsModel> temp = state.basketProductList;
+        if(event.productWeight > 0){
+          temp[event.listIndex].productWeight = event.productWeight - 1;
+        }
+        else{
+          print('event.productWeight     ${event.productWeight}');
+        }
+        print('productWeight  ${temp[event.listIndex].productWeight}');
+        emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
+      }
+      if(event is _deleteListItemEvent){
+        List<ProductDetailsModel> temp = [];
+        temp.addAll(state.basketProductList);
+        temp.removeAt(event.listIndex);
+        print('length   ${temp.length}');
+        showSnackBar(context: event.context, title: 'Item delete', bgColor: AppColors.mainColor);
+        emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
+
+      }
     });
   }
 }

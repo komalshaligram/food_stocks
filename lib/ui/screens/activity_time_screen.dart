@@ -13,12 +13,12 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/button_widget.dart';
 
-class OperationTimeScreenRoute {
-  static Widget get route => const OperationTimeScreen();
+class ActivityTimeScreenRoute {
+  static Widget get route => const ActivityTimeScreen();
 }
 
-class OperationTimeScreen extends StatelessWidget {
-  const OperationTimeScreen({super.key});
+class ActivityTimeScreen extends StatelessWidget {
+  const ActivityTimeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class OperationTimeScreen extends StatelessWidget {
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}}");
     return BlocProvider(
       create: (context) => ActivityTimeBloc()
-        ..add(ActivityTimeEvent.getOperationTimeDetailsEvent(
+        ..add(ActivityTimeEvent.getActivityTimeDetailsEvent(
           isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
               ? true
               : false,
@@ -36,16 +36,16 @@ class OperationTimeScreen extends StatelessWidget {
         ..add(ActivityTimeEvent.defaultValueAddInListEvent(
           context: context,
         ))
-        ..add(ActivityTimeEvent.getOperationTimeListEvent(
+        ..add(ActivityTimeEvent.getActivityTimeListEvent(
           context: context,
         )),
-      child: OperationTimeScreenWidget(),
+      child: ActivityTimeScreenWidget(),
     );
   }
 }
 
-class OperationTimeScreenWidget extends StatelessWidget {
-  OperationTimeScreenWidget();
+class ActivityTimeScreenWidget extends StatelessWidget {
+  ActivityTimeScreenWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -163,14 +163,14 @@ class OperationTimeScreenWidget extends StatelessWidget {
                           right: getScreenWidth(context) * 0.08),
                       child: ButtonWidget(
                         buttonText: state.isUpdate
-                            ? AppLocalizations.of(context)!.save
-                            : AppLocalizations.of(context)!.next,
+                            ? AppLocalizations.of(context)!.save.toUpperCase()
+                            : AppLocalizations.of(context)!.next.toUpperCase(),
                         fontColors: AppColors.whiteColor,
                         width: double.maxFinite,
                         onPressed: () {
                           context
                               .read<ActivityTimeBloc>()
-                              .add(ActivityTimeEvent.operationTimeApiEvent(
+                              .add(ActivityTimeEvent.activityTimeApiEvent(
                                 context: context,
                               ));
                         },
@@ -186,7 +186,7 @@ class OperationTimeScreenWidget extends StatelessWidget {
                                 right: getScreenWidth(context) * 0.08),
                             child: ButtonWidget(
                               buttonText: AppLocalizations.of(context)!
-                                  .skip
+                                  .skip.toUpperCase()
                                   .toUpperCase(),
                               fontColors: AppColors.mainColor,
                               borderColor: AppColors.mainColor,

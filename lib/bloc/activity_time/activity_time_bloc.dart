@@ -7,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
-import '../../data/model/req_model/update_req_model.dart' as update;
-
-import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
+    as update;
+import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
+    as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -47,11 +47,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       List<Day>? fridayAndHolidayEvesList = [];
       List<Day>? saturdayAndHolidaysList = [];
 
-      if (event is _getOperationTimeDetailsEvent) {
+      if (event is _getActivityTimeDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
       }
 
-      if (event is _getOperationTimeListEvent) {
+      if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
           try {
             final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
@@ -59,13 +59,14 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
-            if( response.data!.clients!.first.clientDetail!.operationTime!.isNotEmpty){
+            if (response
+                .data!.clients!.first.clientDetail!.operationTime!.isNotEmpty) {
               if (response.status == 200) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
-                var sundayRs = response
-                    .data!.clients!.first.clientDetail!.operationTime![0].sunday!;
-                var mondayRs = response
-                    .data!.clients!.first.clientDetail!.operationTime![0].monday!;
+                var sundayRs = response.data!.clients!.first.clientDetail!
+                    .operationTime![0].sunday!;
+                var mondayRs = response.data!.clients!.first.clientDetail!
+                    .operationTime![0].monday!;
                 var tuesdayRs = response.data!.clients!.first.clientDetail!
                     .operationTime![0].tuesday!;
                 var wednesdayRs = response.data!.clients!.first.clientDetail!
@@ -97,12 +98,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 }).toList();
 
                 List<Day> fridayAndHolidayEvesList =
-                fridayAndHolidayEvesRs.map((e) {
+                    fridayAndHolidayEvesRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
 
                 List<Day> saturdayAndHolidaysList =
-                saturdayAndHolidaysRs.map((e) {
+                    saturdayAndHolidaysRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
                 temp1[0].monday = sundayList;
@@ -369,7 +370,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             OperationTimeList: temp, isRefresh: !state.isRefresh));
       }
 
-      if (event is _operationTimeApiEvent) {
+      if (event is _activityTimeApiEvent) {
         bool isSnackbarActive = false;
         for (int i = 0; i < state.OperationTimeList.length; i++) {
           if (state.OperationTimeList[i].monday[0].until ==
@@ -446,7 +447,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               debugPrint('operation time reqMap + $reqMap');
               try {
-
                 final response1 = await DioClient().post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
                     //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
@@ -495,58 +495,34 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               ));
             }
           } else {
-            update.ProfileUpdateReqModel reqMap = update.ProfileUpdateReqModel(
-                email: 'test@jglfkgfjhs.dgd',
-                phoneNumber: '6498573612',
-                address: '123 Main St',
-                cityId: '6511302f482b14e37c254527',
-                logo:
-                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
-                contactName: 'John Smith',
-                profileImage:
-                    'temp/profileImg/1696505299869-hisu-lee-u6LGX2VMOP4-unsplash.jpg',
-                clientDetail: update.ClientDetail(
-                  bussinessId: 559,
-                  lastSeen: '2023-09-27T12:00:00.000Z',
-                  monthlyCredits: 100,
-                  bussinessName: 'Xfhg',
-                  ownerName: 'Jane Doe',
-                  fax: '555-1234',
-                  clientTypeId: '65117f58fc0c530f43e8b72a',
-                  israelId: '65117f58fc0c530f43e8b72a',
-                  tokenId: '65117f58fc0c530f43e8b72a',
-                  applicationVersion: '',
-                  deviceType: '',
-                  operationTime: update.OperationTime(
-                    sunday: sundayList,
-                    monday: mondayList,
-                    tuesday: tuesdayList,
-                    wednesday: wednesdayList,
-                    thursday: thursdayList,
-                    fridayAndHolidayEves: fridayAndHolidayEvesList,
-                    saturdayAndHolidays: saturdayAndHolidaysList,
-                  ),
-                )
-                // logo: imgUrl,
-                );
-
+            update.ProfileDetailsUpdateReqModel reqMap =
+                update.ProfileDetailsUpdateReqModel(
+                    clientDetail: update.ClientDetail(
+              operationTime: update.OperationTime(
+                sunday: sundayList,
+                monday: mondayList,
+                tuesday: tuesdayList,
+                wednesday: wednesdayList,
+                thursday: thursdayList,
+                fridayAndHolidayEves: fridayAndHolidayEvesList,
+                saturdayAndHolidays: saturdayAndHolidaysList,
+              ),
+            ));
             try {
               final res = await DioClient().post(
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),
                   data: reqMap.toJson());
-              print(
-                  '___url___${AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId()}');
-//651bb2f9d2c8a6d5b1c1ff84
+
               debugPrint('operation update req _____${reqMap}');
+
 
               reqUpdate.ProfileDetailsUpdateResModel res1 =
                   reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
 
               debugPrint('operation update res _____${res1}');
-              if (res1.status == 200) {
-                print('skjdksd');
+              if (res.status == 200) {
                 showSnackBar(
                     context: event.context,
                     title: AppStrings.updateSuccessString,
@@ -555,7 +531,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               } else {
                 showSnackBar(
                     context: event.context,
-                    title: res1.message ?? AppStrings.somethingWrongString,
+                    title: res.message ?? AppStrings.somethingWrongString,
                     bgColor: AppColors.redColor);
               }
             } on ServerException {

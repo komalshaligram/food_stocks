@@ -18,7 +18,7 @@ String profileDetailsReqModelToJson(ProfileDetailsReqModel data) =>
 @freezed
 class ProfileDetailsReqModel with _$ProfileDetailsReqModel {
   const factory ProfileDetailsReqModel({
-    @JsonKey(name: "_id") String? id,
+   String? id,
   }) = _ProfileDetailsReqModel;
 
   factory ProfileDetailsReqModel.fromJson(Map<String, dynamic> json) =>
