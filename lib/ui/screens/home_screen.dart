@@ -439,7 +439,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         BottomNavEvent.changePage(index: 2));
                                   },
                                   svgImage: AppImagePath.cart,
-                                  cartCount: 12,
+                                  cartCount: state.cartCount,
                                 ),
                               ),
                             ],

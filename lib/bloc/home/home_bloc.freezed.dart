@@ -170,6 +170,7 @@ abstract class _getPreferencesDataEvent implements HomeEvent {
 mixin _$HomeState {
   String get UserImageUrl => throw _privateConstructorUsedError;
   String get UserCompanyLogoUrl => throw _privateConstructorUsedError;
+  int get cartCount => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -181,7 +182,7 @@ abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res, HomeState>;
   @useResult
-  $Res call({String UserImageUrl, String UserCompanyLogoUrl});
+  $Res call({String UserImageUrl, String UserCompanyLogoUrl, int cartCount});
 }
 
 /// @nodoc
@@ -199,6 +200,7 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
   $Res call({
     Object? UserImageUrl = null,
     Object? UserCompanyLogoUrl = null,
+    Object? cartCount = null,
   }) {
     return _then(_value.copyWith(
       UserImageUrl: null == UserImageUrl
@@ -209,6 +211,10 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           ? _value.UserCompanyLogoUrl
           : UserCompanyLogoUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      cartCount: null == cartCount
+          ? _value.cartCount
+          : cartCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -220,7 +226,7 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String UserImageUrl, String UserCompanyLogoUrl});
+  $Res call({String UserImageUrl, String UserCompanyLogoUrl, int cartCount});
 }
 
 /// @nodoc
@@ -236,6 +242,7 @@ class __$$_HomeStateCopyWithImpl<$Res>
   $Res call({
     Object? UserImageUrl = null,
     Object? UserCompanyLogoUrl = null,
+    Object? cartCount = null,
   }) {
     return _then(_$_HomeState(
       UserImageUrl: null == UserImageUrl
@@ -246,6 +253,10 @@ class __$$_HomeStateCopyWithImpl<$Res>
           ? _value.UserCompanyLogoUrl
           : UserCompanyLogoUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      cartCount: null == cartCount
+          ? _value.cartCount
+          : cartCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -254,16 +265,20 @@ class __$$_HomeStateCopyWithImpl<$Res>
 
 class _$_HomeState implements _HomeState {
   const _$_HomeState(
-      {required this.UserImageUrl, required this.UserCompanyLogoUrl});
+      {required this.UserImageUrl,
+      required this.UserCompanyLogoUrl,
+      required this.cartCount});
 
   @override
   final String UserImageUrl;
   @override
   final String UserCompanyLogoUrl;
+  @override
+  final int cartCount;
 
   @override
   String toString() {
-    return 'HomeState(UserImageUrl: $UserImageUrl, UserCompanyLogoUrl: $UserCompanyLogoUrl)';
+    return 'HomeState(UserImageUrl: $UserImageUrl, UserCompanyLogoUrl: $UserCompanyLogoUrl, cartCount: $cartCount)';
   }
 
   @override
@@ -274,12 +289,14 @@ class _$_HomeState implements _HomeState {
             (identical(other.UserImageUrl, UserImageUrl) ||
                 other.UserImageUrl == UserImageUrl) &&
             (identical(other.UserCompanyLogoUrl, UserCompanyLogoUrl) ||
-                other.UserCompanyLogoUrl == UserCompanyLogoUrl));
+                other.UserCompanyLogoUrl == UserCompanyLogoUrl) &&
+            (identical(other.cartCount, cartCount) ||
+                other.cartCount == cartCount));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, UserImageUrl, UserCompanyLogoUrl);
+      Object.hash(runtimeType, UserImageUrl, UserCompanyLogoUrl, cartCount);
 
   @JsonKey(ignore: true)
   @override
@@ -291,12 +308,15 @@ class _$_HomeState implements _HomeState {
 abstract class _HomeState implements HomeState {
   const factory _HomeState(
       {required final String UserImageUrl,
-      required final String UserCompanyLogoUrl}) = _$_HomeState;
+      required final String UserCompanyLogoUrl,
+      required final int cartCount}) = _$_HomeState;
 
   @override
   String get UserImageUrl;
   @override
   String get UserCompanyLogoUrl;
+  @override
+  int get cartCount;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
