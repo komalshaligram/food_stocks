@@ -119,17 +119,38 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       } else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
           ProfileModel updatedProfileModel = ProfileModel(
-            // cityId: state.selectCity,
+            cityId: state.cityListResModel?.data?.cities
+                ?.firstWhere((city) => city.cityName == state.selectCity)
+                .id,
             address: state.addressController.text,
             email: state.emailController.text,
             clientDetail: ClientDetail(fax: state.faxController.text),
-            // logo: imgUrl,
+            logo: state.companyLogo,
           );
+          Map<String, dynamic> req = updatedProfileModel.toJson();
+          Map<String, dynamic>? clientDetail =
+              updatedProfileModel.clientDetail?.toJson();
+          debugPrint("update before Model = ${req}");
+          clientDetail?.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          req[AppStrings.clientDetailString] = clientDetail;
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
           try {
+            debugPrint(
+                'more profile req = ${/*updatedProfileModel.toJson()*/ req}');
             emit(state.copyWith(isLoading: true));
             final res = await DioClient().post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferences.getUserId()}",
-                data: updatedProfileModel.toJson());
+                data: /*updatedProfileModel.toJson()*/ req);
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
@@ -228,6 +249,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         print(list.length);
         emit(state.copyWith(filterList: list));
       } else if (event is _selectCityEvent) {
+        debugPrint('new city = ${event.city}');
         emit(state.copyWith(selectCity: event.city));
       } else if (event is _getProfileMoreDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));

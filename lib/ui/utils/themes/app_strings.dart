@@ -27,6 +27,7 @@ class AppStrings {
   static const formString = 'form';
   static const formsString = 'forms';
   static const idParamString = '_id';
+  static const clientDetailString = 'clientDetail';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

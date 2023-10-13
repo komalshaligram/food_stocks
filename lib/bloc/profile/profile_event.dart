@@ -15,8 +15,8 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.navigateToMoreDetailsScreenEvent(
       {
-        required BuildContext context,
-      }) = _navigateToMoreDetailsScreenEvent;
+    required BuildContext context,
+  }) = _navigateToMoreDetailsScreenEvent;
 
   factory ProfileEvent.getProfileDetailsEvent(
       {required BuildContext context,
@@ -25,4 +25,7 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.updateProfileDetailsEvent(
       {required BuildContext context}) = _updateProfileDetailsEvent;
+
+  factory ProfileEvent.changeBusinessTypeEvent(
+      {required String newBusinessType}) = _ChangeBusinessTypeEventEvent;
 }

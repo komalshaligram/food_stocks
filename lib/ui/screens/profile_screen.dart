@@ -400,7 +400,10 @@ class ProfileScreenWidget extends StatelessWidget {
                                 child: Text("${businessType.businessType}"),
                               );
                             }).toList(),
-                            onChanged: (tag) {},
+                            onChanged: (newBusinessType) {
+                              bloc.add(ProfileEvent.changeBusinessTypeEvent(
+                                  newBusinessType: newBusinessType!));
+                            },
                           ),
                         ),
                         7.height,

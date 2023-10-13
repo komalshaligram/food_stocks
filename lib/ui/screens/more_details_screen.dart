@@ -32,16 +32,16 @@ class MoreDetailsScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => MoreDetailsBloc()
-        ..add(MoreDetailsEvent.addFilterListEvent())
+        ..add(MoreDetailsEvent.getProfileModelEvent(
+          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
+          context: context,
+        ))
         ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
                 : false))
-        ..add(MoreDetailsEvent.getProfileModelEvent(
-          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
-          context: context,
-        )),
+        ..add(MoreDetailsEvent.addFilterListEvent()),
       child: MoreDetailsScreenWidget(),
     );
   }

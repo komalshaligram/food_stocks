@@ -197,27 +197,29 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             AppStrings.formsString: {},
             AppStrings.filesString: {}
           };
-          for (int i = 0; i < state.formsAndFilesList.length; i++) {
-            debugPrint('url = ${state.formsAndFilesList[i].url}');
-            if (state.formsAndFilesList[i].url?.isNotEmpty ?? false) {
-              if ((state.formsAndFilesList[i].isForm ?? false) &&
+          state.formsAndFilesList.forEach((formAndFile) {
+            debugPrint('url = ${formAndFile.url}');
+            if (formAndFile.url?.isNotEmpty ?? false) {
+              if ((formAndFile.isForm ??
+                      false) /*&&
                   (state.formsAndFilesList[i].url
                           ?.contains(AppStrings.tempString) ??
-                      false)) {
-                formsAndFiles[AppStrings.formsString]
-                ?[state.formsAndFilesList[i].id ?? ''] =
-                    state.formsAndFilesList[i].url ?? '';
-              } else if ((state.formsAndFilesList[i].isForm == false) &&
+                      false)*/
+                  ) {
+                formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
+                    formAndFile.url ?? '';
+              } else if ((formAndFile.isForm ==
+                      false) /*&&
                   (state.formsAndFilesList[i].url
                       ?.contains(AppStrings.tempString) ??
-                      false)) {
-                formsAndFiles[AppStrings.filesString]
-                ?[state.formsAndFilesList[i].id ?? ''] =
-                    state.formsAndFilesList[i].url ?? '';
+                      false)*/
+                  ) {
+                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
+                    formAndFile.url ?? '';
               }
             }
-          }
-          debugPrint('update url list = ${formsAndFiles}');
+          });
+          debugPrint('update urls list = ${formsAndFiles}');
           if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
               (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
             if (state.isUpdate) {
@@ -240,7 +242,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               Navigator.popUntil(event.context,
-                      (route) => route.name == RouteDefine.connectScreen.name);
+                  (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
