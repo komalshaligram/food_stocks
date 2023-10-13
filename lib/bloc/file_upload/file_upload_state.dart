@@ -5,6 +5,9 @@ class FileUploadState with _$FileUploadState {
   const factory FileUploadState({
     required List<FormAndFileModel> formsAndFilesList,
     required bool isLoading,
+    required bool isApiLoading,
+    required bool isUploadLoading,
+    required int uploadIndex,
     required bool isUpdate,
   }) = _FileUploadState;
 
@@ -12,5 +15,8 @@ class FileUploadState with _$FileUploadState {
     formsAndFilesList: <FormAndFileModel>[],
         isUpdate: false,
         isLoading: false,
+        isApiLoading: false,
+        uploadIndex: -1,
+        isUploadLoading: false,
       );
 }

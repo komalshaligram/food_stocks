@@ -125,6 +125,7 @@ class LogInScreenWidget extends StatelessWidget {
                                     ),
                                     TextFormField(
                                       controller: phoneController,
+                                      // maxLength: 10,
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.number,
@@ -141,8 +142,10 @@ class LogInScreenWidget extends StatelessWidget {
                                                             AppStrings
                                                                 .mobileValString) ??
                                                     ''));
+                                        return null;
                                       },
                                       decoration: InputDecoration(
+                                        // counterText: '',
                                           errorStyle: TextStyle(
                                               color: AppColors.redColor,
                                               fontWeight: FontWeight.w400),
@@ -236,7 +239,7 @@ class LogInScreenWidget extends StatelessWidget {
                           ],
                         ),
                         state.mobileErrorMessage.isEmpty
-                            ? 15.height
+                            ? 5.height
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -246,6 +249,7 @@ class LogInScreenWidget extends StatelessWidget {
                                           color: AppColors.redColor)),
                                 ],
                               ),
+                        10.height,
                         CustomButtonWidget(
                           buttonText: AppLocalizations.of(context)!.next,
                           bGColor: AppColors.mainColor,

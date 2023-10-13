@@ -13,19 +13,20 @@ class ProfileState with _$ProfileState {
     required TextEditingController idController,
     required TextEditingController contactController,
     required String UserImageUrl,
+    required bool isLoading,
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
-    image: File(''),
-        isUpdate: false,
-        selectedBusinessType: '',
-        businessTypeList: BusinessTypeModel(),
-        businessNameController: TextEditingController(),
-        hpController: TextEditingController(),
-        ownerNameController: TextEditingController(),
-        idController: TextEditingController(),
-        contactController: TextEditingController(),
-    UserImageUrl: ''
-      );
+      image: File(''),
+      isUpdate: false,
+      selectedBusinessType: '',
+      businessTypeList: BusinessTypeModel(),
+      businessNameController: TextEditingController(),
+      hpController: TextEditingController(),
+      ownerNameController: TextEditingController(),
+      idController: TextEditingController(),
+      contactController: TextEditingController(),
+      isLoading: false,
+      UserImageUrl: '');
 }
 

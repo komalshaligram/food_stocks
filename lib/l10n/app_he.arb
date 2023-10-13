@@ -26,7 +26,6 @@
   "friday_and_holiday_eves": "יום שישי וערבי חג",
   "contact_name": "איש קשר",
   "israel_id": "תעודת זהות",
-  "next": "איש קשר",
   "id": "תעודת זהות",
   "city": "עיר / ישוב",
   "skip": "דלג",
@@ -79,7 +78,7 @@
   "save": "שמור",
   "companies": "חברות",
   "all_companies": "כל החברות",
-
+  "name_provider": "שם ספק",
   "total_order": "סה”כ הזמנה",
   "delivery_date": "תאריך משלוח",
   "everything_was_received": "התקבל הכל",
@@ -105,19 +104,16 @@
   "main": "ראשי",
   "for_payment": "לתשלום",
   "home": "ראשי",
-  "problem_detected":"זוהתה בעיה",
-    "the_product_did_not_arrive_at_all" : "המוצר הגיע פגום",
-    "product_arrived_damaged":"המוצר הגיע פגום",
-    "the_product_arrived_missing":"המוצר הגיע חסר",
-    "another_product_problem" :"בעיה נוספת במוצר",
-    "add_text" :"הוסף טקסט",
-    "submit" :"שלח",
-   "empty":"ריק",
-    "order_summary" :"סיכום הזמנה",
-    "supplier_name" :"שם ספק",
-    "send_order" : "שלח הזמנה"
-
-
-
-
-   }
+  "problem_detected": "זוהתה בעיה",
+  "the_product_did_not_arrive_at_all": "המוצר הגיע פגום",
+  "product_arrived_damaged": "המוצר הגיע פגום",
+  "the_product_arrived_missing": "המוצר הגיע חסר",
+  "another_product_problem": "בעיה נוספת במוצר",
+  "add_text": "הוסף טקסט",
+  "submit": "שלח",
+  "empty": "ריק",
+  "contact": "יצירת קשר",
+  "order_summary": "סיכום הזמנה",
+  "supplier_name": "שם ספק",
+  "send_order": "שלח הזמנה"
+}

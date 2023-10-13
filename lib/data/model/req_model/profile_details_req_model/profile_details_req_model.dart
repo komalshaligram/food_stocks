@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'profile_details_req_model.freezed.dart';
-
 part 'profile_details_req_model.g.dart';
 
 ProfileDetailsReqModel profileDetailsReqModelFromJson(String str) =>
@@ -18,7 +17,7 @@ String profileDetailsReqModelToJson(ProfileDetailsReqModel data) =>
 @freezed
 class ProfileDetailsReqModel with _$ProfileDetailsReqModel {
   const factory ProfileDetailsReqModel({
-   String? id,
+    @JsonKey(name: "_id") String? id,
   }) = _ProfileDetailsReqModel;
 
   factory ProfileDetailsReqModel.fromJson(Map<String, dynamic> json) =>

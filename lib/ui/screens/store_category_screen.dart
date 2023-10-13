@@ -90,7 +90,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   // BlocProvider.of<StoreCategoryBloc>(context).add();
                 },
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
@@ -98,12 +99,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.mainColor),
+                      textAlign: TextAlign.center,
                     ),
+                    1.width,
                     Icon(
-                      Icons.arrow_forward_ios_sharp,
+                      Icons.arrow_forward_ios_rounded,
                       color: AppColors.mainColor,
                       size: 16,
                     ),
+                    1.width,
                   ],
                 ),
               ),

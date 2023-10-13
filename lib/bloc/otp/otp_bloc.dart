@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,7 @@ import '../../data/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/themes/app_strings.dart';
+
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -46,8 +49,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             OtpReqModel reqMap =
                 OtpReqModel(contact: event.contact, otp: event.otp);
             debugPrint('otp req = ${event.contact}___${event.otp}');
-            final res =
-                await DioClient(event.context).post(AppUrls.loginOTPUrl, data: reqMap);
+            final res = await DioClient(event.context)
+                .post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
 
@@ -64,13 +67,19 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
               preferencesHelper.setUserName(
                   name: response.data?.user?.clientDetail?.ownerName ?? '');
-               preferencesHelper.setUserImageUrl(imageUrl:response.data?.user?.profileImage ?? '' );
-               preferencesHelper.setUserCompanyLogoUrl(logoUrl: response.data?.user?.logo ?? '');
+              preferencesHelper.setUserImageUrl(
+                  imageUrl: response.data?.user?.profileImage ?? '');
+              preferencesHelper.setUserCompanyLogoUrl(
+                  logoUrl: response.data?.user?.logo ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.loginSuccessString,
+                  bgColor: AppColors.mainColor);
               emit(state.copyWith(isLoginSuccess: true, isLoading: false));
-
             } else {
-              emit(state.copyWith(isLoginFail: true, errorMessage: res['message']));
+              emit(state.copyWith(
+                  isLoginFail: true, errorMessage: res['message']));
               emit(state.copyWith(isLoginFail: false, isLoading: false));
             }
           } catch (e) {
@@ -78,7 +87,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             emit(state.copyWith(isLoginFail: false, isLoading: false));
           }
         } else {
-          emit(state.copyWith(isLoginFail: true, errorMessage: AppStrings.enterOtpString));
+          emit(state.copyWith(
+              isLoginFail: true, errorMessage: AppStrings.enterOtpString));
           emit(state.copyWith(isLoginFail: false));
         }
       }
