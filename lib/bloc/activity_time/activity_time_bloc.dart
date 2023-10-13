@@ -54,7 +54,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
           try {
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
@@ -447,7 +447,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               debugPrint('operation time reqMap + $reqMap');
               try {
-                final response1 = await DioClient().post(
+                final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
                     //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
@@ -509,7 +509,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               ),
             ));
             try {
-              final res = await DioClient().post(
+              final res = await DioClient(event.context).post(
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),
