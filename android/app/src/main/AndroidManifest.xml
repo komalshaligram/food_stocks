@@ -10,6 +10,7 @@
     <application
         android:label="food_stock"
         android:name="${applicationName}"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.example.food_stock.MainActivity"

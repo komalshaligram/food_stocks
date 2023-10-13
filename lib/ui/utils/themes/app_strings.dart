@@ -48,6 +48,7 @@ class AppStrings {
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
+  static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';

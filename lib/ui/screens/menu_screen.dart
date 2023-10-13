@@ -62,7 +62,7 @@ class MenuScreenWidget extends StatelessWidget {
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.termsOfUseScreen.name)),
                   menuTiles(
-                      title: AppLocalizations.of(context)!.contact_name,
+                      title: AppLocalizations.of(context)!.contact,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.contactScreen.name)),
                   menuTiles(

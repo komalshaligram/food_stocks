@@ -512,24 +512,41 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 saturdayAndHolidays: saturdayAndHolidaysList,
               ),
             ));
+            Map<String, dynamic> req = reqMap.toJson();
+            Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
+            debugPrint("update before Model = ${req}");
+            clientDetail?.removeWhere((key, value) {
+              if (value != null) {
+                debugPrint("[$key] = $value");
+              }
+              return value == null;
+            });
+            req[AppStrings.clientDetailString] = clientDetail;
+            req.removeWhere((key, value) {
+              if (value != null) {
+                debugPrint("[$key] = $value");
+              }
+              return value == null;
+            });
+            debugPrint("update after Model = ${req}");
             try {
               final res = await DioClient(event.context).post(
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),
-                  data: reqMap.toJson());
+                  data: /*reqMap.toJson()*/ req);
 
-              debugPrint('operation update req _____${reqMap}');
+              debugPrint('operation update req _____${req}');
 
               reqUpdate.ProfileDetailsUpdateResModel res1 =
                   reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
 
               debugPrint('operation update res _____${res1}');
-              if (res.status == 200) {
+              if (res1.status == 200) {
                 showSnackBar(
                     context: event.context,
                     title: AppStrings.updateSuccessString,
-                    bgColor: AppColors.redColor);
+                    bgColor: AppColors.mainColor);
                 Navigator.pop(event.context);
               } else {
                 showSnackBar(

@@ -54,7 +54,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (int.parse(imageSize.split(' ').first) <= 500 &&
               imageSize.split(' ').last == 'KB') {
             try {
-              final response = await DioClient(event.context).uploadFileProgressWithFormData(
+              debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
+              final response =
+                  await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
@@ -65,14 +67,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ),
               );
               FileUploadModel profileImageModel =
-                  FileUploadModel.fromJson(response);
+              FileUploadModel.fromJson(response);
               debugPrint('img url = ${profileImageModel.filepath}');
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
+                debugPrint("image1 = ${imgUrl}\n${profileImageModel.filepath}");
+                emit(state.copyWith(
+                    image: File(croppedImage?.path ?? pickedFile.path),
+                    UserImageUrl: profileImageModel.filepath ?? ''));
               }
-              emit(state.copyWith(
-                  image: File(croppedImage?.path ?? pickedFile.path),
-                  UserImageUrl: profileImageModel.filepath ?? ''));
             } on ServerException {
               showSnackBar(
                   context: event.context,
@@ -131,12 +134,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
-            emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
+            debugPrint('mobile = ${preferences.getUserId()}');
+            // emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
+            final res = await DioClient(event.context).post(
+                AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
-            resGet.ProfileDetailsResModel.fromJson(res);
+                resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');

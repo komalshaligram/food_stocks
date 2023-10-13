@@ -332,18 +332,18 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             Permission.storage,
           ].request();
 
-          if (statuses[Permission.storage]!.isGranted) {
-            File file;
-            Directory dir;
-            if (defaultTargetPlatform == TargetPlatform.android) {
-              dir = Directory('/storage/emulated/0/Documents');
-            } else {
-              dir = await getApplicationDocumentsDirectory();
-            }
-            if (state.formsAndFilesList[event.fileIndex].url
-                    ?.contains(AppStrings.tempString) ??
-                false) {
-              file =
+          // if (statuses[Permission.storage]!.isGranted) {
+          File file;
+          Directory dir;
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            dir = Directory('/storage/emulated/0/Documents');
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          if (state.formsAndFilesList[event.fileIndex].url
+                  ?.contains(AppStrings.tempString) ??
+              false) {
+            file =
                   File(state.formsAndFilesList[event.fileIndex].localUrl ?? '');
               Uint8List fileBytes = file.readAsBytesSync();
               File newFile = File('${dir.path}/${p.basename(file.path)}');
@@ -376,22 +376,22 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   });
                 } else {
                   filePath = 'Error code: ' + response.statusCode.toString();
-                  debugPrint('download ${filePath}');
-                  showSnackBar(
-                      context: event.context,
-                      title: AppStrings.downloadFailedString,
-                      bgColor: AppColors.redColor);
-                }
-              } catch (ex) {
-                filePath = 'Can not fetch url';
+                debugPrint('download ${filePath}');
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.downloadFailedString,
+                    bgColor: AppColors.redColor);
               }
+            } catch (ex) {
+              filePath = 'Can not fetch url';
             }
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.docDownloadAllowPermissionString,
-                bgColor: AppColors.redColor);
           }
+          // } else {
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
+          // }
         } catch (e) {
           showSnackBar(
               context: event.context,
@@ -404,13 +404,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           try {
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
-            final res =
-                await DioClient(event.context).post(AppUrls.getProfileDetailsUrl, data: {
+            final res = await DioClient(event.context)
+                .post(AppUrls.getProfileDetailsUrl, data: {
               AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
                   preferencesHelper.getUserId()
             });
             ProfileDetailsResModel response =
                 ProfileDetailsResModel.fromJson(res);
+            Map<String, dynamic> newModel =
+                res['data']['clients'][0]['clientDetail'];
+            debugPrint('data1 = ${newModel}');
 
             debugPrint(
                 'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
@@ -421,20 +424,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               List<FormAndFileModel> formsAndFilesList =
                   state.formsAndFilesList.toList(growable: true);
               for (int i = 0; i < formsAndFilesList.length; i++) {
-                if (response.data?.clients?.first.clientDetail?.files
-                        ?.toJson()
+                if (newModel[AppStrings.filesString]
                         .containsKey(formsAndFilesList[i].id) ??
                     false) {
-                  formsAndFilesList[i].url = response
-                      .data?.clients?.first.clientDetail?.files
-                      ?.toJson()[formsAndFilesList[i].id];
-                } else if (response.data?.clients?.first.clientDetail?.forms
-                        ?.toJson()
+                  formsAndFilesList[i].url =
+                      newModel[AppStrings.filesString][formsAndFilesList[i].id];
+                } else if (newModel[AppStrings.formsString]
                         .containsKey(formsAndFilesList[i].id) ??
                     false) {
-                  formsAndFilesList[i].url = response
-                      .data?.clients?.first.clientDetail?.forms
-                      ?.toJson()[formsAndFilesList[i].id];
+                  formsAndFilesList[i].url =
+                      newModel[AppStrings.formsString][formsAndFilesList[i].id];
                 }
                 debugPrint(
                     'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
