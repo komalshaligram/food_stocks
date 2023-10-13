@@ -28,10 +28,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               contact: event.contactNumber, isRegistration: event.isRegister);
           debugPrint(
               'login req = ${event.contactNumber}___${event.isRegister}');
-          final res = await DioClient().post(
+          final res = await DioClient(event.context).post(
             AppUrls.existingUserLoginUrl,
             data: reqMap,
-            context: event.context,
           );
           debugPrint('login res = $res');
           LoginResModel response = LoginResModel.fromJson(res);
