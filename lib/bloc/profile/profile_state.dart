@@ -14,6 +14,7 @@ class ProfileState with _$ProfileState {
     required TextEditingController contactController,
     required String UserImageUrl,
     required bool isLoading,
+    required bool isFileSizeExceeds,
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
@@ -27,6 +28,7 @@ class ProfileState with _$ProfileState {
       idController: TextEditingController(),
       contactController: TextEditingController(),
       isLoading: false,
+      isFileSizeExceeds: false,
       UserImageUrl: '');
 }
 

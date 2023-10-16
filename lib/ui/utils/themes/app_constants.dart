@@ -37,4 +37,7 @@ class AppConstants{
   static const double font_30 = 30;
 
   static const double blur_10 = 10;
+
+  //file size cap
+  static const int fileSizeCap = 1024;
 }

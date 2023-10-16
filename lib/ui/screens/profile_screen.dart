@@ -62,7 +62,14 @@ class ProfileScreenWidget extends StatelessWidget {
   Widget build(BuildContext context1) {
     ProfileBloc bloc = context1.read<ProfileBloc>();
     return BlocListener<ProfileBloc, ProfileState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state.isFileSizeExceeds) {
+          showSnackBar(
+              context: context,
+              title: AppStrings.fileSizeLimitString,
+              bgColor: AppColors.redColor);
+        }
+      },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           return Scaffold(
@@ -139,7 +146,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                 onTap: () {
                                                   bloc.add(ProfileEvent
                                                       .pickProfileImageEvent(
-                                                          context: context,
+                                                      context: context1,
                                                           isFromCamera: true));
                                                   Navigator.pop(context);
                                                 }),

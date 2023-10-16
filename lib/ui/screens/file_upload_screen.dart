@@ -32,13 +32,18 @@ class FileUploadScreen extends StatelessWidget {
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
     return BlocProvider(
       create: (context) => FileUploadBloc()
-        ..add(FileUploadEvent.getFormsListEvent(context: context))
-        ..add(FileUploadEvent.getFilesListEvent(context: context))
-        ..add(FileUploadEvent.getProfileFilesAndFormsEvent(
+        ..add(FileUploadEvent.getFormsListEvent(
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
-                : false)),
+                : false))
+      // ..add(FileUploadEvent.getFilesListEvent(context: context))
+      /*..add(FileUploadEvent.getProfileFilesAndFormsEvent(
+            context: context,
+            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
+                ? true
+                : false))*/
+      ,
       child: const FileUploadScreenWidget(),
     );
   }
@@ -51,136 +56,154 @@ class FileUploadScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     FileUploadBloc bloc = context.read<FileUploadBloc>();
-    return BlocBuilder<FileUploadBloc, FileUploadState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            titleSpacing: 0,
-            leadingWidth: 60,
-            title: Text(AppLocalizations.of(context)!.forms_files,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.blackColor)),
-            leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: AppColors.blackColor,
-                )),
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: screenWidth * 0.1, right: screenWidth * 0.1),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    state.isLoading
-                        ? Container(
-                            height: getScreenHeight(context) - 56,
-                            width: getScreenWidth(context),
-                            child: Center(
-                              child: CupertinoActivityIndicator(
-                                color: AppColors.blackColor,
-                              ),
-                            ),
-                          )
-                        : state.formsAndFilesList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context),
-                                width: getScreenWidth(context),
-                                child: Center(
-                                  child: Text(
-                                    'No Files And Forms available',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.textColor),
-                                  ),
-                                ),
-                              )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: state.formsAndFilesList.length,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return buildFormsAndFilesUploadFields(
-                                    fileIndex: index,
-                                    context: context,
-                                    fileName:
-                                        state.formsAndFilesList[index].name ??
-                                            '',
-                                    url: state.formsAndFilesList[index].url ??
-                                        '',
-                                    localUrl: state.formsAndFilesList[index]
-                                            .localUrl ??
-                                        '',
-                                    isUploading: state.isUploadLoading,
-                                    uploadIndex: state.uploadIndex,
-                                    isDownloadable: state
-                                            .formsAndFilesList[index]
-                                            .isDownloadable ??
-                                        false,
-                                  );
-                                },
-                              ),
-                    40.height,
-                    CustomButtonWidget(
-                      buttonText: state.isUpdate
-                          ? AppLocalizations.of(context)!.save.toUpperCase()
-                          : AppLocalizations.of(context)!.next.toUpperCase(),
-                      fontColors: AppColors.whiteColor,
-                      isLoading: state.isApiLoading,
-                      onPressed: state.isApiLoading
-                          ? null
-                          : () {
-                              bloc.add(FileUploadEvent.uploadApiEvent(
-                                  context: context));
-                            },
-                      bGColor: AppColors.mainColor,
-                    ),
-                    20.height,
-                    state.isUpdate
-                        ? 0.width
-                        : CustomButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.skip,
-                            fontColors: AppColors.mainColor,
-                            borderColor: AppColors.mainColor,
-                            onPressed: () async {
-                              // SharedPreferencesHelper preferencesHelper =
-                              //     SharedPreferencesHelper(
-                              //         prefs: await SharedPreferences
-                              //             .getInstance());
-                              // preferencesHelper.setUserLoggedIn(
-                              //     isLoggedIn: true);
-                              showSnackBar(
-                                  context: context,
-                                  title: AppStrings.registerSuccessString,
-                                  bgColor: AppColors.mainColor);
-                              Navigator.popUntil(
-                                  context,
-                                  (route) =>
-                                      route.name ==
-                                      RouteDefine.connectScreen.name);
-                              Navigator.pushNamed(
-                                  context, RouteDefine.bottomNavScreen.name);
-                            },
-                            bGColor: AppColors.whiteColor,
-                          ),
-                    20.height,
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
+    return BlocListener<FileUploadBloc, FileUploadState>(
+      listener: (context, state) {
+        if (state.isFileSizeExceeds) {
+          showSnackBar(
+              context: context,
+              title: AppStrings.fileSizeLimitString,
+              bgColor: AppColors.redColor);
+        }
+        ;
       },
+      child: BlocBuilder<FileUploadBloc, FileUploadState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.whiteColor,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              titleSpacing: 0,
+              leadingWidth: 60,
+              title: Text(AppLocalizations.of(context)!.forms_files,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.blackColor)),
+              leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.blackColor,
+                  )),
+            ),
+            body: SafeArea(
+              child: state.isLoading
+                  ? Container(
+                      height: getScreenHeight(context),
+                      child: Center(
+                        child: CupertinoActivityIndicator(
+                          color: AppColors.blackColor,
+                        ),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: screenWidth * 0.1, right: screenWidth * 0.1),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            state.formsAndFilesList.isEmpty
+                                ? Container(
+                                    height: getScreenHeight(context),
+                                    width: getScreenWidth(context),
+                                    child: Center(
+                                      child: Text(
+                                        'No Files And Forms available',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.normalFont,
+                                            color: AppColors.textColor),
+                                      ),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: state.formsAndFilesList.length,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return buildFormsAndFilesUploadFields(
+                                        fileIndex: index,
+                                        context: context,
+                                        fileName: state.formsAndFilesList[index]
+                                                .name ??
+                                            '',
+                                        url: state
+                                                .formsAndFilesList[index].url ??
+                                            '',
+                                        localUrl: state.formsAndFilesList[index]
+                                                .localUrl ??
+                                            '',
+                                        isUploading: state.isUploadLoading,
+                                        uploadIndex: state.uploadIndex,
+                                        isDownloadable: state
+                                                .formsAndFilesList[index]
+                                                .isDownloadable ??
+                                            false,
+                                      );
+                                    },
+                                  ),
+                            40.height,
+                            CustomButtonWidget(
+                              buttonText: state.isUpdate
+                                  ? AppLocalizations.of(context)!
+                                      .save
+                                      .toUpperCase()
+                                  : AppLocalizations.of(context)!
+                                      .next
+                                      .toUpperCase(),
+                              fontColors: AppColors.whiteColor,
+                              isLoading: state.isApiLoading,
+                              onPressed: state.isApiLoading
+                                  ? null
+                                  : () {
+                                      bloc.add(FileUploadEvent.uploadApiEvent(
+                                          context: context));
+                                    },
+                              bGColor: AppColors.mainColor,
+                            ),
+                            20.height,
+                            state.isUpdate
+                                ? 0.width
+                                : CustomButtonWidget(
+                                    buttonText:
+                                        AppLocalizations.of(context)!.skip,
+                                    fontColors: AppColors.mainColor,
+                                    borderColor: AppColors.mainColor,
+                                    onPressed: () async {
+                                      // SharedPreferencesHelper preferencesHelper =
+                                      //     SharedPreferencesHelper(
+                                      //         prefs: await SharedPreferences
+                                      //             .getInstance());
+                                      // preferencesHelper.setUserLoggedIn(
+                                      //     isLoggedIn: true);
+                                      showSnackBar(
+                                          context: context,
+                                          title:
+                                              AppStrings.registerSuccessString,
+                                          bgColor: AppColors.mainColor);
+                                      Navigator.popUntil(
+                                          context,
+                                          (route) =>
+                                              route.name ==
+                                              RouteDefine.connectScreen.name);
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.bottomNavScreen.name);
+                                    },
+                                    bGColor: AppColors.whiteColor,
+                                  ),
+                            20.height,
+                          ],
+                        ),
+                      ),
+                    ),
+            ),
+          );
+        },
+      ),
     );
   }
 
