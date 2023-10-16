@@ -228,7 +228,7 @@ class OperationTimeRow extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_15),
+                    horizontal: AppConstants.padding_10),
                 child: state.OperationTimeList.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,

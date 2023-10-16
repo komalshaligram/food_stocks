@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
@@ -31,16 +32,16 @@ class MoreDetailsScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => MoreDetailsBloc()
-        ..add(MoreDetailsEvent.addFilterListEvent())
+        ..add(MoreDetailsEvent.getProfileModelEvent(
+          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
+          context: context,
+        ))
         ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
                 : false))
-        ..add(MoreDetailsEvent.getProfileModelEvent(
-          profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
-          context: context,
-        )),
+        ..add(MoreDetailsEvent.addFilterListEvent()),
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -415,9 +416,43 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     width:
                                                         getScreenWidth(context),
                                                     child: Image.network(
-                                                      '${AppUrls.baseFileUrl}' +
-                                                          '${state.companyLogo}',
-                                                      fit: BoxFit.fill,
+                                                      '${AppUrls.baseFileUrl}${state.companyLogo}',
+                                                      fit: BoxFit.cover,
+                                                      loadingBuilder: (context,
+                                                          child,
+                                                          loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) {
+                                                          return child;
+                                                        } else {
+                                                          return Center(
+                                                            child:
+                                                                CupertinoActivityIndicator(
+                                                              color: AppColors
+                                                                  .blackColor,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Container(
+                                                          color: AppColors
+                                                              .whiteColor,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                            AppStrings
+                                                                .failedToLoadString,
+                                                            style: AppStyles.rkRegularTextStyle(
+                                                                size:
+                                                                    AppConstants
+                                                                        .font_14,
+                                                                color: AppColors
+                                                                    .textColor),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
                                                   )
                                             : Icon(
@@ -433,7 +468,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 child: Image.file(
                                                   File(state.image.path),
-                                                  fit: BoxFit.fill,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               )
                                             : Icon(
@@ -493,12 +528,25 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                             ? AppLocalizations.of(context)!.save.toUpperCase()
                             : AppLocalizations.of(context)!.next.toUpperCase(),
                         bGColor: AppColors.mainColor,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            bloc.add(MoreDetailsEvent.registrationApiEvent(
-                                context: context));
+                        isLoading: state.isLoading,
+                        onPressed: state.isLoading
+                            ? null
+                            : () {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  if (state.companyLogo.isNotEmpty) {
+                                    bloc.add(
+                                        MoreDetailsEvent.registrationApiEvent(
+                                            context: context));
+                                  } else {
+                                    showSnackBar(
+                                        context: context,
+                                        title:
+                                            AppStrings.selectCompanyLogoString,
+                                        bgColor: AppColors.redColor);
+                                  }
 
-                            /*      if (state.isUpdate) {
+                                  /*      if (state.isUpdate) {
                               if (state.image.path.isNotEmpty) {
                                 bloc.add(MoreDetailsEvent
                                     .registrationApiEvent(
@@ -510,8 +558,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     bgColor: AppColors.redColor);
                               }
                             }*/
-                          }
-                        },
+                                }
+                              },
                         fontColors: AppColors.whiteColor,
                       ),
                       20.height,

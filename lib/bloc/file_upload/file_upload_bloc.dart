@@ -40,7 +40,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       if (event is _getFormsListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient().get(path: AppUrls.formsListUrl);
+          final res = await DioClient(event.context).get(path: AppUrls.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> formsList =
@@ -73,7 +73,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient().get(path: AppUrls.filesListUrl);
+          final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> filesList =
@@ -150,27 +150,40 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 contentType: MediaType('image', 'png'),
               )
             });
-            final res = await DioClient().uploadFileProgressWithFormData(
-              path: AppUrls.fileUploadUrl,
-              formData: formData,
-            );
-            FileUploadResModel response = FileUploadResModel.fromJson(res);
-            if (response.baseUrl?.isNotEmpty ?? false) {
-              formAndFileList[event.fileIndex].url = response.filepath;
-              formAndFileList[event.fileIndex].localUrl =
-                  croppedImage?.path ?? pickedFile.path;
-              debugPrint(
-                  'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
-              emit(state.copyWith(formsAndFilesList: []));
-              emit(state.copyWith(formsAndFilesList: formAndFileList));
-            } else {
+            try {
+              emit(state.copyWith(
+                  isUploadLoading: true, uploadIndex: event.fileIndex));
+              final res = await DioClient(event.context).uploadFileProgressWithFormData(
+                path: AppUrls.fileUploadUrl,
+                formData: formData,
+              );
+              FileUploadResModel response = FileUploadResModel.fromJson(res);
+              if (response.baseUrl?.isNotEmpty ?? false) {
+                emit(state.copyWith(isUploadLoading: false));
+                formAndFileList[event.fileIndex].url = response.filepath;
+                formAndFileList[event.fileIndex].localUrl =
+                    croppedImage?.path ?? pickedFile.path;
+                debugPrint(
+                    'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
+                emit(state.copyWith(formsAndFilesList: []));
+                emit(state.copyWith(formsAndFilesList: formAndFileList));
+              } else {
+                emit(state.copyWith(isUploadLoading: false));
+                showSnackBar(
+                    context: event.context,
+                    title: res[AppStrings.messageString] ??
+                        AppStrings.fileSizeLimit500KBString,
+                    bgColor: AppColors.redColor);
+              }
+            } catch (e) {
+              emit(state.copyWith(isUploadLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: res[AppStrings.messageString] ??
-                      AppStrings.fileSizeLimit500KBString,
+                  title: AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } else {
+            emit(state.copyWith(isUploadLoading: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.fileSizeLimit500KBString,
@@ -179,40 +192,45 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       } else if (event is _uploadApiEvent) {
         try {
+          emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
             AppStrings.formsString: {},
             AppStrings.filesString: {}
           };
-          for (int i = 0; i < state.formsAndFilesList.length; i++) {
-            debugPrint('url = ${state.formsAndFilesList[i].url}');
-            if (state.formsAndFilesList[i].url?.isNotEmpty ?? false) {
-              if ((state.formsAndFilesList[i].isForm ?? false) &&
+          state.formsAndFilesList.forEach((formAndFile) {
+            debugPrint('url = ${formAndFile.url}');
+            if (formAndFile.url?.isNotEmpty ?? false) {
+              if ((formAndFile.isForm ??
+                      false) /*&&
                   (state.formsAndFilesList[i].url
                           ?.contains(AppStrings.tempString) ??
-                      false)) {
-                formsAndFiles[AppStrings.formsString]
-                        ?[state.formsAndFilesList[i].id ?? ''] =
-                    state.formsAndFilesList[i].url ?? '';
-              } else if ((state.formsAndFilesList[i].isForm == false) &&
+                      false)*/
+                  ) {
+                formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
+                    formAndFile.url ?? '';
+              } else if ((formAndFile.isForm ==
+                      false) /*&&
                   (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)) {
-                formsAndFiles[AppStrings.filesString]
-                        ?[state.formsAndFilesList[i].id ?? ''] =
-                    state.formsAndFilesList[i].url ?? '';
+                      ?.contains(AppStrings.tempString) ??
+                      false)*/
+                  ) {
+                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
+                    formAndFile.url ?? '';
               }
             }
-          }
-          debugPrint('update url list = ${formsAndFiles}');
+          });
+          debugPrint('update urls list = ${formsAndFiles}');
           if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
               (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
             if (state.isUpdate) {
+              emit(state.copyWith(isApiLoading: false));
               showSnackBar(
                   context: event.context,
                   title: AppStrings.updateSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
             } else {
+              emit(state.copyWith(isApiLoading: false));
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
@@ -232,14 +250,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
-          debugPrint(
-              "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}");
-          final res = await DioClient().post(
+
+          final res = await DioClient(event.context).post(
             "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
           FileUpdateResModel response = FileUpdateResModel.fromJson(res);
+          debugPrint("file update res = $res");
           if (response.status == 200) {
+            emit(state.copyWith(isApiLoading: false));
             if (state.isUpdate) {
               showSnackBar(
                   context: event.context,
@@ -250,19 +269,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.redColor);
+                  bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
           } else {
+            emit(state.copyWith(isApiLoading: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
+          emit(state.copyWith(isApiLoading: false));
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,
@@ -272,15 +293,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {
+          emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
           RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
               path: formsAndFilesList[event.index].url);
           debugPrint('delete file req = ${reqModel.path}');
           final res =
-              await DioClient().post(AppUrls.removeFileUrl, data: reqModel);
+              await DioClient(event.context).post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
+            emit(state.copyWith(isUploadLoading: false));
             formsAndFilesList[event.index].localUrl = '';
             formsAndFilesList[event.index].url = '';
             emit(state.copyWith(formsAndFilesList: []));
@@ -290,12 +313,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 title: response.message ?? AppStrings.removeSuccessString,
                 bgColor: AppColors.mainColor);
           } else {
+            emit(state.copyWith(isUploadLoading: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
           }
         } catch (e) {
+          emit(state.copyWith(isUploadLoading: false));
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,
@@ -307,43 +332,50 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             Permission.storage,
           ].request();
 
-          if (statuses[Permission.storage]!.isGranted) {
-            Directory dir;
-            if (defaultTargetPlatform == TargetPlatform.android) {
-              dir = Directory('/storage/emulated/0/Documents');
-            } else {
-              dir = await getApplicationDocumentsDirectory();
-            }
-            // debugPrint('download start ${state.formsAndFilesList[event.fileIndex].url ?? 'as'}');
-            // final taskId = await FlutterDownloader.enqueue(
-            //   url: state.formsAndFilesList[event.fileIndex].url ?? '',
-            //   headers: {}, // optional: header send with url (auth token etc)
-            //   savedDir: '$dir/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}',
-            //   showNotification: false, // show download progress in status bar (for Android)
-            //   openFileFromNotification: false, // click on notification to open downloaded file (for Android)
-            // );
-            // debugPrint('download = $taskId');
-            HttpClient httpClient = new HttpClient();
-            File file;
-            String filePath = '';
-            try {
-              var request = await httpClient.getUrl(Uri.parse(
-                  "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}"));
-              var response = await request.close();
-              if (response.statusCode == 200) {
-                Uint8List fileBytes =
-                    await consolidateHttpClientResponseBytes(response);
-                filePath =
-                    '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}';
-                file = File(filePath);
-                await file.writeAsBytes(fileBytes).then((value) {
+          // if (statuses[Permission.storage]!.isGranted) {
+          File file;
+          Directory dir;
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            dir = Directory('/storage/emulated/0/Documents');
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          if (state.formsAndFilesList[event.fileIndex].url
+                  ?.contains(AppStrings.tempString) ??
+              false) {
+            file =
+                  File(state.formsAndFilesList[event.fileIndex].localUrl ?? '');
+              Uint8List fileBytes = file.readAsBytesSync();
+              File newFile = File('${dir.path}/${p.basename(file.path)}');
+              await newFile.writeAsBytes(fileBytes).then(
+                (value) {
                   showSnackBar(
                       context: event.context,
-                      title: AppStrings.docDownloadString,
+                      title: AppStrings.downloadString,
                       bgColor: AppColors.mainColor);
-                });
-              } else {
-                filePath = 'Error code: ' + response.statusCode.toString();
+                },
+              );
+            } else {
+              HttpClient httpClient = new HttpClient();
+              String filePath = '';
+              try {
+                var request = await httpClient.getUrl(Uri.parse(
+                    "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}"));
+                var response = await request.close();
+                if (response.statusCode == 200) {
+                  Uint8List fileBytes =
+                      await consolidateHttpClientResponseBytes(response);
+                  filePath =
+                      '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}';
+                  file = File(filePath);
+                  await file.writeAsBytes(fileBytes).then((value) {
+                    showSnackBar(
+                        context: event.context,
+                        title: AppStrings.downloadString,
+                        bgColor: AppColors.mainColor);
+                  });
+                } else {
+                  filePath = 'Error code: ' + response.statusCode.toString();
                 debugPrint('download ${filePath}');
                 showSnackBar(
                     context: event.context,
@@ -353,23 +385,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             } catch (ex) {
               filePath = 'Can not fetch url';
             }
-            // Uint8List fileBytes = state.businessCertificate.readAsBytesSync();
-            // File newFile = File(
-            //     '${dir.path}/${p.basename(state.businessCertificate.path)}');
-            // await newFile.writeAsBytes(fileBytes).then(
-            //   (value) {
-            //     showSnackBar(
-            //         context: event.context,
-            //         title: AppStrings.docDownloadString,
-            //         bgColor: AppColors.mainColor);
-            //   },
-            // );
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.docDownloadAllowPermissionString,
-                bgColor: AppColors.redColor);
           }
+          // } else {
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
+          // }
         } catch (e) {
           showSnackBar(
               context: event.context,
@@ -382,30 +404,39 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           try {
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
-            final res =
-                await DioClient().post(AppUrls.getProfileDetailsUrl, data: {
+            final res = await DioClient(event.context)
+                .post(AppUrls.getProfileDetailsUrl, data: {
               AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
                   preferencesHelper.getUserId()
             });
             ProfileDetailsResModel response =
                 ProfileDetailsResModel.fromJson(res);
+            Map<String, dynamic> newModel =
+                res['data']['clients'][0]['clientDetail'];
+            debugPrint('data1 = ${newModel}');
+
+            debugPrint(
+                'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
+            debugPrint(
+                'forms = ${response.data?.clients?.first.clientDetail?.forms?.toJson().keys}}');
 
             if (response.status == 200) {
               List<FormAndFileModel> formsAndFilesList =
                   state.formsAndFilesList.toList(growable: true);
               for (int i = 0; i < formsAndFilesList.length; i++) {
-                if (res['data']['clients'][0]['clientDetail']['forms']
-                        [formsAndFilesList[i].id] !=
-                    null) {
-                  formsAndFilesList[i].url = res['data']['clients'][0]
-                  ['clientDetail']['forms'][formsAndFilesList[i].id];
-                } else if (res['data']['clients'][0]['clientDetail']['files']
-                [formsAndFilesList[i].id] !=
-                    null) {
-                  formsAndFilesList[i].url = res['data']['clients'][0]
-                  ['clientDetail']['files'][formsAndFilesList[i].id];
+                if (newModel[AppStrings.filesString]
+                        .containsKey(formsAndFilesList[i].id) ??
+                    false) {
+                  formsAndFilesList[i].url =
+                      newModel[AppStrings.filesString][formsAndFilesList[i].id];
+                } else if (newModel[AppStrings.formsString]
+                        .containsKey(formsAndFilesList[i].id) ??
+                    false) {
+                  formsAndFilesList[i].url =
+                      newModel[AppStrings.formsString][formsAndFilesList[i].id];
                 }
-                debugPrint('url = ${formsAndFilesList[i].url}');
+                debugPrint(
+                    'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
               }
               emit(state.copyWith(formsAndFilesList: []));
               emit(state.copyWith(formsAndFilesList: formsAndFilesList));

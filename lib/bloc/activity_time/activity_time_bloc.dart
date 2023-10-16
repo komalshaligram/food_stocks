@@ -13,6 +13,10 @@ import '../../data/model/req_model/profile_details_update_req_model/profile_deta
     as update;
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
     as res;
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
+    as update;
+
+import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -54,7 +58,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
           try {
-            final res = await DioClient().post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
@@ -447,7 +451,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               debugPrint('operation time reqMap + $reqMap');
               try {
-                final response1 = await DioClient().post(
+                final response1 = await DioClient(event.context).post(
                     AppUrls.operationTimeUrl + '/' + preferences.getUserId(),
                     //  AppUrls.operationTimeUrl + '/' + '651ff55af3c2b715fe5f1ba8',
                     data: reqMap);
@@ -508,25 +512,41 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 saturdayAndHolidays: saturdayAndHolidaysList,
               ),
             ));
+            Map<String, dynamic> req = reqMap.toJson();
+            Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
+            debugPrint("update before Model = ${req}");
+            clientDetail?.removeWhere((key, value) {
+              if (value != null) {
+                debugPrint("[$key] = $value");
+              }
+              return value == null;
+            });
+            req[AppStrings.clientDetailString] = clientDetail;
+            req.removeWhere((key, value) {
+              if (value != null) {
+                debugPrint("[$key] = $value");
+              }
+              return value == null;
+            });
+            debugPrint("update after Model = ${req}");
             try {
-              final res = await DioClient().post(
+              final res = await DioClient(event.context).post(
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),
-                  data: reqMap.toJson());
+                  data: /*reqMap.toJson()*/ req);
 
-              debugPrint('operation update req _____${reqMap}');
-
+              debugPrint('operation update req _____${req}');
 
               reqUpdate.ProfileDetailsUpdateResModel res1 =
                   reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
 
               debugPrint('operation update res _____${res1}');
-              if (res.status == 200) {
+              if (res1.status == 200) {
                 showSnackBar(
                     context: event.context,
                     title: AppStrings.updateSuccessString,
-                    bgColor: AppColors.redColor);
+                    bgColor: AppColors.mainColor);
                 Navigator.pop(event.context);
               } else {
                 showSnackBar(

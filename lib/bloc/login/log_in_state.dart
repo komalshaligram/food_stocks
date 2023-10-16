@@ -14,7 +14,7 @@ class LogInState with _$LogInState {
         isLoginFail: false,
         isLoginSuccess: false,
         errorMessage: '',
-        mobileErrorMessage: '',
+        mobileErrorMessage: ' ',
         isLoading: false,
       );
 }

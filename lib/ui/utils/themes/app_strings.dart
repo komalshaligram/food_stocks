@@ -13,6 +13,7 @@ class AppStrings {
   static const tempString = 'temp';
   static const cityNotFoundString = 'Cities not available';
   static const okString = 'ok';
+  static const failedToLoadString = 'Failed to load';
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -26,6 +27,7 @@ class AppStrings {
   static const formString = 'form';
   static const formsString = 'forms';
   static const idParamString = '_id';
+  static const clientDetailString = 'clientDetail';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -46,6 +48,7 @@ class AppStrings {
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
+  static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
@@ -59,7 +62,7 @@ class AppStrings {
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
       'Please select only image and document files';
-  static const docDownloadString = 'Document download successfully!';
+  static const downloadString = 'Download successfully!';
   static const downloadFailedString = 'Failed to download';
   static const docDownloadAllowPermissionString =
       'Please allow permission from settings';
@@ -77,6 +80,7 @@ class AppStrings {
   static const enterOtpString = 'Please enter otp';
   static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
   static const fillUpClosingTimeString = 'Please fill up closing time';
+  static const noInternetConnection = 'No Internet Connection';
 
 
   //hint strings
