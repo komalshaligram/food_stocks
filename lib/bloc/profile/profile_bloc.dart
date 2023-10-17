@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
@@ -17,6 +18,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
@@ -24,6 +26,7 @@ import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
+import '../../ui/utils/themes/app_constants.dart';
 
 part 'profile_bloc.freezed.dart';
 
@@ -46,12 +49,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             source:
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
+          debugPrint("compress after size = ${await pickedFile.length()}");
+          Directory dir;
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            dir = await getApplicationDocumentsDirectory();
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
           CroppedFile? croppedImage = await cropImage(
-              path: pickedFile.path, shape: CropStyle.circle, quality: 100);
+              path: pickedFile.path,
+              shape: CropStyle.circle,
+              quality: AppConstants.fileQuality);
           String imageSize = getFileSizeString(
-              bytes:
-                  await File(croppedImage?.path ?? pickedFile.path).length());
-          if (int.parse(imageSize.split(' ').first) <= 500 &&
+              bytes: croppedImage?.path.isNotEmpty ?? false
+                  ? await File(croppedImage!.path).length()
+                  : 0);
+          debugPrint('data1 final size = ${imageSize}');
+
+          if (int.parse(imageSize.split(' ').first) == 0) {
+            return;
+          }
+          if (int.parse(imageSize.split(' ').first) <=
+                  AppConstants.fileSizeCap &&
               imageSize.split(' ').last == 'KB') {
             try {
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
@@ -83,10 +102,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   bgColor: AppColors.redColor);
             }
           } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.fileSizeLimit500KBString,
-                bgColor: AppColors.redColor);
+            emit(state.copyWith(isFileSizeExceeds: true));
+            emit(state.copyWith(isFileSizeExceeds: false));
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.fileSizeLimit500KBString,
+            //     bgColor: AppColors.redColor);
           }
         }
       } else if (event is _getBusinessTypeListEvent) {
@@ -180,10 +201,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.somethingWrongString,
+            //     bgColor: AppColors.redColor);
           }
         }
       } else if (event is _updateProfileDetailsEvent) {
