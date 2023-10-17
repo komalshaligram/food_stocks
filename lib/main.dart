@@ -13,11 +13,8 @@ import 'data/services/locale_provider.dart';
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
-
-
     await PushNotificationService().setupInteractedMessage();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
     runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,

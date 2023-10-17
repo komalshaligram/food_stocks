@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:229653257750:android:0c3b8480c2b6094d7e5f37",
+        "android_client_info": {
+          "package_name": "com.foodstock"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4BSfAs-goQLSWw-HDLea9ofgfbcql6tY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:229653257750:android:8e7288090b1831117e5f37",
         "android_client_info": {
           "package_name": "com.shaligram.food_stock"
