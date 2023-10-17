@@ -468,7 +468,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 child: Image.file(
                                                   File(state.image.path),
-                                                  fit: BoxFit.fill,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               )
                                             : Icon(
