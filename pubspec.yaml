@@ -66,6 +66,8 @@ dependencies:
   firebase_messaging: ^14.6.9
   flutter_local_notifications: ^16.0.0+1
   package_info_plus: ^4.1.0
+  appsflyer_sdk: ^6.12.2
+  device_info_plus: ^9.1.0
 
 
 dev_dependencies:

@@ -1,3 +1,5 @@
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
+
 class AppStrings {
   static const appName = 'Food Stock';
   static const hpString = '* H.P.';
@@ -56,7 +58,8 @@ class AppStrings {
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
   static const imageNotSetString = 'Image not set';
-  static const fileSizeLimit500KBString = 'File size must be less then 500KB';
+  static const fileSizeLimitString =
+      'File size must be less then ${AppConstants.fileSizeCap}KB';
   static const selectCompanyLogoString = 'Please upload company logo';
   static const selectProfileImageString = 'Please upload your profile photo';
   static const selectBusinessTypeString = 'Please select your business type';

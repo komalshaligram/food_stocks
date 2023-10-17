@@ -91,6 +91,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               isLoginFail: true, errorMessage: AppStrings.enterOtpString));
           emit(state.copyWith(isLoginFail: false));
         }
+      } else if (event is _ChangeOtpEvent) {
+        emit(state.copyWith(otp: event.otp));
       }
     });
   }

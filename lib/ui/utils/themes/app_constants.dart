@@ -41,4 +41,10 @@ class AppConstants{
   static const double font_22 = 22;
 
   static const double blur_10 = 10;
+
+  //file size cap
+  static const int fileSizeCap = 1024;
+
+  //file quality
+  static const int fileQuality = 70;
 }
