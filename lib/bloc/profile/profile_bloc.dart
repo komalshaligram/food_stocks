@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:food_stock/data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
 import 'package:food_stock/data/model/res_model/business_type_model/business_type_model.dart';
@@ -57,18 +56,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
-          XFile? compressedFile = await FlutterImageCompress.compressAndGetFile(
-            pickedFile.path, "${dir.path}/demo.jpg",
-            quality: 50,
-            // rotate: 180,
-          );
-          debugPrint("compress after size = ${await compressedFile?.length()}");
-
           CroppedFile? croppedImage = await cropImage(
-              path: compressedFile?.path ?? pickedFile.path,
+              path: pickedFile.path,
               shape: CropStyle.circle,
-              quality: 100);
-          debugPrint('data1 cropped size = ${croppedImage?.path.length}');
+              quality: AppConstants.fileQuality);
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()

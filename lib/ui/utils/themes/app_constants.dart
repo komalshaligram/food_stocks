@@ -40,4 +40,7 @@ class AppConstants{
 
   //file size cap
   static const int fileSizeCap = 1024;
+
+  //file quality
+  static const int fileQuality = 70;
 }

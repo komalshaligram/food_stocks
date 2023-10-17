@@ -193,7 +193,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _pickDocumentEvent) {
         XFile? pickedFile;
         if (event.isDocument) {
-          pickedFile = await ImagePicker().pickMedia(imageQuality: 100);
+          pickedFile = await ImagePicker()
+              .pickMedia(imageQuality: AppConstants.fileQuality);
         } else {
           pickedFile = await ImagePicker().pickImage(
               source: event.isFromCamera

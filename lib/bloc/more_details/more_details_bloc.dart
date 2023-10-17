@@ -77,7 +77,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
           CroppedFile? croppedImage = await cropImage(
-              path: pickedFile.path, shape: CropStyle.rectangle, quality: 100);
+              path: pickedFile.path,
+              shape: CropStyle.rectangle,
+              quality: AppConstants.fileQuality);
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
