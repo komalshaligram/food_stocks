@@ -13,6 +13,16 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required int selectRadioTile,
   }) = _radioButtonEvent;
 
+  const factory ProductDetailsEvent.productIncrementEvent({
+    required int productWeight,
+    required int listIndex,
+  }) = _productIncrementEvent;
+
+  const factory ProductDetailsEvent.productDecrementEvent({
+    required int productWeight,
+    required int listIndex,
+  }) = _productDecrementEvent;
+
 
 }
 

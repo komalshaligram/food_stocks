@@ -116,7 +116,7 @@ class BasketScreenWidget extends StatelessWidget {
                                      style: AppStyles.rkRegularTextStyle(
                                          size: AppConstants.normalFont,
                                          color: AppColors.whiteColor,
-                                         fontWeight: FontWeight.w400),
+                                     ),
                                    ),
                                  ),
                                ),
@@ -132,7 +132,7 @@ class BasketScreenWidget extends StatelessWidget {
                            style: AppStyles.rkRegularTextStyle(
                                size: AppConstants.smallFont,
                                color: AppColors.greyColor,
-                               fontWeight: FontWeight.w400),
+                           ),
                          ),
                          5.width,
 
@@ -196,7 +196,7 @@ class BasketScreenWidget extends StatelessWidget {
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
-                    fontWeight: FontWeight.w400),
+                ),
               ),
               10.width,
               GestureDetector(
@@ -216,11 +216,11 @@ class BasketScreenWidget extends StatelessWidget {
               ),
 
               Text(
-                '${'ק”ג' + state.basketProductList[index].productWeight!.toString()}',
+                '${AppLocalizations.of(context)!.kg + state.basketProductList[index].productWeight!.toString()}',
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
-                    fontWeight: FontWeight.w400),
+                    ),
               ),
               GestureDetector(
                 onTap: (){

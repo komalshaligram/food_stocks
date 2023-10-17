@@ -136,7 +136,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                index == 0 ? AppLocalizations.of(context)!.awaiting_shipment :  AppLocalizations.of(context)!.everything_was_received,
+                index == 0 ? AppLocalizations.of(context)!.pending_delivery :  AppLocalizations.of(context)!.everything_was_received,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.smallFont,
                     color: index == 0 ? AppColors.orangeColor : AppColors.mainColor,

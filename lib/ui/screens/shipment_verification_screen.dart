@@ -135,7 +135,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                     fontWeight: FontWeight.w400),
                               ),
                               Text(
-                                AppLocalizations.of(context)!.awaiting_shipment,
+                                AppLocalizations.of(context)!.pending_delivery,
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color:  AppColors.orangeColor ,
@@ -181,16 +181,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             ],
                           ),
                           7.height,
-                          Text( AppLocalizations.of(context)!.supplier_order_number,
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color:  AppColors.blackColor ,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          7.height,
                           RichText(
                             text: TextSpan(
-                              text: AppLocalizations.of(context)!.driver_details ,
+                              text: AppLocalizations.of(context)!.supplier_order_number ,
                               style: TextStyle(
                                   color: AppColors.blackColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
                               children: <TextSpan>[
@@ -200,6 +193,16 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+                          7.height,
+
+                          Text(
+                            AppLocalizations.of(context)!.driver_name,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color:  AppColors.orangeColor ,
+                                fontWeight: FontWeight.w700),
+
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

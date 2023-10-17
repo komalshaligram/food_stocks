@@ -153,7 +153,7 @@ class OrderScreenWidget extends StatelessWidget {
                 flexValue: 2,
                 title: AppLocalizations.of(context)!.order_status,
                 value: index == 0
-                    ? AppLocalizations.of(context)!.awaiting_shipment
+                    ? AppLocalizations.of(context)!.pending_delivery
                     : AppLocalizations.of(context)!.received,
                 titleColor: AppColors.blackColor,
                 valueColor:

@@ -73,7 +73,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
               title: Text(AppLocalizations.of(context)!.activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
-                      fontWeight: FontWeight.w400,
                       color: AppColors.blackColor)),
               leading: GestureDetector(
                   onTap: () => Navigator.pop(context),
@@ -106,7 +105,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
-                                    fontWeight: FontWeight.w400),
+                                    ),
                               )),
                           SizedBox(
                               width: getScreenWidth(context) * 0.24,
@@ -116,7 +115,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
-                                    fontWeight: FontWeight.w400),
+                                    ),
                               )),
                           10.height,
                         ],
@@ -255,8 +254,7 @@ class OperationTimeRow extends StatelessWidget {
                                                             .smallFont,
                                                         color:
                                                             AppColors.textColor,
-                                                        fontWeight:
-                                                            FontWeight.normal),
+                                                        ),
                                               ))
                                           : Container(
                                               width: getScreenWidth(context) *
@@ -459,7 +457,7 @@ class TimeContainer extends StatelessWidget {
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.mediumFont,
                             color: AppColors.blackColor,
-                            fontWeight: FontWeight.w400)),
+                            )),
                   ),
                   Icon(
                     CupertinoIcons.clock,
