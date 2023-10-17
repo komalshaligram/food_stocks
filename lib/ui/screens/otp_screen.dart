@@ -41,7 +41,7 @@ class OTPScreenWidget extends StatelessWidget {
 
   OTPScreenWidget({required this.isRegister, required this.contact});
 
-  String otpCode = '';
+  // String otpCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,9 @@ class OTPScreenWidget extends StatelessWidget {
                             fontSize: 30, fontWeight: FontWeight.bold),
                         onCodeChanged: (String code) {},
                         onSubmit: (verificationCode) {
-                          otpCode = verificationCode;
+                          // otpCode = verificationCode;
+                          bloc.add(
+                              OtpEvent.changeOtpEvent(otp: verificationCode));
                         }, // end onSubmit
                       ),
                       15.height,
@@ -129,7 +131,7 @@ class OTPScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                                if (otpCode.length == 4) {
+                          if (state.otp.length == 4) {
                                   if (isRegister == true) {
                                     Navigator.pushNamed(
                                         context, RouteDefine.profileScreen.name,
@@ -139,7 +141,7 @@ class OTPScreenWidget extends StatelessWidget {
                                   } else {
                                     bloc.add(OtpEvent.otpApiEvent(
                                         contact: contact,
-                                        otp: otpCode,
+                                        otp: state.otp,
                                         isRegister: isRegister,
                                         context: context));
                                   }

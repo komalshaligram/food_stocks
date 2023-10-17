@@ -26,6 +26,7 @@ import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'more_details_bloc.freezed.dart';
@@ -63,12 +64,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           } else {
             debugPrint('cityListResModel____${cityListResModel}');
           }
-        } catch (e) {
-          debugPrint(e.toString());
-          showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              bgColor: AppColors.redColor);
+        } on ServerException {
+          // showSnackBar(
+          //     context: event.context,
+          //     title: e.toString(),
+          //     bgColor: AppColors.redColor);
         }
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
@@ -77,14 +77,22 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
           CroppedFile? croppedImage = await cropImage(
-              path: pickedFile.path, shape: CropStyle.rectangle, quality: 100);
+              path: pickedFile.path,
+              shape: CropStyle.rectangle,
+              quality: AppConstants.fileQuality);
           String imageSize = getFileSizeString(
-              bytes:
-                  await File(croppedImage?.path ?? pickedFile.path).length());
-          if (int.parse(imageSize.split(' ').first) <= 500 &&
+              bytes: croppedImage?.path.isNotEmpty ?? false
+                  ? await File(croppedImage!.path).length()
+                  : 0);
+          if (int.parse(imageSize.split(' ').first) == 0) {
+            return;
+          }
+          if (int.parse(imageSize.split(' ').first) <=
+                  AppConstants.fileSizeCap &&
               imageSize.split(' ').last == 'KB') {
             try {
-              final response = await DioClient(event.context).uploadFileProgressWithFormData(
+              final response =
+                  await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
@@ -110,10 +118,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   bgColor: AppColors.redColor);
             }
           } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.fileSizeLimit500KBString,
-                bgColor: AppColors.redColor);
+            emit(state.copyWith(isFileSizeExceeds: true));
+            emit(state.copyWith(isFileSizeExceeds: false));
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.fileSizeLimitString,
+            //     bgColor: AppColors.redColor);
           }
         }
       } else if (event is _registrationApiEvent) {

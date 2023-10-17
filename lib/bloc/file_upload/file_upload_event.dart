@@ -4,10 +4,12 @@ part of 'file_upload_bloc.dart';
 class FileUploadEvent with _$FileUploadEvent {
   factory FileUploadEvent.getFilesListEvent({
     required BuildContext context,
+    required bool isUpdate,
   }) = _getFilesListEvent;
 
   factory FileUploadEvent.getFormsListEvent({
     required BuildContext context,
+    required bool isUpdate,
   }) = _getFormsListEvent;
 
   factory FileUploadEvent.pickDocumentEvent({

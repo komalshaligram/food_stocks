@@ -9,6 +9,7 @@ class FileUploadState with _$FileUploadState {
     required bool isUploadLoading,
     required int uploadIndex,
     required bool isUpdate,
+    required bool isFileSizeExceeds,
   }) = _FileUploadState;
 
   factory FileUploadState.initial() => FileUploadState(
@@ -18,5 +19,6 @@ class FileUploadState with _$FileUploadState {
         isApiLoading: false,
         uploadIndex: -1,
         isUploadLoading: false,
+        isFileSizeExceeds: false,
       );
 }
