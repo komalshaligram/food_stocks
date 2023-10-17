@@ -83,6 +83,9 @@ class WalletScreenWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           boxShadow: [
+
+
+
                             BoxShadow(
                                 color: AppColors.shadowColor
                                     .withOpacity(0.15),
