@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -49,8 +50,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
                     response.message ?? AppStrings.somethingWrongString));
             emit(state.copyWith(isLoginFail: false));
           }
-        } catch (e) {
-          emit(state.copyWith(isLoginFail: true, errorMessage: e.toString()));
+        } on ServerException {
+          debugPrint('loading false');
+          emit(state.copyWith(isLoginFail: true, isLoading: false));
           emit(state.copyWith(isLoginFail: false));
         }
       }

@@ -285,8 +285,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         CustomFormField(
                           controller: state.addressController,
                           keyboardType: TextInputType.text,
-                          hint:
-                              AppLocalizations.of(context)!.life_grocery_store,
+                          hint: AppLocalizations.of(context)!.address,
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.next,
                           validator: AppStrings.addressValString,

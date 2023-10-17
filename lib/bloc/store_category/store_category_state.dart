@@ -4,9 +4,10 @@ part of 'store_category_bloc.dart';
 class StoreCategoryState with _$StoreCategoryState {
   const factory StoreCategoryState({
     required bool isCategoryExpand,
-    required int topNavigationIndex,
+    required bool isMirror,
+    required bool isCategory,
   }) = _StoreCategoryState;
 
-  factory StoreCategoryState.initial() =>
-      const StoreCategoryState(isCategoryExpand: false, topNavigationIndex: 0);
+  factory StoreCategoryState.initial() => const StoreCategoryState(
+      isCategoryExpand: false, isCategory: true, isMirror: false);
 }

@@ -11,6 +11,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 
@@ -41,6 +42,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Stack(
@@ -120,7 +122,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     return Container(
       height: screenHeight,
       width: screenWidth,
-      child: IndexedStack(
+      child: FadeIndexedStack(
         index: state.index,
         children: const [
           ProfileMenuScreen(),

@@ -173,6 +173,8 @@ class StoreScreenWidget extends StatelessWidget {
                     onCatListItemTap: () {
                       Navigator.pushNamed(
                           context, RouteDefine.storeCategoryScreen.name);
+                      bloc.add(
+                          StoreEvent.changeCategoryExpansion(isOpened: true));
                     },
                     // child: !state.isCategoryExpand
                     //     ? 0.height
@@ -582,13 +584,13 @@ class StoreScreenWidget extends StatelessWidget {
                                         color: AppColors.iconBGColor,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(
-                                              AppConstants.radius_5),
+                                              AppConstants.radius_50),
                                           bottomLeft: Radius.circular(
-                                              AppConstants.radius_5),
+                                              AppConstants.radius_50),
                                           bottomRight: Radius.circular(
-                                              AppConstants.radius_50),
+                                              AppConstants.radius_5),
                                           topRight: Radius.circular(
-                                              AppConstants.radius_50),
+                                              AppConstants.radius_5),
                                         ),
                                         border: Border.all(
                                             color: AppColors.navSelectedColor,
@@ -599,7 +601,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(
                                               AppConstants.padding_10),
-                                          child: Icon(Icons.add,
+                                          child: Icon(Icons.remove,
                                               color: AppColors.mainColor),
                                         ),
                                       ),
@@ -640,13 +642,13 @@ class StoreScreenWidget extends StatelessWidget {
                                         color: AppColors.iconBGColor,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(
-                                              AppConstants.radius_50),
+                                              AppConstants.radius_5),
                                           bottomLeft: Radius.circular(
-                                              AppConstants.radius_50),
+                                              AppConstants.radius_5),
                                           bottomRight: Radius.circular(
-                                              AppConstants.radius_5),
+                                              AppConstants.radius_50),
                                           topRight: Radius.circular(
-                                              AppConstants.radius_5),
+                                              AppConstants.radius_50),
                                         ),
                                         border: Border.all(
                                             color: AppColors.navSelectedColor,
@@ -657,7 +659,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(
                                               AppConstants.padding_10),
-                                          child: Icon(Icons.remove,
+                                          child: Icon(Icons.add,
                                               color: AppColors.mainColor),
                                         ),
                                       ),

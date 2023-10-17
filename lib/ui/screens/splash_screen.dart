@@ -30,7 +30,7 @@ class SplashScreen extends StatelessWidget {
 class SplashScreenWidget extends StatelessWidget {
   const SplashScreenWidget({Key? key}) : super(key: key);
 
-  getVersion(SharedPreferencesHelper preferencesHelper) async{
+  getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     debugPrint("package info : ${packageInfo.toString()}");
     String version = packageInfo.version;
@@ -40,10 +40,10 @@ class SplashScreenWidget extends StatelessWidget {
 
   getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       print('Running on ${androidInfo.id}');
-    }else{
+    } else {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       print('Running on ${iosInfo.utsname.machine}');
     }
@@ -67,7 +67,7 @@ class SplashScreenWidget extends StatelessWidget {
                 context, RouteDefine.connectScreen.name);
           }
         }
-      }     ,
+      },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(

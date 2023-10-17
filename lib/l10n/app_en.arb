@@ -7,7 +7,7 @@
   "profile_picture": "Profile Picture",
   "institutional": "Institutional",
   "business_name": "Business name",
-  "life_grocery_store": "Life grocery store",
+  "address": "Address",
   "name_of_owner": " Owner name",
   "next": "NEXT",
   "more_details": "More details",
@@ -101,7 +101,7 @@
   "add_to_order": "Add to order",
   "sale": "sale",
   "main": "main",
-  "for_payment": "for payment",
+  "finish": "Finish",
   "home": "Home",
   "problem_detected": "Problem detected",
   "the_product_did_not_arrive_at_all": "The product did not arrive at all",
@@ -114,5 +114,6 @@
   "empty": "Empty",
   "order_summary": "Order summary",
   "supplier_name": "Supplier name",
-  "send_order": "Send order"
+  "send_order": "Send order",
+  "planogram": "Planogram"
 }
