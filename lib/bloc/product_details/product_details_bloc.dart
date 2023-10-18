@@ -19,14 +19,12 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       }
 
       if(event is _radioButtonEvent){
-        print('event_____${event.selectRadioTile}');
       emit(state.copyWith(selectedRadioTile: event.selectRadioTile,isRefresh: !state.isRefresh));
       }
 
       if(event is _productIncrementEvent){
         List<ProductDetailsModel> temp = state.productList;
         temp[event.listIndex].productWeight = event.productWeight + 1;
-        print('productWeight  ${temp[event.listIndex].productWeight}');
         emit(state.copyWith(productList: temp,isRefresh: !state.isRefresh));
       }
 
@@ -36,9 +34,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           temp[event.listIndex].productWeight = event.productWeight - 1;
         }
         else{
-          print('event.productWeight     ${event.productWeight}');
         }
-        print('productWeight  ${temp[event.listIndex].productWeight}');
+
         emit(state.copyWith(productList: temp, isRefresh: !state.isRefresh));
       }
 

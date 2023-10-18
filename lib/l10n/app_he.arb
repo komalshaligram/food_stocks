@@ -122,6 +122,7 @@
   "kg" :"ק”ג",
   "monthly_expense_graph" :"גרף הוצאות חודשיות",
   "history" : "הִיסטוֹרִיָה",
-  "export" :"יְצוּא"
+  "export" :"יְצוּא",
+   "price" : "₪"
 
 }

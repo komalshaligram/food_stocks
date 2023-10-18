@@ -1,10 +1,8 @@
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../../data/model/wallet_model/wallet_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -12,7 +10,9 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import '../widget/balance_indicator.dart';
+import '../widget/circular_button_widget.dart';
+import '../widget/dashboard_stats_widget.dart';
 
 class WalletRoute {
   static Widget get route => const WalletScreen();
@@ -25,81 +25,81 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => WalletBloc(),
-      child:  WalletScreenWidget(),
+      child: WalletScreenWidget(),
     );
   }
 }
 
-
 class WalletScreenWidget extends StatelessWidget {
-   WalletScreenWidget({Key? key}) : super(key: key);
- double   cutOffYValue = 0.0;
-    TextStyle yearTextStyle =
-   TextStyle(fontSize: 12, color: Colors.black);
-   List<PricePoint> list =[
-     PricePoint('Jan', 10.0),
-     PricePoint('Feb', 20.0),
-     PricePoint('March', 30.0),
-   ];
-   static Map<int, String> monthMap = const {
-     0: 'JAN',
-     1: 'FEB',
-     2: 'MAR',
-     3: 'APR',
-     4: 'MAY',
-     5: 'JUN',
-     6: 'JUL',
-     7: 'AUG',
-     8: 'SEP',
-     9: 'OCT',
-     10: 'NOV',
-     11: 'DEC',
-   };
+  WalletScreenWidget({Key? key}) : super(key: key);
 
+  final List<FlSpot> chartData = [
+    FlSpot(0, 15),
+    FlSpot(1, 33),
+    FlSpot(2, 10),
+    FlSpot(3, 40),
+    FlSpot(4, 12),
+    FlSpot(5, 13),
+    FlSpot(6, 17),
+    FlSpot(7, 15),
+    FlSpot(8, 20),
+    FlSpot(9, 30),
+    FlSpot(10, 40),
+    FlSpot(11, 15),
+  ];
+  static Map<int, String> monthMap = const {
+    0: 'Jan',
+    1: 'Feb',
+    2: 'Mar',
+    3: 'Apr',
+    4: 'May',
+    5: 'Jun',
+    6: 'Jul',
+    7: 'Aug',
+    8: 'Sep',
+    9: 'Oct',
+    10: 'Nov',
+    11: 'Dec',
+  };
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return BlocListener<WalletBloc, WalletState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           // WalletBloc bloc = context.read<WalletBloc>();
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                   50.height,
-                    Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  50.height,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_15),
+                    child: Container(
                       width: getScreenWidth(context),
                       clipBehavior: Clip.hardEdge,
-                      padding:  EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                           vertical: AppConstants.padding_10,
                           horizontal: AppConstants.padding_10),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           boxShadow: [
-
-
-
                             BoxShadow(
-                                color: AppColors.shadowColor
-                                    .withOpacity(0.15),
+                                color: AppColors.shadowColor.withOpacity(0.15),
                                 blurRadius: AppConstants.blur_10)
                           ],
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(10.0))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                       child: Row(
                         children: [
                           Expanded(
                               flex: 1,
                               child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
@@ -112,64 +112,8 @@ class WalletScreenWidget extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   ),
                                   6.height,
-                                  SizedBox(
-                                    height: 70,
-                                    width: 70,
-                                    child: SfRadialGauge(
-                                      backgroundColor:
-                                      Colors.transparent,
-                                      axes: [
-                                        RadialAxis(
-                                          minimum: 0,
-                                          maximum: 10000,
-                                          showLabels: false,
-                                          showTicks: false,
-                                          startAngle: 270,
-                                          endAngle: 270,
-                                          // radiusFactor: 0.8,
-                                          axisLineStyle: AxisLineStyle(
-                                              thicknessUnit:
-                                              GaugeSizeUnit.factor,
-                                              thickness: 0.2,
-                                              color: AppColors
-                                                  .borderColor),
-                                          annotations: [
-                                            GaugeAnnotation(
-                                              angle: 270,
-                                              widget: Text(
-                                                '7550\n${AppLocalizations.of(context)!.currency}',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                    size:
-                                                    AppConstants
-                                                        .font_14,
-                                                    color: AppColors
-                                                        .blackColor,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w600),
-                                                textAlign:
-                                                TextAlign.center,
-                                              ),
-                                            ),
-                                          ],
-                                          pointers: [
-                                            RangePointer(
-                                              color:
-                                              AppColors.mainColor,
-                                              enableAnimation: true,
-                                              animationDuration: 300,
-                                              animationType:
-                                              AnimationType.ease,
-                                              cornerStyle:
-                                              CornerStyle.bothCurve,
-                                              value: 7550,
-                                              width: 6,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  BalanceIndicator(
+                                    balance: 7550,
                                   ),
                                 ],
                               )),
@@ -182,25 +126,23 @@ class WalletScreenWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     Flexible(
-                                      child: dashboardStatsWidget(
+                                      child: DashBoardStatsWidget(
                                           context: context,
                                           image: AppImagePath.credits,
-                                          title: AppLocalizations.of(
-                                              context)!
+                                          title: AppLocalizations.of(context)!
                                               .total_credit,
                                           value:
-                                          '20,000${AppLocalizations.of(context)!.currency}'),
+                                              '20,000${AppLocalizations.of(context)!.price}'),
                                     ),
                                     10.width,
                                     Flexible(
-                                      child: dashboardStatsWidget(
+                                      child: DashBoardStatsWidget(
                                           context: context,
                                           image: AppImagePath.expense,
-                                          title: AppLocalizations.of(
-                                              context)!
+                                          title: AppLocalizations.of(context)!
                                               .this_months_expenses,
                                           value:
-                                          '7,550${AppLocalizations.of(context)!.currency}'),
+                                              '7,550${AppLocalizations.of(context)!.price}'),
                                     ),
                                   ],
                                 ),
@@ -208,22 +150,20 @@ class WalletScreenWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     Flexible(
-                                      child: dashboardStatsWidget(
+                                      child: DashBoardStatsWidget(
                                           context: context,
                                           image: AppImagePath.expense,
-                                          title: AppLocalizations.of(
-                                              context)!
+                                          title: AppLocalizations.of(context)!
                                               .last_months_expenses,
                                           value:
-                                          '18,360${AppLocalizations.of(context)!.currency}'),
+                                              '18,360${AppLocalizations.of(context)!.price}'),
                                     ),
                                     10.width,
                                     Flexible(
-                                      child: dashboardStatsWidget(
+                                      child: DashBoardStatsWidget(
                                           context: context,
                                           image: AppImagePath.orders,
-                                          title: AppLocalizations.of(
-                                              context)!
+                                          title: AppLocalizations.of(context)!
                                               .this_months_orders,
                                           value: '23'),
                                     ),
@@ -235,8 +175,12 @@ class WalletScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    30.height,
-                    Row(
+                  ),
+                  30.height,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_15),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -245,37 +189,39 @@ class WalletScreenWidget extends StatelessWidget {
                               size: AppConstants.smallFont,
                               color: AppColors.blackColor),
                         ),
-                        dropDownWidget(date: state.date,dateList:state.dateList,context1: context)
+                        dropDownWidget(
+                            date: state.date,
+                            dateList: state.dateList,
+                            context1: context)
                       ],
                     ),
-                    15.height,
-
-            /*        SizedBox(
+                  ),
+                  15.height,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_3),
+                    child: SizedBox(
                       width: double.maxFinite,
                       height: 155,
                       child: LineChart(
                         LineChartData(
-                          lineTouchData: LineTouchData(enabled: true),
+                          borderData: FlBorderData(show: false),
                           lineBarsData: [
                             LineChartBarData(
-                              spots: [
-
-                                  FlSpot(0, 3),
-                                  FlSpot(2.6, 2),
-                                  FlSpot(4.9, 5),
-                                  FlSpot(6.8, 3.1),
-                                  FlSpot(8, 4),
-                                  FlSpot(9.5, 3),
-                                  FlSpot(11, 4),
-
-                              ],
-
+                              spots: chartData,
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppColors.whiteColor,
+                                  AppColors.mainColor,
+                                  AppColors.whiteColor
+                                ],
+                              ),
                               isCurved: false,
-                              barWidth: 2,
                               belowBarData: BarAreaData(
+                                spotsLine: BarAreaSpotsLine(),
                                 show: true,
-                                color:AppColors.mainColor,
-                                cutOffY: cutOffYValue,
+                                color: AppColors.mainColor.withOpacity(0.5),
+                                cutOffY: 0.0,
                                 applyCutOffY: true,
                               ),
                               dotData: FlDotData(
@@ -283,52 +229,57 @@ class WalletScreenWidget extends StatelessWidget {
                               ),
                             ),
                           ],
-
                           titlesData: FlTitlesData(
                             bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: true, reservedSize: 30,
-                                getTitlesWidget: (value, meta) {
-                                  String? month = monthMap[meta];
-                                  if (month == '') {
-                                    return SizedBox();
-                                  }
-                                  return Text(value.toString());
-                                },
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: ((value, meta) {
+                                  String? month = monthMap[value];
+                                  return Text(
+                                    month.toString(),
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_10,
+                                      color: AppColors.navSelectedColor,
+                                    ),
+                                  );
+                                }),
                               ),
-
                             ),
                             leftTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false, ),
+                              sideTitles: SideTitles(showTitles: false),
                             ),
                             rightTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false,),
+                              sideTitles: SideTitles(showTitles: false),
                             ),
                             topTitles: AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
                           ),
-
-                          minY: 0,
-
+                        ),
                       ),
-                    )
-
-                    ),*/
-                    180.height,
-                    15.width,
-                    Row(
+                    ),
+                  ),
+                  15.height,
+                  15.width,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_15),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            dropDownWidget(date: state.date,dateList: state.dateList,context1: context),
+                            dropDownWidget(
+                                date: state.date,
+                                dateList: state.dateList,
+                                context1: context),
                             10.width,
                             Container(
-                              padding: EdgeInsets.symmetric(vertical:AppConstants.padding_5),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5),
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
-                                  borderRadius: BorderRadius.circular(3)
-                              ),
+                                  borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                               child: Text(
                                 AppLocalizations.of(context)!.export,
                                 style: AppStyles.rkRegularTextStyle(
@@ -346,24 +297,39 @@ class WalletScreenWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    10.height,
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: state.balanceSheetList.length,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: listWidget(context: context , balanceSheetList: state.balanceSheetList,
-                              listIndex: index
+                  ),
+                  10.height,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.balanceSheetList.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          color: AppColors.whiteColor,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_10,
+                                    horizontal: AppConstants.padding_15),
+                                child: listWidget(
+                                    context: context,
+                                    balanceSheetList: state.balanceSheetList,
+                                    listIndex: index),
                               ),
-                            );
-                          },
-                      ),
+                              Container(
+                                width: double.maxFinite,
+                                height: 1,
+                                color: AppColors.borderColor,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -372,152 +338,93 @@ class WalletScreenWidget extends StatelessWidget {
     );
   }
 
-
-
-
-
-  Widget dashboardStatsWidget(
-      {required BuildContext context,
-        required String image,
-        required String title,
-        required String value}) {
+  Widget dropDownWidget(
+      {required String date,
+      required List<String> dateList,
+      required BuildContext context1}) {
+    WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          color: AppColors.iconBGColor),
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_10),
+        borderRadius: BorderRadius.circular(AppConstants.radius_7),
+        border: Border.all(color: AppColors.borderColor),
+        color: AppColors.whiteColor,
+      ),
+      child: DropdownButton<String>(
+        icon: Padding(
+          padding: const EdgeInsets.only(left: AppConstants.padding_3),
+          child: Icon(
+            Icons.keyboard_arrow_down,
+            color: AppColors.blackColor,
+          ),
+        ),
+        elevation: 0,
+        isDense: true,
+        underline: SizedBox(),
+        value: date,
+        items: dateList.map((e) {
+          return DropdownMenuItem<String>(
+            value: e,
+            child: Text(e,
+                style:
+                    AppStyles.rkRegularTextStyle(size: AppConstants.font_12)),
+          );
+        }).toList(),
+        onChanged: (value) {
+          bloc.add(WalletEvent.dropDownEvent(date: value!));
+        },
+      ),
+    );
+  }
+
+  Widget listWidget(
+      {required BuildContext context,
+      required List<OrderBalance> balanceSheetList,
+      required int listIndex}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset(image),
-          10.width,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.mainColor),
-                  maxLines: 2,
-                  overflow: TextOverflow.clip,
-                ),
-                Text(
-                  value,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.blackColor),
-                ),
-              ],
-            ),
+          Row(
+            children: [
+              CircularButtonWidget(
+                buttonName: AppLocalizations.of(context)!.balance_status,
+                buttonValue:
+                    '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
+              ),
+              10.width,
+              Text(
+                '${balanceSheetList[listIndex].difference.toString()}${AppLocalizations.of(context)!.price}',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: balanceSheetList[listIndex].difference > 0
+                        ? AppColors.mainColor
+                        : AppColors.redColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                balanceSheetList[listIndex].date.toString(),
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_12, color: AppColors.blackColor),
+              ),
+              10.height,
+              Text(
+                'Order : ${balanceSheetList[listIndex].orderPayment.toString()}',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_12, color: AppColors.blueColor),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
-
- Widget dropDownWidget({required String date , required List<String> dateList , required BuildContext context1}) {
-   WalletBloc bloc = context1.read<WalletBloc>();
-     return  Container(
-       padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5,vertical: AppConstants.padding_5),
-       decoration: BoxDecoration(
-         borderRadius: BorderRadius.circular(7),
-         border: Border.all(color: AppColors.borderColor),
-         color: AppColors.whiteColor,
-       ),
-       child: DropdownButton<String>(
-         icon: Padding(
-           padding: const EdgeInsets.only(left: AppConstants.padding_3),
-           child: Icon(
-             Icons.keyboard_arrow_down,
-             color: AppColors.blackColor,
-           ),
-         ),
-         elevation: 0,
-         isDense: true,
-         underline: SizedBox(),
-         value: date,
-         items: dateList.map((e) {
-           return DropdownMenuItem<String>(
-             value: e,
-             child: Text(e,style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12)),
-           );
-         }).toList(),
-         onChanged: (value) {
-           bloc.add(WalletEvent.dropDownEvent(
-               date: value!
-           ));
-         },
-       ),
-     );
-
-  }
-
-  Widget listWidget({required BuildContext context , required List<OrderBalance> balanceSheetList,
-  required int listIndex
-  }) {
-     return  Container(
-                       child: Row(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.whiteColor.withOpacity(0.95),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(AppConstants.radius_40)
-                                    ),
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_5
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(AppConstants.radius_40),
-                                      color: AppColors.whiteColor,
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.all(AppConstants.padding_5),
-                                      height:27,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.navSelectedColor,
-                                          borderRadius: BorderRadius.circular(AppConstants.radius_40)
-                                      ),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          text: AppLocalizations.of(context)!.balance_status ,
-                                          style: TextStyle(
-                                              color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
-                                          children: <TextSpan>[
-                                            TextSpan(text: ' : ${balanceSheetList[listIndex].balance}',
-                                                style: TextStyle(
-                                                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                 balanceSheetList[listIndex].difference.toString(),
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.blackColor),
-                                ),
-                              ],
-                            ),
-                          );
-  }
-}
-
-class PricePoint {
-  PricePoint(this.month, this.y);
-
-  final String month;
-  final double y;
 }

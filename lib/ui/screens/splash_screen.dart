@@ -61,13 +61,13 @@ class SplashScreenWidget extends StatelessWidget {
           print(preferencesHelper.getUserLoggedIn());
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.productDetailsScreen.name);
+                context, RouteDefine.bottomNavScreen.name);
           } else {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.productDetailsScreen.name);
+                context, RouteDefine.connectScreen.name);
           }
         }
-      }     ,
+      },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(

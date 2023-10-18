@@ -1,55 +1,51 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_styles.dart';
 
 class CircularButtonWidget extends StatelessWidget {
-  bool isBoxShadow;
-   CircularButtonWidget({super.key, this.isBoxShadow = false,
 
+  final String buttonName;
+  final String buttonValue;
 
+   CircularButtonWidget({required this.buttonValue , required this.buttonName
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_80,vertical: AppConstants.padding_50),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor.withOpacity(0.95),
-         boxShadow: [
-           isBoxShadow? BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.20),
-              blurRadius: AppConstants.blur_10
-          ) : BoxShadow(),
-        ],
         borderRadius: BorderRadius.all(
-            Radius.circular(AppConstants.radius_40)),
+            Radius.circular(AppConstants.radius_100)),
+        border: Border.all(
+          color: AppColors.borderColor.withOpacity(0.6),
+          width: 1,
+        ),
       ),
       child: Container(
+        alignment: Alignment.center,
         padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_5
-        ),
+            horizontal: AppConstants.padding_10,
+            vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppConstants.radius_40),
-          color: AppColors.whiteColor,
-        ),
-        child: Container(
-          padding: EdgeInsets.all(AppConstants.padding_10),
-          height:AppConstants.containerHeight_60,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: AppColors.navSelectedColor,
-              borderRadius: BorderRadius.circular(AppConstants.radius_40)
+          color: AppColors.lightGreyColor,
+          borderRadius: BorderRadius.all(
+              Radius.circular(AppConstants.radius_100)),
+          border: Border.all(
+            color: AppColors.whiteColor,
+            width: 1,
           ),
-          child: Text(AppLocalizations.of(context)!.back_to_home_page,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.normalFont,
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w400),
+        ),
+        child: RichText(
+          text: TextSpan(
+            text: buttonName,
+            style: TextStyle(
+                color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
+            children: <TextSpan>[
+              TextSpan(text: ': ${buttonValue}',
+                  style: TextStyle(
+                      color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
+              ),
+            ],
           ),
         ),
       ),

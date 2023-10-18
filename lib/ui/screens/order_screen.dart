@@ -103,7 +103,7 @@ class OrderScreenWidget extends StatelessWidget {
                       horizontal: AppConstants.padding_10,
                       vertical: AppConstants.padding_5),
                   decoration: BoxDecoration(
-                    color: AppColors.greyColor,
+                    color: AppColors.lightGreyColor,
                     borderRadius: BorderRadius.all(
                         Radius.circular(AppConstants.radius_100)),
                     border: Border.all(

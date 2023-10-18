@@ -8,6 +8,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
@@ -33,7 +34,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   ProductDetailsScreenWidget({super.key});
 
   int selectedRadioTile = 0;
-  bool isTextField = false;
+  TextEditingController addProblemController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return SafeArea(
             child: Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
@@ -55,47 +57,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       vertical: AppConstants.padding_10,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_100)),
-                        border: Border.all(
-                          color: AppColors.borderColor,
-                          width: 1,
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_10,
-                            vertical: AppConstants.padding_5),
-                        decoration: BoxDecoration(
-                          color: AppColors.lightGreyColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
-                          border: Border.all(
-                            color: AppColors.whiteColor,
-                            width: 1,
-                          ),
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            text: AppLocalizations.of(context)!.total,
-                            style: TextStyle(
-                                color: AppColors.whiteColor,
-                                fontSize: AppConstants.font_14,
-                                fontWeight: FontWeight.w400),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: ' : 12,450₪',
-                                  style: TextStyle(
-                                      color: AppColors.whiteColor,
-                                      fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-                        ),
-                      ),
+                    child: CircularButtonWidget(
+                      buttonName: AppLocalizations.of(context)!.total,
+                      buttonValue: '12,450₪',
                     ),
                   ),
                   onTap: () {
@@ -263,9 +227,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context)!.order_products_list,
                       style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.blackColor,
-                       ),
+                        size: AppConstants.smallFont,
+                        color: AppColors.blackColor,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -291,6 +255,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       horizontal: AppConstants.padding_30),
                   color: AppColors.pageColor,
                   child: CustomButtonWidget(
+                    onPressed: () => Navigator.pushNamed(
+                        context, RouteDefine.shipmentVerificationScreen.name),
                     buttonText: AppLocalizations.of(context)!.next,
                     bGColor: AppColors.mainColor,
                   ),
@@ -328,7 +294,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               Checkbox(
                   value: state.productList[index].isProductIssue,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3.0),
+                    borderRadius: BorderRadius.circular(AppConstants.radius_3),
                   ),
                   side: MaterialStateBorderSide.resolveWith(
                     (states) =>
@@ -341,8 +307,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   }),
               Image.asset(
                 state.productList[index].productImage!,
-                width: 50,
-                height: 50,
+                width: AppConstants.containerSize_50,
+                height: AppConstants.containerSize_50,
               ),
               Text(
                 state.productList[index].productName!,
@@ -353,14 +319,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${state.productList[index].productWeight!.toString() +AppLocalizations.of(context)!.kg }',
+                '${state.productList[index].productWeight!.toString() + AppLocalizations.of(context)!.kg}',
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                '${state.productList[index].productWeight!.toString() + '₪'}',
+                '${state.productList[index].productWeight!.toString() + AppLocalizations.of(context)!.price}',
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
@@ -371,11 +337,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   state.productList[index].isProductIssue
                       ? ProductProblemBottomSheet(
                           context: context,
-                        productName:   state.productList[index].productName!,
+                          productName: state.productList[index].productName!,
                           weight: state.productList[index].productWeight!,
-                        price:   state.productList[index].productPrice!,
-                         image:  state.productList[index].productImage!,
-                        listIndex:   index)
+                          price: state.productList[index].productPrice!,
+                          image: state.productList[index].productImage!,
+                          listIndex: index)
                       : SizedBox();
                 },
                 child: Container(
@@ -388,7 +354,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         ? AppColors.mainColor
                         : AppColors.lightBorderColor,
                     border: Border.all(color: AppColors.lightGreyColor),
-                    borderRadius: BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(AppConstants.radius_3),
                   ),
                   child: Text(
                     AppLocalizations.of(context)!.product_issue,
@@ -409,13 +375,12 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   }
 
   ProductProblemBottomSheet(
-      {
-        required BuildContext context,
-     required String productName,
-    required  int weight ,
-     required int price,
-    required  String image,
-    required  int listIndex}) {
+      {required BuildContext context,
+      required String productName,
+      required int weight,
+      required int price,
+      required String image,
+      required int listIndex}) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: AppColors.pageColor,
@@ -427,146 +392,153 @@ class ProductDetailsScreenWidget extends StatelessWidget {
             builder: (context, state) {
               selectedRadioTile = state.selectedRadioTile;
               weight = state.productList[listIndex].productWeight!;
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: AppConstants.padding_15,
-                      horizontal: AppConstants.padding_15),
-                  child: Container(
-                    height: getScreenHeight(context) * 0.69,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_5,
-                          ),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context1);
-                                  },
-                                  child: Icon(Icons.close)),
-                              10.width,
-                              Text(
-                                AppLocalizations.of(context)!.product_issue,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.mediumFont,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.blackColor,
+              return Padding(
+                padding: MediaQuery.of(context).viewInsets * 0.67,
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_15,
+                        horizontal: AppConstants.padding_15),
+                    child: Container(
+                      height: getScreenHeight(context) * 0.7,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_5,
+                            ),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context1);
+                                    },
+                                    child: Icon(Icons.close)),
+                                10.width,
+                                Text(
+                                  AppLocalizations.of(context)!.product_issue,
+                                  style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.mediumFont,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.blackColor,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        15.height,
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_5,
-                              horizontal: AppConstants.padding_10),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.shadowColor.withOpacity(0.15),
-                                  blurRadius: AppConstants.blur_10),
-                            ],
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppConstants.radius_5)),
+                          15.height,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_5,
+                                horizontal: AppConstants.padding_10),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                    color:
+                                        AppColors.shadowColor.withOpacity(0.15),
+                                    blurRadius: AppConstants.blur_10),
+                              ],
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(AppConstants.radius_5)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  image,
+                                  width:AppConstants.containerSize_50,
+                                  height: AppConstants.containerSize_50,
+                                ),
+                                5.width,
+                                Text(
+                                  productName,
+                                  style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.font_14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                10.width,
+                                Text(
+                                  '${weight.toString() + AppLocalizations.of(context)!.kg}',
+                                  style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.font_14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                10.width,
+                                Text(
+                                  '${price.toString() + AppLocalizations.of(context)!.price}',
+                                  style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.font_14,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                image,
-                                width: 50,
-                                height: 50,
-                              ),
-                              5.width,
-                              Text(
-                                productName,
-                                style: TextStyle(
-                                    color: AppColors.blackColor,
-                                    fontSize: AppConstants.font_14,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              10.width,
-                              Text(
-                                '${weight.toString()+AppLocalizations.of(context)!.kg  }',
-                                style: TextStyle(
-                                    color: AppColors.blackColor,
-                                    fontSize: AppConstants.font_14,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              10.width,
-                              Text(
-                                '${price.toString() + '₪'}',
-                                style: TextStyle(
-                                    color: AppColors.blackColor,
-                                    fontSize: AppConstants.font_14,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ],
+                          20.height,
+                          Text(
+                            AppLocalizations.of(context)!.problem_detected,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.mediumFont,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.blackColor,
+                            ),
                           ),
-                        ),
-                        20.height,
-                        Text(
-                          AppLocalizations.of(context)!.problem_detected,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.mediumFont,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.blackColor,
-                          ),
-                        ),
-                        20.height,
-                        RadioButtonWidget(
-                           context:  context,
-                           problem:  AppLocalizations.of(context)!
-                                .the_product_did_not_arrive_at_all,
-                         value: 1,
-                            listIndex: listIndex),
-                        10.height,
-                        RadioButtonWidget(
-                         context:context,
-                            problem: AppLocalizations.of(context)!.product_arrived_damaged,
-                           value:  2,
-                           listIndex:  listIndex),
-                        10.height,
-                        RadioButtonWidget(
-                            context: context,
-                           problem:  AppLocalizations.of(context)!
-                                .the_product_arrived_missing,
-                           value:  3,
-                           weight:  weight,
-                          listIndex:   listIndex),
-                        10.height,
-                        RadioButtonWidget(
-                           context:  context,
-                          problem:   AppLocalizations.of(context)!.another_product_problem,
-                           value:  4,
-                           listIndex:  listIndex),
-                        10.height,
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.pop(context1);
-                          },
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_20,
-                                  horizontal: AppConstants.padding_30),
-                              color: AppColors.pageColor,
-                              child: CustomButtonWidget(
-                                buttonText: AppLocalizations.of(context)!.save,
-                                bGColor: AppColors.mainColor,
+                          20.height,
+                          RadioButtonWidget(
+                              context: context,
+                              problem: AppLocalizations.of(context)!
+                                  .the_product_did_not_arrive_at_all,
+                              value: 1,
+                              listIndex: listIndex),
+                          10.height,
+                          RadioButtonWidget(
+                              context: context,
+                              problem: AppLocalizations.of(context)!
+                                  .product_arrived_damaged,
+                              value: 2,
+                              listIndex: listIndex),
+                          10.height,
+                          RadioButtonWidget(
+                              context: context,
+                              problem: AppLocalizations.of(context)!
+                                  .the_product_arrived_missing,
+                              value: 3,
+                              weight: weight,
+                              listIndex: listIndex),
+                          10.height,
+                          RadioButtonWidget(
+                              context: context,
+                              problem: AppLocalizations.of(context)!
+                                  .another_product_problem,
+                              value: 4,
+                              listIndex: listIndex),
+                          10.height,
+                          GestureDetector(
+                            onTap: () async {
+                              Navigator.pop(context1);
+                            },
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_20,
+                                    horizontal: AppConstants.padding_30),
+                                color: AppColors.pageColor,
+                                child: CustomButtonWidget(
+                                  buttonText:
+                                      AppLocalizations.of(context)!.save,
+                                  bGColor: AppColors.mainColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -580,16 +552,13 @@ class ProductDetailsScreenWidget extends StatelessWidget {
 
   Widget RadioButtonWidget(
       {required BuildContext context,
-     required String problem,
-   required   int value,
+      required String problem,
+      required int value,
       int weight = 0,
-     required int listIndex
-      }) {
+      required int listIndex}) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-    TextEditingController addProblemController = TextEditingController();
-
     return Container(
-      height: value == 4 ? 150 : 50,
+      height: value == 4 ? 160 : 50,
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
       decoration: BoxDecoration(
@@ -631,7 +600,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     value == 3
                         ? GestureDetector(
                             onTap: () {
-                              if(selectedRadioTile == 3){
+                              if (selectedRadioTile == 3) {
                                 bloc.add(
                                     ProductDetailsEvent.productIncrementEvent(
                                         productWeight: weight,
@@ -639,8 +608,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               }
                             },
                             child: Container(
-                              width: 25,
-                              height: 25,
+                              width: AppConstants.containerSize_25,
+                              height:  AppConstants.containerSize_25,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(2),
                                   border:
@@ -667,13 +636,12 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     value == 3
                         ? GestureDetector(
                             onTap: () {
-                              if(selectedRadioTile == 3){
+                              if (selectedRadioTile == 3) {
                                 bloc.add(
                                     ProductDetailsEvent.productDecrementEvent(
                                         productWeight: weight,
                                         listIndex: listIndex));
                               }
-
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -697,9 +665,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           ),
           value == 4
               ? CustomFormField(
-            onTap: (){
-              isTextField = true;
-            },
                   fillColor: AppColors.pageColor,
                   validator: '',
                   controller: addProblemController,
@@ -707,6 +672,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   hint: AppLocalizations.of(context)!.add_text,
                   maxLines: 5,
                   isBorderVisible: false,
+                  textInputAction: TextInputAction.done,
+                  contentPaddingTop: AppConstants.padding_8,
                 )
               : SizedBox(),
         ],

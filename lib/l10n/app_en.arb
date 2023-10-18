@@ -121,7 +121,8 @@
   "kg" : "kg",
   "monthly_expense_graph" :"Monthly expense graph",
   "history" : "History",
-  "export" :"Export"
+  "export" :"Export",
+  "price" : "₪"
 
 
 
