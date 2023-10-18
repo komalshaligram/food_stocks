@@ -113,8 +113,7 @@
   "order_summary": "Order summary",
   "supplier_name": "Supplier name",
   "send_order": "Send order",
-  "planogram": "Planogram"
-  "send_order": "Send order",
+  "planogram": "Planogram",
   "order_sent_successfully": "Order sent successfully",
   "total_credit": "Total credit",
   "back_to_home_page": "Back to home page",
