@@ -67,7 +67,8 @@ dependencies:
   flutter_local_notifications: ^16.0.0+1
   package_info_plus: ^4.1.0
   appsflyer_sdk: ^6.12.2
-  device_info_plus: ^9.1.0
+  platform_device_id: ^1.0.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -100,6 +101,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/images/
+     - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

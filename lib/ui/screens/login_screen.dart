@@ -39,16 +39,20 @@ class LogInScreen extends StatelessWidget {
 class LogInScreenWidget extends StatelessWidget {
   final bool isRegister;
 
+
   LogInScreenWidget({required this.isRegister});
 
   final TextEditingController phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
         if (state.isLoginSuccess) {
+
           Navigator.pushNamed(context, RouteDefine.otpScreen.name, arguments: {
             AppStrings.contactString: phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
@@ -172,8 +176,8 @@ class LogInScreenWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            10.width,
-                            Expanded(
+                            //10.width,
+                    /*        Expanded(
                               flex: 1,
                               child: Container(
                                 decoration: BoxDecoration(
@@ -235,7 +239,7 @@ class LogInScreenWidget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                         state.mobileErrorMessage.isEmpty
