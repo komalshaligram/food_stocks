@@ -15,7 +15,13 @@ class AppStrings {
   static const tempString = 'temp';
   static const cityNotFoundString = 'Cities not available';
   static const okString = 'ok';
+  static const cancelString = 'Cancel';
+  static const doneString = 'Done';
   static const failedToLoadString = 'Failed to load';
+
+  //language Strings
+  static const englishString = 'en';
+  static const hebrewString = 'he';
 
   //api req param strings
   static const profileImageString = 'profileImg';

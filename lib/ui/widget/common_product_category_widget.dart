@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -12,6 +14,7 @@ import '../utils/themes/app_styles.dart';
 
 class CommonProductCategoryWidget extends StatelessWidget {
   final bool isCategoryExpand;
+  final bool isMirror;
   final void Function() onScanTap;
   final void Function() onFilterTap;
   final void Function() onOutSideTap;
@@ -22,6 +25,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
   const CommonProductCategoryWidget(
       {super.key,
       required this.isCategoryExpand,
+      this.isMirror = false,
       required this.controller,
       required this.onScanTap,
       required this.onFilterTap,
@@ -38,7 +42,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
         width: getScreenWidth(context),
         padding: EdgeInsets.only(top: AppConstants.padding_10),
         color:
-            isCategoryExpand ? AppColors.shadowColor.withOpacity(0.15) : null,
+        isCategoryExpand ? AppColors.shadowColor.withOpacity(0.15) : null,
         child: Column(
           children: [
             AnimatedContainer(
@@ -48,7 +52,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius:
-                    BorderRadius.all(Radius.circular(AppConstants.radius_30)),
+                BorderRadius.all(Radius.circular(AppConstants.radius_30)),
                 color: AppColors.whiteColor,
                 boxShadow: [
                   BoxShadow(
@@ -86,10 +90,14 @@ class CommonProductCategoryWidget extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_10),
-                            child: SvgPicture.asset(
-                              AppImagePath.filter,
-                              colorFilter: ColorFilter.mode(
-                                  AppColors.greyColor, BlendMode.srcIn),
+                            child: Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.rotationY(isMirror ? pi : 0),
+                              child: SvgPicture.asset(
+                                AppImagePath.filter,
+                                colorFilter: ColorFilter.mode(
+                                    AppColors.greyColor, BlendMode.srcIn),
+                              ),
                             ),
                           ),
                         ),
@@ -108,7 +116,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
                               constraints: BoxConstraints(maxHeight: 40),
                               fillColor: AppColors.pageColor,
                               contentPadding:
-                                  EdgeInsets.only(top: AppConstants.padding_3),
+                              EdgeInsets.only(top: AppConstants.padding_3),
                               prefixIcon: Icon(
                                 Icons.search,
                                 color: AppColors.greyColor,
@@ -137,38 +145,38 @@ class CommonProductCategoryWidget extends StatelessWidget {
                       child: !isCategoryExpand
                           ? 0.height
                           : Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: AppConstants.padding_20,
-                                        right: AppConstants.padding_20,
-                                        top: AppConstants.padding_15,
-                                        bottom: AppConstants.padding_5),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.categories,
-                                      style: AppStyles.rkBoldTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: categoryList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return _buildCategoryFilterItem(
-                                            category: 'category',
-                                            onTap: onCatListItemTap);
-                                      },
-                                    ),
-                                  )
-                                ],
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: AppConstants.padding_20,
+                                  right: AppConstants.padding_20,
+                                  top: AppConstants.padding_15,
+                                  bottom: AppConstants.padding_5),
+                              child: Text(
+                                AppLocalizations.of(context)!.categories,
+                                style: AppStyles.rkBoldTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w500),
                               ),
-                            ))
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: categoryList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return _buildCategoryFilterItem(
+                                      category: 'category',
+                                      onTap: onCatListItemTap);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ))
                 ],
               ),
             ),
@@ -178,8 +186,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryFilterItem(
-      {required String category, required void Function() onTap}) {
+  Widget _buildCategoryFilterItem({required String category, required void Function() onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(

@@ -5,6 +5,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryExpansionEvent(
       {bool? isOpened}) = _ChangeCategoryExpansionEvent;
 
-  const factory StoreCategoryEvent.changeTopNavigationEvent(
-      {required int index}) = _ChangeTopNavigationEvent;
+  const factory StoreCategoryEvent.changeUIUponAppLangEvent() =
+      _ChangeUIUponAppLangEvent;
+
+  const factory StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
+      {required bool isCategory}) = _ChangeCategoryOrSubCategoryEvent;
 }

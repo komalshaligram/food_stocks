@@ -7,7 +7,7 @@
   "profile_picture": "Profile Picture",
   "institutional": "Institutional",
   "business_name": "Business name",
-  "life_grocery_store": "Life grocery store",
+  "address": "Address",
   "name_of_owner": " Owner name",
   "next": "NEXT",
   "more_details": "More details",
@@ -57,7 +57,6 @@
   "city": "City",
   "enter_your_phone": "Enter your phone number",
   "phone": "Phone",
-
   "enter_the_code_sent_to_phone_num": "Enter the OTP code",
   "not_receive_verification_code": "Did not get the code ?",
   "send_again": "send again",
@@ -77,7 +76,6 @@
   "save": "Save",
   "companies": "Companies",
   "all_companies": "All companies",
-
   "total_order": "Total order",
   "delivery_date": "Delivery date",
   "everything_was_received": "Received all",
@@ -101,7 +99,7 @@
   "add_to_order": "Add to order",
   "sale": "sale",
   "main": "main",
-  "for_payment": "for payment",
+  "finish": "Finish",
   "home": "Home",
   "problem_detected": "Problem detected",
   "the_product_did_not_arrive_at_all": "The product did not arrive at all",
@@ -115,15 +113,13 @@
   "order_summary": "Order summary",
   "supplier_name": "Supplier name",
   "send_order": "Send order",
-  "order_sent_successfully" : "Order sent successfully",
-  "total_credit" : "Total credit",
-  "back_to_home_page":"Back to home page",
-  "kg" : "kg",
-  "monthly_expense_graph" :"Monthly expense graph",
-  "history" : "History",
-  "export" :"Export",
-  "price" : "₪"
-
-
-
+  "planogram": "Planogram",
+  "order_sent_successfully": "Order sent successfully",
+  "total_credit": "Total credit",
+  "back_to_home_page": "Back to home page",
+  "kg": "kg",
+  "monthly_expense_graph": "Monthly expense graph",
+  "history": "History",
+  "export": "Export",
+  "price": "₪"
 }
