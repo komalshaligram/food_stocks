@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
@@ -25,7 +26,6 @@ class OrderSummaryScreen extends StatelessWidget {
   }
 }
 
-
 class OrderSummaryScreenWidget extends StatelessWidget {
   const OrderSummaryScreenWidget({super.key});
 
@@ -34,13 +34,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Scaffold(
-          appBar:PreferredSize(
+          appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               title: AppLocalizations.of(context)!.order_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-            Navigator.pop(context);
+                Navigator.pop(context);
               },
             ),
           ),
@@ -51,7 +51,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 ListView.builder(
                   itemCount: 4,
                   shrinkWrap: true,
-                  padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                  padding:
+                      EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                   itemBuilder: (context, index) =>
                       orderListItem(index: index, context: context),
                 ),
@@ -72,10 +73,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(
                           vertical: AppConstants.padding_5,
-                          horizontal: AppConstants.padding_5
-                      ),
+                          horizontal: AppConstants.padding_5),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_40),
                         color: AppColors.whiteColor,
                       ),
                       child: Row(
@@ -84,18 +85,24 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                           Expanded(
                             flex: 3,
                             child: Container(
-                              height: 60,
+                              height: AppConstants.containerHeight_60,
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(
                                   vertical: AppConstants.padding_5,
                                   horizontal: AppConstants.padding_5),
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(6),bottomLeft: Radius.circular(6),
-                                      bottomRight: Radius.circular(30),topRight: Radius.circular(30)
-                                  )
-                              ),
-                              child: Text('${'11.90₪ : ' + AppLocalizations.of(context)!.total}',
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          AppConstants.radius_6),
+                                      bottomLeft: Radius.circular(
+                                          AppConstants.radius_6),
+                                      bottomRight: Radius.circular(
+                                          AppConstants.radius_30),
+                                      topRight: Radius.circular(
+                                          AppConstants.radius_30))),
+                              child: Text(
+                                '${'11.90₪ : ' + AppLocalizations.of(context)!.total}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.normalFont,
                                     color: AppColors.whiteColor,
@@ -105,28 +112,39 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                           ),
                           8.width,
                           Expanded(
-                            flex:2 ,
-                            child: Container(
-                              height: 60,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,
-                                  horizontal: AppConstants.padding_5),
-                              decoration: BoxDecoration(
-                                  color: AppColors.navSelectedColor,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),bottomLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(6),topRight: Radius.circular(6)
-                                  )
-                              ),
-                              child: Text(AppLocalizations.of(context)!.send_order,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
-                                    color: AppColors.whiteColor,
-                                    fontWeight: FontWeight.w400),
+                            flex: 2,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context,
+                                    RouteDefine.orderSuccessfulScreen.name);
+                              },
+                              child: Container(
+                                height: AppConstants.containerHeight_60,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_5,
+                                    horizontal: AppConstants.padding_5),
+                                decoration: BoxDecoration(
+                                    color: AppColors.navSelectedColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(
+                                            AppConstants.radius_30),
+                                        bottomLeft: Radius.circular(
+                                            AppConstants.radius_30),
+                                        bottomRight: Radius.circular(
+                                            AppConstants.radius_6),
+                                        topRight: Radius.circular(
+                                            AppConstants.radius_6))),
+                                child: Text(
+                                  AppLocalizations.of(context)!.send_order,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.whiteColor,
+                                      fontWeight: FontWeight.w400),
+                                ),
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -135,11 +153,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               ],
             ),
           ),
-
         );
       },
     );
   }
+
   Widget orderListItem({required int index, required BuildContext context}) {
     return Container(
       margin: EdgeInsets.all(AppConstants.padding_10),
@@ -188,7 +206,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 valueTextSize: AppConstants.font_10,
                 valueTextWeight: FontWeight.w500,
                 columnPadding: AppConstants.padding_10,
-
               ),
               5.width,
               CommonOrderContentWidget(
@@ -196,7 +213,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.total_order,
                 value: '18,360₪',
                 titleColor: AppColors.mainColor,
-                valueColor:AppColors.blackColor,
+                valueColor: AppColors.blackColor,
                 valueTextWeight: FontWeight.w500,
                 valueTextSize: AppConstants.smallFont,
               ),
@@ -205,6 +222,5 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         ],
       ),
     );
-
   }
 }

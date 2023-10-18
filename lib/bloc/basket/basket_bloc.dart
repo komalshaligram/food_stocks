@@ -17,7 +17,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       if(event is _productIncrementEvent){
         List<ProductDetailsModel> temp = state.basketProductList;
         temp[event.listIndex].productWeight = event.productWeight + 1;
-        print('productWeight  ${temp[event.listIndex].productWeight}');
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
       }
 
@@ -27,16 +26,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           temp[event.listIndex].productWeight = event.productWeight - 1;
         }
         else{
-          print('event.productWeight     ${event.productWeight}');
+
         }
-        print('productWeight  ${temp[event.listIndex].productWeight}');
+
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
       }
       if(event is _deleteListItemEvent){
         List<ProductDetailsModel> temp = [];
         temp.addAll(state.basketProductList);
         temp.removeAt(event.listIndex);
-        print('length   ${temp.length}');
         showSnackBar(context: event.context, title: 'Item delete', bgColor: AppColors.mainColor);
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
 

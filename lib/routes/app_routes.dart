@@ -22,6 +22,7 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
 import '../ui/screens/order_details_screen.dart';
+import '../ui/screens/order_successful_screen.dart';
 import '../ui/screens/order_summary_screen.dart';
 import '../ui/screens/product_details_screen.dart';
 import '../ui/screens/profile_screen.dart';
@@ -61,6 +62,7 @@ enum RouteDefine {
   shipmentVerificationScreen,
   storeCategoryScreen,
   orderSummaryScreen,
+  orderSuccessfulScreen
 }
 
 class AppRouting {
@@ -99,6 +101,7 @@ class AppRouting {
           ShipmentVerificationRoute.route,
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
+      RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

@@ -5,6 +5,9 @@ class AppConstants{
   static const double containerHeight = 40;
   static const double appBarHeight = 56;
   static const double containerHeight_80 = 80;
+  static const double containerHeight_60 = 60;
+  static const double containerSize_50 = 50;
+  static const double containerSize_25 = 25;
 
   static const double textFormFieldHeight = 40;
 
@@ -15,9 +18,15 @@ class AppConstants{
   static const double padding_30 = 30;
   static const double padding_8 = 8;
   static const double padding_3 = 3;
+  static const double padding_50 = 50;
+  static const double padding_80 = 80;
+  static const double padding_2 = 2;
 
   static const double radius_3 = 3;
+  static const double radius_4 = 4;
   static const double radius_5 = 5;
+  static const double radius_6 = 6;
+  static const double radius_7 = 7;
   static const double radius_10 = 10;
   static const double radius_100 = 100;
   static const double radius_200 = 200;
@@ -25,6 +34,7 @@ class AppConstants{
   static const double radius_40 = 40;
   static const double radius_30 = 30;
   static const double radius_20 = 20;
+  static const double radius_25 = 25;
 
 //font size
   static const double normalFont = 20;
@@ -35,6 +45,7 @@ class AppConstants{
   static const double font_12 = 12;
   static const double font_14 = 14;
   static const double font_30 = 30;
+  static const double font_22 = 22;
 
   static const double blur_10 = 10;
 

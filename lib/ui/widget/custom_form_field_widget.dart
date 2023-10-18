@@ -39,7 +39,9 @@ class CustomFormField extends StatelessWidget {
     this.inputformet,
     this.autofocus = false,
     this.textInputAction,  TextCapitalization textCapitalization = TextCapitalization.words,
-    this.cursorColor = Colors.green
+    this.cursorColor = Colors.green,
+    this.contentPaddingBottom = 0.0,
+    this.contentPaddingTop = 0.0,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
@@ -81,6 +83,8 @@ class CustomFormField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
   final ValueChanged<String>? onChangeValue;
+  final double contentPaddingTop;
+  final double contentPaddingBottom;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +134,7 @@ class CustomFormField extends StatelessWidget {
                       width: 1,
                     )
                   : BorderSide.none),
-          contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          contentPadding:  EdgeInsets.fromLTRB(10, contentPaddingTop, 10, contentPaddingBottom),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(3.0),
             borderSide: isBorderVisible

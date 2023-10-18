@@ -103,7 +103,7 @@ class OrderScreenWidget extends StatelessWidget {
                       horizontal: AppConstants.padding_10,
                       vertical: AppConstants.padding_5),
                   decoration: BoxDecoration(
-                    color: AppColors.greyColor,
+                    color: AppColors.lightGreyColor,
                     borderRadius: BorderRadius.all(
                         Radius.circular(AppConstants.radius_100)),
                     border: Border.all(
@@ -153,7 +153,7 @@ class OrderScreenWidget extends StatelessWidget {
                 flexValue: 2,
                 title: AppLocalizations.of(context)!.order_status,
                 value: index == 0
-                    ? AppLocalizations.of(context)!.awaiting_shipment
+                    ? AppLocalizations.of(context)!.pending_delivery
                     : AppLocalizations.of(context)!.received,
                 titleColor: AppColors.blackColor,
                 valueColor:

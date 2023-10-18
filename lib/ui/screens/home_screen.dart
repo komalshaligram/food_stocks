@@ -349,7 +349,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   image: AppImagePath.credits,
                                                   title: AppLocalizations.of(
                                                           context)!
-                                                      .general_framework,
+                                                      .total_credit,
                                                   value:
                                                       '20,000${AppLocalizations.of(context)!.currency}'),
                                             ),
