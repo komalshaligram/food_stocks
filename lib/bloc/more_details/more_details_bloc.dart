@@ -47,7 +47,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
-          final response = await DioClient(event.context).get(path: AppUrls.cityListUrl);
+          emit(state.copyWith(isShimmering: true));
+          final response =
+              await DioClient(event.context).get(path: AppUrls.cityListUrl);
           CityListResModel cityListResModel =
               CityListResModel.fromJson(response);
           if (cityListResModel.status == 200) {
@@ -55,8 +57,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityListResModel.data!.cities!.forEach((element) {
               temp.add(element.cityName.toString());
             });
-            emit(state.copyWith(cityList: temp));
             emit(state.copyWith(
+                isShimmering: false,
+                cityList: temp,
                 filterList: temp,
                 cityListResModel: cityListResModel,
                 selectCity:
@@ -83,7 +86,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
-                  : 0);
+                  : await pickedFile.length());
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
@@ -211,8 +214,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));
-            final response =
-                await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
+            final response = await DioClient(event.context)
+                .post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -265,8 +268,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (state.isUpdate) {
           try {
             emit(state.copyWith(
-                companyLogo: preferences.getUserCompanyLogoUrl()));
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
+                /*
+                companyLogo: preferences.getUserCompanyLogoUrl(),*/
+                isShimmering: true));
+            final res = await DioClient(event.context).post(
+                AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
@@ -275,6 +281,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
+                isShimmering: false,
                 selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),
@@ -291,10 +298,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.somethingWrongString,
+            //     bgColor: AppColors.redColor);
           }
         }
       }

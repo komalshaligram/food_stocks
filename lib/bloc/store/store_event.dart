@@ -4,4 +4,7 @@ part of 'store_bloc.dart';
 class StoreEvent with _$StoreEvent {
   const factory StoreEvent.changeCategoryExpansion({bool? isOpened}) =
       _ChangeCategoryExpansion;
+
+  const factory StoreEvent.changeUIUponAppLangEvent() =
+      _ChangeUIUponAppLangEvent;
 }

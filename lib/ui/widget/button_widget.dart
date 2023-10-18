@@ -33,8 +33,11 @@ class ButtonWidget extends StatelessWidget {
         minWidth: width,
         onPressed: onPressed,
         child: Text(
-          buttonText,
-          style: AppStyles.rkRegularTextStyle(size: fontSize,color: fontColors,fontWeight: FontWeight.w400 ,
+          buttonText.toUpperCase(),
+          style: AppStyles.rkRegularTextStyle(
+            size: fontSize,
+            color: fontColors,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),

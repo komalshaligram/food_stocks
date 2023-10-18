@@ -16,7 +16,8 @@ import '../../data/model/res_model/activity_time_model/activity_time_res_model.d
 import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
     as update;
 
-import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
+import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
+    as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -57,15 +58,18 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
+          emit(state.copyWith(isShimmering: true));
           try {
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(
+                AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
-            if (response
-                .data!.clients!.first.clientDetail!.operationTime!.isNotEmpty) {
-              if (response.status == 200) {
+
+            if (response.status == 200) {
+              if (response.data!.clients!.first.clientDetail!.operationTime!
+                  .isNotEmpty) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
                 var sundayRs = response.data!.clients!.first.clientDetail!
                     .operationTime![0].sunday!;
@@ -102,12 +106,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 }).toList();
 
                 List<Day> fridayAndHolidayEvesList =
-                    fridayAndHolidayEvesRs.map((e) {
+                fridayAndHolidayEvesRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
 
                 List<Day> saturdayAndHolidaysList =
-                    saturdayAndHolidaysRs.map((e) {
+                saturdayAndHolidaysRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
                 temp1[0].monday = sundayList;
@@ -118,19 +122,23 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 temp1[5].monday = fridayAndHolidayEvesList;
                 temp1[6].monday = saturdayAndHolidaysList;
                 emit(state.copyWith(
-                    OperationTimeList: temp1, isRefresh: !state.isRefresh));
+                    isShimmering: false,
+                    OperationTimeList: temp1,
+                    isRefresh: !state.isRefresh));
               } else {
-                showSnackBar(
-                    context: event.context,
-                    title: response.message ?? AppStrings.somethingWrongString,
-                    bgColor: AppColors.redColor);
+                emit(state.copyWith(isShimmering: false));
               }
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
             }
           } on ServerException {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.somethingWrongString,
+            //     bgColor: AppColors.redColor);
           }
         }
       }

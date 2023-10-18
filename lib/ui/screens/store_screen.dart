@@ -113,7 +113,9 @@ class StoreScreenWidget extends StatelessWidget {
                                     'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
                                 price: 20,
                                 onTap: () {
-                                  showProductDetails(context: context);
+                                  showProductDetails(
+                                      context: context,
+                                      isMirror: state.isMirror);
                                 },
                                 onButtonTap: () {},
                               );
@@ -154,6 +156,7 @@ class StoreScreenWidget extends StatelessWidget {
                   ),
                   CommonProductCategoryWidget(
                     isCategoryExpand: state.isCategoryExpand,
+                    isMirror: !state.isMirror ? true : false,
                     onFilterTap: () {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
@@ -447,7 +450,8 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails({required BuildContext context}) async {
+  void showProductDetails(
+      {required BuildContext context, required bool isMirror}) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -477,43 +481,39 @@ class StoreScreenWidget extends StatelessWidget {
               clipBehavior: Clip.hardEdge,
               child: Column(
                 children: [
-                  10.height,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(
-                                Icons.close,
-                                size: 40,
-                                color: AppColors.blackColor,
-                              ),
-                            ),
+                  // 10.height,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(child: 0.width),
+                      Expanded(
+                        flex: 4,
+                        child: Text(
+                          'Product name',
+                          style: AppStyles.rkBoldTextStyle(
+                            size: AppConstants.normalFont,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.w600,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            'Product name',
-                            style: AppStyles.rkBoldTextStyle(
-                              size: AppConstants.normalFont,
+                      ),
+                      Expanded(
+                        child: Container(
+                          // alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 40,
                               color: AppColors.blackColor,
-                              fontWeight: FontWeight.w600,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
-                        Expanded(child: 0.width),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   5.height,
                   Center(
@@ -558,6 +558,7 @@ class StoreScreenWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       '11.90₪',
@@ -578,31 +579,38 @@ class StoreScreenWidget extends StatelessWidget {
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              AppConstants.radius_50),
-                                          bottomLeft: Radius.circular(
-                                              AppConstants.radius_50),
-                                          bottomRight: Radius.circular(
-                                              AppConstants.radius_5),
-                                          topRight: Radius.circular(
-                                              AppConstants.radius_5),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isMirror
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomLeft: Radius.circular(isMirror
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomRight: Radius.circular(
+                                                isMirror
+                                                    ? AppConstants.radius_50
+                                                    : AppConstants.radius_5),
+                                            topRight: Radius.circular(isMirror
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
                                         ),
-                                        border: Border.all(
-                                            color: AppColors.navSelectedColor,
-                                            width: 1),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {},
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                              AppConstants.padding_10),
-                                          child: Icon(Icons.remove,
-                                              color: AppColors.mainColor),
+                                        // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 26,
+                                          color: AppColors.mainColor,
                                         ),
                                       ),
                                     ),
@@ -636,32 +644,36 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                     5.width,
-                                    Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomRight: Radius.circular(
-                                              AppConstants.radius_50),
-                                          topRight: Radius.circular(
-                                              AppConstants.radius_50),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isMirror
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(isMirror
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomRight: Radius.circular(
+                                                isMirror
+                                                    ? AppConstants.radius_5
+                                                    : AppConstants.radius_50),
+                                            topRight: Radius.circular(isMirror
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
                                         ),
-                                        border: Border.all(
-                                            color: AppColors.navSelectedColor,
-                                            width: 1),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {},
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                              AppConstants.padding_10),
-                                          child: Icon(Icons.add,
-                                              color: AppColors.mainColor),
-                                        ),
+                                        alignment: Alignment.center,
+                                        child: Icon(Icons.remove,
+                                            size: 26,
+                                            color: AppColors.mainColor),
                                       ),
                                     ),
                                   ],
@@ -728,19 +740,26 @@ class StoreScreenWidget extends StatelessWidget {
                                 Container(
                                   height: 120,
                                   width: getScreenWidth(context),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_10),
                                   decoration: BoxDecoration(
                                       color: AppColors.notesBGColor,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(
                                               AppConstants.radius_5))),
-                                  child: Text(
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none),
+                                    maxLines: 4,
+                                  ) /*Text(
                                     '',
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.font_12,
                                         color: AppColors.blackColor),
                                     maxLines: 5,
                                     overflow: TextOverflow.ellipsis,
-                                  ),
+                                  )*/
+                                  ,
                                 )
                               ],
                             ),

@@ -20,4 +20,6 @@ class AppColors {
   static Color redColor = const Color(0xffFF4D4F);
   static Color textFieldBorderColor = const Color(0xffCED4DA);
   static Color notesBGColor = const Color(0xffF1F3F5);
+  static Color shimmer1Color = const Color(0xCCE0E0E0);
+  static Color shimmer2Color = const Color(0xffF5F5F5);
 }
