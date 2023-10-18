@@ -48,12 +48,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
                 isLoading: false,
                 errorMessage:
                     response.message ?? AppStrings.somethingWrongString));
-            emit(state.copyWith(isLoginFail: false));
           }
-        } on ServerException {
-          debugPrint('loading false');
-          emit(state.copyWith(isLoginFail: true, isLoading: false));
-          emit(state.copyWith(isLoginFail: false));
+        } catch (e) {
+          emit(state.copyWith(isLoginFail: true,isLoading: false, errorMessage: e.toString()));
         }
       }
       if (event is _validateMobileEvent) {

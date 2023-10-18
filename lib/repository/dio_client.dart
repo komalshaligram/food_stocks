@@ -24,6 +24,7 @@ class DioClient {
         baseUrl: AppUrls.baseUrl,
         connectTimeout: const Duration(milliseconds: 60000),
         receiveTimeout: const Duration(milliseconds: 60000),
+
         headers: {
           HttpHeaders.acceptHeader: Headers.jsonContentType,
           HttpHeaders.authorizationHeader: 'Bearer 1'
@@ -50,8 +51,9 @@ class DioClient {
     if (kDebugMode) {
       debugPrint("app error data $e");
     }
-    ErrorEntity eInfo = _createErrorEntity(e,context: _context);
-    onError(eInfo);
+ /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
+    onError(eInfo);*/
+    return handler.next(e);
   }));
 
 
