@@ -431,66 +431,66 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
           String buildNumber = packageInfo.buildNumber;
           debugPrint('build number $buildNumber');
-          // // if (statuses[Permission.storage]!.isGranted) {
-          // File file;
-          // Directory dir;
-          // if (defaultTargetPlatform == TargetPlatform.android) {
-          //   dir = Directory('/storage/emulated/0/Documents');
+          // if (statuses[Permission.storage]!.isGranted) {
+          File file;
+          Directory dir;
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            dir = Directory('/storage/emulated/0/Documents');
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          if (state.formsAndFilesList[event.fileIndex].url
+                  ?.contains(AppStrings.tempString) ??
+              false) {
+            file =
+                File(state.formsAndFilesList[event.fileIndex].localUrl ?? '');
+            Uint8List fileBytes = file.readAsBytesSync();
+            File newFile = File('${dir.path}/${p.basename(file.path)}');
+            await newFile.writeAsBytes(fileBytes).then(
+              (value) {
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.downloadString,
+                    bgColor: AppColors.mainColor);
+              },
+            );
+          } else {
+            HttpClient httpClient = new HttpClient();
+            String filePath = '';
+            try {
+              var request = await httpClient.getUrl(Uri.parse(
+                  "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}"));
+              var response = await request.close();
+              if (response.statusCode == 200) {
+                Uint8List fileBytes =
+                    await consolidateHttpClientResponseBytes(response);
+                filePath =
+                    '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}';
+                file = File(filePath);
+                await file.writeAsBytes(fileBytes).then((value) {
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.downloadString,
+                      bgColor: AppColors.mainColor);
+                });
+              } else {
+                filePath = 'Error code: ' + response.statusCode.toString();
+                debugPrint('download ${filePath}');
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.downloadFailedString,
+                    bgColor: AppColors.redColor);
+              }
+            } catch (ex) {
+              filePath = 'Can not fetch url';
+            }
+          }
           // } else {
-          //   dir = await getApplicationDocumentsDirectory();
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
           // }
-          // if (state.formsAndFilesList[event.fileIndex].url
-          //         ?.contains(AppStrings.tempString) ??
-          //     false) {
-          //   file =
-          //         File(state.formsAndFilesList[event.fileIndex].localUrl ?? '');
-          //     Uint8List fileBytes = file.readAsBytesSync();
-          //     File newFile = File('${dir.path}/${p.basename(file.path)}');
-          //     await newFile.writeAsBytes(fileBytes).then(
-          //       (value) {
-          //         showSnackBar(
-          //             context: event.context,
-          //             title: AppStrings.downloadString,
-          //             bgColor: AppColors.mainColor);
-          //       },
-          //     );
-          //   } else {
-          //     HttpClient httpClient = new HttpClient();
-          //     String filePath = '';
-          //     try {
-          //       var request = await httpClient.getUrl(Uri.parse(
-          //           "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}"));
-          //       var response = await request.close();
-          //       if (response.statusCode == 200) {
-          //         Uint8List fileBytes =
-          //             await consolidateHttpClientResponseBytes(response);
-          //         filePath =
-          //             '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last}';
-          //         file = File(filePath);
-          //         await file.writeAsBytes(fileBytes).then((value) {
-          //           showSnackBar(
-          //               context: event.context,
-          //               title: AppStrings.downloadString,
-          //               bgColor: AppColors.mainColor);
-          //         });
-          //       } else {
-          //         filePath = 'Error code: ' + response.statusCode.toString();
-          //       debugPrint('download ${filePath}');
-          //       showSnackBar(
-          //           context: event.context,
-          //           title: AppStrings.downloadFailedString,
-          //           bgColor: AppColors.redColor);
-          //     }
-          //   } catch (ex) {
-          //     filePath = 'Can not fetch url';
-          //   }
-          // }
-          // // } else {
-          // //   showSnackBar(
-          // //       context: event.context,
-          // //       title: AppStrings.docDownloadAllowPermissionString,
-          // //       bgColor: AppColors.redColor);
-          // // }
         } catch (e) {
           showSnackBar(
               context: event.context,
