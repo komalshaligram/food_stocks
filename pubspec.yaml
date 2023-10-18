@@ -68,6 +68,8 @@ dependencies:
   package_info_plus: ^4.1.0
   appsflyer_sdk: ^6.12.2
   device_info_plus: ^9.1.0
+  fl_chart: ^0.64.0
+
 
 dev_dependencies:
   flutter_test:

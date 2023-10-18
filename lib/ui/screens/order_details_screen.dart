@@ -6,6 +6,7 @@ import '../../bloc/order_details/order_details_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 
@@ -48,43 +49,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     trailingWidget:  Padding(
                       padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10,
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
-                          border: Border.all(
-                            color: AppColors.borderColor,
-                            width: 1,
-                          ),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10,
-                              vertical: AppConstants.padding_5),
-                          decoration: BoxDecoration(
-                            color: AppColors.lightGreyColor,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppConstants.radius_100)),
-                            border: Border.all(
-                              color: AppColors.whiteColor,
-                              width: 1,
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                              text: AppLocalizations.of(context)!.total ,
-                             style: TextStyle(
-                          color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
-                               children: <TextSpan>[
-                            TextSpan(text: ' : 12,450₪',
-                                style: TextStyle(
-                                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
-                            ),
-                            ],
-                          ),
-                          ),
-                        ),
+                      child: CircularButtonWidget(
+                        buttonName:'12,450₪' ,
+                        buttonValue: 'סה”כ',
                       ),
                     ),
                   onTap: () {
@@ -136,7 +103,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                index == 0 ? AppLocalizations.of(context)!.awaiting_shipment :  AppLocalizations.of(context)!.everything_was_received,
+                index == 0 ? AppLocalizations.of(context)!.pending_delivery :  AppLocalizations.of(context)!.everything_was_received,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.smallFont,
                     color: index == 0 ? AppColors.orangeColor : AppColors.mainColor,
@@ -191,3 +158,43 @@ class OrderDetailsScreenWidget extends StatelessWidget {
 
 
 }
+
+
+/*Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                          border: Border.all(
+                            color: AppColors.borderColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_10,
+                              vertical: AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.lightGreyColor,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_100)),
+                            border: Border.all(
+                              color: AppColors.whiteColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              text: AppLocalizations.of(context)!.total ,
+                             style: TextStyle(
+                          color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
+                               children: <TextSpan>[
+                            TextSpan(text: ' : 12,450₪',
+                                style: TextStyle(
+                                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
+                            ),
+                            ],
+                          ),
+                          ),
+                        ),
+                      )*/

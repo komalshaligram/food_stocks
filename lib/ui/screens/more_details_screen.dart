@@ -173,8 +173,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       .where((city) =>
                                                           city.contains(value))
                                                       .toList();
-                                                  print(
-                                                      'length:${list.length}');
                                                   listNotifier.value = list;
                                                 },
                                                 controller:

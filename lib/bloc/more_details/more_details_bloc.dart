@@ -256,7 +256,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         List<String> list = state.cityList
             .where((city) => city.contains(event.search))
             .toList();
-        print(list.length);
         emit(state.copyWith(filterList: list));
       } else if (event is _selectCityEvent) {
         debugPrint('new city = ${event.city}');

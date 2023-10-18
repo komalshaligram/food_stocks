@@ -25,12 +25,12 @@ class FormFieldValidation {
   String? mobileField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
-      return "mobile can't be Empty";
+      return "mobile number can't be Empty";
     } else if (value.length != 10) {
       if (regex.hasMatch(value)) {
         return "enter digits only";
       } else {
-        return "mobile must be 10 digit";
+        return "mobile number must be 10 digit";
       }
     } else if (regex.hasMatch(value)) {
       return "enter digits only";
