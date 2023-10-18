@@ -6,12 +6,12 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-getScreenHeight(BuildContext context) {
+double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
   return screenHeight;
 }
 
-getScreenWidth(BuildContext context) {
+double getScreenWidth(BuildContext context) {
   final screenWidth = MediaQuery.of(context).size.width;
   return screenWidth;
 }
