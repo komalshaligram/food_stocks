@@ -53,6 +53,54 @@ class ProductDetailsState with _$ProductDetailsState {
         productPrice: 12 ,
         productWeight: 20 ,
       ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),  ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+      ProductDetailsModel(
+        productImage: AppImagePath.product3,
+        productName: 'Tomato',
+        productPrice: 12 ,
+        productWeight: 20 ,
+      ),
+
     ],
   );
 }

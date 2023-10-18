@@ -73,7 +73,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
               title: Text(AppLocalizations.of(context)!.activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
-                      fontWeight: FontWeight.w400,
                       color: AppColors.blackColor)),
               leading: GestureDetector(
                   onTap: () => Navigator.pop(context),
@@ -106,7 +105,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
-                                    fontWeight: FontWeight.w400),
+                                    ),
                               )),
                           SizedBox(
                               width: getScreenWidth(context) * 0.24,
@@ -116,7 +115,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor,
-                                    fontWeight: FontWeight.w400),
+                                    ),
                               )),
                           10.height,
                         ],
@@ -255,8 +254,7 @@ class OperationTimeRow extends StatelessWidget {
                                                             .smallFont,
                                                         color:
                                                             AppColors.textColor,
-                                                        fontWeight:
-                                                            FontWeight.normal),
+                                                        ),
                                               ))
                                           : Container(
                                               width: getScreenWidth(context) *
@@ -397,57 +395,54 @@ class TimeContainer extends StatelessWidget {
                             color: AppColors.blackColor,
                             fontSize: 22.0,
                           ),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: SafeArea(
-                              top: false,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: getScreenHeight(context) * 0.25,
-                                    child: CupertinoDatePicker(
-                                        minuteInterval: 30,
-                                        initialDateTime: DateTime.now().add(
-                                          Duration(
-                                              minutes: 30 -
-                                                  DateTime.now().minute % 30),
-                                        ),
-                                        mode: CupertinoDatePickerMode.time,
-                                        use24hFormat: true,
-                                        onDateTimeChanged: (value) {
-                                          final DateTime time = value;
-                                          final DateFormat formatter =
-                                              DateFormat('HH:mm');
-                                          datetime = formatter.format(time);
-                                        }),
-                                  ),
-                                  GestureDetector(
-                                      onTap: () async {
-                                        context.read<ActivityTimeBloc>().add(
-                                            ActivityTimeEvent.timePickerEvent(
-                                                context: context,
-                                                rowIndex: rowIndex,
-                                                timeIndex: index,
-                                                openingIndex: openingIndex,
-                                                time: datetime,
-                                                timePickerContext: c1));
-                                      },
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.borderColor
-                                                  .withOpacity(0.6),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(
-                                                      AppConstants.radius_5))),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  AppConstants.padding_30,
-                                              vertical: AppConstants.padding_5),
-                                          child: Text(AppStrings.okString))),
-                                  10.height,
-                                ],
-                              ),
+                          child: SafeArea(
+                            top: false,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  height: getScreenHeight(context) * 0.25,
+                                  child: CupertinoDatePicker(
+                                      minuteInterval: 30,
+                                      initialDateTime: DateTime.now().add(
+                                        Duration(
+                                            minutes: 30 -
+                                                DateTime.now().minute % 30),
+                                      ),
+                                      mode: CupertinoDatePickerMode.time,
+                                      use24hFormat: true,
+                                      onDateTimeChanged: (value) {
+                                        final DateTime time = value;
+                                        final DateFormat formatter =
+                                            DateFormat('HH:mm');
+                                        datetime = formatter.format(time);
+                                      }),
+                                ),
+                                GestureDetector(
+                                    onTap: () async {
+                                      context.read<ActivityTimeBloc>().add(
+                                          ActivityTimeEvent.timePickerEvent(
+                                              context: context,
+                                              rowIndex: rowIndex,
+                                              timeIndex: index,
+                                              openingIndex: openingIndex,
+                                              time: datetime,
+                                              timePickerContext: c1));
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.borderColor
+                                                .withOpacity(0.6),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    AppConstants.radius_5))),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppConstants.padding_30,
+                                            vertical: AppConstants.padding_5),
+                                        child: Text(AppStrings.okString))),
+                                10.height,
+                              ],
                             ),
                           ),
                         ),
@@ -462,7 +457,7 @@ class TimeContainer extends StatelessWidget {
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.mediumFont,
                             color: AppColors.blackColor,
-                            fontWeight: FontWeight.w400)),
+                            )),
                   ),
                   Icon(
                     CupertinoIcons.clock,

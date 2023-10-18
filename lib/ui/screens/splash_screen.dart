@@ -67,7 +67,7 @@ class SplashScreenWidget extends StatelessWidget {
                 context, RouteDefine.connectScreen.name);
           }
         }
-      }     ,
+      },
       child: BlocBuilder<SplashBloc, SplashState>(
         builder: (context, state) {
           return Scaffold(

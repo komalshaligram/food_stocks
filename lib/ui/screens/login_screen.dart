@@ -93,153 +93,81 @@ class LogInScreenWidget extends StatelessWidget {
                                 size: AppConstants.smallFont,
                                 color: Colors.black)),
                         30.height,
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: AppColors.borderColor,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            AppConstants.radius_5))),
-                                padding: EdgeInsets.only(
-                                    top: AppConstants.padding_5,
-                                    bottom: AppConstants.padding_5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: AppConstants.padding_10,
-                                          left: AppConstants.padding_10),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.phone,
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_14,
-                                            color: AppColors.blackColor),
-                                      ),
-                                    ),
-                                    TextFormField(
-                                      controller: phoneController,
-                                      // maxLength: 10,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      keyboardType: TextInputType.number,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          color: AppColors.blackColor,
-                                          size: AppConstants.smallFont,
-                                          fontWeight: FontWeight.w400),
-                                      validator: (value) {
-                                        context.read<LogInBloc>().add(
-                                            LogInEvent.validateMobileEvent(
-                                                errorMsg: AuthFormValidation()
-                                                        .formValidation(
-                                                            value!,
-                                                            AppStrings
-                                                                .mobileValString) ??
-                                                    ''));
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                        // counterText: '',
-                                          errorStyle: TextStyle(
-                                              color: AppColors.redColor,
-                                              fontWeight: FontWeight.w400),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide.none),
-                                          contentPadding:
-                                              const EdgeInsets.fromLTRB(
-                                                  10, 0, 10, 0),
-                                          disabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          errorBorder: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          focusedErrorBorder:
-                                              OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                          )),
-                                    ),
-                                  ],
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.borderColor,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      AppConstants.radius_5))),
+                          padding: EdgeInsets.only(
+                              top: AppConstants.padding_5,
+                              bottom: AppConstants.padding_5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: AppConstants.padding_10,
+                                    left: AppConstants.padding_10),
+                                child: Text(
+                                  AppLocalizations.of(context)!.phone,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.blackColor),
                                 ),
                               ),
-                            ),
-                            10.width,
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_5),
-                                    ),
-                                    border: Border.all(
-                                        color: AppColors.borderColor,
-                                        width: 1)),
-                                padding: EdgeInsets.only(
-                                    top: AppConstants.padding_5,
-                                    bottom: AppConstants.padding_5),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: AppConstants.padding_10,
-                                          left: AppConstants.padding_10),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.country,
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_14,
-                                            color: AppColors.blackColor),
-                                      ),
-                                    ),
-                                    DropdownButtonFormField<String>(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: InputDecoration(
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          contentPadding: EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          border: InputBorder.none),
-                                      isExpanded: true,
-                                      elevation: 0,
-                                      style: const TextStyle(
-                                        fontSize: AppConstants.smallFont,
-                                        color: Colors.black,
-                                      ),
-                                      value: '+972',
-                                      focusColor: Colors.transparent,
-                                      items: [
-                                        DropdownMenuItem<String>(
-                                          value: '+972',
-                                          child: Text(
-                                            '+972',
-                                            textDirection: TextDirection.ltr,
-                                          ),
-                                        )
-                                      ].toList(),
-                                      onChanged: (countryCode) {},
-                                    ),
-                                  ],
+                              TextFormField(
+                                controller: phoneController,
+                                // maxLength: 10,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                keyboardType: TextInputType.number,
+                                style: AppStyles.rkRegularTextStyle(
+                                    color: AppColors.blackColor,
+                                    size: AppConstants.smallFont,
                                 ),
+                                validator: (value) {
+                                  context.read<LogInBloc>().add(
+                                      LogInEvent.validateMobileEvent(
+                                          errorMsg: AuthFormValidation()
+                                                  .formValidation(
+                                                      value!,
+                                                      AppStrings
+                                                          .mobileValString) ??
+                                              ''));
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  // counterText: '',
+                                    errorStyle: TextStyle(
+                                        color: AppColors.redColor,
+                                       ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
+                                    disabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    focusedErrorBorder:
+                                        OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    )),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         state.mobileErrorMessage.isEmpty
-                            ? 5.height
+                            ? 10.height
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

@@ -85,7 +85,7 @@ class ProfileScreenWidget extends StatelessWidget {
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.smallFont,
                     color: Colors.black,
-                    fontWeight: FontWeight.w400),
+                ),
               ),
               backgroundColor: Colors.white,
               titleSpacing: 0,
@@ -341,7 +341,6 @@ class ProfileScreenWidget extends StatelessWidget {
                             AppLocalizations.of(context)!.profile_picture,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_14,
-                                fontWeight: FontWeight.w400,
                                 color: AppColors.textColor),
                           ),
                         ),
