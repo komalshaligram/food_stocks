@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +30,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 preferencesHelper.getAppLanguage() == AppStrings.hebrewString
                     ? true
                     : false));
+      } else if (event is _GetProductCategoriesListEvent) {
+        try {} on ServerException {}
       }
     });
   }

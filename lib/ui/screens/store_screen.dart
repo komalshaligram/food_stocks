@@ -8,8 +8,10 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/store/store_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/themes/app_colors.dart';
 import '../widget/common_product_category_widget.dart';
 
@@ -23,7 +25,8 @@ class StoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StoreBloc(),
+      create: (context) =>
+          StoreBloc()..add(StoreEvent.getProductCategoriesListEvent()),
       child: StoreScreenWidget(),
     );
   }
@@ -87,6 +90,7 @@ class StoreScreenWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return buildCompanyListItem(
                                   companyLogo: AppImagePath.profileImage,
+                                  companyName: "Company Name",
                                   onTap: () {});
                             },
                           ),
@@ -396,7 +400,9 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   Widget buildCompanyListItem(
-      {required String companyLogo, required void Function() onTap}) {
+      {required String companyLogo,
+      required String companyName,
+      required void Function() onTap}) {
     return Container(
       height: 90,
       width: 90,
@@ -416,11 +422,41 @@ class StoreScreenWidget extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
-        child: Image.asset(
-          companyLogo,
-          fit: BoxFit.cover,
-          height: 90,
-          width: 90,
+        child: Stack(
+          children: [
+            Image.asset(
+              companyLogo,
+              fit: BoxFit.cover,
+              height: 90,
+              width: 90,
+            ),
+            Positioned(
+              bottom: AppConstants.padding_5,
+              left: AppConstants.padding_5,
+              right: AppConstants.padding_5,
+              child: Container(
+                height: 20,
+                width: 80,
+                alignment: Alignment.center,
+                margin:
+                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                  border: Border.all(color: AppColors.whiteColor, width: 1),
+                ),
+                child: Text(
+                  companyName,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_12, color: AppColors.whiteColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

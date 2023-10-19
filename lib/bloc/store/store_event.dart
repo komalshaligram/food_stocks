@@ -7,4 +7,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.changeUIUponAppLangEvent() =
       _ChangeUIUponAppLangEvent;
+
+  const factory StoreEvent.getProductCategoriesListEvent() =
+      _GetProductCategoriesListEvent;
 }
