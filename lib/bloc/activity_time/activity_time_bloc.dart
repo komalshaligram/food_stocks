@@ -378,7 +378,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-        emit(state.copyWith(isLoading: true));
+        // emit(state.copyWith(isLoading: true));
         bool isSnackbarActive = false;
         for (int i = 0; i < state.OperationTimeList.length; i++) {
           if (state.OperationTimeList[i].monday[0].until ==

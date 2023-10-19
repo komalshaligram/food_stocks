@@ -152,16 +152,20 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   right: getScreenWidth(context) * 0.08),
                               child: CustomButtonWidget(
                                 buttonText: state.isUpdate
-                                    ? AppLocalizations.of(context)!.save.toUpperCase()
-                                    : AppLocalizations.of(context)!.next.toUpperCase(),
+                                    ? AppLocalizations.of(context)!
+                                        .save
+                                        .toUpperCase()
+                                    : AppLocalizations.of(context)!
+                                        .next
+                                        .toUpperCase(),
                                 fontColors: AppColors.whiteColor,
-                                isLoading: state.isLoading,
+                                isLoading: false,
                                 onPressed: () {
-                                  context
-                                      .read<ActivityTimeBloc>()
-                                      .add(ActivityTimeEvent.activityTimeApiEvent(
-                                    context: context,
-                                  ));
+                                  context.read<ActivityTimeBloc>().add(
+                                          ActivityTimeEvent
+                                              .activityTimeApiEvent(
+                                        context: context,
+                                      ));
                                 },
                                 bGColor: AppColors.mainColor,
                               ),

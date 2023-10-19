@@ -79,6 +79,71 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     formsAndFilesList: filesList,
                     isLoading: false,
                     isShimmering: false));
+                if (state.isUpdate) {
+                  try {
+                    emit(state.copyWith(isShimmering: true));
+                    SharedPreferencesHelper preferencesHelper =
+                        SharedPreferencesHelper(
+                            prefs: await SharedPreferences.getInstance());
+                    final res = await DioClient(event.context)
+                        .post(AppUrls.getProfileDetailsUrl, data: {
+                      AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
+                          preferencesHelper.getUserId()
+                    });
+                    ProfileDetailsResModel response =
+                        ProfileDetailsResModel.fromJson(res);
+                    Map<String, dynamic> newModel =
+                        res['data']['clients'][0]['clientDetail'];
+                    debugPrint('data1 = ${newModel}');
+
+                    debugPrint('files = ${newModel[AppStrings.filesString]}');
+                    debugPrint('forms = ${newModel[AppStrings.formsString]}');
+
+                    if (response.status == 200) {
+                      if (newModel[AppStrings.formsString] != null ||
+                          newModel[AppStrings.filesString] != null) {
+                        List<FormAndFileModel> formsAndFilesList =
+                            state.formsAndFilesList.toList(growable: true);
+                        for (int i = 0; i < formsAndFilesList.length; i++) {
+                          if (newModel[AppStrings.filesString] != null &&
+                              (newModel[AppStrings.filesString]
+                                      .containsKey(formsAndFilesList[i].id) ??
+                                  false)) {
+                            formsAndFilesList[i].url =
+                                newModel[AppStrings.filesString]
+                                    [formsAndFilesList[i].id];
+                          } else if (newModel[AppStrings.formsString] != null &&
+                              (newModel[AppStrings.formsString]
+                                      .containsKey(formsAndFilesList[i].id) ??
+                                  false)) {
+                            formsAndFilesList[i].url =
+                                newModel[AppStrings.formsString]
+                                    [formsAndFilesList[i].id];
+                          }
+                          debugPrint(
+                              'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
+                        }
+                        emit(state.copyWith(
+                            formsAndFilesList: [], isShimmering: false));
+                        emit(state.copyWith(
+                            formsAndFilesList: formsAndFilesList));
+                      } else {
+                        emit(state.copyWith(isShimmering: false));
+                      }
+                    } else {
+                      showSnackBar(
+                          context: event.context,
+                          title: response.message ??
+                              AppStrings.somethingWrongString,
+                          bgColor: AppColors.redColor);
+                    }
+                  } on ServerException {
+                    // showSnackBar(
+                    //     context: event.context,
+                    //     title: AppStrings.somethingWrongString,
+                    //     bgColor: AppColors.redColor);
+                  }
+                }
               } else {
                 showSnackBar(
                     context: event.context,
@@ -106,72 +171,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               context: event.context,
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
-        }
-        if (state.isUpdate) {
-          try {
-            emit(state.copyWith(isShimmering: true));
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
-            final res = await DioClient(event.context)
-                .post(AppUrls.getProfileDetailsUrl, data: {
-              AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
-                  preferencesHelper.getUserId()
-            });
-            ProfileDetailsResModel response =
-                ProfileDetailsResModel.fromJson(res);
-            Map<String, dynamic> newModel =
-                res['data']['clients'][0]['clientDetail'];
-            debugPrint('data1 = ${newModel}');
-
-            debugPrint(
-                'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
-            debugPrint(
-                'forms = ${response.data?.clients?.first.clientDetail?.forms?.toJson().keys}}');
-
-            if (response.status == 200) {
-              if (response.data?.clients?.first.clientDetail?.files
-                          ?.toJson()
-                          .keys !=
-                      null &&
-                  response.data?.clients?.first.clientDetail?.forms
-                          ?.toJson()
-                          .keys !=
-                      null) {
-                List<FormAndFileModel> formsAndFilesList =
-                    state.formsAndFilesList.toList(growable: true);
-                for (int i = 0; i < formsAndFilesList.length; i++) {
-                  if (newModel[AppStrings.filesString]
-                          .containsKey(formsAndFilesList[i].id) ??
-                      false) {
-                    formsAndFilesList[i].url = newModel[AppStrings.filesString]
-                        [formsAndFilesList[i].id];
-                  } else if (newModel[AppStrings.formsString]
-                          .containsKey(formsAndFilesList[i].id) ??
-                      false) {
-                    formsAndFilesList[i].url = newModel[AppStrings.formsString]
-                        [formsAndFilesList[i].id];
-                  }
-                  debugPrint(
-                      'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
-                }
-                emit(
-                    state.copyWith(formsAndFilesList: [], isShimmering: false));
-                emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-              } else {
-                emit(state.copyWith(isShimmering: false));
-              }
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
-            }
-          } on ServerException {
-            // showSnackBar(
-            //     context: event.context,
-            //     title: AppStrings.somethingWrongString,
-            //     bgColor: AppColors.redColor);
-          }
         }
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
