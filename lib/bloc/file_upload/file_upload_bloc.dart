@@ -308,6 +308,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
+        debugPrint('update calling');
         try {
           emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
@@ -322,11 +323,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   (state.formsAndFilesList[i].url
                           ?.contains(AppStrings.tempString) ??
                       false)*/
-                  ) {
+              ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                      false) /*&&
+                  false) /*&&
                   (state.formsAndFilesList[i].url
                       ?.contains(AppStrings.tempString) ??
                       false)*/
@@ -337,16 +338,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           });
           debugPrint('update urls list = ${formsAndFiles}');
-          if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
-              (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
-            if (state.isUpdate) {
-              emit(state.copyWith(isApiLoading: false));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
-            } else {
+          if (state.isUpdate) {
+            emit(state.copyWith(isApiLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.updateSuccessString,
+                bgColor: AppColors.mainColor);
+            Navigator.pop(event.context);
+          } else {
+            if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
+                (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
               showSnackBar(
                   context: event.context,
@@ -362,8 +363,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
+              return;
             }
-            return;
           }
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
@@ -388,7 +389,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
+                      (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
@@ -428,10 +429,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             formsAndFilesList[event.index].url = '';
             emit(state.copyWith(formsAndFilesList: []));
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-            showSnackBar(
-                context: event.context,
-                title: response.message ?? AppStrings.removeSuccessString,
-                bgColor: AppColors.mainColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: response.message ?? AppStrings.removeSuccessString,
+            //     bgColor: AppColors.mainColor);
+            add(FileUploadEvent.uploadApiEvent(context: event.context));
           } else {
             emit(state.copyWith(isUploadLoading: false));
             showSnackBar(
