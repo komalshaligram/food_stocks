@@ -73,7 +73,7 @@ class OTPScreenWidget extends StatelessWidget {
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
-                  Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                 },
               ),
             ),
@@ -131,7 +131,7 @@ class OTPScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                          if (state.otp.length == 4) {
+                          if (state.otp.length == 4 && state.otp.isNotEmpty) {
                                   if (isRegister == true) {
                                     Navigator.pushNamed(
                                         context, RouteDefine.profileScreen.name,

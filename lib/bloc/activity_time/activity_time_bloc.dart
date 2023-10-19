@@ -13,11 +13,6 @@ import '../../data/model/req_model/profile_details_update_req_model/profile_deta
     as update;
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
     as res;
-import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
-    as update;
-
-import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
-    as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -60,8 +55,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.isUpdate) {
           emit(state.copyWith(isShimmering: true));
           try {
-            final res = await DioClient(event.context).post(
-                AppUrls.getProfileDetailsUrl,
+            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
@@ -106,12 +100,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 }).toList();
 
                 List<Day> fridayAndHolidayEvesList =
-                fridayAndHolidayEvesRs.map((e) {
+                    fridayAndHolidayEvesRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
 
                 List<Day> saturdayAndHolidaysList =
-                saturdayAndHolidaysRs.map((e) {
+                    saturdayAndHolidaysRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
                 temp1[0].monday = sundayList;
@@ -142,6 +136,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           }
         }
       }
+
       if (event is _defaultValueAddInListEvent) {
         List<ActivityTimeModel> temp = [];
         if (state.OperationTimeList.isEmpty) {
@@ -383,6 +378,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
+        emit(state.copyWith(isLoading: true));
         bool isSnackbarActive = false;
         for (int i = 0; i < state.OperationTimeList.length; i++) {
           if (state.OperationTimeList[i].monday[0].until ==

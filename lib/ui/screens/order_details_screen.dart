@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/order_details/order_details_bloc.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
@@ -89,66 +90,71 @@ class OrderDetailsScreenWidget extends StatelessWidget {
         ],
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.supplier_name,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w400),
-              ),
-              Text(
-                index == 0 ? AppLocalizations.of(context)!.pending_delivery :  AppLocalizations.of(context)!.everything_was_received,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: index == 0 ? AppColors.orangeColor : AppColors.mainColor,
-                    fontWeight: FontWeight.w700),
+      child: GestureDetector(
+        onTap: (){
+          Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name);
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.supplier_name,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w400),
+                ),
+                Text(
+                  index == 0 ? AppLocalizations.of(context)!.pending_delivery :  AppLocalizations.of(context)!.everything_was_received,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: index == 0 ? AppColors.orangeColor : AppColors.mainColor,
+                      fontWeight: FontWeight.w700),
 
-              )
+                )
 
-            ],
-          ),
-          7.height,
-          Row(
-            children: [
-              CommonOrderContentWidget(
-                flexValue: 1,
-                title: AppLocalizations.of(context)!.products,
-                value: "23",
-                titleColor: AppColors.mainColor,
-                valueColor: AppColors.blackColor,
-                valueTextWeight: FontWeight.w700,
-                valueTextSize: AppConstants.mediumFont,
-              ),
-              5.width,
-              CommonOrderContentWidget(
-                flexValue: 2,
-                title: AppLocalizations.of(context)!.delivery_date,
-                value: "12.02.23 10:00-12:00",
-                titleColor: AppColors.mainColor,
-                valueColor: AppColors.blackColor,
-                valueTextSize: AppConstants.font_10,
-                valueTextWeight: FontWeight.w500,
-                columnPadding: AppConstants.padding_8,
-              ),
-              5.width,
-              CommonOrderContentWidget(
-                flexValue: 2,
-                title: AppLocalizations.of(context)!.total_order,
-                value: '18,360₪',
-                titleColor: AppColors.mainColor,
-                valueColor:AppColors.blackColor,
-                valueTextWeight: FontWeight.w500,
-                valueTextSize: AppConstants.smallFont,
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            7.height,
+            Row(
+              children: [
+                CommonOrderContentWidget(
+                  flexValue: 1,
+                  title: AppLocalizations.of(context)!.products,
+                  value: "23",
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextWeight: FontWeight.w700,
+                  valueTextSize: AppConstants.mediumFont,
+                ),
+                5.width,
+                CommonOrderContentWidget(
+                  flexValue: 2,
+                  title: AppLocalizations.of(context)!.delivery_date,
+                  value: "12.02.23 10:00-12:00",
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.font_10,
+                  valueTextWeight: FontWeight.w500,
+                  columnPadding: AppConstants.padding_8,
+                ),
+                5.width,
+                CommonOrderContentWidget(
+                  flexValue: 2,
+                  title: AppLocalizations.of(context)!.total_order,
+                  value: '18,360₪',
+                  titleColor: AppColors.mainColor,
+                  valueColor:AppColors.blackColor,
+                  valueTextWeight: FontWeight.w500,
+                  valueTextSize: AppConstants.smallFont,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
 

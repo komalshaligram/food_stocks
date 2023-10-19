@@ -11,8 +11,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../bloc/activity_time/activity_time_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_strings.dart';
+import '../widget/custom_button_widget.dart';
 import '../widget/activity_time_screen_shimmer_widget.dart';
-import '../widget/button_widget.dart';
 
 class ActivityTimeScreenRoute {
   static Widget get route => const ActivityTimeScreen();
@@ -76,7 +76,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
               leading: GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
                   child: Icon(
                     Icons.arrow_back_ios,
                     color: AppColors.blackColor,
@@ -105,9 +105,9 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.from_time,
                                 style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor,
-                                    ),
+                                  size: AppConstants.smallFont,
+                                  color: AppColors.textColor,
+                                ),
                               )),
                           SizedBox(
                               width: getScreenWidth(context) * 0.24,
@@ -115,9 +115,9 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               child: Text(
                                 AppLocalizations.of(context)!.until_time,
                                 style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor,
-                                    ),
+                                  size: AppConstants.smallFont,
+                                  color: AppColors.textColor,
+                                ),
                               )),
                           10.height,
                         ],
@@ -132,7 +132,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                             vertical: AppConstants.padding_3),
-                                        child: OperationTimeRow(
+                                        child: ActivityTimeRow(
                                           dayString: state
                                               .OperationTimeList[index]
                                               .dayString,
@@ -150,18 +150,18 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               padding: EdgeInsets.only(
                                   left: getScreenWidth(context) * 0.08,
                                   right: getScreenWidth(context) * 0.08),
-                              child: ButtonWidget(
+                              child: CustomButtonWidget(
                                 buttonText: state.isUpdate
-                                    ? AppLocalizations.of(context)!.save
-                                    : AppLocalizations.of(context)!.next,
+                                    ? AppLocalizations.of(context)!.save.toUpperCase()
+                                    : AppLocalizations.of(context)!.next.toUpperCase(),
                                 fontColors: AppColors.whiteColor,
-                                width: double.maxFinite,
+                                isLoading: state.isLoading,
                                 onPressed: () {
-                                  context.read<ActivityTimeBloc>().add(
-                                          ActivityTimeEvent
-                                              .activityTimeApiEvent(
-                                        context: context,
-                                      ));
+                                  context
+                                      .read<ActivityTimeBloc>()
+                                      .add(ActivityTimeEvent.activityTimeApiEvent(
+                                    context: context,
+                                  ));
                                 },
                                 bGColor: AppColors.mainColor,
                               ),
@@ -173,17 +173,16 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                     padding: EdgeInsets.only(
                                         left: getScreenWidth(context) * 0.08,
                                         right: getScreenWidth(context) * 0.08),
-                                    child: ButtonWidget(
+                                    child: CustomButtonWidget(
                                       buttonText: AppLocalizations.of(context)!
                                           .skip
                                           .toUpperCase()
                                           .toUpperCase(),
                                       fontColors: AppColors.mainColor,
                                       borderColor: AppColors.mainColor,
-                                      width: double.maxFinite,
                                       onPressed: () {
-                                        Navigator.pushNamed(context,
-                                            RouteDefine.fileUploadScreen.name);
+                                        Navigator.pushNamed(
+                                            context, RouteDefine.fileUploadScreen.name);
                                       },
                                       bGColor: AppColors.whiteColor,
                                     ),
@@ -255,12 +254,11 @@ class ActivityTimeScreenWidget extends StatelessWidget {
   }
 }
 
-class OperationTimeRow extends StatelessWidget {
+class ActivityTimeRow extends StatelessWidget {
   final String dayString;
   final int rowIndex;
 
-  OperationTimeRow(
-      {super.key, required this.dayString, required this.rowIndex});
+  ActivityTimeRow({super.key, required this.dayString, required this.rowIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -296,19 +294,17 @@ class OperationTimeRow extends StatelessWidget {
                                                 dayString,
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .smallFont,
-                                                        color:
-                                                            AppColors.textColor,
-                                                        ),
+                                                  size: AppConstants.smallFont,
+                                                  color: AppColors.textColor,
+                                                ),
                                               ))
                                           : Container(
                                               width: getScreenWidth(context) *
                                                   0.18,
                                             ),
-                                    SizedBox(
-                                      width: getScreenWidth(context) * 0.04,
-                                    ),
+                                      SizedBox(
+                                        width: getScreenWidth(context) * 0.04,
+                                      ),
                                       TimeContainer(
                                         openingIndex: 1,
                                         index: index,
@@ -326,7 +322,7 @@ class OperationTimeRow extends StatelessWidget {
                                         time: state.OperationTimeList[rowIndex]
                                             .monday[index].until!,
                                       ),
-                                     15.width,
+                                      15.width,
                                       index == 0
                                           ? Container(
                                               height: 40,
@@ -340,7 +336,7 @@ class OperationTimeRow extends StatelessWidget {
                                                   onTap: () {
                                                     context
                                                         .read<
-                                                        ActivityTimeBloc>()
+                                                            ActivityTimeBloc>()
                                                         .add(ActivityTimeEvent
                                                             .addMoreTimeZoneEvent(
                                                           rowIndex: rowIndex,
@@ -363,7 +359,7 @@ class OperationTimeRow extends StatelessWidget {
                                                   onTap: () {
                                                     context
                                                         .read<
-                                                        ActivityTimeBloc>()
+                                                            ActivityTimeBloc>()
                                                         .add(ActivityTimeEvent
                                                             .deleteTimeZoneEvent(
                                                           rowIndex: rowIndex,
@@ -377,10 +373,10 @@ class OperationTimeRow extends StatelessWidget {
                                     ],
                                   ),
                                 )
-                              : SizedBox();
+                              : CupertinoActivityIndicator();
                         },
                       )
-                    : SizedBox(),
+                    : CupertinoActivityIndicator(),
               ),
             ),
           ],
@@ -422,7 +418,13 @@ class TimeContainer extends StatelessWidget {
                 horizontal: AppConstants.padding_10),
             child: GestureDetector(
               onTap: () {
-                var datetime = AppStrings.timeString;
+                var datetime = '';
+                final DateFormat formatter = DateFormat('HH:mm');
+                datetime = formatter.format(
+                  DateTime.now().add(
+                    Duration(minutes: 30 - DateTime.now().minute % 30),
+                  ),
+                );
                 showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext c1) {
@@ -483,8 +485,7 @@ class TimeContainer extends StatelessWidget {
                                                 Radius.circular(
                                                     AppConstants.radius_5))),
                                         padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                AppConstants.padding_30,
+                                            horizontal: AppConstants.padding_30,
                                             vertical: AppConstants.padding_5),
                                         child: Text(AppStrings.okString))),
                                 10.height,
@@ -501,9 +502,9 @@ class TimeContainer extends StatelessWidget {
                   Expanded(
                     child: Text(time == AppStrings.timeString ? '' : time,
                         style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.mediumFont,
-                            color: AppColors.blackColor,
-                            )),
+                          size: AppConstants.mediumFont,
+                          color: AppColors.blackColor,
+                        )),
                   ),
                   Icon(
                     CupertinoIcons.clock,
