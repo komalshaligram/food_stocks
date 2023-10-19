@@ -234,6 +234,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 path: pickedFile.path,
                 shape: CropStyle.rectangle,
                 quality: AppConstants.fileQuality);
+            if (croppedImage?.path.isEmpty ?? true) {
+              return;
+            }
           } else {
             showSnackBar(
                 context: event.context,
@@ -408,6 +411,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {
+          if (formsAndFilesList[event.index].url?.isEmpty ?? true) {
+            return;
+          }
           emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
           RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
               path: formsAndFilesList[event.index].url);

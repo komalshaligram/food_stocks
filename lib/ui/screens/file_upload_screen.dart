@@ -345,23 +345,33 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: true));
                                         Navigator.pop(context);
                                       }),
-                                  Container(
-                                    height: 1,
-                                    width: getScreenWidth(context),
-                                    color:
-                                        AppColors.borderColor.withOpacity(0.5),
-                                  ),
-                                  FileSelectionOptionWidget(
-                                      title:
-                                          AppLocalizations.of(context)!.remove,
-                                      icon: Icons.delete,
-                                      onTap: () {
-                                        context.read<FileUploadBloc>().add(
-                                            FileUploadEvent.deleteFileEvent(
-                                                context: context,
-                                                index: fileIndex));
-                                        Navigator.pop(context);
-                                      }),
+                                  url.isEmpty
+                                      ? 0.width
+                                      : Column(
+                                          children: [
+                                            Container(
+                                              height: 1,
+                                              width: getScreenWidth(context),
+                                              color: AppColors.borderColor
+                                                  .withOpacity(0.5),
+                                            ),
+                                            FileSelectionOptionWidget(
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .remove,
+                                                icon: Icons.delete,
+                                                onTap: () {
+                                                  context
+                                                      .read<FileUploadBloc>()
+                                                      .add(FileUploadEvent
+                                                          .deleteFileEvent(
+                                                              context: context,
+                                                              index:
+                                                                  fileIndex));
+                                                  Navigator.pop(context);
+                                                }),
+                                          ],
+                                        ),
                                 ],
                               ),
                             ),
