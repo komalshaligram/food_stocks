@@ -66,8 +66,8 @@ class AppStrings {
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';
-  static const selectCompanyLogoString = 'Please upload company logo';
-  static const selectProfileImageString = 'Please upload your profile photo';
+  static const selectCompanyLogoString = 'Please upload logo image';
+  static const selectProfileImageString = 'Please upload your profile image';
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
       'Please select only image and document files';
@@ -93,7 +93,7 @@ class AppStrings {
 
 
   //hint strings
-  static const hintNumberString = '1234567896';
+  static const hintNumberString = '1234567890';
 
   //argument strings
   static const isRegisterString = 'isRegister';

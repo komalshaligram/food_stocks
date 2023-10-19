@@ -65,7 +65,7 @@
   "orders": "הזמנות",
   "order_status": "סטטוס הזמנה",
   "order_date": "תאריך הזמנה",
-  "providers": "ספקים",
+  "suppliers": "ספקים",
   "products": "מוצרים",
   "received": "התקבל הכל",
   "enter_your_phone": "הזן את מספר הטלפון שלך",
@@ -123,5 +123,20 @@
   "monthly_expense_graph": "גרף הוצאות חודשיות",
   "history": "הִיסטוֹרִיָה",
   "export": "יְצוּא",
-  "price": "₪"
+  "price": "₪",
+  "order": "להזמין",
+  "jan":"ינו",
+  "feb" :"פבר",
+   "mar" : "מרץ",
+    "apr" : "אפר",
+    "may" : "מאי",
+    "jun" : "יונ",
+    "jul" : "יול",
+    "aug" : "אוג",
+    "sep" : "ספט",
+    "oct" : "אוק",
+    "nov" : "נוב",
+    "dec" :"דצמ"
+
+
 }
