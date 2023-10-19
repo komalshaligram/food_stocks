@@ -161,6 +161,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         emit(state.copyWith(isLoading: true));
         try {
           final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
+
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> filesList =
