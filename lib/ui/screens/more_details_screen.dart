@@ -484,7 +484,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       getScreenWidth(context),
                                                   child: Image.file(
                                                     File(state.image.path),
-                                                    fit: BoxFit.cover,
+                                                    fit: BoxFit.contain,
                                                   ),
                                                 )
                                               : Icon(
@@ -593,7 +593,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     );
   }
 
-  void alertDialog(BuildContext context) {
+ /* void alertDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (c1) {
@@ -639,5 +639,5 @@ class MoreDetailsScreenWidget extends StatelessWidget {
         );
       },
     );
-  }
+  }*/
 }

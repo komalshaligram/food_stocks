@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -43,18 +44,16 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
+            showSnackBar(context: event.context, title: response.message ?? AppStrings.somethingWrongString, bgColor: AppColors.redColor);
             emit(state.copyWith(
-                isLoginFail: true,
                 isLoading: false,
-                errorMessage:
-                    response.message ?? AppStrings.somethingWrongString));
+              ));
           }
         } catch (e) {
-          emit(state.copyWith(isLoginFail: true,isLoading: false, errorMessage: e.toString()));
+          showSnackBar(context: event.context, title: e.toString(), bgColor: AppColors.redColor);
+         emit(state.copyWith(isLoading: false));
+
         }
-      }
-      if (event is _validateMobileEvent) {
-        emit(state.copyWith(mobileErrorMessage: event.errorMsg));
       }
     });
   }

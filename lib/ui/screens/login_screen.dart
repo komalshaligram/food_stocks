@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -12,7 +11,7 @@ import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/login/log_in_bloc.dart';
 import '../utils/themes/app_strings.dart';
-import '../utils/validation/auth_form_validation.dart';
+import '../widget/custom_form_field_widget.dart';
 
 class LogInRoute {
   static Widget get route => LogInScreen();
@@ -94,91 +93,15 @@ class LogInScreenWidget extends StatelessWidget {
                                 size: AppConstants.smallFont,
                                 color: Colors.black)),
                         30.height,
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.borderColor,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      AppConstants.radius_5))),
-                          padding: EdgeInsets.only(
-                              top: AppConstants.padding_5,
-                              bottom: AppConstants.padding_5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: AppConstants.padding_10,
-                                    left: AppConstants.padding_10),
-                                child: Text(
-                                  AppLocalizations.of(context)!.phone,
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.font_14,
-                                      color: AppColors.blackColor),
-                                ),
-                              ),
-                              TextFormField(
-                                controller: phoneController,
-                                // maxLength: 10,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                keyboardType: TextInputType.number,
-                                style: AppStyles.rkRegularTextStyle(
-                                    color: AppColors.blackColor,
-                                    size: AppConstants.smallFont,
-                                ),
-                                validator: (value) {
-                                  context.read<LogInBloc>().add(
-                                      LogInEvent.validateMobileEvent(
-                                          errorMsg: AuthFormValidation()
-                                                  .formValidation(
-                                                      value!,
-                                                      AppStrings
-                                                          .mobileValString) ??
-                                              ''));
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  // counterText: '',
-                                    errorStyle: TextStyle(
-                                        color: AppColors.redColor,
-                                       ),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide.none),
-                                    contentPadding:
-                                        const EdgeInsets.fromLTRB(
-                                            10, 0, 10, 0),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedErrorBorder:
-                                        OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    )),
-                              ),
-                            ],
-                          ),
+                        CustomFormField(
+                          controller: phoneController,
+                          keyboardType: TextInputType.phone,
+                          hint: AppStrings.hintNumberString,
+                          fillColor: AppColors.whiteColor,
+                          textInputAction: TextInputAction.next,
+                          validator: AppStrings.mobileValString,
                         ),
-                        state.mobileErrorMessage.isEmpty
-                            ? 10.height
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(state.mobileErrorMessage,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.redColor)),
-                                ],
-                              ),
-                        10.height,
+                        30.height,
                         CustomButtonWidget(
                           buttonText: AppLocalizations.of(context)!.next,
                           bGColor: AppColors.mainColor,
@@ -188,14 +111,12 @@ class LogInScreenWidget extends StatelessWidget {
                               : () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                    if (state.mobileErrorMessage.isEmpty) {
                                       context.read<LogInBloc>().add(
                                           LogInEvent.logInApiDataEvent(
                                               contactNumber:
                                                   phoneController.text,
                                               isRegister: isRegister,
                                               context: context));
-                                    }
                                   }
                                 },
                           fontColors: AppColors.whiteColor,

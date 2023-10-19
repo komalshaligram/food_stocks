@@ -3,10 +3,10 @@ class FormFieldValidation {
     RegExp regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (value.isEmpty) {
-      return "email can't be empty";
+      return "Please enter email";
     } else {
       if (!regex.hasMatch(value)) {
-        return 'enter valid email';
+        return 'Please enter valid email';
       } else {
         return null;
       }
@@ -25,15 +25,16 @@ class FormFieldValidation {
   String? mobileField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
-      return "mobile number can't be Empty";
+      return "Phone number can't be Empty";
     } else if (value.length != 10) {
       if (regex.hasMatch(value)) {
-        return "enter digits only";
-      } else {
-        return "mobile number must be 10 digit";
+        return "Please enter valid phone number";
+      }
+      else {
+        return "Phone number must be 10 digit";
       }
     } else if (regex.hasMatch(value)) {
-      return "enter digits only";
+      return "Please enter valid phone number";
     } else {
       return null;
     }
@@ -41,7 +42,7 @@ class FormFieldValidation {
 
   String? simpleTextField(String value) {
     if (value.isEmpty) {
-      return 'enter value';
+      return 'Please enter value';
     } else {
       return null;
     }
@@ -49,7 +50,7 @@ class FormFieldValidation {
 
   String? simpleNumberField(String value) {
     if (value.isEmpty) {
-      return 'enter value';
+      return 'Please enter value';
     } else {
       return null;
     }
@@ -57,7 +58,7 @@ class FormFieldValidation {
 
   String? businessNameField(String value) {
     if (value.isEmpty) {
-      return 'enter your business name';
+      return 'Please enter your business name';
     }
     return null;
   }
@@ -65,9 +66,9 @@ class FormFieldValidation {
   String? hpField(String value) {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
     if (value.isEmpty) {
-      return "hp can't be empty";
+      return "Please enter business ID";
     } else if (!regex.hasMatch(value)) {
-      return "enter valid H.P.";
+      return "Please enter valid business ID";
     }
     return null;
   }
@@ -75,9 +76,9 @@ class FormFieldValidation {
   String? ownerNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.isEmpty) {
-      return 'enter business owner name';
+      return 'Please enter owner name';
     } else if (regex.hasMatch(value)) {
-      return 'enter alphabets only';
+      return 'Please enter alphabets only';
     }
     return null;
   }
@@ -85,9 +86,9 @@ class FormFieldValidation {
   String? idField(String value) {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
     if (value.isEmpty) {
-      return "id can't be empty";
+      return "Please enter israel ID number";
     } else if (!regex.hasMatch(value)) {
-      return "enter digits only";
+      return "Please enter valid israel ID number";
     }
     return null;
   }
@@ -95,16 +96,16 @@ class FormFieldValidation {
   String? contactNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.isEmpty) {
-      return "enter contact name";
+      return "Please enter contact name";
     } else if (regex.hasMatch(value)) {
-      return 'enter alphabets only';
+      return 'Enter alphabets only';
     }
     return null;
   }
 
   String? addressNameField(String value) {
     if (value.isEmpty) {
-      return "address can't be empty";
+      return "Please enter address";
     }
     return null;
   }
@@ -113,9 +114,9 @@ class FormFieldValidation {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
 
     if (value.isEmpty) {
-      return "fax number can't be empty";
+      return "Please enter fax number";
     } else if (!regex.hasMatch(value)) {
-      return "enter valid fax number";
+      return "Please enter valid fax number";
     }
     return null;
   }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order/order_bloc.dart';
 import 'package:food_stock/ui/widget/common_order_content_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -89,34 +90,39 @@ class OrderScreenWidget extends StatelessWidget {
                     color: AppColors.blackColor,
                     fontWeight: FontWeight.bold),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(AppConstants.radius_100)),
-                  border: Border.all(
-                    color: AppColors.borderColor,
-                    width: 1,
-                  ),
-                ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name);
+                },
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppConstants.padding_10,
-                      vertical: AppConstants.padding_5),
                   decoration: BoxDecoration(
-                    color: AppColors.lightGreyColor,
                     borderRadius: BorderRadius.all(
                         Radius.circular(AppConstants.radius_100)),
                     border: Border.all(
-                      color: AppColors.whiteColor,
+                      color: AppColors.borderColor,
                       width: 1,
                     ),
                   ),
-                  child: Text(
-                    '12,450${AppLocalizations.of(context)!.currency}',
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_14,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_10,
+                        vertical: AppConstants.padding_5),
+                    decoration: BoxDecoration(
+                      color: AppColors.lightGreyColor,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(AppConstants.radius_100)),
+                      border: Border.all(
                         color: AppColors.whiteColor,
-                        fontWeight: FontWeight.bold),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      '12,450${AppLocalizations.of(context)!.currency}',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               )
@@ -126,7 +132,7 @@ class OrderScreenWidget extends StatelessWidget {
           Row(
             children: [
               CommonOrderContentWidget(
-                flexValue: 1,
+                flexValue: 2,
                 title: AppLocalizations.of(context)!.products,
                 value: "23",
                 titleColor: AppColors.blackColor,
@@ -134,15 +140,15 @@ class OrderScreenWidget extends StatelessWidget {
               ),
               5.width,
               CommonOrderContentWidget(
-                flexValue: 1,
-                title: AppLocalizations.of(context)!.providers,
+                flexValue: 2,
+                title: AppLocalizations.of(context)!.suppliers,
                 value: "3",
                 titleColor: AppColors.blackColor,
                 valueColor: AppColors.blackColor,
               ),
               5.width,
               CommonOrderContentWidget(
-                flexValue: 2,
+                flexValue: 3,
                 title: AppLocalizations.of(context)!.order_date,
                 value: "12.05.2023",
                 titleColor: AppColors.blackColor,
@@ -150,7 +156,7 @@ class OrderScreenWidget extends StatelessWidget {
               ),
               5.width,
               CommonOrderContentWidget(
-                flexValue: 2,
+                flexValue: 3,
                 title: AppLocalizations.of(context)!.order_status,
                 value: index == 0
                     ? AppLocalizations.of(context)!.pending_delivery

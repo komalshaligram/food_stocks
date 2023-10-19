@@ -8,9 +8,6 @@ class LogInEvent with _$LogInEvent {
     required bool isRegister,
     required BuildContext context,
   }) = _logInApiDataEvent;
-  factory LogInEvent.validateMobileEvent({
-    required  String errorMsg,
 
-  }) = _validateMobileEvent;
 
 }

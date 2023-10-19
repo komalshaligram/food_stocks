@@ -10,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/profile/profile_bloc.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
@@ -77,7 +78,8 @@ class ProfileScreenWidget extends StatelessWidget {
             appBar: AppBar(
               leading: GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
+                  //  Navigator.pop(context);
+                    Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Text(
