@@ -1,5 +1,4 @@
-import 'dart:ui' as ui;
-
+//import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -40,7 +40,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
-    var bytes;
+   /* var bytes;*/
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -289,10 +289,11 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    final Image =
+                   /* final Image =
                         await signatureGlobalKey.currentState!.toImage();
                     bytes =
-                        await Image.toByteData(format: ui.ImageByteFormat.png);
+                        await Image.toByteData(format: ui.ImageByteFormat.png);*/
+                    Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name);
                   },
                   child: Align(
                     alignment: Alignment.bottomCenter,
@@ -302,8 +303,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           horizontal: AppConstants.padding_30),
                       color: AppColors.pageColor,
                       child: CustomButtonWidget(
-                        buttonText:
-                            AppLocalizations.of(context)!.save.toUpperCase(),
+                        buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
                         bGColor: AppColors.mainColor,
                       ),
                     ),

@@ -20,4 +20,5 @@ class AppColors {
   static Color redColor = const Color(0xffFF4D4F);
   static Color textFieldBorderColor = const Color(0xffCED4DA);
   static Color notesBGColor = const Color(0xffF1F3F5);
+  static Color graphColor = const Color(0xff1AC769);
 }

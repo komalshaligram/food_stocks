@@ -329,7 +329,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
-                  bgColor: AppColors.redColor);
+                  bgColor: AppColors.mainColor);
 
               SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(

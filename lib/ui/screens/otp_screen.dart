@@ -131,7 +131,7 @@ class OTPScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                          if (state.otp.length == 4) {
+                          if (state.otp.length == 4 && state.otp.isNotEmpty) {
                                   if (isRegister == true) {
                                     Navigator.pushNamed(
                                         context, RouteDefine.profileScreen.name,
