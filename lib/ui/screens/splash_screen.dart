@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/apps_flyer_service.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -78,13 +79,12 @@ class SplashScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
-        appFlyerSetup();
+        AppsFlyerService().setup();
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
           getDeviceId();
-
           print(preferencesHelper.getUserLoggedIn());
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(

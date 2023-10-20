@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/apps_flyer_service.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
@@ -49,6 +50,7 @@ class LogInScreenWidget extends StatelessWidget {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
         if (state.isLoginSuccess) {
+          AppsFlyerService().logInEvent();
           Navigator.pushNamed(context, RouteDefine.otpScreen.name, arguments: {
             AppStrings.contactString: phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister

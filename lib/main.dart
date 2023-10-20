@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('he')),
+      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
       builder: (context, child) {
         final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(

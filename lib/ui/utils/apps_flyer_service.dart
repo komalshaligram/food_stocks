@@ -1,8 +1,9 @@
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppsFlyerService{
-
+  AppsflyerSdk? _appsflyerSdk;
   Future<void> setup() async{
     AppsflyerSdk _appsflyerSdk;
     final AppsFlyerOptions options = AppsFlyerOptions(
@@ -21,6 +22,11 @@ class AppsFlyerService{
       print("onInstallConversionData res: " + res.toString());
       return _appsflyerSdk.logEvent('App Install', res);
     });
+  }
+
+  Future<bool?>? logInEvent(){
+    debugPrint('login event done');
+    return _appsflyerSdk?.logEvent('App Install', {'login':"done"});
   }
 
 }

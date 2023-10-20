@@ -242,7 +242,6 @@ class WalletScreenWidget extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         Text(
                           AppLocalizations.of(context)!.history,
                           style: AppStyles.rkRegularTextStyle(

@@ -13,7 +13,7 @@ class ActivityTimeState with _$ActivityTimeState{
     required String errorMessage,
     required bool isUpdate,
     required bool isLoading,
-
+    required bool isShimmering
 
   }) = _ActivityTimeState;
 
@@ -26,6 +26,6 @@ class ActivityTimeState with _$ActivityTimeState{
     isRegisterFail: false,
     isUpdate:false,
     isLoading: false,
+    isShimmering: false
   );
-
 }

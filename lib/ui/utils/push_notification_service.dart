@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
@@ -48,8 +49,10 @@ class PushNotificationService {
         print("details:$details");
       },
     );
+    FirebaseMessaging.onBackgroundMessage((message) =>myBackgroundMessageHandler(message) );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      debugPrint('message:${message?.data}');
       //  consoleLog(message, key: 'firebase_message');
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -72,6 +75,12 @@ class PushNotificationService {
         );
       }
     });
+  }
+
+  Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) {
+    // Handle data message
+    final dynamic data = message.data;
+    return data;
   }
 
   Future<void> enableIOSNotifications() async {
