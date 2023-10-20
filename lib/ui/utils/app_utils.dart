@@ -38,7 +38,8 @@ void showSnackBar(
 Future<CroppedFile?> cropImage(
     {required String path,
     CropStyle shape = CropStyle.rectangle,
-    int quality = 100}) async {
+    int quality = 100,
+    bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     cropStyle: shape,
@@ -47,7 +48,9 @@ Future<CroppedFile?> cropImage(
       AndroidUiSettings(
           activeControlsWidgetColor: AppColors.mainColor,
           cropFrameColor: AppColors.greyColor,
-          initAspectRatio: CropAspectRatioPreset.square,
+          initAspectRatio: isLogoCrop ?? false
+              ? CropAspectRatioPreset.ratio16x9
+              : CropAspectRatioPreset.square,
           hideBottomControls: true,
           showCropGrid: false,
           lockAspectRatio: true,

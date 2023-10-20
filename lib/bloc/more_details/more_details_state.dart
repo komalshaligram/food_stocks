@@ -14,6 +14,7 @@ class MoreDetailsState with _$MoreDetailsState {
     required File image,
     required bool isImagePick,
     required bool isLoading,
+    required bool isShimmering,
     required CityListResModel? cityListResModel,
     required String companyLogo,
     required bool isFileSizeExceeds,
@@ -34,5 +35,6 @@ class MoreDetailsState with _$MoreDetailsState {
         cityListResModel: CityListResModel(),
         companyLogo: '',
         isFileSizeExceeds: false,
+        isShimmering: false,
       );
 }

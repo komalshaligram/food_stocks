@@ -41,72 +41,82 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.pageColor,
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  _pageContainers(
-                      screenHeight: getScreenHeight(context),
-                      screenWidth: getScreenWidth(context),
-                      state: state),
-                  Positioned(
-                    bottom: 25,
-                    left: 24,
-                    right: 24,
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                              color: AppColors.shadowColor.withOpacity(0.3),
-                              blurRadius: AppConstants.blur_10)
-                        ],
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(AppConstants.radius_100)),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _navItem(
-                              pos: 4,
-                              img: AppImagePath.home,
-                              state: state,
-                              onTap: () => bloc
-                                  .add(BottomNavEvent.changePage(index: 4))),
-                          _navItem(
-                              pos: 3,
-                              img: AppImagePath.store,
-                              state: state,
-                              onTap: () => bloc
-                                  .add(BottomNavEvent.changePage(index: 3))),
-                          _navItem(
-                              pos: 2,
-                              img: AppImagePath.cart,
-                              state: state,
-                              isCart: true,
-                              onTap: () => bloc
-                                  .add(BottomNavEvent.changePage(index: 2))),
-                          _navItem(
-                              pos: 1,
-                              img: AppImagePath.wallet,
-                              state: state,
-                              onTap: () => bloc
-                                  .add(BottomNavEvent.changePage(index: 1))),
-                          _navItem(
-                              pos: 0,
-                              img: AppImagePath.profile,
-                              state: state,
-                              onTap: () => bloc
-                                  .add(BottomNavEvent.changePage(index: 0))),
-                        ],
+          return WillPopScope(
+            onWillPop: () {
+              if (state.index == 4) {
+                return Future.value(true);
+              } else {
+                bloc.add(BottomNavEvent.changePage(index: 4));
+                return Future.value(false);
+              }
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: AppColors.pageColor,
+              body: SafeArea(
+                child: Stack(
+                  children: [
+                    _pageContainers(
+                        screenHeight: getScreenHeight(context),
+                        screenWidth: getScreenWidth(context),
+                        state: state),
+                    Positioned(
+                      bottom: 25,
+                      left: 24,
+                      right: 24,
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.shadowColor.withOpacity(0.3),
+                                blurRadius: AppConstants.blur_10)
+                          ],
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _navItem(
+                                pos: 4,
+                                img: AppImagePath.home,
+                                state: state,
+                                onTap: () => bloc
+                                    .add(BottomNavEvent.changePage(index: 4))),
+                            _navItem(
+                                pos: 3,
+                                img: AppImagePath.store,
+                                state: state,
+                                onTap: () => bloc
+                                    .add(BottomNavEvent.changePage(index: 3))),
+                            _navItem(
+                                pos: 2,
+                                img: AppImagePath.cart,
+                                state: state,
+                                isCart: true,
+                                onTap: () => bloc
+                                    .add(BottomNavEvent.changePage(index: 2))),
+                            _navItem(
+                                pos: 1,
+                                img: AppImagePath.wallet,
+                                state: state,
+                                onTap: () => bloc
+                                    .add(BottomNavEvent.changePage(index: 1))),
+                            _navItem(
+                                pos: 0,
+                                img: AppImagePath.profile,
+                                state: state,
+                                onTap: () => bloc
+                                    .add(BottomNavEvent.changePage(index: 0))),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

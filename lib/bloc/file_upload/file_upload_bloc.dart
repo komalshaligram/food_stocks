@@ -40,7 +40,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
       if (event is _getFormsListEvent) {
-        emit(state.copyWith(isLoading: true, isUpdate: event.isUpdate));
+        emit(state.copyWith(
+            isLoading: true, isShimmering: true, isUpdate: event.isUpdate));
         try {
           final res =
               await DioClient(event.context).get(path: AppUrls.formsListUrl);
@@ -75,7 +76,74 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   debugPrint('fileList[$i] = ${filesList[i].name}');
                 }
                 emit(state.copyWith(
-                    formsAndFilesList: filesList, isLoading: false));
+                    formsAndFilesList: filesList,
+                    isLoading: false,
+                    isShimmering: false));
+                if (state.isUpdate) {
+                  try {
+                    emit(state.copyWith(isShimmering: true));
+                    SharedPreferencesHelper preferencesHelper =
+                        SharedPreferencesHelper(
+                            prefs: await SharedPreferences.getInstance());
+                    final res = await DioClient(event.context)
+                        .post(AppUrls.getProfileDetailsUrl, data: {
+                      AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
+                          preferencesHelper.getUserId()
+                    });
+                    ProfileDetailsResModel response =
+                        ProfileDetailsResModel.fromJson(res);
+                    Map<String, dynamic> newModel =
+                        res['data']['clients'][0]['clientDetail'];
+                    debugPrint('data1 = ${newModel}');
+
+                    debugPrint('files = ${newModel[AppStrings.filesString]}');
+                    debugPrint('forms = ${newModel[AppStrings.formsString]}');
+
+                    if (response.status == 200) {
+                      if (newModel[AppStrings.formsString] != null ||
+                          newModel[AppStrings.filesString] != null) {
+                        List<FormAndFileModel> formsAndFilesList =
+                            state.formsAndFilesList.toList(growable: true);
+                        for (int i = 0; i < formsAndFilesList.length; i++) {
+                          if (newModel[AppStrings.filesString] != null &&
+                              (newModel[AppStrings.filesString]
+                                      .containsKey(formsAndFilesList[i].id) ??
+                                  false)) {
+                            formsAndFilesList[i].url =
+                                newModel[AppStrings.filesString]
+                                    [formsAndFilesList[i].id];
+                          } else if (newModel[AppStrings.formsString] != null &&
+                              (newModel[AppStrings.formsString]
+                                      .containsKey(formsAndFilesList[i].id) ??
+                                  false)) {
+                            formsAndFilesList[i].url =
+                                newModel[AppStrings.formsString]
+                                    [formsAndFilesList[i].id];
+                          }
+                          debugPrint(
+                              'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
+                        }
+                        emit(state.copyWith(
+                            formsAndFilesList: [], isShimmering: false));
+                        emit(state.copyWith(
+                            formsAndFilesList: formsAndFilesList));
+                      } else {
+                        emit(state.copyWith(isShimmering: false));
+                      }
+                    } else {
+                      showSnackBar(
+                          context: event.context,
+                          title: response.message ??
+                              AppStrings.somethingWrongString,
+                          bgColor: AppColors.redColor);
+                    }
+                  } on ServerException {
+                    // showSnackBar(
+                    //     context: event.context,
+                    //     title: AppStrings.somethingWrongString,
+                    //     bgColor: AppColors.redColor);
+                  }
+                }
               } else {
                 showSnackBar(
                     context: event.context,
@@ -84,10 +152,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
+              // showSnackBar(
+              //     context: event.context,
+              //     title: AppStrings.somethingWrongString,
+              //     bgColor: AppColors.redColor);
               emit(state.copyWith(isLoading: false));
             }
           } else {
@@ -104,63 +172,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
         }
-        if (state.isUpdate) {
-          try {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
-            final res = await DioClient(event.context)
-                .post(AppUrls.getProfileDetailsUrl, data: {
-              AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
-                  preferencesHelper.getUserId()
-            });
-            ProfileDetailsResModel response =
-                ProfileDetailsResModel.fromJson(res);
-            Map<String, dynamic> newModel =
-                res['data']['clients'][0]['clientDetail'];
-            debugPrint('data1 = ${newModel}');
-
-            debugPrint(
-                'files = ${response.data?.clients?.first.clientDetail?.files?.toJson().keys}}');
-            debugPrint(
-                'forms = ${response.data?.clients?.first.clientDetail?.forms?.toJson().keys}}');
-
-            if (response.status == 200) {
-              List<FormAndFileModel> formsAndFilesList =
-                  state.formsAndFilesList.toList(growable: true);
-              for (int i = 0; i < formsAndFilesList.length; i++) {
-                if (newModel[AppStrings.filesString]
-                        .containsKey(formsAndFilesList[i].id) ??
-                    false) {
-                  formsAndFilesList[i].url =
-                      newModel[AppStrings.filesString][formsAndFilesList[i].id];
-                } else if (newModel[AppStrings.formsString]
-                        .containsKey(formsAndFilesList[i].id) ??
-                    false) {
-                  formsAndFilesList[i].url =
-                      newModel[AppStrings.formsString][formsAndFilesList[i].id];
-                }
-                debugPrint(
-                    'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
-              }
-              emit(state.copyWith(formsAndFilesList: []));
-              emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
-            }
-          } on ServerException {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
-          }
-        }
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).get(path: AppUrls.filesListUrl);
+          final res =
+              await DioClient(event.context).get(path: AppUrls.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == 200) {
             List<FormAndFileModel> filesList =
@@ -211,11 +227,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               fileType.contains('docx')) {
           } else if (fileType.contains('jpg') ||
               fileType.contains('png') ||
-              fileType.contains('jpeg')) {
+              fileType.contains('jpeg') ||
+              fileType.contains('heic')) {
             croppedImage = await cropImage(
                 path: pickedFile.path,
                 shape: CropStyle.rectangle,
-                quality: 100);
+                quality: AppConstants.fileQuality);
+            if (croppedImage?.path.isEmpty ?? true) {
+              return;
+            }
           } else {
             showSnackBar(
                 context: event.context,
@@ -226,7 +246,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           String fileSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
-                  : 0);
+                  : await pickedFile.length());
+          debugPrint('file SIze = $fileSize');
           if (int.parse(fileSize.split(' ').first) == 0) {
             return;
           }
@@ -246,7 +267,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             try {
               emit(state.copyWith(
                   isUploadLoading: true, uploadIndex: event.fileIndex));
-              final res = await DioClient(event.context).uploadFileProgressWithFormData(
+              final res =
+                  await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: formData,
               );
@@ -276,8 +298,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   bgColor: AppColors.redColor);
             }
           } else {
-            emit(state.copyWith(isUploadLoading: false));
-            emit(state.copyWith(isFileSizeExceeds: true));
+            emit(state.copyWith(
+                isUploadLoading: false, isFileSizeExceeds: true));
             emit(state.copyWith(isFileSizeExceeds: false));
             // showSnackBar(
             //     context: event.context,
@@ -286,6 +308,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
+        debugPrint('update calling');
         try {
           emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
@@ -300,11 +323,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   (state.formsAndFilesList[i].url
                           ?.contains(AppStrings.tempString) ??
                       false)*/
-                  ) {
+              ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                      false) /*&&
+                  false) /*&&
                   (state.formsAndFilesList[i].url
                       ?.contains(AppStrings.tempString) ??
                       false)*/
@@ -315,16 +338,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           });
           debugPrint('update urls list = ${formsAndFiles}');
-          if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
-              (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
-            if (state.isUpdate) {
-              emit(state.copyWith(isApiLoading: false));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
-            } else {
+          if (state.isUpdate) {
+            emit(state.copyWith(isApiLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.updateSuccessString,
+                bgColor: AppColors.mainColor);
+            Navigator.pop(event.context);
+          } else {
+            if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
+                (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
               showSnackBar(
                   context: event.context,
@@ -340,8 +363,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
+              return;
             }
-            return;
           }
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
@@ -366,7 +389,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
+                      (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
@@ -388,12 +411,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {
+          if (formsAndFilesList[event.index].url?.isEmpty ?? true) {
+            return;
+          }
           emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
           RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
               path: formsAndFilesList[event.index].url);
           debugPrint('delete file req = ${reqModel.path}');
-          final res =
-              await DioClient(event.context).post(AppUrls.removeFileUrl, data: reqModel);
+          final res = await DioClient(event.context)
+              .post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
           debugPrint('delete file res = ${response.message}');
@@ -403,10 +429,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             formsAndFilesList[event.index].url = '';
             emit(state.copyWith(formsAndFilesList: []));
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-            showSnackBar(
-                context: event.context,
-                title: response.message ?? AppStrings.removeSuccessString,
-                bgColor: AppColors.mainColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: response.message ?? AppStrings.removeSuccessString,
+            //     bgColor: AppColors.mainColor);
+            add(FileUploadEvent.uploadApiEvent(context: event.context));
           } else {
             emit(state.copyWith(isUploadLoading: false));
             showSnackBar(
