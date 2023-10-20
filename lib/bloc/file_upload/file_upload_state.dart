@@ -9,6 +9,7 @@ class FileUploadState with _$FileUploadState {
     required bool isUploadLoading,
     required int uploadIndex,
     required bool isUpdate,
+    required bool isShimmering,
     required bool isFileSizeExceeds,
   }) = _FileUploadState;
 
@@ -20,5 +21,6 @@ class FileUploadState with _$FileUploadState {
         uploadIndex: -1,
         isUploadLoading: false,
         isFileSizeExceeds: false,
+        isShimmering: false,
       );
 }

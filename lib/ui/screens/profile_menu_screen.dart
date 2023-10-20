@@ -104,7 +104,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
                                   height: 50,
                                   width: getScreenWidth(context) * 0.35,
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
                                     return Container(
                                       decoration: BoxDecoration(

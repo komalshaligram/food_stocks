@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
+import 'package:food_stock/ui/widget/more_details_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
 import '../utils/app_utils.dart';
@@ -90,18 +91,20 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               titleSpacing: 0,
               elevation: 0,
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: getScreenWidth(context) * 0.1,
-                      right: getScreenWidth(context) * 0.1),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+            body: state.isShimmering
+                ? MoreDetailsScreenShimmerWidget()
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: getScreenWidth(context) * 0.1,
+                            right: getScreenWidth(context) * 0.1),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                         10.height,
                         CustomContainerWidget(
                           name: AppLocalizations.of(context)!.city,

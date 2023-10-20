@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/file_upload_screen_Shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
@@ -89,18 +90,20 @@ class FileUploadScreenWidget extends StatelessWidget {
                     color: AppColors.blackColor,
                   )),
             ),
-            body: SafeArea(
-              child: state.isLoading
-                  ? Container(
-                      height: getScreenHeight(context),
-                      child: Center(
-                        child: CupertinoActivityIndicator(
-                          color: AppColors.blackColor,
-                        ),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Padding(
+            body: state.isShimmering
+                ? FileUploadScreenShimmerWidget()
+                : SafeArea(
+                    child: state.isLoading
+                        ? Container(
+                            height: getScreenHeight(context),
+                            child: Center(
+                              child: CupertinoActivityIndicator(
+                                color: AppColors.blackColor,
+                              ),
+                            ),
+                          )
+                        : SingleChildScrollView(
+                            child: Padding(
                         padding: EdgeInsets.only(
                             left: screenWidth * 0.1, right: screenWidth * 0.1),
                         child: Column(
@@ -342,23 +345,33 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: true));
                                         Navigator.pop(context);
                                       }),
-                                  Container(
-                                    height: 1,
-                                    width: getScreenWidth(context),
-                                    color:
-                                        AppColors.borderColor.withOpacity(0.5),
-                                  ),
-                                  FileSelectionOptionWidget(
-                                      title:
-                                          AppLocalizations.of(context)!.remove,
-                                      icon: Icons.delete,
-                                      onTap: () {
-                                        context.read<FileUploadBloc>().add(
-                                            FileUploadEvent.deleteFileEvent(
-                                                context: context,
-                                                index: fileIndex));
-                                        Navigator.pop(context);
-                                      }),
+                                  url.isEmpty
+                                      ? 0.width
+                                      : Column(
+                                          children: [
+                                            Container(
+                                              height: 1,
+                                              width: getScreenWidth(context),
+                                              color: AppColors.borderColor
+                                                  .withOpacity(0.5),
+                                            ),
+                                            FileSelectionOptionWidget(
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .remove,
+                                                icon: Icons.delete,
+                                                onTap: () {
+                                                  context
+                                                      .read<FileUploadBloc>()
+                                                      .add(FileUploadEvent
+                                                          .deleteFileEvent(
+                                                              context: context,
+                                                              index:
+                                                                  fileIndex));
+                                                  Navigator.pop(context);
+                                                }),
+                                          ],
+                                        ),
                                 ],
                               ),
                             ),

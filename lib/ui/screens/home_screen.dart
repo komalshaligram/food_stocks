@@ -320,7 +320,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       color:
                                                           AppColors.mainColor,
                                                       enableAnimation: true,
-                                                      animationDuration: 300,
+                                                      animationDuration: 1000,
                                                       animationType:
                                                           AnimationType.ease,
                                                       cornerStyle:

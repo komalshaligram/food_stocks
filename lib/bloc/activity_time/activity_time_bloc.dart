@@ -53,15 +53,17 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
+          emit(state.copyWith(isShimmering: true));
           try {
             final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
-            if (response
-                .data!.clients!.first.clientDetail!.operationTime!.isNotEmpty) {
-              if (response.status == 200) {
+
+            if (response.status == 200) {
+              if (response.data!.clients!.first.clientDetail!.operationTime!
+                  .isNotEmpty) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
                 var sundayRs = response.data!.clients!.first.clientDetail!
                     .operationTime![0].sunday!;
@@ -114,19 +116,23 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 temp1[5].monday = fridayAndHolidayEvesList;
                 temp1[6].monday = saturdayAndHolidaysList;
                 emit(state.copyWith(
-                    OperationTimeList: temp1, isRefresh: !state.isRefresh));
+                    isShimmering: false,
+                    OperationTimeList: temp1,
+                    isRefresh: !state.isRefresh));
               } else {
-                showSnackBar(
-                    context: event.context,
-                    title: response.message ?? AppStrings.somethingWrongString,
-                    bgColor: AppColors.redColor);
+                emit(state.copyWith(isShimmering: false));
               }
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message ?? AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
             }
           } on ServerException {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
+            // showSnackBar(
+            //     context: event.context,
+            //     title: AppStrings.somethingWrongString,
+            //     bgColor: AppColors.redColor);
           }
         }
       }
@@ -372,7 +378,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-        emit(state.copyWith(isLoading: true));
+        // emit(state.copyWith(isLoading: true));
         bool isSnackbarActive = false;
         for (int i = 0; i < state.OperationTimeList.length; i++) {
           if (state.OperationTimeList[i].monday[0].until ==

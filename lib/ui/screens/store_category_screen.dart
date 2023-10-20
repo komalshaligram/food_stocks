@@ -38,267 +38,289 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
-      builder: (context, state) => Scaffold(
-        backgroundColor: AppColors.pageColor,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              SizedBox(
-                height: getScreenHeight(context),
-                width: getScreenWidth(context),
-                child: state.isCategory
-                    ? Stack(
-                        children: [
-                          SingleChildScrollView(
-                            child: GestureDetector(
-                              onTap: () {
-                                bloc.add(StoreCategoryEvent
-                                    .changeCategoryOrSubCategoryEvent(
-                                        isCategory: false));
-                              },
-                              child: Column(
-                                children: [
-                                  80.height,
-                                  buildTopNavigation(
-                                      context: context,
-                                      categoryName: 'Category'),
-                                ],
+      builder: (context, state) => WillPopScope(
+        onWillPop: () {
+          if (state.isCategory) {
+            return Future.value(true);
+          } else {
+            bloc.add(StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
+                isCategory: true));
+            return Future.value(false);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.pageColor,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  child: state.isCategory
+                      ? Stack(
+                          children: [
+                            SingleChildScrollView(
+                              child: GestureDetector(
+                                onTap: () {
+                                  bloc.add(StoreCategoryEvent
+                                      .changeCategoryOrSubCategoryEvent(
+                                          isCategory: false));
+                                },
+                                child: Column(
+                                  children: [
+                                    80.height,
+                                    buildTopNavigation(
+                                        context: context,
+                                        categoryName: 'Category'),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 60,
-                              margin: EdgeInsets.only(bottom: 25),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5,
-                                vertical: AppConstants.padding_5,
-                              ),
-                              decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.shadowColor
-                                          .withOpacity(0.3),
-                                      blurRadius: AppConstants.blur_10,
-                                    )
-                                  ]),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 60,
+                                margin: EdgeInsets.only(bottom: 25),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_5,
+                                  vertical: AppConstants.padding_5,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                            AppConstants.radius_100)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.shadowColor
+                                            .withOpacity(0.3),
+                                        blurRadius: AppConstants.blur_10,
+                                      )
+                                    ]),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        alignment: Alignment.center,
+                                        child: SvgPicture.asset(
+                                          AppImagePath.store,
+                                          height: 26,
+                                          width: 26,
+                                          fit: BoxFit.cover,
+                                          colorFilter: ColorFilter.mode(
+                                              AppColors.navSelectedColor,
+                                              BlendMode.srcIn),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
                                       height: 50,
-                                      width: 50,
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        AppImagePath.store,
-                                        height: 26,
-                                        width: 26,
-                                        fit: BoxFit.cover,
-                                        colorFilter: ColorFilter.mode(
-                                            AppColors.navSelectedColor,
-                                            BlendMode.srcIn),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                              state.isMirror
+                                                  ? AppConstants.radius_5
+                                                  : AppConstants.radius_100),
+                                          bottomLeft: Radius.circular(
+                                              state.isMirror
+                                                  ? AppConstants.radius_5
+                                                  : AppConstants.radius_100),
+                                          topRight: Radius.circular(
+                                              state.isMirror
+                                                  ? AppConstants.radius_100
+                                                  : AppConstants.radius_5),
+                                          bottomRight: Radius.circular(
+                                              state.isMirror
+                                                  ? AppConstants.radius_100
+                                                  : AppConstants.radius_5),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "${AppLocalizations.of(context)!.total}: ",
+                                            style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.normalFont,
+                                              color: AppColors.whiteColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            "11.90${AppLocalizations.of(context)!.currency}",
+                                            style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.normalFont,
+                                                color: AppColors.whiteColor,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.mainColor,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(state.isMirror
-                                            ? AppConstants.radius_5
-                                            : AppConstants.radius_100),
-                                        bottomLeft: Radius.circular(
-                                            state.isMirror
-                                                ? AppConstants.radius_5
-                                                : AppConstants.radius_100),
-                                        topRight: Radius.circular(state.isMirror
-                                            ? AppConstants.radius_100
-                                            : AppConstants.radius_5),
-                                        bottomRight: Radius.circular(
-                                            state.isMirror
-                                                ? AppConstants.radius_100
-                                                : AppConstants.radius_5),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_10),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "${AppLocalizations.of(context)!.total}: ",
+                                    5.width,
+                                    GestureDetector(
+                                      onTap: () {
+                                        debugPrint('finish');
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.navSelectedColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(
+                                                state.isMirror
+                                                    ? AppConstants.radius_100
+                                                    : AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(
+                                                state.isMirror
+                                                    ? AppConstants.radius_100
+                                                    : AppConstants.radius_5),
+                                            topRight: Radius.circular(
+                                                state.isMirror
+                                                    ? AppConstants.radius_5
+                                                    : AppConstants.radius_100),
+                                            bottomRight: Radius.circular(
+                                                state.isMirror
+                                                    ? AppConstants.radius_5
+                                                    : AppConstants.radius_100),
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppConstants.padding_10),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppLocalizations.of(context)!.finish,
                                           style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.normalFont,
                                             color: AppColors.whiteColor,
                                           ),
                                         ),
-                                        Text(
-                                          "11.90${AppLocalizations.of(context)!.currency}",
-                                          style: AppStyles.rkBoldTextStyle(
-                                              size: AppConstants.normalFont,
-                                              color: AppColors.whiteColor,
-                                              fontWeight: FontWeight.w700),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              80.height,
+                              buildTopNavigation(
+                                  context: context,
+                                  categoryName: 'Category',
+                                  subCategoryName: 'Sub Category'),
+                              16.height,
+                              Container(
+                                color: AppColors.whiteColor,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal:
+                                                  AppConstants.padding_10,
+                                              vertical: AppConstants.padding_3),
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .planogram,
+                                            style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.mediumFont,
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  5.width,
-                                  GestureDetector(
-                                    onTap: () {
-                                      debugPrint('finish');
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.navSelectedColor,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              state.isMirror
-                                                  ? AppConstants.radius_100
-                                                  : AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(
-                                              state.isMirror
-                                                  ? AppConstants.radius_100
-                                                  : AppConstants.radius_5),
-                                          topRight: Radius.circular(
-                                              state.isMirror
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_100),
-                                          bottomRight: Radius.circular(
-                                              state.isMirror
-                                                  ? AppConstants.radius_5
-                                                  : AppConstants.radius_100),
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_10),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        AppLocalizations.of(context)!.finish,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.normalFont,
-                                          color: AppColors.whiteColor,
-                                        ),
+                                    10.height,
+                                    SizedBox(
+                                      height: 200,
+                                      child: ListView.builder(
+                                        itemCount: 10,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: AppConstants.padding_5),
+                                        scrollDirection: Axis.horizontal,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return buildPlanoGramListItem(
+                                              context: context,
+                                              isMirror: false,
+                                              width: getScreenWidth(context) /
+                                                  3.2);
+                                        },
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                    : SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            80.height,
-                            buildTopNavigation(
-                                context: context,
-                                categoryName: 'Category',
-                                subCategoryName: 'Sub Category'),
-                            16.height,
-                            Container(
-                              color: AppColors.whiteColor,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: AppConstants.padding_10,
-                                            vertical: AppConstants.padding_3),
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .planogram,
-                                          style: AppStyles.rkBoldTextStyle(
-                                              size: AppConstants.mediumFont,
-                                              color: AppColors.blackColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  10.height,
-                                  SizedBox(
-                                    height: 200,
-                                    child: ListView.builder(
-                                      itemCount: 10,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return buildPlanoGramListItem(
-                                            context: context,
-                                            isMirror: false,
-                                            width:
-                                                getScreenWidth(context) / 3.2);
-                                      },
-                                    ),
-                                  ),
-                                  10.height,
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.planogram,
-                                    style: AppStyles.rkBoldTextStyle(
-                                        size: AppConstants.mediumFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w600),
-                                  ),
+                                    10.height,
+                                  ],
                                 ),
-                              ],
-                            ),
-                            GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_10),
-                              gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 3),
-                              shrinkWrap: true,
-                              itemCount: 20,
-                              itemBuilder: (context, index) {
-                                return buildPlanoGramListItem(
-                                    context: context, isMirror: false);
-                              },
-                            )
-                          ],
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.planogram,
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.mediumFont,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              GridView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_5),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        childAspectRatio:
+                                            (getScreenWidth(context) + 70) /
+                                                getScreenHeight(context)),
+                                shrinkWrap: true,
+                                itemCount: 20,
+                                itemBuilder: (context, index) {
+                                  return buildPlanoGramListItem(
+                                      context: context,
+                                      isMirror: false,
+                                      width: getScreenWidth(context) / 3.2);
+                                },
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-              ),
-              CommonProductCategoryWidget(
-                isCategoryExpand: state.isCategoryExpand,
-                isMirror: !state.isMirror ? true : false,
-                onFilterTap: () {
-                  bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
-                },
-                onScanTap: () {},
-                controller: TextEditingController(),
-                onOutSideTap: () {
-                  bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
-                      isOpened: true));
-                },
-                onCatListItemTap: () {},
-                categoryList: ['Category', 'Category'],
-              ),
-            ],
+                ),
+                CommonProductCategoryWidget(
+                  isCategoryExpand: state.isCategoryExpand,
+                  isMirror: !state.isMirror ? true : false,
+                  onFilterTap: () {
+                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
+                  },
+                  onScanTap: () {},
+                  controller: TextEditingController(),
+                  onOutSideTap: () {
+                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
+                        isOpened: true));
+                  },
+                  onCatListItemTap: () {},
+                  categoryList: ['Category', 'Category'],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -308,7 +330,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   Container buildPlanoGramListItem(
       {required BuildContext context, double? width, required bool isMirror}) {
     return Container(
-      height: 180,
+      // height: 190,
       width: width,
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.symmetric(
@@ -338,12 +360,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             'ProductName',
             style: AppStyles.rkBoldTextStyle(
                 size: AppConstants.font_14, color: AppColors.blackColor),
+            textAlign: TextAlign.center,
           ),
           4.height,
           Text(
             "23.00${AppLocalizations.of(context)!.currency}",
             style: AppStyles.rkBoldTextStyle(
                 size: AppConstants.font_12, color: AppColors.blackColor),
+            textAlign: TextAlign.center,
           ),
           4.height,
           Expanded(
@@ -353,6 +377,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   size: AppConstants.font_12, color: AppColors.saleRedColor),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
           Container(
@@ -364,47 +389,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    debugPrint('-');
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.iconBGColor,
-                      border: Border(
-                        left: isMirror
-                            ? BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1)
-                            : BorderSide.none,
-                        right: isMirror
-                            ? BorderSide.none
-                            : BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1),
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_8),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.remove, color: AppColors.mainColor),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: AppColors.whiteColor,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_5),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '0',
-                      style: AppStyles.rkBoldTextStyle(
-                          size: 24,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
                 GestureDetector(
                   onTap: () {
                     debugPrint('+');
@@ -429,6 +413,47 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         horizontal: AppConstants.padding_8),
                     alignment: Alignment.center,
                     child: Icon(Icons.add, color: AppColors.mainColor),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: AppColors.whiteColor,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_5),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '0',
+                      style: AppStyles.rkBoldTextStyle(
+                          size: 24,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    debugPrint('-');
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.iconBGColor,
+                      border: Border(
+                        left: isMirror
+                            ? BorderSide(
+                                color: AppColors.borderColor.withOpacity(0.7),
+                                width: 1)
+                            : BorderSide.none,
+                        right: isMirror
+                            ? BorderSide.none
+                            : BorderSide(
+                                color: AppColors.borderColor.withOpacity(0.7),
+                                width: 1),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_8),
+                    alignment: Alignment.center,
+                    child: Icon(Icons.remove, color: AppColors.mainColor),
                   ),
                 ),
               ],
