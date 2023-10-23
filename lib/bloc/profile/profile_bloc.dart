@@ -223,15 +223,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           };
           try{
             final res = await DioClient(event.context).post(
-              "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+              "${AppUrls.fileUpdateUrl}/${preferences.getUserId()}",
               data: req1,
             );
             debugPrint('update profile image req_______${req1}');
             file.FileUpdateResModel response = file.FileUpdateResModel.fromJson(res);
 
             if(response.status == 200){
-              preferencesHelper.removeProfileImage();
-              preferencesHelper.setUserImageUrl(imageUrl: response.data!.client!.profileImage.toString());
+              preferences.removeProfileImage();
+              preferences.setUserImageUrl(imageUrl: response.data!.client!.profileImage.toString());
               debugPrint('update profile image req________${response}');
               imgUrl = response.data!.client!.profileImage.toString();
             }
