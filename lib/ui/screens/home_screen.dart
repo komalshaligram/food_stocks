@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -40,7 +41,7 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //   HomeBloc bloc = context.read<HomeBloc>();
+       HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -48,426 +49,429 @@ class HomeScreenWidget extends StatelessWidget {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
-            body: SafeArea(
-              child: Column(
-                children: [
-                  //appbar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_10,
-                        horizontal: AppConstants.padding_10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            context
-                                .read<BottomNavBloc>()
-                                .add(BottomNavEvent.changePage(index: 0));
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColors.shadowColor
-                                            .withOpacity(0.3),
-                                        blurRadius: AppConstants.blur_10)
-                                  ],
-                                  shape: BoxShape.circle,
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                child: state.UserImageUrl.isNotEmpty
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: CachedNetworkImage(
-                                          placeholder: (context, url) => Center(
-                                              child:
-                                                  const CupertinoActivityIndicator()),
-                                          imageUrl:
-                                              '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return Container(
-                                              color: AppColors.whiteColor,
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    : SizedBox(),
-                              ),
-                              15.width,
-                              state.UserCompanyLogoUrl.isNotEmpty
-                                  ? CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              border: Border.all(
-                                                  color: AppColors.borderColor
-                                                      .withOpacity(0.5),
-                                                  width: 1)),
-                                          alignment: Alignment.center,
-                                          child:
-                                              const CupertinoActivityIndicator()),
-                                      imageUrl:
-                                          '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
-                                      height: 50,
-                                      width: getScreenWidth(context) * 0.35,
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              border: Border.all(
-                                                  color: AppColors.borderColor
-                                                      .withOpacity(0.5),
-                                                  width: 1)),
-                                          alignment: Alignment.center,
-                                        );
-                                      },
-                                    )
-                                  : SizedBox(),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                          decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              boxShadow: [
-                                BoxShadow(
-                                    color:
-                                        AppColors.shadowColor.withOpacity(0.3),
-                                    blurRadius: AppConstants.blur_10)
-                              ],
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_100))),
-                          clipBehavior: Clip.hardEdge,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                height: 54,
-                                width: 54,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.iconBGColor,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
-                                ),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.messageScreen.name);
-                                  },
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppImagePath.message,
-                                        height: 26,
-                                        width: 24,
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                      Positioned(
-                                          right: 7,
-                                          top: 8,
-                                          child: Container(
-                                            height: 16,
-                                            width: 16,
-                                            decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.notificationColor,
-                                                border: Border.all(
-                                                    color: AppColors.whiteColor,
-                                                    width: 1),
-                                                shape: BoxShape.circle),
-                                            alignment: Alignment.center,
-                                            child: Text('4',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        size:
-                                                            AppConstants.font_8,
-                                                        color: AppColors
-                                                            .whiteColor)),
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_100)),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, RouteDefine.menuScreen.name);
-                                },
-                                child: SvgPicture.asset(
-                                  AppImagePath.menuVertical,
-                                  fit: BoxFit.scaleDown,
-                                  width: 54,
-                                  height: 54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  10.height,
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
+            body: FocusDetector(
+              onFocusGained: ()=>bloc.add(HomeEvent.getPreferencesDataEvent()),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    //appbar
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_10,
+                          horizontal: AppConstants.padding_10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          10.height,
-                          //dashboard stats
                           GestureDetector(
                             onTap: () {
                               context
                                   .read<BottomNavBloc>()
-                                  .add(BottomNavEvent.changePage(index: 1));
+                                  .add(BottomNavEvent.changePage(index: 0));
                             },
-                            child: Container(
-                              width: getScreenWidth(context),
-                              clipBehavior: Clip.hardEdge,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_10,
-                                  horizontal: AppConstants.padding_10),
-                              decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: AppColors.shadowColor
-                                            .withOpacity(0.15),
-                                        blurRadius: AppConstants.blur_10)
-                                  ],
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10.0))),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .balance_status,
-                                            style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.smallFont,
-                                              color: AppColors.blackColor,
-                                            ),
-                                            textAlign: TextAlign.center,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: AppColors.shadowColor
+                                              .withOpacity(0.3),
+                                          blurRadius: AppConstants.blur_10)
+                                    ],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: state.UserImageUrl.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) => Center(
+                                                child:
+                                                    const CupertinoActivityIndicator()),
+                                            imageUrl:
+                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) {
+                                              return Container(
+                                                color: AppColors.whiteColor,
+                                              );
+                                            },
                                           ),
-                                          6.height,
-                                          SizedBox(
-                                            height: 70,
-                                            width: 70,
-                                            child: SfRadialGauge(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              axes: [
-                                                RadialAxis(
-                                                  minimum: 0,
-                                                  maximum: 10000,
-                                                  showLabels: false,
-                                                  showTicks: false,
-                                                  startAngle: 270,
-                                                  endAngle: 270,
-                                                  // radiusFactor: 0.8,
-                                                  axisLineStyle: AxisLineStyle(
-                                                      thicknessUnit:
-                                                          GaugeSizeUnit.factor,
-                                                      thickness: 0.2,
-                                                      color: AppColors
-                                                          .borderColor),
-                                                  annotations: [
-                                                    GaugeAnnotation(
-                                                      angle: 270,
-                                                      widget: Text(
-                                                        '7550\n${AppLocalizations.of(context)!.currency}',
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                                size:
-                                                                    AppConstants
-                                                                        .font_14,
-                                                                color: AppColors
-                                                                    .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  pointers: [
-                                                    RangePointer(
-                                                      color:
-                                                          AppColors.mainColor,
-                                                      enableAnimation: true,
-                                                      animationDuration: 300,
-                                                      animationType:
-                                                          AnimationType.ease,
-                                                      cornerStyle:
-                                                          CornerStyle.bothCurve,
-                                                      value: 7550,
-                                                      width: 6,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                  5.width,
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                                        )
+                                      : SizedBox(),
+                                ),
+                                15.width,
+                                state.UserCompanyLogoUrl.isNotEmpty
+                                    ? CachedNetworkImage(
+                                        placeholder: (context, url) => Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.whiteColor,
+                                                border: Border.all(
+                                                    color: AppColors.borderColor
+                                                        .withOpacity(0.5),
+                                                    width: 1)),
+                                            alignment: Alignment.center,
+                                            child:
+                                                const CupertinoActivityIndicator()),
+                                        imageUrl:
+                                            '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
+                                        height: 50,
+                                      //  width: getScreenWidth(context) * 0.35,
+                                        fit: BoxFit.fill,
+                                        errorWidget: (context, url, error) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.whiteColor,
+                                                border: Border.all(
+                                                    color: AppColors.borderColor
+                                                        .withOpacity(0.5),
+                                                    width: 1)),
+                                            alignment: Alignment.center,
+                                          );
+                                        },
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 60,
+                            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color:
+                                          AppColors.shadowColor.withOpacity(0.3),
+                                      blurRadius: AppConstants.blur_10)
+                                ],
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_100))),
+                            clipBehavior: Clip.hardEdge,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  height: 54,
+                                  width: 54,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.iconBGColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(AppConstants.radius_100)),
+                                  ),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(AppConstants.radius_100)),
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.messageScreen.name);
+                                    },
+                                    child: Stack(
+                                      fit: StackFit.expand,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: dashboardStatsWidget(
-                                                  context: context,
-                                                  image: AppImagePath.credits,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .total_credit,
-                                                  value:
-                                                      '20,000${AppLocalizations.of(context)!.currency}'),
-                                            ),
-                                            10.width,
-                                            Flexible(
-                                              child: dashboardStatsWidget(
-                                                  context: context,
-                                                  image: AppImagePath.expense,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .this_months_expenses,
-                                                  value:
-                                                      '7,550${AppLocalizations.of(context)!.currency}'),
-                                            ),
-                                          ],
+                                        SvgPicture.asset(
+                                          AppImagePath.message,
+                                          height: 26,
+                                          width: 24,
+                                          fit: BoxFit.scaleDown,
                                         ),
-                                        10.height,
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: dashboardStatsWidget(
-                                                  context: context,
-                                                  image: AppImagePath.expense,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .last_months_expenses,
-                                                  value:
-                                                      '18,360${AppLocalizations.of(context)!.currency}'),
-                                            ),
-                                            10.width,
-                                            Flexible(
-                                              child: dashboardStatsWidget(
-                                                  context: context,
-                                                  image: AppImagePath.orders,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .this_months_orders,
-                                                  value: '23'),
-                                            ),
-                                          ],
-                                        ),
+                                        Positioned(
+                                            right: 7,
+                                            top: 8,
+                                            child: Container(
+                                              height: 16,
+                                              width: 16,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      AppColors.notificationColor,
+                                                  border: Border.all(
+                                                      color: AppColors.whiteColor,
+                                                      width: 1),
+                                                  shape: BoxShape.circle),
+                                              alignment: Alignment.center,
+                                              child: Text('4',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                          size:
+                                                              AppConstants.font_8,
+                                                          color: AppColors
+                                                              .whiteColor)),
+                                            ))
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                InkWell(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(AppConstants.radius_100)),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, RouteDefine.menuScreen.name);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppImagePath.menuVertical,
+                                    fit: BoxFit.scaleDown,
+                                    width: 54,
+                                    height: 54,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          20.height,
-                          titleRowWidget(
-                              context: context,
-                              title: AppLocalizations.of(context)!.sales,
-                              allContentTitle:
-                                  AppLocalizations.of(context)!.all_sales,
-                              onTap: () {}),
-                          SizedBox(
-                            height: 190,
-                            child: ListView.builder(
-                              itemCount: 10,
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => productListItem(
-                                  index: index, context: context),
-                            ),
-                          ),
-                          10.height,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Flexible(
-                                child: CustomTextIconButtonWidget(
-                                  title:
-                                      AppLocalizations.of(context)!.new_order,
-                                  onPressed: () {
-                                    context.read<BottomNavBloc>().add(
-                                        BottomNavEvent.changePage(index: 3));
-                                  },
-                                  svgImage: AppImagePath.add,
-                                ),
-                              ),
-                              Flexible(
-                                child: CustomTextIconButtonWidget(
-                                  title:
-                                      AppLocalizations.of(context)!.my_basket,
-                                  onPressed: () {
-                                    context.read<BottomNavBloc>().add(
-                                        BottomNavEvent.changePage(index: 2));
-                                  },
-                                  svgImage: AppImagePath.cart,
-                                  cartCount: state.cartCount,
-                                ),
-                              ),
-                            ],
-                          ),
-                          30.height,
-                          titleRowWidget(
-                              context: context,
-                              title: AppLocalizations.of(context)!.messages,
-                              allContentTitle:
-                                  AppLocalizations.of(context)!.all_messages,
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, RouteDefine.messageScreen.name);
-                              }),
-                          10.height,
-                          ListView.builder(
-                            itemCount: 2,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) =>
-                                messageListItem(index: index, context: context),
-                          ),
-                          85.height,
                         ],
                       ),
                     ),
-                  )
-                ],
+                    10.height,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            10.height,
+                            //dashboard stats
+                            GestureDetector(
+                              onTap: () {
+                                context
+                                    .read<BottomNavBloc>()
+                                    .add(BottomNavEvent.changePage(index: 1));
+                              },
+                              child: Container(
+                                width: getScreenWidth(context),
+                                clipBehavior: Clip.hardEdge,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_10),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_10,
+                                    horizontal: AppConstants.padding_10),
+                                decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: AppColors.shadowColor
+                                              .withOpacity(0.15),
+                                          blurRadius: AppConstants.blur_10)
+                                    ],
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .balance_status,
+                                              style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.blackColor,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            6.height,
+                                            SizedBox(
+                                              height: 70,
+                                              width: 70,
+                                              child: SfRadialGauge(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                axes: [
+                                                  RadialAxis(
+                                                    minimum: 0,
+                                                    maximum: 10000,
+                                                    showLabels: false,
+                                                    showTicks: false,
+                                                    startAngle: 270,
+                                                    endAngle: 270,
+                                                    // radiusFactor: 0.8,
+                                                    axisLineStyle: AxisLineStyle(
+                                                        thicknessUnit:
+                                                            GaugeSizeUnit.factor,
+                                                        thickness: 0.2,
+                                                        color: AppColors
+                                                            .borderColor),
+                                                    annotations: [
+                                                      GaugeAnnotation(
+                                                        angle: 270,
+                                                        widget: Text(
+                                                          '7550\n${AppLocalizations.of(context)!.currency}',
+                                                          style: AppStyles
+                                                              .rkRegularTextStyle(
+                                                                  size:
+                                                                      AppConstants
+                                                                          .font_14,
+                                                                  color: AppColors
+                                                                      .blackColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    pointers: [
+                                                      RangePointer(
+                                                        color:
+                                                            AppColors.mainColor,
+                                                        enableAnimation: true,
+                                                        animationDuration: 300,
+                                                        animationType:
+                                                            AnimationType.ease,
+                                                        cornerStyle:
+                                                            CornerStyle.bothCurve,
+                                                        value: 7550,
+                                                        width: 6,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                    5.width,
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Flexible(
+                                                child: dashboardStatsWidget(
+                                                    context: context,
+                                                    image: AppImagePath.credits,
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .total_credit,
+                                                    value:
+                                                        '20,000${AppLocalizations.of(context)!.currency}'),
+                                              ),
+                                              10.width,
+                                              Flexible(
+                                                child: dashboardStatsWidget(
+                                                    context: context,
+                                                    image: AppImagePath.expense,
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .this_months_expenses,
+                                                    value:
+                                                        '7,550${AppLocalizations.of(context)!.currency}'),
+                                              ),
+                                            ],
+                                          ),
+                                          10.height,
+                                          Row(
+                                            children: [
+                                              Flexible(
+                                                child: dashboardStatsWidget(
+                                                    context: context,
+                                                    image: AppImagePath.expense,
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .last_months_expenses,
+                                                    value:
+                                                        '18,360${AppLocalizations.of(context)!.currency}'),
+                                              ),
+                                              10.width,
+                                              Flexible(
+                                                child: dashboardStatsWidget(
+                                                    context: context,
+                                                    image: AppImagePath.orders,
+                                                    title: AppLocalizations.of(
+                                                            context)!
+                                                        .this_months_orders,
+                                                    value: '23'),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            20.height,
+                            titleRowWidget(
+                                context: context,
+                                title: AppLocalizations.of(context)!.sales,
+                                allContentTitle:
+                                    AppLocalizations.of(context)!.all_sales,
+                                onTap: () {}),
+                            SizedBox(
+                              height: 190,
+                              child: ListView.builder(
+                                itemCount: 10,
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => productListItem(
+                                    index: index, context: context),
+                              ),
+                            ),
+                            10.height,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Flexible(
+                                  child: CustomTextIconButtonWidget(
+                                    title:
+                                        AppLocalizations.of(context)!.new_order,
+                                    onPressed: () {
+                                      context.read<BottomNavBloc>().add(
+                                          BottomNavEvent.changePage(index: 3));
+                                    },
+                                    svgImage: AppImagePath.add,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: CustomTextIconButtonWidget(
+                                    title:
+                                        AppLocalizations.of(context)!.my_basket,
+                                    onPressed: () {
+                                      context.read<BottomNavBloc>().add(
+                                          BottomNavEvent.changePage(index: 2));
+                                    },
+                                    svgImage: AppImagePath.cart,
+                                    cartCount: state.cartCount,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            30.height,
+                            titleRowWidget(
+                                context: context,
+                                title: AppLocalizations.of(context)!.messages,
+                                allContentTitle:
+                                    AppLocalizations.of(context)!.all_messages,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, RouteDefine.messageScreen.name);
+                                }),
+                            10.height,
+                            ListView.builder(
+                              itemCount: 2,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) =>
+                                  messageListItem(index: index, context: context),
+                            ),
+                            85.height,
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );

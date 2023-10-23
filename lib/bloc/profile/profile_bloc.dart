@@ -22,6 +22,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
+import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart' as file;
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -41,7 +42,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
-      SharedPreferencesHelper preferences =
+      SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _pickProfileImageEvent) {
@@ -50,7 +51,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
           debugPrint("compress after size = ${await pickedFile.length()}");
-          Directory dir;
+          Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
             dir = await getApplicationDocumentsDirectory();
           } else {
@@ -155,21 +156,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
-            debugPrint('mobile = ${preferences.getUserId()}');
+            debugPrint('mobile = ${preferencesHelper.getUserId()}');
             // emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: preferences.getUserId())
+                data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
-              debugPrint(
-                  'image = ${response.data?.clients?.first.profileImage}');
+              debugPrint('image = ${response.data?.clients?.first.profileImage}');
               emit(
-                state.copyWith(
-                  UserImageUrl:
-                  response.data?.clients?.first.profileImage ?? '',
+                state.copyWith(UserImageUrl: response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
                       ?.firstWhere((businessType) =>
                               businessType.id ==
@@ -208,8 +206,41 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         }
       } else if (event is _updateProfileDetailsEvent) {
+        if(state.image.path != ''){
+          Map<String, dynamic> req1 = {
+           AppStrings.profileUpdateString : imgUrl
+          };
+          try{
+            final res = await DioClient(event.context).post(
+              "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+              data: req1,
+            );
+            debugPrint('update profile image req_______${req1}');
+            file.FileUpdateResModel response = file.FileUpdateResModel.fromJson(res);
+
+            if(response.status == 200){
+              preferencesHelper.removeProfileImage();
+              preferencesHelper.setUserImageUrl(imageUrl: response.data!.client!.profileImage.toString());
+              debugPrint('update profile image req________${response}');
+              imgUrl = response.data!.client!.profileImage.toString();
+            }
+            else{
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+
+            }
+          }
+          on ServerException {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        }
+
         ProfileModel updatedProfileModel = ProfileModel(
-          profileImage: state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList.data?.clientTypes
@@ -243,7 +274,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
               data: /*updatedProfileModel.toJson()*/ req);
 
           reqUpdate.ProfileDetailsUpdateResModel response =

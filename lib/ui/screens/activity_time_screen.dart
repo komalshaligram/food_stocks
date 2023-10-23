@@ -75,7 +75,15 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
               leading: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
+                  onTap: () {
+                    if(!state.isUpdate){
+                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                    }
+                    else{
+                      Navigator.pop(context);
+                    }
+
+                  },
                   child: Icon(
                     Icons.arrow_back_ios,
                     color: AppColors.blackColor,

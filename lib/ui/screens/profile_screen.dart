@@ -78,8 +78,12 @@ class ProfileScreenWidget extends StatelessWidget {
             appBar: AppBar(
               leading: GestureDetector(
                   onTap: () {
-                  //  Navigator.pop(context);
-                    Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                    if(!state.isUpdate){
+                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                    }
+                    else{
+                      Navigator.pop(context);
+                    }
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Text(

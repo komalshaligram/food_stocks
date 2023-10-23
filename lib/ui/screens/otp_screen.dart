@@ -73,7 +73,7 @@ class OTPScreenWidget extends StatelessWidget {
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pushNamed(context, RouteDefine.loginScreen.name);
                 },
               ),
             ),

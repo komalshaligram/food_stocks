@@ -449,6 +449,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: "6b9eb2b3017241d05c482c01f668dd05cc909ec9a0114fdd49acd958ff2432fa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.64.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1250,14 +1258,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  syncfusion_flutter_charts:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_charts
-      sha256: "36faee9bfa9497a0aec44f5501616df545ea00f5348f40818cb5fd1a2d8f719c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "23.1.41"
   syncfusion_flutter_core:
     dependency: transitive
     description:

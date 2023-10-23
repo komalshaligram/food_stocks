@@ -32,6 +32,16 @@ class SharedPreferencesHelper {
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
 
+  Future<void> removeProfileImage() async {
+      await prefs.remove(userImage);
+  }
+
+  Future<void> removeCompanyLogo() async {
+    await prefs.remove(userCompanyLogo);
+  }
+
+
+
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);
   }

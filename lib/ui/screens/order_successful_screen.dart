@@ -35,6 +35,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderSuccessfulBloc, OrderSuccessfulState>(
       builder: (context, state) {
+        print('-----${ getScreenHeight(context) * 0.215}');
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           body: SafeArea(
@@ -45,7 +46,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    height: getScreenHeight(context) * 0.22,
+                    height: getScreenHeight(context) * 0.215,
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
@@ -57,8 +58,11 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                       ],
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                       Image.asset(AppImagePath.successIcon,
+
+                       ),
                         Text(
                           AppLocalizations.of(context)!.order_sent_successfully,
                           style: AppStyles.rkRegularTextStyle(
