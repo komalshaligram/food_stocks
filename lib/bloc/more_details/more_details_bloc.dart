@@ -168,7 +168,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             address: state.addressController.text,
             email: state.emailController.text,
             clientDetail: ClientDetail(fax: state.faxController.text),
-               logo: state.companyLogo,
+            logo: state.companyLogo,
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
@@ -247,8 +247,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));
-            final response =
-                await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
+            final response = await DioClient(event.context)
+                .post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -304,7 +304,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 isShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId())
+                data: req.ProfileDetailsReqModel(
+                        id: preferencesHelper.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);

@@ -10,7 +10,6 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';

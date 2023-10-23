@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,12 +7,11 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/store/store_bloc.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/themes/app_colors.dart';
 import '../widget/common_product_category_widget.dart';
 
@@ -25,8 +25,10 @@ class StoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          StoreBloc()..add(StoreEvent.getProductCategoriesListEvent()),
+      create: (context) => StoreBloc()
+        ..add(StoreEvent.getProductCategoriesListEvent(context: context))
+        ..add(StoreEvent.getProductSalesListEvent(context: context))
+        ..add(StoreEvent.getSuppliersListEvent(context: context)),
       child: StoreScreenWidget(),
     );
   }
@@ -55,20 +57,28 @@ class StoreScreenWidget extends StatelessWidget {
                             context: context,
                             title: AppLocalizations.of(context)!.categories,
                             subTitle:
-                                AppLocalizations.of(context)!.all_categories,
+                            AppLocalizations.of(context)!.all_categories,
                             onTap: () {}),
                         SizedBox(
+                          width: getScreenWidth(context),
                           height: 110,
                           child: ListView.builder(
-                            itemCount: 10,
+                            itemCount: state.productCategoryList.length < 6
+                                ? state.productCategoryList.length
+                                : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) {
                               return buildCategoryListItem(
-                                  categoryImage: AppImagePath.product3,
-                                  categoryName: 'Fruits',
+                                  categoryImage: state
+                                          .productCategoryList[index]
+                                          .categoryImage ??
+                                      '',
+                                  categoryName: state.productCategoryList[index]
+                                          .categoryName ??
+                                      '',
                                   onTap: () {});
                             },
                           ),
@@ -80,6 +90,7 @@ class StoreScreenWidget extends StatelessWidget {
                                 AppLocalizations.of(context)!.all_companies,
                             onTap: () {}),
                         SizedBox(
+                          width: getScreenWidth(context),
                           height: 110,
                           child: ListView.builder(
                             itemCount: 10,
@@ -97,13 +108,47 @@ class StoreScreenWidget extends StatelessWidget {
                         ),
                         buildListTitles(
                             context: context,
+                            title: AppLocalizations.of(context)!.suppliers,
+                            subTitle:
+                                AppLocalizations.of(context)!.all_suppliers,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, RouteDefine.supplierScreen.name);
+                            }),
+                        SizedBox(
+                          width: getScreenWidth(context),
+                          height: 110,
+                          child: ListView.builder(
+                            itemCount: state.suppliersList.length < 5
+                                ? state.suppliersList.length
+                                : 6,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_5),
+                            itemBuilder: (context, index) {
+                              return buildCompanyListItem(
+                                  companyLogo:
+                                      state.suppliersList[index].logo ?? '',
+                                  companyName: state.suppliersList[index]
+                                          .supplierDetail?.companyName ??
+                                      '',
+                                  onTap: () {});
+                            },
+                          ),
+                        ),
+                        buildListTitles(
+                            context: context,
                             title: AppLocalizations.of(context)!.sales,
                             subTitle: AppLocalizations.of(context)!.all_sales,
                             onTap: () {}),
                         SizedBox(
+                          width: getScreenWidth(context),
                           height: 190,
                           child: ListView.builder(
-                            itemCount: 10,
+                            itemCount: state.productSalesList.length < 6
+                                ? state.productSalesList.length
+                                : 6,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.symmetric(
@@ -111,11 +156,19 @@ class StoreScreenWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return buildProductSaleListItem(
                                 context: context,
-                                promotionImage: AppImagePath.product1,
-                                title: '2 Products discount',
-                                description:
-                                    'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
-                                price: 20,
+                                saleImage:
+                                    state.productSalesList[index].salesName ??
+                                        '',
+                                title:
+                                    state.productSalesList[index].salesTerms ??
+                                        '',
+                                description: state.productSalesList[index]
+                                        .salesDescription ??
+                                    '',
+                                price: double.parse(state
+                                        .productSalesList[index]
+                                        .discountPercentage ??
+                                    '0'),
                                 onTap: () {
                                   showProductDetails(
                                       context: context,
@@ -133,6 +186,7 @@ class StoreScreenWidget extends StatelessWidget {
                             subTitle: AppLocalizations.of(context)!.more,
                             onTap: () {}),
                         SizedBox(
+                          width: getScreenWidth(context),
                           height: 190,
                           child: ListView.builder(
                             itemCount: 10,
@@ -143,7 +197,7 @@ class StoreScreenWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return buildProductSaleListItem(
                                 context: context,
-                                promotionImage: AppImagePath.product2,
+                                saleImage: AppImagePath.product2,
                                 title: '2 Products discount',
                                 description:
                                     'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
@@ -237,11 +291,10 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Padding buildListTitles(
-      {required BuildContext context,
-      required String title,
-      required void Function() onTap,
-      required subTitle}) {
+  Padding buildListTitles({required BuildContext context,
+    required String title,
+    required void Function() onTap,
+    required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,
@@ -269,10 +322,9 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryListItem(
-      {required String categoryName,
-      required void Function() onTap,
-      required String categoryImage}) {
+  Widget buildCategoryListItem({required String categoryName,
+    required void Function() onTap,
+    required String categoryImage}) {
     return Container(
       height: 90,
       width: 90,
@@ -293,21 +345,39 @@ class StoreScreenWidget extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
-            Image.asset(
-              categoryImage,
+            Image.network(
+              "${AppUrls.baseFileUrl}$categoryImage",
               fit: BoxFit.contain,
               height: 90,
               width: 90,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return Container(
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(
+                      color: AppColors.blackColor,
+                    ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('product category list image error : $error');
+                return 70.height;
+              },
             ),
             Positioned(
               bottom: AppConstants.padding_5,
               left: AppConstants.padding_5,
               right: AppConstants.padding_5,
               child: Container(
-                height: 20,
+                // height: 20,
                 alignment: Alignment.center,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_5,
+                    vertical: AppConstants.padding_2),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
                   borderRadius:
@@ -319,6 +389,8 @@ class StoreScreenWidget extends StatelessWidget {
                   categoryName,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_12, color: AppColors.whiteColor),
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
                 ),
               ),
             )
@@ -330,7 +402,7 @@ class StoreScreenWidget extends StatelessWidget {
 
   Widget buildProductSaleListItem(
       {required BuildContext context,
-      required String promotionImage,
+      required String saleImage,
       required String title,
       required String description,
       required double price,
@@ -362,8 +434,28 @@ class StoreScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(promotionImage,
-                  height: 70, fit: BoxFit.fitHeight),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$saleImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return 70.height;
+                },
+              ),
             ),
             5.height,
             Text(
@@ -372,6 +464,8 @@ class StoreScreenWidget extends StatelessWidget {
                   size: AppConstants.font_12,
                   color: AppColors.saleRedColor,
                   fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             5.height,
             Expanded(
@@ -387,7 +481,7 @@ class StoreScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                 onPressed: () {},
                 // height: 35,
                 textColor: AppColors.whiteColor,
@@ -402,10 +496,9 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCompanyListItem(
-      {required String companyLogo,
-      required String companyName,
-      required void Function() onTap}) {
+  Widget buildCompanyListItem({required String companyLogo,
+    required String companyName,
+    required void Function() onTap}) {
     return Container(
       height: 90,
       width: 90,
@@ -427,11 +520,28 @@ class StoreScreenWidget extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
-            Image.asset(
-              companyLogo,
+            Image.network(
+              "${AppUrls.baseFileUrl}$companyLogo",
               fit: BoxFit.cover,
               height: 90,
               width: 90,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(
+                      color: AppColors.blackColor,
+                    ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('product category list image error : $error');
+                return 0.height;
+              },
             ),
             Positioned(
               bottom: AppConstants.padding_5,
@@ -442,11 +552,11 @@ class StoreScreenWidget extends StatelessWidget {
                 width: 80,
                 alignment: Alignment.center,
                 margin:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
                   borderRadius:
-                      BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                   border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 child: Text(
@@ -465,8 +575,7 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryFilterItem(
-      {required String category, required void Function() onTap}) {
+  Widget buildCategoryFilterItem({required String category, required void Function() onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -489,8 +598,7 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails(
-      {required BuildContext context, required bool isMirror}) async {
+  void showProductDetails({required BuildContext context, required bool isMirror}) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -582,12 +690,12 @@ class StoreScreenWidget extends StatelessWidget {
                               border: Border(
                                 top: BorderSide(
                                     color:
-                                        AppColors.borderColor.withOpacity(0.5),
+                                    AppColors.borderColor.withOpacity(0.5),
                                     width: 1),
                                 bottom: BorderSide(
                                     width: 1,
                                     color:
-                                        AppColors.borderColor.withOpacity(0.5)),
+                                    AppColors.borderColor.withOpacity(0.5)),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -736,7 +844,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   flex: 5,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Sale',
@@ -805,7 +913,7 @@ class StoreScreenWidget extends StatelessWidget {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.all(AppConstants.padding_20),
+                            const EdgeInsets.all(AppConstants.padding_20),
                             child: CommonProductButtonWidget(
                               title: AppLocalizations.of(context)!.add_to_order,
                               onPressed: () {},

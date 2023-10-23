@@ -87,8 +87,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                             prefs: await SharedPreferences.getInstance());
                     final res = await DioClient(event.context)
                         .post(AppUrls.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: /*'651bb2f9d2c8a6d5b1c1ff84'*/
-                          preferencesHelper.getUserId()
+                      AppStrings.idParamString: preferencesHelper.getUserId()
                     });
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
@@ -308,7 +307,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
-        debugPrint('update calling');
         try {
           emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
@@ -338,14 +336,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           });
           debugPrint('update urls list = ${formsAndFiles}');
-          if (state.isUpdate) {
-            emit(state.copyWith(isApiLoading: false));
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.updateSuccessString,
-                bgColor: AppColors.mainColor);
-            Navigator.pop(event.context);
-          } else {
+          if (!state.isUpdate) {
             if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
                 (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
@@ -353,12 +344,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
-
-              SharedPreferencesHelper preferencesHelper =
-                  SharedPreferencesHelper(
-                      prefs: await SharedPreferences.getInstance());
-
-              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
@@ -402,10 +387,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
-          showSnackBar(
-              context: event.context,
-              title: AppStrings.somethingWrongString,
-              bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
         List<FormAndFileModel> formsAndFilesList =

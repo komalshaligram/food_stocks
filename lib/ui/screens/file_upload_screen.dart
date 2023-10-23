@@ -177,12 +177,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     fontColors: AppColors.mainColor,
                                     borderColor: AppColors.mainColor,
                                     onPressed: () async {
-                                      // SharedPreferencesHelper preferencesHelper =
-                                      //     SharedPreferencesHelper(
-                                      //         prefs: await SharedPreferences
-                                      //             .getInstance());
-                                      // preferencesHelper.setUserLoggedIn(
-                                      //     isLoggedIn: true);
                                       showSnackBar(
                                           context: context,
                                           title:
