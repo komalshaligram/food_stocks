@@ -8,6 +8,7 @@ class AppsFlyerService{
     AppsflyerSdk _appsflyerSdk;
     final AppsFlyerOptions options = AppsFlyerOptions(
         afDevKey: dotenv.env["DEV_KEY"]??'',
+        appId: 'Food Stock',
         showDebug: true,
         timeToWaitForATTUserAuthorization: 15);
     _appsflyerSdk = AppsflyerSdk(options);
