@@ -8,7 +8,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
@@ -89,26 +91,28 @@ class ProfileScreenWidget extends StatelessWidget {
               title: Text(
                 AppLocalizations.of(context)!.business_details,
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: Colors.black,
+                  size: AppConstants.smallFont,
+                  color: Colors.black,
                 ),
               ),
               backgroundColor: Colors.white,
               titleSpacing: 0,
               elevation: 0,
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: getScreenWidth(context1) * 0.1,
-                      right: getScreenWidth(context1) * 0.1),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+            body: state.isShimmering
+                ? /*Shimmer.fromColors(child: Container(height: 100, width: 200,), baseColor: AppColors.greyColor, highlightColor: AppColors.saleRedColor)*/ ProfileScreenShimmerWidget()
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: getScreenWidth(context1) * 0.1,
+                            right: getScreenWidth(context1) * 0.1),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                         10.height,
                         Center(
                           child: GestureDetector(

@@ -49,6 +49,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
+          emit(state.copyWith(isShimmering: true));
           final response =
               await DioClient(event.context).get(path: AppUrls.cityListUrl);
           CityListResModel cityListResModel =
@@ -58,8 +59,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityListResModel.data!.cities!.forEach((element) {
               temp.add(element.cityName.toString());
             });
-            emit(state.copyWith(cityList: temp));
             emit(state.copyWith(
+                isShimmering: false,
+                cityList: temp,
                 filterList: temp,
                 cityListResModel: cityListResModel,
                 selectCity:
@@ -86,7 +88,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
-                  : 0);
+                  : await pickedFile.length());
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
@@ -166,7 +168,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             address: state.addressController.text,
             email: state.emailController.text,
             clientDetail: ClientDetail(fax: state.faxController.text),
-            //   logo: state.companyLogo,
+               logo: state.companyLogo,
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
@@ -192,6 +194,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             final res = await DioClient(event.context).post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
                 data: /*updatedProfileModel.toJson()*/ req);
+
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == 200) {
@@ -244,8 +247,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));
-            final response = await DioClient(event.context)
-                .post(AppUrls.RegistrationUrl, data: reqMap);
+            final response =
+                await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -296,11 +299,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (state.isUpdate) {
           try {
             emit(state.copyWith(
-                companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
+                /*
+                companyLogo: preferences.getUserCompanyLogoUrl(),*/
+                isShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(
-                        id: preferencesHelper.getUserId())
+                data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
@@ -308,6 +312,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
+                isShimmering: false,
                 selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),

@@ -42,7 +42,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc() : super(ProfileState.initial()) {
     on<ProfileEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper preferences =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _pickProfileImageEvent) {
@@ -64,7 +64,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
-                  : 0);
+                  : await pickedFile.length());
           debugPrint('data1 final size = ${imageSize}');
 
           if (int.parse(imageSize.split(' ').first) == 0) {
@@ -113,14 +113,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
+          emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context)
               .get(path: AppUrls.businessTypesUrl);
           debugPrint('business type list res = $res');
           BusinessTypeModel response = BusinessTypeModel.fromJson(res);
-          emit(state.copyWith(
-              businessTypeList: response,
-              selectedBusinessType:
-                  response.data?.clientTypes?[0].businessType ?? ''));
+          if (response.status == 200) {
+            emit(state.copyWith(
+                isShimmering: false,
+                businessTypeList: response,
+                selectedBusinessType:
+                    response.data?.clientTypes?[0].businessType ?? ''));
+          } else {
+            debugPrint('business types not found.\n${response.message}');
+          }
         } on ServerException {
           showSnackBar(
               context: event.context,
@@ -155,19 +161,24 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
+          emit(state.copyWith(isShimmering: true));
+          debugPrint('shimmering true');
           try {
-            debugPrint('mobile = ${preferencesHelper.getUserId()}');
+            debugPrint('mobile = ${preferences.getUserId()}');
             // emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId())
+                data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
-              debugPrint('image = ${response.data?.clients?.first.profileImage}');
+              debugPrint(
+                  'image = ${response.data?.clients?.first.profileImage}');
               emit(
-                state.copyWith(UserImageUrl: response.data?.clients?.first.profileImage ?? '',
+                state.copyWith(
+                  UserImageUrl:
+                  response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
                       ?.firstWhere((businessType) =>
                               businessType.id ==
@@ -180,7 +191,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                          response.data?.clients?.first.clientDetail?.israelId),
+                      response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -241,6 +252,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
 
         ProfileModel updatedProfileModel = ProfileModel(
+          profileImage: state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList.data?.clientTypes
@@ -274,7 +286,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
+              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
               data: /*updatedProfileModel.toJson()*/ req);
 
           reqUpdate.ProfileDetailsUpdateResModel response =

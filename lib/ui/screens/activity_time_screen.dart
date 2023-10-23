@@ -12,6 +12,7 @@ import '../../bloc/activity_time/activity_time_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/custom_button_widget.dart';
+import '../widget/activity_time_screen_shimmer_widget.dart';
 
 class ActivityTimeScreenRoute {
   static Widget get route => const ActivityTimeScreen();
@@ -89,20 +90,21 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                     color: AppColors.blackColor,
                   )),
             ),
-            body: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppConstants.padding_5,
-                      vertical: AppConstants.padding_5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      10.height,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
+            body: state.isShimmering
+                ? ActivityTimeScreenShimmerWidget()
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppConstants.padding_5,
+                            vertical: AppConstants.padding_5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            10.height,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
                           50.height,
                           40.width,
                           SizedBox(
@@ -137,78 +139,126 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_3),
-                                  child: ActivityTimeRow(
-                                    dayString: state
-                                        .OperationTimeList[index].dayString,
-                                    rowIndex: index,
+                                            vertical: AppConstants.padding_3),
+                                        child: ActivityTimeRow(
+                                          dayString: state
+                                              .OperationTimeList[index]
+                                              .dayString,
+                                          rowIndex: index,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+                            // SizedBox(
+                            //   height: getScreenHeight(context) * 0.20,
+                            // ),
+                            40.height,
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: getScreenWidth(context) * 0.08,
+                                  right: getScreenWidth(context) * 0.08),
+                              child: CustomButtonWidget(
+                                buttonText: state.isUpdate
+                                    ? AppLocalizations.of(context)!
+                                        .save
+                                        .toUpperCase()
+                                    : AppLocalizations.of(context)!
+                                        .next
+                                        .toUpperCase(),
+                                fontColors: AppColors.whiteColor,
+                                isLoading: false,
+                                onPressed: () {
+                                  context.read<ActivityTimeBloc>().add(
+                                          ActivityTimeEvent
+                                              .activityTimeApiEvent(
+                                        context: context,
+                                      ));
+                                },
+                                bGColor: AppColors.mainColor,
+                              ),
+                            ),
+                            20.height,
+                            state.isUpdate
+                                ? SizedBox()
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        left: getScreenWidth(context) * 0.08,
+                                        right: getScreenWidth(context) * 0.08),
+                                    child: CustomButtonWidget(
+                                      buttonText: AppLocalizations.of(context)!
+                                          .skip
+                                          .toUpperCase()
+                                          .toUpperCase(),
+                                      fontColors: AppColors.mainColor,
+                                      borderColor: AppColors.mainColor,
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, RouteDefine.fileUploadScreen.name);
+                                      },
+                                      bGColor: AppColors.whiteColor,
+                                    ),
                                   ),
-                                );
-                              },
-                            )
-                          : SizedBox(),
-                      SizedBox(
-                        height: getScreenHeight(context) * 0.20,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            bottomSheet: BottomSheet(
-              backgroundColor: AppColors.whiteColor,
-              onClosing: () {},
-              builder: (BuildContext context) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    10.height,
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: getScreenWidth(context) * 0.08,
-                          right: getScreenWidth(context) * 0.08),
-                      child: CustomButtonWidget(
-                        buttonText: state.isUpdate
-                            ? AppLocalizations.of(context)!.save.toUpperCase()
-                            : AppLocalizations.of(context)!.next.toUpperCase(),
-                        fontColors: AppColors.whiteColor,
-                        isLoading: state.isLoading,
-                        onPressed: () {
-                          context
-                              .read<ActivityTimeBloc>()
-                              .add(ActivityTimeEvent.activityTimeApiEvent(
-                                context: context,
-                              ));
-                        },
-                        bGColor: AppColors.mainColor,
+                            20.height
+                          ],
+                        ),
                       ),
                     ),
-                    20.height,
-                    state.isUpdate
-                        ? SizedBox()
-                        : Padding(
-                            padding: EdgeInsets.only(
-                                left: getScreenWidth(context) * 0.08,
-                                right: getScreenWidth(context) * 0.08),
-                            child: CustomButtonWidget(
-                              buttonText: AppLocalizations.of(context)!
-                                  .skip
-                                  .toUpperCase()
-                                  .toUpperCase(),
-                              fontColors: AppColors.mainColor,
-                              borderColor: AppColors.mainColor,
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, RouteDefine.fileUploadScreen.name);
-                              },
-                              bGColor: AppColors.whiteColor,
-                            ),
-                          ),
-                    20.height
-                  ],
-                );
-              },
-            ),
+                  ),
+            // bottomSheet: BottomSheet(
+            //   backgroundColor: AppColors.whiteColor,
+            //   onClosing: () {},
+            //   builder: (BuildContext context) {
+            //     return Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: [
+            //         10.height,
+            //         Padding(
+            //           padding: EdgeInsets.only(
+            //               left: getScreenWidth(context) * 0.08,
+            //               right: getScreenWidth(context) * 0.08),
+            //           child: ButtonWidget(
+            //             buttonText: state.isUpdate
+            //                 ? AppLocalizations.of(context)!.save
+            //                 : AppLocalizations.of(context)!.next,
+            //             fontColors: AppColors.whiteColor,
+            //             width: double.maxFinite,
+            //             onPressed: () {
+            //               context
+            //                   .read<ActivityTimeBloc>()
+            //                   .add(ActivityTimeEvent.activityTimeApiEvent(
+            //                     context: context,
+            //                   ));
+            //             },
+            //             bGColor: AppColors.mainColor,
+            //           ),
+            //         ),
+            //         20.height,
+            //         state.isUpdate
+            //             ? SizedBox()
+            //             : Padding(
+            //                 padding: EdgeInsets.only(
+            //                     left: getScreenWidth(context) * 0.08,
+            //                     right: getScreenWidth(context) * 0.08),
+            //                 child: ButtonWidget(
+            //                   buttonText: AppLocalizations.of(context)!
+            //                       .skip.toUpperCase()
+            //                       .toUpperCase(),
+            //                   fontColors: AppColors.mainColor,
+            //                   borderColor: AppColors.mainColor,
+            //                   width: double.maxFinite,
+            //                   onPressed: () {
+            //                     Navigator.pushNamed(
+            //                         context, RouteDefine.fileUploadScreen.name);
+            //                   },
+            //                   bGColor: AppColors.whiteColor,
+            //                 ),
+            //               ),
+            //         20.height
+            //       ],
+            //     );
+            //   },
+            // ),
           );
         },
       ),

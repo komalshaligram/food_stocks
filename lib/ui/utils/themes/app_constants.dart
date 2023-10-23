@@ -53,5 +53,8 @@ class AppConstants{
   static const int fileSizeCap = 1024;
 
   //file quality
-  static const int fileQuality = 70;
+  static const int fileQuality = 50;
+
+  //shimmer text height
+  static const double shimmerTextHeight = 20;
 }
