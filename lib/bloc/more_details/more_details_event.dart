@@ -18,7 +18,6 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
   factory MoreDetailsEvent.registrationApiEvent(
       {required BuildContext context}) = _registrationApiEvent;
 
-  factory MoreDetailsEvent.addFilterListEvent() = _addFilterListEvent;
   factory MoreDetailsEvent.citySearchEvent({
     required String search,
 

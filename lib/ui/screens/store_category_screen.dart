@@ -13,6 +13,7 @@ import 'package:food_stock/ui/widget/common_product_category_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../../bloc/store/store_bloc.dart';
+import '../../routes/app_routes.dart';
 
 class StoreCategoryRoute {
   static Widget get route => const StoreCategoryScreen();
@@ -310,7 +311,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   onFilterTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                   },
-                  onScanTap: () {},
+                  onScanTap: () {
+                    Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
+                  },
                   controller: TextEditingController(),
                   onOutSideTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(

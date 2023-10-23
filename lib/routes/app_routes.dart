@@ -11,6 +11,7 @@ import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/activity_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
+import 'package:food_stock/ui/screens/qr_scan_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
@@ -62,7 +63,8 @@ enum RouteDefine {
   shipmentVerificationScreen,
   storeCategoryScreen,
   orderSummaryScreen,
-  orderSuccessfulScreen
+  orderSuccessfulScreen,
+  qrScanScreen,
 }
 
 class AppRouting {
@@ -102,6 +104,7 @@ class AppRouting {
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
+      RouteDefine.qrScanScreen.name: (_) => QrScanRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

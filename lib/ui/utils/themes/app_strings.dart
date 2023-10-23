@@ -25,6 +25,7 @@ class AppStrings {
 
   //api req param strings
   static const profileImageString = 'profileImg';
+  static const profileUpdateString = 'profileImage';
   static const promissoryNoteString = 'promissoryNote';
   static const personalGuaranteeString = 'personalGuarantee';
   static const israelIdImageString = 'israelIdImage';
@@ -36,6 +37,7 @@ class AppStrings {
   static const formsString = 'forms';
   static const idParamString = '_id';
   static const clientDetailString = 'clientDetail';
+  static const logoString = 'logo';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -61,6 +63,7 @@ class AppStrings {
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
+  static const userNotFoundString = 'User not found';
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
   static const imageNotSetString = 'Image not set';

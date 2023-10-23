@@ -164,7 +164,10 @@ class StoreScreenWidget extends StatelessWidget {
                     onFilterTap: () {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
-                    onScanTap: () {},
+                    onScanTap: () {
+                      Navigator.pushNamed(
+                          context, RouteDefine.qrScanScreen.name);
+                    },
                     controller: TextEditingController(),
                     onOutSideTap: () {
                       bloc.add(

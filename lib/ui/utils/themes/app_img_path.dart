@@ -26,5 +26,7 @@ class AppImagePath {
   static const String product1 = 'assets/images/product1.png';
   static const String product2 = 'assets/images/product2.png';
   static const String product3 = 'assets/images/product3.png';
+  static const String successIcon = 'assets/images/icon_success.png';
+
 
 }
