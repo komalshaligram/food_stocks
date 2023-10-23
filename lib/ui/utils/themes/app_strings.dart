@@ -61,6 +61,7 @@ class AppStrings {
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
+  static const userNotFoundString = 'User not found';
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
   static const imageNotSetString = 'Image not set';
