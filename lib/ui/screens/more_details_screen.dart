@@ -41,8 +41,8 @@ class MoreDetailsScreen extends StatelessWidget {
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
-                : false))
-        ..add(MoreDetailsEvent.addFilterListEvent()),
+                : false)),
+
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -324,13 +324,13 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                           height: getScreenHeight(context) * 0.2,
                           alignment: Alignment.center,
                           child: DottedBorder(
-                            color: state.isImagePick
+                            color:state.companyLogo.isNotEmpty ?  state.image.path != ''
                                 ? AppColors.whiteColor
-                                : AppColors.borderColor,
+                                : AppColors.whiteColor : AppColors.borderColor,
                             radius: Radius.circular(AppConstants.radius_3),
                             borderType: BorderType.RRect,
-                            strokeWidth: state.isImagePick ? 0 : 1,
-                            dashPattern: state.isImagePick ? [1, 0] : [3, 2],
+                            strokeWidth: 1,
+                            dashPattern: [3, 2],
                             child: Container(
                               color: AppColors.whiteColor,
                               child: Column(
@@ -425,7 +425,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                           context),
                                                       child: Image.file(
                                                         File(state.image.path),
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                     )
                                                   : SizedBox(
@@ -436,7 +436,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                           context),
                                                       child: Image.network(
                                                         '${AppUrls.baseFileUrl}${state.companyLogo}',
-                                                        fit: BoxFit.cover,
+                                                        fit:BoxFit.contain,
                                                         loadingBuilder: (context,
                                                             child,
                                                             loadingProgress) {
@@ -478,7 +478,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                   color: AppColors.blueColor,
                                                   size: 30,
                                                 )
-                                          : state.isImagePick
+                                          : state.image.path != ''
                                               ? SizedBox(
                                                   height:
                                                       getScreenHeight(context) *
@@ -516,7 +516,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 ),
                                               ),
                                             )
-                                      : state.isImagePick
+                                      : state.image.path != ''
                                           ? const SizedBox()
                                           : Align(
                                               child: Container(

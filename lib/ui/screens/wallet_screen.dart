@@ -1,8 +1,8 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../data/model/wallet_model/wallet_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -33,26 +33,36 @@ class WalletScreen extends StatelessWidget {
 class WalletScreenWidget extends StatelessWidget {
   WalletScreenWidget({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-
-    final List<_ChartData> data = [
-
-      _ChartData(AppLocalizations.of(context)!.dec, 12),
-      _ChartData(AppLocalizations.of(context)!.nov, 40),
-      _ChartData(AppLocalizations.of(context)!.oct, 30),
-      _ChartData(AppLocalizations.of(context)!.sep, 6.4),
-      _ChartData(AppLocalizations.of(context)!.aug, 14),
-      _ChartData(AppLocalizations.of(context)!.jul, 40),
-      _ChartData(AppLocalizations.of(context)!.jun, 20),
-      _ChartData(AppLocalizations.of(context)!.may, 35),
-      _ChartData(AppLocalizations.of(context)!.apr, 5),
-      _ChartData(AppLocalizations.of(context)!.mar, 25),
-      _ChartData(AppLocalizations.of(context)!.feb, 7),
-      _ChartData(AppLocalizations.of(context)!.jan, 38),
+    final List<FlSpot> chartData = [
+      FlSpot(0, 15),
+      FlSpot(1, 33),
+      FlSpot(2, 15),
+      FlSpot(3, 40),
+      FlSpot(4, 30),
+      FlSpot(5, 35),
+      FlSpot(6, 25),
+      FlSpot(7, 30),
+      FlSpot(8, 15),
+      FlSpot(9, 40),
+      FlSpot(10, 10),
+      FlSpot(11, 15),
     ];
+    Map<int, String> monthMap = {
+      0: AppLocalizations.of(context)!.jan,
+      1: AppLocalizations.of(context)!.feb,
+      2: AppLocalizations.of(context)!.mar,
+      3: AppLocalizations.of(context)!.apr,
+      4: AppLocalizations.of(context)!.may,
+      5: AppLocalizations.of(context)!.jun,
+      6: AppLocalizations.of(context)!.jul,
+      7: AppLocalizations.of(context)!.aug,
+      8: AppLocalizations.of(context)!.sep,
+      9: AppLocalizations.of(context)!.oct,
+      10: AppLocalizations.of(context)!.nov,
+      11: AppLocalizations.of(context)!.dec,
+    };
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {},
@@ -186,55 +196,95 @@ class WalletScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  15.height,
-                  SizedBox(
-                    height: 186,
-                    child: SfCartesianChart(
-                      margin: EdgeInsets.all(0),
+                  20.height,
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: SizedBox(
+                      height: 186,
+                      width: double.maxFinite,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: LineChart(
+                          LineChartData(
+                            borderData: FlBorderData(show: false),
 
-                      plotAreaBorderWidth: 0,
-                      primaryXAxis: CategoryAxis(
-                        majorTickLines: const MajorTickLines(size: 0),
-                        majorGridLines: MajorGridLines(width: 0),
-                          axisLine: AxisLine(width: 0),
-                        axisLabelFormatter: (AxisLabelRenderDetails args) {
-                          late String text;
-                          late TextStyle textStyle =
-                              AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.font_8,
-                                  color: AppColors.navSelectedColor);
-                          text = '${args.text}';
-                          return ChartAxisLabel(text, textStyle);
-                        },
-                      ),
-                      primaryYAxis: CategoryAxis(
-                        isVisible: false,
-                        desiredIntervals: 2,
-                        rangePadding: ChartRangePadding.none,
-                      ),
-                      legend: Legend(isVisible: false),
-                      series: <ChartSeries<_ChartData, String>>[
-                        AreaSeries<_ChartData, String>(
-                          borderWidth: 1.2,
-                          borderColor: AppColors.mainColor,
-                          dataSource: data,
-                          xValueMapper: (_ChartData sales, _) => sales.x,
-                          yValueMapper: (_ChartData sales, _) => sales.y,
-                          dataLabelSettings: DataLabelSettings(isVisible: false),
-                         enableTooltip: true,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              AppColors.graphColor.withOpacity(0.3),
-                              AppColors.graphColor.withOpacity(0.01),
+                            lineTouchData: LineTouchData(
+                              getTouchLineEnd: (barData, spotIndex) {
+                                return 46;
+                              },
+                              enabled: true,
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipItems: (value) {
+                                  return value.map((e) {
+                                    return LineTooltipItem(
+                                        "${monthMap[e.x]} ${AppLocalizations.of(context)!.total} :  ${e.y}",
+                                        TextStyle(fontSize: 8));
+                                  }).toList();
+                                },
+
+                                tooltipBgColor: Colors.transparent,
+                                showOnTopOfTheChartBoxArea: true,
+                                tooltipMargin: 5,
+                              ),
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: chartData,
+                                color: AppColors.mainColor.withOpacity(0.8),
+                                isCurved: false,
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  color: AppColors.mainColor.withOpacity(0.5),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      AppColors.graphColor.withOpacity(0.2),
+                                      AppColors.graphColor.withOpacity(0.01),
+                                    ],
+                                  ),
+                                  cutOffY: 0.0,
+                                  applyCutOffY: false,
+                                ),
+                                dotData: FlDotData(
+                                  show: false,
+                                ),
+                              ),
                             ],
+                            minY: 0,
+                            gridData: FlGridData(show: false),
+                            titlesData: FlTitlesData(
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  getTitlesWidget: ((value, meta) {
+                                    String? month = monthMap[value];
+                                    return Text(
+                                      month.toString(),
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_8,
+                                        color: AppColors.navSelectedColor,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false),
+                              ),
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                  25.height,
+                  15.height,
                   15.width,
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -242,7 +292,6 @@ class WalletScreenWidget extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         Text(
                           AppLocalizations.of(context)!.history,
                           style: AppStyles.rkRegularTextStyle(
@@ -253,7 +302,8 @@ class WalletScreenWidget extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,horizontal: AppConstants.padding_8),
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_8),
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
                                   borderRadius: BorderRadius.circular(
@@ -394,8 +444,9 @@ class WalletScreenWidget extends StatelessWidget {
               ),
               10.width,
               CircularButtonWidget(
-                buttonName:AppLocalizations.of(context)!.balance_status,
-                buttonValue:'${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
+                buttonName: AppLocalizations.of(context)!.balance_status,
+                buttonValue:
+                    '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
               ),
             ],
           ),
@@ -405,9 +456,210 @@ class WalletScreenWidget extends StatelessWidget {
   }
 }
 
-class _ChartData {
+/*SideTitles get _bottomTitles => SideTitles(
+  showTitles: true,
+  getTitlesWidget: (value, meta) {
+    String text = '';
+    switch (value.toInt()) {
+      case 0:
+        text = 'Jan';
+        break;
+      case 1:
+        text = 'Feb';
+        break;
+      case 2:
+        text = 'Mar';
+        break;
+      case 3:
+        text = 'Apr';
+        break;
+      case 4:
+        text = 'May';
+        break;
+      case 5:
+        text = 'Jun';
+        break;
+      case 6:
+        text = 'Jul';
+        break;
+      case 7:
+        text = 'Aug';
+        break;
+      case 8:
+        text = 'Sep';
+        break;
+      case 9:
+        text = 'Oct';
+        break;
+      case 10:
+        text = 'Nov';
+        break;
+      case 11:
+        text = 'Dec';
+        break;
+    }
+
+    return Text(text);
+  },
+);*/
+/*class _ChartData {
   _ChartData(this.x, this.y);
 
   final String x;
   final double y;
-}
+}*/
+/*LineChart(
+                      LineChartData(
+
+                        borderData: FlBorderData(show: false,
+                        ),
+                        lineTouchData: LineTouchData(enabled: true,
+                            touchTooltipData: LineTouchTooltipData(
+                              fitInsideHorizontally: true,
+                              getTooltipItems: (value) {
+                                return value
+                                    .map((e) => LineTooltipItem(
+                                    "${e.y < 0 ? 'Expense:' : 'Income:'} ${e.y.toStringAsFixed(2)} \n Diff: ",
+                                    TextStyle(fontSize: 10)))
+                                    .toList();
+                              },
+                              tooltipBgColor: Colors.transparent,
+                            ),
+
+                        ),
+                        lineBarsData: [
+                          LineChartBarData(
+                             gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          AppColors.graphColor,
+                          AppColors.graphColor,
+                          AppColors.whiteColor
+                        ],
+                      ) ,
+                            spots: [
+                              FlSpot(0, 1),
+                              FlSpot(1, 1),
+                              FlSpot(2, 3),
+                              FlSpot(3, 4),
+                              FlSpot(4, 5),
+                              FlSpot(5, 8),
+                              FlSpot(6, 2),
+                              FlSpot(7, 7),
+                              FlSpot(8, 10),
+                              FlSpot(9, 21),
+                              FlSpot(10, 6),
+                              FlSpot(11, 3),
+                            ],
+                            isCurved: false,
+                            barWidth: 2,
+                          //  color:AppColors.mainColor,
+
+                            belowBarData: BarAreaData(
+                              show: false,
+
+                              cutOffY: 5,
+                              applyCutOffY: false,
+                            ),
+                            aboveBarData: BarAreaData(
+                              show: false,
+                            ),
+                            dotData: FlDotData(
+                              show: false,
+                            ),
+                          ),
+                        ],
+                        minY: -2,
+                        gridData: FlGridData(show: false),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(sideTitles: _bottomTitles,),
+                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        ),
+                  ),
+          ),*/
+/* SizedBox(
+                    height: 186,
+                    child: SfCartesianChart(
+                      tooltipBehavior:  TooltipBehavior(
+                          enable: true,
+                         opacity: 0.01,
+                         //  duration: 0,
+                          tooltipPosition: TooltipPosition.auto,
+                          color: AppColors.lightGreyColor.withOpacity(0.01),
+                          canShowMarker: true,
+                          textAlignment: ChartAlignment.center,
+                         builder: (data, point, series, pointIndex, seriesIndex) {
+                           return Text("${point.x} total : ${point.y}",
+                           style: TextStyle(
+                             color: AppColors.greyColor,
+                             fontSize: AppConstants.padding_10,
+                           ),
+                           );
+                        },
+                      ),
+                      margin: EdgeInsets.all(0),
+                      plotAreaBorderWidth: 0,
+                      primaryXAxis: CategoryAxis(
+                        majorTickLines: const MajorTickLines(size:0),
+                        majorGridLines: MajorGridLines(width: 0),
+                          axisLine: AxisLine(width: 0),
+                        axisLabelFormatter: (AxisLabelRenderDetails args) {
+                          late String text;
+                          late TextStyle textStyle =
+                              AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.font_8,
+                                  color: AppColors.navSelectedColor);
+                          text = '${args.text}';
+                          return ChartAxisLabel(text, textStyle);
+                        },
+                      ),
+                      primaryYAxis: CategoryAxis(
+
+                        isVisible: false,
+                        desiredIntervals: 2,
+                        rangePadding: ChartRangePadding.none,
+                      ),
+                      legend: Legend(isVisible: false),
+                      series: <ChartSeries<_ChartData, String>>[
+
+                        AreaSeries<_ChartData, String>(
+                          borderWidth: 1.2,
+
+                          borderColor: AppColors.mainColor,
+                          dataSource: data,
+                          xValueMapper: (_ChartData sales, _) => sales.x,
+                          yValueMapper: (_ChartData sales, _) => sales.y,
+                          dataLabelSettings: DataLabelSettings(isVisible: false),
+                         enableTooltip: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppColors.graphColor.withOpacity(0.3),
+                              AppColors.graphColor.withOpacity(0.01),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),*/
+/*
+final List<_ChartData> data = [
+
+  _ChartData(AppLocalizations.of(context)!.dec, 12),
+  _ChartData(AppLocalizations.of(context)!.nov, 40),
+  _ChartData(AppLocalizations.of(context)!.oct, 30),
+  _ChartData(AppLocalizations.of(context)!.sep, 6.4),
+  _ChartData(AppLocalizations.of(context)!.aug, 14),
+  _ChartData(AppLocalizations.of(context)!.jul, 40),
+  _ChartData(AppLocalizations.of(context)!.jun, 20),
+  _ChartData(AppLocalizations.of(context)!.may, 35),
+  _ChartData(AppLocalizations.of(context)!.apr, 5),
+  _ChartData(AppLocalizations.of(context)!.mar, 25),
+  _ChartData(AppLocalizations.of(context)!.feb, 7),
+  _ChartData(AppLocalizations.of(context)!.jan, 38),
+];
+*/
