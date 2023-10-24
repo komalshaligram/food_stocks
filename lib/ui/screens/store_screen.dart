@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -13,7 +14,9 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../../bloc/store/store_bloc.dart';
 import '../utils/themes/app_colors.dart';
+import '../utils/themes/app_strings.dart';
 import '../widget/common_product_category_widget.dart';
+import '../widget/store_screen_shimmer_widget.dart';
 
 class StoreRoute {
   static Widget get route => const StoreScreen();
@@ -49,18 +52,21 @@ class StoreScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: Stack(
                 children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        80.height,
-                        buildListTitles(
-                            context: context,
-                            title: AppLocalizations.of(context)!.categories,
-                            subTitle:
-                            AppLocalizations.of(context)!.all_categories,
-                            onTap: () {}),
-                        SizedBox(
-                          width: getScreenWidth(context),
+                  state.isShimmering
+                      ? StoreScreenShimmerWidget()
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              80.height,
+                              buildListTitles(
+                                  context: context,
+                                  title:
+                                      AppLocalizations.of(context)!.categories,
+                                  subTitle: AppLocalizations.of(context)!
+                                      .all_categories,
+                                  onTap: () {}),
+                              SizedBox(
+                                width: getScreenWidth(context),
                           height: 110,
                           child: ListView.builder(
                             itemCount: state.productCategoryList.length < 6
@@ -128,13 +134,25 @@ class StoreScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) {
                               return buildCompanyListItem(
-                                  companyLogo:
-                                      state.suppliersList[index].logo ?? '',
-                                  companyName: state.suppliersList[index]
-                                          .supplierDetail?.companyName ??
-                                      '',
-                                  onTap: () {});
-                            },
+                                        companyLogo:
+                                            state.suppliersList[index].logo ??
+                                                '',
+                                        companyName: state.suppliersList[index]
+                                                .supplierDetail?.companyName ??
+                                            '',
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context,
+                                              RouteDefine
+                                                  .supplierProductsScreen.name,
+                                              arguments: {
+                                                AppStrings.supplierIdString:
+                                                    state.suppliersList[index]
+                                                            .id ??
+                                                        ''
+                                              });
+                                        });
+                                  },
                           ),
                         ),
                         buildListTitles(
@@ -218,9 +236,17 @@ class StoreScreenWidget extends StatelessWidget {
                     onFilterTap: () {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
-                    onScanTap: () {
-                      Navigator.pushNamed(
-                          context, RouteDefine.qrScanScreen.name);
+                    onScanTap: () async {
+                      // Navigator.pushNamed(
+                      //     context, RouteDefine.qrScanScreen.name);
+                      String result = await scanBarcodeOrQRCode(
+                          context: context,
+                          cancelText: AppLocalizations.of(context)!.cancel,
+                          scanMode: ScanMode.QR);
+                      if (result != '-1') {
+                        // -1 result for cancel scanning
+                        debugPrint('result = $result');
+                      }
                     },
                     controller: TextEditingController(),
                     onOutSideTap: () {
@@ -291,10 +317,11 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Padding buildListTitles({required BuildContext context,
-    required String title,
-    required void Function() onTap,
-    required subTitle}) {
+  Padding buildListTitles(
+      {required BuildContext context,
+      required String title,
+      required void Function() onTap,
+      required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,
@@ -322,9 +349,10 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryListItem({required String categoryName,
-    required void Function() onTap,
-    required String categoryImage}) {
+  Widget buildCategoryListItem(
+      {required String categoryName,
+      required void Function() onTap,
+      required String categoryImage}) {
     return Container(
       height: 90,
       width: 90,
@@ -481,7 +509,7 @@ class StoreScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                    "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                 onPressed: () {},
                 // height: 35,
                 textColor: AppColors.whiteColor,
@@ -496,9 +524,10 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCompanyListItem({required String companyLogo,
-    required String companyName,
-    required void Function() onTap}) {
+  Widget buildCompanyListItem(
+      {required String companyLogo,
+      required String companyName,
+      required void Function() onTap}) {
     return Container(
       height: 90,
       width: 90,
@@ -552,11 +581,11 @@ class StoreScreenWidget extends StatelessWidget {
                 width: 80,
                 alignment: Alignment.center,
                 margin:
-                EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
                   borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                      BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                   border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 child: Text(
@@ -575,7 +604,8 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryFilterItem({required String category, required void Function() onTap}) {
+  Widget buildCategoryFilterItem(
+      {required String category, required void Function() onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -598,12 +628,17 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails({required BuildContext context, required bool isMirror}) async {
+  void showProductDetails(
+      {required BuildContext context, required bool isMirror}) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      // showDragHandle: true,
       useSafeArea: true,
+      enableDrag: true,
       builder: (context) {
         return DraggableScrollableSheet(
           expand: true,
@@ -690,12 +725,12 @@ class StoreScreenWidget extends StatelessWidget {
                               border: Border(
                                 top: BorderSide(
                                     color:
-                                    AppColors.borderColor.withOpacity(0.5),
+                                        AppColors.borderColor.withOpacity(0.5),
                                     width: 1),
                                 bottom: BorderSide(
                                     width: 1,
                                     color:
-                                    AppColors.borderColor.withOpacity(0.5)),
+                                        AppColors.borderColor.withOpacity(0.5)),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -844,7 +879,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   flex: 5,
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Sale',
@@ -913,7 +948,7 @@ class StoreScreenWidget extends StatelessWidget {
                           ),
                           Padding(
                             padding:
-                            const EdgeInsets.all(AppConstants.padding_20),
+                                const EdgeInsets.all(AppConstants.padding_20),
                             child: CommonProductButtonWidget(
                               title: AppLocalizations.of(context)!.add_to_order,
                               onPressed: () {},

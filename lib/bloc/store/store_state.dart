@@ -8,6 +8,7 @@ class StoreState with _$StoreState {
     required List<Category> productCategoryList,
     required List<Sale> productSalesList,
     required List<Datum> suppliersList,
+    required bool isShimmering,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
@@ -16,5 +17,6 @@ class StoreState with _$StoreState {
         productCategoryList: [],
         productSalesList: [],
         suppliersList: [],
+        isShimmering: false,
       );
 }

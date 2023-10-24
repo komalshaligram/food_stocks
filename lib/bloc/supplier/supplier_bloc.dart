@@ -21,12 +21,14 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
     on<SupplierEvent>((event, emit) async {
       if (event is _GetSuppliersListEvent) {
         try {
+          emit(state.copyWith(isShimmering: true));
           final res =
               await DioClient(event.context).post(AppUrls.getSuppliersUrl);
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
-            emit(state.copyWith(suppliersList: response.data ?? []));
+            emit(state.copyWith(
+                suppliersList: response.data ?? [], isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,

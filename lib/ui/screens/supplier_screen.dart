@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
 
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
@@ -50,18 +51,19 @@ class SupplierScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            child: GridView.builder(
-              shrinkWrap: true,
-              itemCount: state.suppliersList.length,
-              padding:
-                  EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (context, index) => buildSupplierListItem(
-                  context: context,
-                  supplierLogo: state.suppliersList[index].logo ?? '',
-                  supplierName:
-                      state.suppliersList[index].supplierDetail?.companyName ??
+            child: state.isShimmering
+                ? SupplierScreenShimmerWidget()
+                : GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.suppliersList.length,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3),
+                    itemBuilder: (context, index) => buildSupplierListItem(
+                        context: context,
+                        supplierLogo: state.suppliersList[index].logo ?? '',
+                        supplierName: state.suppliersList[index].supplierDetail?.companyName ??
                           '',
                   onTap: () {
                     Navigator.pushNamed(
@@ -134,7 +136,7 @@ class SupplierScreenWidget extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 0,
+          bottom: AppConstants.padding_10,
           left: AppConstants.padding_5,
           right: AppConstants.padding_5,
           child: Container(
@@ -145,7 +147,7 @@ class SupplierScreenWidget extends StatelessWidget {
                 vertical: AppConstants.padding_5,
                 horizontal: AppConstants.padding_5),
             decoration: BoxDecoration(
-              color: AppColors.mainColor,
+              color: AppColors.mainColor.withOpacity(0.9),
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(AppConstants.radius_10),
                   bottomRight: Radius.circular(AppConstants.radius_10)),

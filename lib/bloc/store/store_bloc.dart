@@ -39,6 +39,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     : false));
       } else if (event is _GetProductCategoriesListEvent) {
         try {
+          emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context)
               .get(path: AppUrls.getProductCategoriesUrl);
           ProductCategoriesResModel response =
@@ -76,7 +77,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
-            emit(state.copyWith(suppliersList: response.data ?? []));
+            emit(state.copyWith(
+                suppliersList: response.data ?? [], isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,
