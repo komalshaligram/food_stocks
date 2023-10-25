@@ -21,6 +21,7 @@ class FileUploadEvent with _$FileUploadEvent {
 
   factory FileUploadEvent.uploadApiEvent({
     required BuildContext context,
+    bool? isFromDelete,
   }) = _uploadApiEvent;
 
   factory FileUploadEvent.deleteFileEvent({

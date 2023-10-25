@@ -24,8 +24,7 @@ class StoreCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StoreCategoryBloc()
-        ..add(StoreCategoryEvent.changeUIUponAppLangEvent()),
+      create: (context) => StoreCategoryBloc(),
       child: StoreCategoryScreenWidget(),
     );
   }
@@ -125,19 +124,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         color: AppColors.mainColor,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(
-                                              state.isMirror
+                                              isRTLContent(context: context)
                                                   ? AppConstants.radius_5
                                                   : AppConstants.radius_100),
                                           bottomLeft: Radius.circular(
-                                              state.isMirror
+                                              isRTLContent(context: context)
                                                   ? AppConstants.radius_5
                                                   : AppConstants.radius_100),
                                           topRight: Radius.circular(
-                                              state.isMirror
+                                              isRTLContent(context: context)
                                                   ? AppConstants.radius_100
                                                   : AppConstants.radius_5),
                                           bottomRight: Radius.circular(
-                                              state.isMirror
+                                              isRTLContent(context: context)
                                                   ? AppConstants.radius_100
                                                   : AppConstants.radius_5),
                                         ),
@@ -175,19 +174,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           color: AppColors.navSelectedColor,
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(
-                                                state.isMirror
+                                                isRTLContent(context: context)
                                                     ? AppConstants.radius_100
                                                     : AppConstants.radius_5),
                                             bottomLeft: Radius.circular(
-                                                state.isMirror
+                                                isRTLContent(context: context)
                                                     ? AppConstants.radius_100
                                                     : AppConstants.radius_5),
                                             topRight: Radius.circular(
-                                                state.isMirror
+                                                isRTLContent(context: context)
                                                     ? AppConstants.radius_5
                                                     : AppConstants.radius_100),
                                             bottomRight: Radius.circular(
-                                                state.isMirror
+                                                isRTLContent(context: context)
                                                     ? AppConstants.radius_5
                                                     : AppConstants.radius_100),
                                           ),
@@ -257,7 +256,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         itemBuilder: (context, index) {
                                           return buildPlanoGramListItem(
                                               context: context,
-                                              isMirror: false,
+                                              isRTL: isRTLContent(
+                                                  context: context),
                                               width: getScreenWidth(context) /
                                                   3.2);
                                         },
@@ -296,7 +296,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return buildPlanoGramListItem(
                                       context: context,
-                                      isMirror: false,
+                                      isRTL: isRTLContent(context: context),
                                       width: getScreenWidth(context) / 3.2);
                                 },
                               )
@@ -306,7 +306,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 ),
                 CommonProductCategoryWidget(
                   isCategoryExpand: state.isCategoryExpand,
-                  isMirror: !state.isMirror ? true : false,
+                  isRTL: isRTLContent(context: context),
                   onFilterTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                   },
@@ -338,7 +338,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   }
 
   Container buildPlanoGramListItem(
-      {required BuildContext context, double? width, required bool isMirror}) {
+      {required BuildContext context, double? width, required bool isRTL}) {
     return Container(
       // height: 190,
       width: width,
@@ -399,33 +399,37 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    debugPrint('+');
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.iconBGColor,
-                      border: Border(
-                        left: !isMirror
-                            ? BorderSide.none
-                            : BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1),
-                        right: !isMirror
-                            ? BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1)
-                            : BorderSide.none,
+                Expanded(
+                  flex: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      debugPrint('+');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.iconBGColor,
+                        border: Border(
+                          left: isRTL
+                              ? BorderSide(
+                                  color: AppColors.borderColor.withOpacity(0.7),
+                                  width: 1)
+                              : BorderSide.none,
+                          right: isRTL
+                              ? BorderSide.none
+                              : BorderSide(
+                                  color: AppColors.borderColor.withOpacity(0.7),
+                                  width: 1),
+                        ),
                       ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_3),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.add, color: AppColors.mainColor),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_3),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.add, color: AppColors.mainColor),
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: Container(
                     color: AppColors.whiteColor,
                     padding: EdgeInsets.symmetric(
@@ -440,30 +444,33 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    debugPrint('-');
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.iconBGColor,
-                      border: Border(
-                        left: !isMirror
-                            ? BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1)
-                            : BorderSide.none,
-                        right: !isMirror
-                            ? BorderSide.none
-                            : BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.7),
-                                width: 1),
+                Expanded(
+                  flex: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      debugPrint('-');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.iconBGColor,
+                        border: Border(
+                          left: isRTL
+                              ? BorderSide.none
+                              : BorderSide(
+                                  color: AppColors.borderColor.withOpacity(0.7),
+                                  width: 1),
+                          right: isRTL
+                              ? BorderSide(
+                                  color: AppColors.borderColor.withOpacity(0.7),
+                                  width: 1)
+                              : BorderSide.none,
+                        ),
                       ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_3),
+                      alignment: Alignment.center,
+                      child: Icon(Icons.remove, color: AppColors.mainColor),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_3),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.remove, color: AppColors.mainColor),
                   ),
                 ),
               ],

@@ -7,6 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/storage/shared_preferences_helper.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -98,4 +101,11 @@ Future<String> scanBarcodeOrQRCode(
   }
   debugPrint('barcode = $barcodeSOrQRScanRes');
   return barcodeSOrQRScanRes;
+}
+
+bool isRTLContent({required BuildContext context}) {
+  Locale locale = Localizations.localeOf(context);
+  List<Locale> rtlLocales = [Locale('he')];
+  debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
+  return rtlLocales.contains(locale) ? true : false;
 }

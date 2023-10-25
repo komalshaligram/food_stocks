@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
@@ -189,9 +190,10 @@ class StoreScreenWidget extends StatelessWidget {
                                     '0'),
                                 onTap: () {
                                   showProductDetails(
-                                      context: context,
-                                      isMirror: state.isMirror);
-                                },
+                                            context: context,
+                                            isRTL:
+                                                isRTLContent(context: context));
+                                      },
                                 onButtonTap: () {},
                               );
                             },
@@ -232,7 +234,7 @@ class StoreScreenWidget extends StatelessWidget {
                   ),
                   CommonProductCategoryWidget(
                     isCategoryExpand: state.isCategoryExpand,
-                    isMirror: !state.isMirror ? true : false,
+                    isRTL: isRTLContent(context: context),
                     onFilterTap: () {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
@@ -360,6 +362,7 @@ class StoreScreenWidget extends StatelessWidget {
           horizontal: AppConstants.padding_5,
           vertical: AppConstants.padding_10),
       clipBehavior: Clip.hardEdge,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
@@ -376,8 +379,9 @@ class StoreScreenWidget extends StatelessWidget {
             Image.network(
               "${AppUrls.baseFileUrl}$categoryImage",
               fit: BoxFit.contain,
-              height: 90,
-              width: 90,
+              height: 80,
+              width: 80,
+              alignment: Alignment.center,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress?.cumulativeBytesLoaded !=
                     loadingProgress?.expectedTotalBytes) {
@@ -393,11 +397,13 @@ class StoreScreenWidget extends StatelessWidget {
               },
               errorBuilder: (context, error, stackTrace) {
                 // debugPrint('product category list image error : $error');
-                return 70.height;
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable),
+                );
               },
             ),
             Positioned(
-              bottom: AppConstants.padding_5,
+              bottom: 0,
               left: AppConstants.padding_5,
               right: AppConstants.padding_5,
               child: Container(
@@ -413,12 +419,16 @@ class StoreScreenWidget extends StatelessWidget {
                   border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 clipBehavior: Clip.hardEdge,
-                child: Text(
-                  categoryName,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12, color: AppColors.whiteColor),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
+                child: CommonMarqueeWidget(
+                  direction: Axis.horizontal,
+                  child: Text(
+                    categoryName,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.whiteColor),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             )
@@ -481,7 +491,9 @@ class StoreScreenWidget extends StatelessWidget {
                 },
                 errorBuilder: (context, error, stackTrace) {
                   // debugPrint('sale list image error : $error');
-                  return 70.height;
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable),
+                  );
                 },
               ),
             ),
@@ -569,7 +581,9 @@ class StoreScreenWidget extends StatelessWidget {
               },
               errorBuilder: (context, error, stackTrace) {
                 // debugPrint('product category list image error : $error');
-                return 0.height;
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable),
+                );
               },
             ),
             Positioned(
@@ -629,7 +643,7 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required bool isMirror}) async {
+      {required BuildContext context, required bool isRTL}) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -769,17 +783,17 @@ class StoreScreenWidget extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: AppColors.iconBGColor,
                                           borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(isMirror
+                                            topLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
-                                            bottomLeft: Radius.circular(isMirror
+                                            bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
                                             bottomRight: Radius.circular(
-                                                isMirror
-                                                    ? AppConstants.radius_50
+                                                isRTL
+                                                ? AppConstants.radius_50
                                                     : AppConstants.radius_5),
-                                            topRight: Radius.circular(isMirror
+                                            topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
                                           ),
@@ -834,17 +848,17 @@ class StoreScreenWidget extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: AppColors.iconBGColor,
                                           borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(isMirror
+                                            topLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
-                                            bottomLeft: Radius.circular(isMirror
+                                            bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
                                             bottomRight: Radius.circular(
-                                                isMirror
-                                                    ? AppConstants.radius_5
+                                                isRTL
+                                                ? AppConstants.radius_5
                                                     : AppConstants.radius_50),
-                                            topRight: Radius.circular(isMirror
+                                            topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
                                           ),

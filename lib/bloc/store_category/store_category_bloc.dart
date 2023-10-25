@@ -20,14 +20,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _ChangeUIUponAppLangEvent) {
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
-        emit(state.copyWith(
-            isMirror:
-                preferencesHelper.getAppLanguage() == AppStrings.hebrewString
-                    ? true
-                    : false));
       } else if (event is _ChangeCategoryOrSubCategoryEvent) {
         emit(state.copyWith(isCategory: event.isCategory));
       }

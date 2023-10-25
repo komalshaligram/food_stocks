@@ -1,5 +1,4 @@
 class AppImagePath {
-
   ///svg
   static const String splashLogo = 'assets/images/splash_logo.svg';
   static const String profile = 'assets/images/profile.svg';
@@ -27,6 +26,6 @@ class AppImagePath {
   static const String product2 = 'assets/images/product2.png';
   static const String product3 = 'assets/images/product3.png';
   static const String successIcon = 'assets/images/icon_success.png';
-
-
+  static const String imageNotAvailable =
+      'assets/images/image_not_available.png';
 }

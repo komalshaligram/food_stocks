@@ -41,7 +41,7 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-       HomeBloc bloc = context.read<HomeBloc>();
+    HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -50,7 +50,8 @@ class HomeScreenWidget extends StatelessWidget {
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
-              onFocusGained: ()=>bloc.add(HomeEvent.getPreferencesDataEvent()),
+              onFocusGained: () =>
+                  bloc.add(HomeEvent.getPreferencesDataEvent()),
               child: SafeArea(
                 child: Column(
                   children: [
@@ -87,7 +88,8 @@ class HomeScreenWidget extends StatelessWidget {
                                   clipBehavior: Clip.hardEdge,
                                   child: state.UserImageUrl.isNotEmpty
                                       ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           child: CachedNetworkImage(
                                             placeholder: (context, url) => Center(
                                                 child:
@@ -107,7 +109,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
                                     ? CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
+                                  placeholder: (context, url) => Container(
                                             decoration: BoxDecoration(
                                                 color: AppColors.whiteColor,
                                                 border: Border.all(
@@ -115,13 +117,22 @@ class HomeScreenWidget extends StatelessWidget {
                                                         .withOpacity(0.5),
                                                     width: 1)),
                                             alignment: Alignment.center,
-                                            child:
-                                                const CupertinoActivityIndicator()),
+                                            child: Container(
+                                                height: 50,
+                                                width: getScreenWidth(context) *
+                                                    0.35,
+                                                alignment: Alignment.center,
+                                                child:
+                                                    const CupertinoActivityIndicator())),
                                         imageUrl:
                                             '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
                                         height: 50,
-                                      //  width: getScreenWidth(context) * 0.35,
-                                        fit: BoxFit.fill,
+                                        width: getScreenWidth(context) * 0.35,
+                                        fit: BoxFit.fitHeight,
+                                        alignment:
+                                            isRTLContent(context: context)
+                                                ? Alignment.centerRight
+                                                : Alignment.centerLeft,
                                         errorWidget: (context, url, error) {
                                           return Container(
                                             decoration: BoxDecoration(
@@ -140,13 +151,14 @@ class HomeScreenWidget extends StatelessWidget {
                           ),
                           Container(
                             height: 60,
-                            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 3.0),
                             decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
                                 boxShadow: [
                                   BoxShadow(
-                                      color:
-                                          AppColors.shadowColor.withOpacity(0.3),
+                                      color: AppColors.shadowColor
+                                          .withOpacity(0.3),
                                       blurRadius: AppConstants.blur_10)
                                 ],
                                 borderRadius: const BorderRadius.all(
@@ -163,11 +175,13 @@ class HomeScreenWidget extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: AppColors.iconBGColor,
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(AppConstants.radius_100)),
+                                        Radius.circular(
+                                            AppConstants.radius_100)),
                                   ),
                                   child: InkWell(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(AppConstants.radius_100)),
+                                        Radius.circular(
+                                            AppConstants.radius_100)),
                                     onTap: () {
                                       Navigator.pushNamed(context,
                                           RouteDefine.messageScreen.name);
@@ -188,18 +202,19 @@ class HomeScreenWidget extends StatelessWidget {
                                               height: 16,
                                               width: 16,
                                               decoration: BoxDecoration(
-                                                  color:
-                                                      AppColors.notificationColor,
+                                                  color: AppColors
+                                                      .notificationColor,
                                                   border: Border.all(
-                                                      color: AppColors.whiteColor,
+                                                      color:
+                                                          AppColors.whiteColor,
                                                       width: 1),
                                                   shape: BoxShape.circle),
                                               alignment: Alignment.center,
                                               child: Text('4',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
-                                                          size:
-                                                              AppConstants.font_8,
+                                                          size: AppConstants
+                                                              .font_8,
                                                           color: AppColors
                                                               .whiteColor)),
                                             ))
@@ -270,7 +285,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             Text(
                                               AppLocalizations.of(context)!
                                                   .balance_status,
-                                              style: AppStyles.rkRegularTextStyle(
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.smallFont,
                                                 color: AppColors.blackColor,
                                               ),
@@ -292,12 +308,14 @@ class HomeScreenWidget extends StatelessWidget {
                                                     startAngle: 270,
                                                     endAngle: 270,
                                                     // radiusFactor: 0.8,
-                                                    axisLineStyle: AxisLineStyle(
-                                                        thicknessUnit:
-                                                            GaugeSizeUnit.factor,
-                                                        thickness: 0.2,
-                                                        color: AppColors
-                                                            .borderColor),
+                                                    axisLineStyle:
+                                                        AxisLineStyle(
+                                                            thicknessUnit:
+                                                                GaugeSizeUnit
+                                                                    .factor,
+                                                            thickness: 0.2,
+                                                            color: AppColors
+                                                                .borderColor),
                                                     annotations: [
                                                       GaugeAnnotation(
                                                         angle: 270,
@@ -305,9 +323,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                           '7550\n${AppLocalizations.of(context)!.currency}',
                                                           style: AppStyles
                                                               .rkRegularTextStyle(
-                                                                  size:
-                                                                      AppConstants
-                                                                          .font_14,
+                                                                  size: AppConstants
+                                                                      .font_14,
                                                                   color: AppColors
                                                                       .blackColor,
                                                                   fontWeight:
@@ -326,8 +343,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                         animationDuration: 300,
                                                         animationType:
                                                             AnimationType.ease,
-                                                        cornerStyle:
-                                                            CornerStyle.bothCurve,
+                                                        cornerStyle: CornerStyle
+                                                            .bothCurve,
                                                         value: 7550,
                                                         width: 6,
                                                       ),
@@ -414,8 +431,9 @@ class HomeScreenWidget extends StatelessWidget {
                                 itemCount: 10,
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
-                                itemBuilder: (context, index) => productListItem(
-                                    index: index, context: context),
+                                itemBuilder: (context, index) =>
+                                    productListItem(
+                                        index: index, context: context),
                               ),
                             ),
                             10.height,
@@ -462,8 +480,8 @@ class HomeScreenWidget extends StatelessWidget {
                               itemCount: 2,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemBuilder: (context, index) =>
-                                  messageListItem(index: index, context: context),
+                              itemBuilder: (context, index) => messageListItem(
+                                  index: index, context: context),
                             ),
                             85.height,
                           ],
