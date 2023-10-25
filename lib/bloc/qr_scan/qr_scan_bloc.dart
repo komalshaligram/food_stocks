@@ -8,9 +8,7 @@ part 'qr_scan_state.dart';
 part 'qr_scan_bloc.freezed.dart';
 
 class QrScanBloc extends Bloc<QrScanEvent, QrScanState> {
-  QrScanBloc() : super(const QrScanState.initial()) {
-    on<QrScanEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  QrScanBloc() : super(QrScanState.initial()) {
+    on<QrScanEvent>((event, emit) {});
   }
 }

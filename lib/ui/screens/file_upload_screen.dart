@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/file_upload_screen_Shimmer_widget.dart';
+import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
@@ -177,12 +177,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     fontColors: AppColors.mainColor,
                                     borderColor: AppColors.mainColor,
                                     onPressed: () async {
-                                      // SharedPreferencesHelper preferencesHelper =
-                                      //     SharedPreferencesHelper(
-                                      //         prefs: await SharedPreferences
-                                      //             .getInstance());
-                                      // preferencesHelper.setUserLoggedIn(
-                                      //     isLoggedIn: true);
                                       showSnackBar(
                                           context: context,
                                           title:

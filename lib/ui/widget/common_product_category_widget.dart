@@ -41,8 +41,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
         height: getScreenHeight(context),
         width: getScreenWidth(context),
         padding: EdgeInsets.only(top: AppConstants.padding_10),
-        color:
-        isCategoryExpand ? AppColors.shadowColor.withOpacity(0.15) : null,
+        color: isCategoryExpand ? Color.fromARGB(80, 0, 0, 0) : null,
         child: Column(
           children: [
             AnimatedContainer(
@@ -52,7 +51,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_30)),
+                    BorderRadius.all(Radius.circular(AppConstants.radius_30)),
                 color: AppColors.whiteColor,
                 boxShadow: [
                   BoxShadow(

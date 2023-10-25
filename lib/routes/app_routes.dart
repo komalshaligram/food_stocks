@@ -16,6 +16,7 @@ import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
+import 'package:food_stock/ui/screens/supplier_products_screen.dart';
 import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
 import '../ui/screens/basket_screen.dart';
@@ -30,6 +31,7 @@ import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
+import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
 
 enum RouteDefine {
@@ -65,6 +67,8 @@ enum RouteDefine {
   orderSummaryScreen,
   orderSuccessfulScreen,
   qrScanScreen,
+  supplierScreen,
+  supplierProductsScreen,
 }
 
 class AppRouting {
@@ -105,6 +109,9 @@ class AppRouting {
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
       RouteDefine.qrScanScreen.name: (_) => QrScanRoute.route,
+      RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
+      RouteDefine.supplierProductsScreen.name: (_) =>
+          SupplierProductsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

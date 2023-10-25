@@ -38,6 +38,7 @@ class AppStrings {
   static const idParamString = '_id';
   static const clientDetailString = 'clientDetail';
   static const logoString = 'logo';
+  static const supplierIdString = 'supplierId';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

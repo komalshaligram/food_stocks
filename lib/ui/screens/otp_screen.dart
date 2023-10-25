@@ -98,7 +98,7 @@ class OTPScreenWidget extends StatelessWidget {
                         autoFocus: true,
                         fieldWidth: (getScreenWidth(context) -
                                 (getScreenWidth(context) * 0.2)) /
-                            5.5,
+                            5.55,
                         numberOfFields: 4,
                         borderWidth: 1,
                         disabledBorderColor: AppColors.borderColor,

@@ -5,12 +5,18 @@ class StoreState with _$StoreState {
   const factory StoreState({
     required bool isCategoryExpand,
     required bool isMirror,
-    required ProductCategoriesResModel productCategoryList,
+    required List<Category> productCategoryList,
+    required List<Sale> productSalesList,
+    required List<Datum> suppliersList,
+    required bool isShimmering,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
-        isCategoryExpand: false,
+    isCategoryExpand: false,
         isMirror: false,
-        productCategoryList: ProductCategoriesResModel(),
+        productCategoryList: [],
+        productSalesList: [],
+        suppliersList: [],
+        isShimmering: false,
       );
 }
