@@ -28,4 +28,12 @@ class AppImagePath {
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable =
       'assets/images/image_not_available.png';
+  static const String imageNotAvailable1 =
+      'assets/images/image_not_available1.png';
+  static const String imageNotAvailable2 =
+      'assets/images/image_not_available2.png';
+  static const String imageNotAvailable3 =
+      'assets/images/image_not_available3.jpg';
+  static const String imageNotAvailable4 =
+      'assets/images/image_not_available4.png';
 }

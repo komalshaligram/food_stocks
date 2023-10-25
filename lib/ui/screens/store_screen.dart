@@ -79,10 +79,10 @@ class StoreScreenWidget extends StatelessWidget {
                                 horizontal: AppConstants.padding_5),
                             itemBuilder: (context, index) {
                               return buildCategoryListItem(
-                                  categoryImage: state
+                                  categoryImage: /*state
                                           .productCategoryList[index]
-                                          .categoryImage ??
-                                      '',
+                                          .categoryImage ??*/
+                                            '',
                                   categoryName: state.productCategoryList[index]
                                           .categoryName ??
                                       '',
@@ -362,7 +362,7 @@ class StoreScreenWidget extends StatelessWidget {
           horizontal: AppConstants.padding_5,
           vertical: AppConstants.padding_10),
       clipBehavior: Clip.hardEdge,
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
@@ -380,7 +380,7 @@ class StoreScreenWidget extends StatelessWidget {
               "${AppUrls.baseFileUrl}$categoryImage",
               fit: BoxFit.contain,
               height: 80,
-              width: 80,
+              width: 90,
               alignment: Alignment.center,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress?.cumulativeBytesLoaded !=
@@ -398,14 +398,21 @@ class StoreScreenWidget extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 // debugPrint('product category list image error : $error');
                 return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable),
+                  padding:
+                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable4,
+                    fit: BoxFit.fill,
+                    width: 90,
+                    height: 70,
+                  ),
                 );
               },
             ),
             Positioned(
               bottom: 0,
-              left: AppConstants.padding_5,
-              right: AppConstants.padding_5,
+              left: 0,
+              right: 0,
               child: Container(
                 // height: 20,
                 alignment: Alignment.center,
@@ -414,8 +421,9 @@ class StoreScreenWidget extends StatelessWidget {
                     vertical: AppConstants.padding_2),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppConstants.radius_10),
+                      bottomRight: Radius.circular(AppConstants.radius_10)),
                   border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 clipBehavior: Clip.hardEdge,
@@ -582,33 +590,48 @@ class StoreScreenWidget extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 // debugPrint('product category list image error : $error');
                 return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable),
+                  padding:
+                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable4,
+                    fit: BoxFit.fill,
+                    width: 90,
+                    height: 70,
+                  ),
                 );
               },
             ),
             Positioned(
-              bottom: AppConstants.padding_5,
-              left: AppConstants.padding_5,
-              right: AppConstants.padding_5,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: Container(
                 height: 20,
-                width: 80,
+                // width: 90,
                 alignment: Alignment.center,
-                margin:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                // margin:
+                //     EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_5,
+                    vertical: AppConstants.padding_2),
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(AppConstants.radius_10),
+                      bottomLeft: Radius.circular(AppConstants.radius_10)),
                   border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
-                child: Text(
-                  companyName,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12, color: AppColors.whiteColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                child: CommonMarqueeWidget(
+                  direction: Axis.horizontal,
+                  child: Text(
+                    companyName,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.whiteColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             )
