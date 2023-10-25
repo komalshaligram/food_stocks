@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
 
 void main() async {
+
   runZonedGuarded<Future<void>>(() async {
 
     WidgetsFlutterBinding.ensureInitialized();
