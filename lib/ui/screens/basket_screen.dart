@@ -45,98 +45,101 @@ class BasketScreenWidget extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(AppConstants.padding_10),
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor.withOpacity(0.95),
-                        boxShadow: [
-                          BoxShadow(
-                              color: AppColors.shadowColor.withOpacity(0.20),
-                              blurRadius: AppConstants.blur_10),
-                        ],
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_40)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: AppConstants.padding_5,
-                                horizontal: AppConstants.padding_5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(AppConstants.radius_30),
-                                color: AppColors.whiteColor,
-                                border:
-                                    Border.all(color: AppColors.borderColor)),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: getScreenWidth(context) * 0.35,
-                                  height: AppConstants.containerSize_50,
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_5,
-                                      horizontal: AppConstants.padding_5),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.mainColor,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(AppConstants.radius_5),
-                                          bottomRight: Radius.circular(AppConstants.radius_25),
-                                          topRight: Radius.circular(AppConstants.radius_25))),
-                                  child: Text(
-                                    '${'11.90₪ : ' + AppLocalizations.of(context)!.total}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.whiteColor,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                                8.width,
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.orderSummaryScreen.name);
-                                  },
-                                  child: Container(
-                                    width: getScreenWidth(context) * 0.22,
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Container(
+                        margin: EdgeInsets.all(AppConstants.padding_10),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor.withOpacity(0.95),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.shadowColor.withOpacity(0.20),
+                                blurRadius: AppConstants.blur_10),
+                          ],
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_40)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(AppConstants.radius_30),
+                                  color: AppColors.whiteColor,
+                                  border:
+                                      Border.all(color: AppColors.borderColor)),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: getScreenWidth(context) * 0.36,
                                     height: AppConstants.containerSize_50,
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_5),
                                     decoration: BoxDecoration(
-                                        color: AppColors.navSelectedColor,
+                                        color: AppColors.mainColor,
                                         borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(AppConstants.radius_25),
-                                            bottomLeft: Radius.circular(AppConstants.radius_25),
-                                            bottomRight: Radius.circular(AppConstants.radius_4),
-                                            topRight: Radius.circular(AppConstants.radius_4))),
+                                            topLeft: Radius.circular(AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(AppConstants.radius_5),
+                                            bottomRight: Radius.circular(AppConstants.radius_25),
+                                            topRight: Radius.circular(AppConstants.radius_25))),
                                     child: Text(
-                                      AppLocalizations.of(context)!.submit,
+                                      '${'11.90₪ : ' + AppLocalizations.of(context)!.total}',
                                       style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.whiteColor,
+                                          size: getScreenWidth(context) <= 380 ?AppConstants.mediumFont :AppConstants.normalFont,
+                                          color: AppColors.whiteColor,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                  5.width,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.orderSummaryScreen.name);
+                                    },
+                                    child: Container(
+                                      width: getScreenWidth(context) * 0.22,
+                                      height: AppConstants.containerSize_50,
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5,
+                                          horizontal: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.navSelectedColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(AppConstants.radius_25),
+                                              bottomLeft: Radius.circular(AppConstants.radius_25),
+                                              bottomRight: Radius.circular(AppConstants.radius_4),
+                                              topRight: Radius.circular(AppConstants.radius_4))),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.submit,
+                                        style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.normalFont,
+                                          color: AppColors.whiteColor,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          SvgPicture.asset(
-                            AppImagePath.delete,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.empty,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.greyColor,
+                            SvgPicture.asset(
+                              AppImagePath.delete,
                             ),
-                          ),
-                          5.width,
-                        ],
+                            Text(
+                              AppLocalizations.of(context)!.empty,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.greyColor,
+                              ),
+                            ),
+                            5.width,
+                          ],
+                        ),
                       ),
                     ),
                     state.basketProductList.isNotEmpty
@@ -224,7 +227,7 @@ class BasketScreenWidget extends StatelessWidget {
                 '${state.basketProductList[index].productWeight!.toString() + AppLocalizations.of(context)!.kg}',
                 style: TextStyle(
                   color: AppColors.blackColor,
-                  fontSize: AppConstants.font_14,
+                  fontSize: AppConstants.font_12,
                 ),
               ),
               GestureDetector(

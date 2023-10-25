@@ -94,6 +94,7 @@ class AppStrings {
   static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
   static const fillUpClosingTimeString = 'Please fill up closing time';
   static const noInternetConnection = 'No Internet Connection';
+  static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
 
 
   //hint strings

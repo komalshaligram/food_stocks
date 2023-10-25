@@ -1,4 +1,4 @@
-//import 'dart:ui' as ui;
+/*import 'dart:ui' as ui;*/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,7 +40,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
-   /* var bytes;*/
+    // var bytes;
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -121,12 +121,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w700,
-                            valueTextSize: AppConstants.mediumFont,
+                            valueTextSize: AppConstants.smallFont,
                           ),
                           5.width,
                           CommonOrderContentWidget(
                             flexValue: 2,
-                            title: AppLocalizations.of(context)!.delivery_date,
+                            title:
+                                AppLocalizations.of(context)!.delivery_date,
                             value: "12.02.23 10:00-12:00",
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
@@ -200,7 +201,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColors.mainColor,
                                   borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_100)),
+                                      Radius.circular(
+                                          AppConstants.radius_100)),
                                   border: Border.all(
                                     color: AppColors.whiteColor,
                                     width: 1,
@@ -211,7 +213,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   style: TextStyle(
                                       color: AppColors.whiteColor,
                                       fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w400),
+                                      fontWeight: FontWeight.w700),
                                 )),
                           ),
                         ],
@@ -251,14 +253,16 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         state.isSignaturePadActive
-                            ? SfSignaturePad(
-                                key: signatureGlobalKey,
-                                backgroundColor: Colors.white,
-                                strokeColor: Colors.black,
-                                minimumStrokeWidth: 1.0,
-                                maximumStrokeWidth: 4.0)
-                            : SizedBox(),
-                        Align(
+                            ? Expanded(
+                              child: SfSignaturePad(
+                                  key: signatureGlobalKey,
+                                  backgroundColor: Colors.white,
+                                  strokeColor: Colors.black,
+                                  minimumStrokeWidth: 1.0,
+                                  maximumStrokeWidth: 4.0),
+                            )
+                            : 0.height,
+                      Align(
                           alignment: Alignment.bottomCenter,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -289,23 +293,22 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                   /* final Image =
+                    /*  final Image =
                         await signatureGlobalKey.currentState!.toImage();
                     bytes =
                         await Image.toByteData(format: ui.ImageByteFormat.png);*/
-                    Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name);
+                    Navigator.of(context)
+                        .pushNamed(RouteDefine.orderDetailsScreen.name);
                   },
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_20,
-                          horizontal: AppConstants.padding_30),
-                      color: AppColors.pageColor,
-                      child: CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
-                        bGColor: AppColors.mainColor,
-                      ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_20,
+                        horizontal: AppConstants.padding_30),
+                    color: AppColors.pageColor,
+                    child: CustomButtonWidget(
+                      buttonText:
+                      AppLocalizations.of(context)!.save.toUpperCase(),
+                      bGColor: AppColors.mainColor,
                     ),
                   ),
                 ),
@@ -315,7 +318,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     ) : SizedBox(),*/
               ],
             ),
-          ));
+
+          )
+          );
         },
       ),
     );

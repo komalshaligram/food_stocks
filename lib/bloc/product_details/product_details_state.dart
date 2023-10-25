@@ -19,7 +19,7 @@ class ProductDetailsState with _$ProductDetailsState {
     productList: [
       ProductDetailsModel(
           productImage: AppImagePath.product3,
-          productName: 'Tomato',
+          productName: 'Product Name  ',
           productPrice: 12 ,
           productWeight: 20 ,
       ),

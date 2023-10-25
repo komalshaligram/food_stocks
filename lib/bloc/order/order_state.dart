@@ -2,5 +2,78 @@ part of 'order_bloc.dart';
 
 @freezed
 class OrderState with _$OrderState {
-  const factory OrderState.initial() = _Initial;
+  const factory OrderState({
+   required List<OrderDetailsModel>orderList,
+  }) = _OrderState;
+
+   factory OrderState.initial() => OrderState(
+  orderList: [
+   OrderDetailsModel(
+       orderDate: '12.05.2023',
+       noOfSupplier: 3,
+       orderNumber: '1250123',
+       orderStatus: 'Pending delivery',
+       productQuantity: 23,
+       totalPrice: '12,450₪'
+   ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),   OrderDetailsModel(
+       orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Pending delivery',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+    OrderDetailsModel(
+        orderDate: '12.05.2023',
+        noOfSupplier: 3,
+        orderNumber: '1250123',
+        orderStatus: 'Received all',
+        productQuantity: 23,
+        totalPrice: '12,450₪'
+    ),
+
+  ]
+  );
+
+
 }

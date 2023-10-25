@@ -73,8 +73,15 @@ dependencies:
   shimmer: ^3.0.0
   syncfusion_flutter_charts: ^23.1.41
   flutter_barcode_scanner: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
 
 
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/appIcon/food_stock_app_icon.png"
+  remove_alpha_ios: true
 
 
 dev_dependencies:

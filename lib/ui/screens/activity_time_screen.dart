@@ -451,9 +451,9 @@ class TimeContainer extends StatelessWidget {
                                 topRight:
                                     Radius.circular(AppConstants.padding_20))),
                         child: DefaultTextStyle(
-                          style: TextStyle(
+                          style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
-                            fontSize: 22.0,
+                             size: getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.font_22,
                           ),
                           child: SafeArea(
                             top: false,
@@ -499,7 +499,7 @@ class TimeContainer extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: AppConstants.padding_30,
                                             vertical: AppConstants.padding_5),
-                                        child: Text(AppStrings.okString))),
+                                        child: Text(AppLocalizations.of(context)!.ok))),
                                 10.height,
                               ],
                             ),
@@ -514,7 +514,7 @@ class TimeContainer extends StatelessWidget {
                   Expanded(
                     child: Text(time == AppStrings.timeString ? '' : time,
                         style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.mediumFont,
+                          size: getScreenWidth(context) <= 370 ? AppConstants.smallFont : AppConstants.mediumFont,
                           color: AppColors.blackColor,
                         )),
                   ),

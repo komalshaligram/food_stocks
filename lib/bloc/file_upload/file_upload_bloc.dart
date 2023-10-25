@@ -363,11 +363,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           if (response.status == 200) {
             emit(state.copyWith(isApiLoading: false));
             if (state.isUpdate) {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.updateSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
+              // showSnackBar(
+              //     context: event.context,
+              //     title: AppStrings.updateSuccessString,
+              //     bgColor: AppColors.mainColor);
+           //   Navigator.pop(event.context);
             } else {
               showSnackBar(
                   context: event.context,

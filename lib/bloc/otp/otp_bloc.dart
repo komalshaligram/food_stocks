@@ -94,6 +94,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
       }
+      else if(event is _updateOtpCodeEvent){
+        emit(state.copyWith(codeLength: event.codeLength));
+      }
     });
   }
 }
