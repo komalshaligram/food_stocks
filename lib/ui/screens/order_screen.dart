@@ -43,15 +43,16 @@ class OrderScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.orders,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.of(context)
+                      .pushNamed(RouteDefine.menuScreen.name);
                 },
               ),
             ),
             body: SafeArea(
               child: ListView.builder(
-                itemCount: 4,
+                scrollDirection: Axis.vertical,
+                itemCount: state.orderList.length,
                 shrinkWrap: true,
-                padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                 itemBuilder: (context, index) =>
                     orderListItem(index: index, context: context),
               ),
@@ -63,112 +64,120 @@ class OrderScreenWidget extends StatelessWidget {
   }
 
   Widget orderListItem({required int index, required BuildContext context}) {
-    return Container(
-      margin: EdgeInsets.all(AppConstants.padding_10),
-      padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_15,
-          horizontal: AppConstants.padding_10),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        return Container(
+          margin: EdgeInsets.all(AppConstants.padding_10),
+          padding: EdgeInsets.symmetric(
+              vertical: AppConstants.padding_15,
+              horizontal: AppConstants.padding_10),
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.15),
+                  blurRadius: AppConstants.blur_10),
+            ],
+            borderRadius: BorderRadius.all(
+                Radius.circular(AppConstants.radius_5)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '1250123',
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.normalFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(AppConstants.radius_100)),
-                    border: Border.all(
-                      color: AppColors.borderColor,
-                      width: 1,
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    state.orderList[index].orderNumber.toString(),
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.normalFont,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.bold),
                   ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_10,
-                        vertical: AppConstants.padding_5),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGreyColor,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_100)),
-                      border: Border.all(
-                        color: AppColors.whiteColor,
-                        width: 1,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, RouteDefine.orderDetailsScreen.name);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_100)),
+                        border: Border.all(
+                          color: AppColors.borderColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppConstants.padding_10,
+                            vertical: AppConstants.padding_5),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightGreyColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                          border: Border.all(
+                            color: AppColors.whiteColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          state.orderList[index].totalPrice.toString(),
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.font_14,
+                              color: AppColors.whiteColor,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      '12,450${AppLocalizations.of(context)!.currency}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_14,
-                          color: AppColors.whiteColor,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  )
+                ],
+              ),
+              7.height,
+              Row(
+                children: [
+                  CommonOrderContentWidget(
+                    flexValue: 2,
+                    title: AppLocalizations.of(context)!.products,
+                    value: state.orderList[index].productQuantity.toString(),
+                    titleColor: AppColors.blackColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextSize: AppConstants.smallFont,
                   ),
-                ),
-              )
-            ],
-          ),
-          7.height,
-          Row(
-            children: [
-              CommonOrderContentWidget(
-                flexValue: 2,
-                title: AppLocalizations.of(context)!.products,
-                value: "23",
-                titleColor: AppColors.blackColor,
-                valueColor: AppColors.blackColor,
-              ),
-              5.width,
-              CommonOrderContentWidget(
-                flexValue: 2,
-                title: AppLocalizations.of(context)!.suppliers,
-                value: "3",
-                titleColor: AppColors.blackColor,
-                valueColor: AppColors.blackColor,
-              ),
-              5.width,
-              CommonOrderContentWidget(
-                flexValue: 3,
-                title: AppLocalizations.of(context)!.order_date,
-                value: "12.05.2023",
-                titleColor: AppColors.blackColor,
-                valueColor: AppColors.blackColor,
-              ),
-              5.width,
-              CommonOrderContentWidget(
-                flexValue: 3,
-                title: AppLocalizations.of(context)!.order_status,
-                value: index == 0
-                    ? AppLocalizations.of(context)!.pending_delivery
-                    : AppLocalizations.of(context)!.received,
-                titleColor: AppColors.blackColor,
-                valueColor:
-                    index == 0 ? AppColors.orangeColor : AppColors.mainColor,
+                  5.width,
+                  CommonOrderContentWidget(
+                    flexValue: 2,
+                    title: AppLocalizations.of(context)!.suppliers,
+                    value: state.orderList[index].noOfSupplier.toString(),
+                    titleColor: AppColors.blackColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextSize: AppConstants.smallFont,
+                  ),
+                  5.width,
+                  CommonOrderContentWidget(
+                    flexValue: 4,
+                    title: AppLocalizations.of(context)!.order_date,
+                    value: state.orderList[index].orderDate.toString(),
+                    titleColor: AppColors.blackColor,
+                    valueColor: AppColors.blackColor,
+                    valueTextSize: AppConstants.smallFont,
+                  ),
+                  5.width,
+                  CommonOrderContentWidget(
+                    flexValue: 4,
+                    title: AppLocalizations.of(context)!.order_status,
+                    value: state.orderList[index].orderStatus.toString(),
+                    titleColor: AppColors.blackColor,
+                    valueColor:
+                    state.orderList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
+                    valueTextSize: AppConstants.smallFont,
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

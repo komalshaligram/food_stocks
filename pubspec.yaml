@@ -73,13 +73,21 @@ dependencies:
   shimmer: ^3.0.0
   qr_code_scanner: ^1.0.1
   syncfusion_flutter_charts: ^23.1.41
+  flutter_launcher_icons: ^0.13.1
 
 
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/appIcon/food_stock_app_icon.png"
+  remove_alpha_ios: true
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

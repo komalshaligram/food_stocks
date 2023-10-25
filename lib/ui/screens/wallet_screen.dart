@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../data/model/wallet_model/wallet_model.dart';
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -13,6 +14,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
+
+extension NewMap on Map {
+  Map reverse() => Map.fromEntries(entries.toList().reversed);
+}
 
 class WalletRoute {
   static Widget get route => const WalletScreen();
@@ -24,7 +29,7 @@ class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WalletBloc(),
+      create: (context) => WalletBloc()..add(WalletEvent.checkLanguage()),
       child: WalletScreenWidget(),
     );
   }
@@ -50,18 +55,18 @@ class WalletScreenWidget extends StatelessWidget {
       FlSpot(11, 15),
     ];
     Map<int, String> monthMap = {
-      0: AppLocalizations.of(context)!.jan,
-      1: AppLocalizations.of(context)!.feb,
-      2: AppLocalizations.of(context)!.mar,
-      3: AppLocalizations.of(context)!.apr,
-      4: AppLocalizations.of(context)!.may,
-      5: AppLocalizations.of(context)!.jun,
-      6: AppLocalizations.of(context)!.jul,
-      7: AppLocalizations.of(context)!.aug,
-      8: AppLocalizations.of(context)!.sep,
-      9: AppLocalizations.of(context)!.oct,
-      10: AppLocalizations.of(context)!.nov,
-      11: AppLocalizations.of(context)!.dec,
+      0: AppLocalizations.of(context)!.dec,
+      1: AppLocalizations.of(context)!.nov,
+      2: AppLocalizations.of(context)!.oct,
+      3: AppLocalizations.of(context)!.sep,
+      4: AppLocalizations.of(context)!.aug,
+      5: AppLocalizations.of(context)!.jul,
+      6: AppLocalizations.of(context)!.jun,
+      7: AppLocalizations.of(context)!.may,
+      8: AppLocalizations.of(context)!.apr,
+      9: AppLocalizations.of(context)!.mar,
+      10: AppLocalizations.of(context)!.feb,
+      11: AppLocalizations.of(context)!.jan,
     };
 
     return BlocListener<WalletBloc, WalletState>(
@@ -71,292 +76,310 @@ class WalletScreenWidget extends StatelessWidget {
           // WalletBloc bloc = context.read<WalletBloc>();
           return Scaffold(
             backgroundColor: AppColors.pageColor,
-            body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  50.height,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_15),
-                    child: Container(
-                      width: getScreenWidth(context),
-                      clipBehavior: Clip.hardEdge,
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_10,
-                          horizontal: AppConstants.padding_10),
-                      decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.shadowColor.withOpacity(0.15),
-                                blurRadius: AppConstants.blur_10)
-                          ],
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10))),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 1,
+            body: SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    50.height,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_15),
+                      child: Container(
+                        width: getScreenWidth(context),
+                        clipBehavior: Clip.hardEdge,
+                        padding: EdgeInsets.symmetric(
+                            vertical: AppConstants.padding_10,
+                            horizontal: AppConstants.padding_10),
+                        decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            boxShadow: [
+                              BoxShadow(
+                                  color:
+                                      AppColors.shadowColor.withOpacity(0.15),
+                                  blurRadius: AppConstants.blur_10)
+                            ],
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(AppConstants.radius_10))),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .balance_status,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.blackColor,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    6.height,
+                                    BalanceIndicator(
+                                      balance: 7550,
+                                    ),
+                                  ],
+                                )),
+                            5.width,
+                            Expanded(
+                              flex: 3,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .balance_status,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.blackColor,
-                                    ),
-                                    textAlign: TextAlign.center,
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: DashBoardStatsWidget(
+                                            context: context,
+                                            image: AppImagePath.credits,
+                                            title: AppLocalizations.of(context)!
+                                                .total_credit,
+                                            value:
+                                                '20,000${AppLocalizations.of(context)!.price}'),
+                                      ),
+                                      10.width,
+                                      Flexible(
+                                        child: DashBoardStatsWidget(
+                                            context: context,
+                                            image: AppImagePath.expense,
+                                            title: AppLocalizations.of(context)!
+                                                .this_months_expenses,
+                                            value:
+                                                '7,550${AppLocalizations.of(context)!.price}'),
+                                      ),
+                                    ],
                                   ),
-                                  6.height,
-                                  BalanceIndicator(
-                                    balance: 7550,
+                                  10.height,
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: DashBoardStatsWidget(
+                                            context: context,
+                                            image: AppImagePath.expense,
+                                            title: AppLocalizations.of(context)!
+                                                .last_months_expenses,
+                                            value:
+                                                '18,360${AppLocalizations.of(context)!.price}'),
+                                      ),
+                                      10.width,
+                                      Flexible(
+                                        child: DashBoardStatsWidget(
+                                            context: context,
+                                            image: AppImagePath.orders,
+                                            title: AppLocalizations.of(context)!
+                                                .this_months_orders,
+                                            value: '23'),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              )),
-                          5.width,
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: DashBoardStatsWidget(
-                                          context: context,
-                                          image: AppImagePath.credits,
-                                          title: AppLocalizations.of(context)!
-                                              .total_credit,
-                                          value:
-                                              '20,000${AppLocalizations.of(context)!.price}'),
-                                    ),
-                                    10.width,
-                                    Flexible(
-                                      child: DashBoardStatsWidget(
-                                          context: context,
-                                          image: AppImagePath.expense,
-                                          title: AppLocalizations.of(context)!
-                                              .this_months_expenses,
-                                          value:
-                                              '7,550${AppLocalizations.of(context)!.price}'),
-                                    ),
-                                  ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    30.height,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.monthly_expense_graph,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: state.language == 'en'
+                                    ? AppConstants.font_14
+                                    : AppConstants.smallFont,
+                                color: AppColors.blackColor),
+                          ),
+                          dropDownWidget(
+                              index: 1,
+                              date: state.date,
+                              dateList: state.dateList,
+                              context1: context)
+                        ],
+                      ),
+                    ),
+                    20.height,
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SizedBox(
+                        height: 185,
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: LineChart(
+                            LineChartData(
+                              borderData: FlBorderData(show: false),
+                              lineTouchData: LineTouchData(
+                                getTouchLineEnd: (barData, spotIndex) {
+                                  return 46;
+                                },
+                                enabled: true,
+                                touchTooltipData: LineTouchTooltipData(
+                                  getTooltipItems: (value) {
+                                    return value.map((e) {
+                                      return LineTooltipItem(
+                                          "${monthMap[e.x]} ${AppLocalizations.of(context)!.total} :  ${e.y}",
+                                          TextStyle(fontSize: 8));
+                                    }).toList();
+                                  },
+                                  tooltipBgColor: Colors.transparent,
+                                  showOnTopOfTheChartBoxArea: true,
+                                  tooltipMargin: 5,
                                 ),
-                                10.height,
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: DashBoardStatsWidget(
-                                          context: context,
-                                          image: AppImagePath.expense,
-                                          title: AppLocalizations.of(context)!
-                                              .last_months_expenses,
-                                          value:
-                                              '18,360${AppLocalizations.of(context)!.price}'),
+                              ),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: chartData,
+                                  color: AppColors.mainColor.withOpacity(0.8),
+                                  isCurved: false,
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    color: AppColors.mainColor.withOpacity(0.5),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        AppColors.graphColor.withOpacity(0.2),
+                                        AppColors.graphColor.withOpacity(0.01),
+                                      ],
                                     ),
-                                    10.width,
-                                    Flexible(
-                                      child: DashBoardStatsWidget(
-                                          context: context,
-                                          image: AppImagePath.orders,
-                                          title: AppLocalizations.of(context)!
-                                              .this_months_orders,
-                                          value: '23'),
-                                    ),
-                                  ],
+                                    cutOffY: 0.0,
+                                    applyCutOffY: false,
+                                  ),
+                                  dotData: FlDotData(
+                                    show: false,
+                                  ),
                                 ),
                               ],
+                              minY: 0,
+                              gridData: FlGridData(show: false),
+                              titlesData: FlTitlesData(
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: ((value, meta) {
+                                      /*     month = '';
+
+                                      print('newMap_____${newMap}');
+                                      if(state.language == 'en') {
+                                        Map hebrewMonthMap = (monthMap.values)
+                                            .reverse();
+                                        print(
+                                            'hebrewMonthMap____${hebrewMonthMap}');
+                                        month = hebrewMonthMap[value];
+                                      }*/
+
+                                      String? month = monthMap[value];
+                                      return Text(
+                                        month.toString(),
+                                        textDirection: TextDirection.ltr,
+                                        style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_8,
+                                          color: AppColors.navSelectedColor,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                              ),
                             ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    15.height,
+                    15.width,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.history,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_5,
+                                    horizontal: AppConstants.padding_8),
+                                decoration: BoxDecoration(
+                                    color: AppColors.mainColor,
+                                    borderRadius: BorderRadius.circular(
+                                        AppConstants.radius_3)),
+                                child: Text(
+                                  AppLocalizations.of(context)!.export,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.whiteColor),
+                                ),
+                              ),
+                              10.width,
+                              dropDownWidget(
+                                  index: 2,
+                                  date: state.date1,
+                                  dateList: state.dateList1,
+                                  context1: context),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  30.height,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.monthly_expense_graph,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor),
-                        ),
-                        dropDownWidget(
-                            date: state.date,
-                            dateList: state.dateList,
-                            context1: context)
-                      ],
-                    ),
-                  ),
-                  20.height,
-                  Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: SizedBox(
-                      height: 186,
-                      width: double.maxFinite,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: LineChart(
-                          LineChartData(
-                            borderData: FlBorderData(show: false),
-
-                            lineTouchData: LineTouchData(
-                              getTouchLineEnd: (barData, spotIndex) {
-                                return 46;
-                              },
-                              enabled: true,
-                              touchTooltipData: LineTouchTooltipData(
-                                getTooltipItems: (value) {
-                                  return value.map((e) {
-                                    return LineTooltipItem(
-                                        "${monthMap[e.x]} ${AppLocalizations.of(context)!.total} :  ${e.y}",
-                                        TextStyle(fontSize: 8));
-                                  }).toList();
-                                },
-
-                                tooltipBgColor: Colors.transparent,
-                                showOnTopOfTheChartBoxArea: true,
-                                tooltipMargin: 5,
-                              ),
+                    10.height,
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: state.balanceSheetList.length,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            color: AppColors.whiteColor,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_10,
+                                      horizontal: AppConstants.padding_15),
+                                  child: listWidget(
+                                      context: context,
+                                      balanceSheetList: state.balanceSheetList,
+                                      listIndex: index),
+                                ),
+                                Container(
+                                  width: double.maxFinite,
+                                  height: 1,
+                                  color: AppColors.borderColor,
+                                ),
+                              ],
                             ),
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: chartData,
-                                color: AppColors.mainColor.withOpacity(0.8),
-                                isCurved: false,
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: AppColors.mainColor.withOpacity(0.5),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      AppColors.graphColor.withOpacity(0.2),
-                                      AppColors.graphColor.withOpacity(0.01),
-                                    ],
-                                  ),
-                                  cutOffY: 0.0,
-                                  applyCutOffY: false,
-                                ),
-                                dotData: FlDotData(
-                                  show: false,
-                                ),
-                              ),
-                            ],
-                            minY: 0,
-                            gridData: FlGridData(show: false),
-                            titlesData: FlTitlesData(
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: ((value, meta) {
-                                    String? month = monthMap[value];
-                                    return Text(
-                                      month.toString(),
-                                      style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_8,
-                                        color: AppColors.navSelectedColor,
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              rightTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              topTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  15.height,
-                  15.width,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.history,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,
-                                  horizontal: AppConstants.padding_8),
-                              decoration: BoxDecoration(
-                                  color: AppColors.mainColor,
-                                  borderRadius: BorderRadius.circular(
-                                      AppConstants.radius_3)),
-                              child: Text(
-                                AppLocalizations.of(context)!.export,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.whiteColor),
-                              ),
-                            ),
-                            10.width,
-                            dropDownWidget(
-                                date: state.date,
-                                dateList: state.dateList,
-                                context1: context),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  10.height,
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: state.balanceSheetList.length,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          color: AppColors.whiteColor,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_10,
-                                    horizontal: AppConstants.padding_15),
-                                child: listWidget(
-                                    context: context,
-                                    balanceSheetList: state.balanceSheetList,
-                                    listIndex: index),
-                              ),
-                              Container(
-                                width: double.maxFinite,
-                                height: 1,
-                                color: AppColors.borderColor,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -366,7 +389,8 @@ class WalletScreenWidget extends StatelessWidget {
   }
 
   Widget dropDownWidget(
-      {required String date,
+      {required int index,
+      required String date,
       required List<String> dateList,
       required BuildContext context1}) {
     WalletBloc bloc = context1.read<WalletBloc>();
@@ -399,7 +423,7 @@ class WalletScreenWidget extends StatelessWidget {
           );
         }).toList(),
         onChanged: (value) {
-          bloc.add(WalletEvent.dropDownEvent(date: value!));
+          bloc.add(WalletEvent.dropDownEvent(date: value!, index: index));
         },
       ),
     );
@@ -415,7 +439,7 @@ class WalletScreenWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
@@ -433,20 +457,27 @@ class WalletScreenWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(
-                '${balanceSheetList[listIndex].difference.toString()}${AppLocalizations.of(context)!.price}',
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: balanceSheetList[listIndex].difference > 0
-                        ? AppColors.mainColor
-                        : AppColors.redColor,
-                    fontWeight: FontWeight.w600),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  '${balanceSheetList[listIndex].difference.toString()}${AppLocalizations.of(context)!.price}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: balanceSheetList[listIndex].difference > 0
+                          ? AppColors.mainColor
+                          : AppColors.redColor,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
               10.width,
-              CircularButtonWidget(
-                buttonName: AppLocalizations.of(context)!.balance_status,
-                buttonValue:
-                    '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, RouteDefine.orderSuccessfulScreen.name),
+                child: CircularButtonWidget(
+                  buttonName: AppLocalizations.of(context)!.balance_status,
+                  buttonValue:
+                      '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
+                ),
               ),
             ],
           ),

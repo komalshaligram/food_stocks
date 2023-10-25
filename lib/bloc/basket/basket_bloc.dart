@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/model/product_details/product_details_model.dart';
+import '../../data/model/order_model/product_details_model.dart';
 import '../../ui/utils/themes/app_img_path.dart';
 
 part 'basket_event.dart';

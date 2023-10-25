@@ -7,12 +7,11 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_product_category_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
-import '../../bloc/store/store_bloc.dart';
+
 import '../../routes/app_routes.dart';
 
 class StoreCategoryRoute {

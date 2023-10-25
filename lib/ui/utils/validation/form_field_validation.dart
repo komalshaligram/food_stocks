@@ -26,16 +26,20 @@ class FormFieldValidation {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
       return "Phone number can't be Empty";
-    } else if (value.length != 10) {
+    } else if (value.length <= 10) {
       if (regex.hasMatch(value)) {
         return "Please enter valid phone number";
       }
-      else {
+      else if(value.length < 10){
         return "Phone number must be 10 digit";
       }
-    } else if (regex.hasMatch(value)) {
-      return "Please enter valid phone number";
-    } else {
+      else{
+        return null;
+      }
+    } else if (value.length > 10) {
+      return "Phone number must be 10 digit";
+    }
+    else {
       return null;
     }
   }

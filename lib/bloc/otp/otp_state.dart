@@ -11,6 +11,7 @@ class OtpState with _$OtpState {
     required bool isLoginFail,
     required bool isLoading,
     required String errorMessage,
+    required int codeLength,
   }) = _OtpState;
 
   factory OtpState.initial() =>  OtpState(
@@ -19,7 +20,9 @@ class OtpState with _$OtpState {
       isLoginSuccess: false,
       isLoginFail: false,
       isLoading: false,
-      errorMessage: '') ;
+      errorMessage: '',
+    codeLength: 0,
+  ) ;
 
 
 }

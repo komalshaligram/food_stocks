@@ -8,10 +8,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../bloc/store/store_bloc.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/themes/app_colors.dart';
 import '../widget/common_product_category_widget.dart';
 

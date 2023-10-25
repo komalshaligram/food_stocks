@@ -35,7 +35,6 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderSuccessfulBloc, OrderSuccessfulState>(
       builder: (context, state) {
-        print('-----${ getScreenHeight(context) * 0.215}');
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           body: SafeArea(
@@ -46,7 +45,6 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    height: getScreenHeight(context) * 0.215,
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
@@ -60,16 +58,17 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                       Image.asset(AppImagePath.successIcon,
-
-                       ),
+                        Image.asset(
+                          AppImagePath.successIcon,
+                        ),
                         Text(
                           AppLocalizations.of(context)!.order_sent_successfully,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_22,
                               color: AppColors.blackColor,
                               fontWeight: FontWeight.w700),
-                        )
+                        ),
+                        10.height,
                       ],
                     ),
                   ),
@@ -178,9 +177,10 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
               },
               child: Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_80,
-                    vertical: AppConstants.padding_50),
+                margin: EdgeInsets.only(
+                    left: AppConstants.padding_70,
+                    right: AppConstants.padding_70,
+                    bottom: AppConstants.padding_50),
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor.withOpacity(0.95),
                   boxShadow: [
@@ -222,7 +222,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
     );
   }
 
- /* Widget dashboardStatsWidget(
+/* Widget dashboardStatsWidget(
       {required BuildContext context,
       required String image,
       required String title,

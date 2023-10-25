@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/model/product_details/product_details_model.dart';
+
+import '../../data/model/order_model/product_details_model.dart';
 import '../../ui/utils/themes/app_img_path.dart';
 
 part 'product_details_event.dart';

@@ -45,7 +45,7 @@
   "this_months_orders": "הזמנות החודש",
   "general_framework": "מסגרת כללית",
   "last_months_expenses": "הוצאות חודש שעבר",
-  "balance_status": "מצב יתרה",
+  "balance_status": "יתרה",
   "currency": "₪",
   "all_sales": "כל המבצעים",
   "sales": "מבצעים",
@@ -105,11 +105,11 @@
   "finish": "לתשלום",
   "home": "ראשי",
   "problem_detected": "זוהתה בעיה",
-  "the_product_did_not_arrive_at_all": "המוצר הגיע פגום",
+  "the_product_did_not_arrive_at_all": "המוצר לא הגיע בכלל",
   "product_arrived_damaged": "המוצר הגיע פגום",
   "the_product_arrived_missing": "המוצר הגיע חסר",
   "another_product_problem": "בעיה נוספת במוצר",
-  "add_text": "הוסף טקסט",
+  "add_text": "פרט",
   "submit": "שלח",
   "empty": "ריק",
   "contact": "יצירת קשר",
@@ -137,7 +137,8 @@
     "sep" : "ספט",
     "oct" : "אוק",
     "nov" : "נוב",
-    "dec" :"דצמ"
+    "dec" :"דצמ",
+     "ok": "בסדר"
 
 
 }

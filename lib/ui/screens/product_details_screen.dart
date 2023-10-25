@@ -45,6 +45,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
+          print(getScreenHeight(context));
           return SafeArea(
             child: Scaffold(
               resizeToAvoidBottomInset: false,
@@ -97,9 +98,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             Text(
                               AppLocalizations.of(context)!.supplier_name,
                               style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.font_14,
-                                  color: AppColors.blackColor,
-                                  fontWeight: FontWeight.w400),
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor,
+                              ),
                             ),
                             Text(
                               AppLocalizations.of(context)!.pending_delivery,
@@ -132,7 +133,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               valueColor: AppColors.blackColor,
                               valueTextSize: AppConstants.font_10,
                               valueTextWeight: FontWeight.w500,
-                              columnPadding: AppConstants.padding_8,
+                              columnPadding: AppConstants.padding_10,
                             ),
                             5.width,
                             CommonOrderContentWidget(
@@ -212,7 +213,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     style: TextStyle(
                                         color: AppColors.whiteColor,
                                         fontSize: AppConstants.font_14,
-                                        fontWeight: FontWeight.w400),
+                                        fontWeight: FontWeight.w700),
                                   )),
                             ),
                           ],
@@ -310,23 +311,26 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                 width: AppConstants.containerSize_50,
                 height: AppConstants.containerSize_50,
               ),
-              Text(
-                state.productList[index].productName!,
-                style: TextStyle(
-                    color: AppColors.blackColor,
-                    fontSize: AppConstants.font_14,
-                    fontWeight: FontWeight.w400),
+              Container(
+                width: 55,
+                child: Text(
+                  state.productList[index].productName!,
+                  style: TextStyle(
+                      color: AppColors.blackColor,
+                      fontSize: AppConstants.font_14,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
               10.width,
               Text(
                 '${state.productList[index].productWeight!.toString() + AppLocalizations.of(context)!.kg}',
                 style: TextStyle(
                     color: AppColors.blackColor,
-                    fontSize: AppConstants.font_14,
+                    fontSize: AppConstants.font_12,
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                '${state.productList[index].productWeight!.toString() + AppLocalizations.of(context)!.price}',
+                '${state.productList[index].productPrice!.toString() + AppLocalizations.of(context)!.price}',
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
@@ -392,152 +396,156 @@ class ProductDetailsScreenWidget extends StatelessWidget {
             builder: (context, state) {
               selectedRadioTile = state.selectedRadioTile;
               weight = state.productList[listIndex].productWeight!;
-              return Padding(
-                padding: MediaQuery.of(context).viewInsets * 0.67,
-                child: Container(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_15,
-                        horizontal: AppConstants.padding_15),
-                    child: Container(
-                      height: getScreenHeight(context) * 0.7,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_5,
-                            ),
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context1);
-                                    },
-                                    child: Icon(Icons.close)),
-                                10.width,
-                                Text(
-                                  AppLocalizations.of(context)!.product_issue,
-                                  style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.mediumFont,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.blackColor,
+              return SafeArea(
+                child: Padding(
+                  padding: MediaQuery.of(context).viewInsets * 0.67,
+                  child: Container(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_15,
+                          horizontal: AppConstants.padding_15),
+                      child: Container(
+                        height: getScreenHeight(context) <= 730
+                            ? getScreenHeight(context) * 0.85
+                            : getScreenHeight(context) * 0.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_5,
+                              ),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context1);
+                                      },
+                                      child: Icon(Icons.close)),
+                                  10.width,
+                                  Text(
+                                    AppLocalizations.of(context)!.product_issue,
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.blackColor,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          15.height,
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: AppConstants.padding_5,
-                                horizontal: AppConstants.padding_10),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              boxShadow: [
-                                BoxShadow(
-                                    color:
-                                        AppColors.shadowColor.withOpacity(0.15),
-                                    blurRadius: AppConstants.blur_10),
-                              ],
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_5)),
+                            15.height,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_10),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppColors.shadowColor
+                                          .withOpacity(0.15),
+                                      blurRadius: AppConstants.blur_10),
+                                ],
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_5)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Image.asset(
+                                    image,
+                                    width: AppConstants.containerSize_50,
+                                    height: AppConstants.containerSize_50,
+                                  ),
+                                  5.width,
+                                  Text(
+                                    productName,
+                                    style: TextStyle(
+                                        color: AppColors.blackColor,
+                                        fontSize: AppConstants.font_14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  10.width,
+                                  Text(
+                                    '${weight.toString() + AppLocalizations.of(context)!.kg}',
+                                    style: TextStyle(
+                                        color: AppColors.blackColor,
+                                        fontSize: AppConstants.font_12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  10.width,
+                                  Text(
+                                    '${price.toString() + AppLocalizations.of(context)!.price}',
+                                    style: TextStyle(
+                                        color: AppColors.blackColor,
+                                        fontSize: AppConstants.font_14,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                  image,
-                                  width:AppConstants.containerSize_50,
-                                  height: AppConstants.containerSize_50,
-                                ),
-                                5.width,
-                                Text(
-                                  productName,
-                                  style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                10.width,
-                                Text(
-                                  '${weight.toString() + AppLocalizations.of(context)!.kg}',
-                                  style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                10.width,
-                                Text(
-                                  '${price.toString() + AppLocalizations.of(context)!.price}',
-                                  style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ],
+                            20.height,
+                            Text(
+                              AppLocalizations.of(context)!.problem_detected,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.blackColor,
+                              ),
                             ),
-                          ),
-                          20.height,
-                          Text(
-                            AppLocalizations.of(context)!.problem_detected,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.mediumFont,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.blackColor,
-                            ),
-                          ),
-                          20.height,
-                          RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .the_product_did_not_arrive_at_all,
-                              value: 1,
-                              listIndex: listIndex),
-                          10.height,
-                          RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .product_arrived_damaged,
-                              value: 2,
-                              listIndex: listIndex),
-                          10.height,
-                          RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .the_product_arrived_missing,
-                              value: 3,
-                              weight: weight,
-                              listIndex: listIndex),
-                          10.height,
-                          RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .another_product_problem,
-                              value: 4,
-                              listIndex: listIndex),
-                          10.height,
-                          GestureDetector(
-                            onTap: () async {
-                              Navigator.pop(context1);
-                            },
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_20,
-                                    horizontal: AppConstants.padding_30),
-                                color: AppColors.pageColor,
-                                child: CustomButtonWidget(
-                                  buttonText:
-                                      AppLocalizations.of(context)!.save,
-                                  bGColor: AppColors.mainColor,
+                            20.height,
+                            RadioButtonWidget(
+                                context: context,
+                                problem: AppLocalizations.of(context)!
+                                    .the_product_did_not_arrive_at_all,
+                                value: 1,
+                                listIndex: listIndex),
+                            10.height,
+                            RadioButtonWidget(
+                                context: context,
+                                problem: AppLocalizations.of(context)!
+                                    .product_arrived_damaged,
+                                value: 2,
+                                listIndex: listIndex),
+                            10.height,
+                            RadioButtonWidget(
+                                context: context,
+                                problem: AppLocalizations.of(context)!
+                                    .the_product_arrived_missing,
+                                value: 3,
+                                weight: weight,
+                                listIndex: listIndex),
+                            10.height,
+                            RadioButtonWidget(
+                                context: context,
+                                problem: AppLocalizations.of(context)!
+                                    .another_product_problem,
+                                value: 4,
+                                listIndex: listIndex),
+                            10.height,
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.pop(context1);
+                              },
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_20,
+                                      horizontal: AppConstants.padding_30),
+                                  color: AppColors.pageColor,
+                                  child: CustomButtonWidget(
+                                    buttonText:
+                                        AppLocalizations.of(context)!.save,
+                                    bGColor: AppColors.mainColor,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -556,6 +564,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       required int value,
       int weight = 0,
       required int listIndex}) {
+    print(getScreenHeight(context));
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
     return Container(
       height: value == 4 ? 160 : 50,
@@ -573,93 +582,100 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Radio(
-                value: value,
-                fillColor: MaterialStateColor.resolveWith(
-                    (states) => AppColors.greyColor),
-                groupValue: selectedRadioTile,
-                activeColor: AppColors.blueColor,
-                onChanged: (val) {
-                  bloc.add(ProductDetailsEvent.radioButtonEvent(
-                      selectRadioTile: val!));
-                },
+              Row(
+                children: [
+                  Radio(
+                    value: value,
+                    fillColor: MaterialStateColor.resolveWith(
+                        (states) => AppColors.greyColor),
+                    groupValue: selectedRadioTile,
+                    activeColor: AppColors.blueColor,
+                    onChanged: (val) {
+                      bloc.add(ProductDetailsEvent.radioButtonEvent(
+                          selectRadioTile: val!));
+                    },
+                  ),
+                  Text(
+                    problem,
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                problem,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
-                  color: AppColors.blackColor,
-                ),
-              ),
-              15.width,
-              Container(
-                child: Row(
-                  children: [
-                    value == 3
-                        ? GestureDetector(
-                            onTap: () {
-                              if (selectedRadioTile == 3) {
-                                bloc.add(
-                                    ProductDetailsEvent.productIncrementEvent(
-                                        productWeight: weight,
-                                        listIndex: listIndex));
-                              }
-                            },
-                            child: Container(
-                              width: AppConstants.containerSize_25,
-                              height:  AppConstants.containerSize_25,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2),
-                                  border:
-                                      Border.all(color: AppColors.greyColor),
-                                  color: AppColors.pageColor),
-                              child: Icon(
-                                Icons.add,
-                                size: 15,
-                              ),
-                            ),
-                          )
-                        : SizedBox(),
-                    5.width,
-                    value == 3
-                        ? Text(
-                            '${weight.toString() + AppLocalizations.of(context)!.kg}',
-                            style: TextStyle(
-                                color: AppColors.blackColor,
-                                fontSize: AppConstants.font_14,
-                                fontWeight: FontWeight.w700),
-                          )
-                        : SizedBox(),
-                    5.width,
-                    value == 3
-                        ? GestureDetector(
-                            onTap: () {
-                              if (selectedRadioTile == 3) {
-                                bloc.add(
-                                    ProductDetailsEvent.productDecrementEvent(
-                                        productWeight: weight,
-                                        listIndex: listIndex));
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 25,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  border:
-                                      Border.all(color: AppColors.greyColor),
-                                  color: AppColors.pageColor),
-                              child: Text('-',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.mediumFont)),
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
-                ),
+              Row(
+                children: [
+                  Container(
+                    child: Row(
+                      children: [
+                        value == 3
+                            ? GestureDetector(
+                                onTap: () {
+                                  if (selectedRadioTile == 3) {
+                                    bloc.add(ProductDetailsEvent
+                                        .productIncrementEvent(
+                                            productWeight: weight,
+                                            listIndex: listIndex));
+                                  }
+                                },
+                                child: Container(
+                                  width: AppConstants.containerSize_25,
+                                  height: AppConstants.containerSize_25,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      border: Border.all(
+                                          color: AppColors.greyColor),
+                                      color: AppColors.pageColor),
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 15,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
+                        getScreenHeight(context) <= 750 ? 1.width : 8.width,
+                        value == 3
+                            ? Text(
+                                '${weight.toString() + AppLocalizations.of(context)!.kg}',
+                                style: TextStyle(
+                                    color: AppColors.blackColor,
+                                    fontSize: AppConstants.font_12,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            : SizedBox(),
+                        getScreenHeight(context) <= 750 ? 1.width : 8.width,
+                        value == 3
+                            ? GestureDetector(
+                                onTap: () {
+                                  if (selectedRadioTile == 3) {
+                                    bloc.add(ProductDetailsEvent
+                                        .productDecrementEvent(
+                                            productWeight: weight,
+                                            listIndex: listIndex));
+                                  }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: 25,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(3),
+                                      border: Border.all(
+                                          color: AppColors.greyColor),
+                                      color: AppColors.pageColor),
+                                  child: Text('-',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.mediumFont)),
+                                ),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -668,7 +684,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   fillColor: AppColors.pageColor,
                   validator: '',
                   controller: addProblemController,
-                  keyboardType: TextInputType.text,
+                  keyboardType: selectedRadioTile == 4
+                      ? TextInputType.text
+                      : TextInputType.none,
                   hint: AppLocalizations.of(context)!.add_text,
                   maxLines: 5,
                   isBorderVisible: false,

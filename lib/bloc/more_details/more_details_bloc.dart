@@ -168,7 +168,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             address: state.addressController.text,
             email: state.emailController.text,
             clientDetail: ClientDetail(fax: state.faxController.text),
-               logo: state.companyLogo,
+         //      logo: state.companyLogo,
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =

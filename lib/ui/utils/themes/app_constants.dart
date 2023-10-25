@@ -16,11 +16,14 @@ class AppConstants{
   static const double padding_15 = 15;
   static const double padding_20 = 20;
   static const double padding_30 = 30;
+  static const double padding_35 = 35;
   static const double padding_8 = 8;
   static const double padding_3 = 3;
   static const double padding_50 = 50;
   static const double padding_80 = 80;
   static const double padding_2 = 2;
+  static const double padding_40 = 40;
+  static const double padding_70 = 70;
 
   static const double radius_3 = 3;
   static const double radius_4 = 4;
