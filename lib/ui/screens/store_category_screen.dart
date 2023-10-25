@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,7 +11,6 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_product_category_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 
 import '../../routes/app_routes.dart';
 
@@ -310,8 +310,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   onFilterTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                   },
-                  onScanTap: () {
-                    Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
+                  onScanTap: () async {
+                    // Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
+                    String result = await scanBarcodeOrQRCode(
+                        context: context,
+                        cancelText: AppLocalizations.of(context)!.cancel,
+                        scanMode: ScanMode.QR);
+                    if (result != '-1') {
+                      // -1 result for cancel scanning
+                      debugPrint('result = $result');
+                    }
                   },
                   controller: TextEditingController(),
                   onOutSideTap: () {
@@ -399,12 +407,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.iconBGColor,
                       border: Border(
-                        left: isMirror
+                        left: !isMirror
                             ? BorderSide.none
                             : BorderSide(
                                 color: AppColors.borderColor.withOpacity(0.7),
                                 width: 1),
-                        right: isMirror
+                        right: !isMirror
                             ? BorderSide(
                                 color: AppColors.borderColor.withOpacity(0.7),
                                 width: 1)
@@ -412,7 +420,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ),
                     ),
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_8),
+                        horizontal: AppConstants.padding_3),
                     alignment: Alignment.center,
                     child: Icon(Icons.add, color: AppColors.mainColor),
                   ),
@@ -440,12 +448,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.iconBGColor,
                       border: Border(
-                        left: isMirror
+                        left: !isMirror
                             ? BorderSide(
                                 color: AppColors.borderColor.withOpacity(0.7),
                                 width: 1)
                             : BorderSide.none,
-                        right: isMirror
+                        right: !isMirror
                             ? BorderSide.none
                             : BorderSide(
                                 color: AppColors.borderColor.withOpacity(0.7),
@@ -453,7 +461,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ),
                     ),
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_8),
+                        horizontal: AppConstants.padding_3),
                     alignment: Alignment.center,
                     child: Icon(Icons.remove, color: AppColors.mainColor),
                   ),

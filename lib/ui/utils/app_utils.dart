@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -80,4 +82,20 @@ String getFileSizeString({required int bytes, int decimals = 0}) {
   const suffixList = [" Bytes", " KB", " MB", " GB", " TB"];
   int i = (log(bytes) / log(1024)).floor();
   return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + suffixList[i];
+}
+
+Future<String> scanBarcodeOrQRCode(
+    {required BuildContext context,
+    required String cancelText,
+    required ScanMode scanMode}) async {
+  String barcodeSOrQRScanRes;
+  try {
+    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
+        '#ff20BF6B', cancelText, true, scanMode);
+    print(barcodeSOrQRScanRes);
+  } on PlatformException {
+    barcodeSOrQRScanRes = 'Failed to get platform version.';
+  }
+  debugPrint('barcode = $barcodeSOrQRScanRes');
+  return barcodeSOrQRScanRes;
 }

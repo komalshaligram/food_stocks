@@ -52,6 +52,7 @@
   "order_status": "Order Status",
   "order_date": "Order Date",
   "suppliers": "Suppliers",
+  "all_suppliers": "All Suppliers",
   "products": "Products",
   "pending_delivery": "Pending delivery",
   "received": "Received all",
@@ -136,5 +137,6 @@
   "oct" : "Oct",
   "nov" : "Nov",
   "dec" :"Dec",
-  "ok":"Ok"
+   "ok":"Ok",
+   "cancel": "Cancel"
 }
