@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CommonShimmerWidget extends StatelessWidget {
@@ -23,7 +24,9 @@ class CommonShimmerWidget extends StatelessWidget {
       child: child,
       baseColor: baseColor,
       highlightColor: highlightColor,
-      direction: direction,
+      direction: isRTLContent(context: context)
+          ? ShimmerDirection.rtl
+          : ShimmerDirection.ltr,
       period: period,
       enabled: true,
     );

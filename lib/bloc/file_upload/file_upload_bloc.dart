@@ -321,11 +321,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   (state.formsAndFilesList[i].url
                           ?.contains(AppStrings.tempString) ??
                       false)*/
-              ) {
+                  ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
-                  false) /*&&
+                      false) /*&&
                   (state.formsAndFilesList[i].url
                       ?.contains(AppStrings.tempString) ??
                       false)*/
@@ -363,18 +363,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           if (response.status == 200) {
             emit(state.copyWith(isApiLoading: false));
             if (state.isUpdate) {
-              // showSnackBar(
-              //     context: event.context,
-              //     title: AppStrings.updateSuccessString,
-              //     bgColor: AppColors.mainColor);
-           //   Navigator.pop(event.context);
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.updateSuccessString,
+                  bgColor: AppColors.mainColor);
+              if (event.isFromDelete ?? false) {
+              } else {
+                Navigator.pop(event.context);
+              }
             } else {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.registerSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
-                      (route) => route.name == RouteDefine.connectScreen.name);
+                  (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
             }
@@ -414,7 +417,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             //     context: event.context,
             //     title: response.message ?? AppStrings.removeSuccessString,
             //     bgColor: AppColors.mainColor);
-            add(FileUploadEvent.uploadApiEvent(context: event.context));
+            add(FileUploadEvent.uploadApiEvent(
+                context: event.context, isFromDelete: true));
           } else {
             emit(state.copyWith(isUploadLoading: false));
             showSnackBar(

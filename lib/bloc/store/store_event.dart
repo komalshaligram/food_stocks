@@ -5,9 +5,6 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.changeCategoryExpansion({bool? isOpened}) =
       _ChangeCategoryExpansion;
 
-  const factory StoreEvent.changeUIUponAppLangEvent() =
-      _ChangeUIUponAppLangEvent;
-
   const factory StoreEvent.getProductCategoriesListEvent(
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
