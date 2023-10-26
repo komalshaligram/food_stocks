@@ -61,6 +61,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               path: pickedFile.path,
               shape: CropStyle.circle,
               quality: AppConstants.fileQuality);
+          if (croppedImage?.path.isEmpty ?? true) {
+            return;
+          }
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()
@@ -165,7 +168,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           debugPrint('shimmering true');
           try {
             debugPrint('mobile = ${preferences.getUserId()}');
-            // emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
@@ -252,7 +254,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
 
         ProfileModel updatedProfileModel = ProfileModel(
-        //  profileImage: state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList.data?.clientTypes
