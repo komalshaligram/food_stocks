@@ -59,217 +59,280 @@ class StoreScreenWidget extends StatelessWidget {
                           child: Column(
                             children: [
                               80.height,
-                              Column(
-                                children: [
-                                  buildListTitles(
-                                      context: context,
-                                      title: AppLocalizations.of(context)!
-                                          .categories,
-                                      subTitle: AppLocalizations.of(context)!
-                                          .all_categories,
-                                      onTap: () {}),
-                                  SizedBox(
-                                    width: getScreenWidth(context),
-                                    height: 110,
-                                    child: ListView.builder(
-                                      itemCount: state
-                                                  .productCategoryList.length <
-                                              6
-                                          ? state.productCategoryList.length
-                                          : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildCategoryListItem(
-                                            categoryImage: /*state
-                                          .productCategoryList[index]
-                                          .categoryImage ??*/
-                                                '',
-                                            categoryName: state
-                                                    .productCategoryList[index]
-                                                    .categoryName ??
-                                                '',
-                                            onTap: () {});
-                                      },
+                              state.productCategoryList.isEmpty
+                                  ? 0.width
+                                  : Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .categories,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_categories,
+                                            onTap: () {}),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount: state.productCategoryList
+                                                        .length <
+                                                    6
+                                                ? state
+                                                    .productCategoryList.length
+                                                : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCategoryListItem(
+                                                  categoryImage: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .categoryImage ??
+                                                      '',
+                                                  categoryName: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .categoryName ??
+                                                      '',
+                                                  onTap: () {});
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  buildListTitles(
-                                      context: context,
-                                      title: AppLocalizations.of(context)!
-                                          .companies,
-                                      subTitle: AppLocalizations.of(context)!
-                                          .all_companies,
-                                      onTap: () {}),
-                                  SizedBox(
-                                    width: getScreenWidth(context),
-                                    height: 110,
-                                    child: ListView.builder(
-                                      itemCount: 10,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildCompanyListItem(
-                                            companyLogo:
-                                                AppImagePath.profileImage,
-                                            companyName: "Company Name",
-                                            onTap: () {});
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  buildListTitles(
-                                      context: context,
-                                      title: AppLocalizations.of(context)!
-                                          .suppliers,
-                                      subTitle: AppLocalizations.of(context)!
-                                          .all_suppliers,
-                                      onTap: () {
-                                        Navigator.pushNamed(context,
-                                            RouteDefine.supplierScreen.name);
-                                      }),
-                                  SizedBox(
-                                    width: getScreenWidth(context),
-                                    height: 110,
-                                    child: ListView.builder(
-                                      itemCount: state.suppliersList.length < 5
-                                          ? state.suppliersList.length
-                                          : 6,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildCompanyListItem(
-                                            companyLogo: state
-                                                    .suppliersList[index]
-                                                    .logo ??
-                                                '',
-                                            companyName: state
-                                                    .suppliersList[index]
-                                                    .supplierDetail
-                                                    ?.companyName ??
-                                                '',
+                              // Column(
+                              //   children: [
+                              //     buildListTitles(
+                              //         context: context,
+                              //         title: AppLocalizations.of(context)!
+                              //             .companies,
+                              //         subTitle: AppLocalizations.of(context)!
+                              //             .all_companies,
+                              //         onTap: () {}),
+                              //     SizedBox(
+                              //       width: getScreenWidth(context),
+                              //       height: 110,
+                              //       child: ListView.builder(
+                              //         itemCount: 10,
+                              //         shrinkWrap: true,
+                              //         scrollDirection: Axis.horizontal,
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: AppConstants.padding_5),
+                              //         itemBuilder: (context, index) {
+                              //           return buildCompanyListItem(
+                              //               companyLogo:
+                              //                   AppImagePath.profileImage,
+                              //               companyName: "Company Name",
+                              //               onTap: () {});
+                              //         },
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              (state.suppliersList.data?.length ?? 0) == 0
+                                  ? 0.width
+                                  : Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .suppliers,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_suppliers,
                                             onTap: () {
                                               Navigator.pushNamed(
                                                   context,
                                                   RouteDefine
-                                                      .supplierProductsScreen
-                                                      .name,
-                                                  arguments: {
-                                                    AppStrings.supplierIdString:
-                                                        state
-                                                                .suppliersList[
-                                                                    index]
-                                                                .id ??
-                                                            ''
+                                                      .supplierScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount: (state.suppliersList.data
+                                                            ?.length ??
+                                                        0) <
+                                                    5
+                                                ? state
+                                                    .suppliersList.data?.length
+                                                : 6,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCompanyListItem(
+                                                  companyLogo: state
+                                                          .suppliersList
+                                                          .data?[index]
+                                                          .logo ??
+                                                      '',
+                                                  companyName: state
+                                                          .suppliersList
+                                                          .data?[index]
+                                                          .supplierDetail
+                                                          ?.companyName ??
+                                                      '',
+                                                  onTap: () {
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        RouteDefine
+                                                            .supplierProductsScreen
+                                                            .name,
+                                                        arguments: {
+                                                          AppStrings
+                                                              .supplierIdString: state
+                                                                  .suppliersList
+                                                                  .data?[index]
+                                                                  .id ??
+                                                              ''
+                                                        });
                                                   });
-                                            });
-                                      },
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  buildListTitles(
-                                      context: context,
-                                      title:
-                                          AppLocalizations.of(context)!.sales,
-                                      subTitle: AppLocalizations.of(context)!
-                                          .all_sales,
-                                      onTap: () {}),
-                                  SizedBox(
-                                    width: getScreenWidth(context),
-                                    height: 190,
-                                    child: ListView.builder(
-                                      itemCount:
-                                          state.productSalesList.length < 6
-                                              ? state.productSalesList.length
-                                              : 6,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildProductSaleListItem(
-                                          context: context,
-                                          saleImage: state
-                                                  .productSalesList[index]
-                                                  .salesName ??
-                                              '',
-                                          title: state.productSalesList[index]
-                                                  .salesTerms ??
-                                              '',
-                                          description: state
-                                                  .productSalesList[index]
-                                                  .salesDescription ??
-                                              '',
-                                          price: double.parse(state
-                                                  .productSalesList[index]
-                                                  .discountPercentage ??
-                                              '0'),
-                                          onTap: () {
-                                            showProductDetails(
+                              (state.productSalesList.data?.length ?? 0) == 0
+                                  ? 0.width
+                                  : Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .sales,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_sales,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .productSaleScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 190,
+                                          child: ListView.builder(
+                                            itemCount: (state.productSalesList
+                                                            .data?.length ??
+                                                        0) <
+                                                    6
+                                                ? state.productSalesList.data
+                                                    ?.length
+                                                : 6,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildProductSaleListItem(
                                                 context: context,
-                                                isRTL: isRTLContent(
-                                                    context: context));
-                                          },
-                                          onButtonTap: () {},
-                                        );
-                                      },
+                                                saleImage: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .mainImage ??
+                                                    '',
+                                                title: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .salesName ??
+                                                    '',
+                                                description: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .salesDescription ??
+                                                    '',
+                                                price: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .discountPercentage
+                                                        ?.toDouble() ??
+                                                    0.0,
+                                                onButtonTap: () {
+                                                  showProductDetails(
+                                                      context: context,
+                                                      isRTL: isRTLContent(
+                                                          context: context),
+                                                      productImage: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .mainImage ??
+                                                          '',
+                                                      productName: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .productName ??
+                                                          '',
+                                                      productCompanyName: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .brandName ??
+                                                          '',
+                                                      productSaleDescription: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .salesName ??
+                                                          '',
+                                                      productDescription: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .salesDescription ??
+                                                          '',
+                                                      productPrice: state.productSalesList.data?[index].discountPercentage?.toDouble() ?? 0.0,
+                                                      productWeight: state.productSalesList.data?[index].itemsWeight?.toDouble() ?? 0.0);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  buildListTitles(
-                                      context: context,
-                                      title: AppLocalizations.of(context)!
-                                          .recommended_for_you,
-                                      subTitle:
-                                          AppLocalizations.of(context)!.more,
-                                      onTap: () {}),
-                                  SizedBox(
-                                    width: getScreenWidth(context),
-                                    height: 190,
-                                    child: ListView.builder(
-                                      itemCount: 10,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildProductSaleListItem(
-                                          context: context,
-                                          saleImage: AppImagePath.product2,
-                                          title: '2 Products discount',
-                                          description:
-                                              'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
-                                          price: 20,
-                                          onTap: () {},
-                                          onButtonTap: () {},
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Column(
+                              //   children: [
+                              //     buildListTitles(
+                              //         context: context,
+                              //         title: AppLocalizations.of(context)!
+                              //             .recommended_for_you,
+                              //         subTitle:
+                              //             AppLocalizations.of(context)!.more,
+                              //         onTap: () {}),
+                              //     SizedBox(
+                              //       width: getScreenWidth(context),
+                              //       height: 190,
+                              //       child: ListView.builder(
+                              //         itemCount: 10,
+                              //         shrinkWrap: true,
+                              //         scrollDirection: Axis.horizontal,
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: AppConstants.padding_5),
+                              //         itemBuilder: (context, index) {
+                              //           return buildProductSaleListItem(
+                              //             context: context,
+                              //             saleImage: AppImagePath.product2,
+                              //             title: '2 Products discount',
+                              //             description:
+                              //                 'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
+                              //             price: 20,
+                              //             onTap: () {},
+                              //             onButtonTap: () {},
+                              //           );
+                              //         },
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                               85.height,
                             ],
-                    ),
-                  ),
+                          ),
+                        ),
                   CommonProductCategoryWidget(
                     isCategoryExpand: state.isCategoryExpand,
                     isRTL: isRTLContent(context: context),
@@ -286,6 +349,10 @@ class StoreScreenWidget extends StatelessWidget {
                       if (result != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $result');
+                        showSnackBar(
+                            context: context,
+                            title: result,
+                            bgColor: AppColors.mainColor);
                       }
                     },
                     controller: TextEditingController(),
@@ -294,11 +361,11 @@ class StoreScreenWidget extends StatelessWidget {
                           StoreEvent.changeCategoryExpansion(isOpened: true));
                     },
                     categoryList: [
-                      'Category',
-                      'Category',
-                      'Category',
-                      'Category',
-                      'Category'
+                      'Category name',
+                      'Category name',
+                      'Category name',
+                      'Category name',
+                      'Category name',
                     ],
                     onCatListItemTap: () {
                       Navigator.pushNamed(
@@ -404,48 +471,55 @@ class StoreScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
-        // boxShadow: [
-        //   BoxShadow(
-        //       color: AppColors.shadowColor.withOpacity(0.15),
-        //       blurRadius: AppConstants.blur_10)
-        // ],
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10)
+        ],
       ),
       child: InkWell(
         onTap: onTap,
         child: Stack(
           children: [
-            Image.network(
-              "${AppUrls.baseFileUrl}$categoryImage",
-              fit: BoxFit.contain,
-              height: 80,
-              width: 90,
-              alignment: Alignment.center,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: AppConstants.padding_5,
+                  left: AppConstants.padding_5,
+                  right: AppConstants.padding_5,
+                  bottom: AppConstants.padding_20),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$categoryImage",
+                fit: BoxFit.contain,
+                height: 65,
+                width: 80,
+                alignment: Alignment.center,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: 90,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
                   return Container(
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                    padding: EdgeInsets.only(
+                        bottom: AppConstants.padding_10, top: 0),
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 70,
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('product category list image error : $error');
-                return Container(
-                  padding:
-                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
-                  child: Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                    width: 90,
-                    height: 70,
-                  ),
-                );
-              },
+                },
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -462,7 +536,7 @@ class StoreScreenWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppConstants.radius_10),
                       bottomRight: Radius.circular(AppConstants.radius_10)),
-                  border: Border.all(color: AppColors.whiteColor, width: 1),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 clipBehavior: Clip.hardEdge,
                 child: CommonMarqueeWidget(
@@ -484,14 +558,14 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildProductSaleListItem(
-      {required BuildContext context,
-      required String saleImage,
-      required String title,
-      required String description,
-      required double price,
-      required void Function() onButtonTap,
-      required void Function() onTap}) {
+  Widget buildProductSaleListItem({
+    required BuildContext context,
+    required String saleImage,
+    required String title,
+    required String description,
+    required double price,
+    required void Function() onButtonTap,
+  }) {
     return Container(
       height: 170,
       width: 140,
@@ -511,74 +585,71 @@ class StoreScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$saleImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: 70,
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
-                      ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$saleImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
                   return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(
+                      color: AppColors.blackColor,
+                    ),
                   );
-                },
-              ),
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('sale list image error : $error');
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-            5.height,
-            Text(
-              title,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.saleRedColor,
-                  fontWeight: FontWeight.w600),
-              maxLines: 1,
+          ),
+          5.height,
+          Text(
+            title,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.saleRedColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: Text(
+              description,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_10, color: AppColors.blackColor),
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            5.height,
-            Expanded(
-              child: Text(
-                description,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_10, color: AppColors.blackColor),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+              onPressed: onButtonTap,
+              // height: 35,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
             ),
-            5.height,
-            Center(
-              child: CommonProductButtonWidget(
-                title:
-                    "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                onPressed: () {},
-                // height: 35,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -608,37 +679,38 @@ class StoreScreenWidget extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
-            Image.network(
-              "${AppUrls.baseFileUrl}$companyLogo",
-              fit: BoxFit.cover,
-              height: 90,
-              width: 90,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$companyLogo",
+                fit: BoxFit.fill,
+                height: 70,
+                width: 90,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: 90,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
                   return Container(
-                    height: 90,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('product category list image error : $error');
-                return Container(
-                  padding:
-                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
-                  child: Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                    width: 90,
-                    height: 70,
-                  ),
-                );
-              },
+                },
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -658,7 +730,7 @@ class StoreScreenWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(AppConstants.radius_10),
                       bottomLeft: Radius.circular(AppConstants.radius_10)),
-                  border: Border.all(color: AppColors.whiteColor, width: 1),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 child: CommonMarqueeWidget(
                   direction: Axis.horizontal,
@@ -705,7 +777,15 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required bool isRTL}) async {
+      {required BuildContext context,
+      required String productImage,
+      required String productName,
+      required String productCompanyName,
+      required String productDescription,
+      required String productSaleDescription,
+      required double productPrice,
+      required double productWeight,
+      required bool isRTL}) async {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -747,7 +827,7 @@ class StoreScreenWidget extends StatelessWidget {
                       Expanded(
                         flex: 4,
                         child: Text(
-                          'Product name',
+                          productName,
                           style: AppStyles.rkBoldTextStyle(
                             size: AppConstants.normalFont,
                             color: AppColors.blackColor,
@@ -776,7 +856,7 @@ class StoreScreenWidget extends StatelessWidget {
                   5.height,
                   Center(
                     child: Text(
-                      '100gr | Company name',
+                      '$productWeight | $productCompanyName',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.blackColor),
@@ -790,10 +870,42 @@ class StoreScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Center(
-                            child: Image.asset(
-                              AppImagePath.product1,
-                              height: 150,
-                              fit: BoxFit.fitHeight,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.all(AppConstants.padding_10),
+                              child: Image.network(
+                                "${AppUrls.baseFileUrl}$productImage",
+                                height: 150,
+                                fit: BoxFit.fitHeight,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress?.cumulativeBytesLoaded !=
+                                      loadingProgress?.expectedTotalBytes) {
+                                    return Container(
+                                      height: 170,
+                                      alignment: Alignment.center,
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors.blackColor,
+                                      ),
+                                    );
+                                  }
+                                  return child;
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  // debugPrint('product category list image error : $error');
+                                  return Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: AppConstants.padding_10,
+                                        top: 0),
+                                    child: Image.asset(
+                                      AppImagePath.imageNotAvailable5,
+                                      fit: BoxFit.cover,
+                                      // width: 90,
+                                      height: 170,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           Container(
@@ -819,14 +931,14 @@ class StoreScreenWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '11.90₪',
+                                      '$productPrice${AppLocalizations.of(context)!.currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
                                           color: AppColors.blackColor,
                                           fontWeight: FontWeight.w700),
                                     ),
                                     Text(
-                                      '4.76 ש"ח ל- 100 גרם',
+                                      productSaleDescription,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,
@@ -851,10 +963,9 @@ class StoreScreenWidget extends StatelessWidget {
                                             bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
-                                            bottomRight: Radius.circular(
-                                                isRTL
+                                            bottomRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
-                                                    : AppConstants.radius_5),
+                                                : AppConstants.radius_5),
                                             topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
@@ -916,10 +1027,9 @@ class StoreScreenWidget extends StatelessWidget {
                                             bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
-                                            bottomRight: Radius.circular(
-                                                isRTL
+                                            bottomRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
-                                                    : AppConstants.radius_50),
+                                                : AppConstants.radius_50),
                                             topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
@@ -966,7 +1076,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                       5.height,
                                       Text(
-                                        '2 at discount Buy 2 units at a price there of ₪20',
+                                        productDescription,
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.font_14,
                                             color: AppColors.blackColor,

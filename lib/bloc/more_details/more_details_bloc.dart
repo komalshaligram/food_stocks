@@ -84,6 +84,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.rectangle,
+              isLogoCrop: true,
               quality: AppConstants.fileQuality);
           if (croppedImage?.path.isEmpty ?? true) {
             return;
