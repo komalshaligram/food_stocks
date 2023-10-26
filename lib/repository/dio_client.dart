@@ -27,7 +27,8 @@ class DioClient {
 
         headers: {
           HttpHeaders.acceptHeader: Headers.jsonContentType,
-          HttpHeaders.authorizationHeader: 'Bearer 1'
+          HttpHeaders.authorizationHeader: 'Bearer 1',
+
         },
         validateStatus: (status) {
           if (status == 401) {
@@ -73,7 +74,6 @@ class DioClient {
 
         var response = await _dio.post(path,
             data: data,
-
             queryParameters: queryParameters,
             options: requestOptions);
 

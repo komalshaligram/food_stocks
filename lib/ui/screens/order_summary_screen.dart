@@ -32,6 +32,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Scaffold(
@@ -123,8 +124,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               flex: 2,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context,
-                                      RouteDefine.orderSuccessfulScreen.name);
+                                  bloc.add(OrderSummaryEvent.orderSendEvent(context: context));
+
                                 },
                                 child: Container(
                                   height: AppConstants.containerHeight_60,
