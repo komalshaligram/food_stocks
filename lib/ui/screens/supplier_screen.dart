@@ -6,6 +6,7 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -130,6 +131,11 @@ class SupplierScreenWidget extends StatelessWidget {
                 // debugPrint('product category list image error : $error');
                 return Container(
                   color: AppColors.whiteColor,
+                  padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                  child: Image.asset(
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
+                  ),
                 );
               },
             ),

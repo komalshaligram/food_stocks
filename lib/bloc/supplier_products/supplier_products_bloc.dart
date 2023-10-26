@@ -9,6 +9,9 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/storage/shared_preferences_helper.dart';
 
 part 'supplier_products_event.dart';
 
@@ -31,6 +34,10 @@ class SupplierProductsBloc
           SupplierProductsResModel response =
               SupplierProductsResModel.fromJson(res);
           debugPrint('supplier Products res = ${response.data}');
+          response.data?.forEach((element) {
+            debugPrint('supplier Products res = ${element.id}');
+          });
+
           if (response.status == 200) {
             emit(state.copyWith(
                 productList: response.data ?? [], isShimmering: false));

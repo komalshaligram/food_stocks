@@ -1,5 +1,4 @@
 class AppImagePath {
-
   ///svg
   static const String splashLogo = 'assets/images/splash_logo.svg';
   static const String profile = 'assets/images/profile.svg';
@@ -27,6 +26,16 @@ class AppImagePath {
   static const String product2 = 'assets/images/product2.png';
   static const String product3 = 'assets/images/product3.png';
   static const String successIcon = 'assets/images/icon_success.png';
-
-
+  static const String imageNotAvailable =
+      'assets/images/image_not_available.png';
+  static const String imageNotAvailable1 =
+      'assets/images/image_not_available1.png';
+  static const String imageNotAvailable2 =
+      'assets/images/image_not_available2.png';
+  static const String imageNotAvailable3 =
+      'assets/images/image_not_available3.jpg';
+  static const String imageNotAvailable4 =
+      'assets/images/image_not_available4.png';
+  static const String imageNotAvailable5 =
+      'assets/images/image_not_available5.png';
 }

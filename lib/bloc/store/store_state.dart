@@ -4,7 +4,6 @@ part of 'store_bloc.dart';
 class StoreState with _$StoreState {
   const factory StoreState({
     required bool isCategoryExpand,
-    required bool isMirror,
     required List<Category> productCategoryList,
     required List<Sale> productSalesList,
     required List<Datum> suppliersList,
@@ -13,7 +12,6 @@ class StoreState with _$StoreState {
 
   factory StoreState.initial() => const StoreState(
     isCategoryExpand: false,
-        isMirror: false,
         productCategoryList: [],
         productSalesList: [],
         suppliersList: [],

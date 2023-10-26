@@ -7,9 +7,8 @@ import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
-  final bool isMirror;
 
-  const ProfileScreenShimmerWidget({super.key, this.isMirror = false});
+  const ProfileScreenShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

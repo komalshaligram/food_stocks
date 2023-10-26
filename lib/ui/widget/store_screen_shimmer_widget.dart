@@ -13,87 +13,91 @@ class StoreScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             80.height,
             buildListTitles(),
-            SizedBox(
-              width: getScreenWidth(context),
-              height: 110,
-              child: ListView.builder(
-                itemCount: 6,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                itemBuilder: (context, index) {
-                  return buildCategoryListItem();
-                },
-              ),
-            ),
+            buildListItems(context),
             buildListTitles(),
-            SizedBox(
-              width: getScreenWidth(context),
-              height: 110,
-              child: ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                itemBuilder: (context, index) {
-                  return buildCategoryListItem();
-                },
-              ),
-            ),
+            buildListItems(context),
+            // SizedBox(
+            //   width: getScreenWidth(context),
+            //   height: 110,
+            //   child: ListView.builder(
+            //     itemCount: 10,
+            //     shrinkWrap: true,
+            //     scrollDirection: Axis.horizontal,
+            //     padding:
+            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+            //     itemBuilder: (context, index) {
+            //       return buildCategoryListItem();
+            //     },
+            //   ),
+            // ),
             buildListTitles(),
-            SizedBox(
-              width: getScreenWidth(context),
-              height: 110,
-              child: ListView.builder(
-                itemCount: 6,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                itemBuilder: (context, index) {
-                  return buildCategoryListItem();
-                },
-              ),
-            ),
+            buildListItems(context),
             buildListTitles(),
-            SizedBox(
-              width: getScreenWidth(context),
-              height: 190,
-              child: ListView.builder(
-                itemCount: 6,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                itemBuilder: (context, index) {
-                  return buildProductSaleListItem();
-                },
-              ),
-            ),
+            buildListItems(context, height: 120),
+            // SizedBox(
+            //   width: getScreenWidth(context),
+            //   height: 190,
+            //   child: ListView.builder(
+            //     itemCount: 6,
+            //     shrinkWrap: true,
+            //     scrollDirection: Axis.horizontal,
+            //     padding:
+            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+            //     itemBuilder: (context, index) {
+            //       return buildProductSaleListItem();
+            //     },
+            //   ),
+            // ),
             buildListTitles(),
-            SizedBox(
-              width: getScreenWidth(context),
-              height: 190,
-              child: ListView.builder(
-                itemCount: 6,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                padding:
-                    EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                itemBuilder: (context, index) {
-                  return buildProductSaleListItem();
-                },
-              ),
-            ),
+            buildListItems(context, height: 120),
+            // SizedBox(
+            //   width: getScreenWidth(context),
+            //   height: 190,
+            //   child: ListView.builder(
+            //     itemCount: 6,
+            //     shrinkWrap: true,
+            //     scrollDirection: Axis.horizontal,
+            //     padding:
+            //         EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+            //     itemBuilder: (context, index) {
+            //       return buildProductSaleListItem();
+            //     },
+            //   ),
+            // ),
             85.height,
           ],
         ),
+      ),
+    );
+  }
+
+  CommonShimmerWidget buildListItems(BuildContext context, {double? height}) {
+    return CommonShimmerWidget(
+      child: Container(
+        width: getScreenWidth(context),
+        height: height ?? 110,
+        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppConstants.radius_10),
+          ),
+          color: AppColors.whiteColor,
+        ),
+        // child: ListView.builder(
+        //   itemCount: 6,
+        //   shrinkWrap: true,
+        //   scrollDirection: Axis.horizontal,
+        //   padding:
+        //       EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        //   itemBuilder: (context, index) {
+        //     return buildCategoryListItem();
+        //   },
+        // ),
       ),
     );
   }

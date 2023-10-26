@@ -11,6 +11,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_urls.dart';
 
 class ProfileMenuRoute {
@@ -103,13 +104,21 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                                     .withOpacity(0.5),
                                                 width: 1)),
                                         alignment: Alignment.center,
-                                        child:
-                                            const CupertinoActivityIndicator()),
+                                        child: Container(
+                                            height: 50,
+                                            width:
+                                                getScreenWidth(context) * 0.35,
+                                            alignment: Alignment.center,
+                                            child:
+                                                const CupertinoActivityIndicator())),
                                     imageUrl:
                                         "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
                                     height: 50,
-                                   // width: getScreenWidth(context) * 0.35,
-                                    fit: BoxFit.contain,
+                                    width: getScreenWidth(context) * 0.35,
+                                    fit: BoxFit.fitHeight,
+                                    alignment: isRTLContent(context: context)
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
                                     errorWidget: (context, url, error) {
                                       return Container(
                                         decoration: BoxDecoration(

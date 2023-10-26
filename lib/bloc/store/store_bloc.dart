@@ -29,14 +29,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _ChangeUIUponAppLangEvent) {
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
-        emit(state.copyWith(
-            isMirror:
-                preferencesHelper.getAppLanguage() == AppStrings.hebrewString
-                    ? true
-                    : false));
       } else if (event is _GetProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -47,7 +39,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('product categories = ${response.data?.categories}');
           if (response.status == 200) {
             emit(state.copyWith(
-                productCategoryList: response.data?.categories ?? []));
+                productCategoryList: response.data?.categories ?? [],
+                isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,
@@ -57,12 +50,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } on ServerException {}
       } else if (event is _GetProductSalesListEvent) {
         try {
+          emit(state.copyWith(isShimmering: true));
           final res =
               await DioClient(event.context).post(AppUrls.getProductSalesUrl);
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           debugPrint('product sales = ${response.data?.sales}');
           if (response.status == 200) {
-            emit(state.copyWith(productSalesList: response.data?.sales ?? []));
+            emit(state.copyWith(
+                productSalesList: response.data?.sales ?? [],
+                isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,
@@ -72,6 +68,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } on ServerException {}
       } else if (event is _GetSuppliersListEvent) {
         try {
+          emit(state.copyWith(isShimmering: true));
           final res =
               await DioClient(event.context).post(AppUrls.getSuppliersUrl);
           SuppliersResModel response = SuppliersResModel.fromJson(res);

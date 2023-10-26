@@ -4,10 +4,11 @@ part of 'store_category_bloc.dart';
 class StoreCategoryState with _$StoreCategoryState {
   const factory StoreCategoryState({
     required bool isCategoryExpand,
-    required bool isMirror,
     required bool isCategory,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => const StoreCategoryState(
-      isCategoryExpand: false, isCategory: true, isMirror: false);
+        isCategoryExpand: false,
+        isCategory: true,
+      );
 }
