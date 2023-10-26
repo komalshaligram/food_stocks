@@ -133,7 +133,8 @@ class SupplierScreenWidget extends StatelessWidget {
                   color: AppColors.whiteColor,
                   padding: EdgeInsets.only(bottom: AppConstants.padding_20),
                   child: Image.asset(
-                    AppImagePath.imageNotAvailable,
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
                   ),
                 );
               },

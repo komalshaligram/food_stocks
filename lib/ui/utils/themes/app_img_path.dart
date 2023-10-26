@@ -36,4 +36,6 @@ class AppImagePath {
       'assets/images/image_not_available3.jpg';
   static const String imageNotAvailable4 =
       'assets/images/image_not_available4.png';
+  static const String imageNotAvailable5 =
+      'assets/images/image_not_available5.png';
 }

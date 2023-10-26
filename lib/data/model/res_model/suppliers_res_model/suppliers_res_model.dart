@@ -119,7 +119,7 @@ class SupplierDetail with _$SupplierDetail {
     @JsonKey(name: "hasImport") bool? hasImport,
     @JsonKey(name: "hasLogistics") bool? hasLogistics,
     @JsonKey(name: "hasDistribution") bool? hasDistribution,
-    @JsonKey(name: "categoriesIds") List<String>? categoriesIds,
+    @JsonKey(name: "categoriesIds") List<String?>? categoriesIds,
     @JsonKey(name: "suplierPolicy") List<SuplierPolicy>? suplierPolicy,
     @JsonKey(name: "hasDistributionPolicy") bool? hasDistributionPolicy,
     @JsonKey(name: "distributionDetails")

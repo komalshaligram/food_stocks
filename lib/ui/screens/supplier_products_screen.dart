@@ -500,7 +500,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   height: 150,
                                   color: AppColors.whiteColor,
                                   child: Image.asset(
-                                    AppImagePath.imageNotAvailable,
+                                    AppImagePath.imageNotAvailable5,
+                                    fit: BoxFit.cover,
                                   ),
                                 );
                               },

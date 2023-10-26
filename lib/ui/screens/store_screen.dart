@@ -59,177 +59,215 @@ class StoreScreenWidget extends StatelessWidget {
                           child: Column(
                             children: [
                               80.height,
-                              buildListTitles(
-                                  context: context,
-                                  title:
-                                      AppLocalizations.of(context)!.categories,
-                                  subTitle: AppLocalizations.of(context)!
-                                      .all_categories,
-                                  onTap: () {}),
-                              SizedBox(
-                                width: getScreenWidth(context),
-                          height: 110,
-                          child: ListView.builder(
-                            itemCount: state.productCategoryList.length < 6
-                                ? state.productCategoryList.length
-                                : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) {
-                              return buildCategoryListItem(
-                                  categoryImage: /*state
+                              Column(
+                                children: [
+                                  buildListTitles(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!
+                                          .categories,
+                                      subTitle: AppLocalizations.of(context)!
+                                          .all_categories,
+                                      onTap: () {}),
+                                  SizedBox(
+                                    width: getScreenWidth(context),
+                                    height: 110,
+                                    child: ListView.builder(
+                                      itemCount: state
+                                                  .productCategoryList.length <
+                                              6
+                                          ? state.productCategoryList.length
+                                          : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) {
+                                        return buildCategoryListItem(
+                                            categoryImage: /*state
                                           .productCategoryList[index]
                                           .categoryImage ??*/
-                                            '',
-                                  categoryName: state.productCategoryList[index]
-                                          .categoryName ??
-                                      '',
-                                  onTap: () {});
-                            },
-                          ),
-                        ),
-                        buildListTitles(
-                            context: context,
-                            title: AppLocalizations.of(context)!.companies,
-                            subTitle:
-                                AppLocalizations.of(context)!.all_companies,
-                            onTap: () {}),
-                        SizedBox(
-                          width: getScreenWidth(context),
-                          height: 110,
-                          child: ListView.builder(
-                            itemCount: 10,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) {
-                              return buildCompanyListItem(
-                                  companyLogo: AppImagePath.profileImage,
-                                  companyName: "Company Name",
-                                  onTap: () {});
-                            },
-                          ),
-                        ),
-                        buildListTitles(
-                            context: context,
-                            title: AppLocalizations.of(context)!.suppliers,
-                            subTitle:
-                                AppLocalizations.of(context)!.all_suppliers,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, RouteDefine.supplierScreen.name);
-                            }),
-                        SizedBox(
-                          width: getScreenWidth(context),
-                          height: 110,
-                          child: ListView.builder(
-                            itemCount: state.suppliersList.length < 5
-                                ? state.suppliersList.length
-                                : 6,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) {
-                              return buildCompanyListItem(
-                                        companyLogo:
-                                            state.suppliersList[index].logo ??
                                                 '',
-                                        companyName: state.suppliersList[index]
-                                                .supplierDetail?.companyName ??
-                                            '',
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context,
-                                              RouteDefine
-                                                  .supplierProductsScreen.name,
-                                              arguments: {
-                                                AppStrings.supplierIdString:
-                                                    state.suppliersList[index]
-                                                            .id ??
-                                                        ''
-                                              });
-                                        });
-                                  },
-                          ),
-                        ),
-                        buildListTitles(
-                            context: context,
-                            title: AppLocalizations.of(context)!.sales,
-                            subTitle: AppLocalizations.of(context)!.all_sales,
-                            onTap: () {}),
-                        SizedBox(
-                          width: getScreenWidth(context),
-                          height: 190,
-                          child: ListView.builder(
-                            itemCount: state.productSalesList.length < 6
-                                ? state.productSalesList.length
-                                : 6,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) {
-                              return buildProductSaleListItem(
-                                context: context,
-                                saleImage:
-                                    state.productSalesList[index].salesName ??
-                                        '',
-                                title:
-                                    state.productSalesList[index].salesTerms ??
-                                        '',
-                                description: state.productSalesList[index]
-                                        .salesDescription ??
-                                    '',
-                                price: double.parse(state
-                                        .productSalesList[index]
-                                        .discountPercentage ??
-                                    '0'),
-                                onTap: () {
-                                  showProductDetails(
-                                            context: context,
-                                            isRTL:
-                                                isRTLContent(context: context));
+                                            categoryName: state
+                                                    .productCategoryList[index]
+                                                    .categoryName ??
+                                                '',
+                                            onTap: () {});
                                       },
-                                onButtonTap: () {},
-                              );
-                            },
-                          ),
-                        ),
-                        buildListTitles(
-                            context: context,
-                            title: AppLocalizations.of(context)!
-                                .recommended_for_you,
-                            subTitle: AppLocalizations.of(context)!.more,
-                            onTap: () {}),
-                        SizedBox(
-                          width: getScreenWidth(context),
-                          height: 190,
-                          child: ListView.builder(
-                            itemCount: 10,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5),
-                            itemBuilder: (context, index) {
-                              return buildProductSaleListItem(
-                                context: context,
-                                saleImage: AppImagePath.product2,
-                                title: '2 Products discount',
-                                description:
-                                    'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
-                                price: 20,
-                                onTap: () {},
-                                onButtonTap: () {},
-                              );
-                            },
-                          ),
-                        ),
-                        85.height,
-                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  buildListTitles(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!
+                                          .companies,
+                                      subTitle: AppLocalizations.of(context)!
+                                          .all_companies,
+                                      onTap: () {}),
+                                  SizedBox(
+                                    width: getScreenWidth(context),
+                                    height: 110,
+                                    child: ListView.builder(
+                                      itemCount: 10,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) {
+                                        return buildCompanyListItem(
+                                            companyLogo:
+                                                AppImagePath.profileImage,
+                                            companyName: "Company Name",
+                                            onTap: () {});
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  buildListTitles(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!
+                                          .suppliers,
+                                      subTitle: AppLocalizations.of(context)!
+                                          .all_suppliers,
+                                      onTap: () {
+                                        Navigator.pushNamed(context,
+                                            RouteDefine.supplierScreen.name);
+                                      }),
+                                  SizedBox(
+                                    width: getScreenWidth(context),
+                                    height: 110,
+                                    child: ListView.builder(
+                                      itemCount: state.suppliersList.length < 5
+                                          ? state.suppliersList.length
+                                          : 6,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) {
+                                        return buildCompanyListItem(
+                                            companyLogo: state
+                                                    .suppliersList[index]
+                                                    .logo ??
+                                                '',
+                                            companyName: state
+                                                    .suppliersList[index]
+                                                    .supplierDetail
+                                                    ?.companyName ??
+                                                '',
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .supplierProductsScreen
+                                                      .name,
+                                                  arguments: {
+                                                    AppStrings.supplierIdString:
+                                                        state
+                                                                .suppliersList[
+                                                                    index]
+                                                                .id ??
+                                                            ''
+                                                  });
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  buildListTitles(
+                                      context: context,
+                                      title:
+                                          AppLocalizations.of(context)!.sales,
+                                      subTitle: AppLocalizations.of(context)!
+                                          .all_sales,
+                                      onTap: () {}),
+                                  SizedBox(
+                                    width: getScreenWidth(context),
+                                    height: 190,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          state.productSalesList.length < 6
+                                              ? state.productSalesList.length
+                                              : 6,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) {
+                                        return buildProductSaleListItem(
+                                          context: context,
+                                          saleImage: state
+                                                  .productSalesList[index]
+                                                  .salesName ??
+                                              '',
+                                          title: state.productSalesList[index]
+                                                  .salesTerms ??
+                                              '',
+                                          description: state
+                                                  .productSalesList[index]
+                                                  .salesDescription ??
+                                              '',
+                                          price: double.parse(state
+                                                  .productSalesList[index]
+                                                  .discountPercentage ??
+                                              '0'),
+                                          onTap: () {
+                                            showProductDetails(
+                                                context: context,
+                                                isRTL: isRTLContent(
+                                                    context: context));
+                                          },
+                                          onButtonTap: () {},
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  buildListTitles(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!
+                                          .recommended_for_you,
+                                      subTitle:
+                                          AppLocalizations.of(context)!.more,
+                                      onTap: () {}),
+                                  SizedBox(
+                                    width: getScreenWidth(context),
+                                    height: 190,
+                                    child: ListView.builder(
+                                      itemCount: 10,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) {
+                                        return buildProductSaleListItem(
+                                          context: context,
+                                          saleImage: AppImagePath.product2,
+                                          title: '2 Products discount',
+                                          description:
+                                              'Buy 2 units of a of flat salted pretzels for a price of 250 grams',
+                                          price: 20,
+                                          onTap: () {},
+                                          onButtonTap: () {},
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              85.height,
+                            ],
                     ),
                   ),
                   CommonProductCategoryWidget(
@@ -401,8 +439,8 @@ class StoreScreenWidget extends StatelessWidget {
                   padding:
                       EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
                   child: Image.asset(
-                    AppImagePath.imageNotAvailable4,
-                    fit: BoxFit.fill,
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
                     width: 90,
                     height: 70,
                   ),
@@ -500,7 +538,8 @@ class StoreScreenWidget extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   // debugPrint('sale list image error : $error');
                   return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable),
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
               ),
@@ -593,8 +632,8 @@ class StoreScreenWidget extends StatelessWidget {
                   padding:
                       EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
                   child: Image.asset(
-                    AppImagePath.imageNotAvailable4,
-                    fit: BoxFit.fill,
+                    AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover,
                     width: 90,
                     height: 70,
                   ),
