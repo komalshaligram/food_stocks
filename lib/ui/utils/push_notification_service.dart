@@ -49,7 +49,7 @@ class PushNotificationService {
         print("details:$details");
       },
     );
-    FirebaseMessaging.onBackgroundMessage((message) =>myBackgroundMessageHandler(message) );
+    FirebaseMessaging.onBackgroundMessage((message) =>myBackgroundMessageHandler(message));
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
       debugPrint('message:${message?.data}');
@@ -78,8 +78,11 @@ class PushNotificationService {
   }
 
   Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) {
+     dynamic? data;
+    if(message.data.isNotEmpty){
+       data = message.data;
+    }
     // Handle data message
-    final dynamic data = message.data;
     return data;
   }
 

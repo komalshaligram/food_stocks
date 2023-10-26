@@ -27,7 +27,7 @@ class AppsFlyerService{
 
   Future<bool?>? logInEvent(){
     debugPrint('login event done');
-    return _appsflyerSdk?.logEvent('App Install', {'login':"done"});
+    return _appsflyerSdk?.logEvent('App Install1', {'login':"done"});
   }
 
 }
