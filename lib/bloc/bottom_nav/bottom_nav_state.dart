@@ -8,7 +8,7 @@ class BottomNavState with _$BottomNavState {
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => const BottomNavState(
-        index: 4,
+        index: 3,
         cartCount: 12,
       );
 }

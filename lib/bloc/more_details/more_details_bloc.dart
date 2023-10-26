@@ -84,6 +84,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.rectangle,
+              isLogoCrop: true,
               quality: AppConstants.fileQuality);
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
@@ -168,7 +169,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             address: state.addressController.text,
             email: state.emailController.text,
             clientDetail: ClientDetail(fax: state.faxController.text),
-               logo: state.companyLogo,
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =

@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'product_sales_res_model.freezed.dart';
-
 part 'product_sales_res_model.g.dart';
 
 ProductSalesResModel productSalesResModelFromJson(String str) =>
@@ -19,8 +18,8 @@ String productSalesResModelToJson(ProductSalesResModel data) =>
 class ProductSalesResModel with _$ProductSalesResModel {
   const factory ProductSalesResModel({
     @JsonKey(name: "status") int? status,
-    @JsonKey(name: "data") Data? data,
-    @JsonKey(name: "message") String? message,
+    @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "metaData") MetaData? metaData,
   }) = _ProductSalesResModel;
 
   factory ProductSalesResModel.fromJson(Map<String, dynamic> json) =>
@@ -28,38 +27,90 @@ class ProductSalesResModel with _$ProductSalesResModel {
 }
 
 @freezed
-class Data with _$Data {
-  const factory Data({
-    @JsonKey(name: "sales") List<Sale>? sales,
-    @JsonKey(name: "totalRecords") int? totalRecords,
-    @JsonKey(name: "totalPages") int? totalPages,
-    @JsonKey(name: "currentPage") int? currentPage,
-  }) = _Data;
-
-  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
-}
-
-@freezed
-class Sale with _$Sale {
-  const factory Sale({
+class Datum with _$Datum {
+  const factory Datum({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "status") String? status,
-    @JsonKey(name: "productDetailsCounts") String? productDetailsCounts,
-    @JsonKey(name: "supplierDetails") String? supplierDetails,
-    @JsonKey(name: "salesType") String? salesType,
-    @JsonKey(name: "createdFirstName") String? createdFirstName,
-    @JsonKey(name: "createdLastName") String? createdLastName,
-    @JsonKey(name: "salesName") String? salesName,
-    @JsonKey(name: "discountPercentage") String? discountPercentage,
-    @JsonKey(name: "salesDescription") String? salesDescription,
-    @JsonKey(name: "fromDate") String? fromDate,
-    @JsonKey(name: "endDate") String? endDate,
-    @JsonKey(name: "salesTerms") String? salesTerms,
+    @JsonKey(name: "category") String? category,
+    @JsonKey(name: "subcategories") String? subcategories,
+    @JsonKey(name: "subsubcategories") Subsubcategories? subsubcategories,
+    @JsonKey(name: "casetypes") String? casetypes,
+    @JsonKey(name: "status") Status? status,
+    @JsonKey(name: "sku") String? sku,
+    @JsonKey(name: "brandName") String? brandName,
+    @JsonKey(name: "images") List<Image>? images,
+    @JsonKey(name: "mainImage") String? mainImage,
+    @JsonKey(name: "numberOfUnit") int? numberOfUnit,
+    @JsonKey(name: "productName") String? productName,
+    @JsonKey(name: "itemsWeight") int? itemsWeight,
     @JsonKey(name: "createdBy") String? createdBy,
     @JsonKey(name: "updatedBy") String? updatedBy,
     @JsonKey(name: "createdAt") String? createdAt,
     @JsonKey(name: "updatedAt") String? updatedAt,
-  }) = _Sale;
+    @JsonKey(name: "salesName") String? salesName,
+    @JsonKey(name: "discountPercentage") int? discountPercentage,
+    @JsonKey(name: "salesDescription") String? salesDescription,
+    @JsonKey(name: "fromDate") DateTime? fromDate,
+    @JsonKey(name: "endDate") DateTime? endDate,
+  }) = _Datum;
 
-  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
+  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+}
+
+@freezed
+class Image with _$Image {
+  const factory Image({
+    @JsonKey(name: "imageUrl") String? imageUrl,
+    @JsonKey(name: "order") int? order,
+  }) = _Image;
+
+  factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+}
+
+enum Status {
+  @JsonValue("Approved")
+  APPROVED,
+  @JsonValue("Pending")
+  PENDING
+}
+
+final statusValues =
+    EnumValues({"Approved": Status.APPROVED, "Pending": Status.PENDING});
+
+enum Subsubcategories {
+  @JsonValue("Ghee")
+  GHEE,
+  @JsonValue("Kids")
+  KIDS,
+  @JsonValue("Use For Handwash")
+  USE_FOR_HANDWASH
+}
+
+final subsubcategoriesValues = EnumValues({
+  "Ghee": Subsubcategories.GHEE,
+  "Kids": Subsubcategories.KIDS,
+  "Use For Handwash": Subsubcategories.USE_FOR_HANDWASH
+});
+
+@freezed
+class MetaData with _$MetaData {
+  const factory MetaData({
+    @JsonKey(name: "currentPage") int? currentPage,
+    @JsonKey(name: "totalFilteredCount") int? totalFilteredCount,
+    @JsonKey(name: "totalFilteredPage") int? totalFilteredPage,
+  }) = _MetaData;
+
+  factory MetaData.fromJson(Map<String, dynamic> json) =>
+      _$MetaDataFromJson(json);
+}
+
+class EnumValues<T> {
+  Map<String, T> map;
+  late Map<T, String> reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    reverseMap = map.map((k, v) => MapEntry(v, k));
+    return reverseMap;
+  }
 }

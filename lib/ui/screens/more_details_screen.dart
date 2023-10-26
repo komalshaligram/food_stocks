@@ -379,20 +379,20 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                       ),
                                                       30.height,
                                                       FileSelectionOptionWidget(
-                                                          title: AppLocalizations
-                                                                  .of(context)!
-                                                              .camera,
-                                                          icon: Icons.camera,
-                                                          onTap: () {
-                                                            bloc.add(MoreDetailsEvent
-                                                                .pickLogoImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        true));
-                                                            Navigator.pop(
-                                                                context);
-                                                          }),
+                                                          title: AppLocalizations.of(
+                                                                        context)!
+                                                                    .camera,
+                                                                icon: Icons
+                                                                    .camera_alt_rounded,
+                                                                onTap: () {
+                                                                  bloc.add(MoreDetailsEvent.pickLogoImageEvent(
+                                                                      context:
+                                                                          context,
+                                                                      isFromCamera:
+                                                                          true));
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }),
                                                       FileSelectionOptionWidget(
                                                           title: AppLocalizations
                                                                   .of(context)!

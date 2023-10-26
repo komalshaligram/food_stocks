@@ -252,7 +252,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
 
         ProfileModel updatedProfileModel = ProfileModel(
-        //  profileImage: state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList.data?.clientTypes

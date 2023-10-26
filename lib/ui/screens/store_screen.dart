@@ -83,9 +83,9 @@ class StoreScreenWidget extends StatelessWidget {
                                           horizontal: AppConstants.padding_5),
                                       itemBuilder: (context, index) {
                                         return buildCategoryListItem(
-                                            categoryImage: /*state
-                                          .productCategoryList[index]
-                                          .categoryImage ??*/
+                                            categoryImage: state
+                                                    .productCategoryList[index]
+                                                    .categoryImage ??
                                                 '',
                                             categoryName: state
                                                     .productCategoryList[index]
@@ -206,26 +206,26 @@ class StoreScreenWidget extends StatelessWidget {
                                           context: context,
                                           saleImage: state
                                                   .productSalesList[index]
-                                                  .salesName ??
+                                                  .mainImage ??
                                               '',
                                           title: state.productSalesList[index]
-                                                  .salesTerms ??
+                                                  .salesName ??
                                               '',
                                           description: state
                                                   .productSalesList[index]
                                                   .salesDescription ??
                                               '',
-                                          price: double.parse(state
-                                                  .productSalesList[index]
-                                                  .discountPercentage ??
-                                              '0'),
-                                          onTap: () {
+                                          price: state.productSalesList[index]
+                                                  .discountPercentage
+                                                  ?.toDouble() ??
+                                              0.0,
+                                          onTap: () {},
+                                          onButtonTap: () {
                                             showProductDetails(
                                                 context: context,
                                                 isRTL: isRTLContent(
                                                     context: context));
                                           },
-                                          onButtonTap: () {},
                                         );
                                       },
                                     ),
@@ -268,8 +268,8 @@ class StoreScreenWidget extends StatelessWidget {
                               ),
                               85.height,
                             ],
-                    ),
-                  ),
+                          ),
+                        ),
                   CommonProductCategoryWidget(
                     isCategoryExpand: state.isCategoryExpand,
                     isRTL: isRTLContent(context: context),
@@ -404,48 +404,55 @@ class StoreScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
-        // boxShadow: [
-        //   BoxShadow(
-        //       color: AppColors.shadowColor.withOpacity(0.15),
-        //       blurRadius: AppConstants.blur_10)
-        // ],
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10)
+        ],
       ),
       child: InkWell(
         onTap: onTap,
         child: Stack(
           children: [
-            Image.network(
-              "${AppUrls.baseFileUrl}$categoryImage",
-              fit: BoxFit.contain,
-              height: 80,
-              width: 90,
-              alignment: Alignment.center,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: AppConstants.padding_5,
+                  left: AppConstants.padding_5,
+                  right: AppConstants.padding_5,
+                  bottom: AppConstants.padding_20),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$categoryImage",
+                fit: BoxFit.contain,
+                height: 65,
+                width: 80,
+                alignment: Alignment.center,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: 90,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
                   return Container(
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                    padding: EdgeInsets.only(
+                        bottom: AppConstants.padding_10, top: 0),
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 70,
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('product category list image error : $error');
-                return Container(
-                  padding:
-                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
-                  child: Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                    width: 90,
-                    height: 70,
-                  ),
-                );
-              },
+                },
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -462,7 +469,7 @@ class StoreScreenWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppConstants.radius_10),
                       bottomRight: Radius.circular(AppConstants.radius_10)),
-                  border: Border.all(color: AppColors.whiteColor, width: 1),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 clipBehavior: Clip.hardEdge,
                 child: CommonMarqueeWidget(
@@ -511,74 +518,71 @@ class StoreScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$saleImage",
-                height: 70,
-                fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: 70,
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
-                      ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$saleImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
                   return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(
+                      color: AppColors.blackColor,
+                    ),
                   );
-                },
-              ),
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('sale list image error : $error');
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-            5.height,
-            Text(
-              title,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.saleRedColor,
-                  fontWeight: FontWeight.w600),
-              maxLines: 1,
+          ),
+          5.height,
+          Text(
+            title,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.saleRedColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: Text(
+              description,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_10, color: AppColors.blackColor),
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            5.height,
-            Expanded(
-              child: Text(
-                description,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_10, color: AppColors.blackColor),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+              onPressed: () {},
+              // height: 35,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
             ),
-            5.height,
-            Center(
-              child: CommonProductButtonWidget(
-                title:
-                    "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                onPressed: () {},
-                // height: 35,
-                textColor: AppColors.whiteColor,
-                bgColor: AppColors.mainColor,
-                borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -608,37 +612,38 @@ class StoreScreenWidget extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
-            Image.network(
-              "${AppUrls.baseFileUrl}$companyLogo",
-              fit: BoxFit.cover,
-              height: 90,
-              width: 90,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$companyLogo",
+                fit: BoxFit.fill,
+                height: 70,
+                width: 90,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: 90,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
                   return Container(
-                    height: 90,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('product category list image error : $error');
-                return Container(
-                  padding:
-                      EdgeInsets.only(bottom: AppConstants.padding_10, top: 0),
-                  child: Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                    width: 90,
-                    height: 70,
-                  ),
-                );
-              },
+                },
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -658,7 +663,7 @@ class StoreScreenWidget extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(AppConstants.radius_10),
                       bottomLeft: Radius.circular(AppConstants.radius_10)),
-                  border: Border.all(color: AppColors.whiteColor, width: 1),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 child: CommonMarqueeWidget(
                   direction: Axis.horizontal,
@@ -851,10 +856,9 @@ class StoreScreenWidget extends StatelessWidget {
                                             bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
-                                            bottomRight: Radius.circular(
-                                                isRTL
+                                            bottomRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
-                                                    : AppConstants.radius_5),
+                                                : AppConstants.radius_5),
                                             topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
@@ -916,10 +920,9 @@ class StoreScreenWidget extends StatelessWidget {
                                             bottomLeft: Radius.circular(isRTL
                                                 ? AppConstants.radius_50
                                                 : AppConstants.radius_5),
-                                            bottomRight: Radius.circular(
-                                                isRTL
+                                            bottomRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
-                                                    : AppConstants.radius_50),
+                                                : AppConstants.radius_50),
                                             topRight: Radius.circular(isRTL
                                                 ? AppConstants.radius_5
                                                 : AppConstants.radius_50),
