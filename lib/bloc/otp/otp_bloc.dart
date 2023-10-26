@@ -83,8 +83,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               emit(state.copyWith(isLoginFail: false, isLoading: false));
             }
           } catch (e) {
-            emit(state.copyWith(isLoginFail: true, errorMessage: e.toString()));
-            emit(state.copyWith(isLoginFail: false, isLoading: false));
+            emit(state.copyWith(isLoading: false));
           }
         } else {
           emit(state.copyWith(

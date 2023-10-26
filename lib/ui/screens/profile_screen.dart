@@ -483,8 +483,8 @@ class ProfileScreenWidget extends StatelessWidget {
                           onPressed: state.isLoading
                               ? null
                               : () {
-                                  if (state.UserImageUrl != '') {
-                                    if (state.selectedBusinessType.isEmpty ||
+                                  // if (state.UserImageUrl != '') {
+                                        if (state.selectedBusinessType.isEmpty ||
                                         state.selectedBusinessType != '') {
                                       if (_formKey.currentState?.validate() ??
                                           false) {
@@ -495,24 +495,24 @@ class ProfileScreenWidget extends StatelessWidget {
                                         } else {
                                           bloc.add(ProfileEvent
                                               .navigateToMoreDetailsScreenEvent(
-                                                  context: context1));
+                                                      context: context1));
+                                            }
+                                          }
+                                        } else {
+                                          showSnackBar(
+                                              context: context,
+                                              title: AppStrings
+                                                  .selectBusinessTypeString,
+                                              bgColor: AppColors.redColor);
                                         }
-                                      }
-                                    } else {
-                                      showSnackBar(
-                                          context: context,
-                                          title: AppStrings
-                                              .selectBusinessTypeString,
-                                          bgColor: AppColors.redColor);
-                                    }
-                                  } else {
-                                    showSnackBar(
-                                        context: context,
-                                        title:
-                                            AppStrings.selectProfileImageString,
-                                        bgColor: AppColors.redColor);
-                                  }
-                                },
+                                        // } else {
+                                        //   showSnackBar(
+                                        //       context: context,
+                                        //       title:
+                                        //           AppStrings.selectProfileImageString,
+                                        //       bgColor: AppColors.redColor);
+                                        // }
+                                      },
                           fontColors: AppColors.whiteColor,
                         ),
                         20.height,

@@ -140,8 +140,10 @@ class SupplierScreenWidget extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   // debugPrint('product category list image error : $error');
                   return Container(
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                    // padding: EdgeInsets.only(bottom: AppConstants.padding_20),
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
