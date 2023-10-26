@@ -16,4 +16,6 @@ class BasketEvent with _$BasketEvent {
     required int listIndex,
     required BuildContext context,
   }) = _deleteListItemEvent;
+
+  const factory BasketEvent.getDataEvent() = _getDataEvent;
 }
