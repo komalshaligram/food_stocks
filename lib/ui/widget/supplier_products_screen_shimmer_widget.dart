@@ -13,7 +13,7 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: GridView.builder(
             shrinkWrap: true,
-            itemCount: 7,
+            itemCount: 8,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

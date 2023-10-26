@@ -8,10 +8,7 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'store_event.dart';
@@ -52,17 +49,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isShimmering: true));
           final res =
-              await DioClient(event.context).post(AppUrls.getProductSalesUrl);
+              await DioClient(event.context).post(AppUrls.getSaleProductsUrl);
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
-          debugPrint('product sales = ${response.data?.sales}');
           if (response.status == 200) {
             emit(state.copyWith(
-                productSalesList: response.data?.sales ?? [],
-                isShimmering: false));
+                productSalesList: response, isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -74,8 +69,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
-            emit(state.copyWith(
-                suppliersList: response.data ?? [], isShimmering: false));
+            emit(state.copyWith(suppliersList: response, isShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,

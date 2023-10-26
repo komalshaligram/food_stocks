@@ -319,6 +319,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     if (result != '-1') {
                       // -1 result for cancel scanning
                       debugPrint('result = $result');
+                      showSnackBar(
+                          context: context,
+                          title: result,
+                          bgColor: AppColors.mainColor);
                     }
                   },
                   controller: TextEditingController(),

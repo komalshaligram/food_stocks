@@ -363,52 +363,51 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .upload_photo,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                                size: AppConstants
-                                                                    .normalFont,
-                                                                color: AppColors
-                                                                    .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                      ),
-                                                      30.height,
-                                                      FileSelectionOptionWidget(
-                                                          title: AppLocalizations
-                                                                  .of(context)!
-                                                              .camera,
-                                                          icon: Icons.camera,
-                                                          onTap: () {
-                                                            bloc.add(MoreDetailsEvent
-                                                                .pickLogoImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        true));
-                                                            Navigator.pop(
-                                                                context);
-                                                          }),
-                                                      FileSelectionOptionWidget(
-                                                          title: AppLocalizations
-                                                                  .of(context)!
-                                                              .gallery,
-                                                          icon: Icons.photo,
-                                                          onTap: () {
-                                                            bloc.add(MoreDetailsEvent
-                                                                .pickLogoImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        false));
-                                                            Navigator.pop(
-                                                                context);
-                                                          }),
-                                                    ],
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .upload_photo,
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants
+                                                                      .normalFont,
+                                                                  color: AppColors
+                                                                      .blackColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                            ),
+                                                            30.height,
+                                                            FileSelectionOptionWidget(
+                                                                title: AppLocalizations.of(
+                                                                        context)!
+                                                                    .camera,
+                                                                icon: Icons
+                                                                    .camera_alt_rounded,
+                                                                onTap: () {
+                                                                  bloc.add(MoreDetailsEvent.pickLogoImageEvent(
+                                                                      context:
+                                                                          context,
+                                                                      isFromCamera:
+                                                                          true));
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }),
+                                                            FileSelectionOptionWidget(
+                                                                title: AppLocalizations.of(
+                                                                        context)!
+                                                                    .gallery,
+                                                                icon:
+                                                                    Icons.photo,
+                                                                onTap: () {
+                                                                  bloc.add(MoreDetailsEvent.pickLogoImageEvent(
+                                                                      context:
+                                                                          context,
+                                                                      isFromCamera:
+                                                                          false));
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }),
+                                                          ],
                                                   ),
                                                 ),
                                             backgroundColor:
