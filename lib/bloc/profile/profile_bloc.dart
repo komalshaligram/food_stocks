@@ -54,6 +54,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
             dir = await getApplicationDocumentsDirectory();
+
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
