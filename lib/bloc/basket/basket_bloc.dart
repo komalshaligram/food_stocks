@@ -14,13 +14,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
   BasketBloc() : super( BasketState.initial()) {
     on<BasketEvent>((event, emit) {
 
+      if(event is _getDataEvent){
+        emit(state.copyWith(isShimmering: true));
+      }
+
       if(event is _productIncrementEvent){
         List<ProductDetailsModel> temp = state.basketProductList;
         temp[event.listIndex].productWeight = event.productWeight + 1;
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
       }
 
-      if(event is _productDecrementEvent){
+     else if(event is _productDecrementEvent){
         List<ProductDetailsModel> temp = state.basketProductList;
         if(event.productWeight > 0){
           temp[event.listIndex].productWeight = event.productWeight - 1;
@@ -31,7 +35,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
       }
-      if(event is _deleteListItemEvent){
+    else  if(event is _deleteListItemEvent){
         List<ProductDetailsModel> temp = [];
         temp.addAll(state.basketProductList);
         temp.removeAt(event.listIndex);
@@ -39,6 +43,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
 
       }
+
     });
   }
 }

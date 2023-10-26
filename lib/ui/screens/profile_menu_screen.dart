@@ -122,11 +122,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     errorWidget: (context, url, error) {
                                       return Container(
                                         decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            border: Border.all(
+                                            color: AppColors.pageColor,
+                                          /*  border: Border.all(
                                                 color: AppColors.borderColor
                                                     .withOpacity(0.5),
-                                                width: 1)),
+                                                width: 0)*/),
                                       );
                                     },
                                   ),

@@ -86,6 +86,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               shape: CropStyle.rectangle,
               isLogoCrop: true,
               quality: AppConstants.fileQuality);
+          if (croppedImage?.path.isEmpty ?? true) {
+            return;
+          }
           String imageSize = getFileSizeString(
               bytes: croppedImage?.path.isNotEmpty ?? false
                   ? await File(croppedImage!.path).length()

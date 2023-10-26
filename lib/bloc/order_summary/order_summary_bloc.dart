@@ -11,6 +11,10 @@ part 'order_summary_bloc.freezed.dart';
 
 class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
   OrderSummaryBloc() : super(OrderSummaryState.initial()) {
-    on<OrderSummaryEvent>((event, emit) {});
+    on<OrderSummaryEvent>((event, emit) {
+      if(event is _getDataEvent){
+        emit(state.copyWith(isShimmering: true));
+      }
+    });
   }
 }

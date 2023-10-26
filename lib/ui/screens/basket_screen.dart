@@ -11,6 +11,7 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 
+
 class BasketRoute {
   static Widget get route => const BasketScreen();
 }
@@ -21,7 +22,7 @@ class BasketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BasketBloc(),
+      create: (context) => BasketBloc()..add(BasketEvent.getDataEvent()),
       child: const BasketScreenWidget(),
     );
   }
@@ -142,6 +143,7 @@ class BasketScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
+                    /*state.isShimmering ? BasketScreenShimmerWidget() :*/
                     state.basketProductList.isNotEmpty
                         ? Expanded(
                             child: ListView.builder(

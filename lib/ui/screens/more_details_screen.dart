@@ -554,17 +554,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                               : () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                    if (state.companyLogo.isNotEmpty) {
                                       bloc.add(
                                           MoreDetailsEvent.registrationApiEvent(
                                               context: context));
-                                    } else {
-                                      showSnackBar(
-                                          context: context,
-                                          title: AppStrings
-                                              .selectCompanyLogoString,
-                                          bgColor: AppColors.redColor);
-                                    }
+
 
                                     /*      if (state.isUpdate) {
                               if (state.image.path.isNotEmpty) {
