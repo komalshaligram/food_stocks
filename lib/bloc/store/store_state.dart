@@ -4,17 +4,17 @@ part of 'store_bloc.dart';
 class StoreState with _$StoreState {
   const factory StoreState({
     required bool isCategoryExpand,
-    required List<CategoryModel.Category> productCategoryList,
-    required List<SalesModel.Datum> productSalesList,
-    required List<SuppliersModel.Datum> suppliersList,
+    required List<Category> productCategoryList,
+    required ProductSalesResModel productSalesList,
+    required SuppliersResModel suppliersList,
     required bool isShimmering,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
     isCategoryExpand: false,
         productCategoryList: [],
-        productSalesList: [],
-        suppliersList: [],
+        productSalesList: ProductSalesResModel(),
+        suppliersList: SuppliersResModel(),
         isShimmering: false,
       );
 }

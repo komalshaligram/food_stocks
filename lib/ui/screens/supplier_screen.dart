@@ -64,17 +64,18 @@ class SupplierScreenWidget extends StatelessWidget {
                     itemBuilder: (context, index) => buildSupplierListItem(
                         context: context,
                         supplierLogo: state.suppliersList[index].logo ?? '',
-                        supplierName: state.suppliersList[index].supplierDetail?.companyName ??
-                          '',
-                  onTap: () {
-                    Navigator.pushNamed(
-                        context, RouteDefine.supplierProductsScreen.name,
-                        arguments: {
-                          AppStrings.supplierIdString:
-                              state.suppliersList[index].id ?? ''
-                        });
-                  }),
-            ),
+                        supplierName: state.suppliersList[index].supplierDetail
+                                ?.companyName ??
+                            '',
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RouteDefine.supplierProductsScreen.name,
+                              arguments: {
+                                AppStrings.supplierIdString:
+                                    state.suppliersList[index].id ?? ''
+                              });
+                        }),
+                  ),
           ),
         );
       },
@@ -109,35 +110,45 @@ class SupplierScreenWidget extends StatelessWidget {
             borderRadius:
                 BorderRadius.all(Radius.circular(AppConstants.radius_10)),
             onTap: onTap,
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$supplierLogo",
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: AppConstants.padding_20,
+                left: AppConstants.padding_5,
+                right: AppConstants.padding_5,
+                top: AppConstants.padding_5,
+              ),
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$supplierLogo",
+                fit: BoxFit.scaleDown,
+                width: getScreenWidth(context),
+                height: getScreenHeight(context) - 20,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return Container(
+                      height: getScreenHeight(context),
+                      width: getScreenWidth(context),
+                      alignment: Alignment.center,
+                      color: AppColors.whiteColor,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
                   return Container(
-                    height: getScreenHeight(context),
-                    width: getScreenWidth(context),
-                    alignment: Alignment.center,
                     color: AppColors.whiteColor,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                    padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('product category list image error : $error');
-                return Container(
-                  color: AppColors.whiteColor,
-                  padding: EdgeInsets.only(bottom: AppConstants.padding_20),
-                  child: Image.asset(
-                    AppImagePath.imageNotAvailable5,
-                    fit: BoxFit.cover,
-                  ),
-                );
-              },
+                },
+              ),
             ),
           ),
         ),

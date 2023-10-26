@@ -32,7 +32,7 @@ class Datum with _$Datum {
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "category") String? category,
     @JsonKey(name: "subcategories") String? subcategories,
-    @JsonKey(name: "subsubcategories") Subsubcategories? subsubcategories,
+    @JsonKey(name: "subsubcategories") String? subsubcategories,
     @JsonKey(name: "casetypes") String? casetypes,
     @JsonKey(name: "status") Status? status,
     @JsonKey(name: "sku") String? sku,
@@ -75,21 +75,6 @@ enum Status {
 
 final statusValues =
     EnumValues({"Approved": Status.APPROVED, "Pending": Status.PENDING});
-
-enum Subsubcategories {
-  @JsonValue("Ghee")
-  GHEE,
-  @JsonValue("Kids")
-  KIDS,
-  @JsonValue("Use For Handwash")
-  USE_FOR_HANDWASH
-}
-
-final subsubcategoriesValues = EnumValues({
-  "Ghee": Subsubcategories.GHEE,
-  "Kids": Subsubcategories.KIDS,
-  "Use For Handwash": Subsubcategories.USE_FOR_HANDWASH
-});
 
 @freezed
 class MetaData with _$MetaData {
