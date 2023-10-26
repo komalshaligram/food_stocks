@@ -21,7 +21,7 @@ class OrderSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderSummaryBloc(),
+      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent()),
       child: OrderSummaryScreenWidget(),
     );
   }
@@ -49,7 +49,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+              /*  state.isShimmering ? OrderSummaryScreenShimmerWidget():*/Expanded(
                   child: ListView.builder(
                     itemCount: state.orderSummaryList.length,
                     shrinkWrap: true,

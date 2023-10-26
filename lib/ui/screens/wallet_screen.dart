@@ -266,17 +266,6 @@ class WalletScreenWidget extends StatelessWidget {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     getTitlesWidget: ((value, meta) {
-                                      /*     month = '';
-
-                                      print('newMap_____${newMap}');
-                                      if(state.language == 'en') {
-                                        Map hebrewMonthMap = (monthMap.values)
-                                            .reverse();
-                                        print(
-                                            'hebrewMonthMap____${hebrewMonthMap}');
-                                        month = hebrewMonthMap[value];
-                                      }*/
-
                                       String? month = monthMap[value];
                                       return Text(
                                         month.toString(),

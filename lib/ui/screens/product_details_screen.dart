@@ -387,27 +387,36 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       required int listIndex}) {
     showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: AppColors.pageColor,
+      backgroundColor: Colors.transparent,
       context: context,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      useSafeArea: true,
+      enableDrag: true,
       builder: (context1) {
-        return BlocProvider(
-          create: (context) => ProductDetailsBloc(),
-          child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-            builder: (context, state) {
-              selectedRadioTile = state.selectedRadioTile;
-              weight = state.productList[listIndex].productWeight!;
-              return SafeArea(
-                child: Padding(
-                  padding: MediaQuery.of(context).viewInsets * 0.67,
-                  child: Container(
+        return DraggableScrollableSheet(
+          expand: true,
+          maxChildSize: 1 -
+              (MediaQuery.of(context).viewPadding.top /
+                  getScreenHeight(context)),
+          minChildSize: 0.4,
+          initialChildSize: 0.7,
+          shouldCloseOnMinExtent: true,
+          builder: (context, scrollController) {
+            return BlocProvider(
+              create: (context) => ProductDetailsBloc(),
+              child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+                builder: (context, state) {
+                  selectedRadioTile = state.selectedRadioTile;
+                  weight = state.productList[listIndex].productWeight!;
+                  return Container(
+                    color: AppColors.whiteColor,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: AppConstants.padding_15,
                           horizontal: AppConstants.padding_15),
-                      child: Container(
-                        height: getScreenHeight(context) <= 730
-                            ? getScreenHeight(context) * 0.85
-                            : getScreenHeight(context) * 0.7,
+                      child: SingleChildScrollView(
+                        controller: scrollController,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -548,11 +557,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );
