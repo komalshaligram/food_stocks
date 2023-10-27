@@ -41,8 +41,8 @@ class MenuScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.menu,
                 iconData: Icons.close,
                 onTap: () {
-                  Navigator.pushNamed(context,
-                      RouteDefine.bottomNavScreen.name);
+                  Navigator.pushNamed(
+                      context, RouteDefine.bottomNavScreen.name);
                 },
               ),
             ),
@@ -75,6 +75,11 @@ class MenuScreenWidget extends StatelessWidget {
                       onTap: () => context
                           .read<MenuBloc>()
                           .add(MenuEvent.logOutEvent(context: context))),
+                  // menuTiles(
+                  //     title: AppLocalizations.of(context)!.app_language,
+                  //     onTap: () => context
+                  //         .read<MenuBloc>()
+                  //         .add(MenuEvent.changeAppLanguageEvent(context: context))),
                 ],
               ),
             ),
@@ -101,7 +106,7 @@ class MenuScreenWidget extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-      padding: const EdgeInsets.all(AppConstants.padding_15),
+          padding: const EdgeInsets.all(AppConstants.padding_15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

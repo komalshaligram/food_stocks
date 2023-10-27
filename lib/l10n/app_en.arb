@@ -1,4 +1,5 @@
 {
+  "app_language": "App Language",
   "register": "Register",
   "login": "Login",
   "business_details": "Business info",
