@@ -549,14 +549,14 @@ abstract class $HomeStateCopyWith<$Res> {
 /// @nodoc
 class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     implements $HomeStateCopyWith<$Res> {
-_$HomeStateCopyWithImpl(this._value, this._then);
+  _$HomeStateCopyWithImpl(this._value, this._then);
 
 // ignore: unused_field
-final $Val _value;
+  final $Val _value;
 // ignore: unused_field
-final $Res Function($Val) _then;
+  final $Res Function($Val) _then;
 
-@pragma('vm:prefer-inline')
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? UserImageUrl = null,
@@ -567,9 +567,9 @@ final $Res Function($Val) _then;
     Object? isProductLoading = null,
     Object? productDetails = null,
   }) {
-return _then(_value.copyWith(
-UserImageUrl: null == UserImageUrl
-? _value.UserImageUrl
+    return _then(_value.copyWith(
+      UserImageUrl: null == UserImageUrl
+          ? _value.UserImageUrl
           : UserImageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       UserCompanyLogoUrl: null == UserCompanyLogoUrl
