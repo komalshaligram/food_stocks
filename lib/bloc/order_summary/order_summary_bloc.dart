@@ -1,13 +1,14 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/error/exceptions.dart';
 import '../../data/model/order_model/supplier_details_model.dart';
 import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
@@ -23,6 +24,9 @@ part 'order_summary_bloc.freezed.dart';
 class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
   OrderSummaryBloc() : super(OrderSummaryState.initial()) {
     on<OrderSummaryEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if(event is _getDataEvent){
         emit(state.copyWith(isShimmering: true));
       }
@@ -43,7 +47,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             data: reqMap,
             options:Options(
                 headers: {
-              HttpHeaders.authorizationHeader : 'Bearer ${'eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..tsF0TnOirA7IogJI.zwMSbwM78vumMusBOc0jodD8fehRm2otd_kecQqLBT5wLh9l79AbYyoygGfXFfrhi8K-_Gbi3IJuf0Y-C9wi69n7YhgeutV-vhlmNiQwaO-u1MeNGIXdBv3l00RvspyGGwT2IlEZmwDSzi1rRCTDRHQj0mdsK5ombAIzs0kPIQC0dGmjKWvPUexjB6HSxO-Z4N5tegi9R7cynK2HIs0vg9PztzLaEieX53Sm5WBMgjlorDXrQoPe-9hgJHfx-EJGnydTxd15kn1LT03kHbM5uQZlsSXiAnK9KBp4-dwJi8sKk5Zw8mwgPysqQQ9dduajY5Rnx14KbMYcugRUwnjlvQ09hfdAfiWfXK-EJLhGLs5bkvIZ8hpyBzjEb2U.dTZBGHM5h2CD-ZvMe8gbzQ'}'
+              HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
             })
           );
 
@@ -51,6 +55,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           debugPrint('OrderSendResModel  = $response');
 
           if (response.status == 201) {
+            preferencesHelper.setOrderId(orderId: response.data!.id!);
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
              Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
          //   emit(state.copyWith(isLoginSuccess: true, isLoading: false));
@@ -61,10 +66,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             )*/
           //  );
           }
-        } catch (e) {
-          showSnackBar(context: event.context, title: e.toString(), bgColor: AppColors.redColor);
-         // emit(state.copyWith(isLoading: false));
-        }
+        }  on ServerException {}
       }
     });
   }

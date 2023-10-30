@@ -23,6 +23,9 @@ class Data with _$Data {
     User? user,
     @JsonKey(name: "authToken")
     AuthToken? authToken,
+    @JsonKey(name: "cartId")
+    String? cartId,
+
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

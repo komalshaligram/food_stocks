@@ -11,6 +11,8 @@ class SharedPreferencesHelper {
   static const String userCompanyLogo = "companyLogo";
   static const String appVersion = 'appVersion';
   static const String fcmToken = 'fcmToken';
+  static const String userOrderId = 'userOrderId';
+  static const String userCartId = 'userCartId';
 
   final SharedPreferences prefs;
 
@@ -39,9 +41,6 @@ class SharedPreferencesHelper {
   Future<void> removeCompanyLogo() async {
     await prefs.remove(userCompanyLogo);
   }
-
-
-
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);
   }
@@ -74,6 +73,14 @@ class SharedPreferencesHelper {
     await prefs.setString(userCompanyLogo, logoUrl);
   }
 
+  Future<void> setOrderId({required String orderId}) async {
+    await prefs.setString(userOrderId, orderId);
+  }
+
+  Future<void> setCartId({required String cartId}) async {
+    await prefs.setString(userCartId, cartId);
+  }
+
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
   }
@@ -88,7 +95,6 @@ class SharedPreferencesHelper {
   String getFCMToken() {
     return prefs.getString(fcmToken) ?? '';
   }
-
 
   String getRefreshToken() {
     return prefs.getString(refreshToken) ?? '';
@@ -112,5 +118,13 @@ class SharedPreferencesHelper {
 
   String getUserCompanyLogoUrl() {
     return prefs.getString(userCompanyLogo) ?? '';
+  }
+
+  String getOrderId() {
+    return prefs.getString(userOrderId) ?? '';
+  }
+
+  String getCartId() {
+    return prefs.getString(userCartId) ?? '';
   }
 }

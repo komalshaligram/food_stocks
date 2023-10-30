@@ -486,14 +486,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     isRegisterFail: false,
                   ));
                 }
-              } catch (e) {
-                debugPrint(e.toString());
-                emit(state.copyWith(
-                    isRegisterFail: true, errorMessage: e.toString()));
-                emit(state.copyWith(
-                  isRegisterFail: false,
-                ));
-              }
+              } on ServerException {}
             } else {
               emit(state.copyWith(
                   isRegisterFail: true,
@@ -559,10 +552,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     bgColor: AppColors.redColor);
               }
             } on ServerException {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
             }
           }
         }

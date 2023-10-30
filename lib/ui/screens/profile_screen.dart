@@ -252,7 +252,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                       left: AppConstants.padding_3),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(200),
-                                    color: AppColors.mainColor.withOpacity(0.1),
+                                    color:state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
                                   ),
                                   child: state.isUpdate
                                       ? state.UserImageUrl.contains(
@@ -277,17 +277,20 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     return child;
                                                   } else {
                                                     return Center(
-                                                      child:
-                                                          CupertinoActivityIndicator(
-                                                        color: AppColors
-                                                            .blackColor,
+                                                      child: CupertinoActivityIndicator(
+                                                        color: AppColors.blackColor,
                                                       ),
                                                     );
                                                   }
                                                 },
                                                 errorBuilder: (context, error,
                                                     stackTrace) {
-                                                  return Container(
+                                                  return Icon(
+                                                    Icons.person,
+                                                    size: 60,
+                                                    color: AppColors.textColor,
+                                                  )
+                                                    /*Container(
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color: AppColors
@@ -298,7 +301,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 .withOpacity(
                                                                     0.5),
                                                             width: 1)),
-                                                  );
+                                                  )*/;
                                                 },
                                               ))
                                       : state.image.path == ""
@@ -483,7 +486,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           onPressed: state.isLoading
                               ? null
                               : () {
-                                  if (state.UserImageUrl != '') {
+                              //    if (state.UserImageUrl != '') {
                                     if (state.selectedBusinessType.isEmpty ||
                                         state.selectedBusinessType != '') {
                                       if (_formKey.currentState?.validate() ??
@@ -505,13 +508,13 @@ class ProfileScreenWidget extends StatelessWidget {
                                               .selectBusinessTypeString,
                                           bgColor: AppColors.redColor);
                                     }
-                                  } else {
+                               /*   } else {
                                     showSnackBar(
                                         context: context,
                                         title:
                                             AppStrings.selectProfileImageString,
                                         bgColor: AppColors.redColor);
-                                  }
+                                  }*/
                                 },
                           fontColors: AppColors.whiteColor,
                         ),

@@ -9,6 +9,7 @@ import '../utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class OrderRoute {
   static Widget get route => const OrderScreen();
@@ -20,7 +21,7 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderBloc(),
+      create: (context) => OrderBloc()..add(OrderEvent.getAllOrderEvent(context: context)),
       child: OrderScreenWidget(),
     );
   }
@@ -43,15 +44,18 @@ class OrderScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.orders,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(RouteDefine.menuScreen.name);
+                 /* Navigator.of(context)
+                      .pushNamed(RouteDefine.menuScreen.name);*/
+                  Navigator.pop(context);
                 },
               ),
             ),
             body: SafeArea(
-              child: ListView.builder(
+              child: (state.orderList.data?.length ?? 0) == 0
+                ? OrderSummaryScreenShimmerWidget() :
+              ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: state.orderList.length,
+                itemCount: state.orderList.data?.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) =>
                     orderListItem(index: index, context: context),
@@ -88,7 +92,7 @@ class OrderScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    state.orderList[index].orderNumber.toString(),
+                    state.orderList.data?[index].id ?? '',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.normalFont,
                         color: AppColors.blackColor,
@@ -122,7 +126,7 @@ class OrderScreenWidget extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          state.orderList[index].totalPrice.toString(),
+                          '${state.orderList.data?[index].totalAmount ?? ''}${AppLocalizations.of(context)!.currency}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,
@@ -139,7 +143,7 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.products,
-                    value: state.orderList[index].productQuantity.toString(),
+                    value: state.orderList.data?[index].products.toString() ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,
@@ -148,7 +152,7 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.suppliers,
-                    value: state.orderList[index].noOfSupplier.toString(),
+                    value: state.orderList.data?[index].suppiers.toString() ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,
@@ -157,19 +161,19 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 4,
                     title: AppLocalizations.of(context)!.order_date,
-                    value: state.orderList[index].orderDate.toString(),
+                    value: state.orderList.data?[index].createdAt?.replaceRange(11, 16, '') ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,
                   ),
                   5.width,
-                  CommonOrderContentWidget(
+                CommonOrderContentWidget(
                     flexValue: 4,
                     title: AppLocalizations.of(context)!.order_status,
-                    value: state.orderList[index].orderStatus.toString(),
+                    value:state.orderList.data?[index].status?.statusName ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor:
-                    state.orderList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
+                    state.orderList.data![index].status!.statusName == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
                     valueTextSize: AppConstants.smallFont,
                   ),
                 ],

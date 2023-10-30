@@ -125,7 +125,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .total_credit,
                                         value:
-                                            '20,000${AppLocalizations.of(context)!.price}'),
+                                            '20,000${AppLocalizations.of(context)!.currency}'),
                                   ),
                                   10.width,
                                   Flexible(
@@ -135,7 +135,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .this_months_expenses,
                                         value:
-                                            '7,550${AppLocalizations.of(context)!.price}'),
+                                            '7,550${AppLocalizations.of(context)!.currency}'),
                                   ),
                                 ],
                               ),
@@ -149,7 +149,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .last_months_expenses,
                                         value:
-                                            '18,360${AppLocalizations.of(context)!.price}'),
+                                            '18,360${AppLocalizations.of(context)!.currency}'),
                                   ),
                                   10.width,
                                   Flexible(
