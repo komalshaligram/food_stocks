@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_stock/ui/screens/order_details_screen.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -296,8 +296,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         await signatureGlobalKey.currentState!.toImage();
                      bytes =
                         await Image.toByteData(format: ui.ImageByteFormat.png);*/
-                    Navigator.of(context)
-                        .pushNamed(RouteDefine.orderDetailsScreen.name);
+                    /*Navigator.of(context)
+                        .pushNamed(RouteDefine.orderDetailsScreen.name);*/
+
+                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
+                      return OrderDetailsScreen();
+                    } ));
+
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(

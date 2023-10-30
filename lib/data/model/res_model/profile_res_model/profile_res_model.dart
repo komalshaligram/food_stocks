@@ -1,9 +1,6 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'profile_res_model.freezed.dart';
 part 'profile_res_model.g.dart';
-
 
 @freezed
 class ProfileResModel with _$ProfileResModel {
@@ -32,12 +29,26 @@ class Data with _$Data {
 @freezed
 class Client with _$Client {
   const factory Client({
-    @JsonKey(name: "_id")
-    String? id,
+    @JsonKey(name: "clientData")
+    ClientData? clientData,
+    @JsonKey(name: "cartId")
+    String? cartId,
+  }) = _Client;
+
+  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
+}
+
+@freezed
+class ClientData with _$ClientData {
+  const factory ClientData({
     @JsonKey(name: "email")
     String? email,
     @JsonKey(name: "password")
     dynamic password,
+    @JsonKey(name: "firstName")
+    String? firstName,
+    @JsonKey(name: "lastName")
+    String? lastName,
     @JsonKey(name: "phoneNumber")
     String? phoneNumber,
     @JsonKey(name: "address")
@@ -56,21 +67,19 @@ class Client with _$Client {
     String? adminTypeId,
     @JsonKey(name: "clientDetail")
     ClientDetail? clientDetail,
-    @JsonKey(name: "createdBy")
-    String? createdBy,
-    @JsonKey(name: "updatedBy")
-    String? updatedBy,
     @JsonKey(name: "isDeleted")
     bool? isDeleted,
+    @JsonKey(name: "_id")
+    String? id,
     @JsonKey(name: "createdAt")
-    DateTime? createdAt,
+    String? createdAt,
     @JsonKey(name: "updatedAt")
-    DateTime? updatedAt,
+    String? updatedAt,
     @JsonKey(name: "__v")
     int? v,
-  }) = _Client;
+  }) = _ClientData;
 
-  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
+  factory ClientData.fromJson(Map<String, dynamic> json) => _$ClientDataFromJson(json);
 }
 
 @freezed
@@ -91,9 +100,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "fax")
     String? fax,
     @JsonKey(name: "lastSeen")
-    DateTime? lastSeen,
-    @JsonKey(name: "monthlyCredits")
-    int? monthlyCredits,
+    String? lastSeen,
     @JsonKey(name: "applicationVersion")
     String? applicationVersion,
     @JsonKey(name: "deviceType")
@@ -103,9 +110,9 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "createdAt")
-    DateTime? createdAt,
+    String? createdAt,
     @JsonKey(name: "updatedAt")
-    DateTime? updatedAt,
+    String? updatedAt,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);

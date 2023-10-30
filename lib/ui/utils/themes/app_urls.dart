@@ -27,4 +27,6 @@ class AppUrls {
   static const String getSupplierProductsUrl = '/v1/products/getAllProducts';
   static const String getProductDetailsUrl = '/v1/store/ProductDetail';
 // static const String getProductSuppliersUrl = '/v1/supplierProduct/getSupplierProducts';
+  static const String createOrderUrl = '/v1/orders/createOrder';
+  static const String getAllOrderUrl = '/v1/orders/getAllOrders';
 }

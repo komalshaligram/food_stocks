@@ -45,7 +45,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
-          print(getScreenHeight(context));
           return SafeArea(
             child: Scaffold(
               resizeToAvoidBottomInset: false,
@@ -256,8 +255,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       horizontal: AppConstants.padding_30),
                   color: AppColors.pageColor,
                   child: CustomButtonWidget(
-                    onPressed: () => Navigator.pushNamed(
-                        context, RouteDefine.shipmentVerificationScreen.name),
+                    onPressed: () => Navigator.pushNamed(context,
+                        RouteDefine.shipmentVerificationScreen.name
+                          ),
                     buttonText: AppLocalizations.of(context)!.next,
                     bGColor: AppColors.mainColor,
                   ),
@@ -330,7 +330,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                '${state.productList[index].productPrice!.toString() + AppLocalizations.of(context)!.price}',
+                '${state.productList[index].productPrice!.toString() + AppLocalizations.of(context)!.currency}',
                 style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,
@@ -486,7 +486,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   10.width,
                                   Text(
-                                    '${price.toString() + AppLocalizations.of(context)!.price}',
+                                    '${price.toString() + AppLocalizations.of(context)!.currency}',
                                     style: TextStyle(
                                         color: AppColors.blackColor,
                                         fontSize: AppConstants.font_14,
@@ -573,7 +573,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       required int value,
       int weight = 0,
       required int listIndex}) {
-    print(getScreenHeight(context));
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
     return Container(
       height: value == 4 ? 160 : 50,

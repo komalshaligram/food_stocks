@@ -258,16 +258,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
+              preferencesHelper.setCartId(
+                  cartId: response.data?.cartId ?? '');
               preferencesHelper.setUserImageUrl(
                   imageUrl:
-                      profileResModel.data!.client!.profileImage.toString());
+                      profileResModel.data!.client!.clientData!.profileImage.toString());
               preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: profileResModel.data!.client!.logo.toString());
+                  logoUrl: profileResModel.data!.client!.clientData!.logo.toString());
               preferencesHelper.setUserName(
-                  name: profileResModel.data!.client!.clientDetail!.ownerName
+                  name: profileResModel.data!.client!.clientData!.clientDetail!.ownerName
                       .toString());
               preferencesHelper.setUserId(
-                  id: profileResModel.data!.client!.id.toString());
+                  id: profileResModel.data!.client!.clientData!.id.toString());
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamed(
                 event.context,

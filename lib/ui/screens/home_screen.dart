@@ -80,12 +80,13 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
+                                    color:state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: AppColors.shadowColor
-                                              .withOpacity(0.3),
-                                          blurRadius: AppConstants.blur_10)
+                                          color:state.UserImageUrl.isNotEmpty ? AppColors.shadowColor
+                                              .withOpacity(0.3) : AppColors.whiteColor,
+                                          blurRadius: state.UserImageUrl.isNotEmpty ? AppConstants.blur_10 : 0
+                                      )
                                     ],
                                     shape: BoxShape.circle,
                                   ),
@@ -110,7 +111,11 @@ class HomeScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                   )
-                                      : SizedBox(),
+                                      : Icon(
+                                    Icons.person,
+                                    size: 40,
+                                    color: AppColors.textColor,
+                                  ),
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
