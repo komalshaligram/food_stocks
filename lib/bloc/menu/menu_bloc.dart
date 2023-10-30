@@ -48,16 +48,17 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
             },
           ),
         );
-      } /*else if (event is _ChangeAppLanguageEvent) {
+      } else if (event is _ChangeAppLanguageEvent) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         if (preferencesHelper.getAppLanguage() == "en") {
-          await LocaleProvider().setAppLocale(Locale('he'));
-          final provider = Provider.of<LocaleProvider>(event.context);
+          await LocaleProvider()
+            ..setAppLocale(Locale('he'));
         } else {
-          await LocaleProvider().setAppLocale(Locale('en'));
+          await LocaleProvider()
+            ..setAppLocale(Locale('en'));
         }
-      }*/
+      }
     });
   }
 }

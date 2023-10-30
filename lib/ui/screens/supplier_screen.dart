@@ -10,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
 
 import '../utils/themes/app_styles.dart';
@@ -111,27 +112,28 @@ class SupplierScreenWidget extends StatelessWidget {
                 BorderRadius.all(Radius.circular(AppConstants.radius_10)),
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: AppConstants.padding_20,
-                left: AppConstants.padding_5,
-                right: AppConstants.padding_5,
-                top: AppConstants.padding_5,
-              ),
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
               child: Image.network(
                 "${AppUrls.baseFileUrl}$supplierLogo",
                 fit: BoxFit.scaleDown,
-                width: getScreenWidth(context),
-                height: getScreenHeight(context) - 20,
+                alignment: Alignment.center,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      alignment: Alignment.center,
-                      color: AppColors.whiteColor,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: getScreenHeight(context),
+                        width: getScreenWidth(context),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                        // alignment: Alignment.center,
+                        // color: AppColors.whiteColor,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
                     );
                   }
@@ -143,7 +145,7 @@ class SupplierScreenWidget extends StatelessWidget {
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    // padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                    padding: EdgeInsets.only(bottom: AppConstants.padding_20),
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,

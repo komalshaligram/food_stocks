@@ -8,7 +8,6 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -62,8 +61,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
-              preferencesHelper.setCartId(
-                  cartId: response.data?.cartId ?? '');
+              // preferencesHelper.setCartId(
+              //     cartId: response.data?.cartId ?? '');
               preferencesHelper.setAuthToken(
                   accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(

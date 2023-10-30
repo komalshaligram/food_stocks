@@ -31,7 +31,6 @@ void showSnackBar(
           fontWeight: FontWeight.w400),
     ),
     backgroundColor: bgColor,
-    padding: EdgeInsets.all(AppConstants.padding_20),
     behavior: SnackBarBehavior.floating,
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);

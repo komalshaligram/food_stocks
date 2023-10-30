@@ -10,6 +10,8 @@ class HomeState with _$HomeState {
     required bool isShimmering,
     required bool isProductLoading,
     required ProductDetailsResModel productDetails,
+    required List<ProductStockModel> productStockList,
+    required int productStockUpdateIndex,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -19,5 +21,7 @@ class HomeState with _$HomeState {
       productSalesList: ProductSalesResModel(),
       isShimmering: false,
       isProductLoading: false,
-      productDetails: ProductDetailsResModel());
+      productDetails: ProductDetailsResModel(),
+      productStockUpdateIndex: -1,
+      productStockList: []);
 }

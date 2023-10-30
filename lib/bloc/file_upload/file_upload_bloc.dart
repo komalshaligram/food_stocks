@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/data/model/form_and_file_model.dart';
+import 'package:food_stock/data/model/form_and_file_model/form_and_file_model.dart';
 import 'package:food_stock/data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';
 import 'package:food_stock/data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
@@ -108,24 +108,25 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                               (newModel[AppStrings.filesString]
                                       .containsKey(formsAndFilesList[i].id) ??
                                   false)) {
-                            formsAndFilesList[i].url =
-                                newModel[AppStrings.filesString]
-                                    [formsAndFilesList[i].id];
+                            formsAndFilesList[i] = formsAndFilesList[i]
+                                .copyWith(
+                                    url: newModel[AppStrings.filesString]
+                                        [formsAndFilesList[i].id]);
                           } else if (newModel[AppStrings.formsString] != null &&
                               (newModel[AppStrings.formsString]
                                       .containsKey(formsAndFilesList[i].id) ??
                                   false)) {
-                            formsAndFilesList[i].url =
-                                newModel[AppStrings.formsString]
-                                    [formsAndFilesList[i].id];
+                            formsAndFilesList[i] = formsAndFilesList[i]
+                                .copyWith(
+                                    url: newModel[AppStrings.formsString]
+                                        [formsAndFilesList[i].id]);
                           }
                           debugPrint(
                               'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
                         }
                         emit(state.copyWith(
-                            formsAndFilesList: [], isShimmering: false));
-                        emit(state.copyWith(
-                            formsAndFilesList: formsAndFilesList));
+                            formsAndFilesList: formsAndFilesList,
+                            isShimmering: false));
                       } else {
                         emit(state.copyWith(isShimmering: false));
                       }
@@ -274,12 +275,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               FileUploadResModel response = FileUploadResModel.fromJson(res);
               if (response.baseUrl?.isNotEmpty ?? false) {
                 emit(state.copyWith(isUploadLoading: false));
-                formAndFileList[event.fileIndex].url = response.filepath;
-                formAndFileList[event.fileIndex].localUrl =
-                    croppedImage?.path ?? pickedFile.path;
+                formAndFileList[event.fileIndex] =
+                    formAndFileList[event.fileIndex]
+                        .copyWith(url: response.filepath);
+                formAndFileList[event.fileIndex] =
+                    formAndFileList[event.fileIndex].copyWith(
+                        localUrl: croppedImage?.path ?? pickedFile.path);
                 debugPrint(
                     'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
-                emit(state.copyWith(formsAndFilesList: []));
                 emit(state.copyWith(formsAndFilesList: formAndFileList));
               } else {
                 emit(state.copyWith(isUploadLoading: false));
@@ -413,9 +416,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
             emit(state.copyWith(isUploadLoading: false));
-            formsAndFilesList[event.index].localUrl = '';
-            formsAndFilesList[event.index].url = '';
-            emit(state.copyWith(formsAndFilesList: []));
+            formsAndFilesList[event.index] =
+                formsAndFilesList[event.index].copyWith(localUrl: '');
+            formsAndFilesList[event.index] =
+                formsAndFilesList[event.index].copyWith(url: '');
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             // showSnackBar(
             //     context: event.context,
@@ -542,18 +546,19 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 if (newModel[AppStrings.filesString]
                         .containsKey(formsAndFilesList[i].id) ??
                     false) {
-                  formsAndFilesList[i].url =
-                      newModel[AppStrings.filesString][formsAndFilesList[i].id];
+                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(
+                      url: newModel[AppStrings.filesString]
+                          [formsAndFilesList[i].id]);
                 } else if (newModel[AppStrings.formsString]
                         .containsKey(formsAndFilesList[i].id) ??
                     false) {
-                  formsAndFilesList[i].url =
-                      newModel[AppStrings.formsString][formsAndFilesList[i].id];
+                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(
+                      url: newModel[AppStrings.formsString]
+                          [formsAndFilesList[i].id]);
                 }
                 debugPrint(
                     'url(${formsAndFilesList[i].id}) = ${formsAndFilesList[i].url}');
               }
-              emit(state.copyWith(formsAndFilesList: []));
               emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             } else {
               showSnackBar(

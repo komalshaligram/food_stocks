@@ -66,12 +66,12 @@ android {
     productFlavors {
         dev {
             dimension "app"
-            applicationId "com.foodstock"
+            applicationId "com.foodstock.dev"
             resValue "string", "app_name", "Food Stock Dev"
         }
         stag {
             dimension "app"
-            applicationId "com.foodstock"
+            applicationId "com.foodstock.stag"
             resValue "string", "app_name", "Food Stock Stag"
         }
         prod {

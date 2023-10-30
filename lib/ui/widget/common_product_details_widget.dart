@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
@@ -19,9 +20,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String productSaleDescription;
   final double productPrice;
   final double productWeight;
+  final int productQuantity;
   final ScrollController scrollController;
   final TextEditingController noteController;
-  final void Function() onPressed;
+  final void Function() onAddToOrderPressed;
+  final void Function() onQuantityIncreaseTap;
+  final void Function() onQuantityDecreaseTap;
+  final void Function(String)? onNoteChanged;
   final bool isRTL;
 
   const CommonProductDetailsWidget(
@@ -36,8 +41,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productWeight,
       required this.isRTL,
       required this.scrollController,
-      required this.onPressed,
-      required this.noteController});
+      required this.onAddToOrderPressed,
+      required this.noteController,
+      required this.productQuantity,
+      required this.onQuantityIncreaseTap,
+      required this.onQuantityDecreaseTap,
+      this.onNoteChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
       ),
       padding: EdgeInsets.only(
         top: AppConstants.padding_10,
-      ),
+          bottom: MediaQuery.of(context).viewInsets.bottom),
       clipBehavior: Clip.hardEdge,
       child: Column(
         children: [
@@ -79,7 +88,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     },
                     child: Icon(
                       Icons.close,
-                      size: 40,
+                      size: 36,
                       color: AppColors.blackColor,
                     ),
                   ),
@@ -112,11 +121,19 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress?.cumulativeBytesLoaded !=
                               loadingProgress?.expectedTotalBytes) {
-                            return Container(
-                              height: 170,
-                              alignment: Alignment.center,
-                              child: CupertinoActivityIndicator(
-                                color: AppColors.blackColor,
+                            return CommonShimmerWidget(
+                              child: Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(AppConstants.radius_10)),
+                                ),
+                                // alignment: Alignment.center,
+                                // child: CupertinoActivityIndicator(
+                                //   color: AppColors.blackColor,
+                                // ),
                               ),
                             );
                           }
@@ -124,15 +141,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         },
                         errorBuilder: (context, error, stackTrace) {
                           // debugPrint('product category list image error : $error');
-                          return Container(
-                            padding: EdgeInsets.only(
-                                bottom: AppConstants.padding_10, top: 0),
-                            child: Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              fit: BoxFit.cover,
-                              // width: 90,
-                              height: 170,
-                            ),
+                          return Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            fit: BoxFit.cover,
+                            // width: 90,
+                            height: 150,
                           );
                         },
                       ),
@@ -178,7 +191,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             GestureDetector(
-                              onTap: () {},
+                              onTap: onQuantityIncreaseTap,
                               child: Container(
                                 height: 50,
                                 width: 50,
@@ -233,7 +246,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                '1',
+                                '$productQuantity',
                                 style: AppStyles.rkBoldTextStyle(
                                     size: AppConstants.font_30,
                                     color: AppColors.blackColor,
@@ -242,7 +255,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ),
                             5.width,
                             GestureDetector(
-                              onTap: () {},
+                              onTap: onQuantityDecreaseTap,
                               child: Container(
                                 height: 50,
                                 width: 50,
@@ -286,35 +299,38 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         vertical: AppConstants.padding_10,
                         horizontal: AppConstants.padding_20),
                     child: Row(
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Sale',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_30,
-                                    color: AppColors.saleRedColor,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              5.height,
-                              Text(
-                                productDescription,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(flex: 2, child: 0.height),
-                      ],
+                      children: [],
                     ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       flex: 5,
+                    //       child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Text(
+                    //             'Sale',
+                    //             style: AppStyles.rkBoldTextStyle(
+                    //                 size: AppConstants.font_30,
+                    //                 color: AppColors.saleRedColor,
+                    //                 fontWeight: FontWeight.w700),
+                    //           ),
+                    //           5.height,
+                    //           Text(
+                    //             productDescription,
+                    //             style: AppStyles.rkRegularTextStyle(
+                    //                 size: AppConstants.font_14,
+                    //                 color: AppColors.blackColor,
+                    //                 fontWeight: FontWeight.w400),
+                    //             maxLines: 3,
+                    //             overflow: TextOverflow.ellipsis,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Expanded(flex: 2, child: 0.height),
+                    //   ],
+                    // ),
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -341,6 +357,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   Radius.circular(AppConstants.radius_5))),
                           child: TextField(
                             controller: noteController,
+                            onChanged: onNoteChanged,
                             decoration:
                                 InputDecoration(border: InputBorder.none),
                             maxLines: 5,
@@ -353,7 +370,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(AppConstants.padding_20),
                     child: CommonProductButtonWidget(
                       title: AppLocalizations.of(context)!.add_to_order,
-                      onPressed: onPressed,
+                      onPressed: onAddToOrderPressed,
                       width: double.maxFinite,
                       height: AppConstants.buttonHeight,
                       borderRadius: AppConstants.radius_5,
@@ -361,7 +378,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       textColor: AppColors.whiteColor,
                       bgColor: AppColors.mainColor,
                     ),
-                  )
+                  ),
+                  // 160.height,
                 ],
               ),
             ),

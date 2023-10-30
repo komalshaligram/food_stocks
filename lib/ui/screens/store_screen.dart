@@ -11,6 +11,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../../bloc/store/store_bloc.dart';
@@ -496,11 +497,17 @@ class StoreScreenWidget extends StatelessWidget {
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: 90,
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 90,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                        ),
+                        // alignment: Alignment.center,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
                     );
                   }
@@ -597,11 +604,19 @@ class StoreScreenWidget extends StatelessWidget {
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress?.cumulativeBytesLoaded !=
                     loadingProgress?.expectedTotalBytes) {
-                  return Container(
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
                   );
                 }
@@ -689,11 +704,17 @@ class StoreScreenWidget extends StatelessWidget {
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: 90,
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 90,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                        ),
+                        // alignment: Alignment.center,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
                     );
                   }
@@ -881,11 +902,20 @@ class StoreScreenWidget extends StatelessWidget {
                                     (context, child, loadingProgress) {
                                   if (loadingProgress?.cumulativeBytesLoaded !=
                                       loadingProgress?.expectedTotalBytes) {
-                                    return Container(
-                                      height: 170,
-                                      alignment: Alignment.center,
-                                      child: CupertinoActivityIndicator(
-                                        color: AppColors.blackColor,
+                                    return CommonShimmerWidget(
+                                      child: Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.whiteColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppConstants.radius_10)),
+                                        ),
+                                        // alignment: Alignment.center,
+                                        // child: CupertinoActivityIndicator(
+                                        //   color: AppColors.blackColor,
+                                        // ),
                                       ),
                                     );
                                   }
@@ -893,16 +923,11 @@ class StoreScreenWidget extends StatelessWidget {
                                 },
                                 errorBuilder: (context, error, stackTrace) {
                                   // debugPrint('product category list image error : $error');
-                                  return Container(
-                                    padding: EdgeInsets.only(
-                                        bottom: AppConstants.padding_10,
-                                        top: 0),
-                                    child: Image.asset(
-                                      AppImagePath.imageNotAvailable5,
-                                      fit: BoxFit.cover,
-                                      // width: 90,
-                                      height: 170,
-                                    ),
+                                  return Image.asset(
+                                    AppImagePath.imageNotAvailable5,
+                                    fit: BoxFit.cover,
+                                    // width: 90,
+                                    height: 150,
                                   );
                                 },
                               ),

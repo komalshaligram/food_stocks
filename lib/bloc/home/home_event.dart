@@ -10,4 +10,13 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId}) = _GetProductDetailsEvent;
+
+  const factory HomeEvent.increaseQuantityOfProduct(
+      {required BuildContext context}) = _IncreaseQuantityOfProduct;
+
+  const factory HomeEvent.decreaseQuantityOfProduct(
+      {required BuildContext context}) = _DecreaseQuantityOfProduct;
+
+  const factory HomeEvent.changeNoteOfProduct({required String newNote}) =
+      _ChangeNoteOfProduct;
 }

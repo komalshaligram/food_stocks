@@ -67,6 +67,7 @@ class AppStrings {
   static const userNotFoundString = 'User not found';
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
+  static const maxQuantityAllowString = 'Maximum 30 items allow per order';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';

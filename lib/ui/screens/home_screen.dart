@@ -15,6 +15,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -80,13 +81,19 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color:state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
+                                    color: state.UserImageUrl.isNotEmpty
+                                        ? AppColors.whiteColor
+                                        : AppColors.mainColor.withOpacity(0.1),
                                     boxShadow: [
                                       BoxShadow(
-                                          color:state.UserImageUrl.isNotEmpty ? AppColors.shadowColor
-                                              .withOpacity(0.3) : AppColors.whiteColor,
-                                          blurRadius: state.UserImageUrl.isNotEmpty ? AppConstants.blur_10 : 0
-                                      )
+                                          color: state.UserImageUrl.isNotEmpty
+                                              ? AppColors.shadowColor
+                                                  .withOpacity(0.3)
+                                              : AppColors.whiteColor,
+                                          blurRadius:
+                                              state.UserImageUrl.isNotEmpty
+                                                  ? AppConstants.blur_10
+                                                  : 0)
                                     ],
                                     shape: BoxShape.circle,
                                   ),
@@ -481,42 +488,8 @@ class HomeScreenWidget extends StatelessWidget {
                                           showProductDetails(
                                               context: context,
                                               productId: state.productSalesList
-                                                  .data?[index].id ??
-                                                  '',
-                                              isRTL: isRTLContent(
-                                                  context: context),
-                                              productImage: state
-                                                  .productSalesList
-                                                  .data?[index]
-                                                  .mainImage ??
-                                                  '',
-                                              productName: state
-                                                  .productSalesList
-                                                  .data?[index]
-                                                  .productName ??
-                                                  '',
-                                              productCompanyName: state
-                                                  .productSalesList
-                                                  .data?[index]
-                                                  .brandName ??
-                                                  '',
-                                              productSaleDescription: state
-                                                  .productSalesList
-                                                  .data?[index]
-                                                  .salesName ??
-                                                  '',
-                                              productDescription:
-                                              state.productSalesList
-                                                  .data?[index]
-                                                  .salesDescription ?? '',
-                                              productPrice: state
-                                                  .productSalesList.data?[index]
-                                                  .discountPercentage
-                                                  ?.toDouble() ?? 0.0,
-                                              productWeight: state
-                                                  .productSalesList.data?[index]
-                                                  .itemsWeight?.toDouble() ??
-                                                  0.0);
+                                                      .data?[index].id ??
+                                                  '');
                                         },
                                       )),
                             ),
@@ -654,11 +627,19 @@ class HomeScreenWidget extends StatelessWidget {
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress?.cumulativeBytesLoaded !=
                     loadingProgress?.expectedTotalBytes) {
-                  return Container(
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.blackColor,
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
                   );
                 }
@@ -712,23 +693,10 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails({required BuildContext context,
-    required String productId,
-    required String productImage,
-    required String productName,
-    required String productCompanyName,
-    required String productDescription,
-    required String productSaleDescription,
-    required double productPrice,
-    required double productWeight,
-    required bool isRTL}) async {
+  void showProductDetails(
+      {required BuildContext context, required String productId}) async {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
         context: context, productId: productId));
-    // debugPrint("image = ${
-    //   BlocProvider.of<HomeBloc>(context)
-    //       .state
-    //       .productDetails
-    // }");
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -744,65 +712,78 @@ class HomeScreenWidget extends StatelessWidget {
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
-                (MediaQuery
-                    .of(context)
-                    .viewPadding
-                    .top /
+                (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
             shouldCloseOnMinExtent: true,
-            builder: (BuildContext context2,
-                ScrollController scrollController) {
-              debugPrint('image = ${context2
-                  .read<HomeBloc>()
-                  .state
-                  .productDetails
-                  .product}');
-              // return Container(height: 400  ,);
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
                   value: context.read<HomeBloc>(),
                   child: BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_30),
-                              topRight: Radius.circular(AppConstants.radius_30),
-                            ),
-                            color: AppColors.whiteColor,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(AppConstants.radius_30),
+                            topRight: Radius.circular(AppConstants.radius_30),
                           ),
-                          child: state.isProductLoading
-                              ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CupertinoActivityIndicator()
-                            ],
-                          ) : CommonProductDetailsWidget(
-                              context: context,
-                              productImage: state.productDetails.product?.first
-                                  .mainImage ?? '',
-                              productName: state.productDetails.product?.first
-                                  .productName ?? '',
-                              productCompanyName: state.productDetails.product
-                                  ?.first.brandName ?? '',
-                              productDescription: state.productDetails.product
-                                  ?.first.productDescription ?? '',
-                              productSaleDescription: state.productDetails
-                                  .product
-                                  ?.first.productDescription ?? '',
-                              productPrice: 0.0,
-                              productWeight: state.productDetails.product?.first
-                                  .itemsWeight?.toDouble() ?? 0.0,
-                              isRTL: isRTLContent(context: context),
-                              scrollController: scrollController,
-                              noteController: TextEditingController(),
-                              onPressed: () {})
+                          color: AppColors.whiteColor,
+                        ),
+                        child: state.isProductLoading
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [CupertinoActivityIndicator()],
+                              )
+                            : CommonProductDetailsWidget(
+                                context: context,
+                                productImage: state.productDetails.product?.first.mainImage ??
+                                    '',
+                                productName:
+                                    state.productDetails.product?.first.productName ??
+                                        '',
+                                productCompanyName:
+                                    state.productDetails.product?.first.brandName ??
+                                        '',
+                                productDescription: state.productDetails.product
+                                        ?.first.productDescription ??
+                                    '',
+                                productSaleDescription: state.productDetails
+                                        .product?.first.productDescription ??
+                                    '',
+                                productPrice: state.productDetails.product
+                                        ?.first.numberOfUnit
+                                        ?.toDouble() ??
+                                    0.0,
+                                productWeight:
+                                    state.productDetails.product?.first.itemsWeight?.toDouble() ??
+                                        0.0,
+                                isRTL: isRTLContent(context: context),
+                                scrollController: scrollController,
+                                productQuantity: state
+                                    .productStockList[state.productStockUpdateIndex]
+                                    .quantity,
+                                onQuantityIncreaseTap: () {
+                                  context.read<HomeBloc>().add(
+                                      HomeEvent.increaseQuantityOfProduct(
+                                          context: context1));
+                                },
+                                onQuantityDecreaseTap: () {
+                                  context.read<HomeBloc>().add(
+                                      HomeEvent.decreaseQuantityOfProduct(
+                                          context: context1));
+                                },
+                                noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note),
+                                onNoteChanged: (newNote) {
+                                  context.read<HomeBloc>().add(
+                                      HomeEvent.changeNoteOfProduct(
+                                          newNote: newNote));
+                                },
+                                onAddToOrderPressed: () {}),
                       );
                     },
-                  )
-              )
-              ;
+                  ));
             },
           ),
         );

@@ -22,6 +22,9 @@ mixin _$HomeEvent {
     required TResult Function(BuildContext context) getProductSalesListEvent,
     required TResult Function(BuildContext context, String productId)
         getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +33,9 @@ mixin _$HomeEvent {
     TResult? Function(BuildContext context)? getProductSalesListEvent,
     TResult? Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +44,9 @@ mixin _$HomeEvent {
     TResult Function(BuildContext context)? getProductSalesListEvent,
     TResult Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -49,6 +58,11 @@ mixin _$HomeEvent {
         getProductSalesListEvent,
     required TResult Function(_GetProductDetailsEvent value)
         getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +71,11 @@ mixin _$HomeEvent {
     TResult? Function(_GetProductSalesListEvent value)?
         getProductSalesListEvent,
     TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -64,6 +83,11 @@ mixin _$HomeEvent {
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
     TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -129,6 +153,9 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
     required TResult Function(BuildContext context) getProductSalesListEvent,
     required TResult Function(BuildContext context, String productId)
         getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
   }) {
     return getPreferencesDataEvent();
   }
@@ -140,6 +167,9 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
     TResult? Function(BuildContext context)? getProductSalesListEvent,
     TResult? Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
   }) {
     return getPreferencesDataEvent?.call();
   }
@@ -151,6 +181,9 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
     TResult Function(BuildContext context)? getProductSalesListEvent,
     TResult Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getPreferencesDataEvent != null) {
@@ -168,6 +201,11 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
         getProductSalesListEvent,
     required TResult Function(_GetProductDetailsEvent value)
         getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
   }) {
     return getPreferencesDataEvent(this);
   }
@@ -179,6 +217,11 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
     TResult? Function(_GetProductSalesListEvent value)?
         getProductSalesListEvent,
     TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
   }) {
     return getPreferencesDataEvent?.call(this);
   }
@@ -189,6 +232,11 @@ class _$_getPreferencesDataEvent implements _getPreferencesDataEvent {
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
     TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getPreferencesDataEvent != null) {
@@ -272,6 +320,9 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
     required TResult Function(BuildContext context) getProductSalesListEvent,
     required TResult Function(BuildContext context, String productId)
         getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
   }) {
     return getProductSalesListEvent(context);
   }
@@ -283,6 +334,9 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
     TResult? Function(BuildContext context)? getProductSalesListEvent,
     TResult? Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
   }) {
     return getProductSalesListEvent?.call(context);
   }
@@ -294,6 +348,9 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
     TResult Function(BuildContext context)? getProductSalesListEvent,
     TResult Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getProductSalesListEvent != null) {
@@ -311,6 +368,11 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
         getProductSalesListEvent,
     required TResult Function(_GetProductDetailsEvent value)
         getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
   }) {
     return getProductSalesListEvent(this);
   }
@@ -322,6 +384,11 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
     TResult? Function(_GetProductSalesListEvent value)?
         getProductSalesListEvent,
     TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
   }) {
     return getProductSalesListEvent?.call(this);
   }
@@ -332,6 +399,11 @@ class _$_GetProductSalesListEvent implements _GetProductSalesListEvent {
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
     TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getProductSalesListEvent != null) {
@@ -430,6 +502,9 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
     required TResult Function(BuildContext context) getProductSalesListEvent,
     required TResult Function(BuildContext context, String productId)
         getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
   }) {
     return getProductDetailsEvent(context, productId);
   }
@@ -441,6 +516,9 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
     TResult? Function(BuildContext context)? getProductSalesListEvent,
     TResult? Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
   }) {
     return getProductDetailsEvent?.call(context, productId);
   }
@@ -452,6 +530,9 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
     TResult Function(BuildContext context)? getProductSalesListEvent,
     TResult Function(BuildContext context, String productId)?
         getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getProductDetailsEvent != null) {
@@ -469,6 +550,11 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
         getProductSalesListEvent,
     required TResult Function(_GetProductDetailsEvent value)
         getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
   }) {
     return getProductDetailsEvent(this);
   }
@@ -480,6 +566,11 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
     TResult? Function(_GetProductSalesListEvent value)?
         getProductSalesListEvent,
     TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
   }) {
     return getProductDetailsEvent?.call(this);
   }
@@ -490,6 +581,11 @@ class _$_GetProductDetailsEvent implements _GetProductDetailsEvent {
     TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
     TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
     TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
     required TResult orElse(),
   }) {
     if (getProductDetailsEvent != null) {
@@ -512,6 +608,526 @@ abstract class _GetProductDetailsEvent implements HomeEvent {
 }
 
 /// @nodoc
+abstract class _$$_IncreaseQuantityOfProductCopyWith<$Res> {
+  factory _$$_IncreaseQuantityOfProductCopyWith(
+          _$_IncreaseQuantityOfProduct value,
+          $Res Function(_$_IncreaseQuantityOfProduct) then) =
+      __$$_IncreaseQuantityOfProductCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context});
+}
+
+/// @nodoc
+class __$$_IncreaseQuantityOfProductCopyWithImpl<$Res>
+    extends _$HomeEventCopyWithImpl<$Res, _$_IncreaseQuantityOfProduct>
+    implements _$$_IncreaseQuantityOfProductCopyWith<$Res> {
+  __$$_IncreaseQuantityOfProductCopyWithImpl(
+      _$_IncreaseQuantityOfProduct _value,
+      $Res Function(_$_IncreaseQuantityOfProduct) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+  }) {
+    return _then(_$_IncreaseQuantityOfProduct(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_IncreaseQuantityOfProduct implements _IncreaseQuantityOfProduct {
+  const _$_IncreaseQuantityOfProduct({required this.context});
+
+  @override
+  final BuildContext context;
+
+  @override
+  String toString() {
+    return 'HomeEvent.increaseQuantityOfProduct(context: $context)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_IncreaseQuantityOfProduct &&
+            (identical(other.context, context) || other.context == context));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_IncreaseQuantityOfProductCopyWith<_$_IncreaseQuantityOfProduct>
+      get copyWith => __$$_IncreaseQuantityOfProductCopyWithImpl<
+          _$_IncreaseQuantityOfProduct>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getPreferencesDataEvent,
+    required TResult Function(BuildContext context) getProductSalesListEvent,
+    required TResult Function(BuildContext context, String productId)
+        getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
+  }) {
+    return increaseQuantityOfProduct(context);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getPreferencesDataEvent,
+    TResult? Function(BuildContext context)? getProductSalesListEvent,
+    TResult? Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
+  }) {
+    return increaseQuantityOfProduct?.call(context);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getPreferencesDataEvent,
+    TResult Function(BuildContext context)? getProductSalesListEvent,
+    TResult Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (increaseQuantityOfProduct != null) {
+      return increaseQuantityOfProduct(context);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
+    required TResult Function(_GetProductSalesListEvent value)
+        getProductSalesListEvent,
+    required TResult Function(_GetProductDetailsEvent value)
+        getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
+  }) {
+    return increaseQuantityOfProduct(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_GetProductSalesListEvent value)?
+        getProductSalesListEvent,
+    TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+  }) {
+    return increaseQuantityOfProduct?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
+    TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (increaseQuantityOfProduct != null) {
+      return increaseQuantityOfProduct(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _IncreaseQuantityOfProduct implements HomeEvent {
+  const factory _IncreaseQuantityOfProduct(
+      {required final BuildContext context}) = _$_IncreaseQuantityOfProduct;
+
+  BuildContext get context;
+  @JsonKey(ignore: true)
+  _$$_IncreaseQuantityOfProductCopyWith<_$_IncreaseQuantityOfProduct>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_DecreaseQuantityOfProductCopyWith<$Res> {
+  factory _$$_DecreaseQuantityOfProductCopyWith(
+          _$_DecreaseQuantityOfProduct value,
+          $Res Function(_$_DecreaseQuantityOfProduct) then) =
+      __$$_DecreaseQuantityOfProductCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context});
+}
+
+/// @nodoc
+class __$$_DecreaseQuantityOfProductCopyWithImpl<$Res>
+    extends _$HomeEventCopyWithImpl<$Res, _$_DecreaseQuantityOfProduct>
+    implements _$$_DecreaseQuantityOfProductCopyWith<$Res> {
+  __$$_DecreaseQuantityOfProductCopyWithImpl(
+      _$_DecreaseQuantityOfProduct _value,
+      $Res Function(_$_DecreaseQuantityOfProduct) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+  }) {
+    return _then(_$_DecreaseQuantityOfProduct(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_DecreaseQuantityOfProduct implements _DecreaseQuantityOfProduct {
+  const _$_DecreaseQuantityOfProduct({required this.context});
+
+  @override
+  final BuildContext context;
+
+  @override
+  String toString() {
+    return 'HomeEvent.decreaseQuantityOfProduct(context: $context)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_DecreaseQuantityOfProduct &&
+            (identical(other.context, context) || other.context == context));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DecreaseQuantityOfProductCopyWith<_$_DecreaseQuantityOfProduct>
+      get copyWith => __$$_DecreaseQuantityOfProductCopyWithImpl<
+          _$_DecreaseQuantityOfProduct>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getPreferencesDataEvent,
+    required TResult Function(BuildContext context) getProductSalesListEvent,
+    required TResult Function(BuildContext context, String productId)
+        getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
+  }) {
+    return decreaseQuantityOfProduct(context);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getPreferencesDataEvent,
+    TResult? Function(BuildContext context)? getProductSalesListEvent,
+    TResult? Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
+  }) {
+    return decreaseQuantityOfProduct?.call(context);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getPreferencesDataEvent,
+    TResult Function(BuildContext context)? getProductSalesListEvent,
+    TResult Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (decreaseQuantityOfProduct != null) {
+      return decreaseQuantityOfProduct(context);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
+    required TResult Function(_GetProductSalesListEvent value)
+        getProductSalesListEvent,
+    required TResult Function(_GetProductDetailsEvent value)
+        getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
+  }) {
+    return decreaseQuantityOfProduct(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_GetProductSalesListEvent value)?
+        getProductSalesListEvent,
+    TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+  }) {
+    return decreaseQuantityOfProduct?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
+    TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (decreaseQuantityOfProduct != null) {
+      return decreaseQuantityOfProduct(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DecreaseQuantityOfProduct implements HomeEvent {
+  const factory _DecreaseQuantityOfProduct(
+      {required final BuildContext context}) = _$_DecreaseQuantityOfProduct;
+
+  BuildContext get context;
+  @JsonKey(ignore: true)
+  _$$_DecreaseQuantityOfProductCopyWith<_$_DecreaseQuantityOfProduct>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_ChangeNoteOfProductCopyWith<$Res> {
+  factory _$$_ChangeNoteOfProductCopyWith(_$_ChangeNoteOfProduct value,
+          $Res Function(_$_ChangeNoteOfProduct) then) =
+      __$$_ChangeNoteOfProductCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String newNote});
+}
+
+/// @nodoc
+class __$$_ChangeNoteOfProductCopyWithImpl<$Res>
+    extends _$HomeEventCopyWithImpl<$Res, _$_ChangeNoteOfProduct>
+    implements _$$_ChangeNoteOfProductCopyWith<$Res> {
+  __$$_ChangeNoteOfProductCopyWithImpl(_$_ChangeNoteOfProduct _value,
+      $Res Function(_$_ChangeNoteOfProduct) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? newNote = null,
+  }) {
+    return _then(_$_ChangeNoteOfProduct(
+      newNote: null == newNote
+          ? _value.newNote
+          : newNote // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_ChangeNoteOfProduct implements _ChangeNoteOfProduct {
+  const _$_ChangeNoteOfProduct({required this.newNote});
+
+  @override
+  final String newNote;
+
+  @override
+  String toString() {
+    return 'HomeEvent.changeNoteOfProduct(newNote: $newNote)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ChangeNoteOfProduct &&
+            (identical(other.newNote, newNote) || other.newNote == newNote));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, newNote);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ChangeNoteOfProductCopyWith<_$_ChangeNoteOfProduct> get copyWith =>
+      __$$_ChangeNoteOfProductCopyWithImpl<_$_ChangeNoteOfProduct>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() getPreferencesDataEvent,
+    required TResult Function(BuildContext context) getProductSalesListEvent,
+    required TResult Function(BuildContext context, String productId)
+        getProductDetailsEvent,
+    required TResult Function(BuildContext context) increaseQuantityOfProduct,
+    required TResult Function(BuildContext context) decreaseQuantityOfProduct,
+    required TResult Function(String newNote) changeNoteOfProduct,
+  }) {
+    return changeNoteOfProduct(newNote);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getPreferencesDataEvent,
+    TResult? Function(BuildContext context)? getProductSalesListEvent,
+    TResult? Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult? Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult? Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult? Function(String newNote)? changeNoteOfProduct,
+  }) {
+    return changeNoteOfProduct?.call(newNote);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? getPreferencesDataEvent,
+    TResult Function(BuildContext context)? getProductSalesListEvent,
+    TResult Function(BuildContext context, String productId)?
+        getProductDetailsEvent,
+    TResult Function(BuildContext context)? increaseQuantityOfProduct,
+    TResult Function(BuildContext context)? decreaseQuantityOfProduct,
+    TResult Function(String newNote)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (changeNoteOfProduct != null) {
+      return changeNoteOfProduct(newNote);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_getPreferencesDataEvent value)
+        getPreferencesDataEvent,
+    required TResult Function(_GetProductSalesListEvent value)
+        getProductSalesListEvent,
+    required TResult Function(_GetProductDetailsEvent value)
+        getProductDetailsEvent,
+    required TResult Function(_IncreaseQuantityOfProduct value)
+        increaseQuantityOfProduct,
+    required TResult Function(_DecreaseQuantityOfProduct value)
+        decreaseQuantityOfProduct,
+    required TResult Function(_ChangeNoteOfProduct value) changeNoteOfProduct,
+  }) {
+    return changeNoteOfProduct(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult? Function(_GetProductSalesListEvent value)?
+        getProductSalesListEvent,
+    TResult? Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult? Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult? Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult? Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+  }) {
+    return changeNoteOfProduct?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_getPreferencesDataEvent value)? getPreferencesDataEvent,
+    TResult Function(_GetProductSalesListEvent value)? getProductSalesListEvent,
+    TResult Function(_GetProductDetailsEvent value)? getProductDetailsEvent,
+    TResult Function(_IncreaseQuantityOfProduct value)?
+        increaseQuantityOfProduct,
+    TResult Function(_DecreaseQuantityOfProduct value)?
+        decreaseQuantityOfProduct,
+    TResult Function(_ChangeNoteOfProduct value)? changeNoteOfProduct,
+    required TResult orElse(),
+  }) {
+    if (changeNoteOfProduct != null) {
+      return changeNoteOfProduct(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ChangeNoteOfProduct implements HomeEvent {
+  const factory _ChangeNoteOfProduct({required final String newNote}) =
+      _$_ChangeNoteOfProduct;
+
+  String get newNote;
+  @JsonKey(ignore: true)
+  _$$_ChangeNoteOfProductCopyWith<_$_ChangeNoteOfProduct> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$HomeState {
   String get UserImageUrl => throw _privateConstructorUsedError;
   String get UserCompanyLogoUrl => throw _privateConstructorUsedError;
@@ -522,6 +1138,9 @@ mixin _$HomeState {
   bool get isProductLoading => throw _privateConstructorUsedError;
   ProductDetailsResModel get productDetails =>
       throw _privateConstructorUsedError;
+  List<ProductStockModel> get productStockList =>
+      throw _privateConstructorUsedError;
+  int get productStockUpdateIndex => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -540,7 +1159,9 @@ abstract class $HomeStateCopyWith<$Res> {
       ProductSalesResModel productSalesList,
       bool isShimmering,
       bool isProductLoading,
-      ProductDetailsResModel productDetails});
+      ProductDetailsResModel productDetails,
+      List<ProductStockModel> productStockList,
+      int productStockUpdateIndex});
 
   $ProductSalesResModelCopyWith<$Res> get productSalesList;
   $ProductDetailsResModelCopyWith<$Res> get productDetails;
@@ -551,9 +1172,9 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     implements $HomeStateCopyWith<$Res> {
   _$HomeStateCopyWithImpl(this._value, this._then);
 
-// ignore: unused_field
+  // ignore: unused_field
   final $Val _value;
-// ignore: unused_field
+  // ignore: unused_field
   final $Res Function($Val) _then;
 
   @pragma('vm:prefer-inline')
@@ -566,6 +1187,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? isShimmering = null,
     Object? isProductLoading = null,
     Object? productDetails = null,
+    Object? productStockList = null,
+    Object? productStockUpdateIndex = null,
   }) {
     return _then(_value.copyWith(
       UserImageUrl: null == UserImageUrl
@@ -596,6 +1219,14 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           ? _value.productDetails
           : productDetails // ignore: cast_nullable_to_non_nullable
               as ProductDetailsResModel,
+      productStockList: null == productStockList
+          ? _value.productStockList
+          : productStockList // ignore: cast_nullable_to_non_nullable
+              as List<ProductStockModel>,
+      productStockUpdateIndex: null == productStockUpdateIndex
+          ? _value.productStockUpdateIndex
+          : productStockUpdateIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -632,7 +1263,9 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       ProductSalesResModel productSalesList,
       bool isShimmering,
       bool isProductLoading,
-      ProductDetailsResModel productDetails});
+      ProductDetailsResModel productDetails,
+      List<ProductStockModel> productStockList,
+      int productStockUpdateIndex});
 
   @override
   $ProductSalesResModelCopyWith<$Res> get productSalesList;
@@ -658,6 +1291,8 @@ class __$$_HomeStateCopyWithImpl<$Res>
     Object? isShimmering = null,
     Object? isProductLoading = null,
     Object? productDetails = null,
+    Object? productStockList = null,
+    Object? productStockUpdateIndex = null,
   }) {
     return _then(_$_HomeState(
       UserImageUrl: null == UserImageUrl
@@ -688,6 +1323,14 @@ class __$$_HomeStateCopyWithImpl<$Res>
           ? _value.productDetails
           : productDetails // ignore: cast_nullable_to_non_nullable
               as ProductDetailsResModel,
+      productStockList: null == productStockList
+          ? _value._productStockList
+          : productStockList // ignore: cast_nullable_to_non_nullable
+              as List<ProductStockModel>,
+      productStockUpdateIndex: null == productStockUpdateIndex
+          ? _value.productStockUpdateIndex
+          : productStockUpdateIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -702,7 +1345,10 @@ class _$_HomeState implements _HomeState {
       required this.productSalesList,
       required this.isShimmering,
       required this.isProductLoading,
-      required this.productDetails});
+      required this.productDetails,
+      required final List<ProductStockModel> productStockList,
+      required this.productStockUpdateIndex})
+      : _productStockList = productStockList;
 
   @override
   final String UserImageUrl;
@@ -718,10 +1364,21 @@ class _$_HomeState implements _HomeState {
   final bool isProductLoading;
   @override
   final ProductDetailsResModel productDetails;
+  final List<ProductStockModel> _productStockList;
+  @override
+  List<ProductStockModel> get productStockList {
+    if (_productStockList is EqualUnmodifiableListView)
+      return _productStockList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_productStockList);
+  }
+
+  @override
+  final int productStockUpdateIndex;
 
   @override
   String toString() {
-    return 'HomeState(UserImageUrl: $UserImageUrl, UserCompanyLogoUrl: $UserCompanyLogoUrl, cartCount: $cartCount, productSalesList: $productSalesList, isShimmering: $isShimmering, isProductLoading: $isProductLoading, productDetails: $productDetails)';
+    return 'HomeState(UserImageUrl: $UserImageUrl, UserCompanyLogoUrl: $UserCompanyLogoUrl, cartCount: $cartCount, productSalesList: $productSalesList, isShimmering: $isShimmering, isProductLoading: $isProductLoading, productDetails: $productDetails, productStockList: $productStockList, productStockUpdateIndex: $productStockUpdateIndex)';
   }
 
   @override
@@ -742,7 +1399,12 @@ class _$_HomeState implements _HomeState {
             (identical(other.isProductLoading, isProductLoading) ||
                 other.isProductLoading == isProductLoading) &&
             (identical(other.productDetails, productDetails) ||
-                other.productDetails == productDetails));
+                other.productDetails == productDetails) &&
+            const DeepCollectionEquality()
+                .equals(other._productStockList, _productStockList) &&
+            (identical(
+                    other.productStockUpdateIndex, productStockUpdateIndex) ||
+                other.productStockUpdateIndex == productStockUpdateIndex));
   }
 
   @override
@@ -754,7 +1416,9 @@ class _$_HomeState implements _HomeState {
       productSalesList,
       isShimmering,
       isProductLoading,
-      productDetails);
+      productDetails,
+      const DeepCollectionEquality().hash(_productStockList),
+      productStockUpdateIndex);
 
   @JsonKey(ignore: true)
   @override
@@ -771,7 +1435,9 @@ abstract class _HomeState implements HomeState {
       required final ProductSalesResModel productSalesList,
       required final bool isShimmering,
       required final bool isProductLoading,
-      required final ProductDetailsResModel productDetails}) = _$_HomeState;
+      required final ProductDetailsResModel productDetails,
+      required final List<ProductStockModel> productStockList,
+      required final int productStockUpdateIndex}) = _$_HomeState;
 
   @override
   String get UserImageUrl;
@@ -787,6 +1453,10 @@ abstract class _HomeState implements HomeState {
   bool get isProductLoading;
   @override
   ProductDetailsResModel get productDetails;
+  @override
+  List<ProductStockModel> get productStockList;
+  @override
+  int get productStockUpdateIndex;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>

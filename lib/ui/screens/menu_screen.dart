@@ -75,11 +75,10 @@ class MenuScreenWidget extends StatelessWidget {
                       onTap: () => context
                           .read<MenuBloc>()
                           .add(MenuEvent.logOutEvent(context: context))),
-                  // menuTiles(
-                  //     title: AppLocalizations.of(context)!.app_language,
-                  //     onTap: () => context
-                  //         .read<MenuBloc>()
-                  //         .add(MenuEvent.changeAppLanguageEvent(context: context))),
+                  menuTiles(
+                      title: AppLocalizations.of(context)!.app_language,
+                      onTap: () => context.read<MenuBloc>().add(
+                          MenuEvent.changeAppLanguageEvent(context: context))),
                 ],
               ),
             ),

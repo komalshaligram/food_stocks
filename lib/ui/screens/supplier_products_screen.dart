@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -10,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
 
@@ -238,13 +238,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
-                    return Container(
-                      height: 80,
-                      // width: getScreenWidth(context),
-                      alignment: Alignment.center,
-                      color: AppColors.whiteColor,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                        // alignment: Alignment.center,
+                        // color: AppColors.whiteColor,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
                     );
                   }
@@ -484,12 +491,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     loadingProgress?.expectedTotalBytes) {
                                   return Container(
                                     height: 150,
-                                    // width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    color: AppColors.whiteColor,
-                                    child: CupertinoActivityIndicator(
-                                      color: AppColors.blackColor,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppConstants.radius_10)),
                                     ),
+                                    // alignment: Alignment.center,
+                                    // color: AppColors.whiteColor,
+                                    // child: CupertinoActivityIndicator(
+                                    //   color: AppColors.blackColor,
+                                    // ),
                                   );
                                 }
                                 return child;
