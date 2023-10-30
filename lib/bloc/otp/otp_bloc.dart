@@ -2,12 +2,14 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/otp_req_model/otp_req_model.dart';
+import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/themes/app_strings.dart';
@@ -60,6 +62,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
+              preferencesHelper.setCartId(
+                  cartId: response.data?.cartId ?? '');
               preferencesHelper.setAuthToken(
                   accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(
@@ -76,20 +80,22 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: response.message ?? AppStrings.loginSuccessString,
                   bgColor: AppColors.mainColor);
-              emit(state.copyWith(isLoginSuccess: true, isLoading: false));
+              Navigator.popUntil(
+                  event.context, (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
+              emit(state.copyWith( isLoading: false));
             } else {
-              emit(state.copyWith(
-                  isLoginFail: true, errorMessage: res['message']));
-              emit(state.copyWith(isLoginFail: false, isLoading: false));
+              showSnackBar(
+                  context: event.context,
+                  title: res['message'],
+                  bgColor: AppColors.mainColor);
             }
-          } catch (e) {
-            emit(state.copyWith(isLoginFail: true, errorMessage: e.toString()));
-            emit(state.copyWith(isLoginFail: false, isLoading: false));
-          }
+          } on ServerException {}
         } else {
-          emit(state.copyWith(
-              isLoginFail: true, errorMessage: AppStrings.enterOtpString));
-          emit(state.copyWith(isLoginFail: false));
+          showSnackBar(
+              context: event.context,
+              title:  AppStrings.enterOtpString,
+              bgColor: AppColors.mainColor);
         }
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));

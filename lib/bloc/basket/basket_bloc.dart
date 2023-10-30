@@ -16,6 +16,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
       if(event is _getDataEvent){
         emit(state.copyWith(isShimmering: true));
+
+
       }
 
       if(event is _productIncrementEvent){

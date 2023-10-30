@@ -6,6 +6,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -49,11 +50,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
                 isLoading: false,
               ));
           }
-        } catch (e) {
-          showSnackBar(context: event.context, title: e.toString(), bgColor: AppColors.redColor);
-         emit(state.copyWith(isLoading: false));
-
-        }
+        } on ServerException {}
       }
     });
   }

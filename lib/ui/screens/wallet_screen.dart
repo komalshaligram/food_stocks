@@ -139,7 +139,7 @@ class WalletScreenWidget extends StatelessWidget {
                                             title: AppLocalizations.of(context)!
                                                 .total_credit,
                                             value:
-                                                '20,000${AppLocalizations.of(context)!.price}'),
+                                                '20,000${AppLocalizations.of(context)!.currency}'),
                                       ),
                                       10.width,
                                       Flexible(
@@ -149,7 +149,7 @@ class WalletScreenWidget extends StatelessWidget {
                                             title: AppLocalizations.of(context)!
                                                 .this_months_expenses,
                                             value:
-                                                '7,550${AppLocalizations.of(context)!.price}'),
+                                                '7,550${AppLocalizations.of(context)!.currency}'),
                                       ),
                                     ],
                                   ),
@@ -163,7 +163,7 @@ class WalletScreenWidget extends StatelessWidget {
                                             title: AppLocalizations.of(context)!
                                                 .last_months_expenses,
                                             value:
-                                                '18,360${AppLocalizations.of(context)!.price}'),
+                                                '18,360${AppLocalizations.of(context)!.currency}'),
                                       ),
                                       10.width,
                                       Flexible(
@@ -338,33 +338,36 @@ class WalletScreenWidget extends StatelessWidget {
                     10.height,
                     SizedBox(
                       height: 200,
-                      child: ListView.builder(
-                        itemCount: state.balanceSheetList.length,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            color: AppColors.whiteColor,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_10,
-                                      horizontal: AppConstants.padding_15),
-                                  child: listWidget(
-                                      context: context,
-                                      balanceSheetList: state.balanceSheetList,
-                                      listIndex: index),
-                                ),
-                                Container(
-                                  width: double.maxFinite,
-                                  height: 1,
-                                  color: AppColors.borderColor,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: ListView.builder(
+                          itemCount: state.balanceSheetList.length,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              color: AppColors.whiteColor,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_10,
+                                        horizontal: AppConstants.padding_15),
+                                    child: listWidget(
+                                        context: context,
+                                        balanceSheetList: state.balanceSheetList,
+                                        listIndex: index),
+                                  ),
+                                  Container(
+                                    width: double.maxFinite,
+                                    height: 1,
+                                    color: AppColors.borderColor,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -449,7 +452,7 @@ class WalletScreenWidget extends StatelessWidget {
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Text(
-                  '${balanceSheetList[listIndex].difference.toString()}${AppLocalizations.of(context)!.price}',
+                  '${balanceSheetList[listIndex].difference.toString()}${AppLocalizations.of(context)!.currency}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: balanceSheetList[listIndex].difference > 0
@@ -465,7 +468,7 @@ class WalletScreenWidget extends StatelessWidget {
                 child: CircularButtonWidget(
                   buttonName: AppLocalizations.of(context)!.balance_status,
                   buttonValue:
-                      '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.price}',
+                      '${balanceSheetList[listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
                 ),
               ),
             ],

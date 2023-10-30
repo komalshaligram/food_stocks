@@ -61,11 +61,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             height: 80,
                             width: 80,
                             decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
+                              color: state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
                               boxShadow: [
                                 BoxShadow(
-                                    color: AppColors.shadowColor.withOpacity(0.3),
-                                    blurRadius: AppConstants.blur_10)
+                                    color:  state.UserImageUrl.isNotEmpty ? AppColors.shadowColor.withOpacity(0.3): AppColors.whiteColor,
+                                    blurRadius: AppConstants.blur_10
+                                )
                               ],
                               shape: BoxShape.circle,
                             ),
@@ -86,7 +87,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                   )
-                                : SizedBox(),
+                                :Icon(
+                              Icons.person,
+                              size: 60,
+                              color: AppColors.textColor,
+                            ),
                           ),
                           20.width,
                           SizedBox(
@@ -122,11 +127,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     errorWidget: (context, url, error) {
                                       return Container(
                                         decoration: BoxDecoration(
-                                            color: AppColors.pageColor,
+                                            color: AppColors.mainColor.withOpacity(0.1),
                                           /*  border: Border.all(
                                                 color: AppColors.borderColor
                                                     .withOpacity(0.5),
                                                 width: 0)*/),
+                                        child: Icon(Icons.image_not_supported_outlined,
+                                          size: 40,
+                                          color: AppColors.textColor,
+                                        )
                                       );
                                     },
                                   ),

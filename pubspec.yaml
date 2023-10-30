@@ -71,7 +71,6 @@ dependencies:
   flutter_dotenv: ^5.1.0
   fl_chart: ^0.64.0
   shimmer: ^3.0.0
-  syncfusion_flutter_charts: ^23.1.41
   flutter_barcode_scanner: ^2.0.0
 
 

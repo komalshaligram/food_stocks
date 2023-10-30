@@ -3,11 +3,13 @@ part of 'order_bloc.dart';
 @freezed
 class OrderState with _$OrderState {
   const factory OrderState({
-   required List<OrderDetailsModel>orderList,
+   required List<OrderDetailsModel>orderList1,
+   required GetAllOrderResModel orderList,
   }) = _OrderState;
 
    factory OrderState.initial() => OrderState(
-  orderList: [
+       orderList: GetAllOrderResModel(),
+  orderList1: [
    OrderDetailsModel(
        orderDate: '12.05.2023',
        noOfSupplier: 3,

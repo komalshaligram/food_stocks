@@ -48,21 +48,10 @@ class OTPScreenWidget extends StatelessWidget {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
-        if (state.isLoginSuccess) {
-          Navigator.popUntil(
-              context, (route) => route.name == RouteDefine.connectScreen.name);
-          Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
-        }
-        if (state.isLoginFail) {
-          showSnackBar(
-              context: context,
-              title: state.errorMessage,
-              bgColor: AppColors.redColor);
-        }
+
       },
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
-          print(getScreenWidth(context) * 0.097);
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: PreferredSize(

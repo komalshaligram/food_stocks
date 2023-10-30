@@ -57,7 +57,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    Navigator.of(context).pushNamed(RouteDefine.orderScreen.name);
+                   // Navigator.of(context).pushNamed(RouteDefine.orderScreen.name);
+                    Navigator.pop(context);
                   },
                 ),
               ),
