@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: provider.locale,
           title: AppStrings.appName,
-          initialRoute: RouteDefine.loginScreen.name,
+          initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: ThemeData(
