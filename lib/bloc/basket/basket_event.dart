@@ -17,5 +17,7 @@ class BasketEvent with _$BasketEvent {
     required BuildContext context,
   }) = _deleteListItemEvent;
 
-  const factory BasketEvent.getDataEvent() = _getDataEvent;
+  const factory BasketEvent.getAllCartEvent({
+    required BuildContext context
+}) = _getAllCartEvent;
 }

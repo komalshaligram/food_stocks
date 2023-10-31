@@ -21,7 +21,7 @@ class BasketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BasketBloc()..add(BasketEvent.getDataEvent()),
+      create: (context) => BasketBloc()..add(BasketEvent.getAllCartEvent(context: context)),
       child: const BasketScreenWidget(),
     );
   }
