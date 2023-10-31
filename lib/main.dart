@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,9 +13,19 @@ import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
 
 void main() async {
-  runZonedGuarded<Future<void>>(() async {
 
+  // runApp(
+  //   MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: Directionality(
+  //       textDirection: TextDirection.rtl,
+  //       child: const MyApp(),
+  //     ),
+  //   ),
+  // );
+runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -45,7 +56,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: provider.locale,
           title: AppStrings.appName,
-          initialRoute: RouteDefine.splashScreen.name,
+          initialRoute: RouteDefine.loginScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: ThemeData(

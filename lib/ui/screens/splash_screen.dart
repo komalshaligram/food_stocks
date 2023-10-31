@@ -1,4 +1,4 @@
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+//import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +54,7 @@ class SplashScreenWidget extends StatelessWidget {
     return deviceId;
   }
 
-  void appFlyerSetup(){
+/*  void appFlyerSetup(){
     AppsflyerSdk? _appsflyerSdk;
     final AppsFlyerOptions options = AppsFlyerOptions(
         afDevKey: dotenv.env["DEV_KEY"]??'',
@@ -72,13 +72,13 @@ class SplashScreenWidget extends StatelessWidget {
       print("onInstallConversionData res: " + res.toString());
       return _appsflyerSdk?.logEvent('App Install', res);
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
-        appFlyerSetup();
+      //  appFlyerSetup();
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());

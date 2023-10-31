@@ -44,7 +44,7 @@ dependencies:
   flutter_localization: ^0.1.14
   intl: ^0.18.0
   flutter_svg: ^2.0.7
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^5.0.1
   dartz: ^0.10.1
   dotted_border: ^2.0.0+3
   image_picker: ^1.0.4
@@ -61,12 +61,11 @@ dependencies:
   permission_handler: ^11.0.0
   path_provider: ^2.1.1
   in_app_update: ^4.2.1
-  firebase_crashlytics: ^3.3.7
-  firebase_core: ^2.17.0
-  firebase_messaging: ^14.6.9
+  firebase_crashlytics: ^3.4.2
+  firebase_core: ^2.20.0
+  firebase_messaging: ^14.7.2
   flutter_local_notifications: ^16.0.0+1
   package_info_plus: ^4.1.0
-  appsflyer_sdk: ^6.12.2
   platform_device_id: ^1.0.1
   flutter_dotenv: ^5.1.0
   fl_chart: ^0.64.0
@@ -77,11 +76,6 @@ dependencies:
 
 
 
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/appIcon/food_stock_app_icon.png"
-  remove_alpha_ios: true
 
 
 dev_dependencies:
