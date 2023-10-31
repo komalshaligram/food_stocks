@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:food_stock/data/model/req_model/product_stock_verify_req_model/product_stock_verify_req_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
+import 'package:food_stock/data/model/res_model/product_stock_verify_res_model/product_stock_verify_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,16 +45,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               await DioClient(event.context).post(AppUrls.getSaleProductsUrl);
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
-            List<ProductStockModel> productStockModelList = [];
+            List<ProductStockModel> productStockList = [];
             if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
               for (int i = 0; i < (response.data?.length ?? 0); i++) {
-                productStockModelList.add(
+                productStockList.add(
                     ProductStockModel(productId: response.data?[i].id ?? ''));
               }
             }
             emit(state.copyWith(
                 productSalesList: response,
-                productStockList: productStockModelList,
+                productStockList: productStockList,
                 isShimmering: false));
           } else {
             showSnackBar(
@@ -73,9 +75,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             debugPrint(
                 'id = ${state.productStockList.firstWhere((productStock) => productStock.productId == event.productId).productId}\n id = ${event.productId}');
-            int productStockUpdateIndex = state.productStockList.indexOf(
-                state.productStockList.firstWhere((productStock) =>
-                    productStock.productId == event.productId));
+            int productStockUpdateIndex = state.productStockList.indexWhere(
+                (productStock) => productStock.productId == event.productId);
             debugPrint('product stock update index = $productStockUpdateIndex');
             // debugPrint('product details res = ${response.product}');
             emit(state.copyWith(
@@ -134,6 +135,57 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               productStockList[state.productStockUpdateIndex]
                   .copyWith(note: event.newNote);
           emit(state.copyWith(productStockList: productStockList));
+        }
+      } else if (event is _VerifyProductStockEvent) {
+        if (state.productStockList[state.productStockUpdateIndex].quantity ==
+            0) {
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.minQuantityMsgString,
+              bgColor: AppColors.mainColor);
+          return;
+        }
+        try {
+          emit(state.copyWith(isLoading: true));
+          ProductStockVerifyReqModel req = ProductStockVerifyReqModel(
+              quantity: state
+                  .productStockList[state.productStockUpdateIndex].quantity,
+              supplierId: [
+                state.productDetails.product?.first.supplierSales?.supplier
+                        ?.id ??
+                    ''
+              ],
+              productId: state
+                  .productStockList[state.productStockUpdateIndex].productId);
+          debugPrint('verify stock req = $req');
+          final res = await DioClient(event.context)
+              .post(AppUrls.verifyProductStockUrl, data: req.toJson());
+          ProductStockVerifyResModel response =
+              ProductStockVerifyResModel.fromJson(res);
+          if (response.status == 200) {
+            emit(state.copyWith(isLoading: false));
+            if (state.productStockList[state.productStockUpdateIndex].quantity <
+                (response.data?.stock?.first.data?.productStock ?? 0)) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.doneString,
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response.data?.stock?.first.message ??
+                      AppStrings.somethingWrongString,
+                  bgColor: AppColors.redColor);
+            }
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } on ServerException {
+          Navigator.pop(event.context);
         }
       }
     });

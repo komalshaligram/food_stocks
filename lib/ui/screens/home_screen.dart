@@ -17,6 +17,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
+import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
@@ -32,10 +33,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-      HomeBloc()
-        ..add(HomeEvent.getPreferencesDataEvent())..add(
-          HomeEvent.getProductSalesListEvent(context: context)),
+      create: (context) => HomeBloc()
+        ..add(HomeEvent.getPreferencesDataEvent())
+        ..add(HomeEvent.getProductSalesListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -100,71 +100,67 @@ class HomeScreenWidget extends StatelessWidget {
                                   clipBehavior: Clip.hardEdge,
                                   child: state.UserImageUrl.isNotEmpty
                                       ? ClipRRect(
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) =>
-                                          Center(
-                                              child:
-                                              const CupertinoActivityIndicator()),
-                                      imageUrl:
-                                      '${AppUrls.baseFileUrl}${state
-                                          .UserImageUrl}',
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) {
-                                        return Container(
-                                          color: AppColors.whiteColor,
-                                        );
-                                      },
-                                    ),
-                                  )
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) => Center(
+                                                child:
+                                                    const CupertinoActivityIndicator()),
+                                            imageUrl:
+                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) {
+                                              return Container(
+                                                color: AppColors.whiteColor,
+                                              );
+                                            },
+                                          ),
+                                        )
                                       : Icon(
-                                    Icons.person,
-                                    size: 40,
-                                    color: AppColors.textColor,
-                                  ),
+                                          Icons.person,
+                                          size: 40,
+                                          color: AppColors.textColor,
+                                        ),
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
                                     ? CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                      Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              border: Border.all(
-                                                  color: AppColors.borderColor
-                                                      .withOpacity(0.5),
-                                                  width: 1)),
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                              height: 50,
-                                              width: getScreenWidth(context) *
-                                                  0.35,
-                                              alignment: Alignment.center,
-                                              child:
-                                              const CupertinoActivityIndicator())),
-                                  imageUrl:
-                                  '${AppUrls.baseFileUrl}${state
-                                      .UserCompanyLogoUrl}',
-                                  height: 50,
-                                  width: getScreenWidth(context) * 0.35,
-                                  fit: BoxFit.fitHeight,
-                                  alignment:
-                                  isRTLContent(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                                  errorWidget: (context, url, error) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                          color: AppColors.whiteColor,
-                                          border: Border.all(
-                                              color: AppColors.borderColor
-                                                  .withOpacity(0.5),
-                                              width: 1)),
-                                      alignment: Alignment.center,
-                                    );
-                                  },
-                                )
+                                        placeholder: (context, url) => Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.whiteColor,
+                                                border: Border.all(
+                                                    color: AppColors.borderColor
+                                                        .withOpacity(0.5),
+                                                    width: 1)),
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                                height: 50,
+                                                width: getScreenWidth(context) *
+                                                    0.35,
+                                                alignment: Alignment.center,
+                                                child:
+                                                    const CupertinoActivityIndicator())),
+                                        imageUrl:
+                                            '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
+                                        height: 50,
+                                        width: getScreenWidth(context) * 0.35,
+                                        fit: BoxFit.fitHeight,
+                                        alignment:
+                                            isRTLContent(context: context)
+                                                ? Alignment.centerRight
+                                                : Alignment.centerLeft,
+                                        errorWidget: (context, url, error) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors.whiteColor,
+                                                border: Border.all(
+                                                    color: AppColors.borderColor
+                                                        .withOpacity(0.5),
+                                                    width: 1)),
+                                            alignment: Alignment.center,
+                                          );
+                                        },
+                                      )
                                     : SizedBox(),
                               ],
                             ),
@@ -172,7 +168,7 @@ class HomeScreenWidget extends StatelessWidget {
                           Container(
                             height: 60,
                             padding:
-                            const EdgeInsets.symmetric(horizontal: 3.0),
+                                const EdgeInsets.symmetric(horizontal: 3.0),
                             decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
                                 boxShadow: [
@@ -226,17 +222,17 @@ class HomeScreenWidget extends StatelessWidget {
                                                       .notificationColor,
                                                   border: Border.all(
                                                       color:
-                                                      AppColors.whiteColor,
+                                                          AppColors.whiteColor,
                                                       width: 1),
                                                   shape: BoxShape.circle),
                                               alignment: Alignment.center,
                                               child: Text('4',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .font_8,
-                                                      color: AppColors
-                                                          .whiteColor)),
+                                                          size: AppConstants
+                                                              .font_8,
+                                                          color: AppColors
+                                                              .whiteColor)),
                                             ))
                                       ],
                                     ),
@@ -299,14 +295,14 @@ class HomeScreenWidget extends StatelessWidget {
                                         flex: 1,
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
                                               AppLocalizations.of(context)!
                                                   .balance_status,
                                               style:
-                                              AppStyles.rkRegularTextStyle(
+                                                  AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.smallFont,
                                                 color: AppColors.blackColor,
                                               ),
@@ -318,7 +314,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               width: 70,
                                               child: SfRadialGauge(
                                                 backgroundColor:
-                                                Colors.transparent,
+                                                    Colors.transparent,
                                                 axes: [
                                                   RadialAxis(
                                                     minimum: 0,
@@ -329,42 +325,40 @@ class HomeScreenWidget extends StatelessWidget {
                                                     endAngle: 270,
                                                     // radiusFactor: 0.8,
                                                     axisLineStyle:
-                                                    AxisLineStyle(
-                                                        thicknessUnit:
-                                                        GaugeSizeUnit
-                                                            .factor,
-                                                        thickness: 0.2,
-                                                        color: AppColors
-                                                            .borderColor),
+                                                        AxisLineStyle(
+                                                            thicknessUnit:
+                                                                GaugeSizeUnit
+                                                                    .factor,
+                                                            thickness: 0.2,
+                                                            color: AppColors
+                                                                .borderColor),
                                                     annotations: [
                                                       GaugeAnnotation(
                                                         angle: 270,
                                                         widget: Text(
-                                                          '7550\n${AppLocalizations
-                                                              .of(context)!
-                                                              .currency}',
+                                                          '7550\n${AppLocalizations.of(context)!.currency}',
                                                           style: AppStyles
                                                               .rkRegularTextStyle(
-                                                              size: AppConstants
-                                                                  .font_14,
-                                                              color: AppColors
-                                                                  .blackColor,
-                                                              fontWeight:
-                                                              FontWeight
-                                                                  .w600),
+                                                                  size: AppConstants
+                                                                      .font_14,
+                                                                  color: AppColors
+                                                                      .blackColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                         ),
                                                       ),
                                                     ],
                                                     pointers: [
                                                       RangePointer(
                                                         color:
-                                                        AppColors.mainColor,
+                                                            AppColors.mainColor,
                                                         enableAnimation: true,
                                                         animationDuration: 300,
                                                         animationType:
-                                                        AnimationType.ease,
+                                                            AnimationType.ease,
                                                         cornerStyle: CornerStyle
                                                             .bothCurve,
                                                         value: 7550,
@@ -390,12 +384,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.credits,
                                                     title: AppLocalizations.of(
-                                                        context)!
+                                                            context)!
                                                         .total_credit,
                                                     value:
-                                                    '20,000${AppLocalizations
-                                                        .of(context)!
-                                                        .currency}'),
+                                                        '20,000${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -403,11 +395,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
-                                                        context)!
+                                                            context)!
                                                         .this_months_expenses,
                                                     value:
-                                                    '7,550${AppLocalizations.of(
-                                                        context)!.currency}'),
+                                                        '7,550${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -419,12 +410,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
-                                                        context)!
+                                                            context)!
                                                         .last_months_expenses,
                                                     value:
-                                                    '18,360${AppLocalizations
-                                                        .of(context)!
-                                                        .currency}'),
+                                                        '18,360${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -432,7 +421,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.orders,
                                                     title: AppLocalizations.of(
-                                                        context)!
+                                                            context)!
                                                         .this_months_orders,
                                                     value: '23'),
                                               ),
@@ -446,61 +435,81 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            titleRowWidget(
-                                context: context,
-                                title: AppLocalizations.of(context)!.sales,
-                                allContentTitle:
-                                AppLocalizations.of(context)!.all_sales,
-                                onTap: () {
-                                  Navigator.pushNamed(context,
-                                      RouteDefine.productSaleScreen.name);
-                                }),
-                            SizedBox(
-                              height: 190,
-                              child: ListView.builder(
-                                  itemCount:
-                                  (state.productSalesList.data?.length ??
-                                      0) <
-                                      6
-                                      ? state.productSalesList.data?.length
-                                      : 6,
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) =>
-                                      buildProductSaleListItem(
-                                        context: context,
-                                        saleImage: state.productSalesList
-                                            .data?[index].mainImage ??
-                                            '',
-                                        title: state.productSalesList
-                                            .data?[index].salesName ??
-                                            '',
-                                        description: state
-                                            .productSalesList
-                                            .data?[index]
-                                            .salesDescription ??
-                                            '',
-                                        price: state.productSalesList
-                                            .data?[index].discountPercentage
-                                            ?.toDouble() ??
-                                            0.0,
-                                        onButtonTap: () {
-                                          showProductDetails(
-                                              context: context,
-                                              productId: state.productSalesList
-                                                      .data?[index].id ??
-                                                  '');
-                                        },
-                                      )),
-                            ),
-                            10.height,
+                            state.isShimmering
+                                ? 0.width
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      titleRowWidget(
+                                          context: context,
+                                          title: AppLocalizations.of(context)!
+                                              .sales,
+                                          allContentTitle:
+                                              AppLocalizations.of(context)!
+                                                  .all_sales,
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .productSaleScreen.name);
+                                          }),
+                                      SizedBox(
+                                        height: 190,
+                                        child: ListView.builder(
+                                            itemCount: (state.productSalesList
+                                                            .data?.length ??
+                                                        0) <
+                                                    6
+                                                ? state.productSalesList.data
+                                                    ?.length
+                                                : 6,
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) =>
+                                                buildProductSaleListItem(
+                                                  context: context,
+                                                  saleImage: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .mainImage ??
+                                                      '',
+                                                  title: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .salesName ??
+                                                      '',
+                                                  description: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .salesDescription ??
+                                                      '',
+                                                  price: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .discountPercentage
+                                                          ?.toDouble() ??
+                                                      0.0,
+                                                  onButtonTap: () {
+                                                    showProductDetails(
+                                                        context: context,
+                                                        productId: state
+                                                                .productSalesList
+                                                                .data?[index]
+                                                                .id ??
+                                                            '');
+                                                  },
+                                                )),
+                                      ),
+                                      10.height,
+                                    ],
+                                  ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Flexible(
                                   child: CustomTextIconButtonWidget(
                                     title:
-                                    AppLocalizations.of(context)!.new_order,
+                                        AppLocalizations.of(context)!.new_order,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
                                           BottomNavEvent.changePage(index: 3));
@@ -511,7 +520,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 Flexible(
                                   child: CustomTextIconButtonWidget(
                                     title:
-                                    AppLocalizations.of(context)!.my_basket,
+                                        AppLocalizations.of(context)!.my_basket,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
                                           BottomNavEvent.changePage(index: 2));
@@ -527,7 +536,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 context: context,
                                 title: AppLocalizations.of(context)!.messages,
                                 allContentTitle:
-                                AppLocalizations.of(context)!.all_messages,
+                                    AppLocalizations.of(context)!.all_messages,
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, RouteDefine.messageScreen.name);
@@ -537,9 +546,8 @@ class HomeScreenWidget extends StatelessWidget {
                               itemCount: 2,
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemBuilder: (context, index) =>
-                                  messageListItem(
-                                      index: index, context: context),
+                              itemBuilder: (context, index) => messageListItem(
+                                  index: index, context: context),
                             ),
                             85.height,
                           ],
@@ -556,10 +564,11 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget titleRowWidget({required BuildContext context,
-    required title,
-    required allContentTitle,
-    required void Function() onTap}) {
+  Widget titleRowWidget(
+      {required BuildContext context,
+      required title,
+      required allContentTitle,
+      required void Function() onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
       child: Row(
@@ -678,8 +687,7 @@ class HomeScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-              "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!
-                  .currency}",
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -731,56 +739,63 @@ class HomeScreenWidget extends StatelessWidget {
                           ),
                           color: AppColors.whiteColor,
                         ),
-                        child: state.isProductLoading
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [CupertinoActivityIndicator()],
-                              )
-                            : CommonProductDetailsWidget(
-                                context: context,
-                                productImage: state.productDetails.product?.first.mainImage ??
-                                    '',
-                                productName:
-                                    state.productDetails.product?.first.productName ??
-                                        '',
-                                productCompanyName:
-                                    state.productDetails.product?.first.brandName ??
-                                        '',
-                                productDescription: state.productDetails.product
-                                        ?.first.productDescription ??
-                                    '',
-                                productSaleDescription: state.productDetails
-                                        .product?.first.productDescription ??
-                                    '',
-                                productPrice: state.productDetails.product
-                                        ?.first.numberOfUnit
-                                        ?.toDouble() ??
-                                    0.0,
-                                productWeight:
-                                    state.productDetails.product?.first.itemsWeight?.toDouble() ??
-                                        0.0,
-                                isRTL: isRTLContent(context: context),
-                                scrollController: scrollController,
-                                productQuantity: state
-                                    .productStockList[state.productStockUpdateIndex]
-                                    .quantity,
-                                onQuantityIncreaseTap: () {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.increaseQuantityOfProduct(
-                                          context: context1));
-                                },
-                                onQuantityDecreaseTap: () {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.decreaseQuantityOfProduct(
-                                          context: context1));
-                                },
-                                noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note),
-                                onNoteChanged: (newNote) {
-                                  context.read<HomeBloc>().add(
-                                      HomeEvent.changeNoteOfProduct(
-                                          newNote: newNote));
-                                },
-                                onAddToOrderPressed: () {}),
+                        clipBehavior: Clip.hardEdge,
+                        child: Scaffold(
+                          body: state.isProductLoading
+                              ? ProductDetailsShimmerWidget()
+                              : CommonProductDetailsWidget(
+                                  context: context,
+                                  productImage:
+                                      state.productDetails.product?.first.mainImage ??
+                                          '',
+                                  productName:
+                                      state.productDetails.product?.first.productName ??
+                                          '',
+                                  productCompanyName:
+                                      state.productDetails.product?.first.brandName ??
+                                          '',
+                                  productDescription: state.productDetails
+                                          .product?.first.productDescription ??
+                                      '',
+                                  productSaleDescription: state.productDetails
+                                          .product?.first.productDescription ??
+                                      '',
+                                  productPrice: state.productDetails.product
+                                          ?.first.numberOfUnit
+                                          ?.toDouble() ??
+                                      0.0,
+                                  productWeight: state.productDetails.product
+                                          ?.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
+                                  isRTL: isRTLContent(context: context),
+                                  scrollController: scrollController,
+                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  onQuantityIncreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.increaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  onQuantityDecreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.decreaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note),
+                                  onNoteChanged: (newNote) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  isLoading: state.isLoading,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<HomeBloc>().add(
+                                              HomeEvent.verifyProductStockEvent(
+                                                  context: context1));
+                                        }),
+                        ),
                       );
                     },
                   ));
@@ -791,74 +806,11 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget productListItem({required int index, required BuildContext context}) =>
-      Container(
-        width: 140,
-        padding: const EdgeInsets.symmetric(
-            vertical: 5.0, horizontal: AppConstants.padding_10),
-        margin: const EdgeInsets.symmetric(
-            horizontal: 5.0, vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10,
-            ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        ),
-        child: InkWell(
-          onTap: () {},
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Image.asset(
-                  AppImagePath.product2,
-                  width: 70,
-                  height: 70,
-                ),
-              ),
-              5.height,
-              Text(
-                AppLocalizations.of(context)!.next,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.redColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              5.height,
-              Expanded(
-                child: Text(
-                  "Buy 2 units of a variety of flat salted pretzels for a price of 250 grams",
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.blackColor),
-                  maxLines: 3,
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-              5.height,
-              Center(
-                child: CommonProductButtonWidget(
-                  title: "20${AppLocalizations.of(context)!.currency}",
-                  onPressed: () {},
-                  textColor: AppColors.whiteColor,
-                  bgColor: AppColors.mainColor,
-                  borderRadius: AppConstants.radius_3,
-                  textSize: AppConstants.font_12,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget dashboardStatsWidget({required BuildContext context,
-    required String image,
-    required String title,
-    required String value}) {
+  Widget dashboardStatsWidget(
+      {required BuildContext context,
+      required String image,
+      required String title,
+      required String value}) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5.0)),
@@ -909,7 +861,7 @@ class HomeScreenWidget extends StatelessWidget {
             height: 16,
             width: 16,
             colorFilter:
-            ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+                ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
           ),
           10.width,
           Expanded(

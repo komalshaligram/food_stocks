@@ -23,11 +23,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final int productQuantity;
   final ScrollController scrollController;
   final TextEditingController noteController;
-  final void Function() onAddToOrderPressed;
+  final void Function()? onAddToOrderPressed;
   final void Function() onQuantityIncreaseTap;
   final void Function() onQuantityDecreaseTap;
   final void Function(String)? onNoteChanged;
   final bool isRTL;
+  final bool isLoading;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -46,7 +47,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productQuantity,
       required this.onQuantityIncreaseTap,
       required this.onQuantityDecreaseTap,
-      this.onNoteChanged});
+      this.onNoteChanged,
+      required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -370,6 +372,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(AppConstants.padding_20),
                     child: CommonProductButtonWidget(
                       title: AppLocalizations.of(context)!.add_to_order,
+                      isLoading: isLoading,
                       onPressed: onAddToOrderPressed,
                       width: double.maxFinite,
                       height: AppConstants.buttonHeight,

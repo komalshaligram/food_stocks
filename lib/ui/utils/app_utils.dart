@@ -102,6 +102,6 @@ Future<String> scanBarcodeOrQRCode(
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
   List<Locale> rtlLocales = [Locale('he')];
-  debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
+  // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }

@@ -47,9 +47,13 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            OtpReqModel reqMap =
-                OtpReqModel(contact: event.contact, otp: event.otp);
-            debugPrint('otp req = ${event.contact}___${event.otp}');
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+            OtpReqModel reqMap = OtpReqModel(
+                contact: event.contact,
+                otp: event.otp,
+                tokenId: preferencesHelper.getFCMToken());
+            debugPrint('otp req = $reqMap');
             final res = await DioClient(event.context)
                 .post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');
@@ -57,10 +61,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();
-
-              SharedPreferencesHelper preferencesHelper =
-                  SharedPreferencesHelper(
-                      prefs: await SharedPreferences.getInstance());
               // preferencesHelper.setCartId(
               //     cartId: response.data?.cartId ?? '');
               preferencesHelper.setAuthToken(
@@ -79,14 +79,16 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: response.message ?? AppStrings.loginSuccessString,
                   bgColor: AppColors.mainColor);
-              Navigator.popUntil(
-                  event.context, (route) => route.name == RouteDefine.connectScreen.name);
-              Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
-              emit(state.copyWith( isLoading: false));
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
+              emit(state.copyWith(isLoading: false));
             } else {
+              emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: res['message'],
+                  title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.mainColor);
             }
           } catch (e) {
@@ -95,13 +97,12 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         } else {
           showSnackBar(
               context: event.context,
-              title:  AppStrings.enterOtpString,
+              title: AppStrings.enterOtpString,
               bgColor: AppColors.mainColor);
         }
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
-      }
-      else if(event is _updateOtpCodeEvent){
+      } else if (event is _updateOtpCodeEvent) {
         emit(state.copyWith(codeLength: event.codeLength));
       }
     });

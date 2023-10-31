@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/menu/menu_bloc.dart';
@@ -18,7 +20,7 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MenuBloc(),
+      create: (context) => MenuBloc()..add(MenuEvent.getAppLanguage()),
       child: const MenuScreenWidget(),
     );
   }
@@ -49,35 +51,36 @@ class MenuScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: Column(
                 children: [
-                  menuTiles(
+                  menuTile(
                       title: AppLocalizations.of(context)!.my_orders,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.orderScreen.name)),
-                  menuTiles(
+                  menuTile(
                       title:
                           AppLocalizations.of(context)!.questions_and_answers,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.questionAndAnswerScreen.name)),
-                  menuTiles(
+                  menuTile(
                       title: AppLocalizations.of(context)!.terms_of_use,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.termsOfUseScreen.name)),
-                  menuTiles(
+                  menuTile(
                       title: AppLocalizations.of(context)!.contact_us,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.contactScreen.name)),
-                  menuTiles(
+                  menuTile(
                       title: AppLocalizations.of(context)!.about_the_app,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.aboutAppScreen.name)),
-                  menuTiles(
+                  menuTile(
                       title: AppLocalizations.of(context)!.logout,
                       onTap: () => context
                           .read<MenuBloc>()
                           .add(MenuEvent.logOutEvent(context: context))),
-                  menuTiles(
+                  menuSwitchTile(
                       title: AppLocalizations.of(context)!.app_language,
-                      onTap: () => context.read<MenuBloc>().add(
+                      isHebrewLang: state.isHebrewLanguage,
+                      onChanged: (bool value) => context.read<MenuBloc>().add(
                           MenuEvent.changeAppLanguageEvent(context: context))),
                 ],
               ),
@@ -88,7 +91,7 @@ class MenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget menuTiles({required title, required void Function() onTap}) {
+  Widget menuTile({required String title, required void Function() onTap}) {
     return Container(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
@@ -120,6 +123,53 @@ class MenuScreenWidget extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget menuSwitchTile(
+      {required String title,
+      required bool isHebrewLang,
+      required void Function(bool)? onChanged}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10)
+          ]),
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Padding(
+        padding: const EdgeInsets.all(AppConstants.padding_15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+            ),
+            SizedBox(
+              width: 45,
+              child: Transform.scale(
+                scaleX: 0.84,
+                scaleY: 0.8,
+                child: CupertinoSwitch(
+                  value: isHebrewLang,
+                  onChanged: onChanged,
+                  activeColor: AppColors.mainColor,
+                  thumbColor: AppColors.whiteColor,
+                  trackColor: AppColors.lightBorderColor,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

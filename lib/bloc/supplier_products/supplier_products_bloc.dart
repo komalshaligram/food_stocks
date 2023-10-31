@@ -11,6 +11,8 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/model/product_stock_model/product_stock_model.dart';
+import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 
 part 'supplier_products_event.dart';
@@ -26,8 +28,8 @@ class SupplierProductsBloc
       if (event is _GetSupplierProductsListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          SupplierProductsReqModel request =
-              SupplierProductsReqModel(userId: event.supplierId);
+          SupplierProductsReqModel request = SupplierProductsReqModel(
+              userId: event.supplierId, pageLimit: 18, pageNum: 1);
           debugPrint('supplier products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getSupplierProductsUrl, data: request.toJson());

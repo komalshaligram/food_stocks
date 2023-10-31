@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
@@ -29,7 +30,7 @@ class SupplierProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => SupplierProductsBloc()
         ..add(SupplierProductsEvent.getSupplierProductsListEvent(
@@ -146,43 +147,55 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   state.isShimmering
                       ? SupplierProductsScreenShimmerWidget()
                       : state.productList.isEmpty
-                      ? Container(
-                    height: getScreenHeight(context) - 56,
-                    width: getScreenWidth(context),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Currently this Supplier has no products',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.textColor),
-                    ),
-                  )
-                      : GridView.builder(
-                    itemCount: state.productList.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_5),
-                    gridDelegate:
-                    SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio:
-                        (getScreenWidth(context) + 50) /
-                            getScreenHeight(context)),
-                    itemBuilder: (context, index) =>
-                        buildSupplierProducts(
-                            context: context,
-                                      productName: state
-                                              .productList[index].productName ??
-                                          '',
-                                      productPrice: state
-                                              .productList[index].numberOfUnit
-                                              ?.toDouble() ??
-                                          0.0,
-                                      productImage:
-                                          state.productList[index].mainImage ??
-                                              '',
-                                      isRTL: isRTLContent(context: context)),
+                          ? Container(
+                              height: getScreenHeight(context) - 56,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Currently this Supplier has no products',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
+                          : NotificationListener<ScrollNotification>(
+                              child: GridView.builder(
+                                itemCount: state.productList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_5),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        childAspectRatio:
+                                            (getScreenWidth(context) + 50) /
+                                                getScreenHeight(context)),
+                                itemBuilder: (context, index) =>
+                                    buildSupplierProducts(
+                                        context: context,
+                                        productName: state.productList[index]
+                                                .productName ??
+                                            '',
+                                        productPrice: state
+                                                .productList[index].numberOfUnit
+                                                ?.toDouble() ??
+                                            0.0,
+                                        productImage: state
+                                                .productList[index].mainImage ??
+                                            '',
+                                        isRTL: isRTLContent(context: context)),
+                              ),
+                              onNotification: (notification) {
+                                if (notification.metrics.pixels ==
+                                    notification.metrics.maxScrollExtent) {
+                                  debugPrint('end of screen');
+                                  return true;
+                                } else {
+                                  debugPrint('not end of screen');
+                                  return false;
+                                }
+                              },
                             ),
                 ],
               ),
@@ -275,6 +288,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 style: AppStyles.rkBoldTextStyle(
                     size: AppConstants.font_14, color: AppColors.blackColor),
                 textAlign: TextAlign.center,
+                maxLines: 1,
               ),
             ),
             4.height,

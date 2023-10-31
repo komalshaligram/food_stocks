@@ -22,8 +22,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
   LogInBloc() : super(LogInState.initial()) {
     on<LogInEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -45,12 +44,19 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
-            showSnackBar(context: event.context, title: response.message ?? AppStrings.somethingWrongString, bgColor: AppColors.redColor);
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
             emit(state.copyWith(
-                isLoading: false,
-              ));
+              isLoading: false,
+            ));
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
+        }
       }
     });
   }

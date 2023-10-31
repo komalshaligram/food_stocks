@@ -101,57 +101,14 @@ class Supplier with _$Supplier {
 @freezed
 class Sale with _$Sale {
   const factory Sale({
-    @JsonKey(name: "saleId") SaleId? saleId,
-    @JsonKey(name: "sd") Sd? sd,
-    @JsonKey(name: "salesName") SalesName? salesName,
+    @JsonKey(name: "saleId") String? saleId,
+    @JsonKey(name: "sd") String? sd,
+    @JsonKey(name: "salesName") String? salesName,
     @JsonKey(name: "discountPercentage") int? discountPercentage,
-    @JsonKey(name: "salesDescription") SalesDescription? salesDescription,
+    @JsonKey(name: "salesDescription") String? salesDescription,
     @JsonKey(name: "fromDate") DateTime? fromDate,
     @JsonKey(name: "endDate") DateTime? endDate,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
-}
-
-enum SaleId {
-  @JsonValue("653a36f96321167806032524")
-  THE_653_A36_F96321167806032524
-}
-
-final saleIdValues = EnumValues(
-    {"653a36f96321167806032524": SaleId.THE_653_A36_F96321167806032524});
-
-enum SalesDescription {
-  @JsonValue("<p>Sale Description</p>")
-  P_SALE_DESCRIPTION_P
-}
-
-final salesDescriptionValues = EnumValues(
-    {"<p>Sale Description</p>": SalesDescription.P_SALE_DESCRIPTION_P});
-
-enum SalesName {
-  @JsonValue("Levi's Sale")
-  LEVI_S_SALE
-}
-
-final salesNameValues = EnumValues({"Levi's Sale": SalesName.LEVI_S_SALE});
-
-enum Sd {
-  @JsonValue("653a326b66a6f5add6e026e4")
-  THE_653_A326_B66_A6_F5_ADD6_E026_E4
-}
-
-final sdValues = EnumValues(
-    {"653a326b66a6f5add6e026e4": Sd.THE_653_A326_B66_A6_F5_ADD6_E026_E4});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

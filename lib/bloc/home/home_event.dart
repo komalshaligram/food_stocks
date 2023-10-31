@@ -19,4 +19,7 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.changeNoteOfProduct({required String newNote}) =
       _ChangeNoteOfProduct;
+
+  const factory HomeEvent.verifyProductStockEvent(
+      {required BuildContext context}) = _VerifyProductStockEvent;
 }

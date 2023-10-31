@@ -51,12 +51,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
+      create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
-        final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          locale: provider.locale,
+          locale: Provider.of<LocaleProvider>(context).locale,
           title: AppStrings.appName,
           initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
