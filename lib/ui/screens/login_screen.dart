@@ -109,6 +109,7 @@ class LogInScreenWidget extends StatelessWidget {
                           onPressed: state.isLoading
                               ? null
                               : () {
+                              Exception();
                                   if (_formKey.currentState?.validate() ??
                                       false) {
                                       context.read<LogInBloc>().add(

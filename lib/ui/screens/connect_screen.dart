@@ -36,6 +36,10 @@ class ConnectScreen extends StatelessWidget {
                 SizedBox(
                   height: getScreenHeight(context) * 0.07,
                 ),
+                TextButton(
+                  onPressed: () => throw Exception(),
+                  child: const Text("Throw Test Exception"),
+                ),
                 CustomButtonWidget(
                   buttonText: AppLocalizations.of(context)!.register,
                   bGColor: AppColors.mainColor,
