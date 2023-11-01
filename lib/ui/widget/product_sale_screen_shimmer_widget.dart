@@ -12,7 +12,7 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      itemCount: 8,
+      itemCount: AppConstants.saleProductPageLimit,
       padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, childAspectRatio: 9 / 13),

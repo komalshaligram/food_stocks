@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/widget/common_pagination_end_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -54,56 +54,76 @@ class ProductSaleScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            child: state.isShimmering
-                ? ProductSaleScreenShimmerWidget()
-                : (state.productSalesList.data?.length ?? 0) == 0
-                    ? Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Currently products are not on sale',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.textColor),
-                          ),
-                        ],
-                      )
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.productSalesList.data?.length ?? 0,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_10),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, childAspectRatio: 9 / 13),
-                        itemBuilder: (context, index) {
-                          return buildProductSaleListItem(
-                            context: context,
-                            saleImage:
-                                state.productSalesList.data?[index].mainImage ??
-                                    '',
-                            title:
-                                state.productSalesList.data?[index].salesName ??
-                                    '',
-                            description: state.productSalesList.data?[index]
-                                    .salesDescription ??
-                                '',
-                            price: state.productSalesList.data?[index]
-                                    .discountPercentage
-                                    ?.toDouble() ??
-                                0.0,
-                            onButtonTap: () {
-                              showProductDetails(
+              child: NotificationListener<ScrollNotification>(
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                state.isShimmering
+                    ? ProductSaleScreenShimmerWidget()
+                    : state.productSalesList.length == 0
+                        ? Container(
+                            height: getScreenHeight(context) - 56,
+                            width: getScreenWidth(context),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Currently products are not on sale',
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.smallFont,
+                                  color: AppColors.textColor),
+                            ),
+                          )
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.productSalesList.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_10),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    childAspectRatio: 9 / 13),
+                            itemBuilder: (context, index) {
+                              return buildProductSaleListItem(
                                 context: context,
-                                productId:
-                                    state.productSalesList.data?[index].id ??
+                                saleImage:
+                                    state.productSalesList[index].mainImage ??
                                         '',
+                                title:
+                                    state.productSalesList[index].salesName ??
+                                        '',
+                                description: state.productSalesList[index]
+                                        .salesDescription ??
+                                    '',
+                                price: state.productSalesList[index]
+                                        .discountPercentage
+                                        ?.toDouble() ??
+                                    0.0,
+                                onButtonTap: () {
+                                  showProductDetails(
+                                    context: context,
+                                    productId:
+                                        state.productSalesList[index].id ?? '',
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
-          ),
+                          ),
+                state.isLoadMore ? ProductSaleScreenShimmerWidget() : 0.width,
+                state.isBottomOfProducts
+                    ? CommonPaginationEndWidget(pageEndText: 'No more Products')
+                    : 0.width,
+              ],
+            )),
+            onNotification: (notification) {
+              if (notification.metrics.pixels ==
+                  notification.metrics.maxScrollExtent) {
+                context.read<ProductSaleBloc>().add(
+                    ProductSaleEvent.getProductSalesListEvent(
+                        context: context));
+              }
+              return true;
+            },
+          )),
         );
       },
     );

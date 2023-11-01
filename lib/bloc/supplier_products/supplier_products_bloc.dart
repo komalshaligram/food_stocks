@@ -6,14 +6,13 @@ import 'package:food_stock/data/model/res_model/supplier_products_res_model/supp
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 
 part 'supplier_products_event.dart';
 
@@ -25,25 +24,42 @@ class SupplierProductsBloc
     extends Bloc<SupplierProductsEvent, SupplierProductsState> {
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
-      if (event is _GetSupplierProductsListEvent) {
+      if (event is _GetSupplierProductsIdEvent) {
+        emit(state.copyWith(supplierId: event.supplierId));
+      } else if (event is _GetSupplierProductsListEvent) {
+        if (state.isBottomOfProducts) {
+          return;
+        }
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(
+              isShimmering: state.pageNum == 0 ? true : false,
+              isLoadMore: state.pageNum == 0 ? false : true));
           SupplierProductsReqModel request = SupplierProductsReqModel(
-              userId: event.supplierId, pageLimit: 18, pageNum: 1);
+              supplierId: state.supplierId,
+              pageLimit: AppConstants.supplierProductPageLimit,
+              pageNum: state.pageNum + 1);
           debugPrint('supplier products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getSupplierProductsUrl, data: request.toJson());
           SupplierProductsResModel response =
               SupplierProductsResModel.fromJson(res);
           debugPrint('supplier Products res = ${response.data}');
-          response.data?.forEach((element) {
-            debugPrint('supplier Products res = ${element.id}');
-          });
-
           if (response.status == 200) {
+            List<Datum> productList = state.productList.toList(growable: true);
+            productList.addAll(response.data ?? []);
+            debugPrint('new product list len = ${productList.length}');
             emit(state.copyWith(
-                productList: response.data ?? [], isShimmering: false));
+                productList: productList,
+                pageNum: state.pageNum + 1,
+                isShimmering: false,
+                isLoadMore: false));
+            emit(state.copyWith(
+                isBottomOfProducts:
+                    state.pageNum == (response.metaData?.totalFilteredPage ?? 0)
+                        ? true
+                        : false));
           } else {
+            emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,

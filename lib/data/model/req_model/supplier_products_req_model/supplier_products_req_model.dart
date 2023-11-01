@@ -20,7 +20,7 @@ class SupplierProductsReqModel with _$SupplierProductsReqModel {
   const factory SupplierProductsReqModel({
     @JsonKey(name: "pageLimit") int? pageLimit,
     @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "supplierId") String? userId,
+    @JsonKey(name: "supplierId") String? supplierId,
   }) = _SupplierProductsReqModel;
 
   factory SupplierProductsReqModel.fromJson(Map<String, dynamic> json) =>

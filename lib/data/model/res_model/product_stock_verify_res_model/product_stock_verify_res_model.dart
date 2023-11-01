@@ -52,7 +52,7 @@ class StockData with _$StockData {
   const factory StockData({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "productStock") int? productStock,
-    @JsonKey(name: "productPrice") int? productPrice,
+    @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "email") String? email,
     @JsonKey(name: "contactName") String? contactName,

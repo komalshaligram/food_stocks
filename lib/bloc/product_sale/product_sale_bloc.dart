@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/error/exceptions.dart';
@@ -25,31 +27,59 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
       if (event is _GetProductSalesListEvent) {
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfProducts) {
+          return;
+        }
         try {
-          emit(state.copyWith(isShimmering: true));
-          final res =
-              await DioClient(event.context).post(AppUrls.getSaleProductsUrl);
+          emit(state.copyWith(
+              isShimmering: state.pageNum == 0 ? true : false,
+              isLoadMore: state.pageNum == 0 ? false : true));
+          final res = await DioClient(event.context).post(
+              AppUrls.getSaleProductsUrl,
+              data: ProductSalesReqModel(
+                      pageNum: state.pageNum + 1,
+                      pageLimit: AppConstants.saleProductPageLimit)
+                  .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
-          debugPrint('product sales = ${response.data}');
           if (response.status == 200) {
-            List<ProductStockModel> productStockList = [];
+            List<Datum> productSaleList =
+                state.productSalesList.toList(growable: true);
+            productSaleList.addAll(response.data ?? []);
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
             if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
               for (int i = 0; i < (response.data?.length ?? 0); i++) {
                 productStockList.add(
                     ProductStockModel(productId: response.data?[i].id ?? ''));
               }
             }
+            debugPrint('new product sale list len = ${productSaleList.length}');
+            debugPrint(
+                'new product sale stock list len = ${productStockList.length}');
             emit(state.copyWith(
-                productSalesList: response,
+                productSalesList: productSaleList,
                 productStockList: productStockList,
+                pageNum: state.pageNum + 1,
+                isLoadMore: false,
                 isShimmering: false));
+            emit(state.copyWith(
+                isBottomOfProducts:
+                    state.pageNum == (response.metaData?.totalFilteredPage ?? 0)
+                        ? true
+                        : false));
           } else {
+            emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isLoadMore: false));
+        }
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
@@ -172,6 +202,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
+          emit(state.copyWith(isLoading: false));
           Navigator.pop(event.context);
         }
       }

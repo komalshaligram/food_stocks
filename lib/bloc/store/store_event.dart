@@ -29,4 +29,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.verifyProductStockEvent(
       {required BuildContext context}) = _VerifyProductStockEvent;
+
+  const factory StoreEvent.getScanProductDetailsEvent(
+      {required String scanResult}) = _GetScanProductDetailsEvent;
 }

@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_stock_verify_req_model/product_stock_verify_req_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_stock_verify_res_model/product_stock_verify_res_model.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,8 +43,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res =
-              await DioClient(event.context).post(AppUrls.getSaleProductsUrl);
+          final res = await DioClient(event.context).post(
+              AppUrls.getSaleProductsUrl,
+              data: ProductSalesReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                  .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductStockModel> productStockList = [];

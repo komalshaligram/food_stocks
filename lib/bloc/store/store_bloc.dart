@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
+import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import 'package:food_stock/data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
@@ -14,6 +17,7 @@ import '../../data/model/req_model/product_stock_verify_req_model/product_stock_
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/product_stock_verify_res_model/product_stock_verify_res_model.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'store_event.dart';
@@ -34,8 +38,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       } else if (event is _GetProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context)
-              .get(path: AppUrls.getProductCategoriesUrl);
+          final res = await DioClient(event.context).post(
+              AppUrls.getProductCategoriesUrl,
+              data: ProductCategoriesReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                  .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
           debugPrint('product categories = ${response.data?.categories}');
@@ -53,8 +60,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res =
-              await DioClient(event.context).post(AppUrls.getSaleProductsUrl);
+          final res = await DioClient(event.context).post(
+              AppUrls.getSaleProductsUrl,
+              data: ProductSalesReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                  .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductStockModel> productStockList = [];
@@ -78,8 +88,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       } else if (event is _GetSuppliersListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
-          final res =
-              await DioClient(event.context).post(AppUrls.getSuppliersUrl);
+          final res = await DioClient(event.context).post(
+              AppUrls.getSuppliersUrl,
+              data: SuppliersReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                  .toJson());
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
@@ -215,7 +228,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } on ServerException {
           Navigator.pop(event.context);
         }
-      }
+      } else if (event is _GetScanProductDetailsEvent) {}
     });
   }
 }

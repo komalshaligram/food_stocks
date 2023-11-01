@@ -20,11 +20,12 @@ class AppUrls {
   static const String operationTimeUrl = '/v1/clients/operationTime';
   static const String cityListUrl = '/v1/settings/Cities';
   static const String removeFileUrl = '/v1/files/remove';
-  static const String getProductCategoriesUrl = '/v1/settings/Categories';
+  static const String getProductCategoriesUrl = '/v1/store/getCategories';
   static const String getProductSalesUrl = '/v1/sales/getSales';
   static const String getSaleProductsUrl = '/v1/store/SaleProducts';
   static const String getSuppliersUrl = '/v1/suppliers/getSupplier';
-  static const String getSupplierProductsUrl = '/v1/products/getAllProducts';
+  static const String getSupplierProductsUrl =
+      '/v1/supplierProduct/getSupplierProducts';
   static const String getProductDetailsUrl = '/v1/store/ProductDetail';
 
 // static const String getProductSuppliersUrl = '/v1/supplierProduct/getSupplierProducts';

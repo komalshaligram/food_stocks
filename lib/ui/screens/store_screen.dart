@@ -78,12 +78,8 @@ class StoreScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           height: 110,
                                           child: ListView.builder(
-                                            itemCount: state.productCategoryList
-                                                        .length <
-                                                    6
-                                                ? state
-                                                    .productCategoryList.length
-                                                : 6 /*state.productCategoryList.length.clamp(6, 6).toInt()*/,
+                                            itemCount: state
+                                                .productCategoryList.length,
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
                                             padding: EdgeInsets.symmetric(
@@ -157,13 +153,8 @@ class StoreScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           height: 110,
                                           child: ListView.builder(
-                                            itemCount: (state.suppliersList.data
-                                                            ?.length ??
-                                                        0) <
-                                                    5
-                                                ? state
-                                                    .suppliersList.data?.length
-                                                : 6,
+                                            itemCount: state
+                                                .suppliersList.data?.length,
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
                                             padding: EdgeInsets.symmetric(
@@ -223,13 +214,8 @@ class StoreScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           height: 190,
                                           child: ListView.builder(
-                                            itemCount: (state.productSalesList
-                                                            .data?.length ??
-                                                        0) <
-                                                    6
-                                                ? state.productSalesList.data
-                                                    ?.length
-                                                : 6,
+                                            itemCount: state
+                                                .productSalesList.data?.length,
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
                                             padding: EdgeInsets.symmetric(
@@ -319,8 +305,6 @@ class StoreScreenWidget extends StatelessWidget {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
                     onScanTap: () async {
-                      // Navigator.pushNamed(
-                      //     context, RouteDefine.qrScanScreen.name);
                       String result = await scanBarcodeOrQRCode(
                           context: context,
                           cancelText: AppLocalizations.of(context)!.cancel,
@@ -332,7 +316,7 @@ class StoreScreenWidget extends StatelessWidget {
                             context: context,
                             title: result,
                             bgColor: AppColors.mainColor);
-                      }
+                      } else {}
                     },
                     controller: TextEditingController(),
                     onOutSideTap: () {
@@ -676,7 +660,7 @@ class StoreScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
               child: Image.network(
                 "${AppUrls.baseFileUrl}$companyLogo",
-                fit: BoxFit.fill,
+                fit: BoxFit.scaleDown,
                 height: 70,
                 width: 90,
                 loadingBuilder: (context, child, loadingProgress) {
@@ -689,10 +673,6 @@ class StoreScreenWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                         ),
-                        // alignment: Alignment.center,
-                        // child: CupertinoActivityIndicator(
-                        //   color: AppColors.blackColor,
-                        // ),
                       ),
                     );
                   }
