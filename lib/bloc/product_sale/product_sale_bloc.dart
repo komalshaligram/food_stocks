@@ -67,8 +67,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isShimmering: false));
             emit(state.copyWith(
                 isBottomOfProducts:
-                    state.pageNum == (response.metaData?.totalFilteredPage ?? 0)
-                        ? true
+                    productSaleList.length ==
+                        (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
                         : false));
           } else {
             emit(state.copyWith(isLoadMore: false));

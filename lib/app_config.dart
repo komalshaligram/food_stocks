@@ -4,26 +4,37 @@ import 'package:flutter/services.dart';
 class AppConfig {
   final String flavor;
   final String appName;
+  final String appBaseUrl;
   final Color primaryColor;
 
   AppConfig(
       {required this.flavor,
       required this.appName,
+      required this.appBaseUrl,
       required this.primaryColor});
 
   factory AppConfig.dev() {
     return AppConfig(
-        flavor: 'dev', appName: 'Food Stock Dev', primaryColor: Colors.blue);
+        flavor: 'dev',
+        appName: 'Food Stock Dev',
+        appBaseUrl: 'http://192.168.1.46:3000/api',
+        primaryColor: Colors.blue);
   }
 
   factory AppConfig.stag() {
     return AppConfig(
-        flavor: 'stag', appName: 'Food Stock', primaryColor: Colors.green);
+        flavor: 'stag',
+        appName: 'Food Stock',
+        appBaseUrl: 'http://192.168.1.46:3000/api',
+        primaryColor: Colors.green);
   }
 
   factory AppConfig.prod() {
     return AppConfig(
-        flavor: 'prod', appName: 'Food Stock Prod', primaryColor: Colors.red);
+        flavor: 'prod',
+        appName: 'Food Stock Prod',
+        appBaseUrl: 'http://182.70.118.201:3000/api',
+        primaryColor: Colors.red);
   }
 
   static Future<void> initializeAppConfig(BuildContext context) async {
@@ -45,8 +56,23 @@ class AppConfig {
     }
     (context as Element).markNeedsBuild();
 
-    print('STARTED WITH FLAVOR ${AppConfigManager.appConfig!.flavor}');
+    debugPrint('STARTED WITH FLAVOR ${AppConfigManager.appConfig!.flavor}');
   }
+//
+// static Future<String> getAppUrl() async {
+//   final String? flavor =
+//       await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+//   switch (flavor) {
+//     case 'dev':
+//       return AppConfig.dev().appBaseUrl;
+//     case 'stag':
+//       return AppConfig.stag().appBaseUrl;
+//     case 'prod':
+//       return AppConfig.prod().appBaseUrl;
+//     default:
+//       return AppConfig.dev().appBaseUrl;
+//   }
+// }
 }
 
 class AppConfigManager {

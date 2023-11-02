@@ -11,6 +11,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default([]) List<String> productSupplierIds,
     @Default(0) int quantity,
     @Default('') String note,
+    @Default(0) int stock,
   }) = _ProductStockModel;
 
   factory ProductStockModel.fromJson(Map<String, dynamic> json) =>

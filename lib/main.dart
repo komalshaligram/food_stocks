@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      AppConfig.initializeAppConfig(context);
+      await AppConfig.initializeAppConfig(context);
     });
     super.initState();
   }

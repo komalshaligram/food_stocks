@@ -17,7 +17,11 @@ class AppStrings {
   static const okString = 'ok';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
+  static const ascendingString = 'asc';
+  static const descendingString = 'desc';
+  static const planogramSortFieldString = 'planogramName';
   static const failedToLoadString = 'Failed to load';
+  static const outOfStockString = 'Out of Stock';
 
   //language Strings
   static const englishString = 'en';

@@ -1,9 +1,9 @@
 class AppUrls {
   static const String baseUrl =
-      'http://182.70.118.201:3000/api' /*'http://192.168.1.80:3001/api'*/;
+      /*'http://182.70.118.201:3000/api'*/ 'http://192.168.1.46:8080/api';
 
   static const String baseFileUrl =
-      'http://182.70.118.201:3000/public/' /*'http://192.168.1.80:3001/public/'*/;
+      'http://182.70.118.201:3000/public/' /*'http://192.168.1.46:8080/public/'*/;
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
@@ -27,6 +27,8 @@ class AppUrls {
   static const String getSupplierProductsUrl =
       '/v1/supplierProduct/getSupplierProducts';
   static const String getProductDetailsUrl = '/v1/store/ProductDetail';
+  static const String getPlanogramProductsUrl =
+      '/v1/store/getPalnogramProducts';
 
 // static const String getProductSuppliersUrl = '/v1/supplierProduct/getSupplierProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';

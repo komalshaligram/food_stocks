@@ -61,10 +61,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
         color: AppColors.whiteColor,
       ),
       padding: EdgeInsets.only(
-        top: AppConstants.padding_10,
+          top: AppConstants.padding_10,
           bottom: MediaQuery.of(context).viewInsets.bottom),
       clipBehavior: Clip.hardEdge,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -171,6 +172,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
+                          flex: 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -187,14 +189,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     size: AppConstants.font_14,
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w400),
-                                maxLines: 1,
+                                maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
                         Expanded(
+                          flex: 3,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GestureDetector(
@@ -202,6 +206,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 child: Container(
                                   height: 50,
                                   width: 50,
+                                  // padding: EdgeInsets.symmetric(
+                                  //     horizontal: AppConstants.padding_10),
                                   decoration: BoxDecoration(
                                     color: AppColors.iconBGColor,
                                     borderRadius: BorderRadius.only(
@@ -233,7 +239,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ),
                               5.width,
                               Container(
-                                width: 80,
+                                width: 75,
                                 height: 50,
                                 decoration: BoxDecoration(
                                   color: AppColors.iconBGColor,
@@ -245,7 +251,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     bottomRight:
                                         Radius.circular(AppConstants.radius_5),
                                     topRight:
-                                        Radius.circular(AppConstants.radius_5),
+                                    Radius.circular(AppConstants.radius_5),
                                   ),
                                   border: Border.all(
                                       color: AppColors.navSelectedColor,
@@ -266,6 +272,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 child: Container(
                                   height: 50,
                                   width: 50,
+                                  // padding: EdgeInsets.symmetric(
+                                  //     horizontal: AppConstants.padding_10),
                                   decoration: BoxDecoration(
                                     color: AppColors.iconBGColor,
                                     borderRadius: BorderRadius.only(
@@ -367,7 +375,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             controller: noteController,
                             onChanged: onNoteChanged,
                             decoration:
-                                InputDecoration(border: InputBorder.none),
+                            InputDecoration(border: InputBorder.none),
                             maxLines: 5,
                           ),
                         )

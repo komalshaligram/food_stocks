@@ -12,7 +12,7 @@ class CommonShimmerWidget extends StatelessWidget {
   const CommonShimmerWidget({
     super.key,
     required this.child,
-    this.baseColor = const Color(0xCCE0E0E0),
+    this.baseColor = const Color(0x99E0E0E0),
     this.highlightColor = const Color(0xffF5F5F5),
     this.direction = ShimmerDirection.ltr,
     this.period = const Duration(milliseconds: 3000),
