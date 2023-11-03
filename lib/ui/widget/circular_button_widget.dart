@@ -41,7 +41,7 @@ class CircularButtonWidget extends StatelessWidget {
             style: TextStyle(
                 color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
             children: <TextSpan>[
-              TextSpan(text: ': ${buttonValue}',
+              TextSpan(text: ' : ${buttonValue}',
                   style: TextStyle(
                       color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
               ),

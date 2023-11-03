@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
-import '../../data/model/order_model/order_details_model.dart';
 import '../../data/model/req_model/get_all_order_req_model/get_all_order_req_model.dart';
 import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';

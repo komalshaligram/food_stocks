@@ -7,6 +7,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
@@ -44,8 +45,6 @@ class OrderScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.orders,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                 /* Navigator.of(context)
-                      .pushNamed(RouteDefine.menuScreen.name);*/
                   Navigator.pop(context);
                 },
               ),
@@ -101,7 +100,9 @@ class OrderScreenWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(
-                          context, RouteDefine.orderDetailsScreen.name);
+                          context, RouteDefine.orderDetailsScreen.name ,
+                          arguments: {AppStrings.idString: state.orderList.data?[index].id }
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(

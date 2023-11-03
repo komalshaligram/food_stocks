@@ -1,18 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/product_details/product_details_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
+import '../widget/product_details_screen-shimmer_widget.dart';
 
 class ProductDetailsRoute {
   static Widget get route => ProductDetailsScreen();
@@ -23,18 +27,31 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => ProductDetailsBloc(),
-      child: ProductDetailsScreenWidget(),
+      create: (context) => ProductDetailsBloc()
+        ..add(ProductDetailsEvent.getProductDataEvent(
+            context: context,
+            productIndex: args?[AppStrings.productIndexString] ?? 0,
+            orderId: args?[AppStrings.idString] ?? '')),
+      child: ProductDetailsScreenWidget(
+          productIndex: args?[AppStrings.productIndexString] ?? 0,
+          orderId: args?[AppStrings.idString] ?? 0),
     );
   }
 }
 
 class ProductDetailsScreenWidget extends StatelessWidget {
-  ProductDetailsScreenWidget({super.key});
+  int productIndex;
+  String orderId;
 
-  int selectedRadioTile = 0;
+  ProductDetailsScreenWidget(
+      {super.key, required this.productIndex, required this.orderId});
+
   TextEditingController addProblemController = TextEditingController();
+  TextEditingController driverController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,216 +68,299 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
-                  title: '123456',
+                  title: orderId,
                   iconData: Icons.arrow_back_ios_sharp,
                   trailingWidget: Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: AppConstants.padding_10,
                     ),
-                    child: CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.total,
-                      buttonValue: '12,450₪',
-                    ),
+                    child:
+                        (state.orderList.data?.ordersBySupplier?.length ?? 0) ==
+                                0
+                            ? CupertinoActivityIndicator()
+                            : CircularButtonWidget(
+                                buttonName: AppLocalizations.of(context)!.total,
+                                buttonValue:
+                                    '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
+                              ),
                   ),
                   onTap: () {
                     Navigator.pop(context);
                   },
                 ),
               ),
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(AppConstants.padding_10),
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_15,
-                        horizontal: AppConstants.padding_10),
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      boxShadow: [
-                        BoxShadow(
-                            color: AppColors.shadowColor.withOpacity(0.15),
-                            blurRadius: 1),
-                      ],
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_5)),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+              body: (state.orderList.data?.ordersBySupplier?.length ?? 0) == 0
+                  ? ProductDetailsScreenShimmerWidget()
+                  : Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.supplier_name,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor,
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.pending_delivery,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.orangeColor,
-                                  fontWeight: FontWeight.w700),
-                            )
-                          ],
-                        ),
-                        7.height,
-                        Row(
-                          children: [
-                            CommonOrderContentWidget(
-                              flexValue: 1,
-                              title: AppLocalizations.of(context)!.products,
-                              value: "23",
-                              titleColor: AppColors.mainColor,
-                              valueColor: AppColors.blackColor,
-                              valueTextWeight: FontWeight.w700,
-                              valueTextSize: AppConstants.mediumFont,
-                            ),
-                            5.width,
-                            CommonOrderContentWidget(
-                              flexValue: 2,
-                              title:
-                                  AppLocalizations.of(context)!.delivery_date,
-                              value: "12.02.23 10:00-12:00",
-                              titleColor: AppColors.mainColor,
-                              valueColor: AppColors.blackColor,
-                              valueTextSize: AppConstants.font_10,
-                              valueTextWeight: FontWeight.w500,
-                              columnPadding: AppConstants.padding_10,
-                            ),
-                            5.width,
-                            CommonOrderContentWidget(
-                              flexValue: 2,
-                              title: AppLocalizations.of(context)!.total_order,
-                              value: '18,360₪',
-                              titleColor: AppColors.mainColor,
-                              valueColor: AppColors.blackColor,
-                              valueTextWeight: FontWeight.w500,
-                              valueTextSize: AppConstants.smallFont,
-                            ),
-                          ],
-                        ),
-                        7.height,
-                        RichText(
-                          text: TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .supplier_order_number,
-                            style: TextStyle(
-                                color: AppColors.blackColor,
-                                fontSize: AppConstants.font_14,
-                                fontWeight: FontWeight.w400),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: ' : 1524812',
-                                  style: TextStyle(
+                        Container(
+                          margin: EdgeInsets.all(AppConstants.padding_10),
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_15,
+                              horizontal: AppConstants.padding_10),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            boxShadow: [
+                              BoxShadow(
+                                  color:
+                                      AppColors.shadowColor.withOpacity(0.15),
+                                  blurRadius: 10),
+                            ],
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_5)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state
+                                        .orderList
+                                        .data!
+                                        .ordersBySupplier![productIndex]
+                                        .supplierName!
+                                        .toString(),
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
                                       color: AppColors.blackColor,
-                                      fontSize: AppConstants.font_14,
-                                      fontWeight: FontWeight.w700)),
+                                    ),
+                                  ),
+                                  Text(
+                                    state
+                                        .orderList
+                                        .data!
+                                        .ordersBySupplier![productIndex]
+                                        .deliverStatus!
+                                        .statusName
+                                        .toString(),
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.orangeColor,
+                                        fontWeight: FontWeight.w700),
+                                  )
+                                ],
+                              ),
+                              7.height,
+                              Row(
+                                children: [
+                                  CommonOrderContentWidget(
+                                    flexValue: 1,
+                                    title:
+                                        AppLocalizations.of(context)!.products,
+                                    value: state
+                                        .orderList
+                                        .data!
+                                        .ordersBySupplier![productIndex]
+                                        .products!
+                                        .length
+                                        .toString(),
+                                    titleColor: AppColors.mainColor,
+                                    valueColor: AppColors.blackColor,
+                                    valueTextWeight: FontWeight.w700,
+                                    valueTextSize: AppConstants.mediumFont,
+                                  ),
+                                  5.width,
+                                  CommonOrderContentWidget(
+                                    flexValue: 2,
+                                    title: AppLocalizations.of(context)!
+                                        .delivery_date,
+                                    value: /*state
+                                        .orderList
+                                        .data!
+                                        .ordersBySupplier![productIndex]
+                                        .orderDate
+                                        .toString()*/'-',
+                                    titleColor: AppColors.mainColor,
+                                    valueColor: AppColors.blackColor,
+                                    valueTextSize: AppConstants.font_10,
+                                    valueTextWeight: FontWeight.w500,
+                                    columnPadding: AppConstants.padding_10,
+                                  ),
+                                  5.width,
+                                  CommonOrderContentWidget(
+                                    flexValue: 2,
+                                    title: AppLocalizations.of(context)!
+                                        .total_order,
+                                    value:
+                                        '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                                    titleColor: AppColors.mainColor,
+                                    valueColor: AppColors.blackColor,
+                                    valueTextWeight: FontWeight.w500,
+                                    valueTextSize: AppConstants.smallFont,
+                                  ),
+                                ],
+                              ),
+                              7.height,
+                             RichText(
+                                text: TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .supplier_order_number,
+                                  style: AppStyles.rkRegularTextStyle(
+                                    color: AppColors.blackColor,
+                                    size: AppConstants.font_14,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: ' : 1524812',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            color: AppColors.blackColor,
+                                            size: AppConstants.font_14,
+                                            fontWeight: FontWeight.w700)),
+                                  ],
+                                ),
+                              ),
+                              7.height,
+                              Text(
+                                AppLocalizations.of(context)!.driver_name,
+                                style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.font_14,
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                              5.height,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Text(
+                                  //   'חיים משה',
+                                  //   style: AppStyles.rkRegularTextStyle(
+                                  //       size: AppConstants.mediumFont,
+                                  //       color: AppColors.blackColor,
+                                  //       fontWeight: FontWeight.w600),
+                                  // ),
+                              Container(
+                                width: 150,
+                                height: 40,
+                                child: CustomFormField(
+                          controller: driverController,
+                          keyboardType: TextInputType.text,
+                        hint: '',
+                        validator: '',
+                          fillColor: Colors.white,
+                        ),
+                              ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppConstants.radius_100)),
+                                      border: Border.all(
+                                        color: AppColors.borderColor,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Container(
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: AppConstants.padding_5,
+                                            vertical: AppConstants.padding_5),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mainColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppConstants.radius_100)),
+                                          border: Border.all(
+                                            color: AppColors.whiteColor,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Container(
+                                          width: 150,
+                                          height: 35,
+                                          child: CustomFormField(
+                                            controller: phoneNumberController,
+                                            keyboardType: TextInputType.number,
+                                            hint: '',
+                                            validator: AppStrings.mobileValString,
+                                            fillColor: Colors.white,
+                                            border: 30,
+                                          ),
+                                        ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
-                        7.height,
-                        Text(
-                          AppLocalizations.of(context)!.driver_name,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5,
+                              horizontal: AppConstants.padding_15),
+                          child: Text(
+                            AppLocalizations.of(context)!.order_products_list,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
                               color: AppColors.blackColor,
-                              fontWeight: FontWeight.w400),
+                            ),
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'חיים משה',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.mediumFont,
-                                  color: AppColors.blackColor,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_100)),
-                                border: Border.all(
-                                  color: AppColors.borderColor,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: AppConstants.padding_10,
-                                      vertical: AppConstants.padding_5),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.mainColor,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            AppConstants.radius_100)),
-                                    border: Border.all(
-                                      color: AppColors.whiteColor,
-                                      width: 1,
+                        Expanded(
+                          child:
+                              (state.orderList.data?.ordersBySupplier?.length ??
+                                          0) ==
+                                      0
+                                  ? CircularProgressIndicator()
+                                  : ListView.builder(
+                                      itemCount: state
+                                          .orderList
+                                          .data!
+                                          .ordersBySupplier![productIndex]
+                                          .products!
+                                          .length,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics: AlwaysScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5),
+                                      itemBuilder: (context, index) =>
+                                          productListItem(
+                                              index: index, context: context),
                                     ),
-                                  ),
-                                  child: Text(
-                                    '054-5858996',
-                                    style: TextStyle(
-                                        color: AppColors.whiteColor,
-                                        fontSize: AppConstants.font_14,
-                                        fontWeight: FontWeight.w700),
-                                  )),
-                            ),
-                          ],
                         ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_5,
-                        horizontal: AppConstants.padding_15),
-                    child: Text(
-                      AppLocalizations.of(context)!.order_products_list,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: state.productList.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_5),
-                      itemBuilder: (context, index) =>
-                          productListItem(index: index, context: context),
-                    ),
-                  ),
-                ],
-              ),
-              bottomSheet: GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                    context, RouteDefine.shipmentVerificationScreen.name),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: AppConstants.padding_20,
-                      horizontal: AppConstants.padding_30),
-                  color: AppColors.pageColor,
-                  child: CustomButtonWidget(
-                    onPressed: () => Navigator.pushNamed(context,
-                        RouteDefine.shipmentVerificationScreen.name
-                          ),
-                    buttonText: AppLocalizations.of(context)!.next,
-                    bGColor: AppColors.mainColor,
-                  ),
+              bottomSheet: Container(
+                padding: EdgeInsets.symmetric(
+                    vertical: AppConstants.padding_20,
+                    horizontal: AppConstants.padding_30),
+                color: AppColors.pageColor,
+                child: CustomButtonWidget(
+                  onPressed: () => Navigator.pushNamed(
+                      context, RouteDefine.shipmentVerificationScreen.name,
+                      arguments: {
+                        AppStrings.supplierNameString: state.orderList.data!
+                            .ordersBySupplier![productIndex].supplierName!
+                            .toString() ?? '',
+                        AppStrings.deliveryStatusString: state
+                            .orderList
+                            .data!
+                            .ordersBySupplier![productIndex]
+                            .deliverStatus.toString(),
+                        AppStrings.totalOrderString: state.orderList.data!
+                            .ordersBySupplier![productIndex].totalPayment
+                            .toString() ?? '',
+                        AppStrings.deliveryDateString: state.orderList.data!
+                            .ordersBySupplier![productIndex].orderDate
+                            .toString() ?? '',
+                        AppStrings.quantityString: state.orderList.data!
+                            .ordersBySupplier![productIndex].products!.length
+                            .toString() ?? '',
+                        AppStrings.totalAmountString: state
+                            .orderList.data!.orderData!.first.totalAmount!
+                            .toString() ?? '',
+                        AppStrings.idString: orderId,
+                      }),
+                  buttonText: AppLocalizations.of(context)!.next,
+                  bGColor: AppColors.mainColor,
                 ),
               ),
             ),
@@ -293,7 +393,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Checkbox(
-                  value: state.productList[index].isProductIssue,
+                  value: state.productListIndex.contains(index) ? true : false,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppConstants.radius_3),
                   ),
@@ -303,48 +403,66 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   ),
                   activeColor: AppColors.mainColor,
                   onChanged: (value) {
+                    print('value_____${value}');
                     bloc.add(ProductDetailsEvent.productProblemEvent(
                         isProductProblem: value!, index: index));
                   }),
-              Image.asset(
-                state.productList[index].productImage!,
+              Image.network(
+                '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage.toString()}',
                 width: AppConstants.containerSize_50,
                 height: AppConstants.containerSize_50,
               ),
               Container(
                 width: 55,
                 child: Text(
-                  state.productList[index].productName!,
-                  style: TextStyle(
-                      color: AppColors.blackColor,
-                      fontSize: AppConstants.font_14,
-                      fontWeight: FontWeight.w400),
+                  state.orderList.data!.ordersBySupplier![productIndex]
+                      .products![index].productName
+                      .toString(),
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14, color: AppColors.blackColor),
                 ),
               ),
               10.width,
               Text(
-                '${state.productList[index].productWeight!.toString() + AppLocalizations.of(context)!.kg}',
-                style: TextStyle(
-                    color: AppColors.blackColor,
-                    fontSize: AppConstants.font_12,
-                    fontWeight: FontWeight.w400),
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].itemWeight.toString() + AppLocalizations.of(context)!.kg}',
+                style: AppStyles.rkRegularTextStyle(
+                  color: AppColors.blackColor,
+                  size: AppConstants.font_12,
+                ),
               ),
               Text(
-                '${state.productList[index].productPrice!.toString() + AppLocalizations.of(context)!.currency}',
-                style: TextStyle(
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
+                style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
-                    fontSize: AppConstants.font_14,
+                    size: AppConstants.font_14,
                     fontWeight: FontWeight.w700),
               ),
               GestureDetector(
                 onTap: () {
-                  state.productList[index].isProductIssue
+                  state.productListIndex.contains(index)
                       ? ProductProblemBottomSheet(
                           context: context,
-                          productName: state.productList[index].productName!,
-                          weight: state.productList[index].productWeight!,
-                          price: state.productList[index].productPrice!,
-                          image: state.productList[index].productImage!,
+                          productName: state
+                              .orderList
+                              .data!
+                              .ordersBySupplier![productIndex]
+                              .products![index]
+                              .productName
+                              .toString(),
+                          weight: state
+                              .orderList
+                              .data!
+                              .ordersBySupplier![productIndex]
+                              .products![index]
+                              .itemWeight!,
+                          price: state
+                              .orderList
+                              .data!
+                              .ordersBySupplier![productIndex]
+                              .products![index]
+                              .totalPayment!,
+                          image:
+                              '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage.toString()}',
                           listIndex: index)
                       : SizedBox();
                 },
@@ -354,7 +472,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       vertical: AppConstants.padding_5,
                       horizontal: AppConstants.padding_5),
                   decoration: BoxDecoration(
-                    color: state.productList[index].isProductIssue
+                    color: state.productListIndex.contains(index)
                         ? AppColors.mainColor
                         : AppColors.lightBorderColor,
                     border: Border.all(color: AppColors.lightGreyColor),
@@ -362,11 +480,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   ),
                   child: Text(
                     AppLocalizations.of(context)!.product_issue,
-                    style: TextStyle(
-                        color: state.productList[index].isProductIssue
+                    style: AppStyles.rkRegularTextStyle(
+                        color: state.productListIndex.contains(index)
                             ? AppColors.whiteColor
                             : AppColors.blackColor,
-                        fontSize: AppConstants.font_12,
+                        size: AppConstants.font_12,
                         fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -407,8 +525,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               create: (context) => ProductDetailsBloc(),
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
-                  selectedRadioTile = state.selectedRadioTile;
-                  weight = state.productList[listIndex].productWeight!;
                   return Container(
                     color: AppColors.whiteColor,
                     child: Padding(
@@ -437,7 +553,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.product_issue,
                                     style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      fontWeight: FontWeight.w400,
                                       color: AppColors.blackColor,
                                     ),
                                   ),
@@ -463,7 +578,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Image.asset(
+                                  Image.network(
                                     image,
                                     width: AppConstants.containerSize_50,
                                     height: AppConstants.containerSize_50,
@@ -471,25 +586,25 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   5.width,
                                   Text(
                                     productName,
-                                    style: TextStyle(
-                                        color: AppColors.blackColor,
-                                        fontSize: AppConstants.font_14,
-                                        fontWeight: FontWeight.w400),
+                                    style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor,
+                                      size: AppConstants.font_14,
+                                    ),
                                   ),
                                   10.width,
                                   Text(
-                                    '${weight.toString() + AppLocalizations.of(context)!.kg}',
-                                    style: TextStyle(
-                                        color: AppColors.blackColor,
-                                        fontSize: AppConstants.font_12,
-                                        fontWeight: FontWeight.w400),
+                                    '${weight.toString()}${AppLocalizations.of(context)!.kg}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor,
+                                      size: AppConstants.font_12,
+                                    ),
                                   ),
                                   10.width,
                                   Text(
                                     '${price.toString() + AppLocalizations.of(context)!.currency}',
-                                    style: TextStyle(
+                                    style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
-                                        fontSize: AppConstants.font_14,
+                                        size: AppConstants.font_14,
                                         fontWeight: FontWeight.w700),
                                   ),
                                 ],
@@ -500,7 +615,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               AppLocalizations.of(context)!.problem_detected,
                               style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
-                                fontWeight: FontWeight.w400,
                                 color: AppColors.blackColor,
                               ),
                             ),
@@ -574,135 +688,156 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       int weight = 0,
       required int listIndex}) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-    return Container(
-      height: value == 4 ? 160 : 50,
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.10),
-              blurRadius: AppConstants.blur_10),
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Radio(
-                    value: value,
-                    fillColor: MaterialStateColor.resolveWith(
-                        (states) => AppColors.greyColor),
-                    groupValue: selectedRadioTile,
-                    activeColor: AppColors.blueColor,
-                    onChanged: (val) {
-                      bloc.add(ProductDetailsEvent.radioButtonEvent(
-                          selectRadioTile: val!));
-                    },
-                  ),
-                  Text(
-                    problem,
-                    style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.blackColor,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Container(
-                    child: Row(
+    return BlocProvider.value(
+      value: context.read<ProductDetailsBloc>(),
+      child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        builder: (context, state) {
+          if (state.productWeight == 0) {
+            weight = weight;
+          } else {
+            weight = state.productWeight;
+          }
+          return Container(
+            height: value == 4 ? 160 : 50,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.10),
+                    blurRadius: AppConstants.blur_10),
+              ],
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       children: [
-                        value == 3
-                            ? GestureDetector(
-                                onTap: () {
-                                  if (selectedRadioTile == 3) {
-                                    bloc.add(ProductDetailsEvent
-                                        .productIncrementEvent(
-                                            productWeight: weight,
-                                            listIndex: listIndex));
-                                  }
-                                },
-                                child: Container(
-                                  width: AppConstants.containerSize_25,
-                                  height: AppConstants.containerSize_25,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(2),
-                                      border: Border.all(
-                                          color: AppColors.greyColor),
-                                      color: AppColors.pageColor),
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 15,
-                                  ),
-                                ),
-                              )
-                            : SizedBox(),
-                        getScreenHeight(context) <= 750 ? 1.width : 8.width,
-                        value == 3
-                            ? Text(
-                                '${weight.toString() + AppLocalizations.of(context)!.kg}',
-                                style: TextStyle(
-                                    color: AppColors.blackColor,
-                                    fontSize: AppConstants.font_12,
-                                    fontWeight: FontWeight.w400),
-                              )
-                            : SizedBox(),
-                        getScreenHeight(context) <= 750 ? 1.width : 8.width,
-                        value == 3
-                            ? GestureDetector(
-                                onTap: () {
-                                  if (selectedRadioTile == 3) {
-                                    bloc.add(ProductDetailsEvent
-                                        .productDecrementEvent(
-                                            productWeight: weight,
-                                            listIndex: listIndex));
-                                  }
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 25,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      border: Border.all(
-                                          color: AppColors.greyColor),
-                                      color: AppColors.pageColor),
-                                  child: Text('-',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.mediumFont)),
-                                ),
-                              )
-                            : SizedBox(),
+                        Radio(
+                          value: value,
+                          fillColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.greyColor),
+                          groupValue: state.selectedRadioTile,
+                          activeColor: AppColors.blueColor,
+                          onChanged: (val) {
+                            bloc.add(ProductDetailsEvent.radioButtonEvent(
+                                selectRadioTile: val!));
+                          },
+                        ),
+                        Text(
+                          problem,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_14,
+                            color: AppColors.blackColor,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          value == 4
-              ? CustomFormField(
-                  fillColor: AppColors.pageColor,
-                  validator: '',
-                  controller: addProblemController,
-                  keyboardType: selectedRadioTile == 4
-                      ? TextInputType.text
-                      : TextInputType.none,
-                  hint: AppLocalizations.of(context)!.add_text,
-                  maxLines: 5,
-                  isBorderVisible: false,
-                  textInputAction: TextInputAction.done,
-                  contentPaddingTop: AppConstants.padding_8,
-                )
-              : SizedBox(),
-        ],
+                    Row(
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              value == 3
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        if (state.selectedRadioTile == 3) {
+                                          bloc.add(ProductDetailsEvent
+                                              .productIncrementEvent(
+                                                  productWeight: weight,
+                                                  listIndex: listIndex,
+                                          context: context
+                                          ));
+                                        }
+                                      },
+                                      child: Container(
+                                        width: AppConstants.containerSize_25,
+                                        height: AppConstants.containerSize_25,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                            border: Border.all(
+                                                color: AppColors.greyColor),
+                                            color: AppColors.pageColor),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              getScreenHeight(context) <= 750
+                                  ? 5.width
+                                  : 8.width,
+                              value == 3
+                                  ? Text(
+                                      '${weight.toString() + AppLocalizations.of(context)!.kg}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.blackColor,
+                                        size: AppConstants.font_12,
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              getScreenHeight(context) <= 750
+                                  ? 5.width
+                                  : 8.width,
+                              value == 3
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        if (state.selectedRadioTile == 3) {
+                                          bloc.add(ProductDetailsEvent
+                                              .productDecrementEvent(
+                                                  productWeight: weight,
+                                                  listIndex: listIndex));
+                                        }
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: 25,
+                                        height: 25,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            border: Border.all(
+                                                color: AppColors.greyColor),
+                                            color: AppColors.pageColor),
+                                        child: Text('-',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.mediumFont)),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                value == 4
+                    ? CustomFormField(
+                        fillColor: AppColors.pageColor,
+                        validator: '',
+                        controller: addProblemController,
+                        keyboardType: state.selectedRadioTile == 4
+                            ? TextInputType.text
+                            : TextInputType.none,
+                        hint: AppLocalizations.of(context)!.add_text,
+                        maxLines: 5,
+                        isBorderVisible: false,
+                        textInputAction: TextInputAction.done,
+                        contentPaddingTop: AppConstants.padding_8,
+                      )
+                    : SizedBox(),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

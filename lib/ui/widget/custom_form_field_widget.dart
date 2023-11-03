@@ -42,6 +42,8 @@ class CustomFormField extends StatelessWidget {
     this.cursorColor = Colors.green,
     this.contentPaddingBottom = 0.0,
     this.contentPaddingTop = 0.0,
+    this.border = 3.0,
+
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
@@ -85,6 +87,8 @@ class CustomFormField extends StatelessWidget {
   final ValueChanged<String>? onChangeValue;
   final double contentPaddingTop;
   final double contentPaddingBottom;
+  final double border;
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,12 +126,13 @@ class CustomFormField extends StatelessWidget {
           hintStyle: TextStyle(
             color: AppColors.textColor,
           ),
+
           errorStyle: TextStyle(
               color: AppColors.redColor,
               height: height,
               fontWeight: FontWeight.w400),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(border),
               borderSide: isBorderVisible
                   ? BorderSide(
                       color: AppColors.mainColor,
@@ -136,19 +141,19 @@ class CustomFormField extends StatelessWidget {
                   : BorderSide.none),
           contentPadding:  EdgeInsets.fromLTRB(10, contentPaddingTop, 10, contentPaddingBottom),
           disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(3.0),
+            borderRadius: BorderRadius.circular(border),
             borderSide: isBorderVisible
                 ? BorderSide(color: AppColors.borderColor)
                 : BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(3.0),
+            borderRadius: BorderRadius.circular(border),
             borderSide: isBorderVisible
                 ? BorderSide(color: AppColors.borderColor)
                 : BorderSide.none,
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(3.0),
+            borderRadius: BorderRadius.circular(border),
             borderSide: isBorderVisible
                 ? BorderSide(
                     color: AppColors.borderColor,
@@ -157,7 +162,7 @@ class CustomFormField extends StatelessWidget {
                 : BorderSide.none,
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(3.0),
+            borderRadius: BorderRadius.circular(border),
             borderSide: isBorderVisible
                 ? BorderSide(
                     color: AppColors.redColor,

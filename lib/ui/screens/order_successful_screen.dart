@@ -212,7 +212,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.normalFont,
                           color: AppColors.whiteColor,
-                          fontWeight: FontWeight.w400),
+                          ),
                     ),
                   ),
                 ),

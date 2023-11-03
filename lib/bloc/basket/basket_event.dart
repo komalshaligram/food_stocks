@@ -2,15 +2,13 @@ part of 'basket_bloc.dart';
 
 @freezed
 class BasketEvent with _$BasketEvent {
-  const factory BasketEvent.productIncrementEvent({
+  const factory BasketEvent.productUpdateEvent({
     required int productWeight,
     required int listIndex,
-}) = _productIncrementEvent;
-
-  const factory BasketEvent.productDecrementEvent({
-    required int productWeight,
-    required int listIndex,
-}) = _productDecrementEvent;
+    required BuildContext context,
+    required String supplierId,
+    required String productId,
+}) = _productUpdateEvent;
 
   const factory BasketEvent.deleteListItemEvent({
     required int listIndex,
@@ -20,4 +18,8 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.getAllCartEvent({
     required BuildContext context
 }) = _getAllCartEvent;
+
+  const factory BasketEvent.clearCartEvent({
+    required BuildContext context
+  }) = _clearCartEvent;
 }

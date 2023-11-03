@@ -5,11 +5,12 @@ part of 'order_details_bloc.dart';
 @freezed
 class OrderDetailsState with _$OrderDetailsState {
   const factory OrderDetailsState({
-    required List<SupplierDetailsModel>supplierList,
+    required GetOrderByIdModel orderByIdList,
   }) = _OrderDetailsState;
 
   factory OrderDetailsState.initial() => OrderDetailsState(
-      supplierList: [
+    orderByIdList: GetOrderByIdModel()
+/*      supplierList: [
    SupplierDetailsModel(
        orderStatus: 'Pending delivery',
        deliveryDate: '12.02.23 10:00-12:00',
@@ -73,7 +74,7 @@ class OrderDetailsState with _$OrderDetailsState {
             totalPrice: '18,360₪',
             supplierName: 'Supplier name'
         ),
-      ]
+      ]*/
   );
 
 

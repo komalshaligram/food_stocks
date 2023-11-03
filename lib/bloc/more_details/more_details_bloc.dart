@@ -234,10 +234,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                       (element) => element.cityName == state.selectCity)
                   .id,
               contactName: profileModel.contactName,
-              address: state.addressController.text,
+              address: state.addressController.text.trim(),
               email: state.emailController.text,
               clientDetail: ClientDetail(
-                fax: state.faxController.text,
+                fax: state.faxController.text.trim(),
                 ownerName: profileModel.clientDetail?.ownerName,
                 clientTypeId: profileModel.clientDetail?.clientTypeId,
                 bussinessName: profileModel.clientDetail?.bussinessName,
@@ -259,7 +259,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
               preferencesHelper.setCartId(
-                  cartId: response.data?.cartId ?? '');
+                  cartId: profileResModel.data!.client!.cartId ?? '');
               preferencesHelper.setUserImageUrl(
                   imageUrl:
                       profileResModel.data!.client!.clientData!.profileImage.toString());

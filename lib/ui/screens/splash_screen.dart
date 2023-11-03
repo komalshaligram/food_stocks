@@ -91,7 +91,7 @@ class SplashScreenWidget extends StatelessWidget {
                 context, RouteDefine.bottomNavScreen.name);
           } else {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.connectScreen.name);
+                context, RouteDefine.activityTimeScreen.name);
           }
         }
       },
@@ -113,3 +113,6 @@ class SplashScreenWidget extends StatelessWidget {
     );
   }
 }
+
+
+//eti3Gz3RRYuUgZVbNrqt5z:APA91bH29l6pxfxQtwh9l3xTQtoCcXhROpI1zX-1oSb3W2QOFW-RycCY63dMS1l41e-dUHG2J4Xmr2FRIL1TR6WvT6uu6vgd9xiyyIgaUuE8p81kOr9zySa5OwJUjeKdFBigKQVkiSq-

@@ -53,11 +53,6 @@ class LogInScreenWidget extends StatelessWidget {
             AppStrings.contactString: phoneController.text.toString(),
             AppStrings.isRegisterString: isRegister
           });
-        } else if (state.isLoginFail) {
-          showSnackBar(
-              context: context,
-              title: state.errorMessage,
-              bgColor: AppColors.redColor);
         }
       },
       child: BlocBuilder<LogInBloc, LogInState>(

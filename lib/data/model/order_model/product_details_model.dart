@@ -2,18 +2,18 @@
 class ProductDetailsModel{
 
    String? productName ;
-   String? productImage;
-   int? productWeight;
-   int? productPrice;
+   String? categoryImage;
+   int? itemWeight;
+   int? totalPayment;
    bool isProductIssue;
    bool isDelete;
 
   ProductDetailsModel({
     this.isProductIssue = false,
-    required this.productImage,
+    required this.categoryImage,
     required this.productName,
-    required this.productPrice,
-    required this.productWeight,
+    required this.totalPayment,
+    required this.itemWeight,
     this.isDelete = false,
   });
 

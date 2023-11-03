@@ -96,6 +96,8 @@ class DioClient {
    Future<Map<String, dynamic>> get({
      required String path,
      Map<String, dynamic>? query,
+     Options? options
+
    }) async {
 
      final connectivityResult = await (Connectivity().checkConnectivity());
@@ -106,6 +108,7 @@ class DioClient {
          final response = await _dio.get(
            path,
            queryParameters: query,
+            options: options
          );
          debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
          return response.data as Map<String, dynamic>;

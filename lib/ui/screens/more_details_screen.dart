@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/ui/widget/more_details_screen_shimmer_widget.dart';
@@ -85,7 +86,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               title: Text(
                 AppLocalizations.of(context)!.more_details,
                 style: AppStyles.rkRegularTextStyle(
-                    size: 16, color: Colors.black, fontWeight: FontWeight.w400),
+                    size: 16, color: Colors.black),
               ),
               backgroundColor: Colors.transparent,
               titleSpacing: 0,
@@ -285,6 +286,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.addressController,
+                          inputformet: [LengthLimitingTextInputFormatter(30)],
                           keyboardType: TextInputType.text,
                           hint: AppLocalizations.of(context)!.address,
                           fillColor: AppColors.whiteColor,
@@ -297,6 +299,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.emailController,
+                          inputformet: [LengthLimitingTextInputFormatter(20)],
                           keyboardType: TextInputType.emailAddress,
                           hint: "test2gmail.com",
                           fillColor: AppColors.whiteColor,
@@ -309,6 +312,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.faxController,
+                          inputformet: [LengthLimitingTextInputFormatter(10)],
                           keyboardType: TextInputType.number,
                           hint: AppLocalizations.of(context)!.fax,
                           fillColor: AppColors.whiteColor,
@@ -530,8 +534,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                               .font_14,
                                                           color: AppColors
                                                               .textColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
+                                                          ),
                                                 ),
                                               ),
                                             ),

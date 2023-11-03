@@ -24,6 +24,7 @@ class AppConstants{
   static const double padding_2 = 2;
   static const double padding_40 = 40;
   static const double padding_70 = 70;
+  static const double padding_11 = 11;
 
   static const double radius_3 = 3;
   static const double radius_4 = 4;

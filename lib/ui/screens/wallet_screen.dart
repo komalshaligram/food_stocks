@@ -80,6 +80,7 @@ class WalletScreenWidget extends StatelessWidget {
               child: SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     50.height,
                     Padding(
@@ -337,13 +338,13 @@ class WalletScreenWidget extends StatelessWidget {
                     ),
                     10.height,
                     SizedBox(
-                      height: 200,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.only(bottom: 90),
                         child: ListView.builder(
                           itemCount: state.balanceSheetList.length,
-                          scrollDirection: Axis.vertical,
+                         // scrollDirection: Axis.vertical,
                           shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Container(
                               color: AppColors.whiteColor,
@@ -461,7 +462,7 @@ class WalletScreenWidget extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              10.width,
+              20.width,
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
                     context, RouteDefine.orderSuccessfulScreen.name),

@@ -14,7 +14,7 @@ class CommonAlertDialog extends StatelessWidget {
   CommonAlertDialog({
     super.key,
     required this.title,
-    required this.subTitle,
+     this.subTitle = '',
     this.positiveOnTap,
     this.negativeOnTap,
     this.positiveTitle,
@@ -31,7 +31,7 @@ class CommonAlertDialog extends StatelessWidget {
               size: AppConstants.mediumFont,
               color: AppColors.blackColor,
               fontWeight: FontWeight.bold)),
-      content: Padding(
+      content:Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
         child: Text(
           subTitle,

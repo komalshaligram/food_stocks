@@ -69,22 +69,28 @@ class OTPScreenWidget extends StatelessWidget {
             ),
             body: SafeArea(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppConstants.padding_35,
-                    ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      30.height,
-                      Text(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    30.height,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getScreenWidth(context) * 0.12,
+                          right: getScreenWidth(context) * 0.12),
+                      child: Text(
                           AppLocalizations.of(context)!
                               .enter_the_code_sent_to_phone_num,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: Colors.black)),
-                      30.height,
-                      OtpTextField(
+                    ),
+                    30.height,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getScreenWidth(context) * 0.09,
+                          right: getScreenWidth(context) * 0.09),
+                      child: OtpTextField(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         autoFocus: true,
                         fieldWidth: (getScreenWidth(context) -
                                 (getScreenWidth(context) * 0.2)) /
@@ -103,7 +109,7 @@ class OTPScreenWidget extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(AppConstants.radius_5),
                         margin: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_10),
+                            horizontal: AppConstants.padding_11),
                         textStyle: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                         onCodeChanged: (String code) {
@@ -116,8 +122,13 @@ class OTPScreenWidget extends StatelessWidget {
                               OtpEvent.changeOtpEvent(otp: verificationCode));
                         }, // end onSubmit
                       ),
-                      15.height,
-                      CustomButtonWidget(
+                    ),
+                    15.height,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getScreenWidth(context) * 0.11,
+                          right: getScreenWidth(context) * 0.11),
+                      child: CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
                         isLoading: state.isLoading,
@@ -159,18 +170,23 @@ class OTPScreenWidget extends StatelessWidget {
                               },
                         fontColors: AppColors.whiteColor,
                       ),
-                      20.height,
-                      Center(
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .not_receive_verification_code,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: Colors.black),
-                        ),
+                    ),
+                    20.height,
+                    Center(
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .not_receive_verification_code,
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: Colors.black),
                       ),
-                      20.height,
-                      Container(
+                    ),
+                    20.height,
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: getScreenWidth(context) * 0.11,
+                          right: getScreenWidth(context) * 0.11),
+                      child: Container(
                         width: double.maxFinite,
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
@@ -224,8 +240,8 @@ class OTPScreenWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
