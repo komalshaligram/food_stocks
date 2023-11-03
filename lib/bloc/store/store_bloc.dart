@@ -137,21 +137,21 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
-          if (productStockList[state.productStockUpdateIndex].quantity < 30) {
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    quantity: productStockList[state.productStockUpdateIndex]
-                            .quantity +
-                        1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: productStockList));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.maxQuantityAllowString,
-                bgColor: AppColors.mainColor);
-          }
+          // if (productStockList[state.productStockUpdateIndex].quantity < 30) {
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  quantity:
+                      productStockList[state.productStockUpdateIndex].quantity +
+                          1);
+          debugPrint(
+              'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
+          emit(state.copyWith(productStockList: productStockList));
+          // } else {
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.maxQuantityAllowString,
+          //       bgColor: AppColors.mainColor);
+          // }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =

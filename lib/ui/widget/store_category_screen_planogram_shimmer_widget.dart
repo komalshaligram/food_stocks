@@ -5,8 +5,8 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 
-class StoreCategoryScreenPlanogramShimmerWidget extends StatelessWidget {
-  const StoreCategoryScreenPlanogramShimmerWidget({super.key});
+class StoreCategoryScreenPlanoGramShimmerWidget extends StatelessWidget {
+  const StoreCategoryScreenPlanoGramShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

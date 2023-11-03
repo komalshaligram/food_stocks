@@ -101,21 +101,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
-          if (productStockList[state.productStockUpdateIndex].quantity < 30) {
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    quantity: productStockList[state.productStockUpdateIndex]
-                            .quantity +
-                        1);
-            debugPrint(
-                'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
-            emit(state.copyWith(productStockList: productStockList));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.maxQuantityAllowString,
-                bgColor: AppColors.mainColor);
-          }
+          // if (productStockList[state.productStockUpdateIndex].quantity < 30) {
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  quantity:
+                      productStockList[state.productStockUpdateIndex].quantity +
+                          1);
+          debugPrint(
+              'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
+          emit(state.copyWith(productStockList: productStockList));
+          // } else {
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.maxQuantityAllowString,
+          //       bgColor: AppColors.mainColor);
+          // }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
@@ -140,57 +140,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               productStockList[state.productStockUpdateIndex]
                   .copyWith(note: event.newNote);
           emit(state.copyWith(productStockList: productStockList));
-        }
-      } else if (event is _VerifyProductStockEvent) {
-        if (state.productStockList[state.productStockUpdateIndex].quantity ==
-            0) {
-          showSnackBar(
-              context: event.context,
-              title: AppStrings.minQuantityMsgString,
-              bgColor: AppColors.mainColor);
-          return;
-        }
-        try {
-          emit(state.copyWith(isLoading: true));
-          ProductStockVerifyReqModel req = ProductStockVerifyReqModel(
-              quantity: state
-                  .productStockList[state.productStockUpdateIndex].quantity,
-              supplierId: [
-                state.productDetails.product?.first.supplierSales?.supplier
-                        ?.id ??
-                    ''
-              ],
-              productId: state
-                  .productStockList[state.productStockUpdateIndex].productId);
-          debugPrint('verify stock req = $req');
-          final res = await DioClient(event.context)
-              .post(AppUrls.verifyProductStockUrl, data: req.toJson());
-          ProductStockVerifyResModel response =
-              ProductStockVerifyResModel.fromJson(res);
-          if (response.status == 200) {
-            emit(state.copyWith(isLoading: false));
-            if (state.productStockList[state.productStockUpdateIndex].quantity <
-                (response.data?.stock?.first.data?.productStock ?? 0)) {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.doneString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(event.context);
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: response.data?.stock?.first.message ??
-                      AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
-            }
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.redColor);
-          }
-        } on ServerException {
-          Navigator.pop(event.context);
         }
       }
     });

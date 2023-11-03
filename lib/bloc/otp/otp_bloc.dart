@@ -61,8 +61,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();
-              // preferencesHelper.setCartId(
-              //     cartId: response.data?.cartId ?? '');
+              preferencesHelper.setCartId(cartId: response.data?.cartId ?? '');
               preferencesHelper.setAuthToken(
                   accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(

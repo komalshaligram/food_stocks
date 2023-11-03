@@ -9,12 +9,13 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required bool isCategory,
       required BuildContext context}) = _ChangeCategoryOrSubCategoryEvent;
 
-  const factory StoreCategoryEvent.getPlanogramProductsEvent(
-      {required BuildContext context}) = _GetPlanogramProductsEvent;
+  const factory StoreCategoryEvent.getPlanoGramProductsEvent(
+      {required BuildContext context}) = _GetPlanoGramProductsEvent;
 
   const factory StoreCategoryEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      required int planoGramIndex}) = _GetProductDetailsEvent;
 
   const factory StoreCategoryEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;

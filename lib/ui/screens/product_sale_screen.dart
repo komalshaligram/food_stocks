@@ -300,6 +300,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           ?.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
+                                  productsStock: 1,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,

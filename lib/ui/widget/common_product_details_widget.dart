@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,6 +30,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function(String)? onNoteChanged;
   final bool isRTL;
   final bool isLoading;
+  final int productsStock;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -48,7 +50,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.onQuantityIncreaseTap,
       required this.onQuantityDecreaseTap,
       this.onNoteChanged,
-      required this.isLoading});
+      required this.isLoading,
+      required this.productsStock});
 
   @override
   Widget build(BuildContext context) {
@@ -168,18 +171,30 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_15,
                         vertical: AppConstants.padding_20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    child: productsStock == 0
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '$productPrice${AppLocalizations.of(context)!.currency}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_30,
+                                AppStrings.outOfStockString,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$productPrice${AppLocalizations.of(context)!.currency}',
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_30,
                                     color: AppColors.blackColor,
                                     fontWeight: FontWeight.w700),
                               ),
@@ -197,205 +212,219 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         ),
                         Expanded(
                           flex: 3,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: onQuantityIncreaseTap,
-                                child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     horizontal: AppConstants.padding_10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.iconBGColor,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(isRTL
-                                          ? AppConstants.radius_5
-                                          : AppConstants.radius_50),
-                                      bottomLeft: Radius.circular(isRTL
-                                          ? AppConstants.radius_5
-                                          : AppConstants.radius_50),
-                                      bottomRight: Radius.circular(isRTL
-                                          ? AppConstants.radius_50
-                                          : AppConstants.radius_5),
-                                      topRight: Radius.circular(isRTL
-                                          ? AppConstants.radius_50
-                                          : AppConstants.radius_5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: onQuantityIncreaseTap,
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        // padding: EdgeInsets.symmetric(
+                                        //     horizontal: AppConstants.padding_10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            bottomRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            topRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
+                                        ),
+                                        // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 26,
+                                          color: AppColors.mainColor,
+                                        ),
+                                      ),
                                     ),
-                                    border: Border.all(
-                                        color: AppColors.navSelectedColor,
-                                        width: 1),
-                                  ),
-                                  // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-                                  alignment: Alignment.center,
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 26,
-                                    color: AppColors.mainColor,
-                                  ),
-                                ),
-                              ),
-                              5.width,
-                              Container(
-                                width: 75,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: AppColors.iconBGColor,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft:
-                                        Radius.circular(AppConstants.radius_5),
-                                    bottomLeft:
-                                        Radius.circular(AppConstants.radius_5),
-                                    bottomRight:
-                                        Radius.circular(AppConstants.radius_5),
-                                    topRight:
-                                    Radius.circular(AppConstants.radius_5),
-                                  ),
-                                  border: Border.all(
-                                      color: AppColors.navSelectedColor,
-                                      width: 1),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '$productQuantity',
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.font_30,
-                                      color: AppColors.blackColor,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                              5.width,
-                              GestureDetector(
-                                onTap: onQuantityDecreaseTap,
-                                child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     horizontal: AppConstants.padding_10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.iconBGColor,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(isRTL
-                                          ? AppConstants.radius_50
-                                          : AppConstants.radius_5),
-                                      bottomLeft: Radius.circular(isRTL
-                                          ? AppConstants.radius_50
-                                          : AppConstants.radius_5),
-                                      bottomRight: Radius.circular(isRTL
-                                          ? AppConstants.radius_5
-                                          : AppConstants.radius_50),
-                                      topRight: Radius.circular(isRTL
-                                          ? AppConstants.radius_5
-                                          : AppConstants.radius_50),
+                                    5.width,
+                                    Container(
+                                      width: 75,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.iconBGColor,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                              AppConstants.radius_5),
+                                          bottomLeft: Radius.circular(
+                                              AppConstants.radius_5),
+                                          bottomRight: Radius.circular(
+                                              AppConstants.radius_5),
+                                          topRight: Radius.circular(
+                                              AppConstants.radius_5),
+                                        ),
+                                        border: Border.all(
+                                            color: AppColors.navSelectedColor,
+                                            width: 1),
+                                      ),
+                                      // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '$productQuantity',
+                                        style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_30,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w700),
+                                        maxLines: 1,
+                                      ),
                                     ),
-                                    border: Border.all(
-                                        color: AppColors.navSelectedColor,
-                                        width: 1),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Icon(Icons.remove,
-                                      size: 26, color: AppColors.mainColor),
+                                    5.width,
+                                    GestureDetector(
+                                      onTap: onQuantityDecreaseTap,
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        // padding: EdgeInsets.symmetric(
+                                        //     horizontal: AppConstants.padding_10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(isRTL
+                                                ? AppConstants.radius_50
+                                                : AppConstants.radius_5),
+                                            bottomRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                            topRight: Radius.circular(isRTL
+                                                ? AppConstants.radius_5
+                                                : AppConstants.radius_50),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Icon(Icons.remove,
+                                            size: 26,
+                                            color: AppColors.mainColor),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                  ),
+                  productsStock == 0
+                      ? 0.width
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: AppColors.borderColor
+                                              .withOpacity(0.5),
+                                          width: 1))),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_10,
+                                  horizontal: AppConstants.padding_20),
+                              child: Row(
+                                children: [],
+                              ),
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       flex: 5,
+                              //       child: Column(
+                              //         crossAxisAlignment: CrossAxisAlignment.start,
+                              //         children: [
+                              //           Text(
+                              //             'Sale',
+                              //             style: AppStyles.rkBoldTextStyle(
+                              //                 size: AppConstants.font_30,
+                              //                 color: AppColors.saleRedColor,
+                              //                 fontWeight: FontWeight.w700),
+                              //           ),
+                              //           5.height,
+                              //           Text(
+                              //             productDescription,
+                              //             style: AppStyles.rkRegularTextStyle(
+                              //                 size: AppConstants.font_14,
+                              //                 color: AppColors.blackColor,
+                              //                 fontWeight: FontWeight.w400),
+                              //             maxLines: 3,
+                              //             overflow: TextOverflow.ellipsis,
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     ),
+                              //     Expanded(flex: 2, child: 0.height),
+                              //   ],
+                              // ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_20,
+                                  horizontal: AppConstants.padding_20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.note,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor),
+                                  ),
+                                  10.height,
+                                  Container(
+                                    // height: 120,
+                                    width: getScreenWidth(context),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AppConstants.padding_10),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.notesBGColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppConstants.radius_5))),
+                                    child: TextField(
+                                      controller: noteController,
+                                      onChanged: onNoteChanged,
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none),
+                                      maxLines: 5,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.all(AppConstants.padding_20),
+                              child: CommonProductButtonWidget(
+                                title:
+                                    AppLocalizations.of(context)!.add_to_order,
+                                isLoading: isLoading,
+                                onPressed: onAddToOrderPressed,
+                                width: double.maxFinite,
+                                height: AppConstants.buttonHeight,
+                                borderRadius: AppConstants.radius_5,
+                                textSize: AppConstants.normalFont,
+                                textColor: AppColors.whiteColor,
+                                bgColor: AppColors.mainColor,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: AppColors.borderColor.withOpacity(0.5),
-                                width: 1))),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_10,
-                        horizontal: AppConstants.padding_20),
-                    child: Row(
-                      children: [],
-                    ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       flex: 5,
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Text(
-                    //             'Sale',
-                    //             style: AppStyles.rkBoldTextStyle(
-                    //                 size: AppConstants.font_30,
-                    //                 color: AppColors.saleRedColor,
-                    //                 fontWeight: FontWeight.w700),
-                    //           ),
-                    //           5.height,
-                    //           Text(
-                    //             productDescription,
-                    //             style: AppStyles.rkRegularTextStyle(
-                    //                 size: AppConstants.font_14,
-                    //                 color: AppColors.blackColor,
-                    //                 fontWeight: FontWeight.w400),
-                    //             maxLines: 3,
-                    //             overflow: TextOverflow.ellipsis,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     Expanded(flex: 2, child: 0.height),
-                    //   ],
-                    // ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_20,
-                        horizontal: AppConstants.padding_20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.note,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14,
-                              color: AppColors.blackColor),
-                        ),
-                        10.height,
-                        Container(
-                          // height: 120,
-                          width: getScreenWidth(context),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10),
-                          decoration: BoxDecoration(
-                              color: AppColors.notesBGColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_5))),
-                          child: TextField(
-                            controller: noteController,
-                            onChanged: onNoteChanged,
-                            decoration:
-                            InputDecoration(border: InputBorder.none),
-                            maxLines: 5,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(AppConstants.padding_20),
-                    child: CommonProductButtonWidget(
-                      title: AppLocalizations.of(context)!.add_to_order,
-                      isLoading: isLoading,
-                      onPressed: onAddToOrderPressed,
-                      width: double.maxFinite,
-                      height: AppConstants.buttonHeight,
-                      borderRadius: AppConstants.radius_5,
-                      textSize: AppConstants.normalFont,
-                      textColor: AppColors.whiteColor,
-                      bgColor: AppColors.mainColor,
-                    ),
-                  ),
                   // 160.height,
                 ],
               ),

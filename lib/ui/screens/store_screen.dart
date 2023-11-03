@@ -308,7 +308,7 @@ class StoreScreenWidget extends StatelessWidget {
                       String result = await scanBarcodeOrQRCode(
                           context: context,
                           cancelText: AppLocalizations.of(context)!.cancel,
-                          scanMode: ScanMode.QR);
+                          scanMode: ScanMode.BARCODE);
                       if (result != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $result');
@@ -818,6 +818,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
+                                  productsStock: 10,
                                   productWeight: state.productDetails.product
                                           ?.first.itemsWeight
                                           ?.toDouble() ??
