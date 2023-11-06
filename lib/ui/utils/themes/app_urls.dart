@@ -1,6 +1,6 @@
 class AppUrls {
-  static const String baseUrl =
-      'http://182.70.118.201:3000/api' /*'http://192.168.1.80:3001/api'*/;
+  static const String baseUrl = 'http://192.168.1.46:8080/api' /*'http://192.168.1.46:3000/api'*/
+      /*'http://182.70.118.201:3000/api'*/ /*'http://192.168.1.80:3001/api'*/;
 
   static const String baseFileUrl =
       'http://182.70.118.201:3000/public/' /*'http://192.168.1.80:3001/public/'*/;
@@ -27,4 +27,13 @@ class AppUrls {
   static const String getSupplierProductsUrl = '/v1/products/getAllProducts';
   static const String createOrderUrl = '/v1/orders/createOrder';
   static const String getAllOrderUrl = '/v1/orders/getAllOrders';
+  static const String getAllCartUrl = '/v1/cart/listingCartProducts';
+  static const String getOrderById = '/v1/orders/getOrderById/';
+  static const String verifyStockUrl = '/v1/store/verifyStock';
+  static const String updateCartProductUrl = '/v1/cart/updateCartProducts';
+  static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier';
+  static const String getIssueUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/issues';
+  static const String createIssueUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/issues/createIssue';
+  static const String deliveryConfirmUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/delivery/confirm';
+  static const String clearCartUrl = '/v1/cart/clearCart';
 }

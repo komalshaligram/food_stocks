@@ -31,13 +31,13 @@ class FormFieldValidation {
         return "Please enter valid phone number";
       }
       else if(value.length < 10){
-        return "Phone number must be 10 digit";
+        return "Phone number must be 10-digit";
       }
       else{
         return null;
       }
     } else if (value.length > 10) {
-      return "Phone number must be 10 digit";
+      return "Phone number must be 10-digit";
     }
     else {
       return null;

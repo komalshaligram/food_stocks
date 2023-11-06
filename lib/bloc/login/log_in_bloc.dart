@@ -46,9 +46,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
             showSnackBar(context: event.context, title: response.message ?? AppStrings.somethingWrongString, bgColor: AppColors.redColor);
-            emit(state.copyWith(
-                isLoading: false,
-              ));
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {}
       }

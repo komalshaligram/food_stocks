@@ -52,15 +52,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ActivityTimeBloc, ActivityTimeState>(
       listener: (context, state) {
-        if (state.isRegisterSuccess) {
-          Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name);
-        }
-        if (state.isRegisterFail) {
-          showSnackBar(
-              context: context,
-              title: state.errorMessage,
-              bgColor: AppColors.redColor);
-        }
       },
       child: BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
         builder: (context, state) {
@@ -78,9 +69,11 @@ class ActivityTimeScreenWidget extends StatelessWidget {
               leading: GestureDetector(
                   onTap: () {
                     if(!state.isUpdate){
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                     }
                     else{
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       Navigator.pop(context);
                     }
 
@@ -103,12 +96,14 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                           children: [
                             10.height,
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                           50.height,
-                          40.width,
-                          SizedBox(
-                              width: getScreenWidth(context) * 0.24,
+                         SizedBox(
+                           width: getScreenWidth(context) < 380 ? getScreenWidth(context) * 0.25: getScreenWidth(context) * 0.27,
+                         ),
+                          Container(
+                              width: getScreenWidth(context) * 0.25,
                               height: 20,
                               child: Text(
                                 AppLocalizations.of(context)!.from_time,
@@ -117,8 +112,9 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   color: AppColors.textColor,
                                 ),
                               )),
-                          SizedBox(
-                              width: getScreenWidth(context) * 0.24,
+                          18.width,
+                          Container(
+                              width: getScreenWidth(context) * 0.25,
                               height: 20,
                               child: Text(
                                 AppLocalizations.of(context)!.until_time,
@@ -193,6 +189,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                       fontColors: AppColors.mainColor,
                                       borderColor: AppColors.mainColor,
                                       onPressed: () {
+                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                         Navigator.pushNamed(
                                             context, RouteDefine.fileUploadScreen.name);
                                       },
@@ -301,7 +298,7 @@ class ActivityTimeRow extends StatelessWidget {
                                       index == 0
                                           ? Container(
                                               width: getScreenWidth(context) *
-                                                  0.18,
+                                                  0.22,
                                               child: Text(
                                                 dayString,
                                                 style: AppStyles
@@ -315,7 +312,7 @@ class ActivityTimeRow extends StatelessWidget {
                                                   0.18,
                                             ),
                                       SizedBox(
-                                        width: getScreenWidth(context) * 0.04,
+                                        width: getScreenWidth(context) < 380 ?  getScreenWidth(context) * 0.001: getScreenWidth(context) * 0.03,
                                       ),
                                       TimeContainer(
                                         openingIndex: 1,

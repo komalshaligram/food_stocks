@@ -42,7 +42,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {
           return FocusDetector(
-            onFocusGained: (){
+            onFocusGained: () {
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
             },
             child: Scaffold(
@@ -50,9 +50,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               body: SafeArea(
                 child: Column(
                   children: [
-                    20.height,
+                    25.height,
                     Container(
-                      height: 80,
+                      height: 90,
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
                       child: Row(
@@ -61,12 +61,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             height: 80,
                             width: 80,
                             decoration: BoxDecoration(
-                              color: state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
+                              color: state.UserImageUrl.isNotEmpty
+                                  ? AppColors.whiteColor
+                                  : AppColors.mainColor.withOpacity(0.1),
                               boxShadow: [
                                 BoxShadow(
-                                    color:  state.UserImageUrl.isNotEmpty ? AppColors.shadowColor.withOpacity(0.3): AppColors.whiteColor,
-                                    blurRadius: AppConstants.blur_10
-                                )
+                                    color: state.UserImageUrl.isNotEmpty
+                                        ? AppColors.shadowColor.withOpacity(0.3)
+                                        : AppColors.whiteColor,
+                                    blurRadius: AppConstants.blur_10)
                               ],
                               shape: BoxShape.circle,
                             ),
@@ -87,68 +90,70 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                   )
-                                :Icon(
-                              Icons.person,
-                              size: 60,
-                              color: AppColors.textColor,
-                            ),
+                                : Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: AppColors.textColor,
+                                  ),
                           ),
                           20.width,
                           SizedBox(
-                            height: 80,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 1)),
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                            height: 50,
-                                            width:
-                                                getScreenWidth(context) * 0.35,
-                                            alignment: Alignment.center,
-                                            child:
-                                                const CupertinoActivityIndicator())),
-                                    imageUrl:
-                                        "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
-                                    height: 50,
-                                    width: getScreenWidth(context) * 0.35,
-                                    fit: BoxFit.fitHeight,
-                                    alignment: isRTLContent(context: context)
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    errorWidget: (context, url, error) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.mainColor.withOpacity(0.1),
-                                          /*  border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 0)*/),
-                                        child: Icon(Icons.image_not_supported_outlined,
-                                          size: 40,
-                                          color: AppColors.textColor,
-                                        )
-                                      );
-                                    },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                          decoration: BoxDecoration(
+                                              color: AppColors.whiteColor,
+                                              border: Border.all(
+                                                  color: AppColors.borderColor
+                                                      .withOpacity(0.5),
+                                                  width: 1)),
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              height: 50,
+                                              width: getScreenWidth(context) * 0.35,
+                                              alignment: Alignment.center,
+                                              child:
+                                                  const CupertinoActivityIndicator())),
+                                      imageUrl: "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                                      height: 34,
+                                      width: getScreenWidth(context) * 0.35,
+                                      fit: BoxFit.fitHeight,
+                                      alignment: isRTLContent(context: context)
+                                          ? Alignment.centerRight
+                                          : Alignment.centerLeft,
+                                      errorWidget: (context, url, error) {
+                                        return Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.mainColor
+                                                  .withOpacity(0.1),
+                                              /*  border: Border.all(
+                                                  color: AppColors.borderColor
+                                                      .withOpacity(0.5),
+                                                  width: 0)*/
+                                            ),
+                                            child: Icon(
+                                              Icons.image_not_supported_outlined,
+                                              size: 25,
+                                              color: AppColors.textColor,
+                                            ));
+                                      },
+                                    ),
                                   ),
-                                ),
-                                3.height,
-                                Text(
-                                  state.userName,
-                                  style: AppStyles.rkRegularTextStyle(
-                                    size: 20,
-                                    color: AppColors.textColor,
+                                  10.height,
+                                  Text(
+                                    state.userName,
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: 20,
+                                      color: AppColors.blackColor,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -160,28 +165,36 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(
                               context, RouteDefine.profileScreen.name,
-                              arguments: {AppStrings.isUpdateParamString: true});
+                              arguments: {
+                                AppStrings.isUpdateParamString: true
+                              });
                         }),
                     profileMenuTiles(
                         title: AppLocalizations.of(context)!.more_details,
                         onTap: () {
                           Navigator.pushNamed(
                               context, RouteDefine.moreDetailsScreen.name,
-                              arguments: {AppStrings.isUpdateParamString: true});
+                              arguments: {
+                                AppStrings.isUpdateParamString: true
+                              });
                         }),
                     profileMenuTiles(
                         title: AppLocalizations.of(context)!.activity_time,
                         onTap: () {
                           Navigator.pushNamed(
                               context, RouteDefine.activityTimeScreen.name,
-                              arguments: {AppStrings.isUpdateParamString: true});
+                              arguments: {
+                                AppStrings.isUpdateParamString: true
+                              });
                         }),
                     profileMenuTiles(
                         title: AppLocalizations.of(context)!.forms_files,
                         onTap: () {
                           Navigator.pushNamed(
                               context, RouteDefine.fileUploadScreen.name,
-                              arguments: {AppStrings.isUpdateParamString: true});
+                              arguments: {
+                                AppStrings.isUpdateParamString: true
+                              });
                         }),
                   ],
                 ),

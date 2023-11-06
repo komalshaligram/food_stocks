@@ -41,8 +41,7 @@ class MenuScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.menu,
                 iconData: Icons.close,
                 onTap: () {
-                  Navigator.pushNamed(context,
-                      RouteDefine.bottomNavScreen.name);
+                  Navigator.pop(context);
                 },
               ),
             ),

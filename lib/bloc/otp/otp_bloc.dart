@@ -62,6 +62,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
+              print('cart id____${response.data?.cartId}');
               preferencesHelper.setCartId(
                   cartId: response.data?.cartId ?? '');
               preferencesHelper.setAuthToken(
@@ -83,7 +84,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               Navigator.popUntil(
                   event.context, (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
-              emit(state.copyWith( isLoading: false));
+              emit(state.copyWith(isLoading: false));
             } else {
               showSnackBar(
                   context: event.context,

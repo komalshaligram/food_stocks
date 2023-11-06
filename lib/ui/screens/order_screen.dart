@@ -7,6 +7,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
@@ -44,21 +45,26 @@ class OrderScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.orders,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                 /* Navigator.of(context)
-                      .pushNamed(RouteDefine.menuScreen.name);*/
                   Navigator.pop(context);
                 },
               ),
             ),
             body: SafeArea(
-              child: (state.orderList.data?.length ?? 0) == 0
-                ? OrderSummaryScreenShimmerWidget() :
-              ListView.builder(
+              child: state.isShimmering ? OrderSummaryScreenShimmerWidget():(state.orderList.data?.length) != 0
+                ? ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: state.orderList.data?.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) =>
                     orderListItem(index: index, context: context),
+              ) : Expanded(
+                child: Center(child: Text('No order',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.normalFont,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w400
+                  ),
+                )),
               ),
             ),
           );
@@ -101,7 +107,9 @@ class OrderScreenWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(
-                          context, RouteDefine.orderDetailsScreen.name);
+                          context, RouteDefine.orderDetailsScreen.name ,
+                          arguments: {AppStrings.idString: state.orderList.data?[index].id }
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -170,10 +178,10 @@ class OrderScreenWidget extends StatelessWidget {
                 CommonOrderContentWidget(
                     flexValue: 4,
                     title: AppLocalizations.of(context)!.order_status,
-                    value:state.orderList.data?[index].status?.statusName ?? '',
+                    value:state.orderList.data?[index].status?.statusName?.toString() ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor:
-                    state.orderList.data![index].status!.statusName == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
+                    state.orderList.data?[index].status?.statusName == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
                     valueTextSize: AppConstants.smallFont,
                   ),
                 ],
