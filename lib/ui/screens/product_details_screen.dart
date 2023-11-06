@@ -339,7 +339,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       arguments: {
                         AppStrings.supplierNameString: state.orderList.data!
                             .ordersBySupplier![productIndex].supplierName!
-                            .toString() ?? '',
+                            .toString(),
                         AppStrings.deliveryStatusString: state
                             .orderList
                             .data!
@@ -347,17 +347,18 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             .deliverStatus.toString(),
                         AppStrings.totalOrderString: state.orderList.data!
                             .ordersBySupplier![productIndex].totalPayment
-                            .toString() ?? '',
+                            .toString(),
                         AppStrings.deliveryDateString: state.orderList.data!
                             .ordersBySupplier![productIndex].orderDate
-                            .toString() ?? '',
+                            .toString(),
                         AppStrings.quantityString: state.orderList.data!
                             .ordersBySupplier![productIndex].products!.length
-                            .toString() ?? '',
+                            .toString(),
                         AppStrings.totalAmountString: state
                             .orderList.data!.orderData!.first.totalAmount!
-                            .toString() ?? '',
+                            .toString(),
                         AppStrings.idString: orderId,
+                        AppStrings.supplierIdString : state.orderList.data!.ordersBySupplier![productIndex].id
                       }),
                   buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
@@ -403,12 +404,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   ),
                   activeColor: AppColors.mainColor,
                   onChanged: (value) {
-                    print('value_____${value}');
                     bloc.add(ProductDetailsEvent.productProblemEvent(
                         isProductProblem: value!, index: index));
                   }),
               Image.network(
-                '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage.toString()}',
+                '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
                 width: AppConstants.containerSize_50,
                 height: AppConstants.containerSize_50,
               ),

@@ -50,14 +50,21 @@ class OrderScreenWidget extends StatelessWidget {
               ),
             ),
             body: SafeArea(
-              child: (state.orderList.data?.length ?? 0) == 0
-                ? OrderSummaryScreenShimmerWidget() :
-              ListView.builder(
+              child: state.isShimmering ? OrderSummaryScreenShimmerWidget():(state.orderList.data?.length) != 0
+                ? ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: state.orderList.data?.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) =>
                     orderListItem(index: index, context: context),
+              ) : Expanded(
+                child: Center(child: Text('No order',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.normalFont,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w400
+                  ),
+                )),
               ),
             ),
           );
@@ -171,10 +178,10 @@ class OrderScreenWidget extends StatelessWidget {
                 CommonOrderContentWidget(
                     flexValue: 4,
                     title: AppLocalizations.of(context)!.order_status,
-                    value:state.orderList.data?[index].status?.statusName ?? '',
+                    value:state.orderList.data?[index].status?.statusName?.toString() ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor:
-                    state.orderList.data![index].status!.statusName == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
+                    state.orderList.data?[index].status?.statusName == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
                     valueTextSize: AppConstants.smallFont,
                   ),
                 ],

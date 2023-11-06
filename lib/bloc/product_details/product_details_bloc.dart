@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
-import '../../data/model/order_model/product_details_model.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -29,7 +28,8 @@ class ProductDetailsBloc
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         debugPrint('token___${preferencesHelper.getAuthToken()}');
-        //  debugPrint('token___${event.orderId()}');
+        debugPrint('id___${event.orderId}');
+
 
         try {
           final res = await DioClient(event.context).get(
@@ -44,8 +44,6 @@ class ProductDetailsBloc
           debugPrint('GetOrderByIdModel  = $response');
 
           if (response.status == 200) {
-            List<ProductDetailsModel> temp = [];
-
             emit(state.copyWith(orderList: response));
             showSnackBar(
                 context: event.context,

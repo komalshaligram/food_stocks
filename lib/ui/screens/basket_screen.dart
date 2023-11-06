@@ -15,7 +15,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
-import '../widget/common_alert_dialog.dart';
+
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -56,7 +56,7 @@ class BasketScreenWidget extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      state.isShimmering ? SizedBox(): (state.CartItemList.data?.data!.length) != null ? Container(
+                       (state.CartItemList.data?.data!.length) != 0 ? Container(
                         margin: EdgeInsets.all(AppConstants.padding_10),
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor.withOpacity(0.95),
@@ -261,7 +261,7 @@ class BasketScreenWidget extends StatelessWidget {
                           ],
                         ),
                       ) : SizedBox(),
-                    state.isShimmering ? BasketScreenShimmerWidget() : (state.CartItemList.data?.data!.length) != null ?
+                    state.isShimmering ? BasketScreenShimmerWidget() : (state.CartItemList.data?.data!.length) != 0 ?
                            Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 85),
@@ -327,7 +327,7 @@ class BasketScreenWidget extends StatelessWidget {
               Container(
                 width: 60,
                 child: Text(
-                  state.CartItemList.data!.data![index].productDetails!.productName! ?? '',
+                  state.CartItemList.data!.data![index].productDetails!.productName!,
                   style: TextStyle(
                     color: AppColors.blackColor,
                     fontSize: AppConstants.font_14,

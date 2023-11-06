@@ -26,7 +26,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       debugPrint('token___${preferencesHelper.getAuthToken()}');
 
       if(event is _getAllOrderEvent){
-
+        emit(state.copyWith(isShimmering: true));
         try {
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
       orderId: preferencesHelper.getOrderId()
@@ -45,10 +45,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           debugPrint('OrderSendResModel  = $response');
 
           if (response.status == 200) {
-
-            emit(state.copyWith(orderList: response));
+            emit(state.copyWith(orderList: response,isShimmering: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
+
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
         }  on ServerException {}

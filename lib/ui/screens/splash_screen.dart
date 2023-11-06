@@ -88,10 +88,10 @@ class SplashScreenWidget extends StatelessWidget {
           print(preferencesHelper.getUserLoggedIn());
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.bottomNavScreen.name);
+                context, RouteDefine.shipmentVerificationScreen.name);
           } else {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.activityTimeScreen.name);
+                context, RouteDefine.connectScreen.name);
           }
         }
       },

@@ -34,6 +34,6 @@ class AppUrls {
   static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier';
   static const String getIssueUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/issues';
   static const String createIssueUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/issues/createIssue';
-  static const String deliveryConformUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/delivery/confirm';
+  static const String deliveryConfirmUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/delivery/confirm';
   static const String clearCartUrl = '/v1/cart/clearCart';
 }

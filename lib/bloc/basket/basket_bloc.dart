@@ -38,12 +38,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
           if (response.status == 200) {
 
-            if(response.data?.cart!.length != null){
               emit(state.copyWith(CartItemList: response,isShimmering: false));
-            }
-            else{
-              emit(state.copyWith(CartItemList: response , isShimmering : false));
-            }
+
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(CartItemList: response , isShimmering : false));

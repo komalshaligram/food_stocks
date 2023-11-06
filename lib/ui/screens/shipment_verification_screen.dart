@@ -1,15 +1,17 @@
-/*import 'dart:io';
-import 'dart:ui' as ui;*/
+import 'dart:io';
+import 'dart:typed_data';
+/*import 'dart:ui' as ui;*/
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:food_stock/ui/screens/order_details_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -44,10 +46,11 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
 
+
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
-  /*  var bytes;*/
+ /*   var bytes;*/
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -295,14 +298,18 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    /*  final Image =
-                        await signatureGlobalKey.currentState!.toImage();
-                     bytes =
-                        await Image.toByteData(format: ui.ImageByteFormat.png);*/
-                  //  Navigator.popUntil(context, (route) => route.name == RouteDefine.orderDetailsScreen.name);
-                   Navigator.pushNamedAndRemoveUntil(context,  RouteDefine.orderDetailsScreen.name, ModalRoute.withName(RouteDefine.orderScreen.name,),
-                   arguments: {AppStrings.idString : args?[AppStrings.idString] ?? 0}
-                   );
+
+                   var image = await signatureGlobalKey.currentState!.toImage();
+                   print('image_____${image.toByteData()}');
+                /*   ByteData? byteData;*/
+                //   byteData = image.toByteData(format: ImageByteFormat,);
+                   var tempDir1 = await getTemporaryDirectory();
+
+                   var file = await File('${tempDir1.path}/image.png').create();
+                  // file.writeAsBytesSync(byteData!);
+                   print('path_____${file.path}');
+                    // tempDir1.deleteSync(recursive: true);
+                   // bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(context: context ,supplierId:args?[AppStrings.supplierIdString]));
 
                   },
                   child: Container(
@@ -329,6 +336,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
     );
   }
 }
+
+
 
 /* Container(
                         decoration: BoxDecoration(
