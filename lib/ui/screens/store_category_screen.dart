@@ -14,6 +14,7 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_product_category_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 
 import '../widget/common_pagination_end_widget.dart';
 import '../widget/common_product_button_widget.dart';
@@ -30,8 +31,15 @@ class StoreCategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('store category args = $args');
     return BlocProvider(
-      create: (context) => StoreCategoryBloc(),
+      create: (context) => StoreCategoryBloc()
+        ..add(StoreCategoryEvent.changeCategoryDetailsEvent(
+            categoryId: args?[AppStrings.categoryIdString],
+            categoryName: args?[AppStrings.categoryNameString],
+            context: context)),
       child: StoreCategoryScreenWidget(),
     );
   }
@@ -46,11 +54,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) => WillPopScope(
         onWillPop: () {
-          if (state.isCategory) {
+          if (state.isSubCategory) {
             return Future.value(true);
           } else {
-            bloc.add(StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
-                isCategory: true, context: context));
+            bloc.add(StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+                isSubCategory: true, context: context));
             return Future.value(false);
           }
         },
@@ -64,24 +72,106 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     width: getScreenWidth(context),
                     child: Stack(
                       children: [
-                        state.isCategory
-                            ? SingleChildScrollView(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    bloc.add(StoreCategoryEvent
-                                        .changeCategoryOrSubCategoryEvent(
-                                            isCategory: false,
-                                            context: context));
-                                  },
-                                  child: Column(
-                                    children: [
-                                      80.height,
-                                      buildTopNavigation(
-                                          context: context,
-                                          categoryName: 'Category'),
-                                    ],
+                        state.isSubCategory
+                            ? NotificationListener<ScrollNotification>(
+                                child: SingleChildScrollView(
+                                  physics: state.subCategoryList.isEmpty
+                                      ? const NeverScrollableScrollPhysics()
+                                      : const AlwaysScrollableScrollPhysics(),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      bloc.add(StoreCategoryEvent
+                                          .changeSubCategoryOrPlanogramEvent(
+                                              isSubCategory: false,
+                                              context: context));
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        80.height,
+                                        buildTopNavigation(
+                                            context: context,
+                                            categoryName: state.categoryName),
+                                        state.isShimmering
+                                            ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                            : state.subCategoryList.isEmpty
+                                                ? Container(
+                                                    height: getScreenHeight(
+                                                            context) -
+                                                        140,
+                                                    width:
+                                                        getScreenWidth(context),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'No Sub Categories',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .smallFont,
+                                                              color: AppColors
+                                                                  .textColor),
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    itemCount: state
+                                                        .subCategoryList.length,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemBuilder: (context,
+                                                            index) =>
+                                                        buildSubCategoryListItem(
+                                                            context: context,
+                                                            subCategoryName: state
+                                                                    .subCategoryList[
+                                                                        index]
+                                                                    .subCategoryName ??
+                                                                '',
+                                                            onTap: () {
+                                                              //get subcategory wise plano grams
+                                                              context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(
+                                                                  subCategoryId: state
+                                                                          .subCategoryList[
+                                                                              index]
+                                                                          .id ??
+                                                                      '',
+                                                                  subCategoryName: state
+                                                                          .subCategoryList[
+                                                                              index]
+                                                                          .subCategoryName ??
+                                                                      '',
+                                                                  context:
+                                                                      context));
+                                                            }),
+                                                  ),
+                                        state.isLoadMore
+                                            ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                            : 0.width,
+                                        state.subCategoryList.isEmpty
+                                            ? 0.width
+                                            : state.isBottomOfPlanoGrams
+                                                ? CommonPaginationEndWidget(
+                                                    pageEndText:
+                                                        'No more Sub Categories')
+                                                : 0.width,
+                                      ],
+                                    ),
                                   ),
                                 ),
+                                onNotification: (notification) {
+                                  if (notification.metrics.pixels ==
+                                      notification.metrics.maxScrollExtent) {
+                                    context.read<StoreCategoryBloc>().add(
+                                        StoreCategoryEvent
+                                            .getSubCategoryListEvent(
+                                                context: context));
+                                  }
+                                  return true;
+                                },
                               )
                             : NotificationListener<ScrollNotification>(
                                 child: SingleChildScrollView(
@@ -92,8 +182,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       80.height,
                                       buildTopNavigation(
                                           context: context,
-                                          categoryName: 'Category',
-                                          subCategoryName: 'Sub Category'),
+                                          categoryName: state.categoryName,
+                                          subCategoryName:
+                                              state.subCategoryName),
                                       16.height,
                                       state.isShimmering
                                           ? StoreCategoryScreenPlanoGramShimmerWidget()
@@ -218,6 +309,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 onNotification: (notification) {
                                   if (notification.metrics.pixels ==
                                       notification.metrics.maxScrollExtent) {
+                                    if (notification.metrics.axis ==
+                                        Axis.vertical) {}
                                     context.read<StoreCategoryBloc>().add(
                                         StoreCategoryEvent
                                             .getPlanoGramProductsEvent(
@@ -455,8 +548,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             child: Container(
-              height: 170,
-              width: 140,
+              height: height,
+              width: width,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 borderRadius:
@@ -523,14 +616,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   ),
                   5.height,
                   Expanded(
-                    child: Text(
-                      "Product Description",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.blackColor),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    child: state.planoGramsList[index]
+                                .planogramproducts?[subIndex].totalSale ==
+                            0
+                        ? 0.width
+                        : Text(
+                            "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_10,
+                                color: AppColors.saleRedColor,
+                                fontWeight: FontWeight.w600),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                   ),
                   5.height,
                   Center(
@@ -1057,8 +1155,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 : () {
               debugPrint('cate');
                     BlocProvider.of<StoreCategoryBloc>(context).add(
-                        StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
-                            isCategory: true, context: context));
+                        StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+                            isSubCategory: true, context: context));
                   },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1131,7 +1229,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         : AppLocalizations.of(context)!.see_all),
                 5.height,
                 SizedBox(
-                  height: 200,
+                  height: 170,
                   child:
                       state.planoGramsList[index].planogramproducts?.isEmpty ??
                               false
@@ -1171,6 +1269,46 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget buildSubCategoryListItem(
+      {required BuildContext context,
+      required String subCategoryName,
+      required void Function()? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.1),
+                  blurRadius: AppConstants.blur_10),
+            ]),
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        padding: EdgeInsets.symmetric(
+            horizontal: AppConstants.padding_15,
+            vertical: AppConstants.padding_15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Text(
+              subCategoryName,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }

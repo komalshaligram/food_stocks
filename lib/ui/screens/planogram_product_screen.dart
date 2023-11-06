@@ -13,7 +13,6 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -93,8 +92,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             child: Container(
-              height: 170,
-              width: 140,
+              // height: 170,
+              // width: 140,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 borderRadius:
@@ -176,6 +175,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   5.height,
                   Center(
                     child: Container(
+                      height: AppConstants.buttonHeightSmall,
                       width: double.maxFinite,
                       margin: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),

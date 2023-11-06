@@ -43,16 +43,12 @@ class Cart with _$Cart {
 @freezed
 class Datum with _$Datum {
   const factory Datum({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "productDetails")
-    ProductDetails? productDetails,
-    @JsonKey(name: "suppliers")
-    List<Supplier>? suppliers,
-    @JsonKey(name: "totalQuantity")
-    int? totalQuantity,
-    @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "productDetails") ProductDetails? productDetails,
+    @JsonKey(name: "cartProductId") String? cartProductId,
+    @JsonKey(name: "suppliers") List<Supplier>? suppliers,
+    @JsonKey(name: "totalQuantity") int? totalQuantity,
+    @JsonKey(name: "totalAmount") int? totalAmount,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

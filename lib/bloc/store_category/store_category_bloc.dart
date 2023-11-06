@@ -2,7 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
+import 'package:food_stock/data/model/req_model/product_subcategories_req_model/product_subcategories_req_model.dart';
 import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
+import 'package:food_stock/data/model/res_model/product_subcategories_res_model/product_subcategories_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -30,10 +32,77 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _ChangeCategoryOrSubCategoryEvent) {
-        emit(state.copyWith(isCategory: event.isCategory));
-        if (!state.isCategory) {
-          add(_GetPlanoGramProductsEvent(context: event.context));
+      } else if (event is _ChangeSubCategoryOrPlanogramEvent) {
+        emit(state.copyWith(isSubCategory: event.isSubCategory));
+      } else if (event is _ChangeCategoryDetailsEvent) {
+        emit(state.copyWith(
+          categoryId: event.categoryId,
+          categoryName: event.categoryName,
+        ));
+        add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+      } else if (event is _ChangeSubCategoryDetailsEvent) {
+        debugPrint(
+            'sub category ${event.subCategoryId}(${event.subCategoryName})');
+        if (event.subCategoryId != state.subCategoryId) {
+          emit(state.copyWith(
+            subCategoryId: event.subCategoryId,
+            subCategoryName: event.subCategoryName,
+            planoGramsList: [],
+            productStockList: [],
+            productStockUpdateIndex: -1,
+            planoGramUpdateIndex: -1,
+            planogramPageNum: 0,
+            isBottomOfPlanoGrams: false,
+          ));
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(
+              context: event.context));
+        }
+        emit(state.copyWith(isSubCategory: false));
+      } else if (event is _GetSubCategoryListEvent) {
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfPlanoGrams) {
+          return;
+        }
+        try {
+          emit(state.copyWith(
+              isShimmering: state.subCategoryPageNum == 0 ? true : false,
+              isLoadMore: state.subCategoryPageNum == 0 ? false : true));
+          final res = await DioClient(event.context).post(
+              AppUrls.getSubCategoriesUrl,
+              data: ProductSubcategoriesReqModel(
+                      parentCategoryId: state.categoryId,
+                      pageNum: state.subCategoryPageNum + 1,
+                      pageLimit: AppConstants.productSubCategoryPageLimit)
+                  .toJson());
+          ProductSubcategoriesResModel response =
+              ProductSubcategoriesResModel.fromJson(res);
+          if (response.status == 200) {
+            List<SubCategory> subCategoryList =
+                state.subCategoryList.toList(growable: true);
+            subCategoryList.addAll(response.data?.subCategories ?? []);
+            debugPrint('new sub category List = ${subCategoryList.length}');
+            emit(state.copyWith(
+              subCategoryList: subCategoryList,
+              subCategoryPageNum: state.subCategoryPageNum + 1,
+              isShimmering: false,
+              isLoadMore: false,
+            ));
+            emit(state.copyWith(
+                isBottomOfSubCategory:
+                    subCategoryList.length == (response.data?.totalRecords ?? 0)
+                        ? true
+                        : false));
+          } else {
+            emit(state.copyWith(isLoadMore: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } on ServerException {
+          emit(state.copyWith(isLoadMore: false));
         }
       } else if (event is _GetPlanoGramProductsEvent) {
         if (state.isLoadMore) {
@@ -44,16 +113,26 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
         try {
           emit(state.copyWith(
-              isShimmering: state.pageNum == 0 ? true : false,
-              isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-              AppUrls.getPlanogramProductsUrl,
-              data: PlanogramReqModel(
-                      pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.planogramProductPageLimit,
-                      sortOrder: AppStrings.ascendingString,
-                      sortField: AppStrings.planogramSortFieldString)
-                  .toJson());
+              isShimmering: state.planogramPageNum == 0 ? true : false,
+              isLoadMore: state.planogramPageNum == 0 ? false : true));
+
+          PlanogramReqModel planogramReqModel = PlanogramReqModel(
+              pageNum: state.planogramPageNum + 1,
+              pageLimit: AppConstants.planogramProductPageLimit,
+              sortOrder: AppStrings.ascendingString,
+              sortField: AppStrings.planogramSortFieldString,
+              categoryId: state.categoryId,
+              subCategoryId: state.subCategoryId);
+          Map<String, dynamic> req = planogramReqModel.toJson();
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          debugPrint('sub category req = $req');
+          final res = await DioClient(event.context)
+              .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
           if (response.status == 200) {
             List<Datum> planoGramsList =
@@ -76,7 +155,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(
                 planoGramsList: planoGramsList,
                 productStockList: productStockList,
-                pageNum: state.pageNum + 1,
+                planogramPageNum: state.planogramPageNum + 1,
                 isShimmering: false,
                 isLoadMore: false));
             emit(state.copyWith(

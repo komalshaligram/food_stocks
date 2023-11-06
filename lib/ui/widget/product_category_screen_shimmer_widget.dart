@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import '../utils/themes/app_constants.dart';
 
-class SupplierScreenShimmerWidget extends StatelessWidget {
-  const SupplierScreenShimmerWidget({super.key});
+import '../utils/app_utils.dart';
+import '../utils/themes/app_colors.dart';
+import '../utils/themes/app_constants.dart';
+import 'common_shimmer_widget.dart';
+
+class ProductCategoryScreenShimmerWidget extends StatelessWidget {
+  const ProductCategoryScreenShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: GridView.builder(
           shrinkWrap: true,
-          itemCount: AppConstants.supplierPageLimit,
+          itemCount: AppConstants.productCategoryPageLimit,
           padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemBuilder: (context, index) =>
-              buildSupplierListItem(context: context)),
+              buildProductCategoryListItem(context: context)),
     );
   }
 
-  Widget buildSupplierListItem({required BuildContext context}) {
+  Widget buildProductCategoryListItem({required BuildContext context}) {
     return CommonShimmerWidget(
       child: Container(
         height: getScreenWidth(context),

@@ -41,7 +41,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           final res = await DioClient(event.context).post(
               AppUrls.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
-                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                      pageNum: 1,
+                      pageLimit: AppConstants.productCategoryPageLimit)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);

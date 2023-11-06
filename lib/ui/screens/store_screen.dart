@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +72,13 @@ class StoreScreenWidget extends StatelessWidget {
                                             subTitle:
                                                 AppLocalizations.of(context)!
                                                     .all_categories,
-                                            onTap: () {}),
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .productCategoryScreen
+                                                      .name);
+                                            }),
                                         SizedBox(
                                           width: getScreenWidth(context),
                                           height: 110,
@@ -97,7 +102,32 @@ class StoreScreenWidget extends StatelessWidget {
                                                               index]
                                                           .categoryName ??
                                                       '',
-                                                  onTap: () {});
+                                                  isHomePreference: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .isHomePreference ??
+                                                      false,
+                                                  onTap: () {
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        RouteDefine
+                                                            .storeCategoryScreen
+                                                            .name,
+                                                        arguments: {
+                                                          AppStrings
+                                                                  .categoryIdString:
+                                                              state
+                                                                  .productCategoryList[
+                                                                      index]
+                                                                  .id,
+                                                          AppStrings
+                                                                  .categoryNameString:
+                                                              state
+                                                                  .productCategoryList[
+                                                                      index]
+                                                                  .categoryName
+                                                        });
+                                                  });
                                             },
                                           ),
                                         ),
@@ -422,109 +452,114 @@ class StoreScreenWidget extends StatelessWidget {
   Widget buildCategoryListItem(
       {required String categoryName,
       required void Function() onTap,
-      required String categoryImage}) {
-    return Container(
-      height: 90,
-      width: 90,
-      margin: EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_5,
-          vertical: AppConstants.padding_10),
-      clipBehavior: Clip.hardEdge,
-      // alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10)
-        ],
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: AppConstants.padding_5,
-                  left: AppConstants.padding_5,
-                  right: AppConstants.padding_5,
-                  bottom: AppConstants.padding_20),
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$categoryImage",
-                fit: BoxFit.contain,
-                height: 65,
-                width: 80,
-                alignment: Alignment.center,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 90,
-                        width: 90,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                        ),
-                        // alignment: Alignment.center,
-                        // child: CupertinoActivityIndicator(
-                        //   color: AppColors.blackColor,
-                        // ),
-                      ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('product category list image error : $error');
-                  return Container(
-                    padding: EdgeInsets.only(
-                        bottom: AppConstants.padding_10, top: 0),
-                    child: Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover,
-                      width: 90,
-                      height: 70,
+      required String categoryImage,
+      required bool isHomePreference}) {
+    return !isHomePreference
+        ? 0.width
+        : Container(
+            height: 90,
+            width: 90,
+            margin: EdgeInsets.symmetric(
+                horizontal: AppConstants.padding_5,
+                vertical: AppConstants.padding_10),
+            clipBehavior: Clip.hardEdge,
+            // alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.15),
+                    blurRadius: AppConstants.blur_10)
+              ],
+            ),
+            child: InkWell(
+              onTap: onTap,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: AppConstants.padding_5,
+                        left: AppConstants.padding_5,
+                        right: AppConstants.padding_5,
+                        bottom: AppConstants.padding_20),
+                    child: Image.network(
+                      "${AppUrls.baseFileUrl}$categoryImage",
+                      fit: BoxFit.contain,
+                      height: 65,
+                      width: 80,
+                      alignment: Alignment.center,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress?.cumulativeBytesLoaded !=
+                            loadingProgress?.expectedTotalBytes) {
+                          return CommonShimmerWidget(
+                            child: Container(
+                              height: 90,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                              ),
+                              // alignment: Alignment.center,
+                              // child: CupertinoActivityIndicator(
+                              //   color: AppColors.blackColor,
+                              // ),
+                            ),
+                          );
+                        }
+                        return child;
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        // debugPrint('product category list image error : $error');
+                        return Container(
+                          padding: EdgeInsets.only(
+                              bottom: AppConstants.padding_10, top: 0),
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            fit: BoxFit.cover,
+                            width: 90,
+                            height: 70,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      // height: 20,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5,
+                          vertical: AppConstants.padding_2),
+                      decoration: BoxDecoration(
+                        color: AppColors.mainColor,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(AppConstants.radius_10),
+                            bottomRight:
+                                Radius.circular(AppConstants.radius_10)),
+                        // border: Border.all(color: AppColors.whiteColor, width: 1),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: CommonMarqueeWidget(
+                        direction: Axis.horizontal,
+                        child: Text(
+                          categoryName,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.font_12,
+                              color: AppColors.whiteColor),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                // height: 20,
-                alignment: Alignment.center,
-                padding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_5,
-                    vertical: AppConstants.padding_2),
-                decoration: BoxDecoration(
-                  color: AppColors.mainColor,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(AppConstants.radius_10),
-                      bottomRight: Radius.circular(AppConstants.radius_10)),
-                  // border: Border.all(color: AppColors.whiteColor, width: 1),
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: CommonMarqueeWidget(
-                  direction: Axis.horizontal,
-                  child: Text(
-                    categoryName,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
-                        color: AppColors.whiteColor),
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget buildProductSaleListItem({

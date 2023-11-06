@@ -43,6 +43,8 @@ class AppStrings {
   static const clientDetailString = 'clientDetail';
   static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
+  static const categoryIdString = 'catregoryId';
+  static const categoryNameString = 'catregoryName';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

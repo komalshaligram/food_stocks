@@ -5,9 +5,22 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryExpansionEvent(
       {bool? isOpened}) = _ChangeCategoryExpansionEvent;
 
-  const factory StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
-      {required bool isCategory,
-      required BuildContext context}) = _ChangeCategoryOrSubCategoryEvent;
+  const factory StoreCategoryEvent.changeCategoryDetailsEvent(
+      {required String categoryId,
+      required String categoryName,
+      required BuildContext context}) = _ChangeCategoryDetailsEvent;
+
+  const factory StoreCategoryEvent.changeSubCategoryDetailsEvent(
+      {required String subCategoryId,
+      required String subCategoryName,
+      required BuildContext context}) = _ChangeSubCategoryDetailsEvent;
+
+  const factory StoreCategoryEvent.getSubCategoryListEvent(
+      {required BuildContext context}) = _GetSubCategoryListEvent;
+
+  const factory StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+      {required bool isSubCategory,
+      required BuildContext context}) = _ChangeSubCategoryOrPlanogramEvent;
 
   const factory StoreCategoryEvent.getPlanoGramProductsEvent(
       {required BuildContext context}) = _GetPlanoGramProductsEvent;
