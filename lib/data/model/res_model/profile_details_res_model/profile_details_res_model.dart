@@ -50,7 +50,6 @@ class Client with _$Client {
     @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "roleDetails") RoleDetails? roleDetails,
     @JsonKey(name: "city") City? city,
     @JsonKey(name: "status") Status? status,

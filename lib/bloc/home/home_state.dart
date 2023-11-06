@@ -6,11 +6,24 @@ class HomeState with _$HomeState {
     required String UserImageUrl,
     required String UserCompanyLogoUrl,
     required int cartCount,
+    required ProductSalesResModel productSalesList,
+    required bool isShimmering,
+    required bool isLoading,
+    required bool isProductLoading,
+    required ProductDetailsResModel productDetails,
+    required List<ProductStockModel> productStockList,
+    required int productStockUpdateIndex,
   }) = _HomeState;
 
-  factory HomeState.initial()=>  HomeState(
-    UserImageUrl: '',
-        UserCompanyLogoUrl: '',
-        cartCount: 12,
-      );
+  factory HomeState.initial() => HomeState(
+      UserImageUrl: '',
+      UserCompanyLogoUrl: '',
+      cartCount: 12,
+      productSalesList: ProductSalesResModel(),
+      isShimmering: false,
+      isLoading: false,
+      isProductLoading: false,
+      productDetails: ProductDetailsResModel(),
+      productStockUpdateIndex: -1,
+      productStockList: []);
 }

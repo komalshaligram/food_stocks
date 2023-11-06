@@ -7,9 +7,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../data/storage/shared_preferences_helper.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -34,7 +31,6 @@ void showSnackBar(
           fontWeight: FontWeight.w400),
     ),
     backgroundColor: bgColor,
-    padding: EdgeInsets.all(AppConstants.padding_20),
     behavior: SnackBarBehavior.floating,
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -106,6 +102,6 @@ Future<String> scanBarcodeOrQRCode(
 bool isRTLContent({required BuildContext context}) {
   Locale locale = Localizations.localeOf(context);
   List<Locale> rtlLocales = [Locale('he')];
-  debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
+  // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }

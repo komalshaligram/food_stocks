@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'product_sales_res_model.freezed.dart';
+
 part 'product_sales_res_model.g.dart';
 
 ProductSalesResModel productSalesResModelFromJson(String str) =>
@@ -34,7 +35,7 @@ class Datum with _$Datum {
     @JsonKey(name: "subcategories") String? subcategories,
     @JsonKey(name: "subsubcategories") String? subsubcategories,
     @JsonKey(name: "casetypes") String? casetypes,
-    @JsonKey(name: "status") Status? status,
+    @JsonKey(name: "status") String? status,
     @JsonKey(name: "sku") String? sku,
     @JsonKey(name: "brandName") String? brandName,
     @JsonKey(name: "images") List<Image>? images,
@@ -66,16 +67,6 @@ class Image with _$Image {
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
 }
 
-enum Status {
-  @JsonValue("Approved")
-  APPROVED,
-  @JsonValue("Pending")
-  PENDING
-}
-
-final statusValues =
-    EnumValues({"Approved": Status.APPROVED, "Pending": Status.PENDING});
-
 @freezed
 class MetaData with _$MetaData {
   const factory MetaData({
@@ -86,16 +77,4 @@ class MetaData with _$MetaData {
 
   factory MetaData.fromJson(Map<String, dynamic> json) =>
       _$MetaDataFromJson(json);
-}
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

@@ -17,7 +17,11 @@ class AppStrings {
   static const okString = 'ok';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
+  static const ascendingString = 'asc';
+  static const descendingString = 'desc';
+  static const planogramSortFieldString = 'planogramName';
   static const failedToLoadString = 'Failed to load';
+  static const outOfStockString = 'Out of Stock';
 
   //language Strings
   static const englishString = 'en';
@@ -56,6 +60,7 @@ class AppStrings {
   static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';
   static const isUpdateParamString = 'isUpdateParam';
+  static const planogramProductsParamString = 'planogramProductsParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
@@ -67,6 +72,9 @@ class AppStrings {
   static const userNotFoundString = 'User not found';
   static const imageNotUploadString = 'Image not uploaded';
   static const filesNotUploadString = 'Files not uploaded';
+  static const maxQuantityAllowString = 'Maximum 30 quantity allow per order';
+  static const minQuantityMsgString = 'Add at least 1 quantity';
+  static const maxQuantityMsgString = 'You have reached maximum quantity';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';

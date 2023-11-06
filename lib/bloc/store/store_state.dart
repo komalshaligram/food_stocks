@@ -8,13 +8,25 @@ class StoreState with _$StoreState {
     required ProductSalesResModel productSalesList,
     required SuppliersResModel suppliersList,
     required bool isShimmering,
+    required bool isLoading,
+    required bool isProductLoading,
+    required ProductDetailsResModel productDetails,
+    required List<ProductStockModel> productStockList,
+    required ProductStockModel scanProductStockDetails,
+    required int productStockUpdateIndex,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
-    isCategoryExpand: false,
+        isCategoryExpand: false,
         productCategoryList: [],
         productSalesList: ProductSalesResModel(),
         suppliersList: SuppliersResModel(),
         isShimmering: false,
+        isLoading: false,
+        isProductLoading: false,
+        productDetails: ProductDetailsResModel(),
+        productStockUpdateIndex: -1,
+        productStockList: [],
+        scanProductStockDetails: ProductStockModel(productId: ''),
       );
 }

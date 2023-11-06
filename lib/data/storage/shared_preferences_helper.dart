@@ -57,8 +57,8 @@ class SharedPreferencesHelper {
     await prefs.setString(appVersion, version);
   }
 
-  Future<void> setFCMToken({required String fcmToken}) async {
-    await prefs.setString(fcmToken, fcmToken);
+  Future<void> setFCMToken({required String fcmTokenId}) async {
+    await prefs.setString(fcmToken, fcmTokenId);
   }
 
   Future<void> setUserName({required String name}) async {
@@ -82,7 +82,7 @@ class SharedPreferencesHelper {
   }
 
   String getAppLanguage() {
-    return prefs.getString(lang) ?? 'he';
+    return prefs.getString(lang) ?? 'en';
   }
 
   bool getUserLoggedIn() {

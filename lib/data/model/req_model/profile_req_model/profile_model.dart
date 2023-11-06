@@ -39,7 +39,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "ownerName") String? ownerName,
     @JsonKey(name: "clientTypeId") String? clientTypeId,
     @JsonKey(name: "israelId") String? israelId,
-    // @JsonKey(name: "tokenId") String? tokenId,
+    @JsonKey(name: "tokenId") String? tokenId,
     @JsonKey(name: "fax") String? fax,
     @JsonKey(name: "lastSeen") DateTime? lastSeen,
     // @JsonKey(name: "monthlyCredits") int? monthlyCredits,

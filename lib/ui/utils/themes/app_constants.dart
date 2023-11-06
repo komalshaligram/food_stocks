@@ -61,4 +61,11 @@ class AppConstants{
 
   //shimmer text height
   static const double shimmerTextHeight = 20;
+
+  //pagination
+  static const int defaultPageLimit = 6;
+  static const int supplierPageLimit = 18;
+  static const int supplierProductPageLimit = 18;
+  static const int saleProductPageLimit = 18;
+  static const int planogramProductPageLimit = 4;
 }

@@ -244,14 +244,15 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 bussinessId: profileModel.clientDetail?.bussinessId,
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
+                tokenId: preferencesHelper.getFCMToken(),
                 lastSeen: DateTime.now(),
               ));
 
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));
-            final response =
-                await DioClient(event.context).post(AppUrls.RegistrationUrl, data: reqMap);
+            final response = await DioClient(event.context)
+                .post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -259,17 +260,27 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             debugPrint('profile response --- ${profileResModel}');
             if (profileResModel.status == 200) {
               preferencesHelper.setCartId(
-                  cartId: profileResModel.data!.client!.cartId ?? '');
-              preferencesHelper.setUserImageUrl(
-                  imageUrl:
-                      profileResModel.data!.client!.clientData!.profileImage.toString());
-              preferencesHelper.setUserCompanyLogoUrl(
-                  logoUrl: profileResModel.data!.client!.clientData!.logo.toString());
+                  cartId: profileResModel.data?.client?.cartId ?? '');
+              if ((profileResModel.data?.client?.clientData?.profileImage ??
+                      '') !=
+                  '') {
+                preferencesHelper.setUserImageUrl(
+                    imageUrl: profileResModel
+                            .data?.client?.clientData?.profileImage ??
+                        '');
+              }
+              if ((profileResModel.data?.client?.clientData?.logo ?? '') !=
+                  '') {
+                preferencesHelper.setUserCompanyLogoUrl(
+                    logoUrl:
+                        profileResModel.data?.client?.clientData?.logo ?? '');
+              }
               preferencesHelper.setUserName(
-                  name: profileResModel.data!.client!.clientData!.clientDetail!.ownerName
-                      .toString());
+                  name: profileResModel
+                          .data?.client?.clientData?.clientDetail?.ownerName ??
+                      '');
               preferencesHelper.setUserId(
-                  id: profileResModel.data!.client!.clientData!.id.toString());
+                  id: profileResModel.data?.client?.clientData?.id ?? '');
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamed(
                 event.context,
@@ -279,15 +290,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response['message'],
+                  title: profileResModel.message ??
+                      AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
-            debugPrint(e.toString());
+            debugPrint("data2 = ${e.toString()}");
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: e.toString(),
+                title: AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
           }
         }
@@ -309,7 +321,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 isShimmering: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId())
+                data: req.ProfileDetailsReqModel(
+                        id: preferencesHelper.getUserId())
                     .toJson());
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);

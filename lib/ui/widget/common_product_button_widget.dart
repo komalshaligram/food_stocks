@@ -5,7 +5,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
 class CommonProductButtonWidget extends StatelessWidget {
   final String title;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final Color bgColor;
   final Color textColor;
   final double textSize;
@@ -51,7 +51,9 @@ class CommonProductButtonWidget extends StatelessWidget {
         minWidth: width,
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? CupertinoActivityIndicator()
+            ? CupertinoActivityIndicator(
+                color: Colors.white,
+              )
             : Text(
                 title,
                 style: AppStyles.rkRegularTextStyle(

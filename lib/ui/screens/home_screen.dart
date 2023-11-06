@@ -14,7 +14,10 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/ui/widget/common_product_details_widget.dart';
+import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
+import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
@@ -30,7 +33,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc()..add(HomeEvent.getPreferencesDataEvent()),
+      create: (context) => HomeBloc()
+        ..add(HomeEvent.getPreferencesDataEvent())
+        ..add(HomeEvent.getProductSalesListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -76,13 +81,19 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color:state.UserImageUrl.isNotEmpty ? AppColors.whiteColor :  AppColors.mainColor.withOpacity(0.1),
+                                    color: state.UserImageUrl.isNotEmpty
+                                        ? AppColors.whiteColor
+                                        : AppColors.mainColor.withOpacity(0.1),
                                     boxShadow: [
                                       BoxShadow(
-                                          color:state.UserImageUrl.isNotEmpty ? AppColors.shadowColor
-                                              .withOpacity(0.3) : AppColors.whiteColor,
-                                          blurRadius: state.UserImageUrl.isNotEmpty ? AppConstants.blur_10 : 0
-                                      )
+                                          color: state.UserImageUrl.isNotEmpty
+                                              ? AppColors.shadowColor
+                                                  .withOpacity(0.3)
+                                              : AppColors.whiteColor,
+                                          blurRadius:
+                                              state.UserImageUrl.isNotEmpty
+                                                  ? AppConstants.blur_10
+                                                  : 0)
                                     ],
                                     shape: BoxShape.circle,
                                   ),
@@ -97,7 +108,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     const CupertinoActivityIndicator()),
                                             imageUrl:
                                                 '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.cover,
                                             errorWidget: (context, url, error) {
                                               return Container(
                                                 color: AppColors.whiteColor,
@@ -105,16 +116,16 @@ class HomeScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         )
-                                      :Icon(
-                                    Icons.person,
-                                    size: 40,
-                                    color: AppColors.textColor,
-                                  ),
+                                      : Icon(
+                                          Icons.person,
+                                          size: 40,
+                                          color: AppColors.textColor,
+                                        ),
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
                                     ? CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
+                                        placeholder: (context, url) => Container(
                                             decoration: BoxDecoration(
                                                 color: AppColors.whiteColor,
                                                 border: Border.all(
@@ -424,24 +435,74 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            titleRowWidget(
-                                context: context,
-                                title: AppLocalizations.of(context)!.sales,
-                                allContentTitle:
-                                    AppLocalizations.of(context)!.all_sales,
-                                onTap: () {}),
-                            SizedBox(
-                              height: 190,
-                              child: ListView.builder(
-                                itemCount: 10,
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) =>
-                                    productListItem(
-                                        index: index, context: context),
-                              ),
-                            ),
-                            10.height,
+                            state.isShimmering
+                                ? 0.width
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      titleRowWidget(
+                                          context: context,
+                                          title: AppLocalizations.of(context)!
+                                              .sales,
+                                          allContentTitle:
+                                              AppLocalizations.of(context)!
+                                                  .all_sales,
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .productSaleScreen.name);
+                                          }),
+                                      SizedBox(
+                                        height: 190,
+                                        child: ListView.builder(
+                                            itemCount: (state.productSalesList
+                                                            .data?.length ??
+                                                        0) <
+                                                    6
+                                                ? state.productSalesList.data
+                                                    ?.length
+                                                : 6,
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) =>
+                                                buildProductSaleListItem(
+                                                  context: context,
+                                                  saleImage: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .mainImage ??
+                                                      '',
+                                                  title: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .salesName ??
+                                                      '',
+                                                  description: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .salesDescription ??
+                                                      '',
+                                                  price: state
+                                                          .productSalesList
+                                                          .data?[index]
+                                                          .discountPercentage
+                                                          ?.toDouble() ??
+                                                      0.0,
+                                                  onButtonTap: () {
+                                                    showProductDetails(
+                                                        context: context,
+                                                        productId: state
+                                                                .productSalesList
+                                                                .data?[index]
+                                                                .id ??
+                                                            '');
+                                                  },
+                                                )),
+                                      ),
+                                      10.height,
+                                    ],
+                                  ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -536,69 +597,215 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget productListItem({required int index, required BuildContext context}) =>
-      Container(
-        width: 140,
-        padding: const EdgeInsets.symmetric(
-            vertical: 5.0, horizontal: AppConstants.padding_10),
-        margin: const EdgeInsets.symmetric(
-            horizontal: 5.0, vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
+  Widget buildProductSaleListItem({
+    required BuildContext context,
+    required String saleImage,
+    required String title,
+    required String description,
+    required double price,
+    required void Function() onButtonTap,
+  }) {
+    return Container(
+      height: 170,
+      width: 140,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        boxShadow: [
+          BoxShadow(
               color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10,
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Image.network(
+              "${AppUrls.baseFileUrl}$saleImage",
+              height: 70,
+              fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded !=
+                    loadingProgress?.expectedTotalBytes) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
+                    ),
+                  );
+                }
+                return child;
+              },
+              errorBuilder: (context, error, stackTrace) {
+                // debugPrint('sale list image error : $error');
+                return Container(
+                  child: Image.asset(AppImagePath.imageNotAvailable5,
+                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                );
+              },
             ),
-          ],
-          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        ),
-        child: InkWell(
-          onTap: () {},
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Image.asset(
-                  AppImagePath.product2,
-                  width: 70,
-                  height: 70,
-                ),
-              ),
-              5.height,
-              Text(
-                AppLocalizations.of(context)!.next,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.redColor,
-                    fontWeight: FontWeight.w600),
-              ),
-              5.height,
-              Expanded(
-                child: Text(
-                  "Buy 2 units of a variety of flat salted pretzels for a price of 250 grams",
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.blackColor),
-                  maxLines: 3,
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-              5.height,
-              Center(
-                child: CommonProductButtonWidget(
-                  title: "20${AppLocalizations.of(context)!.currency}",
-                  onPressed: () {},
-                  textColor: AppColors.whiteColor,
-                  bgColor: AppColors.mainColor,
-                  borderRadius: AppConstants.radius_3,
-                  textSize: AppConstants.font_12,
-                ),
-              ),
-            ],
           ),
-        ),
-      );
+          5.height,
+          Text(
+            title,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.saleRedColor,
+                fontWeight: FontWeight.w600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          5.height,
+          Expanded(
+            child: Text(
+              description,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_10, color: AppColors.blackColor),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          5.height,
+          Center(
+            child: CommonProductButtonWidget(
+              title:
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+              onPressed: onButtonTap,
+              // height: 35,
+              textColor: AppColors.whiteColor,
+              bgColor: AppColors.mainColor,
+              borderRadius: AppConstants.radius_3,
+              textSize: AppConstants.font_12,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void showProductDetails(
+      {required BuildContext context, required String productId}) async {
+    context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
+        context: context, productId: productId));
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      // showDragHandle: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context1) {
+        return BlocProvider.value(
+          value: context.read<HomeBloc>(),
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            minChildSize: 0.4,
+            initialChildSize: 0.7,
+            shouldCloseOnMinExtent: true,
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                  value: context.read<HomeBloc>(),
+                  child: BlocBuilder<HomeBloc, HomeState>(
+                    builder: (context, state) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(AppConstants.radius_30),
+                            topRight: Radius.circular(AppConstants.radius_30),
+                          ),
+                          color: AppColors.whiteColor,
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Scaffold(
+                          body: state.isProductLoading
+                              ? ProductDetailsShimmerWidget()
+                              : CommonProductDetailsWidget(
+                                  context: context,
+                                  productImage:
+                                      state.productDetails.product?.first.mainImage ??
+                                          '',
+                                  productName:
+                                      state.productDetails.product?.first.productName ??
+                                          '',
+                                  productCompanyName:
+                                      state.productDetails.product?.first.brandName ??
+                                          '',
+                                  productDescription: state.productDetails
+                                          .product?.first.productDescription ??
+                                      '',
+                                  productSaleDescription: state.productDetails
+                                          .product?.first.productDescription ??
+                                      '',
+                                  productPrice: state.productDetails.product
+                                          ?.first.numberOfUnit
+                                          ?.toDouble() ??
+                                      0.0,
+                                  productWeight: state.productDetails.product
+                                          ?.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
+                                  productsStock: 1,
+                                  isRTL: isRTLContent(context: context),
+                                  scrollController: scrollController,
+                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  onQuantityIncreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.increaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  onQuantityDecreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.decreaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note),
+                                  onNoteChanged: (newNote) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  isLoading: state.isLoading,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<HomeBloc>().add(
+                                              HomeEvent.verifyProductStockEvent(
+                                                  context: context1));
+                                        }),
+                        ),
+                      );
+                    },
+                  ));
+            },
+          ),
+        );
+      },
+    );
+  }
 
   Widget dashboardStatsWidget(
       {required BuildContext context,

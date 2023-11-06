@@ -10,10 +10,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
+import 'app_config.dart';
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
-
     WidgetsFlutterBinding.ensureInitialized();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
@@ -32,18 +32,30 @@ void main() async {
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await AppConfig.initializeAppConfig(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(Locale('en')),
+      create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
-        final provider = Provider.of<LocaleProvider>(context);
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          locale: provider.locale,
+          locale: Provider.of<LocaleProvider>(context).locale,
           title: AppStrings.appName,
           initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,

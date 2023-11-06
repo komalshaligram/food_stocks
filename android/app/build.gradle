@@ -61,6 +61,26 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "app"
+    productFlavors {
+        dev {
+            dimension "app"
+            applicationId "com.foodstock.dev"
+            resValue "string", "app_name", "Food Stock Dev"
+        }
+        stag {
+            dimension "app"
+            applicationId "com.foodstock.stag"
+            resValue "string", "app_name", "Food Stock Stag"
+        }
+        prod {
+            dimension "app"
+            applicationId "com.foodstock"
+            resValue "string", "app_name", "Food Stock"
+        }
+    }
+
 }
 
 flutter {
