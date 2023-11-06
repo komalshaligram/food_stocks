@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/menu/menu_bloc.dart';
@@ -54,7 +55,7 @@ class MenuScreenWidget extends StatelessWidget {
                           context, RouteDefine.orderScreen.name)),
                   menuTile(
                       title:
-                          AppLocalizations.of(context)!.questions_and_answers,
+                      AppLocalizations.of(context)!.questions_and_answers,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.questionAndAnswerScreen.name)),
                   menuTile(
@@ -93,7 +94,7 @@ class MenuScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
@@ -125,15 +126,14 @@ class MenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget menuSwitchTile(
-      {required String title,
-      required bool isHebrewLang,
-      required void Function(bool)? onChanged}) {
+  Widget menuSwitchTile({required String title,
+    required bool isHebrewLang,
+    required void Function(bool)? onChanged}) {
     return Container(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
