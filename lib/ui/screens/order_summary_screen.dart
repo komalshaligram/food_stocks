@@ -9,6 +9,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
+import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class OrderSummaryRoute {
   static Widget get route => const OrderSummaryScreen();
@@ -21,7 +22,9 @@ class OrderSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent()),
+          OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(
+            context: context
+          )),
       child: OrderSummaryScreenWidget(),
     );
   }
@@ -50,10 +53,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /*  state.isShimmering ? OrderSummaryScreenShimmerWidget():*/
+                  (state.orderSummaryList.data?.data!.length ?? 0) == 0 ? OrderSummaryScreenShimmerWidget():
                 Expanded(
                   child: ListView.builder(
-                    itemCount: state.orderSummaryList.length,
+                    itemCount: state.orderSummaryList.data?.data!.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     padding:
@@ -124,7 +127,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                               AppConstants.radius_30)
                                           : Radius.circular(AppConstants.radius_6))),
                               child: Text(
-                                '${'11.90₪ : ' + AppLocalizations.of(context)!.total}',
+                                '${state.orderSummaryList.data?.cart!.first.totalAmount}${' : '}${AppLocalizations.of(context)!.total }',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.normalFont,
                                     color: AppColors.whiteColor,
@@ -217,11 +220,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                state.orderSummaryList[index].supplierName.toString(),
+                state.orderSummaryList.data!.data![index].suppliers!.contactName!,
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_14,
                     color: AppColors.blackColor,
-                    fontWeight: FontWeight.w400),
+                   ),
               ),
               10.height,
               Row(
@@ -229,8 +232,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 1,
                     title: AppLocalizations.of(context)!.products,
-                    value: state.orderSummaryList[index].productQuantity
-                        .toString(),
+                    value: state.orderSummaryList.data!.data![index].totalQuantity!.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w700,
@@ -240,8 +242,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.delivery_date,
-                    value:
-                        state.orderSummaryList[index].deliveryDate.toString(),
+                    value: '-',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.font_10,
@@ -252,7 +253,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
-                    value: state.orderSummaryList[index].totalPrice.toString(),
+                    value:state.orderSummaryList.data!.data![index].totalAmount!.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

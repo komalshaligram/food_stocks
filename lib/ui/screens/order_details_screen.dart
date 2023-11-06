@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/order_details/order_details_bloc.dart';
 import '../../routes/app_routes.dart';
@@ -10,6 +13,7 @@ import '../utils/themes/app_styles.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
+import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class OrderDetailsRoute {
   static Widget get route => OrderDetailsScreen();
@@ -21,18 +25,22 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderDetailsBloc(),
-      child: OrderDetailsScreenWidget(),
+      create: (context) => OrderDetailsBloc()/*..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.idString] ?? ''))*/,
+      child: OrderDetailsScreenWidget(orderId: args?[AppStrings.idString] ?? ''),
     );
   }
 }
 
 class OrderDetailsScreenWidget extends StatelessWidget {
-  const OrderDetailsScreenWidget({super.key});
+ final String orderId;
+  const OrderDetailsScreenWidget({required this.orderId});
 
   @override
   Widget build(BuildContext context) {
+    OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();
     return BlocListener<OrderDetailsBloc, OrderDetailsState>(
       listener: (context, state) {
 
@@ -45,31 +53,36 @@ class OrderDetailsScreenWidget extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
-                  title: '123456',
+                  title: orderId,
                   iconData: Icons.arrow_back_ios_sharp,
                   trailingWidget: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppConstants.padding_10,
                     ),
-                    child: CircularButtonWidget(
-                      buttonName: 'סה”כ',
-                      buttonValue: '12,450₪',
+                    child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
+                        ? CupertinoActivityIndicator() : CircularButtonWidget(
+                      buttonName: AppLocalizations.of(context)!.total,
+                      buttonValue: '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
                     ),
                   ),
                   onTap: () {
-                   // Navigator.of(context).pushNamed(RouteDefine.orderScreen.name);
                     Navigator.pop(context);
                   },
                 ),
               ),
-              body: ListView.builder(
-                itemCount: state.supplierList.length,
+              body: FocusDetector(
+                     onFocusGained: ()=> bloc.add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: orderId ?? '')),
+                     child:(state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
+                  ? OrderSummaryScreenShimmerWidget() : ListView.builder(
+                itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                 itemBuilder: (context, index) =>
-                    orderListItem(index: index, context: context),
+                        orderListItem(index: index, context: context),
               ),
+                   ),
+
 
             ),
           );
@@ -99,7 +112,12 @@ class OrderDetailsScreenWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Navigator.pushNamed(
-                  context, RouteDefine.productDetailsScreen.name);
+                  context, RouteDefine.productDetailsScreen.name ,
+              arguments: {
+                   AppStrings.productIndexString : index,
+                   AppStrings.idString: orderId,
+                  }
+              );
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -108,22 +126,20 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      state.supplierList[index].supplierName.toString(),
+                      state.orderByIdList.data!.ordersBySupplier![index].supplierName!.toString() ?? '',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_14,
                           color: AppColors.blackColor,
-                          fontWeight: FontWeight.w400),
+                          ),
                     ),
                     Text(
-                      state.supplierList[index].orderStatus.toString(),
+                      state.orderByIdList.data!.ordersBySupplier![index].deliverStatus!.statusName.toString() ?? '',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color:state.supplierList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ? AppColors.orangeColor : AppColors.mainColor,
+                          color:/*state.supplierList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ?AppColors.orangeColor :*/  AppColors.mainColor,
                           fontWeight: FontWeight.w700
                       ),
-
                     )
-
                   ],
                 ),
                 7.height,
@@ -132,7 +148,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 1,
                       title: AppLocalizations.of(context)!.products,
-                      value: state.supplierList[index].productQuantity.toString(),
+                      value:  state.orderByIdList.data!.ordersBySupplier![index].products!.length.toString(),
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w700,
@@ -142,7 +158,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.delivery_date,
-                      value: state.supplierList[index].deliveryDate.toString(),
+                      value:  '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.font_10,
@@ -153,7 +169,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.total_order,
-                      value: state.supplierList[index].totalPrice.toString(),
+                      value: '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,

@@ -5,14 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/order_model/supplier_details_model.dart';
 import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart';
+import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
 import '../../data/model/res_model/order_send_res_model/order_send_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_summary_event.dart';
@@ -27,19 +28,42 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
+      debugPrint('cart id =  ${preferencesHelper.getCartId()}');
+
       if(event is _getDataEvent){
-        emit(state.copyWith(isShimmering: true));
+        try {
+          final res = await DioClient(event.context).post(
+              AppUrls.listingCartProductsSupplierUrl,
+              data: {
+                AppStrings.cartIdString : preferencesHelper.getCartId(),
+              }
+          );
+          CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
+          debugPrint('CartProductsSupplierRes  = $response');
+
+          if (response.status == 200) {
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+           emit(state.copyWith(orderSummaryList: response));
+          } else {
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+          }
+        }  on ServerException {}
       }
+
+
       if(event is _orderSendEvent){
+        List<Product> ProductReqMap = [];
+        state.orderSummaryList.data!.data!.forEach((element) {
+          ProductReqMap.add(Product(
+            supplierId: element.suppliers!.id,
+            productId: element.productDetails!.first.id,
+             quantity: element.totalQuantity,
+          ));
+        });
+
         try {
           OrderSendReqModel reqMap = OrderSendReqModel(
-           products: [
-             Product(
-             productId: '653a299466a6f5add6e023a7',
-             quantity: 1,
-             supplierId: '6538f51c31864888fcd99ca6',
-           ),
-           ],
+           products: ProductReqMap
           );
           debugPrint('OrderSendReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
@@ -58,13 +82,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             preferencesHelper.setOrderId(orderId: response.data!.id!);
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
              Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
-         //   emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-         /*   emit(state.copyWith(
-              isLoading: false,
-            )*/
-          //  );
           }
         }  on ServerException {}
       }

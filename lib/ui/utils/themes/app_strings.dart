@@ -103,6 +103,7 @@ class AppStrings {
   static const fillUpClosingTimeString = 'Please fill up closing time';
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
+  static const clearCartPopUpString = 'Aru you sure you wont to clear cart?';
 
 
   //hint strings
@@ -112,5 +113,15 @@ class AppStrings {
   static const isRegisterString = 'isRegister';
   static const contactString = 'contact';
   static const idString = 'id';
+  static const productIndexString = 'index';
+  static const supplierNameString = 'supplierName';
+  static const deliveryStatusString = 'deliveryStatus';
+  static const totalOrderString = 'totalOrder';
+  static const deliveryDateString = 'deliveryDate';
+  static const quantityString = 'quantity';
+  static const supplierOrderNumberString = 'orderNumber';
+  static const totalAmountString = 'totalAmount';
+  static const cartIdString = 'id';
+
 
 }

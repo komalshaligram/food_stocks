@@ -234,10 +234,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                       (element) => element.cityName == state.selectCity)
                   .id,
               contactName: profileModel.contactName,
-              address: state.addressController.text,
+              address: state.addressController.text.trim(),
               email: state.emailController.text,
               clientDetail: ClientDetail(
-                fax: state.faxController.text,
+                fax: state.faxController.text.trim(),
                 ownerName: profileModel.clientDetail?.ownerName,
                 clientTypeId: profileModel.clientDetail?.clientTypeId,
                 bussinessName: profileModel.clientDetail?.bussinessName,

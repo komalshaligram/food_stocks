@@ -1,11 +1,15 @@
-/*import 'dart:io';
-import 'dart:ui' as ui;*/
+import 'dart:io';
+import 'dart:typed_data';
+/*import 'dart:ui' as ui;*/
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:food_stock/ui/screens/order_details_screen.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
 import '../utils/themes/app_colors.dart';
@@ -26,22 +30,27 @@ class ShipmentVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
+
     return BlocProvider(
       create: (context) => ShipmentVerificationBloc(),
-      child: ShipmentVerificationScreenWidget(),
+      child: ShipmentVerificationScreenWidget( args: args,),
     );
   }
 }
 
 class ShipmentVerificationScreenWidget extends StatelessWidget {
-  ShipmentVerificationScreenWidget({super.key});
+  final Map? args;
+  ShipmentVerificationScreenWidget({required this.args,super.key});
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
-  /*  var bytes;*/
+ /*   var bytes;*/
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -61,7 +70,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                   ),
                   child: CircularButtonWidget(
                     buttonName: AppLocalizations.of(context)!.total,
-                    buttonValue: '12,450₪',
+                    buttonValue:' ${args?[AppStrings.totalAmountString] ?? ''}${AppLocalizations.of(context)!.currency}',
                   ),
                 ),
                 onTap: () {
@@ -97,14 +106,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.supplier_name,
+                            args?[AppStrings.supplierNameString] ?? '',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_14,
-                                color: AppColors.blackColor,
-                                fontWeight: FontWeight.w400),
+                                color: AppColors.blackColor,),
                           ),
                           Text(
-                            AppLocalizations.of(context)!.pending_delivery,
+                            args?[AppStrings.deliveryStatusString] ?? '',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.orangeColor,
@@ -118,7 +126,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           CommonOrderContentWidget(
                             flexValue: 1,
                             title: AppLocalizations.of(context)!.products,
-                            value: "23",
+                            value: args?[AppStrings.quantityString] ?? '',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w700,
@@ -128,7 +136,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           CommonOrderContentWidget(
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.delivery_date,
-                            value: "12.02.23 10:00-12:00",
+                            value: args?[AppStrings.deliveryDateString] ?? '',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextSize: AppConstants.font_10,
@@ -139,7 +147,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           CommonOrderContentWidget(
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
-                            value: '18,360₪',
+                            value:' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context)!.currency}',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,
@@ -152,16 +160,15 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         text: TextSpan(
                           text: AppLocalizations.of(context)!
                               .supplier_order_number,
-                          style: TextStyle(
+                          style: AppStyles.rkRegularTextStyle(
                               color: AppColors.blackColor,
-                              fontSize: AppConstants.font_14,
-                              fontWeight: FontWeight.w400),
+                              size: AppConstants.font_14,),
                           children: <TextSpan>[
                             TextSpan(
                                 text: ' : 1524812',
-                                style: TextStyle(
+                                style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.blackColor,
-                                    fontSize: AppConstants.font_14,
+                                    size: AppConstants.font_14,
                                     fontWeight: FontWeight.w700)),
                           ],
                         ),
@@ -209,9 +216,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   '054-5858996',
-                                  style: TextStyle(
+                                  style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.whiteColor,
-                                      fontSize: AppConstants.font_14,
+                                      size: AppConstants.font_14,
                                       fontWeight: FontWeight.w700),
                                 )),
                           ),
@@ -228,8 +235,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     AppLocalizations.of(context)!.signature,
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.w400),
+                        color: AppColors.blackColor,),
                   ),
                 ),
                 Expanded(
@@ -292,16 +298,18 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    /*  final Image =
-                        await signatureGlobalKey.currentState!.toImage();
-                     bytes =
-                        await Image.toByteData(format: ui.ImageByteFormat.png);*/
-                    /*Navigator.of(context)
-                        .pushNamed(RouteDefine.orderDetailsScreen.name);*/
 
-                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                      return OrderDetailsScreen();
-                    } ));
+                   var image = await signatureGlobalKey.currentState!.toImage();
+                   print('image_____${image.toByteData()}');
+                /*   ByteData? byteData;*/
+                //   byteData = image.toByteData(format: ImageByteFormat,);
+                   var tempDir1 = await getTemporaryDirectory();
+
+                   var file = await File('${tempDir1.path}/image.png').create();
+                  // file.writeAsBytesSync(byteData!);
+                   print('path_____${file.path}');
+                    // tempDir1.deleteSync(recursive: true);
+                   // bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(context: context ,supplierId:args?[AppStrings.supplierIdString]));
 
                   },
                   child: Container(
@@ -328,6 +336,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
     );
   }
 }
+
+
 
 /* Container(
                         decoration: BoxDecoration(

@@ -140,23 +140,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
       } else if (event is _navigateToMoreDetailsScreenEvent) {
         profileModel = ProfileModel(
-          phoneNumber: mobileNo,
+          phoneNumber: mobileNo.trim(),
           profileImage: state.UserImageUrl,
           clientDetail: ClientDetail(
-            bussinessId: int.tryParse(state.idController.text) ?? 0,
-            bussinessName: state.businessNameController.text,
-            ownerName: state.ownerNameController.text,
+            bussinessId: int.tryParse(state.idController.text.trim()) ?? 0,
+            bussinessName: state.businessNameController.text.trim(),
+            ownerName: state.ownerNameController.text.trim(),
             clientTypeId: state.businessTypeList.data?.clientTypes
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
             // applicationVersion: '1.0.0',
-            israelId: state.hpController.text,
+            israelId: state.hpController.text.trim(),
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
                 : AppStrings.iosString,
           ),
-          contactName: state.contactController.text,
+          contactName: state.contactController.text.trim(),
         );
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
             arguments: {AppStrings.profileParamString: profileModel});

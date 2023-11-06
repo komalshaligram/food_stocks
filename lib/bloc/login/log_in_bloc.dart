@@ -22,7 +22,8 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
   LogInBloc() : super(LogInState.initial()) {
     on<LogInEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         try {

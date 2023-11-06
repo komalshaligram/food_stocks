@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -419,6 +420,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.businessNameController,
+                          inputformet: [LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint:
                               "" /*AppLocalizations.of(context)!.life_grocery_store*/,
@@ -432,6 +434,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.hpController,
+                          inputformet: [LengthLimitingTextInputFormatter(10)],
                           keyboardType: TextInputType.number,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -444,6 +447,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.ownerNameController,
+                          inputformet: [LengthLimitingTextInputFormatter(12)],
                           keyboardType: TextInputType.text,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -456,6 +460,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.idController,
+                          inputformet: [LengthLimitingTextInputFormatter(10)],
                           keyboardType: TextInputType.number,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -468,6 +473,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         7.height,
                         CustomFormField(
                           controller: state.contactController,
+                          inputformet: [LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint: "",
                           fillColor: Colors.transparent,

@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/menu/menu_bloc.dart';
@@ -43,8 +41,7 @@ class MenuScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.menu,
                 iconData: Icons.close,
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, RouteDefine.bottomNavScreen.name);
+                  Navigator.pop(context);
                 },
               ),
             ),

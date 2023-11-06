@@ -129,10 +129,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
-            // showSnackBar(
-            //     context: event.context,
-            //     title: AppStrings.somethingWrongString,
-            //     bgColor: AppColors.redColor);
           }
         }
       }
@@ -466,11 +462,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     'operation time response --- ${operationTimeResModel}');
 
                 if (response1['status'] == 200) {
-                  emit(state.copyWith(isRegisterSuccess: true));
-
-                  emit(state.copyWith(
-                    isRegisterSuccess: false,
-                  ));
                   Navigator.pushNamed(
                       event.context, RouteDefine.fileUploadScreen.name);
                 } else {
@@ -478,22 +469,14 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       context: event.context,
                       title: response1['message'],
                       bgColor: AppColors.redColor);
-                  emit(state.copyWith(
-                      isRegisterFail: true,
-                      errorMessage: response1['message']));
-
-                  emit(state.copyWith(
-                    isRegisterFail: false,
-                  ));
                 }
               } on ServerException {}
             } else {
-              emit(state.copyWith(
-                  isRegisterFail: true,
-                  errorMessage: AppStrings.selectShiftTimeString));
-              emit(state.copyWith(
-                isRegisterFail: false,
-              ));
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectShiftTimeString,
+                  bgColor: AppColors.redColor);
+
             }
           } else {
             update.ProfileDetailsUpdateReqModel reqMap =

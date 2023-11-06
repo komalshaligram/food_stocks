@@ -16,12 +16,20 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   const factory ProductDetailsEvent.productIncrementEvent({
     required int productWeight,
     required int listIndex,
+    required BuildContext context
   }) = _productIncrementEvent;
 
   const factory ProductDetailsEvent.productDecrementEvent({
     required int productWeight,
     required int listIndex,
   }) = _productDecrementEvent;
+
+  const factory ProductDetailsEvent.getProductDataEvent({
+    required BuildContext context,
+    required int productIndex,
+    required String orderId,
+  }) = _getProductDataEvent;
+
 
 
 }

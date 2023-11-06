@@ -5,9 +5,11 @@ class ProductDetailsState with _$ProductDetailsState {
 
   const factory ProductDetailsState({
     required bool isProductProblem,
-    required List<ProductDetailsModel>productList,
+    required GetOrderByIdModel orderList,
     required bool isRefresh,
     required int selectedRadioTile,
+    required List<int>productListIndex,
+    required int productWeight,
 
   }) = _ProductDetailsState;
 
@@ -16,7 +18,14 @@ class ProductDetailsState with _$ProductDetailsState {
     isProductProblem: false,
     isRefresh: false,
     selectedRadioTile: 0,
-    productList: [
+  orderList: GetOrderByIdModel(),
+  productListIndex: [],
+    productWeight: 0,
+
+  );
+}
+
+/*  productList: [
       ProductDetailsModel(
           productImage: AppImagePath.product3,
           productName: 'Product Name  ',
@@ -101,6 +110,4 @@ class ProductDetailsState with _$ProductDetailsState {
         productWeight: 20 ,
       ),
 
-    ],
-  );
-}
+    ],*/
