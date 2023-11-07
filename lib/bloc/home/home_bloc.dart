@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
-import 'package:food_stock/data/model/req_model/product_stock_verify_req_model/product_stock_verify_req_model.dart';
-import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
-import 'package:food_stock/data/model/res_model/product_stock_verify_res_model/product_stock_verify_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -51,12 +49,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
             List<ProductStockModel> productStockList = [];
-            if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
-              for (int i = 0; i < (response.data?.length ?? 0); i++) {
-                productStockList.add(
-                    ProductStockModel(productId: response.data?[i].id ?? ''));
-              }
-            }
+            productStockList.addAll(response.data?.map((saleProduct) =>
+                    ProductStockModel(
+                        productId: saleProduct.id ?? '',
+                        stock: saleProduct.numberOfUnit ?? 0)) ??
+                []);
+            // if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
+            //   for (int i = 0; i < (response.data?.length ?? 0); i++) {
+            //     productStockList.add(ProductStockModel(
+            //         productId: response.data?[i].id ?? '',
+            //         stock: response.data?[i].numberOfUnit ?? 0));
+            //   }
+            // }
+            debugPrint('stock list len = ${productStockList.length}');
             emit(state.copyWith(
                 productSalesList: response,
                 productStockList: productStockList,
@@ -83,9 +88,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             int productStockUpdateIndex = state.productStockList.indexWhere(
                 (productStock) => productStock.productId == event.productId);
             debugPrint('product stock update index = $productStockUpdateIndex');
-            // debugPrint('product details res = ${response.product}');
+            debugPrint(
+                'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
             emit(state.copyWith(
-                productDetails: response,
+                productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 isProductLoading: false));
           } else {
@@ -101,21 +107,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
-          // if (productStockList[state.productStockUpdateIndex].quantity < 30) {
-          productStockList[state.productStockUpdateIndex] =
-              productStockList[state.productStockUpdateIndex].copyWith(
-                  quantity:
-                      productStockList[state.productStockUpdateIndex].quantity +
-                          1);
-          debugPrint(
-              'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
-          emit(state.copyWith(productStockList: productStockList));
-          // } else {
-          //   showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.maxQuantityAllowString,
-          //       bgColor: AppColors.mainColor);
-          // }
+          if (productStockList[state.productStockUpdateIndex].quantity <
+              productStockList[state.productStockUpdateIndex].stock) {
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    quantity: productStockList[state.productStockUpdateIndex]
+                            .quantity +
+                        1);
+            debugPrint(
+                'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
+            emit(state.copyWith(productStockList: productStockList));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.maxQuantityMsgString,
+                bgColor: AppColors.mainColor);
+          }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =

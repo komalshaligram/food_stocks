@@ -109,9 +109,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                             },
                           ),
                 state.isLoadMore ? ProductSaleScreenShimmerWidget() : 0.width,
-                state.isBottomOfProducts
-                    ? CommonPaginationEndWidget(pageEndText: 'No more Products')
-                    : 0.width,
+                // state.isBottomOfProducts
+                //     ? CommonPaginationEndWidget(pageEndText: 'No more Products')
+                //     : 0.width,
               ],
             )),
             onNotification: (notification) {
@@ -276,34 +276,35 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                                  context: context,
-                                  productImage:
-                                      state.productDetails.product?.first.mainImage ??
-                                          '',
-                                  productName:
-                                      state.productDetails.product?.first.productName ??
-                                          '',
+                              context: context,
+                                  productImage: state.productDetails.first.mainImage ??
+                                      '',
+                                  productName: state.productDetails.first.productName ??
+                                      '',
                                   productCompanyName:
-                                      state.productDetails.product?.first.brandName ??
+                                      state.productDetails.first.brandName ??
                                           '',
-                                  productDescription: state.productDetails
-                                          .product?.first.productDescription ??
+                                  productDescription: state.productDetails.first
+                                          .productDescription ??
                                       '',
                                   productSaleDescription: state.productDetails
-                                          .product?.first.productDescription ??
+                                          .first.productDescription ??
                                       '',
-                                  productPrice: state.productDetails.product
-                                          ?.first.numberOfUnit
+                                  productPrice: state
+                                          .productDetails.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productWeight: state.productDetails.product
-                                          ?.first.itemsWeight
-                                          ?.toDouble() ??
-                                      0.0,
-                                  productsStock: 1,
+                                  productWeight:
+                                      state.productDetails.first.itemsWeight?.toDouble() ??
+                                          0.0,
+                                  productStock:
+                                      1 /*state.productStockList[state.productStockUpdateIndex].stock*/,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  productQuantity: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .quantity,
                                   onQuantityIncreaseTap: () {
                                     context.read<ProductSaleBloc>().add(
                                         ProductSaleEvent

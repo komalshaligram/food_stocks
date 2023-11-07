@@ -396,7 +396,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       0.0,
                                   productWeight:
                                       state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
-                                  productsStock: state.productStockList[index].stock,
+                                  productStock: state.productStockList[index].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,

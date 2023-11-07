@@ -21,6 +21,7 @@ import 'package:food_stock/ui/screens/supplier_products_screen.dart';
 import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
 import '../ui/screens/basket_screen.dart';
+import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
@@ -73,6 +74,7 @@ enum RouteDefine {
   productSaleScreen,
   planogramProductScreen,
   productCategoryScreen,
+  companyScreen,
 }
 
 class AppRouting {
@@ -120,6 +122,7 @@ class AppRouting {
       RouteDefine.planogramProductScreen.name: (_) =>
           PlanogramProductRoute.route,
       RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
+      RouteDefine.companyScreen.name: (_) => CompanyRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

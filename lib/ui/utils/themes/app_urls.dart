@@ -1,12 +1,15 @@
 class AppUrls {
-  static const String baseUrl = 'http://192.168.1.46:8080/api' /*'http://192.168.1.46:3000/api'*/
-      /*'http://182.70.118.201:3000/api'*/ /*'http://192.168.1.80:3001/api'*/;
+  static const String baseUrl = 'http://192.168.1.46:8080/api'
+
+      /*'http://192.168.1.46:3000/api'*/
+      /*'http://182.70.118.201:3000/api'*/ /*'http://192.168.1.204:3000/api'*/;
 
   static const String baseFileUrl =
-      'http://182.70.118.201:3000/public/' /*'http://192.168.1.46:8080/public/'*/;
+      /*'http://182.70.118.201:3000/public/'*/ 'http://192.168.1.46:8080/public/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
+
   static const String newUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
 
   static const String RegistrationUrl = '/v1/clients/createClient';
@@ -48,4 +51,5 @@ class AppUrls {
       '/v1/orders/6540dd1bb186f807d4ce24f0/delivery/confirm';
   static const String clearCartUrl = '/v1/cart/clearCart';
   static const String getSubCategoriesUrl = '/v1/store/getSubCategories';
+  static const String getCompaniesUrl = '/v1/store/getBrand';
 }

@@ -10,7 +10,7 @@ class HomeState with _$HomeState {
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
-    required ProductDetailsResModel productDetails,
+    required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required int productStockUpdateIndex,
   }) = _HomeState;
@@ -23,7 +23,7 @@ class HomeState with _$HomeState {
       isShimmering: false,
       isLoading: false,
       isProductLoading: false,
-      productDetails: ProductDetailsResModel(),
+      productDetails: [],
       productStockUpdateIndex: -1,
       productStockList: []);
 }

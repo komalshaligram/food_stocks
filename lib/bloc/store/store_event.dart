@@ -11,8 +11,14 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.getProductSalesListEvent(
       {required BuildContext context}) = _GetProductSalesListEvent;
 
+  const factory StoreEvent.changeSearchListEvent(
+      {required List<SearchModel> newSearchList}) = _ChangeSearchListEvent;
+
   const factory StoreEvent.getSuppliersListEvent(
       {required BuildContext context}) = _GetSuppliersListEvent;
+
+  const factory StoreEvent.getCompaniesListEvent(
+      {required BuildContext context}) = _GetCompaniesListEvent;
 
   const factory StoreEvent.getProductDetailsEvent(
       {required BuildContext context,

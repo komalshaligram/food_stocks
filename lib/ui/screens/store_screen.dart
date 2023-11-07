@@ -16,7 +16,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/store/store_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_strings.dart';
-import '../widget/common_product_category_widget.dart';
+import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/store_screen_shimmer_widget.dart';
@@ -34,7 +34,8 @@ class StoreScreen extends StatelessWidget {
       create: (context) => StoreBloc()
         ..add(StoreEvent.getProductCategoriesListEvent(context: context))
         ..add(StoreEvent.getProductSalesListEvent(context: context))
-        ..add(StoreEvent.getSuppliersListEvent(context: context)),
+        ..add(StoreEvent.getSuppliersListEvent(context: context))
+        ..add(StoreEvent.getCompaniesListEvent(context: context)),
       child: StoreScreenWidget(),
     );
   }
@@ -133,35 +134,52 @@ class StoreScreenWidget extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                              // Column(
-                              //   children: [
-                              //     buildListTitles(
-                              //         context: context,
-                              //         title: AppLocalizations.of(context)!
-                              //             .companies,
-                              //         subTitle: AppLocalizations.of(context)!
-                              //             .all_companies,
-                              //         onTap: () {}),
-                              //     SizedBox(
-                              //       width: getScreenWidth(context),
-                              //       height: 110,
-                              //       child: ListView.builder(
-                              //         itemCount: 10,
-                              //         shrinkWrap: true,
-                              //         scrollDirection: Axis.horizontal,
-                              //         padding: EdgeInsets.symmetric(
-                              //             horizontal: AppConstants.padding_5),
-                              //         itemBuilder: (context, index) {
-                              //           return buildCompanyListItem(
-                              //               companyLogo:
-                              //                   AppImagePath.profileImage,
-                              //               companyName: "Company Name",
-                              //               onTap: () {});
-                              //         },
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
+                              state.companiesList.isEmpty
+                                  ? 0.width
+                                  : Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .companies,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_companies,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .companyScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount:
+                                                state.companiesList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCategoryListItem(
+                                                  categoryImage: state
+                                                          .companiesList[index]
+                                                          .brandLogo ??
+                                                      '',
+                                                  categoryName: state
+                                                          .companiesList[index]
+                                                          .brandName ??
+                                                      '',
+                                                  isHomePreference:
+                                                      true /*state.companiesList[index].isHomePreference ?? false*/,
+                                                  onTap: () {});
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                               (state.suppliersList.data?.length ?? 0) == 0
                                   ? 0.width
                                   : Column(
@@ -328,7 +346,7 @@ class StoreScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                  CommonProductCategoryWidget(
+                  CommonSearchWidget(
                     isCategoryExpand: state.isCategoryExpand,
                     isRTL: isRTLContent(context: context),
                     onFilterTap: () {
@@ -353,16 +371,23 @@ class StoreScreenWidget extends StatelessWidget {
                       bloc.add(
                           StoreEvent.changeCategoryExpansion(isOpened: true));
                     },
-                    categoryList: [
-                      'Category name',
-                      'Category name',
-                      'Category name',
-                      'Category name',
-                      'Category name',
-                    ],
-                    onCatListItemTap: () {
-                      Navigator.pushNamed(
-                          context, RouteDefine.storeCategoryScreen.name);
+                    searchList: state.searchList,
+                    onSearchItemTap: () {
+                      // Navigator.pushNamed(
+                      //     context, RouteDefine.storeCategoryScreen.name, arguments: {
+                      //   AppStrings
+                      //       .categoryIdString:
+                      //   state
+                      //       .searchList[
+                      //   index]
+                      //       .id,
+                      //   AppStrings
+                      //       .categoryNameString:
+                      //   state
+                      //       .searchList[
+                      //   index]
+                      //       .categoryName
+                      // });
                       bloc.add(
                           StoreEvent.changeCategoryExpansion(isOpened: true));
                     },
@@ -853,7 +878,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           ?.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productsStock: 10,
+                                  productStock: 10,
                                   productWeight: state.productDetails.product
                                           ?.first.itemsWeight
                                           ?.toDouble() ??

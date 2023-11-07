@@ -30,7 +30,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function(String)? onNoteChanged;
   final bool isRTL;
   final bool isLoading;
-  final int productsStock;
+  final int productStock;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -42,19 +42,20 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.productSaleDescription,
       required this.productPrice,
       required this.productWeight,
-      required this.isRTL,
-      required this.scrollController,
-      required this.onAddToOrderPressed,
-      required this.noteController,
-      required this.productQuantity,
-      required this.onQuantityIncreaseTap,
-      required this.onQuantityDecreaseTap,
-      this.onNoteChanged,
-      required this.isLoading,
-      required this.productsStock});
+    required this.isRTL,
+    required this.scrollController,
+    required this.onAddToOrderPressed,
+    required this.noteController,
+    required this.productQuantity,
+    required this.onQuantityIncreaseTap,
+    required this.onQuantityDecreaseTap,
+    this.onNoteChanged,
+    required this.isLoading,
+    required this.productStock});
 
   @override
   Widget build(BuildContext context) {
+    bool isSelectSupplier = false;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -103,12 +104,25 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ],
           ),
           5.height,
-          Center(
-            child: Text(
-              '${productWeight.toStringAsFixed(1)} | $productCompanyName',
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont, color: AppColors.blackColor),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${productWeight.toStringAsFixed(1)}',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              Text(
+                ' | ',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              Text(
+                '$productCompanyName',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+            ],
           ),
           10.height,
           Expanded(
@@ -157,6 +171,161 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                  productStock == 0
+                      ? 0.width
+                      : AnimatedContainer(
+                          height: getScreenHeight(context) * 0.5,
+                          width: getScreenWidth(context),
+                          duration: const Duration(milliseconds: 300),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  top: BorderSide(
+                                      color: AppColors.borderColor
+                                          .withOpacity(0.5),
+                                      width: 1))),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_10,
+                              horizontal: AppConstants.padding_30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: AppConstants.padding_5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.suppliers,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.mainColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        //expand and shrink code
+                                        isSelectSupplier = !isSelectSupplier;
+                                      },
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 26,
+                                        color: AppColors.blackColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      height: 95,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5,
+                                          horizontal: AppConstants.padding_10),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.iconBGColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppConstants.radius_5)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Supplier Name',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.blackColor),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.whiteColor,
+                                                      borderRadius: BorderRadius
+                                                          .all(Radius.circular(
+                                                              AppConstants
+                                                                  .radius_3))),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: AppConstants
+                                                          .padding_3,
+                                                      horizontal: AppConstants
+                                                          .padding_5),
+                                                  margin: EdgeInsets.only(
+                                                      top: AppConstants
+                                                          .padding_10,
+                                                      left: AppConstants
+                                                          .padding_5,
+                                                      right: AppConstants
+                                                          .padding_5),
+                                                  alignment: Alignment.topLeft,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text('Sale Name'),
+                                                      2.height,
+                                                      Text('price : 150\$'),
+                                                      2.height,
+                                                      Text('Sale Description'),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       flex: 5,
+                          //       child: Column(
+                          //         crossAxisAlignment: CrossAxisAlignment.start,
+                          //         children: [
+                          //           Text(
+                          //             'Sale',
+                          //             style: AppStyles.rkBoldTextStyle(
+                          //                 size: AppConstants.font_30,
+                          //                 color: AppColors.saleRedColor,
+                          //                 fontWeight: FontWeight.w700),
+                          //           ),
+                          //           5.height,
+                          //           Text(
+                          //             productDescription,
+                          //             style: AppStyles.rkRegularTextStyle(
+                          //                 size: AppConstants.font_14,
+                          //                 color: AppColors.blackColor,
+                          //                 fontWeight: FontWeight.w400),
+                          //             maxLines: 3,
+                          //             overflow: TextOverflow.ellipsis,
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //     Expanded(flex: 2, child: 0.height),
+                          //   ],
+                          // ),
+                        ),
                   Container(
                     decoration: BoxDecoration(
                       border: Border(
@@ -171,7 +340,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_15,
                         vertical: AppConstants.padding_20),
-                    child: productsStock == 0
+                    child: productStock == 0
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -184,8 +353,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ],
                           )
                         : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                               Expanded(
                                 flex: 2,
                                 child: Column(
@@ -195,23 +364,23 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       '$productPrice${AppLocalizations.of(context)!.currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w700),
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text(
+                                      productSaleDescription,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_14,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w400),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                productSaleDescription,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
+                              Expanded(
+                                flex: 3,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
@@ -223,208 +392,164 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         width: 50,
                                         // padding: EdgeInsets.symmetric(
                                         //     horizontal: AppConstants.padding_10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.iconBGColor,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(isRTL
-                                                ? AppConstants.radius_5
-                                                : AppConstants.radius_50),
-                                            bottomLeft: Radius.circular(isRTL
-                                                ? AppConstants.radius_5
-                                                : AppConstants.radius_50),
-                                            bottomRight: Radius.circular(isRTL
-                                                ? AppConstants.radius_50
-                                                : AppConstants.radius_5),
-                                            topRight: Radius.circular(isRTL
-                                                ? AppConstants.radius_50
-                                                : AppConstants.radius_5),
-                                          ),
-                                          border: Border.all(
-                                              color: AppColors.navSelectedColor,
-                                              width: 1),
-                                        ),
-                                        // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-                                        alignment: Alignment.center,
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 26,
-                                          color: AppColors.mainColor,
-                                        ),
-                                      ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.iconBGColor,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(isRTL
+                                          ? AppConstants.radius_5
+                                          : AppConstants.radius_50),
+                                      bottomLeft: Radius.circular(isRTL
+                                          ? AppConstants.radius_5
+                                          : AppConstants.radius_50),
+                                      bottomRight: Radius.circular(isRTL
+                                          ? AppConstants.radius_50
+                                          : AppConstants.radius_5),
+                                      topRight: Radius.circular(isRTL
+                                          ? AppConstants.radius_50
+                                          : AppConstants.radius_5),
                                     ),
-                                    5.width,
-                                    Container(
-                                      width: 75,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomRight: Radius.circular(
-                                              AppConstants.radius_5),
-                                          topRight: Radius.circular(
-                                              AppConstants.radius_5),
-                                        ),
-                                        border: Border.all(
-                                            color: AppColors.navSelectedColor,
-                                            width: 1),
-                                      ),
-                                      // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '$productQuantity',
-                                        style: AppStyles.rkBoldTextStyle(
-                                            size: AppConstants.font_30,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w700),
-                                        maxLines: 1,
-                                      ),
+                                    border: Border.all(
+                                        color: AppColors.navSelectedColor,
+                                        width: 1),
+                                  ),
+                                  // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 26,
+                                    color: AppColors.mainColor,
+                                  ),
+                                ),
+                              ),
+                              5.width,
+                              Container(
+                                width: 75,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: AppColors.iconBGColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(
+                                        AppConstants.radius_5),
+                                    bottomLeft: Radius.circular(
+                                        AppConstants.radius_5),
+                                    bottomRight: Radius.circular(
+                                        AppConstants.radius_5),
+                                    topRight: Radius.circular(
+                                        AppConstants.radius_5),
+                                  ),
+                                  border: Border.all(
+                                      color: AppColors.navSelectedColor,
+                                      width: 1),
+                                ),
+                                // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '$productQuantity',
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_30,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w700),
+                                  maxLines: 1,
+                                ),
+                              ),
+                              5.width,
+                              GestureDetector(
+                                onTap: onQuantityDecreaseTap,
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  // padding: EdgeInsets.symmetric(
+                                  //     horizontal: AppConstants.padding_10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.iconBGColor,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(isRTL
+                                          ? AppConstants.radius_50
+                                          : AppConstants.radius_5),
+                                      bottomLeft: Radius.circular(isRTL
+                                          ? AppConstants.radius_50
+                                          : AppConstants.radius_5),
+                                      bottomRight: Radius.circular(isRTL
+                                          ? AppConstants.radius_5
+                                          : AppConstants.radius_50),
+                                      topRight: Radius.circular(isRTL
+                                          ? AppConstants.radius_5
+                                          : AppConstants.radius_50),
                                     ),
-                                    5.width,
-                                    GestureDetector(
-                                      onTap: onQuantityDecreaseTap,
-                                      child: Container(
-                                        height: 50,
-                                        width: 50,
-                                        // padding: EdgeInsets.symmetric(
-                                        //     horizontal: AppConstants.padding_10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.iconBGColor,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(isRTL
-                                                ? AppConstants.radius_50
-                                                : AppConstants.radius_5),
-                                            bottomLeft: Radius.circular(isRTL
-                                                ? AppConstants.radius_50
-                                                : AppConstants.radius_5),
-                                            bottomRight: Radius.circular(isRTL
-                                                ? AppConstants.radius_5
-                                                : AppConstants.radius_50),
-                                            topRight: Radius.circular(isRTL
-                                                ? AppConstants.radius_5
-                                                : AppConstants.radius_50),
-                                          ),
-                                          border: Border.all(
-                                              color: AppColors.navSelectedColor,
-                                              width: 1),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Icon(Icons.remove,
-                                            size: 26,
-                                            color: AppColors.mainColor),
-                                      ),
-                                    ),
-                                  ],
+                                    border: Border.all(
+                                        color: AppColors.navSelectedColor,
+                                        width: 1),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Icon(Icons.remove,
+                                      size: 26,
+                                      color: AppColors.mainColor),
                                 ),
                               ),
                             ],
                           ),
+                        ),
+                      ],
+                    ),
                   ),
-                  productsStock == 0
+                  productStock == 0
                       ? 0.width
                       : Column(
-                          mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: AppConstants.padding_20,
+                            horizontal: AppConstants.padding_20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: AppColors.borderColor
-                                              .withOpacity(0.5),
-                                          width: 1))),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_10,
-                                  horizontal: AppConstants.padding_20),
-                              child: Row(
-                                children: [],
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       flex: 5,
-                              //       child: Column(
-                              //         crossAxisAlignment: CrossAxisAlignment.start,
-                              //         children: [
-                              //           Text(
-                              //             'Sale',
-                              //             style: AppStyles.rkBoldTextStyle(
-                              //                 size: AppConstants.font_30,
-                              //                 color: AppColors.saleRedColor,
-                              //                 fontWeight: FontWeight.w700),
-                              //           ),
-                              //           5.height,
-                              //           Text(
-                              //             productDescription,
-                              //             style: AppStyles.rkRegularTextStyle(
-                              //                 size: AppConstants.font_14,
-                              //                 color: AppColors.blackColor,
-                              //                 fontWeight: FontWeight.w400),
-                              //             maxLines: 3,
-                              //             overflow: TextOverflow.ellipsis,
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //     Expanded(flex: 2, child: 0.height),
-                              //   ],
-                              // ),
+                            Text(
+                              AppLocalizations.of(context)!.note,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.font_14,
+                                  color: AppColors.blackColor),
                             ),
+                            10.height,
                             Container(
+                              // height: 120,
+                              width: getScreenWidth(context),
                               padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_20,
-                                  horizontal: AppConstants.padding_20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.note,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_14,
-                                        color: AppColors.blackColor),
-                                  ),
-                                  10.height,
-                                  Container(
-                                    // height: 120,
-                                    width: getScreenWidth(context),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_10),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.notesBGColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                AppConstants.radius_5))),
-                                    child: TextField(
-                                      controller: noteController,
-                                      onChanged: onNoteChanged,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none),
-                                      maxLines: 5,
-                                    ),
-                                  )
-                                ],
+                                  horizontal: AppConstants.padding_10),
+                              decoration: BoxDecoration(
+                                  color: AppColors.notesBGColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          AppConstants.radius_5))),
+                              child: TextField(
+                                controller: noteController,
+                                onChanged: onNoteChanged,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none),
+                                maxLines: 5,
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.all(AppConstants.padding_20),
-                              child: CommonProductButtonWidget(
-                                title:
-                                    AppLocalizations.of(context)!.add_to_order,
-                                isLoading: isLoading,
-                                onPressed: onAddToOrderPressed,
-                                width: double.maxFinite,
-                                height: AppConstants.buttonHeight,
-                                borderRadius: AppConstants.radius_5,
-                                textSize: AppConstants.normalFont,
-                                textColor: AppColors.whiteColor,
-                                bgColor: AppColors.mainColor,
-                              ),
-                            ),
+                            )
                           ],
                         ),
+                      ),
+                      Padding(
+                        padding:
+                        const EdgeInsets.all(AppConstants.padding_20),
+                        child: CommonProductButtonWidget(
+                          title:
+                          AppLocalizations.of(context)!.add_to_order,
+                          isLoading: isLoading,
+                          onPressed: onAddToOrderPressed,
+                          width: double.maxFinite,
+                          height: AppConstants.buttonHeight,
+                          borderRadius: AppConstants.radius_5,
+                          textSize: AppConstants.normalFont,
+                          textColor: AppColors.whiteColor,
+                          bgColor: AppColors.mainColor,
+                        ),
+                      ),
+                    ],
+                  ),
                   // 160.height,
                 ],
               ),

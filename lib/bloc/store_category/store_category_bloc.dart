@@ -67,7 +67,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
         try {
           emit(state.copyWith(
-              isShimmering: state.subCategoryPageNum == 0 ? true : false,
+              isSubCategoryShimmering:
+                  state.subCategoryPageNum == 0 ? true : false,
               isLoadMore: state.subCategoryPageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               AppUrls.getSubCategoriesUrl,
@@ -86,7 +87,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(
               subCategoryList: subCategoryList,
               subCategoryPageNum: state.subCategoryPageNum + 1,
-              isShimmering: false,
+              isSubCategoryShimmering: false,
               isLoadMore: false,
             ));
             emit(state.copyWith(
@@ -113,7 +114,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
         try {
           emit(state.copyWith(
-              isShimmering: state.planogramPageNum == 0 ? true : false,
+              isPlanogramShimmering: state.planogramPageNum == 0 ? true : false,
               isLoadMore: state.planogramPageNum == 0 ? false : true));
 
           PlanogramReqModel planogramReqModel = PlanogramReqModel(
@@ -156,7 +157,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 planoGramsList: planoGramsList,
                 productStockList: productStockList,
                 planogramPageNum: state.planogramPageNum + 1,
-                isShimmering: false,
+                isPlanogramShimmering: false,
                 isLoadMore: false));
             emit(state.copyWith(
                 isBottomOfPlanoGrams: planoGramsList.length ==

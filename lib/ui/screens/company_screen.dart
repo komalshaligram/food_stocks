@@ -1,54 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/product_category/product_category_bloc.dart';
+import 'package:food_stock/bloc/company_screen/company_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/ui/widget/common_marquee_widget.dart';
-import 'package:food_stock/ui/widget/product_category_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_pagination_end_widget.dart';
 import '../widget/common_shimmer_widget.dart';
+import '../widget/company_screen_shimmer_widget.dart';
 
-class ProductCategoryRoute {
-  static Widget get route => ProductCategoryScreen();
+class CompanyRoute {
+  static Widget get route => CompanyScreen();
 }
 
-class ProductCategoryScreen extends StatelessWidget {
-  const ProductCategoryScreen({super.key});
+class CompanyScreen extends StatelessWidget {
+  const CompanyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProductCategoryBloc()
-        ..add(ProductCategoryEvent.getProductCategoriesListEvent(
-            context: context)),
-      child: ProductCategoryScreenWidget(),
+      create: (context) => CompanyBloc()
+        ..add(CompanyEvent.getCompaniesListEvent(context: context)),
+      child: CompanyScreenWidget(),
     );
   }
 }
 
-class ProductCategoryScreenWidget extends StatelessWidget {
-  const ProductCategoryScreenWidget({super.key});
+class CompanyScreenWidget extends StatelessWidget {
+  const CompanyScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
+    return BlocBuilder<CompanyBloc, CompanyState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context)!.categories,
+              title: AppLocalizations.of(context)!.companies,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -58,57 +53,55 @@ class ProductCategoryScreenWidget extends StatelessWidget {
           body: SafeArea(
               child: NotificationListener<ScrollNotification>(
             child: SingleChildScrollView(
+              physics: state.companiesList.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   state.isShimmering
-                      ? ProductCategoryScreenShimmerWidget()
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.productCategoryList.length,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3),
-                          itemBuilder: (context, index) =>
-                              buildProductCategoryListItem(
-                                  context: context,
-                                  categoryImage: state
-                                          .productCategoryList[index]
-                                          .categoryImage ??
-                                      '',
-                                  categoryName: state.productCategoryList[index]
-                                          .categoryName ??
-                                      '',
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.storeCategoryScreen.name,
-                                        arguments: {
-                                          AppStrings.categoryIdString: state
-                                              .productCategoryList[index].id,
-                                          AppStrings.categoryNameString: state
-                                              .productCategoryList[index]
-                                              .categoryName
-                                        });
-                                  }),
-                        ),
-                  state.isLoadMore
-                      ? ProductCategoryScreenShimmerWidget()
-                      : 0.width,
-                  // state.isBottomOfCategories
-                  //     ? CommonPaginationEndWidget(
-                  //         pageEndText: 'No more Categories')
-                  //     : 0.width,
+                      ? CompanyScreenShimmerWidget()
+                      : state.companiesList.isEmpty
+                          ? Container(
+                              height: getScreenHeight(context) - 56,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'No Companies Available',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.companiesList.length,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_10),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3),
+                              itemBuilder: (context, index) =>
+                                  buildCompanyListItem(
+                                      context: context,
+                                      companyLogo: state.companiesList[index]
+                                              .brandLogo ??
+                                          '',
+                                      companyName: state
+                                              .companiesList[index].brandName ??
+                                          '',
+                                      onTap: () {}),
+                            ),
+                  state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
                 ],
               ),
             ),
             onNotification: (notification) {
               if (notification.metrics.pixels ==
                   notification.metrics.maxScrollExtent) {
-                context.read<ProductCategoryBloc>().add(
-                    ProductCategoryEvent.getProductCategoriesListEvent(
-                        context: context));
+                context
+                    .read<CompanyBloc>()
+                    .add(CompanyEvent.getCompaniesListEvent(context: context));
               }
               return true;
             },
@@ -118,9 +111,9 @@ class ProductCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildProductCategoryListItem(
-      {required String categoryImage,
-      required String categoryName,
+  Widget buildCompanyListItem(
+      {required String companyLogo,
+      required String companyName,
       required BuildContext context,
       required void Function() onTap}) {
     return Container(
@@ -146,7 +139,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Image.network(
-                "${AppUrls.baseFileUrl}$categoryImage",
+                "${AppUrls.baseFileUrl}$companyLogo",
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.center,
                 loadingBuilder: (context, child, loadingProgress) {
@@ -195,15 +188,13 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                     bottomRight: Radius.circular(AppConstants.radius_10)),
                 // border: Border.all(color: AppColors.whiteColor, width: 1),
               ),
-              child: CommonMarqueeWidget(
-                child: Text(
-                  categoryName,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12, color: AppColors.whiteColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
+              child: Text(
+                companyName,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_12, color: AppColors.whiteColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ],

@@ -746,29 +746,31 @@ class HomeScreenWidget extends StatelessWidget {
                               : CommonProductDetailsWidget(
                                   context: context,
                                   productImage:
-                                      state.productDetails.product?.first.mainImage ??
+                                      state.productDetails.first.mainImage ??
                                           '',
                                   productName:
-                                      state.productDetails.product?.first.productName ??
+                                      state.productDetails.first.productName ??
                                           '',
                                   productCompanyName:
-                                      state.productDetails.product?.first.brandName ??
+                                      state.productDetails.first.brandName ??
                                           '',
-                                  productDescription: state.productDetails
-                                          .product?.first.productDescription ??
+                                  productDescription: state.productDetails.first
+                                          .productDescription ??
                                       '',
                                   productSaleDescription: state.productDetails
-                                          .product?.first.productDescription ??
+                                          .first.productDescription ??
                                       '',
-                                  productPrice: state.productDetails.product
-                                          ?.first.numberOfUnit
+                                  productPrice: state
+                                          .productDetails.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productWeight: state.productDetails.product
-                                          ?.first.itemsWeight
+                                  productWeight: state
+                                          .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                                  productsStock: 1,
+                                  productStock: state
+                                      .productStockList[state.productStockUpdateIndex]
+                                      .stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,

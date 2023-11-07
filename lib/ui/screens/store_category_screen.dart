@@ -3,6 +3,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
+import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -11,7 +12,7 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_product_category_widget.dart';
+import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -37,8 +38,8 @@ class StoreCategoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => StoreCategoryBloc()
         ..add(StoreCategoryEvent.changeCategoryDetailsEvent(
-            categoryId: args?[AppStrings.categoryIdString],
-            categoryName: args?[AppStrings.categoryNameString],
+            categoryId: args?[AppStrings.categoryIdString] ?? '',
+            categoryName: args?[AppStrings.categoryNameString] ?? '',
             context: context)),
       child: StoreCategoryScreenWidget(),
     );
@@ -94,13 +95,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         buildTopNavigation(
                                             context: context,
                                             categoryName: state.categoryName),
-                                        state.isShimmering
+                                        state.isSubCategoryShimmering
                                             ? StoreCategoryScreenSubcategoryShimmerWidget()
                                             : state.subCategoryList.isEmpty
                                                 ? Container(
-                                                    height: getScreenHeight(
+                                          height: getScreenHeight(
                                                             context) -
-                                                        140,
+                                                        160,
                                                     width:
                                                         getScreenWidth(context),
                                                     alignment: Alignment.center,
@@ -151,13 +152,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         state.isLoadMore
                                             ? StoreCategoryScreenSubcategoryShimmerWidget()
                                             : 0.width,
-                                        state.subCategoryList.isEmpty
-                                            ? 0.width
-                                            : state.isBottomOfPlanoGrams
-                                                ? CommonPaginationEndWidget(
-                                                    pageEndText:
-                                                        'No more Sub Categories')
-                                                : 0.width,
+                                        // state.subCategoryList.isEmpty
+                                        //     ? 0.width
+                                        //     : state.isBottomOfPlanoGrams
+                                        //         ? CommonPaginationEndWidget(
+                                        //             pageEndText:
+                                        //                 'No more Sub Categories')
+                                        //         : 0.width,
                                       ],
                                     ),
                                   ),
@@ -175,6 +176,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               )
                             : NotificationListener<ScrollNotification>(
                                 child: SingleChildScrollView(
+                                  physics: state.planoGramsList.isEmpty
+                                      ? const NeverScrollableScrollPhysics()
+                                      : const AlwaysScrollableScrollPhysics(),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -186,34 +190,54 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           subCategoryName:
                                               state.subCategoryName),
                                       16.height,
-                                      state.isShimmering
+                                      state.isPlanogramShimmering
                                           ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                          : ListView.builder(
-                                              itemCount:
-                                                  state.planoGramsList.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemBuilder: (context, index) {
-                                                return (state
-                                                            .planoGramsList[
-                                                                index]
-                                                            .planogramproducts
-                                                            ?.isEmpty ??
-                                                        true)
-                                                    ? 0.width
-                                                    : buildPlanoGramItem(
-                                                        context: context,
-                                                        index: index);
-                                              },
-                                            ),
+                                          : state.planoGramsList.isEmpty
+                                              ? Container(
+                                                  height:
+                                                      getScreenHeight(context) -
+                                                          160,
+                                                  width:
+                                                      getScreenWidth(context),
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'No products available',
+                                                    textAlign: TextAlign.center,
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .smallFont,
+                                                            color: AppColors
+                                                                .textColor),
+                                                  ),
+                                                )
+                                              : ListView.builder(
+                                                  itemCount: state
+                                                      .planoGramsList.length,
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return (state
+                                                                .planoGramsList[
+                                                                    index]
+                                                                .planogramproducts
+                                                                ?.isEmpty ??
+                                                            true)
+                                                        ? 0.width
+                                                        : buildPlanoGramItem(
+                                                            context: context,
+                                                            index: index);
+                                                  },
+                                                ),
                                       state.isLoadMore
                                           ? StoreCategoryScreenPlanoGramShimmerWidget()
                                           : 0.width,
-                                      state.isBottomOfPlanoGrams
-                                          ? CommonPaginationEndWidget(
-                                              pageEndText: 'No more Products')
-                                          : 0.width,
+                                      // state.isBottomOfPlanoGrams
+                                      //     ? CommonPaginationEndWidget(
+                                      //         pageEndText: 'No more Products')
+                                      //     : 0.width,
                                       // 85.height,
                                       // Container(
                                       //   color: AppColors.whiteColor,
@@ -452,7 +476,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         // ),
                       ],
                     )),
-                CommonProductCategoryWidget(
+                CommonSearchWidget(
                   isCategoryExpand: state.isCategoryExpand,
                   isRTL: isRTLContent(context: context),
                   onFilterTap: () {
@@ -478,8 +502,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
                         isOpened: true));
                   },
-                  onCatListItemTap: () {},
-                  categoryList: ['Category', 'Category'],
+                  onSearchItemTap: () {},
+                  searchList: [],
                 ),
               ],
             ),
@@ -919,7 +943,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           0.0,
                                   productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ??
                                       0.0,
-                                  productsStock: state
+                              productStock: state
                                       .productStockList[state.planoGramUpdateIndex]
                                           [state.productStockUpdateIndex]
                                       .stock,

@@ -96,9 +96,10 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             int productStockUpdateIndex = state.productStockList.indexWhere(
                 (productStock) => productStock.productId == event.productId);
             debugPrint('product stock update index = $productStockUpdateIndex');
-            // debugPrint('product details res = ${response.product}');
+            debugPrint(
+                'product stock  = ${state.productStockList[productStockUpdateIndex].stock}');
             emit(state.copyWith(
-                productDetails: response,
+                productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 isProductLoading: false));
           } else {
@@ -169,8 +170,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               quantity: state
                   .productStockList[state.productStockUpdateIndex].quantity,
               supplierId: [
-                state.productDetails.product?.first.supplierSales?.supplier
-                        ?.id ??
+                state.productDetails.first.supplierSales?.supplier?.id ??
                     ''
               ],
               productId: state
