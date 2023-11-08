@@ -272,10 +272,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           ?.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productWeight: state.productDetails.product
-                                          ?.first.itemsWeight
-                                          ?.toDouble() ??
-                                      0.0,
+                                  productScaleType: state.productDetails.product
+                                          ?.first.scales?.scaleType ??
+                                      '',
+                                  productWeight:
+                                      state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
+                                  supplierWidget: 0.width,
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,

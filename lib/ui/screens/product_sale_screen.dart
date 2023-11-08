@@ -294,16 +294,20 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           .productDetails.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productWeight:
-                                      state.productDetails.first.itemsWeight?.toDouble() ??
-                                          0.0,
+                                  supplierWidget: 0.width,
+                                  productScaleType: state.productDetails.first
+                                          .scales?.scaleType ??
+                                      '',
+                                  productWeight: state
+                                          .productDetails.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
                                   productStock:
                                       1 /*state.productStockList[state.productStockUpdateIndex].stock*/,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
+                                      .productStockList[state.productStockUpdateIndex]
                                       .quantity,
                                   onQuantityIncreaseTap: () {
                                     context.read<ProductSaleBloc>().add(

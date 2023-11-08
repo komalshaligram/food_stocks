@@ -38,4 +38,11 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.getScanProductDetailsEvent(
       {required String scanResult}) = _GetScanProductDetailsEvent;
+
+  const factory StoreEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory StoreEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
 }

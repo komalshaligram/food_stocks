@@ -931,28 +931,28 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       '',
                                   productName: state.productDetails.product?.first.productName ??
                                       '',
-                                  productCompanyName: state.productDetails.product?.first.brandName ??
-                                      '',
-                                  productDescription: state.productDetails.product?.first.productDescription ??
+                                  productCompanyName:
+                                      state.productDetails.product?.first.brandName ??
+                                          '',
+                                  productDescription: state.productDetails
+                                          .product?.first.productDescription ??
                                       '',
                                   productSaleDescription: state.productDetails
                                           .product?.first.productDescription ??
                                       '',
-                                  productPrice:
-                                      state.productDetails.product?.first.numberOfUnit?.toDouble() ??
-                                          0.0,
-                                  productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ??
+                                  productPrice: state.productDetails.product
+                                          ?.first.numberOfUnit
+                                          ?.toDouble() ??
                                       0.0,
-                              productStock: state
-                                      .productStockList[state.planoGramUpdateIndex]
-                                          [state.productStockUpdateIndex]
-                                      .stock,
+                                  productScaleType: state.productDetails.product
+                                          ?.first.scales?.scaleType ??
+                                      '',
+                                  productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
+                                  supplierWidget: 0.width,
+                                  productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
-                                  productQuantity: state
-                                      .productStockList[state.planoGramUpdateIndex]
-                                          [state.productStockUpdateIndex]
-                                      .quantity,
+                                  productQuantity: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity,
                                   onQuantityIncreaseTap: () {
                                     context.read<StoreCategoryBloc>().add(
                                         StoreCategoryEvent

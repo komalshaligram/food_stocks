@@ -16,6 +16,8 @@ class StoreState with _$StoreState {
     required List<ProductStockModel> productStockList,
     required ProductStockModel scanProductStockDetails,
     required int productStockUpdateIndex,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
@@ -32,5 +34,7 @@ class StoreState with _$StoreState {
         productStockUpdateIndex: -1,
         productStockList: [],
         scanProductStockDetails: ProductStockModel(productId: ''),
+        isSelectSupplier: false,
+        productSupplierList: [],
       );
 }

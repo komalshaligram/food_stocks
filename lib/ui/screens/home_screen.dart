@@ -764,10 +764,13 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.numberOfUnit
                                           ?.toDouble() ??
                                       0.0,
-                                  productWeight: state
-                                          .productDetails.first.itemsWeight
-                                          ?.toDouble() ??
-                                      0.0,
+                                  productScaleType:
+                                      state.productDetails.first.scales?.scaleType ??
+                                          '',
+                                  productWeight:
+                                      state.productDetails.first.itemsWeight?.toDouble() ??
+                                          0.0,
+                                  supplierWidget: 0.width,
                                   productStock: state
                                       .productStockList[state.productStockUpdateIndex]
                                       .stock,
