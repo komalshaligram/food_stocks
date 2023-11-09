@@ -98,7 +98,7 @@ class OrderScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    state.orderList.data?[index].id ?? '',
+                    state.orderList.data?[index].orderNumber.toString() ?? '',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.normalFont,
                         color: AppColors.blackColor,
@@ -108,7 +108,10 @@ class OrderScreenWidget extends StatelessWidget {
                     onTap: () {
                       Navigator.pushNamed(
                           context, RouteDefine.orderDetailsScreen.name ,
-                          arguments: {AppStrings.idString: state.orderList.data?[index].id }
+                          arguments: {
+                            AppStrings.orderIdString: state.orderList.data?[index].id ,
+                            AppStrings.orderNumberString: state.orderList.data?[index].orderNumber,
+                          }
                       );
                     },
                     child: Container(
@@ -167,7 +170,7 @@ class OrderScreenWidget extends StatelessWidget {
                   ),
                   5.width,
                   CommonOrderContentWidget(
-                    flexValue: 4,
+                    flexValue: 3,
                     title: AppLocalizations.of(context)!.order_date,
                     value: state.orderList.data?[index].createdAt?.replaceRange(11, 16, '') ?? '',
                     titleColor: AppColors.blackColor,
@@ -176,7 +179,7 @@ class OrderScreenWidget extends StatelessWidget {
                   ),
                   5.width,
                 CommonOrderContentWidget(
-                    flexValue: 4,
+                    flexValue: 3,
                     title: AppLocalizations.of(context)!.order_status,
                     value:state.orderList.data?[index].status?.statusName?.toString() ?? '',
                     titleColor: AppColors.blackColor,

@@ -13,6 +13,8 @@ class SharedPreferencesHelper {
   static const String fcmToken = 'fcmToken';
   static const String userOrderId = 'userOrderId';
   static const String userCartId = 'userCartId';
+  static const String phoneNumber = 'phoneNumber';
+  static const String walletId = 'walletId';
 
   final SharedPreferences prefs;
 
@@ -30,6 +32,9 @@ class SharedPreferencesHelper {
       await prefs.remove(userName);
       await prefs.remove(userImage);
       await prefs.remove(userCompanyLogo);
+      await prefs.remove(phoneNumber);
+      await prefs.remove(userCartId);
+      await prefs.remove(walletId);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
@@ -81,6 +86,14 @@ class SharedPreferencesHelper {
     await prefs.setString(userCartId, cartId);
   }
 
+  Future<void> setPhoneNumber({required String userPhoneNumber}) async {
+    await prefs.setString(phoneNumber, userPhoneNumber);
+  }
+
+  Future<void> setWalletId({required String UserWalletId}) async {
+    await prefs.setString(walletId, UserWalletId);
+  }
+
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'en';
   }
@@ -127,4 +140,14 @@ class SharedPreferencesHelper {
   String getCartId() {
     return prefs.getString(userCartId) ?? '';
   }
+
+  String getPhoneNumber() {
+    return prefs.getString(phoneNumber) ?? '';
+  }
+
+  String getWalletId() {
+    return prefs.getString(walletId) ?? '';
+  }
+
+
 }

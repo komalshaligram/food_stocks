@@ -22,6 +22,9 @@ class AppStrings {
   static const planogramSortFieldString = 'planogramName';
   static const failedToLoadString = 'Failed to load';
   static const outOfStockString = 'Out of Stock';
+  static const clearString = 'Clear';
+  static const deleteString = 'Delete';
+  static const deliverString = 'deliver';
 
   //language Strings
   static const englishString = 'en';
@@ -43,6 +46,9 @@ class AppStrings {
   static const clientDetailString = 'clientDetail';
   static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
+  static const orderNumberString = 'orderNumber';
+  static const signatureString = 'signature';
+  static const cartProductIdString = 'cartProductId';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -103,7 +109,9 @@ class AppStrings {
   static const fillUpClosingTimeString = 'Please fill up closing time';
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
-  static const clearCartPopUpString = 'Aru you sure you wont to clear cart?';
+  static const clearCartPopUpString = 'Aru you sure you want to clear cart?';
+  static const deleteProductPopUpString = 'Aru you sure you want to delete product?';
+  static const stockNotAvailableString = 'Stock not available';
 
 
   //hint strings
@@ -112,7 +120,7 @@ class AppStrings {
   //argument strings
   static const isRegisterString = 'isRegister';
   static const contactString = 'contact';
-  static const idString = 'id';
+  static const orderIdString = 'orderId';
   static const productIndexString = 'index';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';

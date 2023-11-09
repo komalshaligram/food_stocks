@@ -1,7 +1,7 @@
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'update_cart_req_model.freezed.dart';
 part 'update_cart_req_model.g.dart';
-
 
 @freezed
 class UpdateCartReqModel with _$UpdateCartReqModel {
@@ -14,10 +14,8 @@ class UpdateCartReqModel with _$UpdateCartReqModel {
     String? supplierId,
     @JsonKey(name: "saleId")
     String? saleId,
-    @JsonKey(name: "cartId")
-    String? cartId,
-    @JsonKey(name: "id")
-    String? id,
+    @JsonKey(name: "cartProductId")
+    String? cartProductId,
   }) = _UpdateCartReqModel;
 
   factory UpdateCartReqModel.fromJson(Map<String, dynamic> json) => _$UpdateCartReqModelFromJson(json);

@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/create_issue/create_issue_req_model.dart'
+    as create;
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -24,12 +27,12 @@ class ProductDetailsBloc
     extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   ProductDetailsBloc() : super(ProductDetailsState.initial()) {
     on<ProductDetailsEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _getProductDataEvent) {
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
         debugPrint('token___${preferencesHelper.getAuthToken()}');
         debugPrint('id___${event.orderId}');
-
 
         try {
           final res = await DioClient(event.context).get(
@@ -38,6 +41,9 @@ class ProductDetailsBloc
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
               }));
+
+          debugPrint(
+              'GetOrderById  url  = ${AppUrls.getOrderById}${event.orderId}');
           debugPrint('GetOrderByIdModel  = $res');
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
@@ -56,36 +62,80 @@ class ProductDetailsBloc
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
-      }
-
-      if (event is _productProblemEvent) {
-      //  List<ProductDetailsModel> temp = state.productList;
-       // temp[event.index].isProductIssue = event.isProductProblem;
-        List<int>index = [];
-        if(state.productListIndex.contains(event.index)){
+      } else if (event is _productProblemEvent) {
+        //  List<ProductDetailsModel> temp = state.productList;
+        // temp[event.index].isProductIssue = event.isProductProblem;
+        List<int> index = [];
+        if (state.productListIndex.contains(event.index)) {
           index.remove(event.index);
-        }
-        else{
+        } else {
           index.add(event.index);
         }
-        emit(state.copyWith(isRefresh: !state.isRefresh, productListIndex: index
-        ));
-      }
-
-      if (event is _radioButtonEvent) {
+        emit(state.copyWith(
+            /*isRefresh: !state.isRefresh,*/ productListIndex: index));
+      } else if (event is _radioButtonEvent) {
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
             isRefresh: !state.isRefresh));
+      } else if (event is _productIncrementEvent) {
+        emit(state.copyWith(
+            productWeight: event.productWeight + 1,
+            isRefresh: !state.isRefresh));
+      } else if (event is _productDecrementEvent) {
+        if (event.productWeight >= 1) {
+          emit(state.copyWith(
+              productWeight: event.productWeight - 1,
+              isRefresh: !state.isRefresh));
+        } else {}
       }
 
-      if (event is _productIncrementEvent) {
-        emit(state.copyWith(productWeight: event.productWeight + 1, isRefresh: !state.isRefresh));
-      }
+      else if (event is _createIssueEvent) {
 
-      if (event is _productDecrementEvent) {
-        if (event.productWeight >= 0) {
-          emit(state.copyWith(productWeight: event.productWeight - 1, isRefresh: !state.isRefresh));
+        if (event.issue != '') {
+          create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(
+            supplierId: event.supplierId,
+            products: [
+              create.Product(
+                productId: event.productId,
+                issue: event.issue,
+                missingQuantity: event.missingQuantity,
+              )
+            ],
+          );
+
+          try {
+            final response = await DioClient(event.context).post(
+                '${AppUrls.ordersUrl}${event.orderId}${AppUrls.createIssueUrl}',
+                data: reqMap,
+                options: Options(headers: {
+                  HttpHeaders.authorizationHeader:
+                      'Bearer ${preferencesHelper.getAuthToken()}'
+                }));
+
+            debugPrint(
+                'createIssue url  = ${AppUrls.ordersUrl}${event.orderId}${AppUrls.createIssueUrl}');
+            debugPrint('createIssue Req  = $reqMap');
+            debugPrint('createIssue response = $response');
+
+            if (response['status'] == 201) {
+              showSnackBar(
+                  context: event.context,
+                  title: response['message'],
+                  bgColor: AppColors.mainColor);
+              Navigator.pop(event.context);
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: response['message'],
+                  bgColor: AppColors.mainColor);
+            }
+          } on ServerException {}
         } else {
+          Navigator.pop(event.context);
+          showSnackBar(
+              context: event.context,
+              title: 'Please select issue',
+              bgColor: AppColors.redColor);
         }
       }
     });

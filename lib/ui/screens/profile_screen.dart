@@ -18,7 +18,6 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../widget/file_selection_option_widget.dart';
 
 class ProfileRoute {
@@ -420,7 +419,10 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.businessNameController,
-                          inputformet: [LengthLimitingTextInputFormatter(15)],
+
+                          inputformet: [
+                            /*FilteringTextInputFormatter.deny(
+                                RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint:
                               "" /*AppLocalizations.of(context)!.life_grocery_store*/,
@@ -434,7 +436,8 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.hpController,
-                          inputformet: [LengthLimitingTextInputFormatter(10)],
+                          inputformet: [/*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.number,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -447,7 +450,8 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.ownerNameController,
-                          inputformet: [LengthLimitingTextInputFormatter(12)],
+                          inputformet: [/*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -460,7 +464,18 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.idController,
-                          inputformet: [LengthLimitingTextInputFormatter(10)],
+                          inputformet: [/*TextInputFormatter.withFunction((oldValue, newValue) {
+                            print('old____${oldValue}');
+                            print('new____${newValue}');
+                            print('hgsjdsds _____${newValue.text.length < 1}');
+                            if(newValue.text.length == 1){
+                              FilteringTextInputFormatter.deny(
+                                  RegExp(r'\s'));
+                              return TextEditingValue(text: state.idController.text);
+                            }
+                            return newValue;
+
+                          }),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.number,
                           hint: "",
                           fillColor: Colors.transparent,
@@ -473,7 +488,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         7.height,
                         CustomFormField(
                           controller: state.contactController,
-                          inputformet: [LengthLimitingTextInputFormatter(15)],
+                          inputformet:  [LengthLimitingTextInputFormatter(15)] ,
                           keyboardType: TextInputType.text,
                           hint: "",
                           fillColor: Colors.transparent,

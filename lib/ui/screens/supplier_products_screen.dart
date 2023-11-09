@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +7,9 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
-
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
@@ -351,16 +347,16 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           border: Border(
                             left: isRTL
                                 ? BorderSide(
-                                color:
-                                AppColors.borderColor.withOpacity(0.7),
-                                width: 1)
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.7),
+                                    width: 1)
                                 : BorderSide.none,
                             right: isRTL
                                 ? BorderSide.none
                                 : BorderSide(
-                                color:
-                                AppColors.borderColor.withOpacity(0.7),
-                                width: 1),
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.7),
+                                    width: 1),
                           ),
                         ),
                         alignment: Alignment.center,
@@ -397,14 +393,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             left: isRTL
                                 ? BorderSide.none
                                 : BorderSide(
-                                color:
-                                AppColors.borderColor.withOpacity(0.7),
-                                width: 1),
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.7),
+                                    width: 1),
                             right: isRTL
                                 ? BorderSide(
-                                color:
-                                AppColors.borderColor.withOpacity(0.7),
-                                width: 1)
+                                    color:
+                                        AppColors.borderColor.withOpacity(0.7),
+                                    width: 1)
                                 : BorderSide.none,
                           ),
                         ),
