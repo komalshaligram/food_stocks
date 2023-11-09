@@ -68,6 +68,7 @@ class AppStrings {
   static const registerSuccessString = 'Registered Successfully!';
   static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
+  static const addCartSuccessString = 'Product added to Cart';
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
@@ -76,6 +77,7 @@ class AppStrings {
   static const filesNotUploadString = 'Files not uploaded';
   static const maxQuantityAllowString = 'Maximum 30 quantity allow per order';
   static const minQuantityMsgString = 'Add at least 1 quantity';
+  static const selectSupplierMsgString = 'select at least 1 Supplier';
   static const maxQuantityMsgString = 'You have reached maximum quantity';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =

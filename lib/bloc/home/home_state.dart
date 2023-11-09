@@ -13,17 +13,22 @@ class HomeState with _$HomeState {
     required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required int productStockUpdateIndex,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
-      UserImageUrl: '',
-      UserCompanyLogoUrl: '',
-      cartCount: 12,
-      productSalesList: ProductSalesResModel(),
-      isShimmering: false,
-      isLoading: false,
-      isProductLoading: false,
-      productDetails: [],
-      productStockUpdateIndex: -1,
-      productStockList: []);
+        UserImageUrl: '',
+        UserCompanyLogoUrl: '',
+        cartCount: 12,
+        productSalesList: ProductSalesResModel(),
+        isShimmering: false,
+        isLoading: false,
+        isProductLoading: false,
+        productDetails: [],
+        productStockUpdateIndex: -1,
+        productStockList: [],
+        isSelectSupplier: false,
+        productSupplierList: [],
+      );
 }

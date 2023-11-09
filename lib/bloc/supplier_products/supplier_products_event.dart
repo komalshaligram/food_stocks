@@ -20,4 +20,14 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
+
+  const factory SupplierProductsEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory SupplierProductsEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory SupplierProductsEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

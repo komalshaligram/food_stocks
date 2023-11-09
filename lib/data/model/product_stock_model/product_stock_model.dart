@@ -13,6 +13,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default(0) int quantity,
     @Default('') String note,
     @Default(0) int stock,
+    // @Default(false) bool isBarcodeProduct,
   }) = _ProductStockModel;
 
   factory ProductStockModel.fromJson(Map<String, dynamic> json) =>

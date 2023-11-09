@@ -53,4 +53,5 @@ class AppUrls {
   static const String clearCartUrl = '/v1/cart/clearCart';
   static const String getSubCategoriesUrl = '/v1/store/getSubCategories';
   static const String getCompaniesUrl = '/v1/store/getBrand';
+  static const String insertProductInCartUrl = '/v1/cart/addProduct/';
 }

@@ -353,18 +353,18 @@ class StoreScreenWidget extends StatelessWidget {
                       bloc.add(StoreEvent.changeCategoryExpansion());
                     },
                     onScanTap: () async {
-                      String result = await scanBarcodeOrQRCode(
+                      String scanResult = await scanBarcodeOrQRCode(
                           context: context,
                           cancelText: AppLocalizations.of(context)!.cancel,
                           scanMode: ScanMode.BARCODE);
-                      if (result != '-1') {
+                      if (scanResult != '-1') {
                         // -1 result for cancel scanning
-                        debugPrint('result = $result');
-                        showSnackBar(
+                        debugPrint('result = $scanResult');
+                        showProductDetails(
                             context: context,
-                            title: result,
-                            bgColor: AppColors.mainColor);
-                      } else {}
+                            productId: scanResult,
+                            isBarcode: true);
+                      }
                     },
                     controller: TextEditingController(),
                     onOutSideTap: () {
@@ -816,9 +816,11 @@ class StoreScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId}) async {
+      {required BuildContext context,
+      required String productId,
+      bool? isBarcode}) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
-        context: context, productId: productId));
+        context: context, productId: productId, isBarcode: isBarcode));
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -908,9 +910,8 @@ class StoreScreenWidget extends StatelessWidget {
                                       ? null
                                       : () {
                                           context.read<StoreBloc>().add(
-                                              StoreEvent
-                                                  .verifyProductStockEvent(
-                                                      context: context1));
+                                              StoreEvent.addToCartProductEvent(
+                                                  context: context1));
                                         }),
                         ),
                       );
@@ -1022,6 +1023,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           color: AppColors.blackColor),
                                     ),
                                     Container(
+                                      width: getScreenWidth(context),
                                       decoration: BoxDecoration(
                                           color: AppColors.whiteColor,
                                           borderRadius: BorderRadius.all(
@@ -1033,17 +1035,16 @@ class StoreScreenWidget extends StatelessWidget {
                                       margin: EdgeInsets.only(
                                         top: AppConstants.padding_5,
                                       ),
-                                      alignment: Alignment.topLeft,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                              '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                              '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).selectedIndex].saleName}'),
                                           2.height,
                                           Text(
-                                              'Discount : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}${AppLocalizations.of(context)!.currency}'),
+                                              'Discount : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).selectedIndex].saleDiscount}${AppLocalizations.of(context)!.currency}'),
                                         ],
                                       ),
                                     ),
@@ -1110,176 +1111,174 @@ class StoreScreenWidget extends StatelessWidget {
                             child: ListView.builder(
                               itemCount: state.productSupplierList.length,
                               itemBuilder: (context, index) {
-                                return state.productSupplierList[index]
-                                        .supplierSales.isEmpty
-                                    ? 0.width
-                                    : Container(
-                                        height: 95,
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_5,
-                                            horizontal:
-                                                AppConstants.padding_10),
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_10),
-                                        decoration: BoxDecoration(
-                                            color: /*state
-                                                    .productSupplierList[index]
-                                                    .isSelected
-                                                ? Color(0xff9cfc9c)
-                                                : */
-                                                AppColors.iconBGColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    AppConstants.radius_10)),
-                                            boxShadow: [
-                                              state.productSupplierList[index]
-                                                          .selectedIndex >=
-                                                      0
-                                                  ? BoxShadow(
-                                                      color: AppColors
-                                                          .shadowColor
-                                                          .withOpacity(0.15),
-                                                      blurRadius:
-                                                          AppConstants.blur_10)
-                                                  : BoxShadow()
-                                            ],
-                                            border: Border.all(
-                                                color:
-                                                    AppColors.lightBorderColor,
-                                                width: 1)),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              '${state.productSupplierList[index].companyName}',
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                      size:
-                                                          AppConstants.font_14,
-                                                      color:
-                                                          AppColors.blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                            Expanded(
-                                              child: ListView.builder(
-                                                itemCount: state
-                                                    .productSupplierList[index]
-                                                    .supplierSales
-                                                    .length,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemBuilder:
-                                                    (context, subIndex) {
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      context
-                                                          .read<StoreBloc>()
-                                                          .add(StoreEvent
-                                                              .supplierSelectionEvent(
+                                return Container(
+                                  height: 95,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_5,
+                                      horizontal: AppConstants.padding_10),
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_10),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.iconBGColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppConstants.radius_10)),
+                                      boxShadow: [
+                                        state.productSupplierList[index]
+                                                    .selectedIndex >=
+                                                0
+                                            ? BoxShadow(
+                                                color: AppColors.shadowColor
+                                                    .withOpacity(0.15),
+                                                blurRadius:
+                                                    AppConstants.blur_10)
+                                            : BoxShadow()
+                                      ],
+                                      border: Border.all(
+                                          color: AppColors.lightBorderColor,
+                                          width: 1)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        '${state.productSupplierList[index].companyName}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.font_14,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Expanded(
+                                        child:
+                                            state.productSupplierList[index]
+                                                    .supplierSales.isEmpty
+                                                ? Container(
+                                                    height: 95,
+                                                    width:
+                                                        getScreenWidth(context),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'Sale not available',
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .smallFont,
+                                                              color: AppColors
+                                                                  .textColor),
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    itemCount: state
+                                                        .productSupplierList[
+                                                            index]
+                                                        .supplierSales
+                                                        .length,
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemBuilder:
+                                                        (context, subIndex) {
+                                                      return InkWell(
+                                                        onTap: () {
+                                                          context
+                                                              .read<StoreBloc>()
+                                                              .add(StoreEvent.supplierSelectionEvent(
                                                                   supplierIndex:
                                                                       index,
                                                                   supplierSaleIndex:
                                                                       subIndex));
-                                                      context
-                                                          .read<StoreBloc>()
-                                                          .add(StoreEvent
-                                                              .changeSupplierSelectionExpansionEvent());
-                                                    },
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          color: AppColors
-                                                              .whiteColor,
-                                                          borderRadius:
-                                                              BorderRadius.all(
+                                                          context
+                                                              .read<StoreBloc>()
+                                                              .add(StoreEvent
+                                                                  .changeSupplierSelectionExpansionEvent());
+                                                        },
+                                                        splashColor:
+                                                            Colors.transparent,
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: AppColors
+                                                                  .whiteColor,
+                                                              borderRadius: BorderRadius.all(
                                                                   Radius.circular(
                                                                       AppConstants
                                                                           .radius_10)),
-                                                          border: Border.all(
-                                                              color: state
-                                                                          .productSupplierList[
-                                                                              index]
-                                                                          .selectedIndex ==
-                                                                      subIndex
-                                                                  ? AppColors
-                                                                      .mainColor
-                                                                      .withOpacity(
-                                                                          0.8)
-                                                                  : Colors.transparent,
-                                                              width: 1.5)),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
+                                                              border: Border.all(
+                                                                  color: state.productSupplierList[index].selectedIndex ==
+                                                                          subIndex
+                                                                      ? AppColors
+                                                                          .mainColor
+                                                                          .withOpacity(
+                                                                              0.8)
+                                                                      : Colors
+                                                                          .transparent,
+                                                                  width: 1.5)),
+                                                          padding: EdgeInsets.symmetric(
                                                               vertical:
                                                                   AppConstants
                                                                       .padding_3,
                                                               horizontal:
                                                                   AppConstants
                                                                       .padding_5),
-                                                      margin: EdgeInsets.only(
-                                                          top: AppConstants
-                                                              .padding_5,
-                                                          left: AppConstants
-                                                              .padding_5,
-                                                          right: AppConstants
-                                                              .padding_5),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Text(
-                                                            '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
-                                                            style: AppStyles.rkRegularTextStyle(
-                                                                size:
-                                                                    AppConstants
-                                                                        .font_12,
-                                                                color: AppColors
-                                                                    .saleRedColor),
-                                                          ),
-                                                          2.height,
-                                                          Text(
-                                                            'Discount : ${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}${AppLocalizations.of(context)!.currency}',
-                                                            style: AppStyles.rkRegularTextStyle(
-                                                                size:
-                                                                    AppConstants
-                                                                        .font_14,
-                                                                color: AppColors
-                                                                    .blackColor),
-                                                          ),
-                                                          2.height,
-                                                          GestureDetector(
-                                                              onTap: () {
-                                                                debugPrint(
-                                                                    'please open dialog');
-                                                              },
-                                                              child: Text(
-                                                                'Read condition',
+                                                          margin: EdgeInsets.only(
+                                                              top: AppConstants
+                                                                  .padding_5,
+                                                              left: AppConstants
+                                                                  .padding_5,
+                                                              right: AppConstants
+                                                                  .padding_5),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
                                                                 style: AppStyles.rkRegularTextStyle(
                                                                     size: AppConstants
-                                                                        .font_10,
+                                                                        .font_12,
                                                                     color: AppColors
-                                                                        .blueColor),
-                                                              )),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
+                                                                        .saleRedColor),
+                                                              ),
+                                                              2.height,
+                                                              Text(
+                                                                'Discount : ${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}${AppLocalizations.of(context)!.currency}',
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                    size: AppConstants
+                                                                        .font_14,
+                                                                    color: AppColors
+                                                                        .blackColor),
+                                                              ),
+                                                              2.height,
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    debugPrint(
+                                                                        'please open dialog');
+                                                                  },
+                                                                  child: Text(
+                                                                    'Read condition',
+                                                                    style: AppStyles.rkRegularTextStyle(
+                                                                        size: AppConstants
+                                                                            .font_10,
+                                                                        color: AppColors
+                                                                            .blueColor),
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                      )
+                                    ],
+                                  ),
+                                );
                               },
                             ),
                           )

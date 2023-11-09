@@ -13,6 +13,8 @@ class ProductSaleState with _$ProductSaleState {
     required int pageNum,
     required bool isLoadMore,
     required bool isBottomOfProducts,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => const ProductSaleState(
@@ -26,5 +28,7 @@ class ProductSaleState with _$ProductSaleState {
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
+        isSelectSupplier: false,
+        productSupplierList: [],
       );
 }

@@ -15,7 +15,6 @@ import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_pagination_end_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 
 class ProductCategoryRoute {

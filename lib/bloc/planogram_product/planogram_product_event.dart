@@ -18,6 +18,13 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
 
-  const factory PlanogramProductEvent.addProductToBasketEvent(
-      {required BuildContext context}) = _AddProductToBasketEvent;
+  const factory PlanogramProductEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory PlanogramProductEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory PlanogramProductEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

@@ -24,6 +24,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required ProductDetailsResModel productDetails,
     required int planoGramUpdateIndex,
     required int productStockUpdateIndex,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => const StoreCategoryState(
@@ -39,14 +41,16 @@ class StoreCategoryState with _$StoreCategoryState {
         isPlanogramShimmering: false,
         isSubCategoryShimmering: false,
         isLoading: false,
-        isProductLoading: false,
-        planogramPageNum: 0,
-        subCategoryPageNum: 0,
-        isLoadMore: false,
-        isBottomOfPlanoGrams: false,
-        isBottomOfSubCategory: false,
-        productDetails: ProductDetailsResModel(),
-        planoGramUpdateIndex: -1,
-        productStockUpdateIndex: -1,
+    isProductLoading: false,
+    planogramPageNum: 0,
+    subCategoryPageNum: 0,
+    isLoadMore: false,
+    isBottomOfPlanoGrams: false,
+    isBottomOfSubCategory: false,
+    productDetails: ProductDetailsResModel(),
+    planoGramUpdateIndex: -1,
+    productStockUpdateIndex: -1,
+    isSelectSupplier: false,
+    productSupplierList: [],
       );
 }
