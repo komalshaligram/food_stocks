@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/all_wallet_transaction_req/all_wallet_transaction_req_model.dart';
 import '../../data/model/req_model/total_expense_req/total_expense_req_model.dart';
@@ -30,28 +29,31 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-     if (event is _checkLanguage) {
+      if (event is _checkLanguage) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
-      }
-
-      else if(event is _dropDownListEvent) {
+      } else if (event is _dropDownListEvent) {
         var date = new DateTime.now().toString();
         var dateParse = DateTime.parse(date);
-        int  formattedYear = dateParse.year.toInt();
-        List<int> temp = [formattedYear ,formattedYear -1,formattedYear -2 ,formattedYear- 3];
-       emit(state.copyWith(yearList: temp, year: temp.first , year1: temp.first , ));
-      }
-
-      else if(event is _getWalletRecordEvent){
+        int formattedYear = dateParse.year.toInt();
+        List<int> temp = [
+          formattedYear,
+          formattedYear - 1,
+          formattedYear - 2,
+          formattedYear - 3
+        ];
+        emit(state.copyWith(
+          yearList: temp,
+          year: temp.first,
+          year1: temp.first,
+        ));
+      } else if (event is _getWalletRecordEvent) {
         try {
-          WalletRecordReqModel reqMap = WalletRecordReqModel(
-              userId: preferencesHelper.getUserId()
-          );
+          WalletRecordReqModel reqMap =
+              WalletRecordReqModel(userId: preferencesHelper.getUserId());
           debugPrint('WalletRecordReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
-              AppUrls.walletRecordUrl,
-              data: reqMap,
-
+            AppUrls.walletRecordUrl,
+            data: reqMap,
           );
 
           debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
@@ -65,91 +67,88 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
                 balance: response.data!.balanceAmount!,
                 totalCredit: response.data!.totalCredit!));
-       //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
-           showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
           }
-        }  on ServerException {}
-      }
-
-
-
-      else if(event is _getTotalExpenseEvent){
-
+        } on ServerException {}
+      } else if (event is _getTotalExpenseEvent) {
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(
-              userId: preferencesHelper.getUserId(),
-            year: event.year
-          );
+              userId: preferencesHelper.getUserId(), year: event.year);
 
           debugPrint('TotalExpenseReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
             AppUrls.totalExpenseByYearUrl,
             data: reqMap,
-
           );
 
-          debugPrint('totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
+          debugPrint(
+              'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
           TotalExpenseResModel response = TotalExpenseResModel.fromJson(res);
           debugPrint('TotalExpenseResModel  = $response');
 
           if (response.status == 200) {
             List<FlSpot> temp = [];
-            List<int>number   = List<int>.generate(12, (i) => i);
+            List<int> number = List<int>.generate(12, (i) => i);
 
             number.reversed.toList();
 
             response.data!.forEach((element) {
-              temp.add(FlSpot(number[element.month!.toInt() - 1].toDouble(), element.totalExpenses!.toDouble()));
+              temp.add(FlSpot(number[element.month!.toInt() - 1].toDouble(),
+                  element.totalExpenses!.toDouble()));
             });
             emit(state.copyWith(monthlyExpenseList: temp));
           } else {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
           }
-        }  on ServerException {}
-
-      }
-
-      else if(event is _getAllWalletTransactionEvent){
-       try {
-         AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
+        } on ServerException {}
+      } else if (event is _getAllWalletTransactionEvent) {
+        try {
+          AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
             userId: preferencesHelper.getUserId(),
-         //   userId: '654b8bc117ded10bbebf1fff',
-             year: state.year,
-           month: 1,
-         );
+            //   userId: '654b8bc117ded10bbebf1fff',
+            year: state.year,
+            month: 1,
+          );
 
-         debugPrint('AllWalletTransactionReqModel = $reqMap}');
-         final res = await DioClient(event.context).post(
-           AppUrls.getAllWalletTransactionUrl,
-           data: reqMap,
-         );
+          debugPrint('AllWalletTransactionReqModel = $reqMap}');
+          final res = await DioClient(event.context).post(
+            AppUrls.getAllWalletTransactionUrl,
+            data: reqMap,
+          );
 
-         debugPrint('AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
-         AllWalletTransactionResModel response = AllWalletTransactionResModel.fromJson(res);
-         debugPrint('AllWalletTransactionResModel  = $response');
+          debugPrint(
+              'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
+          AllWalletTransactionResModel response =
+              AllWalletTransactionResModel.fromJson(res);
+          debugPrint('AllWalletTransactionResModel  = $response');
 
-         if (response.status == 200) {
-
-          /* if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
+          if (response.status == 200) {
+            /* if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
              for (int i = 0; i < (response.data?.length ?? 0); i++) {
 
              }
            }*/
-
-           emit(state.copyWith(balanceSheetList: response));
-         } else {
-           showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-         }
-       }  on ServerException {}
-
-     }
-       else if(event is _getDateRangeEvent){
-         emit(state.copyWith(selectedDateRange: event.range));
-     }
-     else if(event is _getDropDownElementEvent){
-       emit(state.copyWith(year: event.year));
-     }
+            emit(state.copyWith(balanceSheetList: response));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {}
+      } else if (event is _getDateRangeEvent) {
+        emit(state.copyWith(selectedDateRange: event.range));
+      } else if (event is _getDropDownElementEvent) {
+        emit(state.copyWith(year: event.year));
+      }
     });
   }
 }
