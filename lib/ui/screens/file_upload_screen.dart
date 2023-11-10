@@ -143,9 +143,9 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         isUploading: state.isUploadLoading,
                                         uploadIndex: state.uploadIndex,
                                         isDownloadable: state
-                                                .formsAndFilesList[index]
-                                                .isDownloadable ??
-                                            false,
+                                                      .formsAndFilesList[index]
+                                                      .isForm ??
+                                                  false,
                                       );
                                     },
                                   ),
@@ -233,9 +233,9 @@ class FileUploadScreenWidget extends StatelessWidget {
                       color: AppColors.textColor,
                       fontWeight: FontWeight.w400),
                 ),
-                isDownloadable && url.isNotEmpty
+                isDownloadable /* && url.isNotEmpty*/
                     ? ButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.download,
+                        buttonText: AppLocalizations.of(context)!.download,
                         fontSize: AppConstants.smallFont,
                         radius: AppConstants.radius_5,
                         bGColor: AppColors.blueColor,
@@ -404,6 +404,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               size: AppConstants.font_14,
                                               color: AppColors.textColor,
                                               fontWeight: FontWeight.w400),
+                                          textAlign: TextAlign.center,
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
                                         ),

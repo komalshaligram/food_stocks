@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
@@ -48,8 +49,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           final res = await DioClient(event.context).post(
               AppUrls.getSaleProductsUrl,
               data: ProductSalesReqModel(
-                  pageNum: state.pageNum + 1,
-                  pageLimit: AppConstants.saleProductPageLimit)
+                      pageNum: state.pageNum + 1,
+                      pageLimit: AppConstants.saleProductPageLimit)
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
@@ -73,9 +74,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 isLoadMore: false,
                 isShimmering: false));
             emit(state.copyWith(
-                isBottomOfProducts:
-                productSaleList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
+                isBottomOfProducts: productSaleList.length ==
+                        (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -96,7 +96,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
+              ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
             debugPrint(
                 'id = ${state.productStockList.firstWhere((productStock) => productStock.productId == event.productId).productId}\n id = ${event.productId}');
@@ -107,19 +107,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 'product stock  = ${state.productStockList[productStockUpdateIndex].stock}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
-                'response supplier id = ${response.product?.first.supplierSales?.supplier?.id ?? ''}');
-            debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
-            supplierList.addAll(response.product
+            supplierList.addAll(response.product?.first.supplierSales
                     ?.map((supplier) => ProductSupplierModel(
-                          supplierId:
-                              supplier.supplierSales?.supplier?.id ?? '',
-                          companyName:
-                              supplier.supplierSales?.supplier?.companyName ??
-                                  '',
-                          selectedIndex: (supplier
-                                          .supplierSales?.supplier?.id ??
-                                      '') ==
+                          supplierId: supplier.supplierId ?? '',
+                          companyName: supplier.supplierCompanyName ?? '',
+                          selectedIndex: (supplier.supplierId ?? '') ==
                                   (state
                                           .productStockList[
                                               productStockUpdateIndex]
@@ -131,26 +124,27 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                                           .productSupplierIds
                                           .first
                                       : '')
-                              ? supplier.supplierSales?.supplier?.sale?.indexOf(
-                                      supplier.supplierSales?.supplier?.sale
-                                              ?.firstWhere((sale) =>
-                                                  sale.saleId ==
-                                                  state
-                                                      .productStockList[
-                                                          productStockUpdateIndex]
-                                                      .productSaleId) ??
-                                          Sale()) ??
+                              ? supplier.saleProduct?.indexOf(
+                                      supplier.saleProduct?.firstWhere((sale) =>
+                                              sale.saleId ==
+                                              state
+                                                  .productStockList[
+                                                      productStockUpdateIndex]
+                                                  .productSaleId) ??
+                                          SaleProduct()) ??
                                   -1
                               : -1,
-                          supplierSales: supplier.supplierSales?.supplier?.sale
+                  supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
-                                      saleName: sale.salesName ?? '',
+                                      saleName: sale.saleName ?? '',
                                       saleDescription:
-                                          sale.salesDescription ?? '',
-                                      saleDiscount:
-                                          sale.discountPercentage?.toDouble() ??
-                                              0.0))
+                                          parse(sale.salesDescription ?? '')
+                                              .outerHtml,
+                                      salePrice:
+                                          double.parse(sale.price ?? '0.0'),
+                                      saleDiscount: double.parse(
+                                          sale.discountPercentage ?? '0.0')))
                                   .toList() ??
                               [],
                         ))
@@ -176,7 +170,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
@@ -197,13 +191,13 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity -
+                            .quantity -
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');

@@ -15,6 +15,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -235,17 +236,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 'stock ${productStockList[event.planoGramIndex][productStockUpdateIndex].stock}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
-                'response supplier id = ${response.product?.first.supplierSales?.supplier?.id ?? ''}');
-            debugPrint(
                 'supplier id = ${state.productStockList[event.planoGramIndex][productStockUpdateIndex].productSupplierIds}');
-            supplierList.addAll(response.product
+            supplierList.addAll(response.product?.first.supplierSales
                     ?.map((supplier) => ProductSupplierModel(
-                          supplierId:
-                              supplier.supplierSales?.supplier?.id ?? '',
-                          companyName:
-                              supplier.supplierSales?.supplier?.companyName ??
-                                  '',
-                          selectedIndex: (supplier.supplierSales?.supplier?.id ?? '') ==
+                          supplierId: supplier.supplierId ?? '',
+                          companyName: supplier.supplierCompanyName ?? '',
+                          selectedIndex: (supplier.supplierId ?? '') ==
                                   (state
                                           .productStockList[event.planoGramIndex]
                                               [productStockUpdateIndex]
@@ -257,26 +253,27 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                                           .productSupplierIds
                                           .first
                                       : '')
-                              ? supplier.supplierSales?.supplier?.sale?.indexOf(
-                                      supplier.supplierSales?.supplier?.sale
-                                              ?.firstWhere((sale) =>
-                                                  sale.saleId ==
-                                                  state
-                                                      .productStockList[event.planoGramIndex]
-                                                          [productStockUpdateIndex]
-                                                      .productSaleId) ??
-                                          Sale()) ??
+                              ? supplier.saleProduct?.indexOf(
+                                      supplier.saleProduct?.firstWhere((sale) =>
+                                              sale.saleId ==
+                                              state
+                                                  .productStockList[event.planoGramIndex]
+                                                      [productStockUpdateIndex]
+                                                  .productSaleId) ??
+                                          SaleProduct()) ??
                                   -1
                               : -1,
-                          supplierSales: supplier.supplierSales?.supplier?.sale
+                  supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
                                       saleId: sale.saleId ?? '',
-                                      saleName: sale.salesName ?? '',
+                                      saleName: sale.saleName ?? '',
                                       saleDescription:
-                                          sale.salesDescription ?? '',
-                                      saleDiscount:
-                                          sale.discountPercentage?.toDouble() ??
-                                              0.0))
+                                          parse(sale.salesDescription ?? '')
+                                              .outerHtml,
+                                      salePrice:
+                                          double.parse(sale.price ?? '0.0'),
+                                      saleDiscount: double.parse(
+                                          sale.discountPercentage ?? '0.0')))
                                   .toList() ??
                               [],
                         ))

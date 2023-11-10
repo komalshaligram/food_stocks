@@ -37,12 +37,7 @@ class Product with _$Product {
     @JsonKey(name: "productDescription") String? productDescription,
     @JsonKey(name: "component") String? component,
     @JsonKey(name: "nutritionalValue") String? nutritionalValue,
-    @JsonKey(name: "qrcode") String? qrcode,
     @JsonKey(name: "sku") String? sku,
-    @JsonKey(name: "itemsWeight") int? itemsWeight,
-    @JsonKey(name: "totalWeightCardboard") int? totalWeightCardboard,
-    @JsonKey(name: "totalWeightSurface") int? totalWeightSurface,
-    @JsonKey(name: "totalWeight") int? totalWeight,
     @JsonKey(name: "kosharMilk") bool? kosharMilk,
     @JsonKey(name: "dairyMeatyAndFur") String? dairyMeatyAndFur,
     @JsonKey(name: "categoryId") String? categoryId,
@@ -55,12 +50,16 @@ class Product with _$Product {
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "qrcode") String? qrcode,
     @JsonKey(name: "mainImage") String? mainImage,
-    @JsonKey(name: "caseTypeId") String? caseTypeId,
+    @JsonKey(name: "itemsWeight") int? itemsWeight,
+    @JsonKey(name: "totalWeight") int? totalWeight,
+    @JsonKey(name: "totalWeightCardboard") int? totalWeightCardboard,
+    @JsonKey(name: "totalWeightSurface") int? totalWeightSurface,
     @JsonKey(name: "numberOfUnit") int? numberOfUnit,
     @JsonKey(name: "scaleId") String? scaleId,
     @JsonKey(name: "scales") Scales? scales,
-    @JsonKey(name: "supplierSales") SupplierSales? supplierSales,
+    @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>
@@ -91,38 +90,42 @@ class Scales with _$Scales {
 }
 
 @freezed
-class SupplierSales with _$SupplierSales {
-  const factory SupplierSales({
-    @JsonKey(name: "supplier") Supplier? supplier,
-  }) = _SupplierSales;
+class SupplierSale with _$SupplierSale {
+  const factory SupplierSale({
+    @JsonKey(name: "_id") Id? id,
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "supplierName") String? supplierName,
+    @JsonKey(name: "supplierCompanyName") String? supplierCompanyName,
+    @JsonKey(name: "productPrice") String? productPrice,
+    @JsonKey(name: "saleProduct") List<SaleProduct>? saleProduct,
+  }) = _SupplierSale;
 
-  factory SupplierSales.fromJson(Map<String, dynamic> json) =>
-      _$SupplierSalesFromJson(json);
+  factory SupplierSale.fromJson(Map<String, dynamic> json) =>
+      _$SupplierSaleFromJson(json);
 }
 
 @freezed
-class Supplier with _$Supplier {
-  const factory Supplier({
+class Id with _$Id {
+  const factory Id({
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "productId") String? productId,
+  }) = _Id;
+
+  factory Id.fromJson(Map<String, dynamic> json) => _$IdFromJson(json);
+}
+
+@freezed
+class SaleProduct with _$SaleProduct {
+  const factory SaleProduct({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "companyName") String? companyName,
-    @JsonKey(name: "sale") List<Sale>? sale,
-  }) = _Supplier;
-
-  factory Supplier.fromJson(Map<String, dynamic> json) =>
-      _$SupplierFromJson(json);
-}
-
-@freezed
-class Sale with _$Sale {
-  const factory Sale({
+    @JsonKey(name: "price") String? price,
+    @JsonKey(name: "discountPercentage") String? discountPercentage,
+    @JsonKey(name: "discountedPrice") String? discountedPrice,
     @JsonKey(name: "saleId") String? saleId,
-    @JsonKey(name: "sd") String? sd,
-    @JsonKey(name: "salesName") String? salesName,
-    @JsonKey(name: "discountPercentage") int? discountPercentage,
+    @JsonKey(name: "saleName") String? saleName,
     @JsonKey(name: "salesDescription") String? salesDescription,
-    @JsonKey(name: "fromDate") DateTime? fromDate,
-    @JsonKey(name: "endDate") DateTime? endDate,
-  }) = _Sale;
+  }) = _SaleProduct;
 
-  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
+  factory SaleProduct.fromJson(Map<String, dynamic> json) =>
+      _$SaleProductFromJson(json);
 }

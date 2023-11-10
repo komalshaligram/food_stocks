@@ -45,6 +45,7 @@ class ClientForm with _$ClientForm {
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "sample") String? sample,
   }) = _ClientForm;
 
   factory ClientForm.fromJson(Map<String, dynamic> json) =>

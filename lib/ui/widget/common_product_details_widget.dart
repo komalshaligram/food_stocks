@@ -3,6 +3,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:html/parser.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -464,7 +465,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w700),
                                     ),
                                     Text(
-                                      productSaleDescription,
+                                      parse(productSaleDescription).outerHtml,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,
