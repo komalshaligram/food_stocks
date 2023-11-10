@@ -31,6 +31,7 @@ class Product with _$Product {
     @JsonKey(name: "productId") String? productId,
     @JsonKey(name: "quantity") int? quantity,
     @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "note") String? note,
     @JsonKey(name: "saleId") String? saleId,
   }) = _Product;
 

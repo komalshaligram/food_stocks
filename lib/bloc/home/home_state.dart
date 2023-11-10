@@ -20,7 +20,7 @@ class HomeState with _$HomeState {
   factory HomeState.initial() => HomeState(
         UserImageUrl: '',
         UserCompanyLogoUrl: '',
-        cartCount: 12,
+        cartCount: 0,
         productSalesList: ProductSalesResModel(),
         isShimmering: false,
         isLoading: false,

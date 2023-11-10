@@ -213,7 +213,8 @@ class CommonSearchWidget extends StatelessWidget {
                                               });
                                         },
                                       ),
-                              )
+                              ),
+                              10.height,
                             ],
                           ),
                         ),

@@ -29,4 +29,7 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory HomeEvent.updateCartCountEvent({required int cartCount}) =
+      _UpdateCartCountEvent;
 }
