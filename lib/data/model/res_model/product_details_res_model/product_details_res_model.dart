@@ -59,6 +59,7 @@ class Product with _$Product {
     @JsonKey(name: "caseTypeId") String? caseTypeId,
     @JsonKey(name: "numberOfUnit") int? numberOfUnit,
     @JsonKey(name: "scaleId") String? scaleId,
+    @JsonKey(name: "scales") Scales? scales,
     @JsonKey(name: "supplierSales") SupplierSales? supplierSales,
   }) = _Product;
 
@@ -74,6 +75,19 @@ class Image with _$Image {
   }) = _Image;
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+}
+
+@freezed
+class Scales with _$Scales {
+  const factory Scales({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "scaleType") String? scaleType,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "__v") int? v,
+  }) = _Scales;
+
+  factory Scales.fromJson(Map<String, dynamic> json) => _$ScalesFromJson(json);
 }
 
 @freezed

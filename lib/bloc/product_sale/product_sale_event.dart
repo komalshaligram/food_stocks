@@ -18,6 +18,13 @@ class ProductSaleEvent with _$ProductSaleEvent {
   const factory ProductSaleEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
 
-  const factory ProductSaleEvent.verifyProductStockEvent(
-      {required BuildContext context}) = _VerifyProductStockEvent;
+  const factory ProductSaleEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory ProductSaleEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory ProductSaleEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

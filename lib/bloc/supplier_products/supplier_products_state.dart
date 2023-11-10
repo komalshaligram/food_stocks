@@ -14,6 +14,8 @@ class SupplierProductsState with _$SupplierProductsState {
     required int pageNum,
     required bool isLoadMore,
     required bool isBottomOfProducts,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -28,5 +30,7 @@ class SupplierProductsState with _$SupplierProductsState {
         pageNum: 0,
         isLoadMore: false,
         isBottomOfProducts: false,
+        isSelectSupplier: false,
+        productSupplierList: [],
       );
 }

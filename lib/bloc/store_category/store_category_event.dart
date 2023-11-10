@@ -5,9 +5,22 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryExpansionEvent(
       {bool? isOpened}) = _ChangeCategoryExpansionEvent;
 
-  const factory StoreCategoryEvent.changeCategoryOrSubCategoryEvent(
-      {required bool isCategory,
-      required BuildContext context}) = _ChangeCategoryOrSubCategoryEvent;
+  const factory StoreCategoryEvent.changeCategoryDetailsEvent(
+      {required String categoryId,
+      required String categoryName,
+      required BuildContext context}) = _ChangeCategoryDetailsEvent;
+
+  const factory StoreCategoryEvent.changeSubCategoryDetailsEvent(
+      {required String subCategoryId,
+      required String subCategoryName,
+      required BuildContext context}) = _ChangeSubCategoryDetailsEvent;
+
+  const factory StoreCategoryEvent.getSubCategoryListEvent(
+      {required BuildContext context}) = _GetSubCategoryListEvent;
+
+  const factory StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+      {required bool isSubCategory,
+      required BuildContext context}) = _ChangeSubCategoryOrPlanogramEvent;
 
   const factory StoreCategoryEvent.getPlanoGramProductsEvent(
       {required BuildContext context}) = _GetPlanoGramProductsEvent;
@@ -15,7 +28,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.getProductDetailsEvent(
       {required BuildContext context,
       required String productId,
-      required int planoGramIndex}) = _GetProductDetailsEvent;
+      required int planoGramIndex,
+      bool? isBarcode}) = _GetProductDetailsEvent;
 
   const factory StoreCategoryEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -26,6 +40,16 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
 
-  const factory StoreCategoryEvent.verifyProductStockEvent(
-      {required BuildContext context}) = _VerifyProductStockEvent;
+  const factory StoreCategoryEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory StoreCategoryEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory StoreCategoryEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory StoreCategoryEvent.getScanProductDetailsEvent(
+      {required String scanResultBarcode}) = _GetScanProductDetailsEvent;
 }

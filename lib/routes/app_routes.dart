@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/screens/about_app_screen.dart';
 import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
@@ -11,6 +9,7 @@ import 'package:food_stock/ui/screens/message_screen.dart';
 import 'package:food_stock/ui/screens/activity_time_screen.dart';
 import 'package:food_stock/ui/screens/order_screen.dart';
 import 'package:food_stock/ui/screens/planogram_product_screen.dart';
+import 'package:food_stock/ui/screens/product_category_screen.dart';
 import 'package:food_stock/ui/screens/product_sale_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/screens/qr_scan_screen.dart';
@@ -22,6 +21,7 @@ import 'package:food_stock/ui/screens/supplier_products_screen.dart';
 import 'package:food_stock/ui/screens/terms_of_use_screen.dart';
 
 import '../ui/screens/basket_screen.dart';
+import '../ui/screens/company_screen.dart';
 import '../ui/screens/connect_screen.dart';
 import '../ui/screens/menu_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
@@ -73,6 +73,8 @@ enum RouteDefine {
   supplierProductsScreen,
   productSaleScreen,
   planogramProductScreen,
+  productCategoryScreen,
+  companyScreen,
 }
 
 class AppRouting {
@@ -88,7 +90,7 @@ class AppRouting {
       RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
 
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
-    //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,
+      //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
       RouteDefine.menuScreen.name: (_) => MenuRoute.route,
@@ -119,13 +121,16 @@ class AppRouting {
       RouteDefine.productSaleScreen.name: (_) => ProductSaleRoute.route,
       RouteDefine.planogramProductScreen.name: (_) =>
           PlanogramProductRoute.route,
+      RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
+      RouteDefine.companyScreen.name: (_) => CompanyRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
 
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
-      settings: RouteSettings(name: settings.name ,arguments: settings.arguments),
+      settings:
+          RouteSettings(name: settings.name, arguments: settings.arguments),
     );
   }
 }

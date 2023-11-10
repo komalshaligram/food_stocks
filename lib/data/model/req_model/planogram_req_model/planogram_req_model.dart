@@ -22,6 +22,8 @@ class PlanogramReqModel with _$PlanogramReqModel {
     int? pageLimit,
     String? sortOrder,
     String? sortField,
+    String? subCategoryId,
+    String? categoryId,
   }) = _PlanogramReqModel;
 
   factory PlanogramReqModel.fromJson(Map<String, dynamic> json) =>

@@ -10,15 +10,19 @@ class PlanogramProductState with _$PlanogramProductState {
     required ProductDetailsResModel productDetails,
     required List<ProductStockModel> productStockList,
     required int productStockUpdateIndex,
+    required bool isSelectSupplier,
+    required List<ProductSupplierModel> productSupplierList,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
-        planogramName: '',
+    planogramName: '',
         planogramProductList: [],
         isLoading: false,
         isProductLoading: false,
         productDetails: ProductDetailsResModel(),
         productStockUpdateIndex: -1,
         productStockList: [],
+        isSelectSupplier: false,
+        productSupplierList: [],
       );
 }

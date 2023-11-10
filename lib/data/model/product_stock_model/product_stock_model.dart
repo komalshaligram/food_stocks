@@ -9,9 +9,11 @@ class ProductStockModel with _$ProductStockModel {
   const factory ProductStockModel({
     required String productId,
     @Default([]) List<String> productSupplierIds,
+    @Default('') String productSaleId,
     @Default(0) int quantity,
     @Default('') String note,
     @Default(0) int stock,
+    // @Default(false) bool isBarcodeProduct,
   }) = _ProductStockModel;
 
   factory ProductStockModel.fromJson(Map<String, dynamic> json) =>

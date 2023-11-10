@@ -20,6 +20,13 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.changeNoteOfProduct({required String newNote}) =
       _ChangeNoteOfProduct;
 
-  const factory HomeEvent.verifyProductStockEvent(
-      {required BuildContext context}) = _VerifyProductStockEvent;
+  const factory HomeEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory HomeEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory HomeEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

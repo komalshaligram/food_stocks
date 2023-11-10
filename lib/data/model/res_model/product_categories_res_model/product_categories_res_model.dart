@@ -31,6 +31,9 @@ class ProductCategoriesResModel with _$ProductCategoriesResModel {
 class Data with _$Data {
   const factory Data({
     @JsonKey(name: "Categories") List<Category>? categories,
+    @JsonKey(name: "totalRecords") int? totalRecords,
+    @JsonKey(name: "totalPages") int? totalPages,
+    @JsonKey(name: "currentPage") int? currentPage,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -45,6 +48,8 @@ class Category with _$Category {
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
     @JsonKey(name: "categoryImage") String? categoryImage,
+    @JsonKey(name: "isHomePreference") bool? isHomePreference,
+    @JsonKey(name: "order") int? order,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>
