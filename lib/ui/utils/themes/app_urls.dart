@@ -40,26 +40,21 @@ class AppUrls {
   static const String getOrderById = '/v1/orders/getOrderById/';
   static const String verifyStockUrl = '/v1/store/verifyStock';
   static const String updateCartProductUrl = '/v1/cart/updateCartProducts/';
-  static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier/';
-  static const String getIssueUrl = '/v1/orders/6540dd1bb186f807d4ce24f0/issues';
+  static const String listingCartProductsSupplierUrl =
+      '/v1/cart/listingCartProductsSupplier/';
+  static const String getIssueUrl =
+      '/v1/orders/6540dd1bb186f807d4ce24f0/issues';
   static const String createIssueUrl = '/issues/createIssue';
   static const String ordersUrl = '/v1/orders/';
   static const String deliveryConfirmUrl = '/delivery/confirm';
   static const String clearCartUrl = '/v1/cart/clearCart/';
   static const String removeCartProductUrl = '/v1/cart/removeProduct';
-  static const String walletRecordUrl = '/v1/walletTransaction/getWalletRecords';
-  static const String totalExpenseByYearUrl = '/v1/walletTransaction/getTotalExpensesByYear';
-  static const String getAllWalletTransactionUrl = '/v1/walletTransaction/getAllWalletTransactions';
-  static const String updateCartProductUrl = '/v1/cart/updateCartProducts';
-  static const String listingCartProductsSupplierUrl =
-      '/v1/cart/listingCartProductsSupplier';
-  static const String getIssueUrl =
-      '/v1/orders/6540dd1bb186f807d4ce24f0/issues';
-  static const String createIssueUrl =
-      '/v1/orders/6540dd1bb186f807d4ce24f0/issues/createIssue';
-  static const String deliveryConfirmUrl =
-      '/v1/orders/6540dd1bb186f807d4ce24f0/delivery/confirm';
-  static const String clearCartUrl = '/v1/cart/clearCart';
+  static const String walletRecordUrl =
+      '/v1/walletTransaction/getWalletRecords';
+  static const String totalExpenseByYearUrl =
+      '/v1/walletTransaction/getTotalExpensesByYear';
+  static const String getAllWalletTransactionUrl =
+      '/v1/walletTransaction/getAllWalletTransactions';
   static const String getSubCategoriesUrl = '/v1/store/getSubCategories';
   static const String getCompaniesUrl = '/v1/store/getBrand';
   static const String insertProductInCartUrl = '/v1/cart/addProduct/';

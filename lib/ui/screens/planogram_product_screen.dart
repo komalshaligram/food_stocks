@@ -12,6 +12,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
