@@ -7,15 +7,18 @@ class BasketState with _$BasketState {
     required bool isRefresh,
     required GetAllCartResModel CartItemList,
     required bool isShimmering,
+    required int productWeight,
+    required List<ProductDetailsModel>basketProductList,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
      isRefresh: false,
      CartItemList: GetAllCartResModel(),
      isShimmering: false,
+     productWeight: 0,
+       basketProductList : [],
 );
 }
-
 
 
 

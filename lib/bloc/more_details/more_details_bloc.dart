@@ -45,7 +45,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
     on<MoreDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
@@ -105,7 +104,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 path: AppUrls.fileUploadUrl,
                 formData: FormData.fromMap(
                   {
-                    AppStrings.profileImageString: await MultipartFile.fromFile(
+                    AppStrings.logoString: await MultipartFile.fromFile(
                         croppedImage?.path ?? pickedFile.path,
                         contentType: MediaType('image', 'png'))
                   },
@@ -171,6 +170,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 .id,
             address: state.addressController.text,
             email: state.emailController.text,
+             phoneNumber: preferencesHelper.getPhoneNumber(),
             clientDetail: ClientDetail(fax: state.faxController.text),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();

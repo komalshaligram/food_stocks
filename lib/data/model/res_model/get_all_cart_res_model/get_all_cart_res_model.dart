@@ -1,6 +1,9 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_all_cart_res_model.freezed.dart';
 part 'get_all_cart_res_model.g.dart';
+
 
 @freezed
 class GetAllCartResModel with _$GetAllCartResModel {
@@ -47,8 +50,14 @@ class Datum with _$Datum {
     String? id,
     @JsonKey(name: "productDetails")
     ProductDetails? productDetails,
+    @JsonKey(name: "cartProductId")
+    String? cartProductId,
     @JsonKey(name: "suppliers")
     List<Supplier>? suppliers,
+    @JsonKey(name: "productStock")
+    int? productStock,
+    @JsonKey(name: "sales")
+    List<dynamic>? sales,
     @JsonKey(name: "totalQuantity")
     int? totalQuantity,
     @JsonKey(name: "totalAmount")
@@ -65,10 +74,14 @@ class ProductDetails with _$ProductDetails {
     String? id,
     @JsonKey(name: "productName")
     String? productName,
-    @JsonKey(name: "images")
-    List<Image>? images,
     @JsonKey(name: "mainImage")
     String? mainImage,
+    @JsonKey(name: "itemsWeight")
+    int? itemsWeight,
+    @JsonKey(name: "images")
+    List<Image>? images,
+    @JsonKey(name: "scales")
+    String? scales,
   }) = _ProductDetails;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => _$ProductDetailsFromJson(json);

@@ -25,6 +25,8 @@ class Data with _$Data {
     AuthToken? authToken,
     @JsonKey(name: "cartId")
     String? cartId,
+    @JsonKey(name: "wallet")
+    String? wallet,
 
   }) = _Data;
 

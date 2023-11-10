@@ -13,7 +13,6 @@ import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_summary_event.dart';
@@ -33,11 +32,10 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if(event is _getDataEvent){
         try {
           final res = await DioClient(event.context).post(
-              AppUrls.listingCartProductsSupplierUrl,
-              data: {
-                AppStrings.cartIdString : preferencesHelper.getCartId(),
-              }
+              '${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
+
           );
+          debugPrint('CartProductsSupplier url   = ${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}');
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
           debugPrint('CartProductsSupplierRes  = $response');
 
@@ -54,12 +52,15 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if(event is _orderSendEvent){
         List<Product> ProductReqMap = [];
         state.orderSummaryList.data!.data!.forEach((element) {
+          debugPrint('supplierId_____${element.suppliers!.id}');
+          debugPrint('product id_____${element.productDetails!.first.id}');
           ProductReqMap.add(Product(
             supplierId: element.suppliers!.id,
             productId: element.productDetails!.first.id,
              quantity: element.totalQuantity,
           ));
         });
+
 
         try {
           OrderSendReqModel reqMap = OrderSendReqModel(
@@ -75,6 +76,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             })
           );
 
+          debugPrint('Order create url  = ${AppUrls.createOrderUrl}');
           OrderSendResModel response = OrderSendResModel.fromJson(res);
           debugPrint('OrderSendResModel  = $response');
 

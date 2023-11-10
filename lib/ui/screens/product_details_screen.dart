@@ -34,10 +34,12 @@ class ProductDetailsScreen extends StatelessWidget {
         ..add(ProductDetailsEvent.getProductDataEvent(
             context: context,
             productIndex: args?[AppStrings.productIndexString] ?? 0,
-            orderId: args?[AppStrings.idString] ?? '')),
+            orderId: args?[AppStrings.orderIdString] ?? '')),
       child: ProductDetailsScreenWidget(
-          productIndex: args?[AppStrings.productIndexString] ?? 0,
-          orderId: args?[AppStrings.idString] ?? 0),
+        productIndex: args?[AppStrings.productIndexString] ?? 0,
+        orderId: args?[AppStrings.orderIdString] ?? '',
+        orderNumber: args?[AppStrings.orderNumberString],
+      ),
     );
   }
 }
@@ -45,9 +47,13 @@ class ProductDetailsScreen extends StatelessWidget {
 class ProductDetailsScreenWidget extends StatelessWidget {
   int productIndex;
   String orderId;
+  int orderNumber;
 
   ProductDetailsScreenWidget(
-      {super.key, required this.productIndex, required this.orderId});
+      {super.key,
+      required this.productIndex,
+      required this.orderId,
+      required this.orderNumber});
 
   TextEditingController addProblemController = TextEditingController();
   TextEditingController driverController = TextEditingController();
@@ -68,7 +74,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
-                  title: orderId,
+                  title: orderNumber.toString(),
                   iconData: Icons.arrow_back_ios_sharp,
                   trailingWidget: Padding(
                     padding: EdgeInsets.symmetric(
@@ -176,7 +182,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         .data!
                                         .ordersBySupplier![productIndex]
                                         .orderDate
-                                        .toString()*/'-',
+                                        .toString()*/
+                                        '-',
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
                                     valueTextSize: AppConstants.font_10,
@@ -198,7 +205,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 ],
                               ),
                               7.height,
-                             RichText(
+                              RichText(
                                 text: TextSpan(
                                   text: AppLocalizations.of(context)!
                                       .supplier_order_number,
@@ -236,17 +243,17 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   //       color: AppColors.blackColor,
                                   //       fontWeight: FontWeight.w600),
                                   // ),
-                              Container(
-                                width: 150,
-                                height: 40,
-                                child: CustomFormField(
-                          controller: driverController,
-                          keyboardType: TextInputType.text,
-                        hint: '',
-                        validator: '',
-                          fillColor: Colors.white,
-                        ),
-                              ),
+                                  Container(
+                                    width: 150,
+                                    height: 40,
+                                    child: CustomFormField(
+                                      controller: driverController,
+                                      keyboardType: TextInputType.text,
+                                      hint: '',
+                                      validator: '',
+                                      fillColor: Colors.white,
+                                    ),
+                                  ),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(
@@ -258,32 +265,32 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                     child: Container(
-                                        alignment: Alignment.center,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: AppConstants.padding_5,
-                                            vertical: AppConstants.padding_5),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.mainColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  AppConstants.radius_100)),
-                                          border: Border.all(
-                                            color: AppColors.whiteColor,
-                                            width: 1,
-                                          ),
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5,
+                                          vertical: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppConstants.radius_100)),
+                                        border: Border.all(
+                                          color: AppColors.whiteColor,
+                                          width: 1,
                                         ),
-                                        child: Container(
-                                          width: 150,
-                                          height: 35,
-                                          child: CustomFormField(
-                                            controller: phoneNumberController,
-                                            keyboardType: TextInputType.number,
-                                            hint: '',
-                                            validator: AppStrings.mobileValString,
-                                            fillColor: Colors.white,
-                                            border: 30,
-                                          ),
+                                      ),
+                                      child: Container(
+                                        width: 150,
+                                        height: 35,
+                                        child: CustomFormField(
+                                          controller: phoneNumberController,
+                                          keyboardType: TextInputType.number,
+                                          hint: '',
+                                          validator: AppStrings.mobileValString,
+                                          fillColor: Colors.white,
+                                          border: 30,
                                         ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -334,32 +341,55 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     horizontal: AppConstants.padding_30),
                 color: AppColors.pageColor,
                 child: CustomButtonWidget(
-                  onPressed: () => Navigator.pushNamed(
-                      context, RouteDefine.shipmentVerificationScreen.name,
-                      arguments: {
-                        AppStrings.supplierNameString: state.orderList.data!
-                            .ordersBySupplier![productIndex].supplierName!
-                            .toString(),
-                        AppStrings.deliveryStatusString: state
-                            .orderList
-                            .data!
-                            .ordersBySupplier![productIndex]
-                            .deliverStatus.toString(),
-                        AppStrings.totalOrderString: state.orderList.data!
-                            .ordersBySupplier![productIndex].totalPayment
-                            .toString(),
-                        AppStrings.deliveryDateString: state.orderList.data!
-                            .ordersBySupplier![productIndex].orderDate
-                            .toString(),
-                        AppStrings.quantityString: state.orderList.data!
-                            .ordersBySupplier![productIndex].products!.length
-                            .toString(),
-                        AppStrings.totalAmountString: state
-                            .orderList.data!.orderData!.first.totalAmount!
-                            .toString(),
-                        AppStrings.idString: orderId,
-                        AppStrings.supplierIdString : state.orderList.data!.ordersBySupplier![productIndex].id
-                      }),
+                  onPressed: () {
+                    state.orderList.data!.orderData!.first.orderstatus!
+                                .statusName ==
+                            AppStrings.deliverString
+                        ? Navigator.pushNamed(
+                            context, RouteDefine.bottomNavScreen.name)
+                        : Navigator.pushNamed(context,
+                            RouteDefine.shipmentVerificationScreen.name,
+                            arguments: {
+                                AppStrings.supplierNameString: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .supplierName!
+                                    .toString(),
+                                AppStrings.deliveryStatusString: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .deliverStatus!
+                                    .statusName
+                                    .toString(),
+                                AppStrings.totalOrderString: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .totalPayment
+                                    .toString(),
+                                AppStrings.deliveryDateString: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .orderDate
+                                    .toString(),
+                                AppStrings.quantityString: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .products!
+                                    .length
+                                    .toString(),
+                                AppStrings.totalAmountString: state.orderList
+                                    .data!.orderData!.first.totalAmount!
+                                    .toString(),
+                                AppStrings.orderIdString: orderId,
+                                AppStrings.supplierIdString: state.orderList
+                                    .data!.ordersBySupplier![productIndex].id
+                              });
+                  },
                   buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
                 ),
@@ -393,25 +423,34 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Checkbox(
-                  value: state.productListIndex.contains(index) ? true : false,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                  ),
-                  side: MaterialStateBorderSide.resolveWith(
-                    (states) =>
-                        BorderSide(width: 1.0, color: AppColors.greyColor),
-                  ),
-                  activeColor: AppColors.mainColor,
-                  onChanged: (value) {
-                    bloc.add(ProductDetailsEvent.productProblemEvent(
-                        isProductProblem: value!, index: index));
-                  }),
-              Image.network(
-                '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
-                width: AppConstants.containerSize_50,
-                height: AppConstants.containerSize_50,
-              ),
+              state.orderList.data!.orderData!.first.orderstatus!.statusName ==
+                      AppStrings.deliverString
+                  ? Checkbox(
+                      value:
+                          state.productListIndex.contains(index) ? true : false,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_3),
+                      ),
+                      side: MaterialStateBorderSide.resolveWith(
+                        (states) =>
+                            BorderSide(width: 1.0, color: AppColors.greyColor),
+                      ),
+                      activeColor: AppColors.mainColor,
+                      onChanged: (value) {
+                        bloc.add(ProductDetailsEvent.productProblemEvent(
+                            isProductProblem: value!, index: index));
+                      })
+                  : SizedBox(),
+              state.orderList.data!.ordersBySupplier![productIndex]
+                          .products![index].category!.categoryImage !=
+                      null
+                  ? Image.network(
+                      '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                      width: AppConstants.containerSize_50,
+                      height: AppConstants.containerSize_50,
+                    )
+                  : SizedBox(),
               Container(
                 width: 55,
                 child: Text(
@@ -437,58 +476,71 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     size: AppConstants.font_14,
                     fontWeight: FontWeight.w700),
               ),
-              GestureDetector(
-                onTap: () {
-                  state.productListIndex.contains(index)
-                      ? ProductProblemBottomSheet(
-                          context: context,
-                          productName: state
-                              .orderList
-                              .data!
-                              .ordersBySupplier![productIndex]
-                              .products![index]
-                              .productName
-                              .toString(),
-                          weight: state
-                              .orderList
-                              .data!
-                              .ordersBySupplier![productIndex]
-                              .products![index]
-                              .itemWeight!,
-                          price: state
-                              .orderList
-                              .data!
-                              .ordersBySupplier![productIndex]
-                              .products![index]
-                              .totalPayment!,
-                          image:
-                              '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage.toString()}',
-                          listIndex: index)
-                      : SizedBox();
-                },
-                child: Container(
-                  margin: EdgeInsets.all(AppConstants.padding_10),
-                  padding: EdgeInsets.symmetric(
-                      vertical: AppConstants.padding_5,
-                      horizontal: AppConstants.padding_5),
-                  decoration: BoxDecoration(
-                    color: state.productListIndex.contains(index)
-                        ? AppColors.mainColor
-                        : AppColors.lightBorderColor,
-                    border: Border.all(color: AppColors.lightGreyColor),
-                    borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.product_issue,
-                    style: AppStyles.rkRegularTextStyle(
-                        color: state.productListIndex.contains(index)
-                            ? AppColors.whiteColor
-                            : AppColors.blackColor,
-                        size: AppConstants.font_12,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
-              ),
+              state.orderList.data!.orderData!.first.orderstatus!.statusName ==
+                      AppStrings.deliverString
+                  ? GestureDetector(
+                      onTap: () {
+                        state.productListIndex.contains(index)
+                            ? ProductProblemBottomSheet(
+                                context: context,
+                                productName: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .products![index]
+                                    .productName
+                                    .toString(),
+                                weight: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .products![index]
+                                    .itemWeight!,
+                                price: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .products![index]
+                                    .totalPayment!,
+                                image:
+                                    '${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                                listIndex: index,
+                                productId: state
+                                    .orderList
+                                    .data!
+                                    .ordersBySupplier![productIndex]
+                                    .products![index]
+                                    .productId!,
+                                supplierId: state.orderList.data!
+                                    .ordersBySupplier![productIndex].id!,
+                              )
+                            : SizedBox();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(AppConstants.padding_10),
+                        padding: EdgeInsets.symmetric(
+                            vertical: AppConstants.padding_5,
+                            horizontal: AppConstants.padding_5),
+                        decoration: BoxDecoration(
+                          color: state.productListIndex.contains(index)
+                              ? AppColors.mainColor
+                              : AppColors.lightBorderColor,
+                          border: Border.all(color: AppColors.lightGreyColor),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radius_3),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.product_issue,
+                          style: AppStyles.rkRegularTextStyle(
+                              color: state.productListIndex.contains(index)
+                                  ? AppColors.whiteColor
+                                  : AppColors.blackColor,
+                              size: AppConstants.font_12,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         );
@@ -502,7 +554,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       required int weight,
       required int price,
       required String image,
-      required int listIndex}) {
+      required int listIndex,
+      required String productId,
+      required String supplierId}) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -576,14 +630,17 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     Radius.circular(AppConstants.radius_5)),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  Image.network(
-                                    image,
-                                    width: AppConstants.containerSize_50,
-                                    height: AppConstants.containerSize_50,
-                                  ),
-                                  5.width,
+                                  image != ''
+                                      ? Image.network(
+                                          '${AppUrls.baseFileUrl}${image}',
+                                          width: AppConstants.containerSize_50,
+                                          height: AppConstants.containerSize_50,
+                                        )
+                                      : SizedBox(),
+                                  //  5.width,
                                   Text(
                                     productName,
                                     style: AppStyles.rkRegularTextStyle(
@@ -591,7 +648,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       size: AppConstants.font_14,
                                     ),
                                   ),
-                                  10.width,
+                                  //10.width,
                                   Text(
                                     '${weight.toString()}${AppLocalizations.of(context)!.kg}',
                                     style: AppStyles.rkRegularTextStyle(
@@ -599,7 +656,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       size: AppConstants.font_12,
                                     ),
                                   ),
-                                  10.width,
+                                  //  10.width,
                                   Text(
                                     '${price.toString() + AppLocalizations.of(context)!.currency}',
                                     style: AppStyles.rkRegularTextStyle(
@@ -650,7 +707,28 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             10.height,
                             GestureDetector(
                               onTap: () async {
-                                Navigator.pop(context1);
+                                context.read<ProductDetailsBloc>().add(
+                                    ProductDetailsEvent.createIssueEvent(
+                                        context: context1,
+                                        supplierId: supplierId,
+                                        productId: productId,
+                                        issue: state.selectedRadioTile == 1
+                                            ? AppLocalizations.of(context)!
+                                                .the_product_did_not_arrive_at_all
+                                            : state.selectedRadioTile == 2
+                                                ? AppLocalizations.of(context)!
+                                                    .product_arrived_damaged
+                                                : state.selectedRadioTile == 3
+                                                    ? AppLocalizations.of(
+                                                            context)!
+                                                        .the_product_arrived_missing
+                                                    : state.selectedRadioTile == 4 ? '${AppLocalizations.of(context)!.another_product_problem} ${' : '}${addProblemController}' : '',
+                                        missingQuantity:
+                                            state.selectedRadioTile == 3
+                                                ? state.productWeight
+                                                : 0,
+                                        orderId: orderId));
+                                // Navigator.pop(context1);
                               },
                               child: Align(
                                 alignment: Alignment.bottomCenter,
@@ -751,8 +829,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                               .productIncrementEvent(
                                                   productWeight: weight,
                                                   listIndex: listIndex,
-                                          context: context
-                                          ));
+                                                  context: context));
                                         }
                                       },
                                       child: Container(

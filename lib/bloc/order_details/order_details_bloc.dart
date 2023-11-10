@@ -36,6 +36,8 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
                HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
              })
      );
+
+     debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
      debugPrint('GetOrderByIdModel  = $res');
      GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
      debugPrint('GetOrderByIdModel  = $response');
