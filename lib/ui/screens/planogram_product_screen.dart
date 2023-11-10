@@ -175,8 +175,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     onPressed: () {
                       showProductDetails(
                           context: context,
-                          productId: state.planogramProductList[index].id ?? '',
-                          planoGramIndex: index);
+                          productId:
+                              state.planogramProductList[index].id ?? '');
                     },
                     textColor: AppColors.whiteColor,
                     bgColor: AppColors.mainColor,
@@ -216,9 +216,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context,
-      required String productId,
-      required int planoGramIndex}) async {
+      {required BuildContext context, required String productId}) async {
     context.read<PlanogramProductBloc>().add(
         PlanogramProductEvent.getProductDetailsEvent(
             context: context, productId: productId));
@@ -263,12 +261,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
-                                  productImage:
-                                      state.productDetails.product?.first.mainImage ??
-                                          '',
-                                  productName:
-                                      state.productDetails.product?.first.productName ??
-                                          '',
+                                  productImage: state.productDetails.product
+                                          ?.first.mainImage ??
+                                      '',
+                                  productName: state.productDetails.product
+                                          ?.first.productName ??
+                                      '',
                                   productCompanyName:
                                       state.productDetails.product?.first.brandName ??
                                           '',
@@ -278,13 +276,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .product?.first.productDescription ??
                                       '',
-                                  productPrice: state.productDetails.product
-                                          ?.first.numberOfUnit
-                                          ?.toDouble() ??
-                                      0.0,
-                                  productScaleType: state.productDetails.product
-                                          ?.first.scales?.scaleType ??
-                                      '',
+                                  productPrice: state
+                                          .productStockList[state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state.productStockList[state.productStockUpdateIndex].quantity
+                                  /*state.productDetails.first.supplierSales?.first.productPrice?.toDouble() ??
+                                          0.0*/
+                                  ,
+                                  productScaleType: state.productDetails.product?.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,

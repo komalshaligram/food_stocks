@@ -305,8 +305,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     onPressed: () {
                       showProductDetails(
                           context: context,
-                          productId: state.productList[index].productId ?? '',
-                          index: index);
+                          productId: state.productList[index].productId ?? '');
                     },
                     textColor: AppColors.whiteColor,
                     bgColor: AppColors.mainColor,
@@ -323,9 +322,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context,
-      required int index,
-      required String productId}) async {
+      {required BuildContext context, required String productId}) async {
     context.read<SupplierProductsBloc>().add(
         SupplierProductsEvent.getProductDetailsEvent(
             context: context, productId: productId));
@@ -369,10 +366,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                              context: context,
-                                  productImage:
-                                      state.productDetails.product?.first.mainImage ??
-                                          '',
+                                  context: context,
+                                  productImage: state.productDetails.product
+                                          ?.first.mainImage ??
+                                      '',
                                   productName: state.productDetails.product
                                           ?.first.productName ??
                                       '',
@@ -385,15 +382,16 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .product?.first.productDescription ??
                                       '',
-                                  productPrice: state.productDetails.product
-                                          ?.first.numberOfUnit
-                                          ?.toDouble() ??
-                                      0.0,
-                                  productScaleType: state.productDetails.product
-                                          ?.first.scales?.scaleType ??
-                                      '',
-                                  supplierWidget: buildSupplierSelection(context: context),
+                                  productPrice: state
+                                          .productStockList[state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state.productStockList[state.productStockUpdateIndex].quantity
+                                  /*state.productDetails.first.supplierSales?.first.productPrice?.toDouble() ??
+                                          0.0*/
+                                  ,
+                                  productScaleType: state.productDetails.product?.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
+                                  supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,

@@ -32,4 +32,6 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.updateCartCountEvent({required int cartCount}) =
       _UpdateCartCountEvent;
+
+  const factory HomeEvent.resetCartCountEvent() = _ResetCartCountEvent;
 }

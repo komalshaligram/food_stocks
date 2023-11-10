@@ -389,43 +389,63 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
               state.productSupplierList.toList(growable: true);
-          if (event.supplierSaleIndex >= 0) {
-            //sale avail then supplier sale selection
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    productSupplierIds:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? []
-                            : [supplierList[event.supplierIndex].supplierId],
-                    productSaleId:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? ''
-                            : supplierList[event.supplierIndex]
-                                .supplierSales[event.supplierSaleIndex]
-                                .saleId);
-            debugPrint(
-                'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
-            debugPrint(
-                'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
-            supplierList[event.supplierIndex] =
-                supplierList[event.supplierIndex].copyWith(
-                    selectedIndex:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? -1
-                            : event.supplierSaleIndex);
-            debugPrint(
-                'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
-            emit(state.copyWith(
-                productSupplierList: supplierList,
-                productStockList: productStockList));
-          } else {
-            //no sale avail then supplier base price selection
-          }
+          // if (event.supplierSaleIndex >= 0) {
+          //sale avail then supplier sale selection
+          List<ProductStockModel> productStockList =
+              state.productStockList.toList(growable: true);
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  productSupplierIds:
+                      supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? []
+                          : [supplierList[event.supplierIndex].supplierId],
+                  totalPrice: event.supplierSaleIndex == -2
+                      ? supplierList[event.supplierIndex].basePrice
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .salePrice
+                          : /*supplierList[event.supplierIndex]
+                                    .supplierSales
+                                    .isEmpty
+                                ? supplierList[event.supplierIndex].basePrice
+                                : */
+                          supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .salePrice,
+                  productSaleId: event.supplierSaleIndex == -2
+                      ? ''
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? ''
+                          : supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .saleId);
+          debugPrint(
+              'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
+          debugPrint(
+              'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
+          supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
+              .copyWith(
+                  selectedIndex: event.supplierSaleIndex == -2
+                      ? -2
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? -1
+                          : event.supplierSaleIndex);
+          debugPrint(
+              'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
+          debugPrint('supplier list = ${supplierList[event.supplierIndex]}');
+          debugPrint(
+              'supplier stock list = ${productStockList[state.productStockUpdateIndex]}');
+          emit(state.copyWith(
+              productSupplierList: supplierList,
+              productStockList: productStockList));
+          // } else {
+          //   //no sale avail then supplier base price selection
+          // }
         }
       }
     });

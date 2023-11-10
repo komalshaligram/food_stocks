@@ -876,16 +876,17 @@ class StoreScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .product?.first.productDescription ??
                                       '',
-                                  productPrice: state.productDetails.product
-                                          ?.first.numberOfUnit
-                                          ?.toDouble() ??
-                                      0.0,
-                                  productScaleType: state.productDetails.product
-                                          ?.first.scales?.scaleType ??
-                                      '',
-                                  productStock: 10,
+                                  productPrice: state
+                                          .productStockList[state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state.productStockList[state.productStockUpdateIndex].quantity
+                                  /*state.productDetails.first.supplierSales?.first.productPrice?.toDouble() ??
+                                          0.0*/
+                                  ,
+                                  productScaleType: state.productDetails.product?.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.product?.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
+                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,

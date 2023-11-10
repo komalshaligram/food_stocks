@@ -1032,11 +1032,11 @@ class HomeScreenWidget extends StatelessWidget {
                                         top: AppConstants.padding_5,
                                       ),
                                       child: state.productSupplierList
-                                              .firstWhere((supplier) =>
-                                                  supplier.selectedIndex >= 0)
-                                              .supplierSales[index]
-                                              .saleId
-                                              .isEmpty
+                                                  .firstWhere((supplier) =>
+                                                      supplier.selectedIndex >=
+                                                      0)
+                                                  .selectedIndex ==
+                                              -2
                                           ? Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,

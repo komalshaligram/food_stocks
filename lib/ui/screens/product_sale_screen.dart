@@ -276,8 +276,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
-                                  productImage: state.productDetails.first.mainImage ??
-                                      '',
+                                  productImage:
+                                      state.productDetails.first.mainImage ??
+                                          '',
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -290,20 +291,18 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .first.productDescription ??
                                       '',
-                                  productPrice:
-                                      state.productDetails.first.numberOfUnit?.toDouble() ??
-                                          0.0,
-                                  supplierWidget:
-                                      buildSupplierSelection(context: context),
-                                  productScaleType:
-                                      state.productDetails.first.scales?.scaleType ??
-                                          '',
-                                  productWeight:
-                                      state.productDetails.first.itemsWeight?.toDouble() ??
-                                          0.0,
-                                  productStock: state
-                                      .productStockList[state.productStockUpdateIndex]
-                                      .stock,
+                                  productPrice: state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state.productStockList[state.productStockUpdateIndex].quantity
+                                  /*state.productDetails.first.supplierSales?.first.productPrice?.toDouble() ??
+                                          0.0*/
+                                  ,
+                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
+                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
+                                  supplierWidget: buildSupplierSelection(context: context),
+                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: isRTLContent(context: context),
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,

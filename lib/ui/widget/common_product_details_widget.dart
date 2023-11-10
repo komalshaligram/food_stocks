@@ -618,7 +618,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(
                                                 AppConstants.radius_5))),
-                                    child: TextField(
+                                    child: TextFormField(
                                       controller: noteController,
                                       onChanged: onNoteChanged,
                                       decoration: InputDecoration(

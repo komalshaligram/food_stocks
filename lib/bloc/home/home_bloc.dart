@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -235,9 +236,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
               state.productSupplierList.toList(growable: true);
-          if (event.supplierSaleIndex >= 0) {
-            //sale avail then supplier sale selection
-            List<ProductStockModel> productStockList =
+          // if (event.supplierSaleIndex >= 0) {
+          //sale avail then supplier sale selection
+          List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
@@ -272,24 +273,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint(
                 'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
             debugPrint(
-                'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
-            if (supplierList[event.supplierIndex].selectedIndex ==
-                event.supplierSaleIndex) {}
-            supplierList[event.supplierIndex] =
-                supplierList[event.supplierIndex].copyWith(
-                    selectedIndex:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? -1
-                            : event.supplierSaleIndex);
-            debugPrint(
-                'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
-            emit(state.copyWith(
-                productSupplierList: supplierList,
-                productStockList: productStockList));
-          } else {
-            //no sale avail then supplier base price selection
-          }
+              'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
+          supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
+              .copyWith(
+                  selectedIndex: event.supplierSaleIndex == -2
+                      ? -2
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? -1
+                          : event.supplierSaleIndex);
+          debugPrint(
+              'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
+          debugPrint('supplier list = ${supplierList[event.supplierIndex]}');
+          debugPrint(
+              'supplier stock list = ${productStockList[state.productStockUpdateIndex]}');
+          emit(state.copyWith(
+              productSupplierList: supplierList,
+              productStockList: productStockList));
+          // } else {
+          //   //no sale avail then supplier base price selection
+          // }
         }
       } else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
@@ -321,8 +324,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .productStockList[state.productStockUpdateIndex]
                     .productSupplierIds
                     .first,
-                note:
-                    state.productStockList[state.productStockUpdateIndex].note,
+                note: state.productStockList[state.productStockUpdateIndex].note
+                        .isEmpty
+                    ? null
+                    : state
+                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
                         .productSaleId.isEmpty
                     ? null
@@ -356,7 +362,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
             emit(state.copyWith(isLoading: false));
-
+            add(HomeEvent.updateCartCountEvent(cartCount: 1));
+            // event.context.read<BottomNavBloc>().add(BottomNavEvent.updateCartCountEvent(cartCount: 1));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -364,7 +371,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             Navigator.pop(event.context);
           } else {
             emit(state.copyWith(isLoading: false));
-            add(HomeEvent.updateCartCountEvent(cartCount: 1));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
@@ -377,6 +383,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _UpdateCartCountEvent) {
         emit(state.copyWith(cartCount: state.cartCount + event.cartCount));
         debugPrint('cart count = ${state.cartCount}');
+      } else if (event is _ResetCartCountEvent) {
+        emit(state.copyWith(cartCount: 0));
+        debugPrint('reset cart count = ${state.cartCount}');
       }
     });
   }
