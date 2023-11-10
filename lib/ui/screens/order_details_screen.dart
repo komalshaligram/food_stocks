@@ -29,14 +29,19 @@ class OrderDetailsScreen extends StatelessWidget {
     ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => OrderDetailsBloc()/*..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.idString] ?? ''))*/,
-      child: OrderDetailsScreenWidget(orderId: args?[AppStrings.idString] ?? ''),
+      child: OrderDetailsScreenWidget(
+        orderId: args?[AppStrings.orderIdString] ?? '',
+        orderNumber: args?[AppStrings.orderNumberString] ?? 0,
+
+      ),
     );
   }
 }
 
 class OrderDetailsScreenWidget extends StatelessWidget {
  final String orderId;
-  const OrderDetailsScreenWidget({required this.orderId});
+ final int orderNumber;
+  const OrderDetailsScreenWidget({required this.orderId, required this.orderNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +58,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
-                  title: orderId,
+                  title: orderNumber.toString(),
                   iconData: Icons.arrow_back_ios_sharp,
                   trailingWidget: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -71,7 +76,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 ),
               ),
               body: FocusDetector(
-                     onFocusGained: ()=> bloc.add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: orderId ?? '')),
+                     onFocusGained: ()=> bloc.add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: orderId)),
                      child:(state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
                   ? OrderSummaryScreenShimmerWidget() : ListView.builder(
                 itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
@@ -115,7 +120,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   context, RouteDefine.productDetailsScreen.name ,
               arguments: {
                    AppStrings.productIndexString : index,
-                   AppStrings.idString: orderId,
+                   AppStrings.orderIdString: orderId,
+                AppStrings.orderNumberString : orderNumber,
                   }
               );
             },
@@ -126,14 +132,14 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      state.orderByIdList.data!.ordersBySupplier![index].supplierName!.toString() ?? '',
+                      state.orderByIdList.data!.ordersBySupplier![index].supplierName!.toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_14,
                           color: AppColors.blackColor,
                           ),
                     ),
                     Text(
-                      state.orderByIdList.data!.ordersBySupplier![index].deliverStatus!.statusName.toString() ?? '',
+                      state.orderByIdList.data!.ordersBySupplier![index].deliverStatus!.statusName.toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color:/*state.supplierList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ?AppColors.orangeColor :*/  AppColors.mainColor,

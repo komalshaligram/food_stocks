@@ -41,6 +41,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                   })
           );
 
+          debugPrint('OrderSend url  = ${AppUrls.getAllOrderUrl}');
           GetAllOrderResModel response = GetAllOrderResModel.fromJson(res);
           debugPrint('OrderSendResModel  = $response');
 

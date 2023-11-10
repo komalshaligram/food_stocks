@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -8,8 +11,10 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/order_model/product_details_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
+import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'basket_event.dart';
@@ -23,113 +28,155 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
 
+
    if(event is _getAllCartEvent){
-        preferencesHelper.getCartId();
+     debugPrint('cartId____${preferencesHelper.getCartId()}');
         emit(state.copyWith(isShimmering: true));
        try {
           final res = await DioClient(event.context).post(
-              AppUrls.getAllCartUrl,
-              data: {
-                'id' : preferencesHelper.getCartId()
-              },
+            '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
+              options:Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
+                  })
           );
+
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
           debugPrint('GetAllCartResModel  = $response');
 
           if (response.status == 200) {
+            emit(state.copyWith(CartItemList: response,isShimmering: false));
+            List<ProductDetailsModel>temp =[];
+            state.CartItemList.data!.data!.forEach((element) {
+              temp.add(ProductDetailsModel(
+            totalQuantity: element.totalQuantity,
+                productName: element.productDetails!.productName!,
+               mainImage: element.productDetails!.mainImage!,
+                totalPayment: element.totalAmount,
+               cartProductId: element.cartProductId! ,
+              ));
+            });
+            print('temp______$temp');
+            emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
 
-              emit(state.copyWith(CartItemList: response,isShimmering: false));
-
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(CartItemList: response , isShimmering : false));
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+          //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
         }  on ServerException {}
       }
 
     else  if(event is _productUpdateEvent){
+     if(event.productWeight != 0){
+
+
         try {
-/*
-         VerifyStockModel reqMap = VerifyStockModel(
-           supplierId: [event.supplierId],
-           quantity: event.productWeight + 1,
-           productId: event.productId,
-
-          );
-
-          final res = await DioClient(event.context).post(
-            AppUrls.verifyStockUrl,
-            data: reqMap,
-          );
-         debugPrint('VerifyStock reqMap  = $reqMap');
-         VerifyStockResModel response = VerifyStockResModel.fromJson(res);
-          debugPrint('VerifyStockModel  = $response');
-*/
         print('supplierId_____${event.supplierId}');
         print('productId_____${event.productId}');
-
+        print('getCartId____${preferencesHelper.getCartId()}');
+        print('cartProductId_____${event.cartProductId}');
+        print('weight_____${event.productWeight}');
 
           UpdateCartReqModel reqMap = UpdateCartReqModel(
             supplierId: event.supplierId,
-            quantity: event.productWeight + 1,
+            quantity: event.productWeight,
             productId: event.productId,
-            cartId: preferencesHelper.getCartId(),
+            cartProductId: event.cartProductId,
           );
 
           final res = await DioClient(event.context).post(
-            AppUrls.updateCartProductUrl,
+            '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
             data: reqMap,
           );
+
           debugPrint('update cart reqMap  = $reqMap');
-          debugPrint('update cart resMap  = $res');
-        /*  VerifyStockResModel response = VerifyStockResModel.fromJson(res);
-          debugPrint('VerifyStockModel  = $response');
 
+        UpdateCartResModel response = UpdateCartResModel.fromJson(res);
+          debugPrint('update response  = $response');
+          if (response.status == 201) {
+            List<ProductDetailsModel>list = [];
+            list = [...state.basketProductList];
+              print('quantity____${response.data!.cartProduct!.quantity}');
+              list[event.listIndex].totalQuantity = response.data!.cartProduct!.quantity;
+              emit(state.copyWith(basketProductList: list,isRefresh: !state.isRefresh));
+              showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
 
-          if (response.status == 200) {
-            print('response.status____${response.status}');
-           if(response.data!.stock!.first.message == 'Product quantity fulfilled')
-             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-             emit(state.copyWith(CartItemList: state.CartItemList,isRefresh: !state.isRefresh));
            }
           else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-          }*/
+          }
         }  on ServerException {}
-
+   }
+     else{
+       showSnackBar(context: event.context, title: "Quantity can't decrease", bgColor: AppColors.mainColor);
+     }
       }
 
-    else  if(event is _deleteListItemEvent){
-        List<ProductDetailsModel> temp = [];
-      //  temp.addAll(state.basketProductList);
-        temp.removeAt(event.listIndex);
-        showSnackBar(context: event.context, title: 'Item delete', bgColor: AppColors.mainColor);
-     //   emit(state.copyWith(basketProductList: temp,isRefresh: !state.isRefresh));
+    else  if(event is _removeCartProductEvent){
+     try {
+
+
+       final response = await DioClient(event.context).post(
+         AppUrls.removeCartProductUrl,
+         data: {
+           AppStrings.cartProductIdString : event.cartProductId},
+       );
+
+  debugPrint('remove cart res  = $response');
+
+
+       if (response['status'] == 200) {
+         List<ProductDetailsModel>list = [];
+         print('index_____${event.listIndex}');
+         list = [...state.basketProductList];
+         list.removeAt(event.listIndex);
+         Navigator.pop(event.context);
+         emit(state.copyWith(basketProductList: list,isRefresh: !state.isRefresh));
+
+
+        // showSnackBar(context: event.context, title: response['message'], bgColor: AppColors.mainColor);
+       }
+       else {
+         Navigator.pop(event.context);
+        // showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
+       }
+     }  on ServerException {}
+
+
 
       }
    else if(event is _clearCartEvent){
      try {
        final res = await DioClient(event.context).post(
-         AppUrls.clearCartUrl,
-         data: {
-           'id' : preferencesHelper.getCartId()
-         },
+           '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
+           options:Options(
+               headers: {
+                 HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
+               })
        );
 
        debugPrint('clear cart response_______${res}');
 
        if (res["status"] == 201) {
+         List<ProductDetailsModel>list = [];
+         list = [...state.basketProductList];
+         list.clear();
          Navigator.pop(event.context);
+         emit(state.copyWith(basketProductList: list,isRefresh: !state.isRefresh));
+
 
        } else {
-         showSnackBar(context: event.context, title: res['message'], bgColor: AppColors.mainColor);
+        // showSnackBar(context: event.context, title: res['message'], bgColor: AppColors.mainColor);
+         Navigator.pop(event.context);
        }
      }  on ServerException {}
 
    }
-
-
+   else if(event is _refreshListEvent){
+     List<ProductDetailsModel>list = [];
+     list = [...state.basketProductList];
+     emit(state.copyWith(basketProductList: list,isRefresh: !state.isRefresh));
+   }
     });
   }
 }

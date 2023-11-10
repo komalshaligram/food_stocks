@@ -30,6 +30,15 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required String orderId,
   }) = _getProductDataEvent;
 
+  const factory ProductDetailsEvent.createIssueEvent({
+    required BuildContext context,
+    required String supplierId,
+    required String productId,
+    required String issue,
+    required int missingQuantity,
+    required String orderId,
+  }) = _createIssueEvent;
+
 
 
 }

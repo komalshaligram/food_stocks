@@ -1,6 +1,9 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_order_by_id_model.freezed.dart';
 part 'get_order_by_id_model.g.dart';
+
 
 @freezed
 class GetOrderByIdModel with _$GetOrderByIdModel {
@@ -129,6 +132,12 @@ class Product with _$Product {
     int? discountedPrice,
     @JsonKey(name: "itemWeight")
     int? itemWeight,
+    @JsonKey(name: "isIssue")
+    bool? isIssue,
+    @JsonKey(name: "issue")
+    String? issue,
+    @JsonKey(name: "deliverStatus")
+    Status? deliverStatus,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
@@ -149,6 +158,10 @@ class Category with _$Category {
     int? v,
     @JsonKey(name: "categoryImage")
     String? categoryImage,
+    @JsonKey(name: "isHomePreference")
+    bool? isHomePreference,
+    @JsonKey(name: "order")
+    int? order,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);

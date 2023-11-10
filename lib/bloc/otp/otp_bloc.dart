@@ -74,6 +74,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setUserCompanyLogoUrl(
                   logoUrl: response.data?.user?.logo ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+              preferencesHelper.setWalletId(UserWalletId: response.data?.wallet ?? '');
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.loginSuccessString,
@@ -88,7 +89,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
-                  bgColor: AppColors.mainColor);
+                  bgColor: AppColors.redColor);
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));

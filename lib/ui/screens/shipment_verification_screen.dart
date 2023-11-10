@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
-/*import 'dart:ui' as ui;*/
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,6 +9,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../bloc/shipment_verification/shipment_verification_bloc.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -31,30 +29,29 @@ class ShipmentVerificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+        ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
       create: (context) => ShipmentVerificationBloc(),
-      child: ShipmentVerificationScreenWidget( args: args,),
+      child: ShipmentVerificationScreenWidget(
+        args: args,
+      ),
     );
   }
 }
 
 class ShipmentVerificationScreenWidget extends StatelessWidget {
   final Map? args;
-  ShipmentVerificationScreenWidget({required this.args,super.key});
+
+  ShipmentVerificationScreenWidget({required this.args, super.key});
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
-
 
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
- /*   var bytes;*/
     return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       child: BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
         builder: (context, state) {
           return SafeArea(
@@ -70,7 +67,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                   ),
                   child: CircularButtonWidget(
                     buttonName: AppLocalizations.of(context)!.total,
-                    buttonValue:' ${args?[AppStrings.totalAmountString] ?? ''}${AppLocalizations.of(context)!.currency}',
+                    buttonValue:
+                        '${args?[AppStrings.totalAmountString]}${AppLocalizations.of(context)!.currency}',
                   ),
                 ),
                 onTap: () {
@@ -108,8 +106,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           Text(
                             args?[AppStrings.supplierNameString] ?? '',
                             style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor,),
+                              size: AppConstants.font_14,
+                              color: AppColors.blackColor,
+                            ),
                           ),
                           Text(
                             args?[AppStrings.deliveryStatusString] ?? '',
@@ -147,7 +146,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           CommonOrderContentWidget(
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
-                            value:' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context)!.currency}',
+                            value:
+                                ' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context)!.currency}',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,
@@ -161,8 +161,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           text: AppLocalizations.of(context)!
                               .supplier_order_number,
                           style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.blackColor,
-                              size: AppConstants.font_14,),
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_14,
+                          ),
                           children: <TextSpan>[
                             TextSpan(
                                 text: ' : 1524812',
@@ -234,8 +235,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context)!.signature,
                     style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor,),
+                      size: AppConstants.smallFont,
+                      color: AppColors.blackColor,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -298,19 +300,31 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    if (state.isSignaturePadActive) {
+                      ui.Image tempImage =
+                          await signatureGlobalKey.currentState!.toImage();
 
-                   var image = await signatureGlobalKey.currentState!.toImage();
-                   print('image_____${image.toByteData()}');
-                /*   ByteData? byteData;*/
-                //   byteData = image.toByteData(format: ImageByteFormat,);
-                   var tempDir1 = await getTemporaryDirectory();
+                      var data = await tempImage.toByteData(
+                          format: ui.ImageByteFormat.png);
+                      final imageInUnit8List = (data!.buffer.asUint8List());
+                      final directory =
+                          (await getApplicationDocumentsDirectory())
+                              .path; // to get path of the file
+                      var path = '$directory/fileName.png';
 
-                   var file = await File('${tempDir1.path}/image.png').create();
-                  // file.writeAsBytesSync(byteData!);
-                   print('path_____${file.path}');
-                    // tempDir1.deleteSync(recursive: true);
-                   // bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(context: context ,supplierId:args?[AppStrings.supplierIdString]));
-
+                      File image =
+                          await File(path).writeAsBytes(imageInUnit8List);
+                      bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
+                          context: context,
+                          supplierId: args?[AppStrings.supplierIdString],
+                          signPath: image.path,
+                          orderId: args?[AppStrings.orderIdString]));
+                    } else {
+                      showSnackBar(
+                          context: context,
+                          title: 'sign missing',
+                          bgColor: AppColors.redColor);
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -336,8 +350,6 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 /* Container(
                         decoration: BoxDecoration(

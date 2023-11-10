@@ -43,6 +43,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
 
           if (response.status == 200) {
             preferencesHelper.setUserId(id: response.user?.id ?? '');
+            preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
             showSnackBar(

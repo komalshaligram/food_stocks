@@ -286,7 +286,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.addressController,
-                          inputformet: [LengthLimitingTextInputFormatter(30)],
+                          inputformet: [/*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint: AppLocalizations.of(context)!.address,
                           fillColor: AppColors.whiteColor,
@@ -299,7 +300,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.emailController,
-                          inputformet: [LengthLimitingTextInputFormatter(20)],
+                          inputformet: [/*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.emailAddress,
                           hint: "test2gmail.com",
                           fillColor: AppColors.whiteColor,
@@ -312,7 +314,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.faxController,
-                          inputformet: [LengthLimitingTextInputFormatter(10)],
+                          inputformet: [/*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.number,
                           hint: AppLocalizations.of(context)!.fax,
                           fillColor: AppColors.whiteColor,
@@ -328,9 +331,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                           height: getScreenHeight(context) * 0.2,
                           alignment: Alignment.center,
                           child: DottedBorder(
-                            color:state.companyLogo.isNotEmpty ?  state.image.path != ''
+                            color:/*state.companyLogo.isNotEmpty ?  state.image.path != ''
                                 ? AppColors.whiteColor
-                                : AppColors.whiteColor : AppColors.borderColor,
+                                : AppColors.whiteColor :*/ AppColors.borderColor,
                             radius: Radius.circular(AppConstants.radius_3),
                             borderType: BorderType.RRect,
                             strokeWidth: 1,
