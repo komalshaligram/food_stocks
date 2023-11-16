@@ -62,11 +62,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           if (response.status == 200) {
             emit(state.copyWith(
-                thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
-                orderThisMonth: response.data!.totalOrders!,
-                lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
-                balance: response.data!.balanceAmount!,
-                totalCredit: response.data!.totalCredit!));
+                thisMonthExpense:
+                    response.data?.currentMonth?.totalExpenses ?? 0,
+                orderThisMonth: response.data?.totalOrders ?? 0,
+                lastMonthExpense:
+                    response.data?.previousMonth?.totalExpenses ?? 0,
+                balance: response.data?.balanceAmount ?? 0,
+                totalCredit: response.data?.totalCredit ?? 0));
             //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
             showSnackBar(

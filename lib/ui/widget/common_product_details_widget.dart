@@ -465,7 +465,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w700),
                                     ),
                                     Text(
-                                      parse(productSaleDescription).outerHtml,
+                                      "${parse(productSaleDescription).body?.text}",
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,

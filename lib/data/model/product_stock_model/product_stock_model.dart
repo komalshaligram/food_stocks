@@ -8,7 +8,7 @@ part 'product_stock_model.g.dart';
 class ProductStockModel with _$ProductStockModel {
   const factory ProductStockModel({
     required String productId,
-    @Default([]) List<String> productSupplierIds,
+    @Default('') String productSupplierIds,
     @Default('') String productSaleId,
     @Default(0) int quantity,
     @Default('') String note,

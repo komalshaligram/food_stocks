@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/home/home_bloc.dart';
+import 'package:food_stock/data/model/product_supplier_model/product_supplier_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -19,9 +20,11 @@ import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_product_button_widget.dart';
+import '../widget/common_sale_description_dialog.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -676,7 +679,7 @@ class HomeScreenWidget extends StatelessWidget {
           5.height,
           Expanded(
             child: Text(
-              description,
+              "${parse(description).body?.text}",
               style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.font_10, color: AppColors.blackColor),
               maxLines: 3,
@@ -764,10 +767,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productStockList[
                                               state.productStockUpdateIndex]
                                           .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity
-                                  /*state.productDetails.first.supplierSales?.first.productPrice?.toDouble() ??
-                                          0.0*/
-                                  ,
+                                      state.productStockList[state.productStockUpdateIndex].quantity,
                                   productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
@@ -967,7 +967,7 @@ class HomeScreenWidget extends StatelessWidget {
                       ),
                     ),
                     state.productSupplierList
-                            .where((supplier) => supplier.selectedIndex >= 0)
+                            .where((supplier) => supplier.selectedIndex != -1)
                             .isEmpty
                         ? InkWell(
                             onTap: () {
@@ -990,7 +990,7 @@ class HomeScreenWidget extends StatelessWidget {
                         : ListView.builder(
                             itemCount: state.productSupplierList
                                     .where((supplier) =>
-                                        supplier.selectedIndex >= 0)
+                                        supplier.selectedIndex != -1)
                                     .isNotEmpty
                                 ? 1
                                 : 0,
@@ -998,6 +998,7 @@ class HomeScreenWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return Container(
+                                height: 85,
                                 padding: EdgeInsets.symmetric(
                                     vertical: AppConstants.padding_5,
                                     horizontal: AppConstants.padding_10),
@@ -1007,57 +1008,79 @@ class HomeScreenWidget extends StatelessWidget {
                                   color: AppColors.iconBGColor,
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(AppConstants.radius_5)),
+                                  border: Border.all(
+                                      color: AppColors.borderColor
+                                          .withOpacity(0.8),
+                                      width: 1),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).companyName}',
+                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
                                       style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_12,
-                                          color: AppColors.blackColor),
+                                          size: AppConstants.font_14,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w500),
                                     ),
-                                    Container(
-                                      width: getScreenWidth(context),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.whiteColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  AppConstants.radius_3))),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_3,
-                                          horizontal: AppConstants.padding_5),
-                                      margin: EdgeInsets.only(
-                                        top: AppConstants.padding_5,
+                                    Expanded(
+                                      child: Container(
+                                        width: getScreenWidth(context),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: AppColors.borderColor
+                                                    .withOpacity(0.5),
+                                                width: 1),
+                                            color: AppColors.whiteColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    AppConstants.radius_5))),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: AppConstants.padding_3,
+                                            horizontal: AppConstants.padding_5),
+                                        margin: EdgeInsets.only(
+                                          top: AppConstants.padding_5,
+                                        ),
+                                        child: state.productSupplierList
+                                                    .firstWhere(
+                                                      (supplier) =>
+                                                          supplier
+                                                              .selectedIndex ==
+                                                          -2,
+                                                      orElse: () =>
+                                                          ProductSupplierModel(
+                                                              supplierId: '',
+                                                              companyName: ''),
+                                                    )
+                                                    .selectedIndex ==
+                                                -2
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                ],
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Text(
+                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                  2.height,
+                                                  Text(
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                ],
+                                              ),
                                       ),
-                                      child: state.productSupplierList
-                                                  .firstWhere((supplier) =>
-                                                      supplier.selectedIndex >=
-                                                      0)
-                                                  .selectedIndex ==
-                                              -2
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
-                                              ],
-                                            )
-                                          : Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
-                                                2.height,
-                                                Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
-                                              ],
-                                            ),
                                     ),
                                   ],
                                 ),
@@ -1068,7 +1091,15 @@ class HomeScreenWidget extends StatelessWidget {
                 ),
               ),
               secondChild: state.productSupplierList.isEmpty
-                  ? Center(
+                  ? Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              top: BorderSide(
+                                  color: AppColors.borderColor.withOpacity(0.5),
+                                  width: 1))),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_30),
+                      alignment: Alignment.center,
                       child: Text(
                         'Suppliers not available',
                         style: AppStyles.rkRegularTextStyle(
@@ -1136,8 +1167,8 @@ class HomeScreenWidget extends StatelessWidget {
                                               AppConstants.radius_10)),
                                       boxShadow: [
                                         state.productSupplierList[index]
-                                                    .selectedIndex >=
-                                                0
+                                                    .selectedIndex !=
+                                                -1
                                             ? BoxShadow(
                                                 color: AppColors.shadowColor
                                                     .withOpacity(0.15),
@@ -1190,6 +1221,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         .length
                                                 ? InkWell(
                                                     onTap: () {
+                                                      //for base price selection /without sale pass -2
                                                       context
                                                           .read<HomeBloc>()
                                                           .add(HomeEvent
@@ -1211,17 +1243,16 @@ class HomeScreenWidget extends StatelessWidget {
                                                       decoration: BoxDecoration(
                                                           color: AppColors
                                                               .whiteColor,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      AppConstants
-                                                                          .radius_10)),
+                                                          borderRadius: BorderRadius.all(
+                                                              Radius.circular(
+                                                                  AppConstants
+                                                                      .radius_10)),
                                                           border: Border.all(
                                                               color: state
                                                                           .productSupplierList[
                                                                               index]
                                                                           .selectedIndex ==
-                                                                      subIndex
+                                                                      -2
                                                                   ? AppColors
                                                                       .mainColor
                                                                       .withOpacity(
@@ -1252,20 +1283,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          /*Text(
-                                                '${state
-                                                    .productSupplierList[index]
-                                                    .supplierSales[subIndex]
-                                                    .saleName}',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                    size:
-                                                    AppConstants
-                                                        .font_12,
-                                                    color: AppColors
-                                                        .saleRedColor),
-                                              ),
-                                              2.height, */
                                                           Text(
                                                             'Price : ${state.productSupplierList[index].basePrice}${AppLocalizations.of(context)!.currency}',
                                                             style: AppStyles.rkRegularTextStyle(
@@ -1275,7 +1292,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                                 color: AppColors
                                                                     .blackColor),
                                                           ),
-                                                          2.height,
+                                                          // 2.height,
                                                         ],
                                                       ),
                                                     ),
@@ -1366,8 +1383,11 @@ class HomeScreenWidget extends StatelessWidget {
                                                           2.height,
                                                           GestureDetector(
                                                               onTap: () {
-                                                                debugPrint(
-                                                                    'please open dialog');
+                                                                showConditionDialog(
+                                                                    context:
+                                                                        context,
+                                                                    saleCondition:
+                                                                        '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
                                                               },
                                                               child: Text(
                                                                 'Read condition',
@@ -1400,5 +1420,56 @@ class HomeScreenWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void showConditionDialog(
+      {required BuildContext context, required String saleCondition}) {
+    // showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //           // insetPadding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_10),
+    //           title: Container(
+    //             color: AppColors.whiteColor,
+    //             padding: EdgeInsets.symmetric(
+    //                 vertical: AppConstants.padding_5,
+    //                 horizontal: AppConstants.padding_5),
+    //             child: Text(
+    //               saleCondition,
+    //               style: AppStyles.rkRegularTextStyle(
+    //                   size: AppConstants.font_14, color: AppColors.blackColor),
+    //             ),
+    //           ),
+    //           actions: [
+    //             InkWell(
+    //               highlightColor: Colors.transparent,
+    //               splashColor: Colors.transparent,
+    //               onTap: () {
+    //                 Navigator.pop(context);
+    //               },
+    //               child: Container(
+    //                 padding:
+    //                     EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+    //                 alignment: Alignment.center,
+    //                 decoration:
+    //                     BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+    //                 width: 80,
+    //                 child: Text(
+    //                   'OK',
+    //                   style: AppStyles.rkRegularTextStyle(
+    //                       color: AppColors.mainColor.withOpacity(0.9),
+    //                       size: AppConstants.smallFont),
+    //                 ),
+    //               ),
+    //             )
+    //           ],
+    //         ));
+    showDialog(
+        context: context,
+        builder: (context) => CommonSaleDescriptionDialog(
+            title: saleCondition,
+            onTap: () {
+              Navigator.pop(context);
+            },
+            buttonTitle: "OK"));
   }
 }

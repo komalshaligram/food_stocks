@@ -8,7 +8,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
-    required ProductDetailsResModel productDetails,
+    required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required int productStockUpdateIndex,
     required int pageNum,
@@ -19,12 +19,12 @@ class SupplierProductsState with _$SupplierProductsState {
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
-        supplierId: '',
+    supplierId: '',
         productList: [],
         isShimmering: false,
         isLoading: false,
         isProductLoading: false,
-        productDetails: ProductDetailsResModel(),
+        productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [],
         pageNum: 0,
