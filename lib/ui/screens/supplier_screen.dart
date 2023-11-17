@@ -15,7 +15,6 @@ import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
 
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/common_pagination_end_widget.dart';
 
 class SupplierRoute {
   static Widget get route => SupplierScreen();
@@ -60,38 +59,53 @@ class SupplierScreenWidget extends StatelessWidget {
                 children: [
                   state.isShimmering
                       ? SupplierScreenShimmerWidget()
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.suppliersList.length,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3),
-                          itemBuilder: (context, index) =>
-                              buildSupplierListItem(
-                                  context: context,
-                                  supplierLogo:
-                                      state.suppliersList[index].logo ?? '',
-                                  supplierName: state.suppliersList[index]
-                                          .supplierDetail?.companyName ??
-                                      '',
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.supplierProductsScreen.name,
-                                        arguments: {
-                                          AppStrings.supplierIdString:
-                                              state.suppliersList[index].id ??
+                      : state.suppliersList.isEmpty
+                          ? Container(
+                              height: getScreenHeight(context) - 56,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'No Suppliers Available',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.suppliersList.length,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_10),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3),
+                              itemBuilder: (context, index) =>
+                                  buildSupplierListItem(
+                                      context: context,
+                                      supplierLogo:
+                                          state.suppliersList[index].logo ?? '',
+                                      supplierName: state.suppliersList[index]
+                                              .supplierDetail?.companyName ??
+                                          '',
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context,
+                                            RouteDefine
+                                                .supplierProductsScreen.name,
+                                            arguments: {
+                                              AppStrings.supplierIdString: state
+                                                      .suppliersList[index]
+                                                      .id ??
                                                   ''
-                                        });
-                                  }),
-                        ),
+                                            });
+                                      }),
+                            ),
                   state.isLoadMore ? SupplierScreenShimmerWidget() : 0.width,
-                  state.isBottomOfSuppliers
-                      ? CommonPaginationEndWidget(
-                          pageEndText: 'No more Suppliers')
-                      : 0.width,
+                  // state.isBottomOfSuppliers
+                  //     ? CommonPaginationEndWidget(
+                  //         pageEndText: 'No more Suppliers')
+                  //     : 0.width,
                 ],
               ),
             ),

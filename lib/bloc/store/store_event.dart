@@ -11,12 +11,19 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.getProductSalesListEvent(
       {required BuildContext context}) = _GetProductSalesListEvent;
 
+  const factory StoreEvent.changeSearchListEvent(
+      {required List<SearchModel> newSearchList}) = _ChangeSearchListEvent;
+
   const factory StoreEvent.getSuppliersListEvent(
       {required BuildContext context}) = _GetSuppliersListEvent;
 
+  const factory StoreEvent.getCompaniesListEvent(
+      {required BuildContext context}) = _GetCompaniesListEvent;
+
   const factory StoreEvent.getProductDetailsEvent(
       {required BuildContext context,
-      required String productId}) = _GetProductDetailsEvent;
+      required String productId,
+      bool? isBarcode}) = _GetProductDetailsEvent;
 
   const factory StoreEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
@@ -27,9 +34,13 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.changeNoteOfProduct({required String newNote}) =
       _ChangeNoteOfProduct;
 
-  const factory StoreEvent.verifyProductStockEvent(
-      {required BuildContext context}) = _VerifyProductStockEvent;
+  const factory StoreEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
-  const factory StoreEvent.getScanProductDetailsEvent(
-      {required String scanResult}) = _GetScanProductDetailsEvent;
+  const factory StoreEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory StoreEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

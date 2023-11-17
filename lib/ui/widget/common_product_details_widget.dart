@@ -3,6 +3,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:html/parser.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -21,6 +22,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final double productPrice;
   final double productWeight;
   final int productQuantity;
+  final String productScaleType;
   final ScrollController scrollController;
   final TextEditingController noteController;
   final void Function()? onAddToOrderPressed;
@@ -29,7 +31,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final void Function(String)? onNoteChanged;
   final bool isRTL;
   final bool isLoading;
-  final int productsStock;
+  final int productStock;
+  final Widget supplierWidget;
 
   const CommonProductDetailsWidget(
       {super.key,
@@ -50,10 +53,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
       required this.onQuantityDecreaseTap,
       this.onNoteChanged,
       required this.isLoading,
-      required this.productsStock});
+      required this.productStock,
+      required this.productScaleType,
+      required this.supplierWidget});
 
   @override
   Widget build(BuildContext context) {
+    // bool isSelectSupplier = true;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -102,12 +108,25 @@ class CommonProductDetailsWidget extends StatelessWidget {
             ],
           ),
           5.height,
-          Center(
-            child: Text(
-              '${productWeight.toStringAsFixed(1)} | $productCompanyName',
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont, color: AppColors.blackColor),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${productWeight.toStringAsFixed(1)}$productScaleType',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              Text(
+                ' | ',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              Text(
+                '$productCompanyName',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+            ],
           ),
           10.height,
           Expanded(
@@ -156,6 +175,254 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                  productStock == 0 ? 0.width : supplierWidget,
+                  // : AnimatedCrossFade(
+                  //     firstChild: Container(
+                  //       width: getScreenWidth(context),
+                  //       decoration: BoxDecoration(
+                  //           border: Border(
+                  //               top: BorderSide(
+                  //                   color: AppColors.borderColor
+                  //                       .withOpacity(0.5),
+                  //                   width: 1))),
+                  //       padding: const EdgeInsets.symmetric(
+                  //           vertical: AppConstants.padding_10,
+                  //           horizontal: AppConstants.padding_30),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.only(
+                  //                 bottom: AppConstants.padding_5),
+                  //             child: InkWell(
+                  //               onTap: onSupplierSelectionTap,
+                  //               child: Row(
+                  //                 mainAxisAlignment:
+                  //                 MainAxisAlignment.spaceBetween,
+                  //                 children: [
+                  //                   Text(
+                  //                     AppLocalizations.of(context)!.suppliers,
+                  //                     style: AppStyles.rkRegularTextStyle(
+                  //                         size: AppConstants.smallFont,
+                  //                         color: AppColors.mainColor,
+                  //                         fontWeight: FontWeight.w500),
+                  //                   ),
+                  //                   Icon(
+                  //                     Icons.arrow_drop_down,
+                  //                     size: 26,
+                  //                     color: AppColors.blackColor,
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           ListView.builder(
+                  //             itemCount: 3,
+                  //             physics: const NeverScrollableScrollPhysics(),
+                  //             shrinkWrap: true,
+                  //             itemBuilder: (context, index) {
+                  //               return Container(
+                  //                 padding: EdgeInsets.symmetric(
+                  //                     vertical: AppConstants.padding_5,
+                  //                     horizontal:
+                  //                     AppConstants.padding_10),
+                  //                 margin: EdgeInsets.symmetric(
+                  //                     vertical: AppConstants.padding_5),
+                  //                 decoration: BoxDecoration(
+                  //                   color: AppColors.iconBGColor,
+                  //                   borderRadius: BorderRadius.all(
+                  //                       Radius.circular(
+                  //                           AppConstants.radius_5)),
+                  //                 ),
+                  //                 child: Column(
+                  //                   crossAxisAlignment:
+                  //                   CrossAxisAlignment.start,
+                  //                   mainAxisSize: MainAxisSize.min,
+                  //                   children: [
+                  //                     Text(
+                  //                       'Supplier Name',
+                  //                       style:
+                  //                       AppStyles.rkRegularTextStyle(
+                  //                           size:
+                  //                           AppConstants.font_12,
+                  //                           color:
+                  //                           AppColors.blackColor),
+                  //                     ),
+                  //                     Container(
+                  //                       decoration: BoxDecoration(
+                  //                           color: AppColors
+                  //                               .whiteColor,
+                  //                           borderRadius: BorderRadius
+                  //                               .all(Radius.circular(
+                  //                               AppConstants
+                  //                                   .radius_3))),
+                  //                       padding:
+                  //                       EdgeInsets.symmetric(
+                  //                           vertical:
+                  //                           AppConstants
+                  //                               .padding_3,
+                  //                           horizontal:
+                  //                           AppConstants
+                  //                               .padding_5),
+                  //                       margin: EdgeInsets.only(
+                  //                           top: AppConstants
+                  //                               .padding_5,),
+                  //                       alignment:
+                  //                       Alignment.topLeft,
+                  //                       child: Column(
+                  //                         crossAxisAlignment:
+                  //                         CrossAxisAlignment
+                  //                             .start,
+                  //                         mainAxisSize:
+                  //                         MainAxisSize.min,
+                  //                         children: [
+                  //                           Text('Sale Name'),
+                  //                           2.height,
+                  //                           Text('price : 150\$'),
+                  //                         ],
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               );
+                  //             },
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     secondChild: Container(
+                  //       height: getScreenHeight(context) * 0.5,
+                  //       width: getScreenWidth(context),
+                  //       decoration: BoxDecoration(
+                  //           border: Border(
+                  //               top: BorderSide(
+                  //                   color: AppColors.borderColor
+                  //                       .withOpacity(0.5),
+                  //                   width: 1))),
+                  //       padding: const EdgeInsets.symmetric(
+                  //           vertical: AppConstants.padding_10,
+                  //           horizontal: AppConstants.padding_30),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.only(
+                  //                 bottom: AppConstants.padding_5),
+                  //             child: InkWell(
+                  //               onTap: onSupplierSelectionTap,
+                  //               child: Row(
+                  //                 mainAxisAlignment:
+                  //                     MainAxisAlignment.spaceBetween,
+                  //                 children: [
+                  //                   Text(
+                  //                     AppLocalizations.of(context)!.suppliers,
+                  //                     style: AppStyles.rkRegularTextStyle(
+                  //                         size: AppConstants.smallFont,
+                  //                         color: AppColors.mainColor,
+                  //                         fontWeight: FontWeight.w500),
+                  //                   ),
+                  //                   Icon(
+                  //                     Icons.remove,
+                  //                     size: 26,
+                  //                     color: AppColors.blackColor,
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Expanded(
+                  //             child: ListView.builder(
+                  //               itemBuilder: (context, index) {
+                  //                 return Container(
+                  //                   height: 95,
+                  //                   padding: EdgeInsets.symmetric(
+                  //                       vertical: AppConstants.padding_5,
+                  //                       horizontal:
+                  //                           AppConstants.padding_10),
+                  //                   margin: EdgeInsets.symmetric(
+                  //                       vertical: AppConstants.padding_10),
+                  //                   decoration: BoxDecoration(
+                  //                     color: AppColors.iconBGColor,
+                  //                     borderRadius: BorderRadius.all(
+                  //                         Radius.circular(
+                  //                             AppConstants.radius_5)),
+                  //                   ),
+                  //                   child: Column(
+                  //                     crossAxisAlignment:
+                  //                         CrossAxisAlignment.start,
+                  //                     mainAxisSize: MainAxisSize.min,
+                  //                     children: [
+                  //                       Text(
+                  //                         'Supplier Name',
+                  //                         style:
+                  //                             AppStyles.rkRegularTextStyle(
+                  //                                 size:
+                  //                                     AppConstants.font_12,
+                  //                                 color:
+                  //                                     AppColors.blackColor),
+                  //                       ),
+                  //                       Expanded(
+                  //                         child: ListView.builder(
+                  //                           scrollDirection:
+                  //                               Axis.horizontal,
+                  //                           itemBuilder: (context, index) {
+                  //                             return Container(
+                  //                               decoration: BoxDecoration(
+                  //                                   color: AppColors
+                  //                                       .whiteColor,
+                  //                                   borderRadius: BorderRadius
+                  //                                       .all(Radius.circular(
+                  //                                           AppConstants
+                  //                                               .radius_3))),
+                  //                               padding:
+                  //                                   EdgeInsets.symmetric(
+                  //                                       vertical:
+                  //                                           AppConstants
+                  //                                               .padding_3,
+                  //                                       horizontal:
+                  //                                           AppConstants
+                  //                                               .padding_5),
+                  //                               margin: EdgeInsets.only(
+                  //                                   top: AppConstants
+                  //                                       .padding_10,
+                  //                                   left: AppConstants
+                  //                                       .padding_5,
+                  //                                   right: AppConstants
+                  //                                       .padding_5),
+                  //                               alignment:
+                  //                                   Alignment.topLeft,
+                  //                               child: Column(
+                  //                                 crossAxisAlignment:
+                  //                                     CrossAxisAlignment
+                  //                                         .start,
+                  //                                 mainAxisSize:
+                  //                                     MainAxisSize.min,
+                  //                                 children: [
+                  //                                   Text('Sale Name'),
+                  //                                   2.height,
+                  //                                   Text('price : 150\$'),
+                  //                                   2.height,
+                  //                                   Text(
+                  //                                       'Sale Description'),
+                  //                                 ],
+                  //                               ),
+                  //                             );
+                  //                           },
+                  //                         ),
+                  //                       )
+                  //                     ],
+                  //                   ),
+                  //                 );
+                  //               },
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     crossFadeState: isSelectSupplier
+                  //         ? CrossFadeState.showSecond
+                  //         : CrossFadeState.showFirst,
+                  //     duration: Duration(milliseconds: 300)),
                   Container(
                     decoration: BoxDecoration(
                       border: Border(
@@ -170,7 +437,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_15,
                         vertical: AppConstants.padding_20),
-                    child: productsStock == 0
+                    child: productStock == 0
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -198,7 +465,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w700),
                                     ),
                                     Text(
-                                      productSaleDescription,
+                                      parse(productSaleDescription).outerHtml,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,
@@ -322,55 +589,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ],
                           ),
                   ),
-                  productsStock == 0
+                  productStock == 0
                       ? 0.width
                       : Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: AppColors.borderColor
-                                              .withOpacity(0.5),
-                                          width: 1))),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_10,
-                                  horizontal: AppConstants.padding_20),
-                              child: Row(
-                                children: [],
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       flex: 5,
-                              //       child: Column(
-                              //         crossAxisAlignment: CrossAxisAlignment.start,
-                              //         children: [
-                              //           Text(
-                              //             'Sale',
-                              //             style: AppStyles.rkBoldTextStyle(
-                              //                 size: AppConstants.font_30,
-                              //                 color: AppColors.saleRedColor,
-                              //                 fontWeight: FontWeight.w700),
-                              //           ),
-                              //           5.height,
-                              //           Text(
-                              //             productDescription,
-                              //             style: AppStyles.rkRegularTextStyle(
-                              //                 size: AppConstants.font_14,
-                              //                 color: AppColors.blackColor,
-                              //                 fontWeight: FontWeight.w400),
-                              //             maxLines: 3,
-                              //             overflow: TextOverflow.ellipsis,
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //     Expanded(flex: 2, child: 0.height),
-                              //   ],
-                              // ),
-                            ),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: AppConstants.padding_20,
@@ -434,3 +657,34 @@ class CommonProductDetailsWidget extends StatelessWidget {
     );
   }
 }
+
+// Row(
+//   children: [
+//     Expanded(
+//       flex: 5,
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             'Sale',
+//             style: AppStyles.rkBoldTextStyle(
+//                 size: AppConstants.font_30,
+//                 color: AppColors.saleRedColor,
+//                 fontWeight: FontWeight.w700),
+//           ),
+//           5.height,
+//           Text(
+//             productDescription,
+//             style: AppStyles.rkRegularTextStyle(
+//                 size: AppConstants.font_14,
+//                 color: AppColors.blackColor,
+//                 fontWeight: FontWeight.w400),
+//             maxLines: 3,
+//             overflow: TextOverflow.ellipsis,
+//           ),
+//         ],
+//       ),
+//     ),
+//     Expanded(flex: 2, child: 0.height),
+//   ],
+// ),

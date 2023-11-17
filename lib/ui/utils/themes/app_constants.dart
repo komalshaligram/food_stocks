@@ -65,6 +65,9 @@ class AppConstants{
   //pagination
   static const int defaultPageLimit = 6;
   static const int supplierPageLimit = 18;
+  static const int companyPageLimit = 18;
+  static const int productCategoryPageLimit = 18;
+  static const int productSubCategoryPageLimit = 18;
   static const int supplierProductPageLimit = 18;
   static const int saleProductPageLimit = 18;
   static const int planogramProductPageLimit = 4;

@@ -4,25 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/data/model/search_model/search_model.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 
-class CommonProductCategoryWidget extends StatelessWidget {
+class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;
   final bool isRTL;
   final void Function() onScanTap;
   final void Function() onFilterTap;
   final void Function() onOutSideTap;
-  final void Function() onCatListItemTap;
-  final List<String> categoryList;
+  final void Function() onSearchItemTap;
+  final List<SearchModel> searchList;
   final TextEditingController controller;
 
-  const CommonProductCategoryWidget(
+  const CommonSearchWidget(
       {super.key,
       required this.isCategoryExpand,
       this.isRTL = false,
@@ -30,8 +34,8 @@ class CommonProductCategoryWidget extends StatelessWidget {
       required this.onScanTap,
       required this.onFilterTap,
       required this.onOutSideTap,
-      required this.onCatListItemTap,
-      required this.categoryList});
+      required this.onSearchItemTap,
+      required this.searchList});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +57,7 @@ class CommonProductCategoryWidget extends StatelessWidget {
           child: AnimatedContainer(
             width: getScreenWidth(context),
             height: isCategoryExpand ? getScreenHeight(context) * 0.65 : 60,
-            duration: Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 100),
             margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
@@ -150,41 +154,71 @@ class CommonProductCategoryWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                    child: !isCategoryExpand
-                        ? 0.height
-                        : Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: AppConstants.padding_20,
-                                      right: AppConstants.padding_20,
-                                      top: AppConstants.padding_15,
-                                      bottom: AppConstants.padding_5),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.categories,
-                                    style: AppStyles.rkBoldTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                  child: !isCategoryExpand
+                      ? 0.height
+                      : Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: AppConstants.padding_20,
+                                    right: AppConstants.padding_20,
+                                    top: AppConstants.padding_15,
+                                    bottom: AppConstants.padding_5),
+                                child: Text(
+                                  AppLocalizations.of(context)!.categories,
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: categoryList.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      return _buildCategoryFilterItem(
-                                          category: 'category',
-                                          onTap: onCatListItemTap);
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                          ))
+                              ),
+                              Expanded(
+                                child: searchList.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'Search result not found',
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.textColor),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        itemCount: searchList.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return _buildSearchItem(
+                                              searchName:
+                                                  searchList[index].name,
+                                              searchImage:
+                                                  searchList[index].image,
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                    context,
+                                                    RouteDefine
+                                                        .storeCategoryScreen
+                                                        .name,
+                                                    arguments: {
+                                                      AppStrings
+                                                              .categoryIdString:
+                                                          searchList[index]
+                                                              .searchId,
+                                                      AppStrings
+                                                              .categoryNameString:
+                                                          searchList[index].name
+                                                    });
+                                                onSearchItemTap;
+                                              });
+                                        },
+                                      ),
+                              ),
+                              10.height,
+                            ],
+                          ),
+                        ),
+                ),
               ],
             ),
           ),
@@ -193,10 +227,14 @@ class CommonProductCategoryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryFilterItem({required String category, required void Function() onTap}) {
+  Widget _buildSearchItem(
+      {required String searchName,
+      required String searchImage,
+      required void Function() onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(
+        height: 35,
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
             border: Border(
@@ -204,13 +242,29 @@ class CommonProductCategoryWidget extends StatelessWidget {
                     color: AppColors.borderColor.withOpacity(0.5), width: 1))),
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.padding_20,
-            vertical: AppConstants.padding_15),
-        child: Text(
-          category,
-          style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_12,
-            color: AppColors.blackColor,
-          ),
+            vertical: AppConstants.padding_5),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.network(
+              '${AppUrls.baseFileUrl}$searchImage',
+              fit: BoxFit.fitHeight,
+              height: 35,
+              width: 40,
+              errorBuilder: (context, error, stackTrace) {
+                return 40.width;
+              },
+            ),
+            10.width,
+            Text(
+              searchName,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.blackColor,
+              ),
+            ),
+          ],
         ),
       ),
     );

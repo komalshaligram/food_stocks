@@ -49,6 +49,8 @@ class AppStrings {
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
   static const cartProductIdString = 'cartProductId';
+  static const categoryIdString = 'catregoryId';
+  static const categoryNameString = 'catregoryName';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -72,6 +74,7 @@ class AppStrings {
   static const registerSuccessString = 'Registered Successfully!';
   static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
+  static const addCartSuccessString = 'Product added to Cart';
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
@@ -80,6 +83,7 @@ class AppStrings {
   static const filesNotUploadString = 'Files not uploaded';
   static const maxQuantityAllowString = 'Maximum 30 quantity allow per order';
   static const minQuantityMsgString = 'Add at least 1 quantity';
+  static const selectSupplierMsgString = 'select at least 1 Supplier';
   static const maxQuantityMsgString = 'You have reached maximum quantity';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
@@ -120,6 +124,7 @@ class AppStrings {
   //argument strings
   static const isRegisterString = 'isRegister';
   static const contactString = 'contact';
+  static const idString = 'id';
   static const orderIdString = 'orderId';
   static const productIndexString = 'index';
   static const supplierNameString = 'supplierName';

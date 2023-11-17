@@ -23,4 +23,5 @@ class AppColors {
   static Color graphColor = const Color(0xff1AC769);
   static Color shimmer1Color = const Color(0xCCE0E0E0);
   static Color shimmer2Color = const Color(0xffF5F5F5);
+  static Color lightMainColor = const Color(0xffd2fcd2);
 }

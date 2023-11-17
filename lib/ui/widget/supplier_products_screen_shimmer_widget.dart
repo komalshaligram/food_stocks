@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 
 class SupplierProductsScreenShimmerWidget extends StatelessWidget {
@@ -17,9 +16,7 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio:
-                    (getScreenWidth(context) + 50) / getScreenHeight(context)),
+                crossAxisCount: 3, childAspectRatio: 9 / 11),
             itemBuilder: (context, index) =>
                 buildSupplierProductsListItem(context: context)),
       ),

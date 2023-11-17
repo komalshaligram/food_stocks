@@ -15,9 +15,19 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.increaseQuantityOfProduct(
       {required BuildContext context}) = _IncreaseQuantityOfProduct;
 
-  const factory SupplierProductsEvent.decreaseQuantityOfProduct({required BuildContext context}) = _DecreaseQuantityOfProduct;
+  const factory SupplierProductsEvent.decreaseQuantityOfProduct(
+      {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
-  const factory SupplierProductsEvent.changeNoteOfProduct({required String newNote}) = _ChangeNoteOfProduct;
+  const factory SupplierProductsEvent.changeNoteOfProduct(
+      {required String newNote}) = _ChangeNoteOfProduct;
 
-  const factory SupplierProductsEvent.verifyProductStockEvent({required BuildContext context}) = _VerifyProductStockEvent;
+  const factory SupplierProductsEvent.changeSupplierSelectionExpansionEvent(
+      {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
+
+  const factory SupplierProductsEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+
+  const factory SupplierProductsEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }
