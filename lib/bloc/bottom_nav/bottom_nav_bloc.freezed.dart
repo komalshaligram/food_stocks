@@ -23,7 +23,6 @@ mixin _$BottomNavEvent {
     required TResult Function() resetCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
@@ -46,7 +45,6 @@ mixin _$BottomNavEvent {
     required TResult Function(_ResetCartCountEvent value) resetCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,

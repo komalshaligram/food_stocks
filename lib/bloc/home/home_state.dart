@@ -15,6 +15,7 @@ class HomeState with _$HomeState {
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -30,5 +31,6 @@ class HomeState with _$HomeState {
         productStockList: [],
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
       );
 }

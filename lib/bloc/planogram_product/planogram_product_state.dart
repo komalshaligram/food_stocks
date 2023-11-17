@@ -12,6 +12,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -24,5 +25,6 @@ class PlanogramProductState with _$PlanogramProductState {
         productStockList: [],
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
       );
 }

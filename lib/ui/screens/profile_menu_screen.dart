@@ -24,8 +24,9 @@ class ProfileMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ProfileMenuBloc()..add(ProfileMenuEvent.getPreferenceDataEvent()),
+      create: (context) => ProfileMenuBloc()
+        ..add(ProfileMenuEvent.getAppLanguage())
+        ..add(ProfileMenuEvent.getPreferenceDataEvent()),
       child: ProfileMenuScreenWidget(),
     );
   }
@@ -49,8 +50,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               backgroundColor: AppColors.pageColor,
               body: SafeArea(
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    25.height,
+                    15.height,
                     Container(
                       height: 90,
                       padding: EdgeInsets.symmetric(
@@ -115,11 +117,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           alignment: Alignment.center,
                                           child: Container(
                                               height: 50,
-                                              width: getScreenWidth(context) * 0.35,
+                                              width: getScreenWidth(context) *
+                                                  0.35,
                                               alignment: Alignment.center,
                                               child:
                                                   const CupertinoActivityIndicator())),
-                                      imageUrl: "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                                      imageUrl:
+                                          "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
                                       height: 34,
                                       width: getScreenWidth(context) * 0.35,
                                       fit: BoxFit.fitHeight,
@@ -132,12 +136,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                               color: AppColors.mainColor
                                                   .withOpacity(0.1),
                                               /*  border: Border.all(
-                                                  color: AppColors.borderColor
-                                                      .withOpacity(0.5),
-                                                  width: 0)*/
+                                                    color: AppColors.borderColor
+                                                        .withOpacity(0.5),
+                                                    width: 0)*/
                                             ),
                                             child: Icon(
-                                              Icons.image_not_supported_outlined,
+                                              Icons
+                                                  .image_not_supported_outlined,
                                               size: 25,
                                               color: AppColors.textColor,
                                             ));
@@ -159,43 +164,73 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    30.height,
-                    profileMenuTiles(
-                        title: AppLocalizations.of(context)!.business_details,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RouteDefine.profileScreen.name,
-                              arguments: {
-                                AppStrings.isUpdateParamString: true
-                              });
-                        }),
-                    profileMenuTiles(
-                        title: AppLocalizations.of(context)!.more_details,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RouteDefine.moreDetailsScreen.name,
-                              arguments: {
-                                AppStrings.isUpdateParamString: true
-                              });
-                        }),
-                    profileMenuTiles(
-                        title: AppLocalizations.of(context)!.activity_time,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RouteDefine.activityTimeScreen.name,
-                              arguments: {
-                                AppStrings.isUpdateParamString: true
-                              });
-                        }),
-                    profileMenuTiles(
-                        title: AppLocalizations.of(context)!.forms_files,
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RouteDefine.fileUploadScreen.name,
-                              arguments: {
-                                AppStrings.isUpdateParamString: true
-                              });
-                        }),
+                    15.height,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            15.height,
+                            profileMenuTiles(
+                                title: AppLocalizations.of(context)!
+                                    .business_details,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, RouteDefine.profileScreen.name,
+                                      arguments: {
+                                        AppStrings.isUpdateParamString: true
+                                      });
+                                }),
+                            profileMenuTiles(
+                                title:
+                                    AppLocalizations.of(context)!.more_details,
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      RouteDefine.moreDetailsScreen.name,
+                                      arguments: {
+                                        AppStrings.isUpdateParamString: true
+                                      });
+                                }),
+                            profileMenuTiles(
+                                title:
+                                    AppLocalizations.of(context)!.activity_time,
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      RouteDefine.activityTimeScreen.name,
+                                      arguments: {
+                                        AppStrings.isUpdateParamString: true
+                                      });
+                                }),
+                            profileMenuTiles(
+                                title:
+                                    AppLocalizations.of(context)!.forms_files,
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      RouteDefine.fileUploadScreen.name,
+                                      arguments: {
+                                        AppStrings.isUpdateParamString: true
+                                      });
+                                }),
+                            profileMenuTiles(
+                                title: AppLocalizations.of(context)!.logout,
+                                onTap: () {
+                                  context.read<ProfileMenuBloc>().add(
+                                      ProfileMenuEvent.logOutEvent(
+                                          context: context));
+                                }),
+                            menuSwitchTile(
+                                title:
+                                    AppLocalizations.of(context)!.app_language,
+                                isHebrewLang: state.isHebrewLanguage,
+                                onChanged: (bool value) => context
+                                    .read<ProfileMenuBloc>()
+                                    .add(
+                                        ProfileMenuEvent.changeAppLanguageEvent(
+                                            context: context))),
+                            85.height,
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -238,6 +273,55 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget menuSwitchTile(
+      {required String title,
+      required bool isHebrewLang,
+      required void Function(bool)? onChanged}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10)
+          ]),
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_5,
+          horizontal: AppConstants.padding_10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppConstants.padding_15,
+            vertical: AppConstants.padding_8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+            ),
+            SizedBox(
+              width: 45,
+              child: Transform.scale(
+                scaleX: 0.84,
+                scaleY: 0.8,
+                child: CupertinoSwitch(
+                  value: isHebrewLang,
+                  onChanged: onChanged,
+                  activeColor: AppColors.mainColor,
+                  thumbColor: AppColors.whiteColor,
+                  trackColor: AppColors.lightBorderColor,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

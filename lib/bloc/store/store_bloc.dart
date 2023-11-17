@@ -171,10 +171,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: false);
-              productStockList.last = productStockList.last.copyWith(
-                  productId: response.product?.first.id ?? '',
-                  stock: response.product?.first.numberOfUnit ?? 0);
+              productStockList[productStockList
+                  .indexOf(productStockList.last)] = productStockList[
+                      productStockList.indexOf(productStockList.last)]
+                  .copyWith(
+                      productId: response.product?.first.id ?? '',
+                      stock: response.product?.first.numberOfUnit ?? 0);
               emit(state.copyWith(productStockList: productStockList));
+              debugPrint('new index = ${state.productStockList.last}');
               productStockUpdateIndex =
                   productStockList.indexOf(productStockList.last);
               debugPrint('barcode stock = ${state.productStockList.last}');
@@ -300,6 +304,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
+          debugPrint('note changed');
           List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
@@ -373,12 +378,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false, isCartCountChange: true));
+            emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
-            // event.context
-            //     .read<HomeBloc>()
-            //     .add(HomeEvent.updateCartCountEvent(cartCount: 1));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,

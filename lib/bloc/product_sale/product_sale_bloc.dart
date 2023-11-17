@@ -335,9 +335,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
             emit(state.copyWith(isLoading: false));
-            // event.context
-            //     .read<HomeBloc>()
-            //     .add(HomeEvent.updateCartCountEvent(cartCount: 1));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,

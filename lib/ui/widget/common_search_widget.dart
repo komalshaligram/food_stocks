@@ -19,6 +19,8 @@ import '../utils/themes/app_styles.dart';
 class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;
   final bool isRTL;
+  final bool isStoreCategory;
+  final Widget searchResultWidget;
   final void Function() onScanTap;
   final void Function() onFilterTap;
   final void Function() onOutSideTap;
@@ -30,6 +32,8 @@ class CommonSearchWidget extends StatelessWidget {
       {super.key,
       required this.isCategoryExpand,
       this.isRTL = false,
+      required this.isStoreCategory,
+      required this.searchResultWidget,
       required this.controller,
       required this.onScanTap,
       required this.onFilterTap,
@@ -176,44 +180,49 @@ class CommonSearchWidget extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                child: searchList.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          'Search result not found',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.smallFont,
-                                              color: AppColors.textColor),
-                                        ),
-                                      )
-                                    : ListView.builder(
-                                        itemCount: searchList.length,
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          return _buildSearchItem(
-                                              searchName:
-                                                  searchList[index].name,
-                                              searchImage:
-                                                  searchList[index].image,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .storeCategoryScreen
-                                                        .name,
-                                                    arguments: {
-                                                      AppStrings
-                                                              .categoryIdString:
-                                                          searchList[index]
-                                                              .searchId,
-                                                      AppStrings
-                                                              .categoryNameString:
-                                                          searchList[index].name
-                                                    });
-                                                onSearchItemTap;
-                                              });
-                                        },
-                                      ),
+                                child: searchResultWidget,
                               ),
+                              // Expanded(
+                              //   child: searchList.isEmpty
+                              //       ? Center(
+                              //           child: Text(
+                              //             'Search result not found',
+                              //             style: AppStyles.rkRegularTextStyle(
+                              //                 size: AppConstants.smallFont,
+                              //                 color: AppColors.textColor),
+                              //           ),
+                              //         )
+                              //       : ListView.builder(
+                              //           itemCount: searchList.length,
+                              //           shrinkWrap: true,
+                              //           itemBuilder: (context, index) {
+                              //             return _buildSearchItem(
+                              //                 searchName:
+                              //                     searchList[index].name,
+                              //                 searchImage:
+                              //                     searchList[index].image,
+                              //                 onTap: () {
+                              //                   if(!isStoreCategory) {
+                              //                     Navigator.pushNamed(
+                              //                         context,
+                              //                         RouteDefine
+                              //                             .storeCategoryScreen
+                              //                             .name,
+                              //                         arguments: {
+                              //                           AppStrings
+                              //                               .categoryIdString:
+                              //                           searchList[index]
+                              //                               .searchId,
+                              //                           AppStrings
+                              //                               .categoryNameString:
+                              //                           searchList[index].name
+                              //                         });
+                              //                   }
+                              //                   onSearchItemTap.call();
+                              //                 });
+                              //           },
+                              //         ),
+                              // ),
                               10.height,
                             ],
                           ),

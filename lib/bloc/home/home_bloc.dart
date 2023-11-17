@@ -364,11 +364,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false, isCartCountChange: true));
+            emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.updateCartCountEvent(cartCount: 1));
-            event.context
-                .read<BottomNavBloc>()
-                .add(BottomNavEvent.updateCartCountEvent(cartCount: 1));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -391,6 +389,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _ResetCartCountEvent) {
         emit(state.copyWith(cartCount: 0));
         debugPrint('reset cart count = ${state.cartCount}');
+      } else if (event is _SetCartCountEvent) {
+        emit(state.copyWith(cartCount: event.cartCount));
       }
     });
   }

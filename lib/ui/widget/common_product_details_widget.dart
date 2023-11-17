@@ -470,7 +470,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,
                                           fontWeight: FontWeight.w400),
-                                      maxLines: 3,
+                                      maxLines: 5,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
@@ -621,6 +621,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     child: TextFormField(
                                       controller: noteController,
                                       onChanged: onNoteChanged,
+                                      textInputAction: TextInputAction.done,
                                       decoration: InputDecoration(
                                           border: InputBorder.none),
                                       maxLines: 5,

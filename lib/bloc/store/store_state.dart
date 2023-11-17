@@ -18,6 +18,7 @@ class StoreState with _$StoreState {
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
@@ -36,5 +37,6 @@ class StoreState with _$StoreState {
         scanProductStockDetails: ProductStockModel(productId: ''),
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
       );
 }
