@@ -62,7 +62,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryName: event.subCategoryName,
             planoGramsList: [],
             productStockList: [
-             [ProductStockModel(productId: '')]
+              [ProductStockModel(productId: '')]
             ],
             productStockUpdateIndex: -1,
             planoGramUpdateIndex: -1,
@@ -83,20 +83,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         try {
           emit(state.copyWith(
               isSubCategoryShimmering:
-              state.subCategoryPageNum == 0 ? true : false,
+                  state.subCategoryPageNum == 0 ? true : false,
               isLoadMore: state.subCategoryPageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               AppUrls.getSubCategoriesUrl,
               data: ProductSubcategoriesReqModel(
-                  parentCategoryId: state.categoryId,
-                  pageNum: state.subCategoryPageNum + 1,
-                  pageLimit: AppConstants.productSubCategoryPageLimit)
+                      parentCategoryId: state.categoryId,
+                      pageNum: state.subCategoryPageNum + 1,
+                      pageLimit: AppConstants.productSubCategoryPageLimit)
                   .toJson());
           ProductSubcategoriesResModel response =
-          ProductSubcategoriesResModel.fromJson(res);
+              ProductSubcategoriesResModel.fromJson(res);
           if (response.status == 200) {
             List<SubCategory> subCategoryList =
-            state.subCategoryList.toList(growable: true);
+                state.subCategoryList.toList(growable: true);
             subCategoryList.addAll(response.data?.subCategories ?? []);
             debugPrint('new sub category List = ${subCategoryList.length}');
             emit(state.copyWith(
@@ -107,9 +107,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             ));
             emit(state.copyWith(
                 isBottomOfSubCategory:
-                subCategoryList.length == (response.data?.totalRecords ?? 0)
-                    ? true
-                    : false));
+                    subCategoryList.length == (response.data?.totalRecords ?? 0)
+                        ? true
+                        : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
@@ -201,7 +201,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
+              ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
             List<List<ProductStockModel>> productStockList =
                 state.productStockList.toList(growable: true);
@@ -212,13 +212,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<List<ProductStockModel>> productStockList =
                   state.productStockList.toList(growable: false);
-              productStockList.last =
-                  /*productStockList.last.map((stockList) => stockList.copyWith(stockList))*/
-                  [
-                productStockList.last.first.copyWith(
-                    productId: response.product?.first.id ?? '',
-                    stock: response.product?.first.numberOfUnit ?? 0)
-              ];
+              productStockList[productStockList.indexOf(productStockList.last)]
+                  [0] = productStockList[
+                      productStockList.indexOf(productStockList.last)][0]
+                  .copyWith(
+                      productId: response.product?.first.id ?? '',
+                      stock: response.product?.first.numberOfUnit ?? 0);
               debugPrint('new index = ${state.productStockList.last}');
               emit(state.copyWith(productStockList: productStockList));
               productStockUpdateIndex = 0;
@@ -274,9 +273,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                                               SaleProduct()) ??
                                       -1
                               : -1,
-                  supplierSales: supplier.saleProduct
+              supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
-                      saleId: sale.saleId ?? '',
+                                      saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
@@ -315,23 +314,23 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.planoGramUpdateIndex]
-          [state.productStockUpdateIndex]
-              .quantity <
+                      [state.productStockUpdateIndex]
+                  .quantity <
               productStockList[state.planoGramUpdateIndex]
-              [state.productStockUpdateIndex]
+                      [state.productStockUpdateIndex]
                   .stock) {
             productStockList[state.planoGramUpdateIndex]
-            [state.productStockUpdateIndex] =
+                    [state.productStockUpdateIndex] =
                 productStockList[state.planoGramUpdateIndex]
-                [state.productStockUpdateIndex]
+                        [state.productStockUpdateIndex]
                     .copyWith(
-                    quantity: productStockList[state.planoGramUpdateIndex]
-                    [state.productStockUpdateIndex]
-                        .quantity +
-                        1);
+                        quantity: productStockList[state.planoGramUpdateIndex]
+                                    [state.productStockUpdateIndex]
+                                .quantity +
+                            1);
             debugPrint(
                 'product quantity = ${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));
@@ -345,21 +344,21 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.planoGramUpdateIndex]
-          [state.productStockUpdateIndex]
-              .quantity >
+                      [state.productStockUpdateIndex]
+                  .quantity >
               0) {
             productStockList[state.planoGramUpdateIndex]
-            [state.productStockUpdateIndex] =
+                    [state.productStockUpdateIndex] =
                 productStockList[state.planoGramUpdateIndex]
-                [state.productStockUpdateIndex]
+                        [state.productStockUpdateIndex]
                     .copyWith(
-                    quantity: productStockList[state.planoGramUpdateIndex]
-                    [state.productStockUpdateIndex]
-                        .quantity -
-                        1);
+                        quantity: productStockList[state.planoGramUpdateIndex]
+                                    [state.productStockUpdateIndex]
+                                .quantity -
+                            1);
             debugPrint(
                 'product quantity = ${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));

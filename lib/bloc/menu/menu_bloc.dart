@@ -47,7 +47,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
                   context: event.context,
                   title: AppStrings.logOutSuccessString,
                   bgColor: AppColors.mainColor);
-              // Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.bottomNavScreen.name);
               Navigator.pushNamed(

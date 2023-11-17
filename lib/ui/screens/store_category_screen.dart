@@ -662,7 +662,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           productId: state.planoGramsList[index]
                                   .planogramproducts?[subIndex].id ??
                               '',
-                          planoGramIndex: index + 1);
+                          planoGramIndex: index);
                     },
                     textColor: AppColors.whiteColor,
                     bgColor: AppColors.mainColor,
