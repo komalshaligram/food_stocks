@@ -344,19 +344,24 @@ class WalletScreenWidget extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_5,
-                                      horizontal: AppConstants.padding_8),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.mainColor,
-                                      borderRadius: BorderRadius.circular(
-                                          AppConstants.radius_3)),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.export,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.whiteColor),
+                                GestureDetector(
+                                  onTap: (){
+                                  bloc.add(WalletEvent.exportWalletTransactionEvent(context: context));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_5,
+                                        horizontal: AppConstants.padding_8),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                        borderRadius: BorderRadius.circular(
+                                            AppConstants.radius_3)),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.export,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.whiteColor),
+                                    ),
                                   ),
                                 ),
                                 10.width,

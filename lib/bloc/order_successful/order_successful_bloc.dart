@@ -43,7 +43,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
           if (response.status == 200) {
             emit(state.copyWith(
                 thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
-                orderThisMonth: response.data!.totalOrders!,
+              //  orderThisMonth: response.data!.totalOrders!,
                 lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
                 balance: response.data!.balanceAmount!,
                 totalCredit: response.data!.totalCredit!));

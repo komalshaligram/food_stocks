@@ -48,6 +48,7 @@ class AppUrls {
   static const String walletRecordUrl = '/v1/walletTransaction/getWalletRecords';
   static const String totalExpenseByYearUrl = '/v1/walletTransaction/getTotalExpensesByYear';
   static const String getAllWalletTransactionUrl = '/v1/walletTransaction/getAllWalletTransactions';
+  static const String exportWalletTransactionUrl = '/v1/walletTransaction/exportWalletTransactions';
 
 
 }

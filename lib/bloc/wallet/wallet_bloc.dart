@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/all_wallet_transaction_req/all_wallet_transaction_req_model.dart';
+import '../../data/model/req_model/export_wallet_transaction/export_wallet_transactions_req_model.dart';
 import '../../data/model/req_model/total_expense_req/total_expense_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
 import '../../data/model/res_model/all_wallet_transaction_res/all_wallet_transaction_res_model.dart';
@@ -63,7 +67,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           if (response.status == 200) {
             emit(state.copyWith(
                 thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
-                orderThisMonth: response.data!.totalOrders!,
+             //   orderThisMonth: response.data!.totalOrders!,
                 lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
                 balance: response.data!.balanceAmount!,
                 totalCredit: response.data!.totalCredit!));
@@ -149,6 +153,61 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       } else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
       }
+
+      else if(event is _exportWalletTransactionEvent){
+        try {
+
+          ExportWalletTransactionsReqModel reqMap = ExportWalletTransactionsReqModel(
+            userId: preferencesHelper.getUserId(),
+           exportType: "PDF",
+           responseType : "File",
+          );
+
+          debugPrint('ExportWalletTransactionsReqModel = $reqMap}');
+          final response = await DioClient(event.context).post(
+            AppUrls.exportWalletTransactionUrl,
+            data: reqMap,
+          );
+
+          debugPrint(
+              'exportWalletTransaction url  = ${AppUrls.exportWalletTransactionUrl}');
+          debugPrint(
+              'response export  = ${response}');
+
+          final bytes = response.bodyBytes;
+          // print(response.bodyBytes);
+          var dir = await getTemporaryDirectory();
+          File file = File(dir.path + "/data.pdf");
+          await file.writeAsBytes(bytes, flush: true);
+
+
+
+
+
+  /*        AllWalletTransactionResModel response =
+          AllWalletTransactionResModel.fromJson(res);
+          debugPrint('AllWalletTransactionResModel  = $response');
+
+          if (response.status == 200) {
+            *//* if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
+             for (int i = 0; i < (response.data?.length ?? 0); i++) {
+
+             }
+           }*//*
+            emit(state.copyWith(balanceSheetList: response));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }*/
+        } on ServerException {}
+      }
     });
   }
+
+
+
+
+
 }

@@ -31,5 +31,8 @@ class WalletEvent with _$WalletEvent {
     required int year,
   }) = _getDropDownElementEvent;
 
+  const factory WalletEvent.exportWalletTransactionEvent({
+    required BuildContext context,
+}) = _exportWalletTransactionEvent;
 
 }
