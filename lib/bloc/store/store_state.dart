@@ -12,12 +12,13 @@ class StoreState with _$StoreState {
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
-    required ProductDetailsResModel productDetails,
+    required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required ProductStockModel scanProductStockDetails,
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
@@ -30,11 +31,12 @@ class StoreState with _$StoreState {
         isShimmering: false,
         isLoading: false,
         isProductLoading: false,
-        productDetails: ProductDetailsResModel(),
+        productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [],
         scanProductStockDetails: ProductStockModel(productId: ''),
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
       );
 }

@@ -171,10 +171,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: false);
-              productStockList.last = productStockList.last.copyWith(
-                  productId: event.productId,
-                  stock: response.product?.first.numberOfUnit ?? 0);
+              productStockList[productStockList
+                  .indexOf(productStockList.last)] = productStockList[
+                      productStockList.indexOf(productStockList.last)]
+                  .copyWith(
+                      productId: response.product?.first.id ?? '',
+                      stock: response.product?.first.numberOfUnit ?? 0);
               emit(state.copyWith(productStockList: productStockList));
+              debugPrint('new index = ${state.productStockList.last}');
               productStockUpdateIndex =
                   productStockList.indexOf(productStockList.last);
               debugPrint('barcode stock = ${state.productStockList.last}');
@@ -191,39 +195,51 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
             supplierList.addAll(response.product?.first.supplierSales
                     ?.map((supplier) => ProductSupplierModel(
-                          supplierId: supplier.supplierId ?? '',
+              supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
+                          basePrice:
+                              double.parse(supplier.productPrice ?? '0.0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
-                                  (state
-                                          .productStockList[
-                                              productStockUpdateIndex]
-                                          .productSupplierIds
-                                          .isNotEmpty
-                                      ? state
-                                          .productStockList[
-                                              productStockUpdateIndex]
-                                          .productSupplierIds
-                                          .first
-                                      : '')
+                                  state
+                                      .productStockList[productStockUpdateIndex]
+                                      .productSupplierIds
                               ? supplier.saleProduct?.indexOf(
-                                      supplier.saleProduct?.firstWhere((sale) =>
-                                              sale.saleId ==
-                                              state
-                                                  .productStockList[
-                                                      productStockUpdateIndex]
-                                                  .productSaleId) ??
-                                          SaleProduct()) ??
-                                  -1
+                                          supplier.saleProduct?.firstWhere(
+                                                (sale) =>
+                                                    sale.saleId ==
+                                                    state
+                                                        .productStockList[
+                                                            productStockUpdateIndex]
+                                                        .productSaleId,
+                                                orElse: () => SaleProduct(),
+                                              ) ??
+                                              SaleProduct()) ==
+                                      -1
+                                  ? -2
+                                  : supplier.saleProduct?.indexOf(
+                                          supplier.saleProduct?.firstWhere(
+                                                (sale) =>
+                                                    sale.saleId ==
+                                                    state
+                                                        .productStockList[
+                                                            productStockUpdateIndex]
+                                                        .productSaleId,
+                                                orElse: () => SaleProduct(),
+                                              ) ??
+                                              SaleProduct()) ??
+                                      -1
                               : -1,
                           supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
-                                      saleId: sale.saleId ?? '',
+                              saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
-                                              .outerHtml,
-                                      salePrice:
-                                          double.parse(sale.price ?? '0.0'),
+                                                  .body
+                                                  ?.text ??
+                                              '',
+                                      salePrice: double.parse(
+                                          sale.discountedPrice ?? '0.0'),
                                       saleDiscount: double.parse(
                                           sale.discountPercentage ?? '0.0')))
                                   .toList() ??
@@ -231,15 +247,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         ))
                     .toList() ??
                 []);
-            debugPrint('response list = ${response.product?.length}');
+            debugPrint(
+                'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
             emit(state.copyWith(
-                productDetails: response,
+                productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 productSupplierList: supplierList,
-                isSelectSupplier: false,
                 isProductLoading: false));
           } else {
             showSnackBar(
@@ -288,6 +304,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
+          debugPrint('note changed');
           List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
@@ -314,7 +331,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
         try {
           emit(state.copyWith(isLoading: true));
-          InsertCartModel.InsertCartReqModel req =
+          InsertCartModel.InsertCartReqModel insertCartReqModel =
               InsertCartModel.InsertCartReqModel(products: [
             InsertCartModel.Product(
                 productId: state
@@ -323,21 +340,25 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     .productStockList[state.productStockUpdateIndex].quantity,
                 supplierId: state
                     .productStockList[state.productStockUpdateIndex]
-                    .productSupplierIds
-                    .first,
+                    .productSupplierIds,
+                note: state.productStockList[state.productStockUpdateIndex].note
+                        .isEmpty
+                    ? null
+                    : state
+                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId)
+                        .productSaleId.isEmpty
+                    ? null
+                    : state.productStockList[state.productStockUpdateIndex]
+                        .productSaleId)
           ]);
-          // ProductStockVerifyReqModel req = ProductStockVerifyReqModel(
-          //     quantity: state
-          //         .productStockList[state.productStockUpdateIndex].quantity,
-          //     supplierId: [
-          //       state.productDetails.product?.first.supplierSales?.supplier
-          //               ?.id ??
-          //           ''
-          //     ],
-          //     productId: state
-          //         .productStockList[state.productStockUpdateIndex].productId);
+          Map<String, dynamic> req = insertCartReqModel.toJson();
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
           debugPrint('insert cart req = $req');
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
@@ -348,7 +369,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               'insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
           final res = await DioClient(event.context).post(
               '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
-              data: req.toJson(),
+              data: req,
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
@@ -357,7 +378,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false, isCartCountChange: true));
+            emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
             showSnackBar(
@@ -389,43 +411,36 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
               state.productSupplierList.toList(growable: true);
-          if (event.supplierSaleIndex >= 0) {
-            //sale avail then supplier sale selection
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    productSupplierIds:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? []
-                            : [supplierList[event.supplierIndex].supplierId],
-                    productSaleId:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? ''
-                            : supplierList[event.supplierIndex]
-                                .supplierSales[event.supplierSaleIndex]
-                                .saleId);
-            debugPrint(
-                'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
-            debugPrint(
-                'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
-            supplierList[event.supplierIndex] =
-                supplierList[event.supplierIndex].copyWith(
-                    selectedIndex:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? -1
-                            : event.supplierSaleIndex);
-            debugPrint(
-                'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
-            emit(state.copyWith(
-                productSupplierList: supplierList,
-                productStockList: productStockList));
-          } else {
-            //no sale avail then supplier base price selection
-          }
+          List<ProductStockModel> productStockList =
+              state.productStockList.toList(growable: true);
+
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  productSupplierIds:
+                      supplierList[event.supplierIndex].supplierId,
+                  totalPrice: event.supplierSaleIndex == -2
+                      ? supplierList[event.supplierIndex].basePrice
+                      : supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .salePrice,
+                  productSaleId: event.supplierSaleIndex == -2
+                      ? ''
+                      : supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .saleId);
+          debugPrint(
+              'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
+          supplierList = supplierList
+              .map((supplier) => supplier.copyWith(selectedIndex: -1))
+              .toList();
+          debugPrint('selected supplier = ${supplierList}');
+          supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
+              .copyWith(selectedIndex: event.supplierSaleIndex);
+          debugPrint(
+              'selected supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex]}');
+          emit(state.copyWith(
+              productSupplierList: supplierList,
+              productStockList: productStockList));
         }
       }
     });

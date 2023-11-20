@@ -50,6 +50,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
-  const factory StoreCategoryEvent.getScanProductDetailsEvent(
-      {required String scanResultBarcode}) = _GetScanProductDetailsEvent;
+  const factory StoreCategoryEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 }

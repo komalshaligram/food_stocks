@@ -9,6 +9,6 @@ class BottomNavState with _$BottomNavState {
 
   factory BottomNavState.initial() => const BottomNavState(
         index: 4,
-        cartCount: 12,
+        cartCount: 0,
       );
 }

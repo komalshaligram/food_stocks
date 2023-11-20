@@ -167,7 +167,6 @@ class CompanyScreenWidget extends StatelessWidget {
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    padding: EdgeInsets.only(bottom: AppConstants.padding_20),
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
