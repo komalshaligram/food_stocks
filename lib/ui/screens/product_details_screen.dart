@@ -728,7 +728,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                 ? state.productWeight
                                                 : 0,
                                         orderId: orderId));
-                                // Navigator.pop(context1);
                               },
                               child: Align(
                                 alignment: Alignment.bottomCenter,

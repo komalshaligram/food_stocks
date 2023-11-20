@@ -340,7 +340,7 @@ class BasketScreenWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '${state.basketProductList[index].totalQuantity}${AppLocalizations.of(context)!.kg}',
+                '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
                 style: TextStyle(
                   color: AppColors.blackColor,
                   fontSize: AppConstants.font_12,
