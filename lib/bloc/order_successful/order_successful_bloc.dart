@@ -1,11 +1,13 @@
-
+import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
+import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -13,23 +15,25 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
-
-
 part 'order_successful_event.dart';
 
 part 'order_successful_state.dart';
 
 part 'order_successful_bloc.freezed.dart';
 
-class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
+class OrderSuccessfulBloc
+    extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _getWalletRecordEvent) {
-        SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
         try {
           WalletRecordReqModel reqMap =
-          WalletRecordReqModel(userId: preferencesHelper.getUserId());
+              WalletRecordReqModel(userId: preferencesHelper.getUserId());
           debugPrint('WalletRecordReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
             AppUrls.walletRecordUrl,
@@ -43,11 +47,9 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
           if (response.status == 200) {
             emit(state.copyWith(
                 thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
-              //  orderThisMonth: response.data!.totalOrders!,
                 lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
                 balance: response.data!.balanceAmount!,
                 totalCredit: response.data!.totalCredit!));
-            //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
             showSnackBar(
                 context: event.context,
@@ -58,7 +60,40 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
       }
 
 
+      try {
+        int daysInMonth(DateTime date) => DateTimeRange(
+                start: DateTime(date.year, date.month, 1),
+                end: DateTime(date.year, date.month + 1))
+            .duration
+            .inDays;
+
+        var now = DateTime.now();
+
+        GetOrderCountReqModel reqMap = GetOrderCountReqModel(
+          startDate: DateTime(now.year, now.month, 1),
+          endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
+        );
+
+        debugPrint('getOrdersCount reqMap = $reqMap}');
+
+        final res =
+            await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+                data: reqMap,
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                ));
+
+        debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+        GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
+        debugPrint('getOrdersCount response  = ${response}');
+
+        if (response.status == 200) {
+          emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+        }
+      } on ServerException {}
     });
   }
 }
-

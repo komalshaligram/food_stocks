@@ -9,7 +9,7 @@ class WalletEvent with _$WalletEvent {
 
   const factory WalletEvent.checkLanguage() = _checkLanguage;
 
-  const factory WalletEvent.dropDownListEvent() = _dropDownListEvent;
+  const factory WalletEvent.getYearListEvent() = _getYearListEvent;
 
   const factory WalletEvent.getWalletRecordEvent({
     required BuildContext context
@@ -34,5 +34,9 @@ class WalletEvent with _$WalletEvent {
   const factory WalletEvent.exportWalletTransactionEvent({
     required BuildContext context,
 }) = _exportWalletTransactionEvent;
+
+  const factory WalletEvent.getOrderCountEvent({
+    required BuildContext context,
+  }) = _getOrderCountEvent;
 
 }

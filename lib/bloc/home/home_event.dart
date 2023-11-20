@@ -32,4 +32,13 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.updateCartCountEvent({required int cartCount}) =
       _UpdateCartCountEvent;
+
+  const factory HomeEvent.getWalletRecordEvent({
+    required BuildContext context
+  }) = _getWalletRecordEvent;
+
+  const factory HomeEvent.getOrderCountEvent({
+    required BuildContext context,
+  }) = _getOrderCountEvent;
+
 }

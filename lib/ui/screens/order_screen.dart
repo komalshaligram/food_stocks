@@ -163,7 +163,7 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.suppliers,
-                    value: state.orderList.data?[index].suppiers.toString() ?? '',
+                    value: state.orderList.data?[index].suppliers.toString() ?? '',
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,

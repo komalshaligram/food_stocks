@@ -300,8 +300,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         CustomFormField(
                           controller: state.emailController,
-                          inputformet: [/*FilteringTextInputFormatter.deny(
-                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
+                          /*inputformet: [*//*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*//*LengthLimitingTextInputFormatter(15)],*/
                           keyboardType: TextInputType.emailAddress,
                           hint: "test2gmail.com",
                           fillColor: AppColors.whiteColor,
