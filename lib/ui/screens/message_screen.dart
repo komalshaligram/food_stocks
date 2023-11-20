@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/message/message_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
@@ -89,7 +90,9 @@ class MessageScreenWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           horizontal: AppConstants.padding_10,
           vertical: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_10),
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(context, RouteDefine.messageContentScreen.name,
@@ -104,7 +107,13 @@ class MessageScreenWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: index == 1 ? Colors.transparent : AppColors.mainColor,
               ),
-              margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+              margin: EdgeInsets.only(
+                  left: isRTLContent(context: context)
+                      ? AppConstants.padding_10
+                      : 0,
+                  right: isRTLContent(context: context)
+                      ? 0
+                      : AppConstants.padding_10),
             ),
             Expanded(
               child: Column(

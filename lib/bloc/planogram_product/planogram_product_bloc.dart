@@ -86,7 +86,6 @@ class PlanogramProductBloc
                                           .productStockList[
                                               productStockUpdateIndex]
                                           .productSupplierIds
-                                          .first
                                       : '')
                               ? supplier.saleProduct?.indexOf(
                                       supplier.saleProduct?.firstWhere((sale) =>
@@ -104,7 +103,9 @@ class PlanogramProductBloc
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
-                                              .outerHtml,
+                                                  .body
+                                                  ?.text ??
+                                              '',
                                       salePrice:
                                           double.parse(sale.price ?? '0.0'),
                                       saleDiscount: double.parse(
@@ -119,7 +120,7 @@ class PlanogramProductBloc
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
             emit(state.copyWith(
-                productDetails: response,
+                productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 productSupplierList: supplierList,
                 isProductLoading: false));
@@ -188,43 +189,63 @@ class PlanogramProductBloc
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
               state.productSupplierList.toList(growable: true);
-          if (event.supplierSaleIndex >= 0) {
-            //sale avail then supplier sale selection
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    productSupplierIds:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? []
-                            : [supplierList[event.supplierIndex].supplierId],
-                    productSaleId:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? ''
-                            : supplierList[event.supplierIndex]
-                                .supplierSales[event.supplierSaleIndex]
-                                .saleId);
-            debugPrint(
-                'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
-            debugPrint(
-                'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
-            supplierList[event.supplierIndex] =
-                supplierList[event.supplierIndex].copyWith(
-                    selectedIndex:
-                        supplierList[event.supplierIndex].selectedIndex ==
-                                event.supplierSaleIndex
-                            ? -1
-                            : event.supplierSaleIndex);
-            debugPrint(
-                'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
-            emit(state.copyWith(
-                productSupplierList: supplierList,
-                productStockList: productStockList));
-          } else {
-            //no sale avail then supplier base price selection
-          }
+          // if (event.supplierSaleIndex >= 0) {
+          //sale avail then supplier sale selection
+          List<ProductStockModel> productStockList =
+              state.productStockList.toList(growable: true);
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  productSupplierIds:
+                      supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? ''
+                          : supplierList[event.supplierIndex].supplierId,
+                  totalPrice: event.supplierSaleIndex == -2
+                      ? supplierList[event.supplierIndex].basePrice
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .salePrice
+                          : /*supplierList[event.supplierIndex]
+                                    .supplierSales
+                                    .isEmpty
+                                ? supplierList[event.supplierIndex].basePrice
+                                : */
+                          supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .salePrice,
+                  productSaleId: event.supplierSaleIndex == -2
+                      ? ''
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? ''
+                          : supplierList[event.supplierIndex]
+                              .supplierSales[event.supplierSaleIndex]
+                              .saleId);
+          debugPrint(
+              'stock supplier id = ${productStockList[state.productStockUpdateIndex].productSupplierIds}');
+          debugPrint(
+              'stock supplier sale id = ${productStockList[state.productStockUpdateIndex].productSaleId}');
+          supplierList[event.supplierIndex] = supplierList[event.supplierIndex]
+              .copyWith(
+                  selectedIndex: event.supplierSaleIndex == -2
+                      ? -2
+                      : supplierList[event.supplierIndex].selectedIndex ==
+                              event.supplierSaleIndex
+                          ? -1
+                          : event.supplierSaleIndex);
+          debugPrint(
+              'supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex].selectedIndex}');
+          debugPrint('supplier list = ${supplierList[event.supplierIndex]}');
+          debugPrint(
+              'supplier stock list = ${productStockList[state.productStockUpdateIndex]}');
+          emit(state.copyWith(
+              productSupplierList: supplierList,
+              productStockList: productStockList));
+          // } else {
+          //   //no sale avail then supplier base price selection
+          // }
         }
       } else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
@@ -254,10 +275,17 @@ class PlanogramProductBloc
                     .productStockList[state.productStockUpdateIndex].quantity,
                 supplierId: state
                     .productStockList[state.productStockUpdateIndex]
-                    .productSupplierIds
-                    .first,
+                    .productSupplierIds,
+                note: state.productStockList[state.productStockUpdateIndex].note
+                        .isEmpty
+                    ? null
+                    : state
+                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId)
+                        .productSaleId.isEmpty
+                    ? null
+                    : state.productStockList[state.productStockUpdateIndex]
+                        .productSaleId)
           ]);
           debugPrint('insert cart req = $req');
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(

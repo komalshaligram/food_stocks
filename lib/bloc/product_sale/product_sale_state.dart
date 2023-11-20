@@ -18,7 +18,7 @@ class ProductSaleState with _$ProductSaleState {
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => const ProductSaleState(
-    productSalesList: [],
+        productSalesList: [],
         productDetails: [],
         isShimmering: false,
         isLoading: false,

@@ -60,18 +60,20 @@ class CustomTextIconButtonWidget extends StatelessWidget {
             10.width,
             cartCount == null
                 ? 0.height
-                : Container(
-                    height: 16,
-                    width: 24,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                    ),
-                    child: Text(
-                      '${cartCount == 0 ? '' : cartCount}',
-                      style: AppStyles.rkRegularTextStyle(
+                : cartCount == 0
+                    ? 0.width
+                    : Container(
+                        height: 16,
+                        width: 24,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                        ),
+                        child: Text(
+                          '${cartCount == 0 ? '' : cartCount}',
+                          style: AppStyles.rkRegularTextStyle(
                         fontWeight: FontWeight.w100,
                           size: AppConstants.padding_10, color: AppColors.mainColor),
                     ),

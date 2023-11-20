@@ -22,9 +22,6 @@ class AppImagePath {
   ///pngs
   static const String profileImage = 'assets/images/profile_image.png';
   static const String companyLogo = 'assets/images/company_logo.png';
-  static const String product1 = 'assets/images/product1.png';
-  static const String product2 = 'assets/images/product2.png';
-  static const String product3 = 'assets/images/product3.png';
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable =
       'assets/images/image_not_available.png';

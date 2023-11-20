@@ -7,11 +7,12 @@ class PlanogramProductState with _$PlanogramProductState {
     required List<Planogramproduct> planogramProductList,
     required bool isLoading,
     required bool isProductLoading,
-    required ProductDetailsResModel productDetails,
+    required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -19,10 +20,11 @@ class PlanogramProductState with _$PlanogramProductState {
         planogramProductList: [],
         isLoading: false,
         isProductLoading: false,
-        productDetails: ProductDetailsResModel(),
+        productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [],
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
       );
 }
