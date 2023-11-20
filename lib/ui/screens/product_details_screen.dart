@@ -87,7 +87,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
+                                    '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context).currency}',
                               ),
                   ),
                   onTap: () {
@@ -159,7 +159,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   CommonOrderContentWidget(
                                     flexValue: 1,
                                     title:
-                                        AppLocalizations.of(context)!.products,
+                                        AppLocalizations.of(context).products,
                                     value: state
                                         .orderList
                                         .data!
@@ -175,8 +175,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   5.width,
                                   CommonOrderContentWidget(
                                     flexValue: 2,
-                                    title: AppLocalizations.of(context)!
-                                        .delivery_date,
+                                    title: AppLocalizations.of(context).delivery_date,
                                     value: /*state
                                         .orderList
                                         .data!
@@ -573,7 +572,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   getScreenHeight(context)),
           minChildSize: 0.4,
           initialChildSize: 0.7,
-          shouldCloseOnMinExtent: true,
+          //shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc(),
