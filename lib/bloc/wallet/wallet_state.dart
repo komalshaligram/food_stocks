@@ -4,7 +4,6 @@ part of 'wallet_bloc.dart';
 class WalletState with _$WalletState {
   const factory WalletState({
     required int year,
-    required int year1,
     required List<int> yearList,
     //required List<OrderBalance> balanceSheetList,
     required AllWalletTransactionResModel balanceSheetList,
@@ -22,9 +21,7 @@ class WalletState with _$WalletState {
 
   factory WalletState.initial() => WalletState(
         year: 2020,
-        year1: 2020,
-        yearList: [
-        ],
+        yearList: [],
      currentDate: '',
      balanceSheetList: AllWalletTransactionResModel(),
         language: '',

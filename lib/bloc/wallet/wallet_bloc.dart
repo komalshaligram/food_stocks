@@ -1,14 +1,24 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/all_wallet_transaction_req/all_wallet_transaction_req_model.dart';
+import '../../data/model/req_model/export_wallet_transaction/export_wallet_transactions_req_model.dart';
+import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
 import '../../data/model/req_model/total_expense_req/total_expense_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
 import '../../data/model/res_model/all_wallet_transaction_res/all_wallet_transaction_res_model.dart';
+import '../../data/model/res_model/export_wallet_res/export_wallet_transactions_res_model.dart';
+import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/total_expense_res/total_expense_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -31,7 +41,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
       if (event is _checkLanguage) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
-      } else if (event is _dropDownListEvent) {
+      } else if (event is _getYearListEvent) {
         var date = new DateTime.now().toString();
         var dateParse = DateTime.parse(date);
         int formattedYear = dateParse.year.toInt();
@@ -44,7 +54,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         emit(state.copyWith(
           yearList: temp,
           year: temp.first,
-          year1: temp.first,
         ));
       } else if (event is _getWalletRecordEvent) {
         try {
@@ -62,14 +71,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           if (response.status == 200) {
             emit(state.copyWith(
-                thisMonthExpense:
-                    response.data?.currentMonth?.totalExpenses ?? 0,
-                orderThisMonth: response.data?.totalOrders ?? 0,
-                lastMonthExpense:
-                    response.data?.previousMonth?.totalExpenses ?? 0,
-                balance: response.data?.balanceAmount ?? 0,
-                totalCredit: response.data?.totalCredit ?? 0));
-            //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+                thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
+                lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
+                balance: response.data!.balanceAmount!,
+                totalCredit: response.data!.totalCredit!));
           } else {
             showSnackBar(
                 context: event.context,
@@ -112,10 +117,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           }
         } on ServerException {}
       } else if (event is _getAllWalletTransactionEvent) {
+        emit(state.copyWith(year: event.year));
         try {
           AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
             userId: preferencesHelper.getUserId(),
-            //   userId: '654b8bc117ded10bbebf1fff',
             year: state.year,
             month: 1,
           );
@@ -133,11 +138,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           debugPrint('AllWalletTransactionResModel  = $response');
 
           if (response.status == 200) {
-            /* if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
-             for (int i = 0; i < (response.data?.length ?? 0); i++) {
-
-             }
-           }*/
             emit(state.copyWith(balanceSheetList: response));
           } else {
             showSnackBar(
@@ -150,6 +150,91 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         emit(state.copyWith(selectedDateRange: event.range));
       } else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
+      } else if (event is _exportWalletTransactionEvent) {
+        try {
+          Map<Permission, PermissionStatus> statuses = await [
+            Permission.storage,
+          ].request();
+
+          File file;
+          Directory dir;
+          String filePath = '';
+          if (defaultTargetPlatform == TargetPlatform.android) {
+            dir = Directory('/storage/emulated/0/Documents');
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+
+          ExportWalletTransactionsReqModel reqMap =
+              ExportWalletTransactionsReqModel(
+            userId: preferencesHelper.getUserId(),
+            exportType: "PDF",
+            responseType: "JSON",
+          );
+
+          debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
+          final res = await DioClient(event.context)
+              .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
+
+          debugPrint(
+              'exportWalletTransaction url  = ${AppUrls.exportWalletTransactionUrl}');
+
+          ExportWalletTransactionsResModel response =
+              ExportWalletTransactionsResModel.fromJson(res);
+          debugPrint('ExportWalletTransactions response  = ${response}');
+          if (response.status == 200) {
+            Uint8List pdf = base64.decode(response.data.toString());
+            filePath =
+                '${dir.path}/${preferencesHelper.getUserName()}${'_'}${TimeOfDay.fromDateTime(DateTime.now()).hour}${'.'}${TimeOfDay.fromDateTime(DateTime.now()).minute}${'.pdf'}';
+            file = File(filePath);
+            debugPrint('path______${filePath}');
+            await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
+              showSnackBar(
+                  context: event.context,
+                  title: response.message!,
+                  bgColor: AppColors.mainColor);
+            });
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {}
+      } else if (event is _getOrderCountEvent) {
+        try {
+          int daysInMonth(DateTime date) => DateTimeRange(
+                  start: DateTime(date.year, date.month, 1),
+                  end: DateTime(date.year, date.month + 1))
+              .duration
+              .inDays;
+
+          var now = DateTime.now();
+
+          GetOrderCountReqModel reqMap = GetOrderCountReqModel(
+            startDate: DateTime(now.year, now.month, 1),
+            endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
+          );
+
+          debugPrint('getOrdersCount reqMap = $reqMap}');
+
+          final res =
+              await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+                  data: reqMap,
+                  options: Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                          'Bearer ${preferencesHelper.getAuthToken()}',
+                    },
+                  ));
+
+          debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+          GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
+          debugPrint('getOrdersCount response  = ${response}');
+          if (response.status == 200) {
+            emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+          }
+        } on ServerException {}
       }
     });
   }

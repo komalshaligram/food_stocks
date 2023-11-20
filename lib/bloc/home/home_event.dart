@@ -23,17 +23,25 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.changeSupplierSelectionExpansionEvent(
       {bool? isSelectSupplier}) = _ChangeSupplierSelectionExpansionEvent;
 
-  const factory HomeEvent.supplierSelectionEvent({required int supplierIndex,
-    required int supplierSaleIndex}) = _SupplierSelectionEvent;
+  const factory HomeEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+      required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory HomeEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory HomeEvent.updateCartCountEvent({required int cartCount}) =
-  _UpdateCartCountEvent;
+      _UpdateCartCountEvent;
 
   const factory HomeEvent.resetCartCountEvent() = _ResetCartCountEvent;
 
-  const factory HomeEvent.setCartCountEvent(
-      {required int cartCount}) = _SetCartCountEvent;
+  const factory HomeEvent.setCartCountEvent({required int cartCount}) =
+      _SetCartCountEvent;
+
+  const factory HomeEvent.getWalletRecordEvent(
+      {required BuildContext context}) = _getWalletRecordEvent;
+
+  const factory HomeEvent.getOrderCountEvent({
+    required BuildContext context,
+  }) = _getOrderCountEvent;
 }

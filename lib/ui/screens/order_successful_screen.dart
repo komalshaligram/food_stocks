@@ -22,7 +22,8 @@ class OrderSuccessfulScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderSuccessfulBloc(),
+      create: (context) => OrderSuccessfulBloc()..add(OrderSuccessfulEvent.getOrderCountEvent(context: context))
+      ..add(OrderSuccessfulEvent.getWalletRecordEvent(context: context)),
       child: OrderSuccessfulScreenWidget(),
     );
   }

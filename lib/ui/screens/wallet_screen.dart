@@ -27,8 +27,9 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => WalletBloc()
-        ..add(WalletEvent.dropDownListEvent())
-        ..add(WalletEvent.getWalletRecordEvent(context: context)),
+      ..add(WalletEvent.getYearListEvent())
+        ..add(WalletEvent.getWalletRecordEvent(context: context))
+      ..add(WalletEvent.getOrderCountEvent(context: context)),
       child: WalletScreenWidget(),
     );
   }
@@ -95,7 +96,7 @@ class WalletScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(WalletEvent.getTotalExpenseEvent(
+           bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
                 bloc.add(WalletEvent.getAllWalletTransactionEvent(
                     context: context, month: 1, year: state.year));
@@ -344,28 +345,28 @@ class WalletScreenWidget extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_5,
-                                      horizontal: AppConstants.padding_8),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.mainColor,
-                                      borderRadius: BorderRadius.circular(
-                                          AppConstants.radius_3)),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.export,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.whiteColor),
+                                GestureDetector(
+                                  onTap: (){
+                                  bloc.add(WalletEvent.exportWalletTransactionEvent(context: context));
+
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_5,
+                                        horizontal: AppConstants.padding_8),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                        borderRadius: BorderRadius.circular(
+                                            AppConstants.radius_3)),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.export,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.whiteColor),
+                                    ),
                                   ),
                                 ),
                                 10.width,
-                                /* dropDownWidget(
-                                    index: 2,
-                                    date: state.year1,
-                                    dateList: state.dateList1,
-                                    context1: context
-                                ),*/
                                 Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: AppConstants.padding_5,
@@ -460,14 +461,17 @@ class WalletScreenWidget extends StatelessWidget {
                                         );
                                       },
                                     )
-                                  : Center(
-                                      child: Text(
-                                      'No Data',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.normalFont,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w400),
-                                    )),
+                                  : Container(
+                            color: Colors.red,
+                                    child: Center(
+                                        child: Text(
+                                        'No Data',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.normalFont,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w400),
+                                      )),
+                                  ),
                         ),
                       ),
                     ],
@@ -516,6 +520,7 @@ class WalletScreenWidget extends StatelessWidget {
         }).toList(),
         onChanged: (value) {
           bloc.add(WalletEvent.getDropDownElementEvent(year: value!));
+          bloc.add(WalletEvent.getTotalExpenseEvent(year: value,context: context1));
         },
       ),
     );
