@@ -21,6 +21,7 @@ import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/balance_indicator.dart';
 import '../widget/common_product_button_widget.dart';
 
 class HomeRoute {
@@ -35,7 +36,9 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc()
         ..add(HomeEvent.getPreferencesDataEvent())
-        ..add(HomeEvent.getProductSalesListEvent(context: context)),
+        ..add(HomeEvent.getProductSalesListEvent(context: context))
+      ..add(HomeEvent.getOrderCountEvent(context: context))
+      ..add(HomeEvent.getWalletRecordEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -309,65 +312,8 @@ class HomeScreenWidget extends StatelessWidget {
                                               textAlign: TextAlign.center,
                                             ),
                                             6.height,
-                                            SizedBox(
-                                              height: 70,
-                                              width: 70,
-                                              child: SfRadialGauge(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                axes: [
-                                                  RadialAxis(
-                                                    minimum: 0,
-                                                    maximum: 10000,
-                                                    showLabels: false,
-                                                    showTicks: false,
-                                                    startAngle: 270,
-                                                    endAngle: 270,
-                                                    // radiusFactor: 0.8,
-                                                    axisLineStyle:
-                                                        AxisLineStyle(
-                                                            thicknessUnit:
-                                                                GaugeSizeUnit
-                                                                    .factor,
-                                                            thickness: 0.2,
-                                                            color: AppColors
-                                                                .borderColor),
-                                                    annotations: [
-                                                      GaugeAnnotation(
-                                                        angle: 270,
-                                                        widget: Text(
-                                                          '7550\n${AppLocalizations.of(context)!.currency}',
-                                                          style: AppStyles
-                                                              .rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                    pointers: [
-                                                      RangePointer(
-                                                        color:
-                                                            AppColors.mainColor,
-                                                        enableAnimation: true,
-                                                        animationDuration: 300,
-                                                        animationType:
-                                                            AnimationType.ease,
-                                                        cornerStyle: CornerStyle
-                                                            .bothCurve,
-                                                        value: 7550,
-                                                        width: 6,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                            BalanceIndicator(
+                                              balance: state.balance,
                                             ),
                                           ],
                                         )),
@@ -387,7 +333,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '20,000${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -398,7 +344,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '7,550${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -413,7 +359,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '18,360${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -423,7 +369,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                     title: AppLocalizations.of(
                                                             context)!
                                                         .this_months_orders,
-                                                    value: '23'),
+                                                    value: '${state.orderThisMonth}'),
                                               ),
                                             ],
                                           ),

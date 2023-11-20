@@ -41,8 +41,8 @@ class Datum with _$Datum {
     String? surfaceWeight,
     @JsonKey(name: "products")
     int? products,
-    @JsonKey(name: "suppiers")
-    int? suppiers,
+    @JsonKey(name: "suppliers")
+    int? suppliers,
     @JsonKey(name: "noOfIssues")
     int? noOfIssues,
     @JsonKey(name: "isIssue")

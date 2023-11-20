@@ -1,4 +1,6 @@
-
+// To parse this JSON data, do
+//
+//     final walletRecordResModel = walletRecordResModelFromMap(jsonString);
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'wallet_record_res_model.freezed.dart';
@@ -22,11 +24,9 @@ class WalletRecordResModel with _$WalletRecordResModel {
 class Data with _$Data {
   const factory Data({
     @JsonKey(name: "currentMonth")
-    Month? currentMonth,
+    CurrentMonth? currentMonth,
     @JsonKey(name: "previousMonth")
-    Month? previousMonth,
-    @JsonKey(name: "totalOrders")
-    int? totalOrders,
+    PreviousMonth? previousMonth,
     @JsonKey(name: "balanceAmount")
     int? balanceAmount,
     @JsonKey(name: "totalCredit")
@@ -37,8 +37,24 @@ class Data with _$Data {
 }
 
 @freezed
-class Month with _$Month {
-  const factory Month({
+class CurrentMonth with _$CurrentMonth {
+  const factory CurrentMonth({
+    @JsonKey(name: "year")
+    int? year,
+    @JsonKey(name: "month")
+    int? month,
+    @JsonKey(name: "totalExpenses")
+    int? totalExpenses,
+    @JsonKey(name: "expensePercentage")
+    String? expensePercentage,
+  }) = _CurrentMonth;
+
+  factory CurrentMonth.fromJson(Map<String, dynamic> json) => _$CurrentMonthFromJson(json);
+}
+
+@freezed
+class PreviousMonth with _$PreviousMonth {
+  const factory PreviousMonth({
     @JsonKey(name: "year")
     int? year,
     @JsonKey(name: "month")
@@ -47,7 +63,7 @@ class Month with _$Month {
     int? totalExpenses,
     @JsonKey(name: "expensePercentage")
     int? expensePercentage,
-  }) = _Month;
+  }) = _PreviousMonth;
 
-  factory Month.fromJson(Map<String, dynamic> json) => _$MonthFromJson(json);
+  factory PreviousMonth.fromJson(Map<String, dynamic> json) => _$PreviousMonthFromJson(json);
 }

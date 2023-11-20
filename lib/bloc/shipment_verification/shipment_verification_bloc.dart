@@ -68,14 +68,13 @@ class ShipmentVerificationBloc
               );
               debugPrint('delivery Confirm ReqModel = $reqMap}');
               final response = await DioClient(event.context).post(
-                  '${AppUrls.ordersUrl}${event.orderId}${AppUrls.deliveryConfirmUrl}',
+                  '${AppUrls.deliveryConfirmUrl}${event.orderId}',
                   data: reqMap,
                   options: Options(headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}'
+                    HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'
                   }));
 
-              debugPrint('delivery Confirm url  = ${AppUrls.ordersUrl}${event.orderId}${AppUrls.deliveryConfirmUrl}');
+              debugPrint('delivery Confirm url  = ${AppUrls.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
               debugPrint('delivery Confirm response model  = $response');
 
               if (response['status'] == 200) {

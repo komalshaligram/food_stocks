@@ -63,8 +63,7 @@ class ProductDetailsBloc
           }
         } on ServerException {}
       } else if (event is _productProblemEvent) {
-        //  List<ProductDetailsModel> temp = state.productList;
-        // temp[event.index].isProductIssue = event.isProductProblem;
+
         List<int> index = [];
         if (state.productListIndex.contains(event.index)) {
           index.remove(event.index);
@@ -105,7 +104,7 @@ class ProductDetailsBloc
 
           try {
             final response = await DioClient(event.context).post(
-                '${AppUrls.ordersUrl}${event.orderId}${AppUrls.createIssueUrl}',
+                '${AppUrls.createIssueUrl}${event.orderId}',
                 data: reqMap,
                 options: Options(headers: {
                   HttpHeaders.authorizationHeader:
@@ -113,8 +112,9 @@ class ProductDetailsBloc
                 }));
 
             debugPrint(
-                'createIssue url  = ${AppUrls.ordersUrl}${event.orderId}${AppUrls.createIssueUrl}');
+                'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
+            debugPrint('order Id  = ${event.orderId}');
             debugPrint('createIssue response = $response');
 
             if (response['status'] == 201) {

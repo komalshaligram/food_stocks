@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -14,11 +15,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
+import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -36,10 +41,10 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeState.initial()) {
     on<HomeEvent>((event, emit) async {
-      if (event is _getPreferencesDataEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
+      if (event is _getPreferencesDataEvent) {
         debugPrint(
             'getUserImageUrl ${AppUrls.baseFileUrl}${preferences.getUserImageUrl()}');
         debugPrint(
@@ -377,6 +382,70 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _UpdateCartCountEvent) {
         emit(state.copyWith(cartCount: state.cartCount + event.cartCount));
         debugPrint('cart count = ${state.cartCount}');
+      }
+
+      else if (event is _getWalletRecordEvent) {
+        try {
+          WalletRecordReqModel reqMap =
+              WalletRecordReqModel(userId: preferences.getUserId());
+          debugPrint('WalletRecordReqModel = $reqMap}');
+          final res = await DioClient(event.context).post(
+            AppUrls.walletRecordUrl,
+            data: reqMap,
+          );
+
+          debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
+          WalletRecordResModel response = WalletRecordResModel.fromJson(res);
+          debugPrint('WalletRecordResModel  = $response');
+
+          if (response.status == 200) {
+            emit(state.copyWith(
+                thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
+                lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
+                balance: response.data!.balanceAmount!,
+                totalCredit: response.data!.totalCredit!));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {}
+      } else if (event is _getOrderCountEvent) {
+        try {
+          int daysInMonth(DateTime date) => DateTimeRange(
+                  start: DateTime(date.year, date.month, 1),
+                  end: DateTime(date.year, date.month + 1))
+              .duration
+              .inDays;
+
+          var now = DateTime.now();
+
+          GetOrderCountReqModel reqMap = GetOrderCountReqModel(
+            startDate: DateTime(now.year, now.month, 1),
+            endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
+          );
+
+          debugPrint('getOrdersCount reqMap = $reqMap}');
+
+          final res =
+              await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+                  data: reqMap,
+                  options: Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                          'Bearer ${preferences.getAuthToken()}',
+                    },
+                  ));
+
+          debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+          GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
+          debugPrint('getOrdersCount response  = ${response}');
+
+          if (response.status == 200) {
+            emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+          }
+        } on ServerException {}
       }
     });
   }
