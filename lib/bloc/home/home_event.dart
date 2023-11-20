@@ -44,4 +44,8 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getOrderCountEvent({
     required BuildContext context,
   }) = _getOrderCountEvent;
+
+  const factory HomeEvent.getMessageListEvent({
+    required BuildContext context,
+  }) = _GetMessageListEvent;
 }

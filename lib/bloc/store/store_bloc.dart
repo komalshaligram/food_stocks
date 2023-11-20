@@ -394,6 +394,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //           AppStrings.somethingWrongString,
             //       bgColor: AppColors.redColor);
             // }
+          } else if (response.status == 403) {
+            emit(state.copyWith(isLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(

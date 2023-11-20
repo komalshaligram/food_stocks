@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/question_and_answer/question_and_answer_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
+import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
@@ -17,7 +20,8 @@ class QuestionAndAnswerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => QuestionAndAnswerBloc(),
+      create: (context) => QuestionAndAnswerBloc()
+        ..add(QuestionAndAnswerEvent.getQNAListEvent(context: context)),
       child: QuestionAndAnswerScreenWidget(),
     );
   }
@@ -48,11 +52,56 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: AppConstants.padding_5),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 3,
-                  itemBuilder: (context, index) => qnaItem(index: index),
-                ),
+                child: NotificationListener<ScrollNotification>(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          state.isShimmering
+                              ? QuestionAndAnswerScreenShimmerWidget()
+                              : state.qnaList.isEmpty
+                                  ? Container(
+                                      height: getScreenHeight(context) - 80,
+                                      width: getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Right now no questions',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.textColor),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: state.qnaList.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return qnaItem(
+                                            question:
+                                                state.qnaList[index].question ??
+                                                    '',
+                                            answer:
+                                                state.qnaList[index].answer ??
+                                                    '');
+                                      },
+                                    ),
+                          state.isLoadMore
+                              ? QuestionAndAnswerScreenShimmerWidget()
+                              : 0.width,
+                        ],
+                      ),
+                    ),
+                    onNotification: (notification) {
+                      if (notification.metrics.pixels ==
+                          notification.metrics.maxScrollExtent) {
+                        if (!state.isBottomOfQNA) {
+                          context.read<QuestionAndAnswerBloc>().add(
+                              QuestionAndAnswerEvent.getQNAListEvent(
+                                  context: context));
+                        }
+                      }
+                      return true;
+                    }),
               ),
             ),
           );
@@ -61,9 +110,11 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget qnaItem({required int index}) {
+  Widget qnaItem({required String question, required String answer}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_8),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         boxShadow: [
@@ -76,29 +127,30 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
       ),
       clipBehavior: Clip.hardEdge,
       child: ExpansionTile(
-        childrenPadding: const EdgeInsets.symmetric(vertical: 2.0),
-        tilePadding:
-            const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
+        collapsedIconColor: AppColors.greyColor,
+        iconColor: AppColors.mainColor,
         title: Padding(
           padding:
               const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
           child: Text(
-            'ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש ?',
-            style: AppStyles.rkRegularTextStyle(
+            question,
+            style: AppStyles.rkBoldTextStyle(
               size: AppConstants.smallFont,
               color: AppColors.blackColor,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
         children: [
           Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(AppConstants.padding_8),
+            color: AppColors.lightBorderColor.withOpacity(0.5),
+            padding:
+                const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             child: ListTile(
               title: Text(
-                "גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, קולהע צופעט למרקוח איבן איף, ברומץ כלרשט מיחוצים. קלאצי מוסן מנת. להאמית קרהשק סכעיט דז מא, מנכםלמטכין נשואי מנורך. גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה -לתכי מורגם בורק? לתיג ישבעס.נולום ארווס סאפיאן - פוסיליס קוויס, אקווזמן נולום ארווס סאפיאן - פוסיליס קוויס, אקווזמן קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי לורם איפסום דולור סיט אמט",
+                answer,
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12, color: AppColors.blackColor),
+                    size: AppConstants.font_14, color: AppColors.blackColor),
               ),
             ),
           ),

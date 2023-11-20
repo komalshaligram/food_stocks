@@ -226,7 +226,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     .add(
                                         ProfileMenuEvent.changeAppLanguageEvent(
                                             context: context))),
-                            85.height,
+                            90.height,
                           ],
                         ),
                       ),

@@ -18,7 +18,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
@@ -51,12 +51,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (pickedFile != null) {
           debugPrint("compress after size = ${await pickedFile.length()}");
-          Directory? dir;
-          if (defaultTargetPlatform == TargetPlatform.android) {
-            dir = await getApplicationDocumentsDirectory();
-          } else {
-            dir = await getApplicationDocumentsDirectory();
-          }
+          // Directory? dir;
+          // if (defaultTargetPlatform == TargetPlatform.android) {
+          //   dir = await getApplicationDocumentsDirectory();
+          // } else {
+          //   dir = await getApplicationDocumentsDirectory();
+          // }
           CroppedFile? croppedImage = await cropImage(
               path: pickedFile.path,
               shape: CropStyle.circle,

@@ -14,11 +14,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/get_messages_req_model/get_messages_req_model.dart';
 import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
+import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
@@ -375,6 +377,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 title: response.message ?? AppStrings.addCartSuccessString,
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
+          } else if (response.status == 403) {
+            emit(state.copyWith(isLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -456,6 +464,41 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+          }
+        } on ServerException {}
+      } else if (event is _GetMessageListEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+              AppUrls.getAllMessagesUrl,
+              data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson());
+          GetMessagesResModel response = GetMessagesResModel.fromJson(res);
+          if (response.status == 200) {
+            List<Message> messageList =
+                state.messageList.toList(growable: true);
+            messageList.addAll(response.data
+                    ?.map((message) => Message(
+                          id: message.id,
+                          contentName: message.contentName,
+                          title: message.title,
+                          fulltext: message.fulltext,
+                          isPushNotification: message.isPushNotification,
+                          isEmail: message.isEmail,
+                          subPage: message.subPage,
+                          linkToPage: message.linkToPage,
+                          createdAt: message.createdAt,
+                          updatedAt: message.updatedAt,
+                        ))
+                    .toList() ??
+                []);
+            messageList.removeWhere(
+                (message) => (message.isPushNotification ?? false) == false);
+            debugPrint('new message list len = ${messageList.length}');
+            emit(state.copyWith(messageList: messageList));
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       }

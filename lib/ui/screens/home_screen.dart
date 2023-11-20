@@ -21,7 +21,6 @@ import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/common_product_button_widget.dart';
@@ -40,8 +39,9 @@ class HomeScreen extends StatelessWidget {
       create: (context) => HomeBloc()
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getProductSalesListEvent(context: context))
-      ..add(HomeEvent.getOrderCountEvent(context: context))
-      ..add(HomeEvent.getWalletRecordEvent(context: context)),
+        ..add(HomeEvent.getOrderCountEvent(context: context))
+        ..add(HomeEvent.getWalletRecordEvent(context: context))
+        ..add(HomeEvent.getMessageListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -382,7 +382,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                     title: AppLocalizations.of(
                                                             context)!
                                                         .this_months_orders,
-                                                    value: '${state.orderThisMonth}'),
+                                                    value:
+                                                        '${state.orderThisMonth}'),
                                               ),
                                             ],
                                           ),
@@ -491,24 +492,56 @@ class HomeScreenWidget extends StatelessWidget {
                               ],
                             ),
                             30.height,
-                            titleRowWidget(
-                                context: context,
-                                title: AppLocalizations.of(context)!.messages,
-                                allContentTitle:
-                                    AppLocalizations.of(context)!.all_messages,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, RouteDefine.messageScreen.name);
-                                }),
+                            state.messageList.isEmpty
+                                ? 0.width
+                                : titleRowWidget(
+                                    context: context,
+                                    title:
+                                        AppLocalizations.of(context)!.messages,
+                                    allContentTitle:
+                                        AppLocalizations.of(context)!
+                                            .all_messages,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.messageScreen.name);
+                                    }),
                             10.height,
-                            ListView.builder(
-                              itemCount: 2,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => messageListItem(
-                                  index: index, context: context),
-                            ),
-                            85.height,
+                            state.messageList.isEmpty
+                                ? 0.width
+                                : ListView.builder(
+                                    itemCount: state.messageList.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) =>
+                                        messageListItem(
+                                            context: context,
+                                            title: state
+                                                    .messageList[index].title ??
+                                                '',
+                                            content: parse(state
+                                                            .messageList[index]
+                                                            .fulltext ??
+                                                        '')
+                                                    .body
+                                                    ?.text ??
+                                                '',
+                                            dateTime: state.messageList[index]
+                                                    .updatedAt ??
+                                                '',
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .messageContentScreen
+                                                      .name,
+                                                  arguments: {
+                                                    AppStrings
+                                                            .messageDataString:
+                                                        state.messageList[index]
+                                                  });
+                                            }),
+                                  ),
+                            90.height,
                           ],
                         ),
                       ),
@@ -809,7 +842,13 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget messageListItem({required int index, required BuildContext context}) {
+  Widget messageListItem({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String dateTime,
+    required void Function() onTap,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Row(
@@ -830,7 +869,7 @@ class HomeScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'כותרת של ההודעה',
+                  title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_12,
                       color: AppColors.blackColor,
@@ -838,27 +877,23 @@ class HomeScreenWidget extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  'גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.',
+                  content,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_10, color: AppColors.blackColor),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '15.02.2023',
+                      dateTime,
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_12,
                           color: AppColors.blackColor),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, RouteDefine.messageContentScreen.name,
-                            arguments: {
-                              AppStrings.messageContentString: index
-                            });
-                      },
+                      onTap: onTap,
                       child: Text(
                         AppLocalizations.of(context)!.read_more,
                         style: AppStyles.rkRegularTextStyle(
