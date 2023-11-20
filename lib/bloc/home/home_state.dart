@@ -15,6 +15,12 @@ class HomeState with _$HomeState {
     required int productStockUpdateIndex,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required bool isCartCountChange,
+    required int totalCredit,
+    required int thisMonthExpense,
+    required int lastMonthExpense,
+    required int orderThisMonth,
+    required int balance,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -30,5 +36,11 @@ class HomeState with _$HomeState {
         productStockList: [],
         isSelectSupplier: false,
         productSupplierList: [],
+        isCartCountChange: false,
+        balance: 0,
+        lastMonthExpense: 0,
+        orderThisMonth: 0,
+        thisMonthExpense: 0,
+        totalCredit: 0,
       );
 }

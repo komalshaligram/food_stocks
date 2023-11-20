@@ -465,12 +465,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w700),
                                     ),
                                     Text(
-                                      parse(productSaleDescription).outerHtml,
+                                      "${parse(productSaleDescription).body?.text}",
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.blackColor,
                                           fontWeight: FontWeight.w400),
-                                      maxLines: 3,
+                                      maxLines: 5,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
@@ -618,9 +618,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(
                                                 AppConstants.radius_5))),
-                                    child: TextField(
+                                    child: TextFormField(
                                       controller: noteController,
                                       onChanged: onNoteChanged,
+                                      textInputAction: TextInputAction.done,
                                       decoration: InputDecoration(
                                           border: InputBorder.none),
                                       maxLines: 5,

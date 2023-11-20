@@ -798,9 +798,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         Radio(
                           value: value,
                           fillColor: MaterialStateColor.resolveWith(
-                              (states) => AppColors.greyColor),
+                              (states) => AppColors.greyColor,
+                          ),
                           groupValue: state.selectedRadioTile,
-                          activeColor: AppColors.blueColor,
+
                           onChanged: (val) {
                             bloc.add(ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: val!));
