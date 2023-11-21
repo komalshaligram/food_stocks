@@ -3,7 +3,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 class AppStrings {
   static const appName = 'Food Stock';
   static const hpString = '* H.P.';
-  static const messageContentString = 'message_content';
   static const selectTagString = 'select tag';
   static const emailString = 'test2gmail.com';
   static const numberString = '1234567896';
@@ -69,6 +68,8 @@ class AppStrings {
   static const profileParamString = 'profileParam';
   static const isUpdateParamString = 'isUpdateParam';
   static const planogramProductsParamString = 'planogramProductsParam';
+  static const messageDataString = 'messageDataParam';
+  static const appContentIdString = 'appContentIdParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';

@@ -2,5 +2,11 @@ part of 'message_content_bloc.dart';
 
 @freezed
 class MessageContentState with _$MessageContentState {
-  const factory MessageContentState.initial() = _Initial;
+  const factory MessageContentState({
+    required Message message,
+  }) = _MessageContentState;
+
+  factory MessageContentState.initial() => MessageContentState(
+        message: Message(),
+      );
 }

@@ -53,30 +53,33 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  (state.orderSummaryList.data?.data!.length ?? 0) == 0 ? OrderSummaryScreenShimmerWidget():
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: state.orderSummaryList.data?.data!.length,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    padding:
-                        EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                    itemBuilder: (context, index) =>
-                        orderListItem(index: index, context: context),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        left: AppConstants.padding_40,
-                        right: AppConstants.padding_40,
-                        top: AppConstants.padding_10,
-                        bottom: AppConstants.padding_30),
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor.withOpacity(0.95),
-                      boxShadow: [
-                        BoxShadow(
+                  (state.orderSummaryList.data?.data!.length ?? 0) == 0
+                    ? Expanded(child: OrderSummaryScreenShimmerWidget())
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: state.orderSummaryList.data?.data!.length,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5),
+                          itemBuilder: (context, index) =>
+                              orderListItem(index: index, context: context),
+                        ),
+                      ),
+                (state.orderSummaryList.data?.data!.length ?? 0) == 0
+                    ? 0.width
+                    : Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              left: AppConstants.padding_40,
+                              right: AppConstants.padding_40,
+                              top: AppConstants.padding_10,
+                              bottom: AppConstants.padding_30),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor.withOpacity(0.95),
+                            boxShadow: [
+                              BoxShadow(
                             color: AppColors.shadowColor.withOpacity(0.20),
                             blurRadius: AppConstants.blur_10),
                       ],

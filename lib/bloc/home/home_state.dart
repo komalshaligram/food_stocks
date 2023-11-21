@@ -21,6 +21,7 @@ class HomeState with _$HomeState {
     required int lastMonthExpense,
     required int orderThisMonth,
     required int balance,
+    required List<Message> messageList,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -42,5 +43,6 @@ class HomeState with _$HomeState {
         orderThisMonth: 0,
         thisMonthExpense: 0,
         totalCredit: 0,
+        messageList: [],
       );
 }

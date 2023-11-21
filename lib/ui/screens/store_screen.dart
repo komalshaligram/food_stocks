@@ -54,7 +54,7 @@ class StoreScreenWidget extends StatelessWidget {
       listener: (context, state) {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent(cartCount: 1));
+              .add(BottomNavEvent.updateCartCountEvent());
         }
       },
       child: BlocBuilder<StoreBloc, StoreState>(

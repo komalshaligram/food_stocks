@@ -306,12 +306,19 @@ class PlanogramProductBloc
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            add(PlanogramProductEvent.setCartCountEvent());
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
+          } else if (response.status == 403) {
+            emit(state.copyWith(isLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -323,6 +330,11 @@ class PlanogramProductBloc
           debugPrint('url1 = ');
           emit(state.copyWith(isLoading: false));
         }
+      } else if (event is _SetCartCountEvent) {
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        debugPrint('cart count = ${preferences.getCartCount()}');
       }
     });
   }

@@ -8,12 +8,10 @@ import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 
 class CommonSearchWidget extends StatelessWidget {

@@ -10,8 +10,6 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
-
-import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -68,17 +66,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           body: SafeArea(
             child: NotificationListener<ScrollNotification>(
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Stack(
-                    //   children: [
-                    //     Container(
-                    //       height: getScreenWidth(context) / 3,
-                    //       width: getScreenWidth(context) / 3,
-                    //       clipBehavior: Clip.hardEdge,
-                    //       margin: EdgeInsets.symmetric(
+                physics: state.productList.isEmpty
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Stack(
+                      //   children: [
+                      //     Container(
+                      //       height: getScreenWidth(context) / 3,
+                      //       width: getScreenWidth(context) / 3,
+                      //       clipBehavior: Clip.hardEdge,
+                      //       margin: EdgeInsets.symmetric(
                     //           vertical: AppConstants.padding_10,
                     //           horizontal: AppConstants.padding_5),
                     //       decoration: BoxDecoration(
@@ -154,42 +155,42 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     state.isShimmering
                         ? SupplierProductsScreenShimmerWidget()
                         : state.productList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context) - 56,
-                                width: getScreenWidth(context),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Currently this Supplier has no products',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
-                                ),
-                              )
-                            : GridView.builder(
-                                itemCount: state.productList.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConstants.padding_5),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio: 9 / 11),
-                                itemBuilder: (context, index) =>
-                                    buildSupplierProducts(
-                                        context: context,
-                                        index: index,
-                                        isRTL: isRTLContent(context: context)),
-                              ),
+                        ? Container(
+                      height: getScreenHeight(context) - 80,
+                                  width: getScreenWidth(context),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Currently this Supplier has no products',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                )
+                        : GridView.builder(
+                      itemCount: state.productList.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5),
+                      gridDelegate:
+                      SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 9 / 11),
+                      itemBuilder: (context, index) =>
+                          buildSupplierProducts(
+                              context: context,
+                              index: index,
+                              isRTL: isRTLContent(context: context)),
+                    ),
                     state.isLoadMore
                         ? Container(
-                            height: 50,
-                            width: double.maxFinite,
-                            alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(
-                              color: AppColors.blackColor,
-                            ),
-                          )
+                      height: 50,
+                      width: double.maxFinite,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    )
                         : 0.width,
                   ],
                 ),
