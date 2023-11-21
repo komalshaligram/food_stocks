@@ -7,7 +7,7 @@ import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import 'package:html/parser.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
@@ -66,16 +66,16 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     ? ProductSaleScreenShimmerWidget()
                     : state.productSalesList.length == 0
                         ? Container(
-                            height: getScreenHeight(context) - 56,
-                            width: getScreenWidth(context),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Currently products are not on sale',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor),
-                            ),
-                          )
+                  height: getScreenHeight(context) - 80,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Currently products are not on sale',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
                         : GridView.builder(
                             shrinkWrap: true,
                             itemCount: state.productSalesList.length,
@@ -89,26 +89,31 @@ class ProductSaleScreenWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return buildProductSaleListItem(
                                 context: context,
-                                saleImage:
-                                    state.productSalesList[index].mainImage ??
-                                        '',
-                                title:
-                                    state.productSalesList[index].salesName ??
-                                        '',
-                                description: state.productSalesList[index]
-                                        .salesDescription ??
-                                    '',
-                                price: state.productSalesList[index]
-                                        .discountPercentage
-                                        ?.toDouble() ??
-                                    0.0,
-                                onButtonTap: () {
-                                  showProductDetails(
-                                    context: context,
-                                    productId:
-                                        state.productSalesList[index].id ?? '',
-                                  );
-                                },
+                                  saleImage:
+                                      state.productSalesList[index].mainImage ??
+                                          '',
+                                  title:
+                                      state.productSalesList[index].salesName ??
+                                          '',
+                                  description: parse(state
+                                                  .productSalesList[index]
+                                                  .salesDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  price: state.productSalesList[index]
+                                          .discountPercentage
+                                          ?.toDouble() ??
+                                      0.0,
+                                  onButtonTap: () {
+                                    showProductDetails(
+                                      context: context,
+                                      productId:
+                                          state.productSalesList[index].id ??
+                                              '',
+                                    );
+                                  },
                               );
                             },
                           ),

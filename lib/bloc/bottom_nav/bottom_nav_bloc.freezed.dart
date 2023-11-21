@@ -19,22 +19,20 @@ mixin _$BottomNavEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
-    required TResult Function(int cartCount) updateCartCountEvent,
-    required TResult Function() resetCartCountEvent,
+    required TResult Function() updateCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
+
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
-    TResult? Function(int cartCount)? updateCartCountEvent,
-    TResult? Function()? resetCartCountEvent,
+    TResult? Function()? updateCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
-    TResult Function(int cartCount)? updateCartCountEvent,
-    TResult Function()? resetCartCountEvent,
+    TResult Function()? updateCartCountEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -42,21 +40,18 @@ mixin _$BottomNavEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
-    required TResult Function(_ResetCartCountEvent value) resetCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult? Function(_ResetCartCountEvent value)? resetCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult Function(_ResetCartCountEvent value)? resetCartCountEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -145,8 +140,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
-    required TResult Function(int cartCount) updateCartCountEvent,
-    required TResult Function() resetCartCountEvent,
+    required TResult Function() updateCartCountEvent,
   }) {
     return changePage(index);
   }
@@ -155,8 +149,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
-    TResult? Function(int cartCount)? updateCartCountEvent,
-    TResult? Function()? resetCartCountEvent,
+    TResult? Function()? updateCartCountEvent,
   }) {
     return changePage?.call(index);
   }
@@ -165,8 +158,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
-    TResult Function(int cartCount)? updateCartCountEvent,
-    TResult Function()? resetCartCountEvent,
+    TResult Function()? updateCartCountEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -180,7 +172,6 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
-    required TResult Function(_ResetCartCountEvent value) resetCartCountEvent,
   }) {
     return changePage(this);
   }
@@ -190,7 +181,6 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult? Function(_ResetCartCountEvent value)? resetCartCountEvent,
   }) {
     return changePage?.call(this);
   }
@@ -200,7 +190,6 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult Function(_ResetCartCountEvent value)? resetCartCountEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -224,8 +213,6 @@ abstract class _$$_UpdateCartCountEventCopyWith<$Res> {
   factory _$$_UpdateCartCountEventCopyWith(_$_UpdateCartCountEvent value,
           $Res Function(_$_UpdateCartCountEvent) then) =
       __$$_UpdateCartCountEventCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int cartCount});
 }
 
 /// @nodoc
@@ -235,83 +222,54 @@ class __$$_UpdateCartCountEventCopyWithImpl<$Res>
   __$$_UpdateCartCountEventCopyWithImpl(_$_UpdateCartCountEvent _value,
       $Res Function(_$_UpdateCartCountEvent) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? cartCount = null,
-  }) {
-    return _then(_$_UpdateCartCountEvent(
-      cartCount: null == cartCount
-          ? _value.cartCount
-          : cartCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
-  const _$_UpdateCartCountEvent({required this.cartCount});
-
-  @override
-  final int cartCount;
+  const _$_UpdateCartCountEvent();
 
   @override
   String toString() {
-    return 'BottomNavEvent.updateCartCountEvent(cartCount: $cartCount)';
+    return 'BottomNavEvent.updateCartCountEvent()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_UpdateCartCountEvent &&
-            (identical(other.cartCount, cartCount) ||
-                other.cartCount == cartCount));
+        (other.runtimeType == runtimeType && other is _$_UpdateCartCountEvent);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, cartCount);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_UpdateCartCountEventCopyWith<_$_UpdateCartCountEvent> get copyWith =>
-      __$$_UpdateCartCountEventCopyWithImpl<_$_UpdateCartCountEvent>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int index) changePage,
-    required TResult Function(int cartCount) updateCartCountEvent,
-    required TResult Function() resetCartCountEvent,
+    required TResult Function() updateCartCountEvent,
   }) {
-    return updateCartCountEvent(cartCount);
+    return updateCartCountEvent();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
-    TResult? Function(int cartCount)? updateCartCountEvent,
-    TResult? Function()? resetCartCountEvent,
+    TResult? Function()? updateCartCountEvent,
   }) {
-    return updateCartCountEvent?.call(cartCount);
+    return updateCartCountEvent?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int index)? changePage,
-    TResult Function(int cartCount)? updateCartCountEvent,
-    TResult Function()? resetCartCountEvent,
+    TResult Function()? updateCartCountEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
-      return updateCartCountEvent(cartCount);
+      return updateCartCountEvent();
     }
     return orElse();
   }
@@ -321,7 +279,6 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
-    required TResult Function(_ResetCartCountEvent value) resetCartCountEvent,
   }) {
     return updateCartCountEvent(this);
   }
@@ -331,7 +288,6 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult? Function(_ResetCartCountEvent value)? resetCartCountEvent,
   }) {
     return updateCartCountEvent?.call(this);
   }
@@ -341,7 +297,6 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult Function(_ResetCartCountEvent value)? resetCartCountEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -352,121 +307,7 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
 }
 
 abstract class _UpdateCartCountEvent implements BottomNavEvent {
-  const factory _UpdateCartCountEvent({required final int cartCount}) =
-      _$_UpdateCartCountEvent;
-
-  int get cartCount;
-  @JsonKey(ignore: true)
-  _$$_UpdateCartCountEventCopyWith<_$_UpdateCartCountEvent> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$_ResetCartCountEventCopyWith<$Res> {
-  factory _$$_ResetCartCountEventCopyWith(_$_ResetCartCountEvent value,
-          $Res Function(_$_ResetCartCountEvent) then) =
-      __$$_ResetCartCountEventCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ResetCartCountEventCopyWithImpl<$Res>
-    extends _$BottomNavEventCopyWithImpl<$Res, _$_ResetCartCountEvent>
-    implements _$$_ResetCartCountEventCopyWith<$Res> {
-  __$$_ResetCartCountEventCopyWithImpl(_$_ResetCartCountEvent _value,
-      $Res Function(_$_ResetCartCountEvent) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ResetCartCountEvent implements _ResetCartCountEvent {
-  const _$_ResetCartCountEvent();
-
-  @override
-  String toString() {
-    return 'BottomNavEvent.resetCartCountEvent()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ResetCartCountEvent);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(int index) changePage,
-    required TResult Function(int cartCount) updateCartCountEvent,
-    required TResult Function() resetCartCountEvent,
-  }) {
-    return resetCartCountEvent();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int index)? changePage,
-    TResult? Function(int cartCount)? updateCartCountEvent,
-    TResult? Function()? resetCartCountEvent,
-  }) {
-    return resetCartCountEvent?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int index)? changePage,
-    TResult Function(int cartCount)? updateCartCountEvent,
-    TResult Function()? resetCartCountEvent,
-    required TResult orElse(),
-  }) {
-    if (resetCartCountEvent != null) {
-      return resetCartCountEvent();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ChangePageEvent value) changePage,
-    required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
-    required TResult Function(_ResetCartCountEvent value) resetCartCountEvent,
-  }) {
-    return resetCartCountEvent(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ChangePageEvent value)? changePage,
-    TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult? Function(_ResetCartCountEvent value)? resetCartCountEvent,
-  }) {
-    return resetCartCountEvent?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ChangePageEvent value)? changePage,
-    TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
-    TResult Function(_ResetCartCountEvent value)? resetCartCountEvent,
-    required TResult orElse(),
-  }) {
-    if (resetCartCountEvent != null) {
-      return resetCartCountEvent(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ResetCartCountEvent implements BottomNavEvent {
-  const factory _ResetCartCountEvent() = _$_ResetCartCountEvent;
+  const factory _UpdateCartCountEvent() = _$_UpdateCartCountEvent;
 }
 
 /// @nodoc

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'bottom_nav_event.dart';
 
@@ -10,15 +12,14 @@ part 'bottom_nav_bloc.freezed.dart';
 
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
   BottomNavBloc() : super(BottomNavState.initial()) {
-    on<BottomNavEvent>((event, emit) {
+    on<BottomNavEvent>((event, emit) async {
       if (event is _ChangePageEvent) {
         emit(state.copyWith(index: event.index));
       } else if (event is _UpdateCartCountEvent) {
-        emit(state.copyWith(cartCount: state.cartCount + event.cartCount));
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         debugPrint('cart count = ${state.cartCount}');
-      } else if (event is _ResetCartCountEvent) {
-        emit(state.copyWith(cartCount: 0));
-        debugPrint('reset cart count = ${state.cartCount}');
       }
     });
   }

@@ -30,4 +30,6 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory SupplierProductsEvent.setCartCountEvent() = _SetCartCountEvent;
 }

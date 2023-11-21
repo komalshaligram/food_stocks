@@ -27,4 +27,6 @@ class ProductSaleEvent with _$ProductSaleEvent {
 
   const factory ProductSaleEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory ProductSaleEvent.setCartCountEvent() = _SetCartCountEvent;
 }
