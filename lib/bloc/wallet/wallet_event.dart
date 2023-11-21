@@ -17,8 +17,8 @@ class WalletEvent with _$WalletEvent {
 
   const factory WalletEvent.getAllWalletTransactionEvent({
     required BuildContext context,
-    required int year,
-    required int month
+    required DateTime? startDate,
+    required DateTime? endDate,
   }) = _getAllWalletTransactionEvent;
 
   const factory WalletEvent.getDateRangeEvent({

@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
+import '../widget/order_summary_screen_shimmer_widget.dart';
 
 class WalletRoute {
   static Widget get route => const WalletScreen();
@@ -29,7 +30,9 @@ class WalletScreen extends StatelessWidget {
       create: (context) => WalletBloc()
       ..add(WalletEvent.getYearListEvent())
         ..add(WalletEvent.getWalletRecordEvent(context: context))
-      ..add(WalletEvent.getOrderCountEvent(context: context)),
+      ..add(WalletEvent.getOrderCountEvent(context: context))
+      /*  ..add(WalletEvent.getAllWalletTransactionEvent(
+    context: context, startDate: ,endDate: )),*/,
       child: WalletScreenWidget(),
     );
   }
@@ -39,6 +42,9 @@ class WalletScreenWidget extends StatelessWidget {
   WalletScreenWidget({Key? key}) : super(key: key);
   DateRange? selectedDateRange;
   DateTime? minDate;
+  DateTime? startDate;
+  DateTime? endDate;
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,386 +102,424 @@ class WalletScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-           bloc.add(WalletEvent.getTotalExpenseEvent(
+        /*        if((state.balanceSheetList.data?.length) == 0){
+                  bloc.add(
+                      WalletEvent.getAllWalletTransactionEvent(
+                        context: context,
+                        endDate: endDate,
+                        startDate: startDate,
+                      ));
+                }*/
+                bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
-                bloc.add(WalletEvent.getAllWalletTransactionEvent(
-                    context: context, month: 1, year: state.year));
                 bloc.add(WalletEvent.getDropDownElementEvent(
                     year: state.yearList.first));
                 minDate = DateTime(state.yearList.last, 1, 1);
               },
-              child: SingleChildScrollView(
-                child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      50.height,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_15),
-                        child: Container(
-                          width: getScreenWidth(context),
-                          clipBehavior: Clip.hardEdge,
-                          padding: EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_10,
-                              horizontal: AppConstants.padding_10),
-                          decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              boxShadow: [
-                                BoxShadow(
-                                    color:
-                                        AppColors.shadowColor.withOpacity(0.15),
-                                    blurRadius: AppConstants.blur_10)
-                              ],
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10))),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 1,
+              child:SafeArea(
+                child: NotificationListener<ScrollNotification> (
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        50.height,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_15),
+                          child: Container(
+                            width: getScreenWidth(context),
+                            clipBehavior: Clip.hardEdge,
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_10,
+                                horizontal: AppConstants.padding_10),
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color:
+                                          AppColors.shadowColor.withOpacity(0.15),
+                                      blurRadius: AppConstants.blur_10)
+                                ],
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10))),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .balance_status,
+                                          style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.blackColor,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        6.height,
+                                        BalanceIndicator(
+                                          balance: state.balance,
+                                        ),
+                                      ],
+                                    )),
+                                5.width,
+                                Expanded(
+                                  flex: 3,
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .balance_status,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
-                                        ),
-                                        textAlign: TextAlign.center,
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: DashBoardStatsWidget(
+                                                context: context,
+                                                image: AppImagePath.credits,
+                                                title:
+                                                    AppLocalizations.of(context)!
+                                                        .total_credit,
+                                                value:
+                                                    '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                          ),
+                                          10.width,
+                                          Flexible(
+                                            child: DashBoardStatsWidget(
+                                                context: context,
+                                                image: AppImagePath.expense,
+                                                title:
+                                                    AppLocalizations.of(context)!
+                                                        .this_months_expenses,
+                                                value:
+                                                    '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                          ),
+                                        ],
                                       ),
-                                      6.height,
-                                      BalanceIndicator(
-                                        balance: state.balance,
+                                      10.height,
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: DashBoardStatsWidget(
+                                                context: context,
+                                                image: AppImagePath.expense,
+                                                title:
+                                                    AppLocalizations.of(context)!
+                                                        .last_months_expenses,
+                                                value:
+                                                    '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                          ),
+                                          10.width,
+                                          Flexible(
+                                            child: DashBoardStatsWidget(
+                                                context: context,
+                                                image: AppImagePath.orders,
+                                                title:
+                                                    AppLocalizations.of(context)!
+                                                        .this_months_orders,
+                                                value: '${state.orderThisMonth}'),
+                                          ),
+                                        ],
                                       ),
                                     ],
-                                  )),
-                              5.width,
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: DashBoardStatsWidget(
-                                              context: context,
-                                              image: AppImagePath.credits,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .total_credit,
-                                              value:
-                                                  '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
-                                        ),
-                                        10.width,
-                                        Flexible(
-                                          child: DashBoardStatsWidget(
-                                              context: context,
-                                              image: AppImagePath.expense,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .this_months_expenses,
-                                              value:
-                                                  '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
-                                        ),
-                                      ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        30.height,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .monthly_expense_graph,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: /*  state.language == 'en'
+                                        ? AppConstants.font_14
+                                        : */
+                                        AppConstants.smallFont,
+                                    color: AppColors.blackColor),
+                              ),
+                              dropDownWidget(
+                                  date: state.year,
+                                  dateList: state.yearList,
+                                  context1: context),
+                            ],
+                          ),
+                        ),
+                        20.height,
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: SizedBox(
+                            height: 185,
+                            width: double.maxFinite,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 2),
+                              child: LineChart(
+                                LineChartData(
+                                  borderData: FlBorderData(show: false),
+                                  lineTouchData: LineTouchData(
+                                    getTouchLineEnd: (barData, spotIndex) {
+                                      return 46;
+                                    },
+                                    enabled: true,
+                                    touchTooltipData: LineTouchTooltipData(
+                                      getTooltipItems: (value) {
+                                        return value.map((e) {
+                                          return LineTooltipItem(
+                                              "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total} :  ${AppLocalizations.of(context)!.currency}${e.y}",
+                                              TextStyle(fontSize: 8));
+                                        }).toList();
+                                      },
+                                      tooltipBgColor: Colors.transparent,
+                                      showOnTopOfTheChartBoxArea: true,
+                                      tooltipMargin: 5,
                                     ),
-                                    10.height,
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: DashBoardStatsWidget(
-                                              context: context,
-                                              image: AppImagePath.expense,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .last_months_expenses,
-                                              value:
-                                                  '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                  ),
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: state.monthlyExpenseList,
+                                      color: AppColors.mainColor.withOpacity(0.8),
+                                      isCurved: false,
+                                      belowBarData: BarAreaData(
+                                        show: true,
+                                        color:
+                                            AppColors.mainColor.withOpacity(0.5),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            AppColors.graphColor.withOpacity(0.2),
+                                            AppColors.graphColor
+                                                .withOpacity(0.01),
+                                          ],
                                         ),
-                                        10.width,
-                                        Flexible(
-                                          child: DashBoardStatsWidget(
-                                              context: context,
-                                              image: AppImagePath.orders,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .this_months_orders,
-                                              value: '${state.orderThisMonth}'),
-                                        ),
-                                      ],
+                                        cutOffY: 0.0,
+                                        applyCutOffY: false,
+                                      ),
+                                      dotData: FlDotData(
+                                        show: false,
+                                      ),
                                     ),
                                   ],
+                                  minY: 0,
+                                  gridData: FlGridData(show: false),
+                                  titlesData: FlTitlesData(
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        getTitlesWidget: ((value, meta) {
+                                          String? month = monthMap[value];
+                                          return Text(
+                                            month.toString(),
+                                            textDirection: TextDirection.ltr,
+                                            style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.font_8,
+                                              color: AppColors.navSelectedColor,
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                    rightTitles: AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                    topTitles: AxisTitles(
+                                      sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                  ),
                                 ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        15.height,
+                        15.width,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.history,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.blackColor),
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                    bloc.add(WalletEvent.exportWalletTransactionEvent(context: context));
+
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5,
+                                          horizontal: AppConstants.padding_8),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.mainColor,
+                                          borderRadius: BorderRadius.circular(
+                                              AppConstants.radius_3)),
+                                      child: Text(
+                                        AppLocalizations.of(context)!.export,
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.whiteColor),
+                                      ),
+                                    ),
+                                  ),
+                                  10.width,
+                                  Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5,
+                                          vertical: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            AppConstants.radius_7),
+                                        border: Border.all(
+                                            color: AppColors.borderColor),
+                                        color: AppColors.whiteColor,
+                                      ),
+                                      child: Container(
+                                        width: 220,
+                                        height: 30,
+                                        child: DateRangeField(
+                                          decoration: InputDecoration(
+                                              enabledBorder: InputBorder.none,
+                                              prefixIcon:
+                                                  Icon(Icons.keyboard_arrow_down),
+                                              contentPadding: EdgeInsets.all(0)),
+                                          showDateRangePicker: (
+                                              {required pickerBuilder,
+                                              required widgetContext}) {
+                                            return showDateRangePickerDialog(
+                                                context: context,
+                                                offset: Offset(65, 200),
+                                                barrierColor: AppColors.whiteColor
+                                                    .withOpacity(0.6),
+                                                builder: datePickerBuilder);
+                                          },
+                                          onDateRangeSelected:
+                                              (DateRange? value) {
+                                                startDate = value?.start;
+                                                endDate = value?.end;
+                                            bloc.add(
+                                                WalletEvent.getDateRangeEvent(
+                                                    context: context,
+                                                    range: value));
+                                            bloc.add(
+                                                WalletEvent.getAllWalletTransactionEvent(
+                                                    context: context,
+                                                    endDate: value?.end,
+                                                  startDate: value?.start,
+                                                ));
+                                            selectedDateRange = value;
+                                            //  minDate = DateTime(state.yearList.last ,1,1);
+                                          },
+                                          selectedDateRange:
+                                              state.selectedDateRange,
+                                          pickerBuilder: (BuildContext context,
+                                              dynamic Function(DateRange?)
+                                                  onDateRangeChanged) {
+                                            return Text('');
+                                          },
+                                          // pickerBuilder: datePickerBuilder,
+                                        ),
+                                      )),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      30.height,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        10.height,
+                        Column(
                           children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .monthly_expense_graph,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: /*  state.language == 'en'
-                                      ? AppConstants.font_14
-                                      : */
-                                      AppConstants.smallFont,
-                                  color: AppColors.blackColor),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 90),
+                              child: state.isShimmering
+                                  ? OrderSummaryScreenShimmerWidget()
+                                  : (state.balanceSheetList.data?.length) != 0
+                                      ? ListView.builder(
+                                          itemCount:
+                                              state.walletTransactionsList.length,
+                                          // scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              color: AppColors.whiteColor,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                            vertical: AppConstants
+                                                                .padding_10,
+                                                            horizontal: AppConstants
+                                                                .padding_15),
+                                                    child: listWidget(
+                                                        context: context,
+                                                        listIndex: index),
+                                                  ),
+                                                  Container(
+                                                    width: double.maxFinite,
+                                                    height: 1,
+                                                    color: AppColors.borderColor,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Container(
+                                       height: 200,
+                                        child: Center(
+                                            child: Text(
+                                            'No Data',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.normalFont,
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w400),
+                                          )),
+                                      ),
                             ),
-                            dropDownWidget(
-                                date: state.year,
-                                dateList: state.yearList,
-                                context1: context),
+                            state.isLoadMore
+                                ? OrderSummaryScreenShimmerWidget()
+                                : 0.width,
                           ],
                         ),
-                      ),
-                      20.height,
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: SizedBox(
-                          height: 185,
-                          width: double.maxFinite,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            child: LineChart(
-                              LineChartData(
-                                borderData: FlBorderData(show: false),
-                                lineTouchData: LineTouchData(
-                                  getTouchLineEnd: (barData, spotIndex) {
-                                    return 46;
-                                  },
-                                  enabled: true,
-                                  touchTooltipData: LineTouchTooltipData(
-                                    getTooltipItems: (value) {
-                                      return value.map((e) {
-                                        return LineTooltipItem(
-                                            "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total} :  ${AppLocalizations.of(context)!.currency}${e.y}",
-                                            TextStyle(fontSize: 8));
-                                      }).toList();
-                                    },
-                                    tooltipBgColor: Colors.transparent,
-                                    showOnTopOfTheChartBoxArea: true,
-                                    tooltipMargin: 5,
-                                  ),
-                                ),
-                                lineBarsData: [
-                                  LineChartBarData(
-                                    spots: state.monthlyExpenseList,
-                                    color: AppColors.mainColor.withOpacity(0.8),
-                                    isCurved: false,
-                                    belowBarData: BarAreaData(
-                                      show: true,
-                                      color:
-                                          AppColors.mainColor.withOpacity(0.5),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          AppColors.graphColor.withOpacity(0.2),
-                                          AppColors.graphColor
-                                              .withOpacity(0.01),
-                                        ],
-                                      ),
-                                      cutOffY: 0.0,
-                                      applyCutOffY: false,
-                                    ),
-                                    dotData: FlDotData(
-                                      show: false,
-                                    ),
-                                  ),
-                                ],
-                                minY: 0,
-                                gridData: FlGridData(show: false),
-                                titlesData: FlTitlesData(
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      getTitlesWidget: ((value, meta) {
-                                        String? month = monthMap[value];
-                                        return Text(
-                                          month.toString(),
-                                          textDirection: TextDirection.ltr,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.font_8,
-                                            color: AppColors.navSelectedColor,
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                  leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  rightTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  topTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      15.height,
-                      15.width,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.history,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.blackColor),
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: (){
-                                  bloc.add(WalletEvent.exportWalletTransactionEvent(context: context));
-
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_8),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.mainColor,
-                                        borderRadius: BorderRadius.circular(
-                                            AppConstants.radius_3)),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.export,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.whiteColor),
-                                    ),
-                                  ),
-                                ),
-                                10.width,
-                                Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_5,
-                                        vertical: AppConstants.padding_5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          AppConstants.radius_7),
-                                      border: Border.all(
-                                          color: AppColors.borderColor),
-                                      color: AppColors.whiteColor,
-                                    ),
-                                    child: Container(
-                                      width: 220,
-                                      height: 30,
-                                      child: DateRangeField(
-                                        decoration: InputDecoration(
-                                            enabledBorder: InputBorder.none,
-                                            prefixIcon:
-                                                Icon(Icons.keyboard_arrow_down),
-                                            contentPadding: EdgeInsets.all(0)),
-                                        showDateRangePicker: (
-                                            {required pickerBuilder,
-                                            required widgetContext}) {
-                                          return showDateRangePickerDialog(
-                                              context: context,
-                                              offset: Offset(65, 200),
-                                              barrierColor: AppColors.whiteColor
-                                                  .withOpacity(0.6),
-                                              builder: datePickerBuilder);
-                                        },
-                                        onDateRangeSelected:
-                                            (DateRange? value) {
-                                          bloc.add(
-                                              WalletEvent.getDateRangeEvent(
-                                                  context: context,
-                                                  range: value));
-                                          selectedDateRange = value;
-                                          //  minDate = DateTime(state.yearList.last ,1,1);
-                                        },
-                                        selectedDateRange:
-                                            state.selectedDateRange,
-                                        pickerBuilder: (BuildContext context,
-                                            dynamic Function(DateRange?)
-                                                onDateRangeChanged) {
-                                          return Text('');
-                                        },
-                                        // pickerBuilder: datePickerBuilder,
-                                      ),
-                                    )),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      10.height,
-                      SizedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 90),
-                          child: state.isShimmering
-                              ? SizedBox()
-                              : (state.balanceSheetList.data?.length) != 0
-                                  ? ListView.builder(
-                                      itemCount:
-                                          state.balanceSheetList.data?.length ??
-                                              0,
-                                      // scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          color: AppColors.whiteColor,
-                                          child: Column(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: AppConstants
-                                                            .padding_10,
-                                                        horizontal: AppConstants
-                                                            .padding_15),
-                                                child: listWidget(
-                                                    context: context,
-                                                    listIndex: index),
-                                              ),
-                                              Container(
-                                                width: double.maxFinite,
-                                                height: 1,
-                                                color: AppColors.borderColor,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container(
-                            color: Colors.red,
-                                    child: Center(
-                                        child: Text(
-                                        'No Data',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.normalFont,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w400),
-                                      )),
-                                  ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  onNotification: (notification) {
+                    if (notification.metrics.pixels ==
+                        notification.metrics.maxScrollExtent) {
+                      if ((state.balanceSheetList.metaData?.totalFilteredCount ?? 0) >
+                          state.walletTransactionsList.length) {
+                       context
+                            .read<WalletBloc>()
+                            .add(WalletEvent.getAllWalletTransactionEvent(context: context,
+                          startDate: startDate,endDate:endDate
+                        ));
+                      } else {
+                        return false;
+                      }
+                    }
+                    return true;
+                  },
+
                 ),
               ),
             ),
@@ -539,7 +583,7 @@ class WalletScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    state.balanceSheetList.data![listIndex].createdAt!
+                    state.walletTransactionsList[listIndex].createdAt!
                         .replaceRange(11, 16, '')
                         .toString(),
                     style: AppStyles.rkRegularTextStyle(
@@ -548,7 +592,7 @@ class WalletScreenWidget extends StatelessWidget {
                   ),
                   10.height,
                   Text(
-                    '${state.balanceSheetList.data![listIndex].type.toString()} : ${state.balanceSheetList.data![listIndex].id!.replaceRange(0, 18, '')}',
+                    '${state.walletTransactionsList[listIndex].type.toString()} : ${state.walletTransactionsList[listIndex].orderId}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12, color: AppColors.blueColor),
                   ),
@@ -559,13 +603,13 @@ class WalletScreenWidget extends StatelessWidget {
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
-                      state.balanceSheetList.data![listIndex].type.toString() ==
+                      state.walletTransactionsList[listIndex].type.toString() ==
                               'Order'
-                          ? '${'-'}${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}'
-                          : '${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}',
+                          ? '${'-'}${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}'
+                          : '${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color: state.balanceSheetList.data![listIndex].type
+                          color: state.walletTransactionsList[listIndex].type
                                       .toString() ==
                                   'Monthly Credits'
                               ? AppColors.mainColor
@@ -580,7 +624,7 @@ class WalletScreenWidget extends StatelessWidget {
                     child: CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
                       buttonValue:
-                          '${state.balanceSheetList.data![listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
+                          '${state.walletTransactionsList[listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
                     ),
                   ),
                 ],

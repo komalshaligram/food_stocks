@@ -1,3 +1,4 @@
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'all_wallet_transaction_res_model.freezed.dart';
 part 'all_wallet_transaction_res_model.g.dart';
@@ -29,15 +30,15 @@ class Datum with _$Datum {
     @JsonKey(name: "Username")
     String? username,
     @JsonKey(name: "orderId")
-    String? orderId,
+    int? orderId,
     @JsonKey(name: "type")
     String? type,
     @JsonKey(name: "income")
     String? income,
     @JsonKey(name: "outcome")
-    int? outcome,
+    String? outcome,
     @JsonKey(name: "balance")
-    int? balance,
+    String? balance,
     @JsonKey(name: "createdAt")
     String? createdAt,
   }) = _Datum;

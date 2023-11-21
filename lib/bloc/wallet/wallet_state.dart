@@ -5,7 +5,6 @@ class WalletState with _$WalletState {
   const factory WalletState({
     required int year,
     required List<int> yearList,
-    //required List<OrderBalance> balanceSheetList,
     required AllWalletTransactionResModel balanceSheetList,
     required String language,
     required int totalCredit,
@@ -16,7 +15,12 @@ class WalletState with _$WalletState {
     required List<FlSpot> monthlyExpenseList,
     required bool isShimmering,
     required String currentDate,
-    required DateRange? selectedDateRange
+    required DateRange? selectedDateRange,
+    required List<Datum>walletTransactionsList,
+    required int pageNum,
+    required bool isLoadMore,
+
+
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -33,6 +37,9 @@ class WalletState with _$WalletState {
       monthlyExpenseList: [],
     isShimmering: false,
     selectedDateRange: DateRange(DateTime.now(),DateTime.now()),
+    walletTransactionsList: [],
+    pageNum: 0,
+    isLoadMore: false
       );
 }
 

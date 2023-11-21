@@ -27,7 +27,7 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          BasketBloc()..add(BasketEvent.getAllCartEvent(context: context)),
+          BasketBloc()/*..add(BasketEvent.getAllCartEvent(context: context))*/,
       child: const BasketScreenWidget(),
     );
   }
@@ -47,7 +47,7 @@ class BasketScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(BasketEvent.refreshListEvent(context: context));
+                bloc.add(BasketEvent.getAllCartEvent(context: context));
               },
               child: SafeArea(
                 child: Padding(
@@ -346,7 +346,7 @@ class BasketScreenWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '${state.basketProductList[index].totalQuantity}${AppLocalizations.of(context)!.kg}',
+                '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
                 style: TextStyle(
                   color: AppColors.blackColor,
                   fontSize: AppConstants.font_12,

@@ -54,6 +54,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                mainImage: element.productDetails!.mainImage!,
                 totalPayment: element.totalAmount,
                cartProductId: element.cartProductId! ,
+                scales: element.productDetails!.scales!
               ));
             });
             print('temp______$temp');
