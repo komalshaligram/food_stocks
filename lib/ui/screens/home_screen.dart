@@ -55,6 +55,8 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
+        BlocProvider.of<BottomNavBloc>(context)
+            .add(BottomNavEvent.updateCartCountEvent());
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
