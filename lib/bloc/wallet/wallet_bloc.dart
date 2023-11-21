@@ -164,7 +164,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           emit(state.copyWith(isLoadMore: false));
         }
       } else if (event is _getDateRangeEvent) {
-        emit(state.copyWith(selectedDateRange: event.range));
+        List<Datum>temp = state.walletTransactionsList.toList(growable: true);
+        temp.clear();
+        emit(state.copyWith(selectedDateRange: event.range,walletTransactionsList: temp));
       } else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
       }

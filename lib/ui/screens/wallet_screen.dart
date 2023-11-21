@@ -102,7 +102,7 @@ class WalletScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-        /*        if((state.balanceSheetList.data?.length) == 0){
+          /*    if((state.balanceSheetList.data?.length) == 0){
                   bloc.add(
                       WalletEvent.getAllWalletTransactionEvent(
                         context: context,
@@ -448,7 +448,7 @@ class WalletScreenWidget extends StatelessWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 90),
-                              child: state.isShimmering
+                              child: (state.balanceSheetList.data?.length) == 0
                                   ? OrderSummaryScreenShimmerWidget()
                                   : (state.balanceSheetList.data?.length) != 0
                                       ? ListView.builder(
