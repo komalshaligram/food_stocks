@@ -22,7 +22,6 @@ mixin _$BottomNavEvent {
     required TResult Function() updateCartCountEvent,
   }) =>
       throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int index)? changePage,
