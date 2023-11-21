@@ -40,7 +40,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           debugPrint('CartProductsSupplierRes  = $response');
 
           if (response.status == 200) {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+          //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
            emit(state.copyWith(orderSummaryList: response));
           } else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
@@ -82,7 +82,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
           if (response.status == 201) {
             preferencesHelper.setOrderId(orderId: response.data!.id!);
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
              Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
           } else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);

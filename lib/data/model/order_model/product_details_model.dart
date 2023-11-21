@@ -8,6 +8,7 @@ class ProductDetailsModel{
    bool isProductIssue;
    bool isDelete;
   String cartProductId;
+  String scales;
 
 
   ProductDetailsModel({
@@ -18,6 +19,7 @@ class ProductDetailsModel{
     required this.totalQuantity,
     this.isDelete = false,
      this.cartProductId = '',
+    required this.scales,
 
   });
 

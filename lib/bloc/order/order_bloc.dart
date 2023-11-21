@@ -11,6 +11,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_event.dart';
@@ -26,10 +27,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       debugPrint('token___${preferencesHelper.getAuthToken()}');
 
       if(event is _getAllOrderEvent){
-        emit(state.copyWith(isShimmering: true));
+        emit(state.copyWith(
+            isShimmering: state.pageNum == 0 ? true : false,
+            isLoadMore: state.pageNum == 0 ? false : true));
         try {
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
-      orderId: preferencesHelper.getOrderId()
+    //  orderId: preferencesHelper.getOrderId(),
+            pageNum: state.pageNum + 1,
+            pageLimit: AppConstants.oderPageLimit,
           );
           debugPrint('OrderSendReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
@@ -46,13 +51,19 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           debugPrint('OrderSendResModel  = $response');
 
           if (response.status == 200) {
-            emit(state.copyWith(orderList: response,isShimmering: false));
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            List<Datum> orderList = state.orderDetailsList.toList(growable: true);
+            orderList.addAll(response.data ?? []);
+            emit(state.copyWith(orderDetailsList: orderList,isShimmering: false, pageNum: state.pageNum + 1,isLoadMore: false,
+            orderList: response
+            ));
+           // showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           } else {
-
+            emit(state.copyWith(isLoadMore: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
-        }  on ServerException {}
+        }  on ServerException {
+          emit(state.copyWith(isLoadMore: false));
+        }
       }
 
     });

@@ -74,4 +74,5 @@ class AppConstants{
   static const int qnaPageLimit = 10;
   static const int messagePageLimit = 10;
   static const int appContentPageLimit = 20;
+  static const int oderPageLimit = 10;
 }
