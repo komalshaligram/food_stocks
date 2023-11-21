@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/company_screen/company_bloc.dart';
+import 'package:food_stock/bloc/company/company_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
@@ -84,13 +86,24 @@ class CompanyScreenWidget extends StatelessWidget {
                               itemBuilder: (context, index) =>
                                   buildCompanyListItem(
                                       context: context,
-                                      companyLogo: state.companiesList[index]
-                                              .brandLogo ??
+                                      companyLogo: state
+                                              .companiesList[index].brandLogo ??
                                           '',
                                       companyName: state
                                               .companiesList[index].brandName ??
                                           '',
-                                      onTap: () {}),
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context,
+                                            RouteDefine
+                                                .companyProductsScreen.name,
+                                            arguments: {
+                                              AppStrings.companyIdString: state
+                                                      .companiesList[index]
+                                                      .id ??
+                                                  ''
+                                            });
+                                      }),
                             ),
                   state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
                 ],

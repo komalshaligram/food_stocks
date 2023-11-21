@@ -61,4 +61,5 @@ class AppUrls {
   static const String getAllAppContentsUrl =
       '/v1/client/contents/getAllContents';
   static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
+  static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
 }

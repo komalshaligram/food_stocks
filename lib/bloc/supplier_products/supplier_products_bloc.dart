@@ -40,6 +40,9 @@ class SupplierProductsBloc
         emit(state.copyWith(supplierId: event.supplierId));
         debugPrint('supplier id = ${state.supplierId}');
       } else if (event is _GetSupplierProductsListEvent) {
+        if (state.isLoadMore) {
+          return;
+        }
         if (state.isBottomOfProducts) {
           return;
         }

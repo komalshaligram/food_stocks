@@ -78,12 +78,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 searchList: searchList,
                 isShimmering: false));
           } else {
+            emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        }
       } else if (event is _ChangeSearchListEvent) {
         emit(state.copyWith(searchList: event.newSearchList));
       } else if (event is _GetProductSalesListEvent) {
@@ -100,7 +103,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: saleProduct.numberOfUnit ?? 0)) ??
+                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
                 []);
             productStockList.add(ProductStockModel(productId: ''));
             emit(state.copyWith(
@@ -108,12 +111,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 productStockList: productStockList,
                 isShimmering: false));
           } else {
+            emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        }
       } else if (event is _GetSuppliersListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -127,12 +133,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
             emit(state.copyWith(suppliersList: response, isShimmering: false));
           } else {
+            emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        }
       } else if (event is _GetCompaniesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -148,12 +157,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 companiesList: response.data?.brandList ?? [],
                 isShimmering: false));
           } else {
+            emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        }
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {

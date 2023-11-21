@@ -9,7 +9,7 @@ class BasketEvent with _$BasketEvent {
     required String supplierId,
     required String productId,
     required String cartProductId,
-}) = _productUpdateEvent;
+  }) = _productUpdateEvent;
 
   const factory BasketEvent.removeCartProductEvent({
     required int listIndex,
@@ -17,15 +17,15 @@ class BasketEvent with _$BasketEvent {
     required String cartProductId,
   }) = _removeCartProductEvent;
 
-  const factory BasketEvent.getAllCartEvent({
-    required BuildContext context
-}) = _getAllCartEvent;
+  const factory BasketEvent.getAllCartEvent({required BuildContext context}) =
+      _getAllCartEvent;
 
-  const factory BasketEvent.clearCartEvent({
-    required BuildContext context
-  }) = _clearCartEvent;
+  const factory BasketEvent.clearCartEvent({required BuildContext context}) =
+      _clearCartEvent;
 
-  const factory BasketEvent.refreshListEvent({
-    required BuildContext context
-  }) = _refreshListEvent;
+  const factory BasketEvent.refreshListEvent({required BuildContext context}) =
+      _refreshListEvent;
+
+  const factory BasketEvent.setCartCountEvent({required bool isClearCart}) =
+      _SetCartCountEvent;
 }

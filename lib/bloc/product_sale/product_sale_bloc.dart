@@ -61,7 +61,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: saleProduct.numberOfUnit ?? 0)) ??
+                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
                 []);
             debugPrint('new product sale list len = ${productSaleList.length}');
             debugPrint(

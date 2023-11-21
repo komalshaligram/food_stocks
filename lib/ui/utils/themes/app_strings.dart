@@ -45,6 +45,7 @@ class AppStrings {
   static const clientDetailString = 'clientDetail';
   static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
+  static const companyIdString = 'companyId';
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
   static const cartProductIdString = 'cartProductId';
@@ -97,7 +98,7 @@ class AppStrings {
   static const downloadString = 'Download successfully!';
   static const downloadFailedString = 'Failed to download';
   static const docDownloadAllowPermissionString =
-      'Please allow permission from settings';
+      'Please allow storage permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
   static const openingTimeAfterPreviousClosingString =
       'Please select opening time after previous closing time';

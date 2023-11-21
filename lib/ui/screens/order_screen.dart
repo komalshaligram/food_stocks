@@ -132,7 +132,7 @@ class OrderScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    state.orderDetailsList[index].orderNumber.toString() ?? '',
+                    state.orderDetailsList[index].orderNumber.toString(),
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.normalFont,
                         color: AppColors.blackColor,
@@ -189,8 +189,7 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.products,
-                    value:
-                        state.orderDetailsList[index].products.toString() ?? '',
+                    value: state.orderDetailsList[index].products.toString(),
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,
@@ -199,8 +198,7 @@ class OrderScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.suppliers,
-                    value: state.orderDetailsList[index].suppliers.toString() ??
-                        '',
+                    value: state.orderDetailsList[index].suppliers.toString(),
                     titleColor: AppColors.blackColor,
                     valueColor: AppColors.blackColor,
                     valueTextSize: AppConstants.smallFont,

@@ -66,6 +66,13 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
+                if (state.productSalesList.data?.isEmpty ?? true) {
+                  bloc.add(
+                      HomeEvent.getProductSalesListEvent(context: context));
+                }
+                if (state.messageList.isEmpty) {
+                  bloc.add(HomeEvent.getMessageListEvent(context: context));
+                }
               },
               child: SafeArea(
                 child: Column(
@@ -135,21 +142,34 @@ class HomeScreenWidget extends StatelessWidget {
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
                                     ? CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
-                                            decoration: BoxDecoration(
-                                                color: AppColors.whiteColor,
-                                                border: Border.all(
-                                                    color: AppColors.borderColor
-                                                        .withOpacity(0.5),
-                                                    width: 1)),
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                                height: 50,
-                                                width: getScreenWidth(context) *
-                                                    0.35,
+                                        placeholder: (context, url) =>
+                                            Container(
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.whiteColor,
+                                                    border: Border.all(
+                                                        color: AppColors
+                                                            .borderColor
+                                                            .withOpacity(0.5),
+                                                        width: 1),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: AppColors
+                                                              .shadowColor
+                                                              .withOpacity(
+                                                                  0.15),
+                                                          blurRadius:
+                                                              AppConstants
+                                                                  .blur_10)
+                                                    ]),
                                                 alignment: Alignment.center,
-                                                child:
-                                                    const CupertinoActivityIndicator())),
+                                                child: Container(
+                                                    height: 50,
+                                                    width: getScreenWidth(
+                                                            context) *
+                                                        0.35,
+                                                    alignment: Alignment.center,
+                                                    child:
+                                                        const CupertinoActivityIndicator())),
                                         imageUrl:
                                             '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
                                         height: 50,
@@ -163,10 +183,18 @@ class HomeScreenWidget extends StatelessWidget {
                                           return Container(
                                             decoration: BoxDecoration(
                                                 color: AppColors.whiteColor,
-                                                border: Border.all(
-                                                    color: AppColors.borderColor
-                                                        .withOpacity(0.5),
-                                                    width: 1)),
+                                                // border: Border.all(
+                                                //     color: AppColors.borderColor
+                                                //         .withOpacity(0.5),
+                                                //     width: 1),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: AppColors
+                                                          .shadowColor
+                                                          .withOpacity(0.15),
+                                                      blurRadius:
+                                                          AppConstants.blur_10)
+                                                ]),
                                             alignment: Alignment.center,
                                           );
                                         },
@@ -389,7 +417,7 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            state.isShimmering
+                            state.isProductSaleShimmering
                                 ? 0.width
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -437,12 +465,11 @@ class HomeScreenWidget extends StatelessWidget {
                                                           .data?[index]
                                                           .salesDescription ??
                                                       '',
-                                                  price: state
+                                                  price: double.parse(state
                                                           .productSalesList
                                                           .data?[index]
-                                                          .discountPercentage
-                                                          ?.toDouble() ??
-                                                      0.0,
+                                                          .discountPercentage ??
+                                                      '0.0'),
                                                   onButtonTap: () {
                                                     showProductDetails(
                                                         context: context,
@@ -673,7 +700,7 @@ class HomeScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                  "${price.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -877,6 +904,7 @@ class HomeScreenWidget extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                3.height,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
@@ -173,26 +172,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_5),
                       gridDelegate:
-                      SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 9 / 11),
-                      itemBuilder: (context, index) =>
-                          buildSupplierProducts(
-                              context: context,
-                              index: index,
-                              isRTL: isRTLContent(context: context)),
-                    ),
-                    state.isLoadMore
-                        ? Container(
-                      height: 50,
-                      width: double.maxFinite,
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.blackColor,
-                      ),
-                    )
-                        : 0.width,
-                  ],
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 3,
+                                          childAspectRatio: 9 / 11),
+                                  itemBuilder: (context, index) =>
+                                      buildSupplierProducts(
+                                          context: context,
+                                          index: index,
+                                          isRTL:
+                                              isRTLContent(context: context)),
+                                ),
+                      state.isLoadMore
+                          ? SupplierProductsScreenShimmerWidget()
+                          : 0.width,
+                    ],
                 ),
               ),
               onNotification: (notification) {

@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
@@ -27,7 +28,7 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          BasketBloc()/*..add(BasketEvent.getAllCartEvent(context: context))*/,
+          BasketBloc()..add(BasketEvent.getAllCartEvent(context: context)),
       child: const BasketScreenWidget(),
     );
   }
@@ -40,7 +41,10 @@ class BasketScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BasketBloc bloc = context.read<BasketBloc>();
     return BlocListener<BasketBloc, BasketState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        BlocProvider.of<BottomNavBloc>(context)
+            .add(BottomNavEvent.updateCartCountEvent());
+      },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
           return Scaffold(
@@ -221,8 +225,17 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
-                      state.isShimmering
-                          ? BasketScreenShimmerWidget()
+                      state.isShimmering && state.basketProductList.isEmpty
+                          ? /*BasketScreenShimmerWidget()*/ Expanded(
+                              child: Center(
+                                  child: Text(
+                                'Your cart is empty',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.normalFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                            )
                           : (state.basketProductList.length) != 0
                               ? Expanded(
                                   child: Padding(

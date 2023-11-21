@@ -40,7 +40,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
       listener: (context, state) {
-        bloc.add(BottomNavEvent.updateCartCountEvent());
+        // bloc.add(BottomNavEvent.updateCartCountEvent());
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {

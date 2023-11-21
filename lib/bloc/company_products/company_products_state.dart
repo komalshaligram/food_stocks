@@ -1,9 +1,9 @@
-part of 'supplier_products_bloc.dart';
+part of 'company_products_bloc.dart';
 
 @freezed
-class SupplierProductsState with _$SupplierProductsState {
-  const factory SupplierProductsState({
-    required String supplierId,
+class CompanyProductsState with _$CompanyProductsState {
+  const factory CompanyProductsState({
+    required String companyId,
     required List<Datum> productList,
     required bool isShimmering,
     required bool isLoading,
@@ -16,10 +16,10 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isBottomOfProducts,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
-  }) = _SupplierProductsState;
+  }) = _CompanyProductsState;
 
-  factory SupplierProductsState.initial() => SupplierProductsState(
-        supplierId: '',
+  factory CompanyProductsState.initial() => CompanyProductsState(
+        companyId: '',
         productList: [],
         isShimmering: false,
         isLoading: false,

@@ -1045,33 +1045,25 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     context.read<StoreCategoryBloc>().add(
                                         StoreCategoryEvent
                                             .increaseQuantityOfProduct(
-                                            context: context1));
+                                                context: context1));
                                   },
-                              onQuantityDecreaseTap: () {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent
-                                        .decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: TextEditingController(text: state
-                                  .productStockList[planoGramIndex][state
-                                  .productStockUpdateIndex].note)
-                                ..selection = TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset: state.productStockList[state
-                                            .planoGramUpdateIndex][state
-                                            .productStockUpdateIndex].note
-                                            .length)),
-                              onNoteChanged: (newNote) {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent.changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context.read<StoreCategoryBloc>().add(
+                                  onQuantityDecreaseTap: () {
+                                    context.read<StoreCategoryBloc>().add(
+                                        StoreCategoryEvent
+                                            .decreaseQuantityOfProduct(
+                                                context: context1));
+                                  },
+                                  noteController: TextEditingController(text: state.productStockList[planoGramIndex][state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<StoreCategoryBloc>().add(
+                                        StoreCategoryEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  isLoading: state.isLoading,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<StoreCategoryBloc>().add(
                                               StoreCategoryEvent
                                                   .addToCartProductEvent(
                                                       context: context1));
@@ -1270,14 +1262,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: subCategoryName?.isEmpty ?? true
-                ? null
-                : () {
-                    debugPrint('cate');
-                    BlocProvider.of<StoreCategoryBloc>(context).add(
-                        StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
-                            isSubCategory: true, context: context));
-                  },
+            onTap: () {
+              if (!(subCategoryName?.isEmpty ?? true)) {
+                debugPrint('cate');
+                BlocProvider.of<StoreCategoryBloc>(context).add(
+                    StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+                        isSubCategory: true, context: context));
+              }
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

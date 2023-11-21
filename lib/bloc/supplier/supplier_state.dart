@@ -11,7 +11,7 @@ class SupplierState with _$SupplierState {
   }) = _SupplierState;
 
   factory SupplierState.initial() => const SupplierState(
-    suppliersList: [],
+        suppliersList: [],
         isShimmering: false,
         pageNum: 0,
         isLoadMore: false,
