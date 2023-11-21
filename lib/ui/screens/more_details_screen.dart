@@ -84,7 +84,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Text(
-                AppLocalizations.of(context)!.more_details,
+                AppLocalizations.of(context).more_details,
                 style: AppStyles.rkRegularTextStyle(
                     size: 16, color: Colors.black),
               ),
@@ -108,7 +108,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                             children: [
                         10.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.city,
+                          name: AppLocalizations.of(context).city,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -146,7 +146,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                   Container(
                                                     child: Text(
                                                         AppLocalizations.of(
-                                                                context)!
+                                                                context)
                                                             .city,
                                                         style: AppStyles
                                                             .rkRegularTextStyle(
@@ -184,7 +184,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 keyboardType:
                                                     TextInputType.text,
                                                 hint: AppLocalizations.of(
-                                                        context)!
+                                                        context)
                                                     .city,
                                                 fillColor: AppColors.whiteColor,
                                                 textInputAction:
@@ -282,21 +282,21 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.full_address,
+                          name: AppLocalizations.of(context).full_address,
                         ),
                         CustomFormField(
                           controller: state.addressController,
                           inputformet: [/*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
-                          hint: AppLocalizations.of(context)!.address,
+                          hint: AppLocalizations.of(context).address,
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.next,
                           validator: AppStrings.addressValString,
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.email,
+                          name: AppLocalizations.of(context).email,
                         ),
                         CustomFormField(
                           controller: state.emailController,
@@ -310,21 +310,21 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.fax,
+                          name: AppLocalizations.of(context).fax,
                         ),
                         CustomFormField(
                           controller: state.faxController,
                           inputformet: [/*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.number,
-                          hint: AppLocalizations.of(context)!.fax,
+                          hint: AppLocalizations.of(context).fax,
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.done,
                           validator: AppStrings.faxValString,
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.logo_image,
+                          name: AppLocalizations.of(context).logo_image,
                           star: '',
                         ),
                         Container(
@@ -372,7 +372,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                     children: [
                                                             Text(
                                                               AppLocalizations.of(
-                                                                      context)!
+                                                                      context)
                                                                   .upload_photo,
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
@@ -386,7 +386,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                             30.height,
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)!
+                                                                        context)
                                                                     .camera,
                                                                 icon: Icons
                                                                     .camera_alt_rounded,
@@ -401,7 +401,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                 }),
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)!
+                                                                        context)
                                                                     .gallery,
                                                                 icon:
                                                                     Icons.photo,
@@ -509,7 +509,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .upload_photo,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
@@ -529,7 +529,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .upload_photo,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
@@ -549,8 +549,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                         50.height,
                         CustomButtonWidget(
                           buttonText: state.isUpdate
-                              ? AppLocalizations.of(context)!.save.toUpperCase()
-                              : AppLocalizations.of(context)!
+                              ? AppLocalizations.of(context).save.toUpperCase()
+                              : AppLocalizations.of(context)
                                   .next
                                   .toUpperCase(),
                           bGColor: AppColors.mainColor,
@@ -606,7 +606,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               bottom: AppConstants.padding_30),
           title: Align(
               alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context)!.upload_photo)),
+              child: Text(AppLocalizations.of(context).upload_photo)),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -632,8 +632,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(AppLocalizations.of(context)!.camera),
-                Text(AppLocalizations.of(context)!.gallery),
+                Text(AppLocalizations.of(context).camera),
+                Text(AppLocalizations.of(context).gallery),
               ],
             ),
           ],

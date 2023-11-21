@@ -38,7 +38,7 @@ class MessageContentScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.message,
+                title: AppLocalizations.of(context).message,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);
@@ -47,7 +47,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {},
                     child: Text(
-                      AppLocalizations.of(context)!.delete,
+                      AppLocalizations.of(context).delete,
                       style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.mainColor,

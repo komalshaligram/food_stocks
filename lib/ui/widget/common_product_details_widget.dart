@@ -201,7 +201,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   //                 MainAxisAlignment.spaceBetween,
                   //                 children: [
                   //                   Text(
-                  //                     AppLocalizations.of(context)!.suppliers,
+                  //                     AppLocalizations.of(context).suppliers,
                   //                     style: AppStyles.rkRegularTextStyle(
                   //                         size: AppConstants.smallFont,
                   //                         color: AppColors.mainColor,
@@ -315,7 +315,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   //                     MainAxisAlignment.spaceBetween,
                   //                 children: [
                   //                   Text(
-                  //                     AppLocalizations.of(context)!.suppliers,
+                  //                     AppLocalizations.of(context).suppliers,
                   //                     style: AppStyles.rkRegularTextStyle(
                   //                         size: AppConstants.smallFont,
                   //                         color: AppColors.mainColor,
@@ -458,7 +458,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '$productPrice${AppLocalizations.of(context)!.currency}',
+                                      '$productPrice${AppLocalizations.of(context).currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
                                           color: AppColors.blackColor,
@@ -602,7 +602,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.note,
+                                    AppLocalizations.of(context).note,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.font_14,
                                         color: AppColors.blackColor),
@@ -635,7 +635,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   const EdgeInsets.all(AppConstants.padding_20),
                               child: CommonProductButtonWidget(
                                 title:
-                                    AppLocalizations.of(context)!.add_to_order,
+                                    AppLocalizations.of(context).add_to_order,
                                 isLoading: isLoading,
                                 onPressed: onAddToOrderPressed,
                                 width: double.maxFinite,

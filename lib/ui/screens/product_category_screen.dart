@@ -47,7 +47,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context)!.categories,
+              title: AppLocalizations.of(context).categories,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);

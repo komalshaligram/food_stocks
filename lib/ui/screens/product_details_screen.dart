@@ -85,7 +85,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 0
                             ? CupertinoActivityIndicator()
                             : CircularButtonWidget(
-                                buttonName: AppLocalizations.of(context)!.total,
+                                buttonName: AppLocalizations.of(context).total,
                                 buttonValue:
                                     '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context).currency}',
                               ),
@@ -192,10 +192,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   5.width,
                                   CommonOrderContentWidget(
                                     flexValue: 2,
-                                    title: AppLocalizations.of(context)!
+                                    title: AppLocalizations.of(context)
                                         .total_order,
                                     value:
-                                        '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                                        '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context).currency}',
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
                                     valueTextWeight: FontWeight.w500,
@@ -206,7 +206,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               7.height,
                               RichText(
                                 text: TextSpan(
-                                  text: AppLocalizations.of(context)!
+                                  text: AppLocalizations.of(context)
                                       .supplier_order_number,
                                   style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.blackColor,
@@ -224,7 +224,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               ),
                               7.height,
                               Text(
-                                AppLocalizations.of(context)!.driver_name,
+                                AppLocalizations.of(context).driver_name,
                                 style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.font_14,
                                   color: AppColors.blackColor,
@@ -302,7 +302,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               vertical: AppConstants.padding_5,
                               horizontal: AppConstants.padding_15),
                           child: Text(
-                            AppLocalizations.of(context)!.order_products_list,
+                            AppLocalizations.of(context).order_products_list,
                             style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.blackColor,
@@ -389,7 +389,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .data!.ordersBySupplier![productIndex].id
                               });
                   },
-                  buttonText: AppLocalizations.of(context)!.next,
+                  buttonText: AppLocalizations.of(context).next,
                   bGColor: AppColors.mainColor,
                 ),
               ),
@@ -462,14 +462,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].itemWeight.toString() + AppLocalizations.of(context)!.kg}',
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].itemWeight.toString() + AppLocalizations.of(context).kg}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
                 ),
               ),
               Text(
-                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context).currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,
@@ -529,7 +529,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               BorderRadius.circular(AppConstants.radius_3),
                         ),
                         child: Text(
-                          AppLocalizations.of(context)!.product_issue,
+                          AppLocalizations.of(context).product_issue,
                           style: AppStyles.rkRegularTextStyle(
                               color: state.productListIndex.contains(index)
                                   ? AppColors.whiteColor
@@ -603,7 +603,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       child: Icon(Icons.close)),
                                   10.width,
                                   Text(
-                                    AppLocalizations.of(context)!.product_issue,
+                                    AppLocalizations.of(context).product_issue,
                                     style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.blackColor,
@@ -649,7 +649,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //10.width,
                                   Text(
-                                    '${weight.toString()}${AppLocalizations.of(context)!.kg}',
+                                    '${weight.toString()}${AppLocalizations.of(context).kg}',
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
                                       size: AppConstants.font_12,
@@ -657,7 +657,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //  10.width,
                                   Text(
-                                    '${price.toString() + AppLocalizations.of(context)!.currency}',
+                                    '${price.toString() + AppLocalizations.of(context).currency}',
                                     style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
                                         size: AppConstants.font_14,
@@ -668,7 +668,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             ),
                             20.height,
                             Text(
-                              AppLocalizations.of(context)!.problem_detected,
+                              AppLocalizations.of(context).problem_detected,
                               style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.blackColor,
@@ -677,21 +677,21 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             20.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)!
+                                problem: AppLocalizations.of(context)
                                     .the_product_did_not_arrive_at_all,
                                 value: 1,
                                 listIndex: listIndex),
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)!
+                                problem: AppLocalizations.of(context)
                                     .product_arrived_damaged,
                                 value: 2,
                                 listIndex: listIndex),
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)!
+                                problem: AppLocalizations.of(context)
                                     .the_product_arrived_missing,
                                 value: 3,
                                 weight: weight,
@@ -699,7 +699,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)!
+                                problem: AppLocalizations.of(context)
                                     .another_product_problem,
                                 value: 4,
                                 listIndex: listIndex),
@@ -712,16 +712,16 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         supplierId: supplierId,
                                         productId: productId,
                                         issue: state.selectedRadioTile == 1
-                                            ? AppLocalizations.of(context)!
+                                            ? AppLocalizations.of(context)
                                                 .the_product_did_not_arrive_at_all
                                             : state.selectedRadioTile == 2
-                                                ? AppLocalizations.of(context)!
+                                                ? AppLocalizations.of(context)
                                                     .product_arrived_damaged
                                                 : state.selectedRadioTile == 3
                                                     ? AppLocalizations.of(
-                                                            context)!
+                                                            context)
                                                         .the_product_arrived_missing
-                                                    : state.selectedRadioTile == 4 ? '${AppLocalizations.of(context)!.another_product_problem} ${' : '}${addProblemController}' : '',
+                                                    : state.selectedRadioTile == 4 ? '${AppLocalizations.of(context).another_product_problem} ${' : '}${addProblemController}' : '',
                                         missingQuantity:
                                             state.selectedRadioTile == 3
                                                 ? state.productWeight
@@ -738,7 +738,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   color: AppColors.pageColor,
                                   child: CustomButtonWidget(
                                     buttonText:
-                                        AppLocalizations.of(context)!.save,
+                                        AppLocalizations.of(context).save,
                                     bGColor: AppColors.mainColor,
                                   ),
                                 ),
@@ -853,7 +853,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   : 8.width,
                               value == 3
                                   ? Text(
-                                      '${weight.toString() + AppLocalizations.of(context)!.kg}',
+                                      '${weight.toString() + AppLocalizations.of(context).kg}',
                                       style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
                                         size: AppConstants.font_12,
@@ -904,7 +904,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         keyboardType: state.selectedRadioTile == 4
                             ? TextInputType.text
                             : TextInputType.none,
-                        hint: AppLocalizations.of(context)!.add_text,
+                        hint: AppLocalizations.of(context).add_text,
                         maxLines: 5,
                         isBorderVisible: false,
                         textInputAction: TextInputAction.done,

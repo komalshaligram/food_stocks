@@ -121,7 +121,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                   0
                                               ? CupertinoActivityIndicator()
                                               : Text(
-                                                  '${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}${' : '}${AppLocalizations.of(context)!.total}',
+                                                  '${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context).currency}${' : '}${AppLocalizations.of(context).total}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                           size: getScreenWidth(
@@ -176,7 +176,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                         : Radius.circular(AppConstants.radius_25),
                                                     topRight: isRTLContent(context: context) ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
                                             child: Text(
-                                              AppLocalizations.of(context)!
+                                              AppLocalizations.of(context)
                                                   .submit,
                                               style:
                                                   AppStyles.rkRegularTextStyle(
@@ -206,7 +206,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           ),
                                           10.width,
                                           Text(
-                                            AppLocalizations.of(context)!.empty,
+                                            AppLocalizations.of(context).empty,
                                             style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.smallFont,
                                               color: AppColors.greyColor,
@@ -346,7 +346,7 @@ class BasketScreenWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '${state.basketProductList[index].totalQuantity}${AppLocalizations.of(context)!.kg}',
+                '${state.basketProductList[index].totalQuantity}${AppLocalizations.of(context).kg}',
                 style: TextStyle(
                   color: AppColors.blackColor,
                   fontSize: AppConstants.font_12,
@@ -385,7 +385,7 @@ class BasketScreenWidget extends StatelessWidget {
               Container(
                 width: 70,
                 child: Text(
-                  '${state.basketProductList[index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
+                  '${state.basketProductList[index].totalPayment.toString() + AppLocalizations.of(context).currency}',
                   style: TextStyle(
                       color: AppColors.blackColor,
                       fontSize: AppConstants.font_14,

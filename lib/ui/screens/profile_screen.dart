@@ -88,7 +88,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Text(
-                AppLocalizations.of(context)!.business_details,
+                AppLocalizations.of(context).business_details,
                 style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
                   color: Colors.black,
@@ -135,7 +135,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              AppLocalizations.of(context)!
+                                              AppLocalizations.of(context)
                                                   .upload_photo,
                                               style:
                                                   AppStyles.rkRegularTextStyle(
@@ -149,7 +149,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                             30.height,
                                             FileSelectionOptionWidget(
                                                 title: AppLocalizations.of(
-                                                        context)!
+                                                        context)
                                                     .camera,
                                                 icon: Icons.camera_alt_rounded,
                                                 onTap: () {
@@ -167,7 +167,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                             ),
                                             FileSelectionOptionWidget(
                                                 title: AppLocalizations.of(
-                                                        context)!
+                                                        context)
                                                     .gallery,
                                                 icon: Icons.photo,
                                                 onTap: () {
@@ -193,7 +193,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               //       title: Align(
                               //           alignment: Alignment.center,
                               //           child: Text(
-                              //               AppLocalizations.of(context)!
+                              //               AppLocalizations.of(context)
                               //                   .upload_photo)),
                               //       actions: [
                               //         Row(
@@ -230,9 +230,9 @@ class ProfileScreenWidget extends StatelessWidget {
                               //           mainAxisAlignment:
                               //               MainAxisAlignment.spaceAround,
                               //           children: [
-                              //             Text(AppLocalizations.of(context)!
+                              //             Text(AppLocalizations.of(context)
                               //                 .camera),
-                              //             Text(AppLocalizations.of(context)!
+                              //             Text(AppLocalizations.of(context)
                               //                 .gallery),
                               //           ],
                               //         ),
@@ -350,14 +350,14 @@ class ProfileScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context1),
                           alignment: Alignment.center,
                           child: Text(
-                            AppLocalizations.of(context)!.profile_picture,
+                            AppLocalizations.of(context).profile_picture,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_14,
                                 color: AppColors.textColor),
                           ),
                         ),
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.type_of_business,
+                          name: AppLocalizations.of(context).type_of_business,
                         ),
                         SizedBox(
                           // height: AppConstants.textFormFieldHeight,
@@ -415,7 +415,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.business_name,
+                          name: AppLocalizations.of(context).business_name,
                         ),
                         CustomFormField(
                           controller: state.businessNameController,
@@ -425,14 +425,14 @@ class ProfileScreenWidget extends StatelessWidget {
                                 RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
                           keyboardType: TextInputType.text,
                           hint:
-                              "" /*AppLocalizations.of(context)!.life_grocery_store*/,
+                              "" /*AppLocalizations.of(context).life_grocery_store*/,
                           fillColor: Colors.transparent,
                           textInputAction: TextInputAction.next,
                           validator: AppStrings.businessNameValString,
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.business_id,
+                          name: AppLocalizations.of(context).business_id,
                         ),
                         CustomFormField(
                           controller: state.hpController,
@@ -446,7 +446,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.name_of_owner,
+                          name: AppLocalizations.of(context).name_of_owner,
                         ),
                         CustomFormField(
                           controller: state.ownerNameController,
@@ -460,7 +460,7 @@ class ProfileScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.israel_id,
+                          name: AppLocalizations.of(context).israel_id,
                         ),
                         CustomFormField(
                           controller: state.idController,
@@ -483,7 +483,7 @@ class ProfileScreenWidget extends StatelessWidget {
                           validator: AppStrings.idValString,
                         ),
                         CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.contact_name,
+                          name: AppLocalizations.of(context).contact_name,
                         ),
                         7.height,
                         CustomFormField(
@@ -498,8 +498,8 @@ class ProfileScreenWidget extends StatelessWidget {
                         40.height,
                         CustomButtonWidget(
                           buttonText: state.isUpdate
-                              ? AppLocalizations.of(context)!.save.toUpperCase()
-                              : AppLocalizations.of(context)!
+                              ? AppLocalizations.of(context).save.toUpperCase()
+                              : AppLocalizations.of(context)
                                   .next
                                   .toUpperCase(),
                           bGColor: AppColors.mainColor,
@@ -564,7 +564,7 @@ class ProfileScreenWidget extends StatelessWidget {
              return AlertDialog(
                title: Align(
                  alignment: Alignment.center,
-                   child: Text(AppLocalizations.of(context)!.upload_photo)),
+                   child: Text(AppLocalizations.of(context).upload_photo)),
 
                actions: [
                  Row(
@@ -589,8 +589,8 @@ class ProfileScreenWidget extends StatelessWidget {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                    children: [
-                   Text(AppLocalizations.of(context)!.camera),
-                     Text(AppLocalizations.of(context)!.gallery),
+                   Text(AppLocalizations.of(context).camera),
+                     Text(AppLocalizations.of(context).gallery),
                    ],
                  ),
 

@@ -63,7 +63,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                           AppImagePath.successIcon,
                         ),
                         Text(
-                          AppLocalizations.of(context)!.order_sent_successfully,
+                          AppLocalizations.of(context).order_sent_successfully,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_22,
                               color: AppColors.blackColor,
@@ -98,7 +98,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context)!.balance_status,
+                                  AppLocalizations.of(context).balance_status,
                                   style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor,
@@ -123,20 +123,20 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                     child: DashBoardStatsWidget(
                                         context: context,
                                         image: AppImagePath.credits,
-                                        title: AppLocalizations.of(context)!
+                                        title: AppLocalizations.of(context)
                                             .total_credit,
                                         value:
-                                            '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.totalCredit}${AppLocalizations.of(context).currency}'),
                                   ),
                                   10.width,
                                   Flexible(
                                     child: DashBoardStatsWidget(
                                         context: context,
                                         image: AppImagePath.expense,
-                                        title: AppLocalizations.of(context)!
+                                        title: AppLocalizations.of(context)
                                             .this_months_expenses,
                                         value:
-                                            '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.thisMonthExpense}${AppLocalizations.of(context).currency}'),
                                   ),
                                 ],
                               ),
@@ -147,17 +147,17 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                     child: DashBoardStatsWidget(
                                         context: context,
                                         image: AppImagePath.expense,
-                                        title: AppLocalizations.of(context)!
+                                        title: AppLocalizations.of(context)
                                             .last_months_expenses,
                                         value:
-                                            '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.lastMonthExpense}${AppLocalizations.of(context).currency}'),
                                   ),
                                   10.width,
                                   Flexible(
                                     child: DashBoardStatsWidget(
                                         context: context,
                                         image: AppImagePath.orders,
-                                        title: AppLocalizations.of(context)!
+                                        title: AppLocalizations.of(context)
                                             .this_months_orders,
                                         value: '${state.orderThisMonth}'),
                                   ),
@@ -209,7 +209,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(AppConstants.radius_40)),
                     child: Text(
-                      AppLocalizations.of(context)!.back_to_home_page,
+                      AppLocalizations.of(context).back_to_home_page,
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.normalFont,
                           color: AppColors.whiteColor,

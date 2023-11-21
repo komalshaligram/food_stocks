@@ -34,7 +34,7 @@ class BalanceIndicator extends StatelessWidget {
               GaugeAnnotation(
                 angle: 270,
                 widget: Text(
-                  '$balance\n${AppLocalizations.of(context)!.currency}',
+                  '$balance\n${AppLocalizations.of(context).currency}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_14,
                       color: AppColors.blackColor,

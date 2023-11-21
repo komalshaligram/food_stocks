@@ -76,7 +76,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               leadingWidth: 60,
-              title: Text(AppLocalizations.of(context)!.forms_files,
+              title: Text(AppLocalizations.of(context).forms_files,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       fontWeight: FontWeight.w400,
@@ -152,10 +152,10 @@ class FileUploadScreenWidget extends StatelessWidget {
                             40.height,
                             CustomButtonWidget(
                               buttonText: state.isUpdate
-                                  ? AppLocalizations.of(context)!
+                                  ? AppLocalizations.of(context)
                                       .save
                                       .toUpperCase()
-                                  : AppLocalizations.of(context)!
+                                  : AppLocalizations.of(context)
                                       .next
                                       .toUpperCase(),
                               fontColors: AppColors.whiteColor,
@@ -173,7 +173,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 ? 0.width
                                 : CustomButtonWidget(
                                     buttonText:
-                                        AppLocalizations.of(context)!.skip,
+                                        AppLocalizations.of(context).skip,
                                     fontColors: AppColors.mainColor,
                                     borderColor: AppColors.mainColor,
                                     onPressed: () async {
@@ -235,7 +235,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                 ),
                 isDownloadable /* && url.isNotEmpty*/
                     ? ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.download,
+                        buttonText: AppLocalizations.of(context).download,
                         fontSize: AppConstants.smallFont,
                         radius: AppConstants.radius_5,
                         bGColor: AppColors.blueColor,
@@ -282,7 +282,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.upload_photo,
+                                    AppLocalizations.of(context).upload_photo,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
@@ -291,7 +291,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   30.height,
                                   FileSelectionOptionWidget(
                                       title:
-                                          AppLocalizations.of(context)!.camera,
+                                          AppLocalizations.of(context).camera,
                                       icon: Icons.camera_alt_rounded,
                                       onTap: () {
                                         context.read<FileUploadBloc>().add(
@@ -310,7 +310,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   ),
                                   FileSelectionOptionWidget(
                                       title:
-                                          AppLocalizations.of(context)!.gallery,
+                                          AppLocalizations.of(context).gallery,
                                       icon: Icons.photo,
                                       onTap: () {
                                         context.read<FileUploadBloc>().add(
@@ -351,7 +351,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                             ),
                                             FileSelectionOptionWidget(
                                                 title: AppLocalizations.of(
-                                                        context)!
+                                                        context)
                                                     .remove,
                                                 icon: Icons.delete,
                                                 onTap: () {
@@ -462,7 +462,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     size: 30,
                                   ),
                                   Text(
-                                    AppLocalizations.of(context)!.upload_photo,
+                                    AppLocalizations.of(context).upload_photo,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.font_14,
                                         color: AppColors.textColor,

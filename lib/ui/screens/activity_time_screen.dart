@@ -62,7 +62,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               leadingWidth: 60,
-              title: Text(AppLocalizations.of(context)!.activity_time,
+              title: Text(AppLocalizations.of(context).activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
@@ -106,7 +106,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context) * 0.25,
                               height: 20,
                               child: Text(
-                                AppLocalizations.of(context)!.from_time,
+                                AppLocalizations.of(context).from_time,
                                 style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.textColor,
@@ -117,7 +117,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context) * 0.25,
                               height: 20,
                               child: Text(
-                                AppLocalizations.of(context)!.until_time,
+                                AppLocalizations.of(context).until_time,
                                 style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.textColor,
@@ -156,10 +156,10 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   right: getScreenWidth(context) * 0.08),
                               child: CustomButtonWidget(
                                 buttonText: state.isUpdate
-                                    ? AppLocalizations.of(context)!
+                                    ? AppLocalizations.of(context)
                                         .save
                                         .toUpperCase()
-                                    : AppLocalizations.of(context)!
+                                    : AppLocalizations.of(context)
                                         .next
                                         .toUpperCase(),
                                 fontColors: AppColors.whiteColor,
@@ -182,7 +182,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                         left: getScreenWidth(context) * 0.08,
                                         right: getScreenWidth(context) * 0.08),
                                     child: CustomButtonWidget(
-                                      buttonText: AppLocalizations.of(context)!
+                                      buttonText: AppLocalizations.of(context)
                                           .skip
                                           .toUpperCase()
                                           .toUpperCase(),
@@ -496,7 +496,7 @@ class TimeContainer extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: AppConstants.padding_30,
                                             vertical: AppConstants.padding_5),
-                                        child: Text(AppLocalizations.of(context)!.ok))),
+                                        child: Text(AppLocalizations.of(context).ok))),
                                 10.height,
                               ],
                             ),

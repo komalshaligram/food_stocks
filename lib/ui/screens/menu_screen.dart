@@ -38,7 +38,7 @@ class MenuScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.menu,
+                title: AppLocalizations.of(context).menu,
                 iconData: Icons.close,
                 onTap: () {
                   Navigator.pop(context);
@@ -49,33 +49,33 @@ class MenuScreenWidget extends StatelessWidget {
               child: Column(
                 children: [
                   menuTile(
-                      title: AppLocalizations.of(context)!.my_orders,
+                      title: AppLocalizations.of(context).my_orders,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.orderScreen.name)),
                   menuTile(
                       title:
-                          AppLocalizations.of(context)!.questions_and_answers,
+                          AppLocalizations.of(context).questions_and_answers,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.questionAndAnswerScreen.name)),
                   menuTile(
-                      title: AppLocalizations.of(context)!.terms_of_use,
+                      title: AppLocalizations.of(context).terms_of_use,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.termsOfUseScreen.name)),
                   menuTile(
-                      title: AppLocalizations.of(context)!.contact_us,
+                      title: AppLocalizations.of(context).contact_us,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.contactScreen.name)),
                   menuTile(
-                      title: AppLocalizations.of(context)!.about_the_app,
+                      title: AppLocalizations.of(context).about_the_app,
                       onTap: () => Navigator.pushNamed(
                           context, RouteDefine.aboutAppScreen.name)),
                   // menuTile(
-                  //     title: AppLocalizations.of(context)!.logout,
+                  //     title: AppLocalizations.of(context).logout,
                   //     onTap: () => context
                   //         .read<MenuBloc>()
                   //         .add(MenuEvent.logOutEvent(context: context))),
                   // menuSwitchTile(
-                  //     title: AppLocalizations.of(context)!.app_language,
+                  //     title: AppLocalizations.of(context).app_language,
                   //     isHebrewLang: state.isHebrewLanguage,
                   //     onChanged: (bool value) => context.read<MenuBloc>().add(
                   //         MenuEvent.changeAppLanguageEvent(context: context))),

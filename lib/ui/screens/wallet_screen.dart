@@ -58,18 +58,18 @@ class WalletScreenWidget extends StatelessWidget {
     ];*/
 
     Map<int, String> monthMap = {
-      0: AppLocalizations.of(context)!.dec,
-      1: AppLocalizations.of(context)!.nov,
-      2: AppLocalizations.of(context)!.oct,
-      3: AppLocalizations.of(context)!.sep,
-      4: AppLocalizations.of(context)!.aug,
-      5: AppLocalizations.of(context)!.jul,
-      6: AppLocalizations.of(context)!.jun,
-      7: AppLocalizations.of(context)!.may,
-      8: AppLocalizations.of(context)!.apr,
-      9: AppLocalizations.of(context)!.mar,
-      10: AppLocalizations.of(context)!.feb,
-      11: AppLocalizations.of(context)!.jan,
+      0: AppLocalizations.of(context).dec,
+      1: AppLocalizations.of(context).nov,
+      2: AppLocalizations.of(context).oct,
+      3: AppLocalizations.of(context).sep,
+      4: AppLocalizations.of(context).aug,
+      5: AppLocalizations.of(context).jul,
+      6: AppLocalizations.of(context).jun,
+      7: AppLocalizations.of(context).may,
+      8: AppLocalizations.of(context).apr,
+      9: AppLocalizations.of(context).mar,
+      10: AppLocalizations.of(context).feb,
+      11: AppLocalizations.of(context).jan,
     };
 
     Map<int, String> monthMap1 = {
@@ -139,7 +139,7 @@ class WalletScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context)!
+                                        AppLocalizations.of(context)
                                             .balance_status,
                                         style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
@@ -166,10 +166,10 @@ class WalletScreenWidget extends StatelessWidget {
                                               context: context,
                                               image: AppImagePath.credits,
                                               title:
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .total_credit,
                                               value:
-                                                  '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                                  '${state.totalCredit}${AppLocalizations.of(context).currency}'),
                                         ),
                                         10.width,
                                         Flexible(
@@ -177,10 +177,10 @@ class WalletScreenWidget extends StatelessWidget {
                                               context: context,
                                               image: AppImagePath.expense,
                                               title:
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .this_months_expenses,
                                               value:
-                                                  '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                  '${state.thisMonthExpense}${AppLocalizations.of(context).currency}'),
                                         ),
                                       ],
                                     ),
@@ -192,10 +192,10 @@ class WalletScreenWidget extends StatelessWidget {
                                               context: context,
                                               image: AppImagePath.expense,
                                               title:
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .last_months_expenses,
                                               value:
-                                                  '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                  '${state.lastMonthExpense}${AppLocalizations.of(context).currency}'),
                                         ),
                                         10.width,
                                         Flexible(
@@ -203,7 +203,7 @@ class WalletScreenWidget extends StatelessWidget {
                                               context: context,
                                               image: AppImagePath.orders,
                                               title:
-                                                  AppLocalizations.of(context)!
+                                                  AppLocalizations.of(context)
                                                       .this_months_orders,
                                               value: '${state.orderThisMonth}'),
                                         ),
@@ -224,7 +224,7 @@ class WalletScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!
+                              AppLocalizations.of(context)
                                   .monthly_expense_graph,
                               style: AppStyles.rkRegularTextStyle(
                                   size: /*  state.language == 'en'
@@ -260,7 +260,7 @@ class WalletScreenWidget extends StatelessWidget {
                                     getTooltipItems: (value) {
                                       return value.map((e) {
                                         return LineTooltipItem(
-                                            "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total} :  ${AppLocalizations.of(context)!.currency}${e.y}",
+                                            "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context).total} :  ${AppLocalizations.of(context).currency}${e.y}",
                                             TextStyle(fontSize: 8));
                                       }).toList();
                                     },
@@ -338,7 +338,7 @@ class WalletScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.history,
+                              AppLocalizations.of(context).history,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.blackColor),
@@ -359,7 +359,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(
                                             AppConstants.radius_3)),
                                     child: Text(
-                                      AppLocalizations.of(context)!.export,
+                                      AppLocalizations.of(context).export,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.whiteColor),
@@ -561,8 +561,8 @@ class WalletScreenWidget extends StatelessWidget {
                     child: Text(
                       state.balanceSheetList.data![listIndex].type.toString() ==
                               'Order'
-                          ? '${'-'}${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}'
-                          : '${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}',
+                          ? '${'-'}${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context).currency}'
+                          : '${state.balanceSheetList.data![listIndex].amount.toString()}${AppLocalizations.of(context).currency}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: state.balanceSheetList.data![listIndex].type
@@ -578,9 +578,9 @@ class WalletScreenWidget extends StatelessWidget {
                     onTap: () => Navigator.pushNamed(
                         context, RouteDefine.orderSuccessfulScreen.name),
                     child: CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.balance_status,
+                      buttonName: AppLocalizations.of(context).balance_status,
                       buttonValue:
-                          '${state.balanceSheetList.data![listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
+                          '${state.balanceSheetList.data![listIndex].balance.toString()}${AppLocalizations.of(context).currency}',
                     ),
                   ),
                 ],
@@ -803,17 +803,17 @@ class WalletScreenWidget extends StatelessWidget {
 /*
 final List<_ChartData> data = [
 
-  _ChartData(AppLocalizations.of(context)!.dec, 12),
-  _ChartData(AppLocalizations.of(context)!.nov, 40),
-  _ChartData(AppLocalizations.of(context)!.oct, 30),
-  _ChartData(AppLocalizations.of(context)!.sep, 6.4),
-  _ChartData(AppLocalizations.of(context)!.aug, 14),
-  _ChartData(AppLocalizations.of(context)!.jul, 40),
-  _ChartData(AppLocalizations.of(context)!.jun, 20),
-  _ChartData(AppLocalizations.of(context)!.may, 35),
-  _ChartData(AppLocalizations.of(context)!.apr, 5),
-  _ChartData(AppLocalizations.of(context)!.mar, 25),
-  _ChartData(AppLocalizations.of(context)!.feb, 7),
-  _ChartData(AppLocalizations.of(context)!.jan, 38),
+  _ChartData(AppLocalizations.of(context).dec, 12),
+  _ChartData(AppLocalizations.of(context).nov, 40),
+  _ChartData(AppLocalizations.of(context).oct, 30),
+  _ChartData(AppLocalizations.of(context).sep, 6.4),
+  _ChartData(AppLocalizations.of(context).aug, 14),
+  _ChartData(AppLocalizations.of(context).jul, 40),
+  _ChartData(AppLocalizations.of(context).jun, 20),
+  _ChartData(AppLocalizations.of(context).may, 35),
+  _ChartData(AppLocalizations.of(context).apr, 5),
+  _ChartData(AppLocalizations.of(context).mar, 25),
+  _ChartData(AppLocalizations.of(context).feb, 7),
+  _ChartData(AppLocalizations.of(context).jan, 38),
 ];
 */

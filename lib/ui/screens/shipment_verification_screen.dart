@@ -59,16 +59,16 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.shipment_verification,
+                title: AppLocalizations.of(context).shipment_verification,
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Padding(
                   padding: EdgeInsets.symmetric(
                     vertical: AppConstants.padding_10,
                   ),
                   child: CircularButtonWidget(
-                    buttonName: AppLocalizations.of(context)!.total,
+                    buttonName: AppLocalizations.of(context).total,
                     buttonValue:
-                        '${args?[AppStrings.totalAmountString]}${AppLocalizations.of(context)!.currency}',
+                        '${args?[AppStrings.totalAmountString]}${AppLocalizations.of(context).currency}',
                   ),
                 ),
                 onTap: () {
@@ -124,7 +124,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         children: [
                           CommonOrderContentWidget(
                             flexValue: 1,
-                            title: AppLocalizations.of(context)!.products,
+                            title: AppLocalizations.of(context).products,
                             value: args?[AppStrings.quantityString] ?? '',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
@@ -134,7 +134,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           5.width,
                           CommonOrderContentWidget(
                             flexValue: 2,
-                            title: AppLocalizations.of(context)!.delivery_date,
+                            title: AppLocalizations.of(context).delivery_date,
                             value: args?[AppStrings.deliveryDateString] ?? '',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
@@ -145,9 +145,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           5.width,
                           CommonOrderContentWidget(
                             flexValue: 2,
-                            title: AppLocalizations.of(context)!.total_order,
+                            title: AppLocalizations.of(context).total_order,
                             value:
-                                ' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context)!.currency}',
+                                ' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context).currency}',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,
@@ -158,7 +158,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       7.height,
                       RichText(
                         text: TextSpan(
-                          text: AppLocalizations.of(context)!
+                          text: AppLocalizations.of(context)
                               .supplier_order_number,
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
@@ -176,7 +176,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       ),
                       7.height,
                       Text(
-                        AppLocalizations.of(context)!.driver_name,
+                        AppLocalizations.of(context).driver_name,
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.orangeColor,
@@ -233,7 +233,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       vertical: AppConstants.padding_5,
                       horizontal: AppConstants.padding_15),
                   child: Text(
-                    AppLocalizations.of(context)!.signature,
+                    AppLocalizations.of(context).signature,
                     style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor,
@@ -333,7 +333,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     color: AppColors.pageColor,
                     child: CustomButtonWidget(
                       buttonText:
-                          AppLocalizations.of(context)!.save.toUpperCase(),
+                          AppLocalizations.of(context).save.toUpperCase(),
                       bGColor: AppColors.mainColor,
                     ),
                   ),
@@ -376,7 +376,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ),
                           child: RichText(
                             text: TextSpan(
-                              text: AppLocalizations.of(context)!.total ,
+                              text: AppLocalizations.of(context).total ,
                               style: TextStyle(
                                   color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
                               children: <TextSpan>[

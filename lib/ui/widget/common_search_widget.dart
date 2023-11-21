@@ -8,12 +8,12 @@ import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
-import '../../routes/app_routes.dart';
+
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
+
 import '../utils/themes/app_styles.dart';
 
 class CommonSearchWidget extends StatelessWidget {
@@ -127,7 +127,7 @@ class CommonSearchWidget extends StatelessWidget {
                             focusedErrorBorder: AppStyles.searchFieldStyle(),
                             disabledBorder: AppStyles.searchFieldStyle(),
                             filled: true,
-                            hintText: AppLocalizations.of(context)!.search,
+                            hintText: AppLocalizations.of(context).search,
                             constraints: BoxConstraints(maxHeight: 40),
                             fillColor: AppColors.pageColor,
                             contentPadding:
@@ -172,7 +172,7 @@ class CommonSearchWidget extends StatelessWidget {
                                     top: AppConstants.padding_15,
                                     bottom: AppConstants.padding_5),
                                 child: Text(
-                                  AppLocalizations.of(context)!.categories,
+                                  AppLocalizations.of(context).categories,
                                   style: AppStyles.rkBoldTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.blackColor,

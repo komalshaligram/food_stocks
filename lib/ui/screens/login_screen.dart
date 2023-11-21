@@ -63,8 +63,8 @@ class LogInScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 title: isRegister
-                    ? AppLocalizations.of(context)!.register
-                    : AppLocalizations.of(context)!.login,
+                    ? AppLocalizations.of(context).register
+                    : AppLocalizations.of(context).login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -83,7 +83,7 @@ class LogInScreenWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         30.height,
-                        Text(AppLocalizations.of(context)!.enter_your_phone,
+                        Text(AppLocalizations.of(context).enter_your_phone,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: Colors.black)),
@@ -98,7 +98,7 @@ class LogInScreenWidget extends StatelessWidget {
                         ),
                         30.height,
                         CustomButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.next,
+                          buttonText: AppLocalizations.of(context).next,
                           bGColor: AppColors.mainColor,
                           isLoading: state.isLoading,
                           onPressed: state.isLoading

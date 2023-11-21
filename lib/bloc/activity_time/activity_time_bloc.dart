@@ -138,7 +138,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.OperationTimeList.isEmpty) {
           temp.add(
             ActivityTimeModel(
-              dayString: AppLocalizations.of(event.context)!.sunday,
+              dayString: AppLocalizations.of(event.context).sunday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -146,7 +146,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-              dayString: AppLocalizations.of(event.context)!.monday,
+              dayString: AppLocalizations.of(event.context).monday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -154,7 +154,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-                dayString: AppLocalizations.of(event.context)!.tuesday,
+                dayString: AppLocalizations.of(event.context).tuesday,
                 monday: [
                   Day(
                       until: AppStrings.timeString,
@@ -163,7 +163,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-              dayString: AppLocalizations.of(event.context)!.wednesday,
+              dayString: AppLocalizations.of(event.context).wednesday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -171,16 +171,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
           temp.add(
             ActivityTimeModel(
-              dayString: AppLocalizations.of(event.context)!.thursday,
-              monday: [
-                Day(until: AppStrings.timeString, from: AppStrings.timeString),
-              ],
-            ),
-          );
-          temp.add(
-            ActivityTimeModel(
-              dayString:
-                  AppLocalizations.of(event.context)!.friday_and_holiday_eves,
+              dayString: AppLocalizations.of(event.context).thursday,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],
@@ -189,7 +180,16 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           temp.add(
             ActivityTimeModel(
               dayString:
-                  AppLocalizations.of(event.context)!.saturday_and_holidays,
+                  AppLocalizations.of(event.context).friday_and_holiday_eves,
+              monday: [
+                Day(until: AppStrings.timeString, from: AppStrings.timeString),
+              ],
+            ),
+          );
+          temp.add(
+            ActivityTimeModel(
+              dayString:
+                  AppLocalizations.of(event.context).saturday_and_holidays,
               monday: [
                 Day(until: AppStrings.timeString, from: AppStrings.timeString),
               ],

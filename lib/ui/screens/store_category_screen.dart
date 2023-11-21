@@ -256,7 +256,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       //       //           AppConstants.padding_10,
                                       //       //           vertical: AppConstants.padding_3),
                                       //       //       child: Text(
-                                      //       //         AppLocalizations.of(context)!
+                                      //       //         AppLocalizations.of(context)
                                       //       //             .planogram,
                                       //       //         style: AppStyles.rkBoldTextStyle(
                                       //       //             size: AppConstants.mediumFont,
@@ -301,7 +301,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       //     Padding(
                                       //       padding: const EdgeInsets.all(8.0),
                                       //       child: Text(
-                                      //         AppLocalizations.of(context)!.planogram,
+                                      //         AppLocalizations.of(context).planogram,
                                       //         style: AppStyles.rkBoldTextStyle(
                                       //             size: AppConstants.mediumFont,
                                       //             color: AppColors.blackColor,
@@ -416,14 +416,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         //             mainAxisSize: MainAxisSize.min,
                         //             children: [
                         //               Text(
-                        //                 "${AppLocalizations.of(context)!.total}: ",
+                        //                 "${AppLocalizations.of(context).total}: ",
                         //                 style: AppStyles.rkRegularTextStyle(
                         //                   size: AppConstants.normalFont,
                         //                   color: AppColors.whiteColor,
                         //                 ),
                         //               ),
                         //               Text(
-                        //                 "11.90${AppLocalizations.of(context)!.currency}",
+                        //                 "11.90${AppLocalizations.of(context).currency}",
                         //                 style: AppStyles.rkBoldTextStyle(
                         //                     size: AppConstants.normalFont,
                         //                     color: AppColors.whiteColor,
@@ -464,7 +464,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         //                 horizontal: AppConstants.padding_10),
                         //             alignment: Alignment.center,
                         //             child: Text(
-                        //               AppLocalizations.of(context)!.finish,
+                        //               AppLocalizations.of(context).finish,
                         //               style: AppStyles.rkRegularTextStyle(
                         //                 size: AppConstants.normalFont,
                         //                 color: AppColors.whiteColor,
@@ -489,7 +489,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     // Navigator.pushNamed(context, RouteDefine.qrScanScreen.name);
                     String result = await scanBarcodeOrQRCode(
                         context: context,
-                        cancelText: AppLocalizations.of(context)!.cancel,
+                        cancelText: AppLocalizations.of(context).cancel,
                         scanMode: ScanMode.BARCODE);
                     if (result != '-1') {
                       // -1 result for cancel scanning
@@ -721,7 +721,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           0
                       ? 0.width
                       : Text(
-                          "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
+                          "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context).discount}",
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_10,
                               color: AppColors.saleRedColor,
@@ -734,7 +734,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Center(
                   child: CommonProductButtonWidget(
                     title:
-                        "${state.planoGramsList[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                        "${state.planoGramsList[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
                     onPressed: () {
                       showProductDetails(
                           context: context,
@@ -843,7 +843,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           //       ),
           //       // 4.height,
           //       // Text(
-          //       //   "23.00${AppLocalizations.of(context)!.currency}",
+          //       //   "23.00${AppLocalizations.of(context).currency}",
           //       //   style: AppStyles.rkBoldTextStyle(
           //       //       size: AppConstants.font_12, color: AppColors.blackColor),
           //       //   textAlign: TextAlign.center,
@@ -1124,7 +1124,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   //         ),
   //         4.height,
   //         Text(
-  //           "23.00${AppLocalizations.of(context)!.currency}",
+  //           "23.00${AppLocalizations.of(context).currency}",
   //           style: AppStyles.rkBoldTextStyle(
   //               size: AppConstants.font_12, color: AppColors.blackColor),
   //           textAlign: TextAlign.center,
@@ -1254,7 +1254,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppLocalizations.of(context)!.home,
+                  AppLocalizations.of(context).home,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont, color: AppColors.mainColor),
                   textAlign: TextAlign.center,
@@ -1355,7 +1355,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 0) <
                             6
                         ? ''
-                        : AppLocalizations.of(context)!.see_all),
+                        : AppLocalizations.of(context).see_all),
                 5.height,
                 SizedBox(
                   height: 170,
@@ -1474,7 +1474,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.suppliers,
+                              AppLocalizations.of(context).suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -1587,7 +1587,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -1601,7 +1601,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -1663,7 +1663,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context)!.suppliers,
+                                      AppLocalizations.of(context).suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -1803,7 +1803,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -1886,7 +1886,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

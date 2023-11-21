@@ -158,7 +158,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       ? 0.width
                       : Text(
                     "${state.planogramProductList[index]
-                        .totalSale} ${AppLocalizations.of(context)!.discount}",
+                        .totalSale} ${AppLocalizations.of(context).discount}",
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_10,
                         color: AppColors.saleRedColor,
@@ -172,7 +172,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   child: CommonProductButtonWidget(
                     title:
                     "${state.planogramProductList[index].productPrice
-                        ?.toStringAsFixed(0)}${AppLocalizations.of(context)!
+                        ?.toStringAsFixed(0)}${AppLocalizations.of(context)
                         .currency}",
                     onPressed: () {
                       showProductDetails(
@@ -201,7 +201,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 //         vertical: AppConstants.padding_5,
                 //         horizontal: AppConstants.padding_10),
                 //     child: Text(
-                //       "${state.planogramProductList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                //       "${state.planogramProductList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
                 //       style: AppStyles.rkRegularTextStyle(
                 //           size: AppConstants.font_12,
                 //           fontWeight: FontWeight.bold,
@@ -361,7 +361,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.suppliers,
+                              AppLocalizations.of(context).suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -474,7 +474,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -488,7 +488,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -550,7 +550,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context)!.suppliers,
+                                      AppLocalizations.of(context).suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -690,7 +690,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -773,7 +773,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

@@ -54,7 +54,7 @@ class QrScanScreenWidget extends StatelessWidget {
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff20BF6B', AppLocalizations.of(context)!.cancel, true, ScanMode.QR);
+          '#ff20BF6B', AppLocalizations.of(context).cancel, true, ScanMode.QR);
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

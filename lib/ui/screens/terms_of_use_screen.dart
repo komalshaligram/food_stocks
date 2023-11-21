@@ -38,7 +38,7 @@ class TermsOfUseScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.terms_of_use,
+                title: AppLocalizations.of(context).terms_of_use,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);

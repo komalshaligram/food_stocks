@@ -171,7 +171,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           children: [
                             15.height,
                             profileMenuTiles(
-                                title: AppLocalizations.of(context)!
+                                title: AppLocalizations.of(context)
                                     .business_details,
                                 onTap: () {
                                   Navigator.pushNamed(
@@ -182,7 +182,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.more_details,
+                                    AppLocalizations.of(context).more_details,
                                 onTap: () {
                                   Navigator.pushNamed(context,
                                       RouteDefine.moreDetailsScreen.name,
@@ -192,7 +192,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.activity_time,
+                                    AppLocalizations.of(context).activity_time,
                                 onTap: () {
                                   Navigator.pushNamed(context,
                                       RouteDefine.activityTimeScreen.name,
@@ -202,7 +202,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.forms_files,
+                                    AppLocalizations.of(context).forms_files,
                                 onTap: () {
                                   Navigator.pushNamed(context,
                                       RouteDefine.fileUploadScreen.name,
@@ -211,7 +211,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       });
                                 }),
                             profileMenuTiles(
-                                title: AppLocalizations.of(context)!.logout,
+                                title: AppLocalizations.of(context).logout,
                                 onTap: () {
                                   context.read<ProfileMenuBloc>().add(
                                       ProfileMenuEvent.logOutEvent(
@@ -219,7 +219,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             menuSwitchTile(
                                 title:
-                                    AppLocalizations.of(context)!.app_language,
+                                    AppLocalizations.of(context).app_language,
                                 isHebrewLang: state.isHebrewLanguage,
                                 onChanged: (bool value) => context
                                     .read<ProfileMenuBloc>()

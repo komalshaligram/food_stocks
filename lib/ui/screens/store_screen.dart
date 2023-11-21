@@ -76,10 +76,10 @@ class StoreScreenWidget extends StatelessWidget {
                                       children: [
                                         buildListTitles(
                                             context: context,
-                                            title: AppLocalizations.of(context)!
+                                            title: AppLocalizations.of(context)
                                                 .categories,
                                             subTitle:
-                                                AppLocalizations.of(context)!
+                                                AppLocalizations.of(context)
                                                     .all_categories,
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -148,10 +148,10 @@ class StoreScreenWidget extends StatelessWidget {
                                       children: [
                                         buildListTitles(
                                             context: context,
-                                            title: AppLocalizations.of(context)!
+                                            title: AppLocalizations.of(context)
                                                 .companies,
                                             subTitle:
-                                                AppLocalizations.of(context)!
+                                                AppLocalizations.of(context)
                                                     .all_companies,
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -194,10 +194,10 @@ class StoreScreenWidget extends StatelessWidget {
                                       children: [
                                         buildListTitles(
                                             context: context,
-                                            title: AppLocalizations.of(context)!
+                                            title: AppLocalizations.of(context)
                                                 .suppliers,
                                             subTitle:
-                                                AppLocalizations.of(context)!
+                                                AppLocalizations.of(context)
                                                     .all_suppliers,
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -255,10 +255,10 @@ class StoreScreenWidget extends StatelessWidget {
                                       children: [
                                         buildListTitles(
                                             context: context,
-                                            title: AppLocalizations.of(context)!
+                                            title: AppLocalizations.of(context)
                                                 .sales,
                                             subTitle:
-                                                AppLocalizations.of(context)!
+                                                AppLocalizations.of(context)
                                                     .all_sales,
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -330,7 +330,7 @@ class StoreScreenWidget extends StatelessWidget {
                     onScanTap: () async {
                       String scanResult = await scanBarcodeOrQRCode(
                           context: context,
-                          cancelText: AppLocalizations.of(context)!.cancel,
+                          cancelText: AppLocalizations.of(context).cancel,
                           scanMode: ScanMode.BARCODE);
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
@@ -671,7 +671,7 @@ class StoreScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -951,7 +951,7 @@ class StoreScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.suppliers,
+                              AppLocalizations.of(context).suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -1063,7 +1063,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -1077,7 +1077,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -1130,7 +1130,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context)!.suppliers,
+                                      AppLocalizations.of(context).suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -1268,7 +1268,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -1349,7 +1349,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

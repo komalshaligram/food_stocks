@@ -42,7 +42,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context)!.order_summary,
+              title: AppLocalizations.of(context).order_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -127,7 +127,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                               AppConstants.radius_30)
                                           : Radius.circular(AppConstants.radius_6))),
                               child: Text(
-                                '${state.orderSummaryList.data?.cart!.first.totalAmount}${' : '}${AppLocalizations.of(context)!.total }',
+                                '${state.orderSummaryList.data?.cart!.first.totalAmount}${' : '}${AppLocalizations.of(context).total }',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.normalFont,
                                     color: AppColors.whiteColor,
@@ -173,7 +173,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                             ? Radius.circular(AppConstants.radius_6)
                                             : Radius.circular(AppConstants.radius_30))),
                                 child: Text(
-                                  AppLocalizations.of(context)!.send_order,
+                                  AppLocalizations.of(context).send_order,
                                   style: AppStyles.rkRegularTextStyle(
                                     size: getScreenWidth(context) <= 380
                                         ? AppConstants.mediumFont
@@ -231,7 +231,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 children: [
                   CommonOrderContentWidget(
                     flexValue: 1,
-                    title: AppLocalizations.of(context)!.products,
+                    title: AppLocalizations.of(context).products,
                     value: state.orderSummaryList.data!.data![index].totalQuantity!.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
@@ -241,7 +241,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   5.width,
                   CommonOrderContentWidget(
                     flexValue: 2,
-                    title: AppLocalizations.of(context)!.delivery_date,
+                    title: AppLocalizations.of(context).delivery_date,
                     value: '-',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
@@ -252,7 +252,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   5.width,
                   CommonOrderContentWidget(
                     flexValue: 2,
-                    title: AppLocalizations.of(context)!.total_order,
+                    title: AppLocalizations.of(context).total_order,
                     value:state.orderSummaryList.data!.data![index].totalAmount!.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,

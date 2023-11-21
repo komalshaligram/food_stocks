@@ -37,7 +37,7 @@ class ConnectScreen extends StatelessWidget {
                   height: getScreenHeight(context) * 0.07,
                 ),
                 CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.register,
+                  buttonText: AppLocalizations.of(context).register,
                   bGColor: AppColors.mainColor,
                   onPressed: () {
                     Navigator.pushNamed(context, RouteDefine.loginScreen.name,
@@ -48,7 +48,7 @@ class ConnectScreen extends StatelessWidget {
                   height: AppConstants.padding_20,
                 ),
                 CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.login,
+                  buttonText: AppLocalizations.of(context).login,
                   fontColors: AppColors.mainColor,
                   borderColor: AppColors.mainColor,
                   onPressed: () {

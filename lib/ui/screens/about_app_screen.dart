@@ -38,7 +38,7 @@ class AboutAppScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context)!.about_the_app,
+                title: AppLocalizations.of(context).about_the_app,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);

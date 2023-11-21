@@ -66,8 +66,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
                         ? CupertinoActivityIndicator() : CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.total,
-                      buttonValue: '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
+                      buttonName: AppLocalizations.of(context).total,
+                      buttonValue: '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context).currency}',
                     ),
                   ),
                   onTap: () {
@@ -142,7 +142,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       state.orderByIdList.data!.ordersBySupplier![index].deliverStatus!.statusName.toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color:/*state.supplierList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ?AppColors.orangeColor :*/  AppColors.mainColor,
+                          color:/*state.supplierList[index].orderStatus == AppLocalizations.of(context).pending_delivery ?AppColors.orangeColor :*/  AppColors.mainColor,
                           fontWeight: FontWeight.w700
                       ),
                     )
@@ -153,7 +153,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   children: [
                     CommonOrderContentWidget(
                       flexValue: 1,
-                      title: AppLocalizations.of(context)!.products,
+                      title: AppLocalizations.of(context).products,
                       value:  state.orderByIdList.data!.ordersBySupplier![index].products!.length.toString(),
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
@@ -163,7 +163,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     5.width,
                     CommonOrderContentWidget(
                       flexValue: 2,
-                      title: AppLocalizations.of(context)!.delivery_date,
+                      title: AppLocalizations.of(context).delivery_date,
                       value:  '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
@@ -174,8 +174,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     5.width,
                     CommonOrderContentWidget(
                       flexValue: 2,
-                      title: AppLocalizations.of(context)!.total_order,
-                      value: '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                      title: AppLocalizations.of(context).total_order,
+                      value: '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context).currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,
@@ -220,7 +220,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           ),
                           child: RichText(
                             text: TextSpan(
-                              text: AppLocalizations.of(context)!.total ,
+                              text: AppLocalizations.of(context).total ,
                              style: TextStyle(
                           color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
                                children: <TextSpan>[
