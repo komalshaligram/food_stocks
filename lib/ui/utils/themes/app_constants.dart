@@ -71,4 +71,5 @@ class AppConstants{
   static const int supplierProductPageLimit = 18;
   static const int saleProductPageLimit = 18;
   static const int planogramProductPageLimit = 4;
+  static const int oderPageLimit = 10;
 }

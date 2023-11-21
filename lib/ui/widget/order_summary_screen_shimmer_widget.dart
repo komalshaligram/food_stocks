@@ -10,7 +10,7 @@ class OrderSummaryScreenShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 6,
+      itemCount: 5,
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       padding:

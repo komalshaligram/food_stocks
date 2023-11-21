@@ -236,24 +236,35 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Text(
-                                  //   'חיים משה',
-                                  //   style: AppStyles.rkRegularTextStyle(
-                                  //       size: AppConstants.mediumFont,
-                                  //       color: AppColors.blackColor,
-                                  //       fontWeight: FontWeight.w600),
-                                  // ),
-                                  Container(
-                                    width: 150,
-                                    height: 40,
-                                    child: CustomFormField(
-                                      controller: driverController,
-                                      keyboardType: TextInputType.text,
-                                      hint: '',
-                                      validator: '',
-                                      fillColor: Colors.white,
-                                    ),
-                                  ),
+                                  state
+                                              .orderList
+                                              .data!
+                                              .ordersBySupplier![productIndex]
+                                              .deliverStatus!
+                                              .statusName ==
+                                          'deliver'
+                                      ? Text(
+                                          state
+                                              .orderList
+                                              .data!
+                                              .ordersBySupplier![productIndex]
+                                              .driverName
+                                              .toString(),
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.mediumFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Container(
+                                          width: 150,
+                                          height: 40,
+                                          child: CustomFormField(
+                                            controller: driverController,
+                                            keyboardType: TextInputType.text,
+                                            hint: '',
+                                            validator: '',
+                                            fillColor: Colors.white,
+                                          )),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(
@@ -279,18 +290,46 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                           width: 1,
                                         ),
                                       ),
-                                      child: Container(
-                                        width: 150,
-                                        height: 35,
-                                        child: CustomFormField(
-                                          controller: phoneNumberController,
-                                          keyboardType: TextInputType.number,
-                                          hint: '',
-                                          validator: AppStrings.mobileValString,
-                                          fillColor: Colors.white,
-                                          border: 30,
-                                        ),
-                                      ),
+                                      child: state
+                                                  .orderList
+                                                  .data!
+                                                  .ordersBySupplier![
+                                                      productIndex]
+                                                  .deliverStatus!
+                                                  .statusName ==
+                                              'deliver'
+                                          ? Text(
+                                              state
+                                                  .orderList
+                                                  .data!
+                                                  .ordersBySupplier![
+                                                      productIndex]
+                                                  .diverNumber
+                                                  .toString(),
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .mediumFont,
+                                                      color:
+                                                          AppColors.blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            )
+                                          : Container(
+                                              width: 150,
+                                              height: 35,
+                                              child: CustomFormField(
+                                                controller:
+                                                    phoneNumberController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                hint: '',
+                                                validator:
+                                                    AppStrings.mobileValString,
+                                                fillColor: Colors.white,
+                                                border: 30,
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ],
@@ -442,11 +481,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             isProductProblem: value!, index: index));
                       })
                   : SizedBox(),
-              state.orderList.data!.ordersBySupplier![productIndex]
-                          .products![index].category!.categoryImage !=
+               state.orderList.data!.ordersBySupplier![productIndex]
+                          .products![index].mainImage !=
                       null
                   ? Image.network(
-                      '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                      '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].mainImage ?? ''}',
                       width: AppConstants.containerSize_50,
                       height: AppConstants.containerSize_50,
                     )
@@ -469,6 +508,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   size: AppConstants.font_12,
                 ),
               ),
+              5.width,
               Text(
                 '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
@@ -502,8 +542,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .ordersBySupplier![productIndex]
                                     .products![index]
                                     .totalPayment!,
-                                image:
-                                    '${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                                image: '${state.orderList.data!.ordersBySupplier![productIndex].products![index].mainImage ?? ''}',
                                 listIndex: index,
                                 productId: state
                                     .orderList
@@ -722,7 +761,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                     ? AppLocalizations.of(
                                                             context)!
                                                         .the_product_arrived_missing
-                                                    : state.selectedRadioTile == 4 ? '${AppLocalizations.of(context)!.another_product_problem} ${' : '}${addProblemController}' : '',
+                                                    : state.selectedRadioTile ==
+                                                            4
+                                                        ? '${AppLocalizations.of(context)!.another_product_problem} ${' : '}${addProblemController.text.toString()}'
+                                                        : '',
                                         missingQuantity:
                                             state.selectedRadioTile == 3
                                                 ? state.productWeight
@@ -798,10 +840,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         Radio(
                           value: value,
                           fillColor: MaterialStateColor.resolveWith(
-                              (states) => AppColors.greyColor,
+                            (states) => AppColors.greyColor,
                           ),
                           groupValue: state.selectedRadioTile,
-
                           onChanged: (val) {
                             bloc.add(ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: val!));

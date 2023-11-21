@@ -14,6 +14,9 @@ class GetAllOrderReqModel with _$GetAllOrderReqModel {
     String? search,
     @JsonKey(name: "orderId")
     String? orderId,
+    int? pageNum,
+    int? pageLimit,
+
   }) = _GetAllOrderReqModel;
 
   factory GetAllOrderReqModel.fromJson(Map<String, dynamic> json) => _$GetAllOrderReqModelFromJson(json);

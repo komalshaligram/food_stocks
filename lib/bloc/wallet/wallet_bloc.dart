@@ -19,7 +19,7 @@ import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dar
 import '../../data/model/res_model/all_wallet_transaction_res/all_wallet_transaction_res_model.dart';
 import '../../data/model/res_model/export_wallet_res/export_wallet_transactions_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
-import '../../data/model/res_model/total_expense_res/total_expense_res_model.dart';
+import '../../data/model/res_model/total_expense_res/total_expense_res_model.dart' as expense;
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -82,10 +82,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
-      } else if (event is _getTotalExpenseEvent) {
+      }
+      else if (event is _getTotalExpenseEvent) {
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(
-              userId: preferencesHelper.getUserId(), year: event.year);
+              userId: preferencesHelper.getUserId(), year: event.year,
+          );
 
           debugPrint('TotalExpenseReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
@@ -95,15 +97,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           debugPrint(
               'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
-          TotalExpenseResModel response = TotalExpenseResModel.fromJson(res);
+          expense.TotalExpenseResModel response = expense.TotalExpenseResModel.fromJson(res);
           debugPrint('TotalExpenseResModel  = $response');
 
           if (response.status == 200) {
             List<FlSpot> temp = [];
             List<int> number = List<int>.generate(12, (i) => i);
-
             number.reversed.toList();
-
             response.data!.forEach((element) {
               temp.add(FlSpot(number[element.month!.toInt() - 1].toDouble(),
                   element.totalExpenses!.toDouble()));
@@ -116,13 +116,20 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
-      } else if (event is _getAllWalletTransactionEvent) {
-        emit(state.copyWith(year: event.year));
+      }
+      else if (event is _getAllWalletTransactionEvent) {
+        emit(state.copyWith(
+            isShimmering: state.pageNum == 0 ? true : false,
+            isLoadMore: state.pageNum == 0 ? false : true));
+
         try {
+
           AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
             userId: preferencesHelper.getUserId(),
-            year: state.year,
-            month: 1,
+            pageNum: state.pageNum + 1,
+            pageLimit: 5,
+            startDate: event.startDate,
+            endDate: event.endDate
           );
 
           debugPrint('AllWalletTransactionReqModel = $reqMap}');
@@ -138,19 +145,30 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           debugPrint('AllWalletTransactionResModel  = $response');
 
           if (response.status == 200) {
-            emit(state.copyWith(balanceSheetList: response));
+            List<Datum>temp = state.walletTransactionsList.toList(growable: true);
+            if ((response.metaData?.totalFilteredCount ?? 0) >
+                state.walletTransactionsList.length){
+              temp.addAll(response.data ?? []);
+              emit(state.copyWith(balanceSheetList: response,pageNum: state.pageNum + 1 ,walletTransactionsList: temp,
+                  isLoadMore: false,isShimmering: false
+              ));
+            }
           } else {
             showSnackBar(
                 context: event.context,
                 title: response.message!,
                 bgColor: AppColors.mainColor);
+            emit(state.copyWith(isLoadMore: false));
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isLoadMore: false));
+        }
       } else if (event is _getDateRangeEvent) {
         emit(state.copyWith(selectedDateRange: event.range));
       } else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
-      } else if (event is _exportWalletTransactionEvent) {
+      }
+      else if (event is _exportWalletTransactionEvent) {
         try {
           Map<Permission, PermissionStatus> statuses = await [
             Permission.storage,
@@ -201,7 +219,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
-      } else if (event is _getOrderCountEvent) {
+      }
+      else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
                   start: DateTime(date.year, date.month, 1),
