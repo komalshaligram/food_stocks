@@ -27,4 +27,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
 
   const factory PlanogramProductEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory PlanogramProductEvent.setCartCountEvent() = _SetCartCountEvent;
 }

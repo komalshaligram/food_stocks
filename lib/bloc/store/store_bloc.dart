@@ -378,6 +378,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            add(StoreEvent.setCartCountEvent());
             emit(state.copyWith(isLoading: false, isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
@@ -411,6 +412,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('url1 = ');
           emit(state.copyWith(isLoading: false));
         }
+      } else if (event is _SetCartCountEvent) {
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
@@ -423,17 +429,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
-                      supplierList[event.supplierIndex].supplierId,
+                  supplierList[event.supplierIndex].supplierId,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
-                          .supplierSales[event.supplierSaleIndex]
-                          .salePrice,
+                      .supplierSales[event.supplierSaleIndex]
+                      .salePrice,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : supplierList[event.supplierIndex]
-                          .supplierSales[event.supplierSaleIndex]
-                          .saleId);
+                      .supplierSales[event.supplierSaleIndex]
+                      .saleId);
           debugPrint(
               'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
           supplierList = supplierList

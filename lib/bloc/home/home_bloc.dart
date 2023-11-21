@@ -50,10 +50,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             'getUserImageUrl ${AppUrls.baseFileUrl}${preferences.getUserImageUrl()}');
         debugPrint(
             'getUserCompanyLogoUrl ${preferences.getUserCompanyLogoUrl()}');
-
-        emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
+        debugPrint('cart count ${preferences.getCartCount()}');
         emit(state.copyWith(
-            UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
+            UserImageUrl: preferences.getUserImageUrl(),
+            UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
+            cartCount: preferences.getCartCount()));
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -70,13 +71,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         productId: saleProduct.id ?? '',
                         stock: saleProduct.numberOfUnit ?? 0)) ??
                 []);
-            // if ((response.metaData?.totalFilteredCount ?? 0) > 0) {
-            //   for (int i = 0; i < (response.data?.length ?? 0); i++) {
-            //     productStockList.add(ProductStockModel(
-            //         productId: response.data?[i].id ?? '',
-            //         stock: response.data?[i].numberOfUnit ?? 0));
-            //   }
-            // }
             debugPrint('stock list len = ${productStockList.length}');
             emit(state.copyWith(
                 productSalesList: response,
@@ -371,7 +365,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 201) {
             emit(state.copyWith(isLoading: false, isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
-            add(HomeEvent.updateCartCountEvent(cartCount: 1));
+            add(HomeEvent.setCartCountEvent());
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -394,17 +388,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('url1 = ');
           emit(state.copyWith(isLoading: false));
         }
-      } else if (event is _UpdateCartCountEvent) {
-        emit(state.copyWith(cartCount: state.cartCount + event.cartCount));
-        debugPrint('cart count = ${state.cartCount}');
-      } else if (event is _ResetCartCountEvent) {
-        emit(state.copyWith(cartCount: 0));
-        debugPrint('reset cart count = ${state.cartCount}');
       } else if (event is _SetCartCountEvent) {
-        emit(state.copyWith(cartCount: event.cartCount));
-      }
-
-      else if (event is _getWalletRecordEvent) {
+        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        emit(state.copyWith(cartCount: preferences.getCartCount()));
+        debugPrint('cart count = ${state.cartCount}');
+      } else if (event is _getWalletRecordEvent) {
         try {
           WalletRecordReqModel reqMap =
               WalletRecordReqModel(userId: preferences.getUserId());

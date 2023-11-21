@@ -55,10 +55,6 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state.isCartCountChange) {
-          BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent(cartCount: 1));
-        }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -67,10 +63,6 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(HomeEvent.setCartCountEvent(
-                    cartCount: BlocProvider.of<BottomNavBloc>(context)
-                        .state
-                        .cartCount));
                 bloc.add(HomeEvent.getPreferencesDataEvent());
               },
               child: SafeArea(
