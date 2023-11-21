@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -334,12 +333,19 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            add(ProductSaleEvent.setCartCountEvent());
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
+          } else if (response.status == 403) {
+            emit(state.copyWith(isLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -351,6 +357,11 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           debugPrint('url1 = ');
           emit(state.copyWith(isLoading: false));
         }
+      } else if (event is _SetCartCountEvent) {
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        debugPrint('cart count = ${preferences.getCartCount()}');
       }
     });
   }

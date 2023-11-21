@@ -39,8 +39,9 @@ class HomeScreen extends StatelessWidget {
       create: (context) => HomeBloc()
         ..add(HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getProductSalesListEvent(context: context))
-      ..add(HomeEvent.getOrderCountEvent(context: context))
-      ..add(HomeEvent.getWalletRecordEvent(context: context)),
+        ..add(HomeEvent.getOrderCountEvent(context: context))
+        ..add(HomeEvent.getWalletRecordEvent(context: context))
+        ..add(HomeEvent.getMessageListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -54,10 +55,8 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state.isCartCountChange) {
-          BlocProvider.of<BottomNavBloc>(context)
-              .add(BottomNavEvent.updateCartCountEvent(cartCount: 1));
-        }
+        BlocProvider.of<BottomNavBloc>(context)
+            .add(BottomNavEvent.updateCartCountEvent());
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -66,10 +65,6 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(HomeEvent.setCartCountEvent(
-                    cartCount: BlocProvider.of<BottomNavBloc>(context)
-                        .state
-                        .cartCount));
                 bloc.add(HomeEvent.getPreferencesDataEvent());
               },
               child: SafeArea(
@@ -314,7 +309,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .balance_status,
                                               style:
                                                   AppStyles.rkRegularTextStyle(
@@ -342,10 +337,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.credits,
                                                     title: AppLocalizations.of(
-                                                            context)
+                                                            context)!
                                                         .total_credit,
                                                     value:
-                                                        '${state.totalCredit}${AppLocalizations.of(context).currency}'),
+                                                        '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -353,10 +348,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
-                                                            context)
+                                                            context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${state.thisMonthExpense}${AppLocalizations.of(context).currency}'),
+                                                        '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -368,10 +363,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
-                                                            context)
+                                                            context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${state.lastMonthExpense}${AppLocalizations.of(context).currency}'),
+                                                        '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -379,9 +374,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                     context: context,
                                                     image: AppImagePath.orders,
                                                     title: AppLocalizations.of(
-                                                            context)
+                                                            context)!
                                                         .this_months_orders,
-                                                    value: '${state.orderThisMonth}'),
+                                                    value:
+                                                        '${state.orderThisMonth}'),
                                               ),
                                             ],
                                           ),
@@ -400,10 +396,10 @@ class HomeScreenWidget extends StatelessWidget {
                                     children: [
                                       titleRowWidget(
                                           context: context,
-                                          title: AppLocalizations.of(context)
+                                          title: AppLocalizations.of(context)!
                                               .sales,
                                           allContentTitle:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .all_sales,
                                           onTap: () {
                                             Navigator.pushNamed(
@@ -467,7 +463,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 Flexible(
                                   child: CustomTextIconButtonWidget(
                                     title:
-                                        AppLocalizations.of(context).new_order,
+                                        AppLocalizations.of(context)!.new_order,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
                                           BottomNavEvent.changePage(index: 3));
@@ -478,7 +474,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 Flexible(
                                   child: CustomTextIconButtonWidget(
                                     title:
-                                        AppLocalizations.of(context).my_basket,
+                                        AppLocalizations.of(context)!.my_basket,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
                                           BottomNavEvent.changePage(index: 2));
@@ -490,24 +486,56 @@ class HomeScreenWidget extends StatelessWidget {
                               ],
                             ),
                             30.height,
-                            titleRowWidget(
-                                context: context,
-                                title: AppLocalizations.of(context).messages,
-                                allContentTitle:
-                                    AppLocalizations.of(context).all_messages,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, RouteDefine.messageScreen.name);
-                                }),
+                            state.messageList.isEmpty
+                                ? 0.width
+                                : titleRowWidget(
+                                    context: context,
+                                    title:
+                                        AppLocalizations.of(context)!.messages,
+                                    allContentTitle:
+                                        AppLocalizations.of(context)!
+                                            .all_messages,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.messageScreen.name);
+                                    }),
                             10.height,
-                            ListView.builder(
-                              itemCount: 2,
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => messageListItem(
-                                  index: index, context: context),
-                            ),
-                            85.height,
+                            state.messageList.isEmpty
+                                ? 0.width
+                                : ListView.builder(
+                                    itemCount: state.messageList.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) =>
+                                        messageListItem(
+                                            context: context,
+                                            title: state
+                                                    .messageList[index].title ??
+                                                '',
+                                            content: parse(state
+                                                            .messageList[index]
+                                                            .fulltext ??
+                                                        '')
+                                                    .body
+                                                    ?.text ??
+                                                '',
+                                            dateTime: state.messageList[index]
+                                                    .updatedAt ??
+                                                '',
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .messageContentScreen
+                                                      .name,
+                                                  arguments: {
+                                                    AppStrings
+                                                            .messageDataString:
+                                                        state.messageList[index]
+                                                  });
+                                            }),
+                                  ),
+                            90.height,
                           ],
                         ),
                       ),
@@ -645,7 +673,7 @@ class HomeScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -682,7 +710,7 @@ class HomeScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-            //shouldCloseOnMinExtent: true,
+            shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -808,7 +836,13 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget messageListItem({required int index, required BuildContext context}) {
+  Widget messageListItem({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String dateTime,
+    required void Function() onTap,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: Row(
@@ -829,7 +863,7 @@ class HomeScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'כותרת של ההודעה',
+                  title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_12,
                       color: AppColors.blackColor,
@@ -837,29 +871,25 @@ class HomeScreenWidget extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  'גולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.',
+                  content,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_10, color: AppColors.blackColor),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '15.02.2023',
+                      dateTime,
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_12,
                           color: AppColors.blackColor),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, RouteDefine.messageContentScreen.name,
-                            arguments: {
-                              AppStrings.messageContentString: index
-                            });
-                      },
+                      onTap: onTap,
                       child: Text(
-                        AppLocalizations.of(context).read_more,
+                        AppLocalizations.of(context)!.read_more,
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.font_12,
                             color: AppColors.mainColor),
@@ -906,7 +936,7 @@ class HomeScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context).suppliers,
+                              AppLocalizations.of(context)!.suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -1018,7 +1048,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -1032,7 +1062,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -1093,7 +1123,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).suppliers,
+                                      AppLocalizations.of(context)!.suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -1244,7 +1274,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -1326,7 +1356,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

@@ -44,7 +44,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
     if (response.status == 200) {
        emit(state.copyWith(orderByIdList: response));
-       showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+   //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
      } else {
        showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
      }

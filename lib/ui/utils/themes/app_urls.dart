@@ -55,4 +55,10 @@ class AppUrls {
   static const String exportWalletTransactionUrl =
       '/v1/walletTransaction/exportWalletTransactions';
   static const String getOrdersCountUrl = '/v1/orders/getOrdersCount';
+  static const String getAllQNAUrl =
+      '/v1/client/questionandanswer/getAllQuestionAndAnswer';
+  static const String getAllMessagesUrl = '/v1/client/usermessages/getMessages';
+  static const String getAllAppContentsUrl =
+      '/v1/client/contents/getAllContents';
+  static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
 }

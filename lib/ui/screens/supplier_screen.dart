@@ -61,7 +61,7 @@ class SupplierScreenWidget extends StatelessWidget {
                       ? SupplierScreenShimmerWidget()
                       : state.suppliersList.isEmpty
                           ? Container(
-                              height: getScreenHeight(context) - 56,
+                              height: getScreenHeight(context) - 80,
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(

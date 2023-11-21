@@ -7,7 +7,7 @@ import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
+import 'package:html/parser.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
@@ -50,7 +50,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context).sales,
+                title: AppLocalizations.of(context)!.sales,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);
@@ -66,16 +66,16 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     ? ProductSaleScreenShimmerWidget()
                     : state.productSalesList.length == 0
                         ? Container(
-                            height: getScreenHeight(context) - 56,
-                            width: getScreenWidth(context),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Currently products are not on sale',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor),
-                            ),
-                          )
+                  height: getScreenHeight(context) - 80,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Currently products are not on sale',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
                         : GridView.builder(
                             shrinkWrap: true,
                             itemCount: state.productSalesList.length,
@@ -89,26 +89,31 @@ class ProductSaleScreenWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return buildProductSaleListItem(
                                 context: context,
-                                saleImage:
-                                    state.productSalesList[index].mainImage ??
-                                        '',
-                                title:
-                                    state.productSalesList[index].salesName ??
-                                        '',
-                                description: state.productSalesList[index]
-                                        .salesDescription ??
-                                    '',
-                                price: state.productSalesList[index]
-                                        .discountPercentage
-                                        ?.toDouble() ??
-                                    0.0,
-                                onButtonTap: () {
-                                  showProductDetails(
-                                    context: context,
-                                    productId:
-                                        state.productSalesList[index].id ?? '',
-                                  );
-                                },
+                                  saleImage:
+                                      state.productSalesList[index].mainImage ??
+                                          '',
+                                  title:
+                                      state.productSalesList[index].salesName ??
+                                          '',
+                                  description: parse(state
+                                                  .productSalesList[index]
+                                                  .salesDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  price: state.productSalesList[index]
+                                          .discountPercentage
+                                          ?.toDouble() ??
+                                      0.0,
+                                  onButtonTap: () {
+                                    showProductDetails(
+                                      context: context,
+                                      productId:
+                                          state.productSalesList[index].id ??
+                                              '',
+                                    );
+                                  },
                               );
                             },
                           ),
@@ -224,7 +229,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
+                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -261,7 +266,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-            //shouldCloseOnMinExtent: true,
+            shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -378,7 +383,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context).suppliers,
+                              AppLocalizations.of(context)!.suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -491,7 +496,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -505,7 +510,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -567,7 +572,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).suppliers,
+                                      AppLocalizations.of(context)!.suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -707,7 +712,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -790,7 +795,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

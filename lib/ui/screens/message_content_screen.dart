@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import '../../bloc/message_content/message_content_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -17,8 +19,12 @@ class MessageContentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => MessageContentBloc(),
+      create: (context) => MessageContentBloc()
+        ..add(MessageContentEvent.getMessageDataEvent(
+            messageData: args?[AppStrings.messageDataString])),
       child: MessageContentScreenWidget(),
     );
   }
@@ -38,23 +44,23 @@ class MessageContentScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context).message,
+                title: AppLocalizations.of(context)!.message,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);
                 },
-                trailingWidget: Center(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      AppLocalizations.of(context).delete,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.mainColor,
-                      ),
-                    ),
-                  ),
-                ),
+                // trailingWidget: Center(
+                //   child: GestureDetector(
+                //     onTap: () {},
+                //     child: Text(
+                //       AppLocalizations.of(context)!.delete,
+                //       style: AppStyles.rkRegularTextStyle(
+                //         size: AppConstants.smallFont,
+                //         color: AppColors.mainColor,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ),
             ),
             body: SafeArea(
@@ -80,7 +86,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'כותרת ההודעה שהגיע ללקוח',
+                        state.message.title ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.blackColor,
@@ -88,14 +94,14 @@ class MessageContentScreenWidget extends StatelessWidget {
                       ),
                       5.height,
                       Text(
-                        '15.02.2023 15:35',
+                        state.message.updatedAt ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.font_10,
                             color: AppColors.textColor),
                       ),
                       5.height,
                       Text(
-                        'ורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית ושבעגט ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.נולום ארווס סאפיאן פוסיליס קוויס, אקווזמן קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי להאמית קרהשק סכעיט דז מא, מנכם למטכין נשואי מנורךגולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט. קונדימנטום קורוס בליקרה, נונסטי קלובר בריקנה סטום, לפריקך תצטריק לרטי.נולום ארווס סאפיאן - פוסיליס קוויס, אקווזמן קוואזי במר מודוף. אודיפו בלאסטיק מונופץ קליר, בנפת נפקט למסון בלרק - וענוף לורם איפסום דולור סיט אמט, ליבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס.',
+                        parse(state.message.fulltext ?? '').body?.text ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.font_12,
                             color: AppColors.blackColor),

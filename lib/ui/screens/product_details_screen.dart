@@ -85,9 +85,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 0
                             ? CupertinoActivityIndicator()
                             : CircularButtonWidget(
-                                buttonName: AppLocalizations.of(context).total,
+                                buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context).currency}',
+                                    '${state.orderList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
                               ),
                   ),
                   onTap: () {
@@ -159,7 +159,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   CommonOrderContentWidget(
                                     flexValue: 1,
                                     title:
-                                        AppLocalizations.of(context).products,
+                                        AppLocalizations.of(context)!.products,
                                     value: state
                                         .orderList
                                         .data!
@@ -175,7 +175,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   5.width,
                                   CommonOrderContentWidget(
                                     flexValue: 2,
-                                    title: AppLocalizations.of(context).delivery_date,
+                                    title: AppLocalizations.of(context)!
+                                        .delivery_date,
                                     value: /*state
                                         .orderList
                                         .data!
@@ -192,10 +193,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   5.width,
                                   CommonOrderContentWidget(
                                     flexValue: 2,
-                                    title: AppLocalizations.of(context)
+                                    title: AppLocalizations.of(context)!
                                         .total_order,
                                     value:
-                                        '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context).currency}',
+                                        '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
                                     titleColor: AppColors.mainColor,
                                     valueColor: AppColors.blackColor,
                                     valueTextWeight: FontWeight.w500,
@@ -206,7 +207,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               7.height,
                               RichText(
                                 text: TextSpan(
-                                  text: AppLocalizations.of(context)
+                                  text: AppLocalizations.of(context)!
                                       .supplier_order_number,
                                   style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.blackColor,
@@ -224,7 +225,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               ),
                               7.height,
                               Text(
-                                AppLocalizations.of(context).driver_name,
+                                AppLocalizations.of(context)!.driver_name,
                                 style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.font_14,
                                   color: AppColors.blackColor,
@@ -235,24 +236,35 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Text(
-                                  //   'חיים משה',
-                                  //   style: AppStyles.rkRegularTextStyle(
-                                  //       size: AppConstants.mediumFont,
-                                  //       color: AppColors.blackColor,
-                                  //       fontWeight: FontWeight.w600),
-                                  // ),
-                                  Container(
-                                    width: 150,
-                                    height: 40,
-                                    child: CustomFormField(
-                                      controller: driverController,
-                                      keyboardType: TextInputType.text,
-                                      hint: '',
-                                      validator: '',
-                                      fillColor: Colors.white,
-                                    ),
-                                  ),
+                                  state
+                                              .orderList
+                                              .data!
+                                              .ordersBySupplier![productIndex]
+                                              .deliverStatus!
+                                              .statusName ==
+                                          'deliver'
+                                      ? Text(
+                                          state
+                                              .orderList
+                                              .data!
+                                              .ordersBySupplier![productIndex]
+                                              .driverName
+                                              .toString(),
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.mediumFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Container(
+                                          width: 150,
+                                          height: 40,
+                                          child: CustomFormField(
+                                            controller: driverController,
+                                            keyboardType: TextInputType.text,
+                                            hint: '',
+                                            validator: '',
+                                            fillColor: Colors.white,
+                                          )),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.all(
@@ -278,18 +290,46 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                           width: 1,
                                         ),
                                       ),
-                                      child: Container(
-                                        width: 150,
-                                        height: 35,
-                                        child: CustomFormField(
-                                          controller: phoneNumberController,
-                                          keyboardType: TextInputType.number,
-                                          hint: '',
-                                          validator: AppStrings.mobileValString,
-                                          fillColor: Colors.white,
-                                          border: 30,
-                                        ),
-                                      ),
+                                      child: state
+                                                  .orderList
+                                                  .data!
+                                                  .ordersBySupplier![
+                                                      productIndex]
+                                                  .deliverStatus!
+                                                  .statusName ==
+                                              'deliver'
+                                          ? Text(
+                                              state
+                                                  .orderList
+                                                  .data!
+                                                  .ordersBySupplier![
+                                                      productIndex]
+                                                  .diverNumber
+                                                  .toString(),
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .mediumFont,
+                                                      color:
+                                                          AppColors.blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            )
+                                          : Container(
+                                              width: 150,
+                                              height: 35,
+                                              child: CustomFormField(
+                                                controller:
+                                                    phoneNumberController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                hint: '',
+                                                validator:
+                                                    AppStrings.mobileValString,
+                                                fillColor: Colors.white,
+                                                border: 30,
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ],
@@ -302,7 +342,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               vertical: AppConstants.padding_5,
                               horizontal: AppConstants.padding_15),
                           child: Text(
-                            AppLocalizations.of(context).order_products_list,
+                            AppLocalizations.of(context)!.order_products_list,
                             style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.blackColor,
@@ -389,7 +429,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .data!.ordersBySupplier![productIndex].id
                               });
                   },
-                  buttonText: AppLocalizations.of(context).next,
+                  buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
                 ),
               ),
@@ -441,11 +481,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             isProductProblem: value!, index: index));
                       })
                   : SizedBox(),
-              state.orderList.data!.ordersBySupplier![productIndex]
-                          .products![index].category!.categoryImage !=
+               state.orderList.data!.ordersBySupplier![productIndex]
+                          .products![index].mainImage !=
                       null
                   ? Image.network(
-                      '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                      '${AppUrls.baseFileUrl}${state.orderList.data!.ordersBySupplier![productIndex].products![index].mainImage ?? ''}',
                       width: AppConstants.containerSize_50,
                       height: AppConstants.containerSize_50,
                     )
@@ -462,14 +502,15 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].itemWeight.toString() + AppLocalizations.of(context).kg}',
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].itemWeight.toString() + AppLocalizations.of(context)!.kg}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
                 ),
               ),
+              5.width,
               Text(
-                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context).currency}',
+                '${state.orderList.data!.ordersBySupplier![productIndex].products![index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,
@@ -501,8 +542,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .ordersBySupplier![productIndex]
                                     .products![index]
                                     .totalPayment!,
-                                image:
-                                    '${state.orderList.data!.ordersBySupplier![productIndex].products![index].category!.categoryImage ?? ''}',
+                                image: '${state.orderList.data!.ordersBySupplier![productIndex].products![index].mainImage ?? ''}',
                                 listIndex: index,
                                 productId: state
                                     .orderList
@@ -529,7 +569,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               BorderRadius.circular(AppConstants.radius_3),
                         ),
                         child: Text(
-                          AppLocalizations.of(context).product_issue,
+                          AppLocalizations.of(context)!.product_issue,
                           style: AppStyles.rkRegularTextStyle(
                               color: state.productListIndex.contains(index)
                                   ? AppColors.whiteColor
@@ -572,7 +612,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   getScreenHeight(context)),
           minChildSize: 0.4,
           initialChildSize: 0.7,
-          //shouldCloseOnMinExtent: true,
+          shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc(),
@@ -603,7 +643,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       child: Icon(Icons.close)),
                                   10.width,
                                   Text(
-                                    AppLocalizations.of(context).product_issue,
+                                    AppLocalizations.of(context)!.product_issue,
                                     style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.blackColor,
@@ -649,7 +689,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //10.width,
                                   Text(
-                                    '${weight.toString()}${AppLocalizations.of(context).kg}',
+                                    '${weight.toString()}${AppLocalizations.of(context)!.kg}',
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
                                       size: AppConstants.font_12,
@@ -657,7 +697,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //  10.width,
                                   Text(
-                                    '${price.toString() + AppLocalizations.of(context).currency}',
+                                    '${price.toString() + AppLocalizations.of(context)!.currency}',
                                     style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
                                         size: AppConstants.font_14,
@@ -668,7 +708,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             ),
                             20.height,
                             Text(
-                              AppLocalizations.of(context).problem_detected,
+                              AppLocalizations.of(context)!.problem_detected,
                               style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.blackColor,
@@ -677,21 +717,21 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             20.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)
+                                problem: AppLocalizations.of(context)!
                                     .the_product_did_not_arrive_at_all,
                                 value: 1,
                                 listIndex: listIndex),
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)
+                                problem: AppLocalizations.of(context)!
                                     .product_arrived_damaged,
                                 value: 2,
                                 listIndex: listIndex),
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)
+                                problem: AppLocalizations.of(context)!
                                     .the_product_arrived_missing,
                                 value: 3,
                                 weight: weight,
@@ -699,7 +739,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             10.height,
                             RadioButtonWidget(
                                 context: context,
-                                problem: AppLocalizations.of(context)
+                                problem: AppLocalizations.of(context)!
                                     .another_product_problem,
                                 value: 4,
                                 listIndex: listIndex),
@@ -712,22 +752,24 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         supplierId: supplierId,
                                         productId: productId,
                                         issue: state.selectedRadioTile == 1
-                                            ? AppLocalizations.of(context)
+                                            ? AppLocalizations.of(context)!
                                                 .the_product_did_not_arrive_at_all
                                             : state.selectedRadioTile == 2
-                                                ? AppLocalizations.of(context)
+                                                ? AppLocalizations.of(context)!
                                                     .product_arrived_damaged
                                                 : state.selectedRadioTile == 3
                                                     ? AppLocalizations.of(
-                                                            context)
+                                                            context)!
                                                         .the_product_arrived_missing
-                                                    : state.selectedRadioTile == 4 ? '${AppLocalizations.of(context).another_product_problem} ${' : '}${addProblemController}' : '',
+                                                    : state.selectedRadioTile ==
+                                                            4
+                                                        ? '${AppLocalizations.of(context)!.another_product_problem} ${' : '}${addProblemController.text.toString()}'
+                                                        : '',
                                         missingQuantity:
                                             state.selectedRadioTile == 3
                                                 ? state.productWeight
                                                 : 0,
                                         orderId: orderId));
-                                // Navigator.pop(context1);
                               },
                               child: Align(
                                 alignment: Alignment.bottomCenter,
@@ -738,7 +780,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   color: AppColors.pageColor,
                                   child: CustomButtonWidget(
                                     buttonText:
-                                        AppLocalizations.of(context).save,
+                                        AppLocalizations.of(context)!.save,
                                     bGColor: AppColors.mainColor,
                                   ),
                                 ),
@@ -798,10 +840,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         Radio(
                           value: value,
                           fillColor: MaterialStateColor.resolveWith(
-                              (states) => AppColors.greyColor,
+                            (states) => AppColors.greyColor,
                           ),
                           groupValue: state.selectedRadioTile,
-
                           onChanged: (val) {
                             bloc.add(ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: val!));
@@ -853,7 +894,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   : 8.width,
                               value == 3
                                   ? Text(
-                                      '${weight.toString() + AppLocalizations.of(context).kg}',
+                                      '${weight.toString() + AppLocalizations.of(context)!.kg}',
                                       style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
                                         size: AppConstants.font_12,
@@ -904,7 +945,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         keyboardType: state.selectedRadioTile == 4
                             ? TextInputType.text
                             : TextInputType.none,
-                        hint: AppLocalizations.of(context).add_text,
+                        hint: AppLocalizations.of(context)!.add_text,
                         maxLines: 5,
                         isBorderVisible: false,
                         textInputAction: TextInputAction.done,

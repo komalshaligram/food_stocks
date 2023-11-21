@@ -69,7 +69,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
             //     },
             //   ),
             // ),
-            85.height,
+            90.height,
           ],
         ),
       ),

@@ -10,8 +10,6 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
-
-
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -58,7 +56,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context).products,
+                title: AppLocalizations.of(context)!.products,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);
@@ -68,17 +66,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           body: SafeArea(
             child: NotificationListener<ScrollNotification>(
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Stack(
-                    //   children: [
-                    //     Container(
-                    //       height: getScreenWidth(context) / 3,
-                    //       width: getScreenWidth(context) / 3,
-                    //       clipBehavior: Clip.hardEdge,
-                    //       margin: EdgeInsets.symmetric(
+                physics: state.productList.isEmpty
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Stack(
+                      //   children: [
+                      //     Container(
+                      //       height: getScreenWidth(context) / 3,
+                      //       width: getScreenWidth(context) / 3,
+                      //       clipBehavior: Clip.hardEdge,
+                      //       margin: EdgeInsets.symmetric(
                     //           vertical: AppConstants.padding_10,
                     //           horizontal: AppConstants.padding_5),
                     //       decoration: BoxDecoration(
@@ -154,42 +155,42 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     state.isShimmering
                         ? SupplierProductsScreenShimmerWidget()
                         : state.productList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context) - 56,
-                                width: getScreenWidth(context),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Currently this Supplier has no products',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
-                                ),
-                              )
-                            : GridView.builder(
-                                itemCount: state.productList.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConstants.padding_5),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio: 9 / 11),
-                                itemBuilder: (context, index) =>
-                                    buildSupplierProducts(
-                                        context: context,
-                                        index: index,
-                                        isRTL: isRTLContent(context: context)),
-                              ),
+                        ? Container(
+                      height: getScreenHeight(context) - 80,
+                                  width: getScreenWidth(context),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Currently this Supplier has no products',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                )
+                        : GridView.builder(
+                      itemCount: state.productList.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5),
+                      gridDelegate:
+                      SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 9 / 11),
+                      itemBuilder: (context, index) =>
+                          buildSupplierProducts(
+                              context: context,
+                              index: index,
+                              isRTL: isRTLContent(context: context)),
+                    ),
                     state.isLoadMore
                         ? Container(
-                            height: 50,
-                            width: double.maxFinite,
-                            alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(
-                              color: AppColors.blackColor,
-                            ),
-                          )
+                      height: 50,
+                      width: double.maxFinite,
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.blackColor,
+                      ),
+                    )
                         : 0.width,
                   ],
                 ),
@@ -294,7 +295,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   // child: state.planoGramsList[index].planogramproducts?[subIndex].totalSale == 0
                   //     ? 0.width
                   //     : Text(
-                  //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context).discount}",
+                  //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
                   //   style: AppStyles.rkRegularTextStyle(
                   //       size: AppConstants.font_10,
                   //       color: AppColors.saleRedColor,
@@ -307,7 +308,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 Center(
                   child: CommonProductButtonWidget(
                     title:
-                        "${state.productList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context).currency}",
+                        "${state.productList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                     onPressed: () {
                       showProductDetails(
                           context: context,
@@ -351,7 +352,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-         //   shouldCloseOnMinExtent: true,
+            shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -472,7 +473,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              AppLocalizations.of(context).suppliers,
+                              AppLocalizations.of(context)!.suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
                                   color: AppColors.mainColor,
@@ -585,7 +586,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                                 ],
                                               )
                                             : Column(
@@ -599,7 +600,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                       '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
                                                 ],
                                               ),
                                       ),
@@ -661,7 +662,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).suppliers,
+                                      AppLocalizations.of(context)!.suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -801,7 +802,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -884,7 +885,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context).currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

@@ -9,6 +9,7 @@ class SharedPreferencesHelper {
   static const String userName = "userName";
   static const String userImage = "userImage";
   static const String userCompanyLogo = "companyLogo";
+  static const String userCartCount = "cartCount";
   static const String appVersion = 'appVersion';
   static const String fcmToken = 'fcmToken';
   static const String userOrderId = 'userOrderId';
@@ -32,6 +33,7 @@ class SharedPreferencesHelper {
       await prefs.remove(userName);
       await prefs.remove(userImage);
       await prefs.remove(userCompanyLogo);
+      await prefs.remove(userCartCount);
       await prefs.remove(phoneNumber);
       await prefs.remove(userCartId);
       await prefs.remove(walletId);
@@ -40,12 +42,13 @@ class SharedPreferencesHelper {
   }
 
   Future<void> removeProfileImage() async {
-      await prefs.remove(userImage);
+    await prefs.remove(userImage);
   }
 
   Future<void> removeCompanyLogo() async {
     await prefs.remove(userCompanyLogo);
   }
+
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);
   }
@@ -78,6 +81,10 @@ class SharedPreferencesHelper {
     await prefs.setString(userCompanyLogo, logoUrl);
   }
 
+  Future<void> setCartCount({required int count}) async {
+    await prefs.setInt(userCartCount, count);
+  }
+
   Future<void> setOrderId({required String orderId}) async {
     await prefs.setString(userOrderId, orderId);
   }
@@ -105,6 +112,7 @@ class SharedPreferencesHelper {
   String getAuthToken() {
     return prefs.getString(accessToken) ?? '';
   }
+
   String getFCMToken() {
     return prefs.getString(fcmToken) ?? '';
   }
@@ -117,8 +125,8 @@ class SharedPreferencesHelper {
     return prefs.getString(userId) ?? '';
   }
 
-  String getAppVersion(){
-    return prefs.getString(appVersion)??'1.0.0';
+  String getAppVersion() {
+    return prefs.getString(appVersion) ?? '1.0.0';
   }
 
   String getUserName() {
@@ -131,6 +139,10 @@ class SharedPreferencesHelper {
 
   String getUserCompanyLogoUrl() {
     return prefs.getString(userCompanyLogo) ?? '';
+  }
+
+  int getCartCount() {
+    return prefs.getInt(userCartCount) ?? 0;
   }
 
   String getOrderId() {
@@ -148,6 +160,4 @@ class SharedPreferencesHelper {
   String getWalletId() {
     return prefs.getString(walletId) ?? '';
   }
-
-
 }
