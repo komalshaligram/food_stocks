@@ -64,7 +64,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
     /*  ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();*/
     return BlocListener<ProductDetailsBloc, ProductDetailsState>(
       listener: (context, state) {
-        // TODO: implement listener
       },
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {

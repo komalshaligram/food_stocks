@@ -69,6 +69,7 @@ class AppConstants{
   static const int productCategoryPageLimit = 18;
   static const int productSubCategoryPageLimit = 18;
   static const int supplierProductPageLimit = 18;
+  static const int recommendationProductPageLimit = 18;
   static const int saleProductPageLimit = 18;
   static const int planogramProductPageLimit = 4;
   static const int qnaPageLimit = 10;

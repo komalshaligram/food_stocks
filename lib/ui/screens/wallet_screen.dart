@@ -487,7 +487,7 @@ class WalletScreenWidget extends StatelessWidget {
                                        height: 200,
                                         child: Center(
                                             child: Text(
-                                            'No Data',
+                                            'Data not Available',
                                             style: AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.normalFont,
                                                 color: AppColors.blackColor,

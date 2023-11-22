@@ -86,7 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
-          emit(state.copyWith(isProductLoading: true));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());

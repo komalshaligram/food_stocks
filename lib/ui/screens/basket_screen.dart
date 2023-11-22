@@ -15,7 +15,6 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
-import '../widget/basket_screen_shimmer_widget.dart';
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -101,24 +100,24 @@ class BasketScreenWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                               color: AppColors.mainColor,
                                               borderRadius: BorderRadius.only(
-                                                  topLeft: isRTLContent(context: context)
+                                                  topLeft: context.rtl
+                                                      ? Radius.circular(
+                                                          AppConstants.radius_5)
+                                                      : Radius.circular(AppConstants
+                                                          .radius_25),
+                                                  bottomLeft: context.rtl
                                                       ? Radius.circular(
                                                           AppConstants.radius_5)
                                                       : Radius.circular(
                                                           AppConstants
                                                               .radius_25),
-                                                  bottomLeft: isRTLContent(context: context)
+                                                  bottomRight: context.rtl
                                                       ? Radius.circular(
-                                                          AppConstants.radius_5)
-                                                      : Radius.circular(
                                                           AppConstants
-                                                              .radius_25),
-                                                  bottomRight: isRTLContent(
-                                                          context: context)
-                                                      ? Radius.circular(
-                                                          AppConstants.radius_25)
-                                                      : Radius.circular(AppConstants.radius_5),
-                                                  topRight: isRTLContent(context: context) ? Radius.circular(AppConstants.radius_25) : Radius.circular(AppConstants.radius_5))),
+                                                              .radius_25)
+                                                      : Radius.circular(
+                                                          AppConstants.radius_5),
+                                                  topRight: context.rtl ? Radius.circular(AppConstants.radius_25) : Radius.circular(AppConstants.radius_5))),
                                           child: (state.CartItemList.data?.cart!
                                                           .length ??
                                                       0) ==
@@ -164,21 +163,23 @@ class BasketScreenWidget extends StatelessWidget {
                                                 color:
                                                     AppColors.navSelectedColor,
                                                 borderRadius: BorderRadius.only(
-                                                    topLeft: isRTLContent(context: context)
-                                                        ? Radius.circular(AppConstants
-                                                            .radius_25)
-                                                        : Radius.circular(AppConstants
-                                                            .radius_4),
-                                                    bottomLeft: isRTLContent(context: context)
+                                                    topLeft: context.rtl
                                                         ? Radius.circular(AppConstants
                                                             .radius_25)
                                                         : Radius.circular(
                                                             AppConstants
                                                                 .radius_4),
-                                                    bottomRight: isRTLContent(context: context)
+                                                    bottomLeft: context.rtl
+                                                        ? Radius.circular(
+                                                            AppConstants
+                                                                .radius_25)
+                                                        : Radius.circular(
+                                                            AppConstants
+                                                                .radius_4),
+                                                    bottomRight: context.rtl
                                                         ? Radius.circular(AppConstants.radius_4)
                                                         : Radius.circular(AppConstants.radius_25),
-                                                    topRight: isRTLContent(context: context) ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
+                                                    topRight: context.rtl ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
                                             child: Text(
                                               AppLocalizations.of(context)!
                                                   .submit,
@@ -339,7 +340,7 @@ class BasketScreenWidget extends StatelessWidget {
                   } else {
                     showSnackBar(
                         context: context,
-                        title: AppStrings.stockNotAvailableString,
+                        title: AppStrings.outOfStockString,
                         bgColor: AppColors.redColor);
                   }
                 },

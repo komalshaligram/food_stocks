@@ -11,9 +11,9 @@ import 'package:food_stock/ui/screens/planogram_product_screen.dart';
 import 'package:food_stock/ui/screens/product_category_screen.dart';
 import 'package:food_stock/ui/screens/product_sale_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
-import 'package:food_stock/ui/screens/qr_scan_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
+import 'package:food_stock/ui/screens/recommendation_products_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
@@ -65,7 +65,6 @@ enum RouteDefine {
   storeCategoryScreen,
   orderSummaryScreen,
   orderSuccessfulScreen,
-  qrScanScreen,
   supplierScreen,
   supplierProductsScreen,
   productSaleScreen,
@@ -73,6 +72,7 @@ enum RouteDefine {
   productCategoryScreen,
   companyScreen,
   companyProductsScreen,
+  recommendationProductsScreen,
 }
 
 class AppRouting {
@@ -110,7 +110,6 @@ class AppRouting {
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
-      RouteDefine.qrScanScreen.name: (_) => QrScanRoute.route,
       RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
       RouteDefine.supplierProductsScreen.name: (_) =>
           SupplierProductsRoute.route,
@@ -120,6 +119,8 @@ class AppRouting {
       RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
       RouteDefine.companyScreen.name: (_) => CompanyRoute.route,
       RouteDefine.companyProductsScreen.name: (_) => CompanyProductsRoute.route,
+      RouteDefine.recommendationProductsScreen.name: (_) =>
+          RecommendationProductsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

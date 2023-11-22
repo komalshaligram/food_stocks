@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -11,24 +14,29 @@ class DashBoardStatsWidget extends StatelessWidget {
   final String title;
   final String value;
 
-  const DashBoardStatsWidget({super.key,required this.context,
-    required this.image,
-    required this.title,
-    required this.value});
+  const DashBoardStatsWidget(
+      {super.key,
+      required this.context,
+      required this.image,
+      required this.title,
+      required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           color: AppColors.iconBGColor),
-      padding:  EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
           horizontal: AppConstants.padding_10,
           vertical: AppConstants.padding_10),
       child: Row(
         children: [
-          SvgPicture.asset(image),
+          Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: SvgPicture.asset(image)),
           10.width,
           Expanded(
             child: Column(

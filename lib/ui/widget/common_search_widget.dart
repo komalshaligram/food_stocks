@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
-import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../utils/app_utils.dart';
@@ -16,7 +15,6 @@ import '../utils/themes/app_styles.dart';
 
 class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;
-  final bool isRTL;
   final bool isStoreCategory;
   final Widget searchResultWidget;
   final void Function() onScanTap;
@@ -29,7 +27,6 @@ class CommonSearchWidget extends StatelessWidget {
   const CommonSearchWidget(
       {super.key,
       required this.isCategoryExpand,
-      this.isRTL = false,
       required this.isStoreCategory,
       required this.searchResultWidget,
       required this.controller,
@@ -97,7 +94,9 @@ class CommonSearchWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      GestureDetector(
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onTap: onFilterTap,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -105,7 +104,7 @@ class CommonSearchWidget extends StatelessWidget {
                               horizontal: AppConstants.padding_10),
                           child: Transform(
                             alignment: Alignment.center,
-                            transform: Matrix4.rotationY(isRTL ? 0 : pi),
+                            transform: Matrix4.rotationY(context.rtl ? 0 : pi),
                             child: SvgPicture.asset(
                               AppImagePath.filter,
                               colorFilter: ColorFilter.mode(
@@ -130,16 +129,23 @@ class CommonSearchWidget extends StatelessWidget {
                             fillColor: AppColors.pageColor,
                             contentPadding:
                                 EdgeInsets.only(top: AppConstants.padding_3),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: AppColors.greyColor,
+                            prefixIcon: Transform(
+                              alignment: Alignment.center,
+                              transform:
+                                  Matrix4.rotationY(context.rtl ? pi : 0),
+                              child: Icon(
+                                Icons.search,
+                                color: AppColors.greyColor,
+                              ),
                             ),
                           ),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                         ),
                       ),
-                      GestureDetector(
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onTap: onScanTap,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -180,47 +186,6 @@ class CommonSearchWidget extends StatelessWidget {
                               Expanded(
                                 child: searchResultWidget,
                               ),
-                              // Expanded(
-                              //   child: searchList.isEmpty
-                              //       ? Center(
-                              //           child: Text(
-                              //             'Search result not found',
-                              //             style: AppStyles.rkRegularTextStyle(
-                              //                 size: AppConstants.smallFont,
-                              //                 color: AppColors.textColor),
-                              //           ),
-                              //         )
-                              //       : ListView.builder(
-                              //           itemCount: searchList.length,
-                              //           shrinkWrap: true,
-                              //           itemBuilder: (context, index) {
-                              //             return _buildSearchItem(
-                              //                 searchName:
-                              //                     searchList[index].name,
-                              //                 searchImage:
-                              //                     searchList[index].image,
-                              //                 onTap: () {
-                              //                   if(!isStoreCategory) {
-                              //                     Navigator.pushNamed(
-                              //                         context,
-                              //                         RouteDefine
-                              //                             .storeCategoryScreen
-                              //                             .name,
-                              //                         arguments: {
-                              //                           AppStrings
-                              //                               .categoryIdString:
-                              //                           searchList[index]
-                              //                               .searchId,
-                              //                           AppStrings
-                              //                               .categoryNameString:
-                              //                           searchList[index].name
-                              //                         });
-                              //                   }
-                              //                   onSearchItemTap.call();
-                              //                 });
-                              //           },
-                              //         ),
-                              // ),
                               10.height,
                             ],
                           ),
@@ -231,49 +196,6 @@ class CommonSearchWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSearchItem(
-      {required String searchName,
-      required String searchImage,
-      required void Function() onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 35,
-        decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            border: Border(
-                bottom: BorderSide(
-                    color: AppColors.borderColor.withOpacity(0.5), width: 1))),
-        padding: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_20,
-            vertical: AppConstants.padding_5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.network(
-              '${AppUrls.baseFileUrl}$searchImage',
-              fit: BoxFit.fitHeight,
-              height: 35,
-              width: 40,
-              errorBuilder: (context, error, stackTrace) {
-                return 40.width;
-              },
-            ),
-            10.width,
-            Text(
-              searchName,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.blackColor,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

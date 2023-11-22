@@ -311,7 +311,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: isRTLContent(context: context),
+                                  isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityIncreaseTap: () {

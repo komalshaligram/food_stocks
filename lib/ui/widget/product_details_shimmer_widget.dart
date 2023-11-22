@@ -101,20 +101,20 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                               color: AppColors.whiteColor,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_5
+                                    context.rtl
+                                    ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 bottomLeft: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_5
+                                    context.rtl
+                                    ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 bottomRight: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_50
+                                    context.rtl
+                                    ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 topRight: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_50
+                                    context.rtl
+                                    ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                               ),
                             ),
@@ -141,20 +141,20 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                               color: AppColors.whiteColor,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_50
+                                    context.rtl
+                                    ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 bottomLeft: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_50
+                                    context.rtl
+                                    ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 bottomRight: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_5
+                                    context.rtl
+                                    ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 topRight: Radius.circular(
-                                    isRTLContent(context: context)
-                                        ? AppConstants.radius_5
+                                    context.rtl
+                                    ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                               ),
                             ),

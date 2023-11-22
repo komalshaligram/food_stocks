@@ -49,18 +49,18 @@ class MessageContentScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                // trailingWidget: Center(
-                //   child: GestureDetector(
-                //     onTap: () {},
-                //     child: Text(
-                //       AppLocalizations.of(context)!.delete,
-                //       style: AppStyles.rkRegularTextStyle(
-                //         size: AppConstants.smallFont,
-                //         color: AppColors.mainColor,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                trailingWidget: Center(
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Text(
+                      AppLocalizations.of(context)!.delete,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.mainColor,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             body: SafeArea(

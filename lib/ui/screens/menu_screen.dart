@@ -63,22 +63,24 @@ class MenuScreenWidget extends StatelessWidget {
                                     : state.contentList[index - 2]
                                             .contentName ??
                                         '',
-                            onTap: () => index == 0
-                                ? Navigator.pushNamed(
-                                    context, RouteDefine.orderScreen.name)
-                                : index == 1
-                                    ? Navigator.pushNamed(
-                                        context,
-                                        RouteDefine
-                                            .questionAndAnswerScreen.name)
-                                    : Navigator.pushNamed(context,
-                                        RouteDefine.appContentScreen.name,
-                                        arguments: {
-                                            AppStrings.appContentIdString: state
-                                                    .contentList[index - 2]
-                                                    .id ??
-                                                ''
-                                          }));
+                            onTap: () {
+                              index == 0
+                                  ? Navigator.pushNamed(
+                                      context, RouteDefine.orderScreen.name)
+                                  : index == 1
+                                      ? Navigator.pushNamed(
+                                          context,
+                                          RouteDefine
+                                              .questionAndAnswerScreen.name)
+                                      : Navigator.pushNamed(context,
+                                          RouteDefine.appContentScreen.name,
+                                          arguments: {
+                                              AppStrings.appContentIdString:
+                                                  state.contentList[index - 2]
+                                                          .id ??
+                                                      ''
+                                            });
+                            });
                       },
                     ),
             ),

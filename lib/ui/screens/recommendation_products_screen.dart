@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/bloc/planogram_product/planogram_product_bloc.dart';
-import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -18,41 +17,39 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/supplier_products_screen_shimmer_widget.dart';
 
-class PlanogramProductRoute {
-  static Widget get route => const PlanogramProductScreen();
+class RecommendationProductsRoute {
+  static Widget get route => RecommendationProductsScreen();
 }
 
-class PlanogramProductScreen extends StatelessWidget {
-  const PlanogramProductScreen({super.key});
+class RecommendationProductsScreen extends StatelessWidget {
+  const RecommendationProductsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => PlanogramProductBloc()
-        ..add(PlanogramProductEvent.getPlanogramProductsEvent(
-            planogram:
-                args?[AppStrings.planogramProductsParamString] ?? Datum())),
-      child: PlanogramProductScreenWidget(),
+      create: (context) => RecommendationProductsBloc()
+        ..add(RecommendationProductsEvent.getRecommendationProductsEvent(
+            context: context)),
+      child: RecommendationProductsScreenWidget(),
     );
   }
 }
 
-class PlanogramProductScreenWidget extends StatelessWidget {
-  const PlanogramProductScreenWidget({super.key});
+class RecommendationProductsScreenWidget extends StatelessWidget {
+  const RecommendationProductsScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+    return BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: state.planogramName,
+              title: AppLocalizations.of(context)!.recommended_for_you,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -60,31 +57,82 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-              child: GridView.builder(
-            itemCount: state.planogramProductList.length,
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, childAspectRatio: 9 / 12),
-            itemBuilder: (context, index) => buildPlanoGramProductItem(
-                context: context, index: index, isRTL: context.rtl),
-          )),
+            child: NotificationListener<ScrollNotification>(
+              child: SingleChildScrollView(
+                physics: state.recommendationProductsList.isEmpty
+                    ? const NeverScrollableScrollPhysics()
+                    : const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    state.isShimmering
+                        ? SupplierProductsScreenShimmerWidget()
+                        : state.recommendationProductsList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Recommendation products are not available',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                            : GridView.builder(
+                                itemCount:
+                                    state.recommendationProductsList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_5),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        childAspectRatio: 9 / 12),
+                                itemBuilder: (context, index) =>
+                                    buildRecommendationProducts(
+                                        context: context,
+                                        index: index,
+                                        isRTL: context.rtl),
+                              ),
+                    state.isLoadMore
+                        ? SupplierProductsScreenShimmerWidget()
+                        : 0.width,
+                  ],
+                ),
+              ),
+              onNotification: (notification) {
+                if (notification.metrics.pixels ==
+                    notification.metrics.maxScrollExtent) {
+                  if (!state.isLoadMore) {
+                    context.read<RecommendationProductsBloc>().add(
+                        RecommendationProductsEvent
+                            .getRecommendationProductsEvent(context: context));
+                  }
+                }
+                return true;
+              },
+            ),
+          ),
         );
       },
     );
   }
 
-  Widget buildPlanoGramProductItem(
+  Widget buildRecommendationProducts(
       {required BuildContext context,
       required int index,
       required bool isRTL}) {
     return BlocProvider.value(
-      value: context.read<PlanogramProductBloc>(),
-      child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
-        builder: (context1, state) {
+      value: context.read<RecommendationProductsBloc>(),
+      child:
+          BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
+        builder: (context, state) {
           return Container(
-            // height: 170,
-            // width: 140,
+            // height: 150,
+            // width: 130,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius:
@@ -108,8 +156,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
               children: [
                 Center(
                   child: Image.network(
-                    "${AppUrls.baseFileUrl}${state.planogramProductList[index]
-                        .mainImage}",
+                    "${AppUrls.baseFileUrl}${state.recommendationProductsList[index].mainImage}",
                     height: 70,
                     fit: BoxFit.fitHeight,
                     loadingBuilder: (context, child, loadingProgress) {
@@ -142,7 +189,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  "${state.planogramProductList[index].productName}",
+                  "${state.recommendationProductsList[index].productName}",
                   style: AppStyles.rkBoldTextStyle(
                       size: AppConstants.font_12,
                       color: AppColors.blackColor,
@@ -152,31 +199,18 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 ),
                 5.height,
                 Expanded(
-                  child: state.planogramProductList[index].totalSale == 0
-                      ? 0.width
-                      : Text(
-                    "${state.planogramProductList[index]
-                        .totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  child: 0.width,
                 ),
                 5.height,
                 Center(
                   child: CommonProductButtonWidget(
                     title:
-                    "${state.planogramProductList[index].productPrice
-                        ?.toStringAsFixed(0)}${AppLocalizations.of(context)!
-                        .currency}",
+                        "${state.recommendationProductsList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
                     onPressed: () {
                       showProductDetails(
                           context: context,
                           productId:
-                              state.planogramProductList[index].id ?? '');
+                              state.recommendationProductsList[index].id ?? '');
                     },
                     textColor: AppColors.whiteColor,
                     bgColor: AppColors.mainColor,
@@ -184,29 +218,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                     textSize: AppConstants.font_12,
                   ),
                 )
-                // Center(
-                //   child: Container(
-                //     height: AppConstants.buttonHeightSmall,
-                //     width: double.maxFinite,
-                //     margin: EdgeInsets.symmetric(
-                //         horizontal: AppConstants.padding_10),
-                //     alignment: Alignment.center,
-                //     decoration: BoxDecoration(
-                //         color: AppColors.mainColor,
-                //         borderRadius: BorderRadius.all(
-                //             Radius.circular(AppConstants.radius_3))),
-                //     padding: EdgeInsets.symmetric(
-                //         vertical: AppConstants.padding_5,
-                //         horizontal: AppConstants.padding_10),
-                //     child: Text(
-                //       "${state.planogramProductList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                //       style: AppStyles.rkRegularTextStyle(
-                //           size: AppConstants.font_12,
-                //           fontWeight: FontWeight.bold,
-                //           color: AppColors.whiteColor),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           );
@@ -214,10 +225,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       ),
     );
   }
+
   void showProductDetails(
       {required BuildContext context, required String productId}) async {
-    context.read<PlanogramProductBloc>().add(
-        PlanogramProductEvent.getProductDetailsEvent(
+    context.read<RecommendationProductsBloc>().add(
+        RecommendationProductsEvent.getProductDetailsEvent(
             context: context, productId: productId));
     showModalBottomSheet(
       context: context,
@@ -230,7 +242,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return BlocProvider.value(
-          value: context.read<PlanogramProductBloc>(),
+          value: context.read<RecommendationProductsBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -242,9 +254,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
-                  value: context.read<PlanogramProductBloc>(),
-                  child:
-                      BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+                  value: context.read<RecommendationProductsBloc>(),
+                  child: BlocBuilder<RecommendationProductsBloc,
+                      RecommendationProductsState>(
                     builder: (context, state) {
                       return Container(
                         decoration: BoxDecoration(
@@ -259,7 +271,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                              context: context,
+                                  context: context,
                                   productImage:
                                       state.productDetails.first.mainImage ??
                                           '',
@@ -288,21 +300,24 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityIncreaseTap: () {
-                                    context.read<PlanogramProductBloc>().add(
-                                        PlanogramProductEvent
+                                    context
+                                        .read<RecommendationProductsBloc>()
+                                        .add(RecommendationProductsEvent
                                             .increaseQuantityOfProduct(
                                                 context: context1));
                                   },
                                   onQuantityDecreaseTap: () {
-                                    context.read<PlanogramProductBloc>().add(
-                                        PlanogramProductEvent
+                                    context
+                                        .read<RecommendationProductsBloc>()
+                                        .add(RecommendationProductsEvent
                                             .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
                                   noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
-                                    context.read<PlanogramProductBloc>().add(
-                                        PlanogramProductEvent
+                                    context
+                                        .read<RecommendationProductsBloc>()
+                                        .add(RecommendationProductsEvent
                                             .changeNoteOfProduct(
                                                 newNote: newNote));
                                   },
@@ -311,8 +326,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       ? null
                                       : () {
                                           context
-                                              .read<PlanogramProductBloc>()
-                                              .add(PlanogramProductEvent
+                                              .read<
+                                                  RecommendationProductsBloc>()
+                                              .add(RecommendationProductsEvent
                                                   .addToCartProductEvent(
                                                       context: context1));
                                         }),
@@ -329,8 +345,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
 
   Widget buildSupplierSelection({required BuildContext context}) {
     return BlocProvider.value(
-      value: context.read<PlanogramProductBloc>(),
-      child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
+      value: context.read<RecommendationProductsBloc>(),
+      child:
+          BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
         builder: (context, state) {
           return AnimatedCrossFade(
               firstChild: Container(
@@ -351,8 +368,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           const EdgeInsets.only(bottom: AppConstants.padding_5),
                       child: InkWell(
                         onTap: () {
-                          context.read<PlanogramProductBloc>().add(
-                              PlanogramProductEvent
+                          context.read<RecommendationProductsBloc>().add(
+                              RecommendationProductsEvent
                                   .changeSupplierSelectionExpansionEvent());
                         },
                         child: Row(
@@ -379,8 +396,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             .isEmpty
                         ? InkWell(
                             onTap: () {
-                              context.read<PlanogramProductBloc>().add(
-                                  PlanogramProductEvent
+                              context.read<RecommendationProductsBloc>().add(
+                                  RecommendationProductsEvent
                                       .changeSupplierSelectionExpansionEvent());
                             },
                             splashColor: Colors.transparent,
@@ -539,8 +556,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   bottom: AppConstants.padding_5),
                               child: InkWell(
                                 onTap: () {
-                                  context.read<PlanogramProductBloc>().add(
-                                      PlanogramProductEvent
+                                  context
+                                      .read<RecommendationProductsBloc>()
+                                      .add(RecommendationProductsEvent
                                           .changeSupplierSelectionExpansionEvent());
                                 },
                                 child: Row(
@@ -626,8 +644,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                         //for base price selection /without sale pass -2
                                                         context
                                                             .read<
-                                                                PlanogramProductBloc>()
-                                                            .add(PlanogramProductEvent
+                                                                RecommendationProductsBloc>()
+                                                            .add(RecommendationProductsEvent
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
@@ -635,8 +653,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                                         -2));
                                                         context
                                                             .read<
-                                                                PlanogramProductBloc>()
-                                                            .add(PlanogramProductEvent
+                                                                RecommendationProductsBloc>()
+                                                            .add(RecommendationProductsEvent
                                                                 .changeSupplierSelectionExpansionEvent());
                                                       },
                                                       splashColor:
@@ -703,8 +721,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                       onTap: () {
                                                         context
                                                             .read<
-                                                                PlanogramProductBloc>()
-                                                            .add(PlanogramProductEvent
+                                                                RecommendationProductsBloc>()
+                                                            .add(RecommendationProductsEvent
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
@@ -712,8 +730,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                                         subIndex));
                                                         context
                                                             .read<
-                                                                PlanogramProductBloc>()
-                                                            .add(PlanogramProductEvent
+                                                                RecommendationProductsBloc>()
+                                                            .add(RecommendationProductsEvent
                                                                 .changeSupplierSelectionExpansionEvent());
                                                       },
                                                       splashColor:

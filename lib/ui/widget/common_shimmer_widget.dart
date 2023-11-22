@@ -24,9 +24,7 @@ class CommonShimmerWidget extends StatelessWidget {
       child: child,
       baseColor: baseColor,
       highlightColor: highlightColor,
-      direction: isRTLContent(context: context)
-          ? ShimmerDirection.rtl
-          : ShimmerDirection.ltr,
+      direction: context.rtl ? ShimmerDirection.rtl : ShimmerDirection.ltr,
       period: period,
       enabled: true,
     );

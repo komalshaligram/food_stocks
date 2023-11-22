@@ -73,7 +73,7 @@ class OrderScreenWidget extends StatelessWidget {
                             : Expanded(
                                 child: Center(
                                     child: Text(
-                                  'No order',
+                                  'Orders not found',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.normalFont,
                                       color: AppColors.blackColor,

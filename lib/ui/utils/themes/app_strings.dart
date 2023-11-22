@@ -2,23 +2,13 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 
 class AppStrings {
   static const appName = 'Food Stock';
-  static const hpString = '* H.P.';
-  static const selectTagString = 'select tag';
-  static const emailString = 'test2gmail.com';
-  static const numberString = '1234567896';
-  static const hintString = '1234567896';
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
   static const timeString = '00:00';
   static const tempString = 'temp';
-  static const cityNotFoundString = 'Cities not available';
-  static const okString = 'ok';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
-  static const ascendingString = 'asc';
-  static const descendingString = 'desc';
-  static const planogramSortFieldString = 'planogramName';
   static const failedToLoadString = 'Failed to load';
   static const outOfStockString = 'Out of Stock';
   static const clearString = 'Clear';
@@ -46,6 +36,9 @@ class AppStrings {
   static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
   static const companyIdString = 'companyId';
+  static const ascendingString = 'asc';
+  static const descendingString = 'desc';
+  static const planogramSortFieldString = 'planogramName';
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
   static const cartProductIdString = 'cartProductId';
@@ -80,22 +73,16 @@ class AppStrings {
   static const removeSuccessString = 'Removed Successfully!';
   static const logOutSuccessString = 'Logged out Successfully!';
   static const somethingWrongString = 'Something is wrong, try again!';
-  static const userNotFoundString = 'User not found';
-  static const imageNotUploadString = 'Image not uploaded';
-  static const filesNotUploadString = 'Files not uploaded';
-  static const maxQuantityAllowString = 'Maximum 30 quantity allow per order';
   static const minQuantityMsgString = 'Add at least 1 quantity';
-  static const selectSupplierMsgString = 'select at least 1 Supplier';
+  static const selectSupplierMsgString = 'Please select supplier';
   static const maxQuantityMsgString = 'You have reached maximum quantity';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';
-  static const selectCompanyLogoString = 'Please upload logo image';
-  static const selectProfileImageString = 'Please upload your profile image';
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
       'Please select only image and document files';
-  static const downloadString = 'Download successfully!';
+  static const downloadString = 'Downloaded successfully!';
   static const downloadFailedString = 'Failed to download';
   static const docDownloadAllowPermissionString =
       'Please allow storage permission from settings';
@@ -109,16 +96,16 @@ class AppStrings {
   static const selectOpeningString = 'Please select opening Time';
   static const selectPreviousShiftString = 'Please select previous shift time';
   static const selectFirstShiftString = 'Please select first shift time';
-  static const selectShiftTimeString = 'please select shiftTime';
+  static const selectShiftTimeString = 'Please select shift time';
   static const enterOtpString = 'Please enter otp';
-  static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
+  static const selectTimeMoreThen0String =
+      'Please select time grater then 00:00';
   static const fillUpClosingTimeString = 'Please fill up closing time';
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
-  static const clearCartPopUpString = 'Aru you sure you want to clear cart?';
-  static const deleteProductPopUpString = 'Aru you sure you want to delete product?';
-  static const stockNotAvailableString = 'Stock not available';
-
+  static const clearCartPopUpString = 'Are you sure you want to clear cart?';
+  static const deleteProductPopUpString =
+      'Are you sure you want to delete product?';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -137,6 +124,4 @@ class AppStrings {
   static const supplierOrderNumberString = 'orderNumber';
   static const totalAmountString = 'totalAmount';
   static const cartIdString = 'id';
-
-
 }

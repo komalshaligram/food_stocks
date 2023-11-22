@@ -1,9 +1,9 @@
 import 'dart:io';
+
+import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,30 +11,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
-import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
-    as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
+import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
+    as InsertCartModel;
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
-import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
-part 'product_sale_event.dart';
+part 'recommendation_products_event.dart';
 
-part 'product_sale_state.dart';
+part 'recommendation_products_state.dart';
 
-part 'product_sale_bloc.freezed.dart';
+part 'recommendation_products_bloc.freezed.dart';
 
-class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
-  ProductSaleBloc() : super(ProductSaleState.initial()) {
-    on<ProductSaleEvent>((event, emit) async {
-      if (event is _GetProductSalesListEvent) {
+class RecommendationProductsBloc
+    extends Bloc<RecommendationProductsEvent, RecommendationProductsState> {
+  RecommendationProductsBloc() : super(RecommendationProductsState.initial()) {
+    on<RecommendationProductsEvent>((event, emit) async {
+      if (event is _GetRecommendationProductsEvent) {
         if (state.isLoadMore) {
           return;
         }
@@ -45,35 +47,53 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-              AppUrls.getSaleProductsUrl,
-              data: ProductSalesReqModel(
-                      pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.saleProductPageLimit)
-                  .toJson());
-          ProductSalesResModel response = ProductSalesResModel.fromJson(res);
+          RecommendationProductsReqModel request =
+              RecommendationProductsReqModel(
+                  pageLimit: AppConstants.recommendationProductPageLimit,
+                  pageNum: state.pageNum + 1);
+          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+              prefs: await SharedPreferences.getInstance());
+          debugPrint('recommendation products req = ${request.toJson()}');
+          final res = await DioClient(event.context)
+              .post(AppUrls.getRecommendationProductsUrl,
+                  data: request.toJson(),
+                  options: Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                          'Bearer ${preferencesHelper.getAuthToken()}',
+                    },
+                  ));
+          RecommendationProductsResModel response =
+              RecommendationProductsResModel.fromJson(res);
+          debugPrint('recommendation Products res = ${response.data}');
           if (response.status == 200) {
-            List<Datum> productSaleList =
-                state.productSalesList.toList(growable: true);
-            productSaleList.addAll(response.data ?? []);
+            List<RecommendationData> recommendationProductsList =
+                state.recommendationProductsList.toList(growable: true);
+            recommendationProductsList.addAll(response.data ?? []);
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
-            productStockList.addAll(response.data?.map((saleProduct) =>
-                    ProductStockModel(
-                        productId: saleProduct.id ?? '',
-                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
+            productStockList.addAll(response.data?.map(
+                    (recommendationProduct) => ProductStockModel(
+                        productId: recommendationProduct.id ?? '',
+                        stock: recommendationProduct.productStock ?? 0)) ??
                 []);
-            debugPrint('new product sale list len = ${productSaleList.length}');
             debugPrint(
-                'new product sale stock list len = ${productStockList.length}');
+                'new product list len = ${recommendationProductsList.length}');
+            debugPrint(
+                'new product stock list len = ${productStockList.length}');
+            debugPrint(
+                'new product stock list len = ${productStockList.where((element) {
+              debugPrint('ids = ${element.productId}');
+              return true;
+            })}}');
             emit(state.copyWith(
-                productSalesList: productSaleList,
+                recommendationProductsList: recommendationProductsList,
                 productStockList: productStockList,
                 pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                isShimmering: false));
+                isShimmering: false,
+                isLoadMore: false));
             emit(state.copyWith(
-                isBottomOfProducts: productSaleList.length ==
+                isBottomOfProducts: state.recommendationProductsList.length ==
                         (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
@@ -81,8 +101,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -143,9 +163,9 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                                               SaleProduct()) ??
                                       -1
                               : -1,
-                  supplierSales: supplier.saleProduct
+                          supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
-                      saleId: sale.saleId ?? '',
+                                      saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
@@ -296,16 +316,16 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 supplierId: state
                     .productStockList[state.productStockUpdateIndex]
                     .productSupplierIds,
-                note: state.productStockList[state.productStockUpdateIndex].note
-                        .isEmpty
-                    ? null
-                    : state
-                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
                         .productSaleId.isEmpty
                     ? null
                     : state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId)
+                        .productSaleId,
+                note: state.productStockList[state.productStockUpdateIndex].note
+                        .isEmpty
+                    ? null
+                    : state
+                        .productStockList[state.productStockUpdateIndex].note)
           ]);
           Map<String, dynamic> req = insertCartReqModel.toJson();
           req.removeWhere((key, value) {
@@ -333,7 +353,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            add(ProductSaleEvent.setCartCountEvent());
+            add(RecommendationProductsEvent.setCartCountEvent());
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
