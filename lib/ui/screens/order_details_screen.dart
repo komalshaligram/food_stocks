@@ -153,8 +153,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           .toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color: state.orderByIdList.data!.ordersBySupplier![index]
-                              .deliverStatus!.statusName == AppLocalizations.of(context)!.pending_delivery ?AppColors.orangeColor :
+                          color: /*state.orderByIdList.data!.ordersBySupplier![index]
+                              .deliverStatus!.statusName == AppLocalizations.of(context)!.pending_delivery*/
+                          state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate == '' ? AppColors.orangeColor :
                               AppColors.mainColor,
                           fontWeight: FontWeight.w700),
                     )
@@ -178,9 +179,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.delivery_date,
-                      value: state.orderByIdList.data!.ordersBySupplier![index]
-                          .deliverStatus!.statusName
-                          != AppLocalizations.of(context)!.pending_delivery? '${state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
+                      value: state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate != ''? '${state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.font_10,

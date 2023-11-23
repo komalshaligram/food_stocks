@@ -91,7 +91,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               );
               debugPrint('clear cart response_______${res}');
               if (res["status"] == 201) {
-                debugPrint('cart clear');
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
               else{
@@ -100,8 +99,12 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
             }  on ServerException {}
 
-          } else {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+          }
+          else if(response.status == 403){
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+          }
+          else {
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
           }
         }  on ServerException {}
       }

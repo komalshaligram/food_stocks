@@ -327,7 +327,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     } else {
                       showSnackBar(
                           context: context,
-                          title: 'sign missing',
+                          title: 'Signature is missing',
                           bgColor: AppColors.redColor);
                     }
                   },

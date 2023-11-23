@@ -161,8 +161,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                       .statusName
                                                       .toString() ==
                                                   AppLocalizations.of(context)!
-                                                      .pending_delivery
-                                              ? AppColors.orangeColor
+                                                      .pending_delivery?
+                                          /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate == ''?*/
+                                               AppColors.orangeColor
                                               : AppColors.mainColor,
                                           fontWeight: FontWeight.w700),
                                     )
@@ -192,9 +193,17 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       flexValue: 2,
                                       title: AppLocalizations.of(context)!
                                           .delivery_date,
-                                      value: state.orderList.data!.ordersBySupplier![productIndex]
-                                          .deliverStatus!.statusName
-                                          != AppLocalizations.of(context)!.pending_delivery? '${state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
+                                      value: /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
+                                      state
+                                          .orderList
+                                          .data!
+                                          .ordersBySupplier![productIndex]
+                                          .deliverStatus!
+                                          .statusName
+                                          .toString() !=
+                                          AppLocalizations.of(context)!
+                                              .pending_delivery
+                                        ?'${state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
                                       valueTextSize: AppConstants.font_10,
@@ -247,7 +256,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    state
+                                   state
                                                 .orderList
                                                 .data!
                                                 .ordersBySupplier![productIndex]
@@ -256,6 +265,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                 .toString() !=
                                             AppLocalizations.of(context)!
                                                 .pending_delivery
+                                    /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
                                         ? Text(
                                             state
                                                     .orderList
@@ -277,15 +287,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                               controller: driverController,
                                               inputformet: [
                                                 LengthLimitingTextInputFormatter(
-                                                    15)
-                                              ],
+                                                    15)],
                                               keyboardType: TextInputType.text,
                                               hint: '',
                                               validator:
                                                   AppStrings.driverNameString,
                                               fillColor: Colors.white,
                                             )),
-                                    (state
+                                   (state
                                                     .orderList
                                                     .data
                                                     ?.ordersBySupplier![
@@ -295,8 +304,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                     .toString() ??
                                                 '') !=
                                             AppLocalizations.of(context)!
-                                                .pending_delivery
-                                        ? Container(
+                                                .pending_delivery?
+         /*         state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
+                                         Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(
@@ -422,8 +432,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     state.orderList.data?.orderData?.first.orderstatus
                                 ?.statusName
                                 .toString() !=
-                            AppLocalizations.of(context)!.pending_delivery
-                        ? Navigator.pushNamed(
+                            AppLocalizations.of(context)!.pending_delivery?
+                    /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''?*/
+                         Navigator.pushNamed(
                             context, RouteDefine.bottomNavScreen.name)
                         : _formKey.currentState?.validate() ?? false
                             ? Navigator.pushNamed(context,
@@ -451,8 +462,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             .totalPayment
                                             .toString() ??
                                         '',
-                                    AppStrings
-                                            .deliveryDateString: /*state
+                                    AppStrings.deliveryDateString: /*state
                                         .orderList
                                         .data!
                                         .ordersBySupplier![productIndex]
@@ -522,8 +532,17 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              status != AppLocalizations.of(context)!.pending_delivery
-                  ? Checkbox(
+         /* state.orderList.data!.ordersBySupplier![index].orderDeliveryDate != '' ?*/
+              state
+                  .orderList
+                  .data!
+                  .ordersBySupplier![productIndex]
+                  .deliverStatus!
+                  .statusName
+                  .toString() !=
+                  AppLocalizations.of(context)!
+                      .pending_delivery ?
+                  Checkbox(
                       value:
                           state.productListIndex.contains(index) ? true : false,
                       shape: RoundedRectangleBorder(
@@ -562,7 +581,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].itemWeight.toString() ?? '' + AppLocalizations.of(context)!.kg}',
+                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].itemWeight.toString() ?? ''}${' '}${state.orderList.data?.ordersBySupplier?[productIndex].products![index].scale.toString() ?? ''}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
@@ -570,14 +589,23 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               5.width,
               Text(
-                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].totalPayment.toString() ?? '' + AppLocalizations.of(context)!.currency}',
+                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].totalPayment.toString() ?? ''}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,
                     fontWeight: FontWeight.w700),
               ),
-              status != AppLocalizations.of(context)!.pending_delivery
-                  ? GestureDetector(
+/*        state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate!= ''?*/
+              state
+                  .orderList
+                  .data!
+                  .ordersBySupplier![productIndex]
+                  .deliverStatus!
+                  .statusName
+                  .toString() !=
+                  AppLocalizations.of(context)!
+                      .pending_delivery ?
+                   GestureDetector(
                       onTap: () {
                         state.productListIndex.contains(index)
                             ? ProductProblemBottomSheet(

@@ -85,7 +85,7 @@
   "delivery_date": "תאריך משלוח",
   "everything_was_received": "התקבל הכל",
   "total": "סה”כ",
-  "pending_delivery": "ממתין למשלוח",
+  "pending_delivery": "pending",
   "supplier_order_number": "מספר הזמנת ספק",
   "driver_name": "פרטי נהג",
   "order_products_list": "רשימת מוצרים בהזמנה",
