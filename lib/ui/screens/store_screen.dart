@@ -94,349 +94,707 @@ class StoreScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 80.height,
-                                state.productCategoryList.isEmpty
-                                    ? 0.width
-                                    : Column(
-                                        children: [
-                                          buildListTitles(
-                                              context: context,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .categories,
-                                              subTitle:
-                                                  AppLocalizations.of(context)!
-                                                      .all_categories,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .productCategoryScreen
-                                                        .name);
-                                              }),
-                                          SizedBox(
-                                            width: getScreenWidth(context),
-                                            height: 110,
-                                            child: ListView.builder(
-                                              itemCount: state
-                                                  .productCategoryList.length,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_5),
-                                              itemBuilder: (context, index) {
-                                                return buildCategoryListItem(
-                                                    categoryImage: state
-                                                            .productCategoryList[
-                                                                index]
-                                                            .categoryImage ??
-                                                        '',
-                                                    categoryName: state
-                                                            .productCategoryList[
-                                                                index]
-                                                            .categoryName ??
-                                                        '',
-                                                    isHomePreference: state
-                                                            .productCategoryList[
-                                                                index]
-                                                            .isHomePreference ??
-                                                        false,
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                          context,
-                                                          RouteDefine
-                                                              .storeCategoryScreen
-                                                              .name,
-                                                          arguments: {
-                                                            AppStrings
-                                                                    .categoryIdString:
-                                                                state
-                                                                    .productCategoryList[
-                                                                        index]
-                                                                    .id,
-                                                            AppStrings
-                                                                    .categoryNameString:
-                                                                state
-                                                                    .productCategoryList[
-                                                                        index]
-                                                                    .categoryName
-                                                          });
-                                                    });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                state.companiesList.isEmpty
-                                    ? 0.width
-                                    : Column(
-                                        children: [
-                                          buildListTitles(
-                                              context: context,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .companies,
-                                              subTitle:
-                                                  AppLocalizations.of(context)!
-                                                      .all_companies,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .companyScreen.name);
-                                              }),
-                                          SizedBox(
-                                            width: getScreenWidth(context),
-                                            height: 110,
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  state.companiesList.length,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_5),
-                                              itemBuilder: (context, index) {
-                                                return buildCompanyListItem(
-                                                    companyLogo: state
-                                                            .companiesList[
-                                                                index]
-                                                            .brandLogo ??
-                                                        '',
-                                                    companyName: state
-                                                            .companiesList[
-                                                                index]
-                                                            .brandName ??
-                                                        '',
-                                                    isHomePreference: state
-                                                            .companiesList[
-                                                                index]
-                                                            .isHomePreference ??
-                                                        false,
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                          context,
-                                                          RouteDefine
-                                                              .companyProductsScreen
-                                                              .name,
-                                                          arguments: {
-                                                            AppStrings
-                                                                .companyIdString: state
-                                                                    .companiesList[
-                                                                        index]
-                                                                    .id ??
-                                                                ''
-                                                          });
-                                                    });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                state.suppliersList.data?.isEmpty ?? true
-                                    ? 0.width
-                                    : Column(
-                                        children: [
-                                          buildListTitles(
-                                              context: context,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .suppliers,
-                                              subTitle:
-                                                  AppLocalizations.of(context)!
-                                                      .all_suppliers,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .supplierScreen.name);
-                                              }),
-                                          SizedBox(
-                                            width: getScreenWidth(context),
-                                            height: 110,
-                                            child: ListView.builder(
-                                              itemCount: state
-                                                  .suppliersList.data?.length,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_5),
-                                              itemBuilder: (context, index) {
-                                                return buildCompanyListItem(
-                                                    companyLogo: state
-                                                            .suppliersList
-                                                            .data?[index]
-                                                            .logo ??
-                                                        '',
-                                                    companyName: state
-                                                            .suppliersList
-                                                            .data?[index]
-                                                            .supplierDetail
-                                                            ?.companyName ??
-                                                        '',
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                          context,
-                                                          RouteDefine
-                                                              .supplierProductsScreen
-                                                              .name,
-                                                          arguments: {
-                                                            AppStrings
-                                                                .supplierIdString: state
-                                                                    .suppliersList
-                                                                    .data?[
-                                                                        index]
-                                                                    .id ??
-                                                                ''
-                                                          });
-                                                    });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                state.productSalesList.data?.isEmpty ?? true
-                                    ? 0.width
-                                    : Column(
-                                        children: [
-                                          buildListTitles(
-                                              context: context,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .sales,
-                                              subTitle:
-                                                  AppLocalizations.of(context)!
-                                                      .all_sales,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .productSaleScreen
-                                                        .name);
-                                              }),
-                                          SizedBox(
-                                            width: getScreenWidth(context),
-                                            height: 190,
-                                            child: ListView.builder(
-                                              itemCount: state.productSalesList
-                                                  .data?.length,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_5),
-                                              itemBuilder: (context, index) {
-                                                return buildProductSaleListItem(
-                                                  context: context,
-                                                  saleImage: state
-                                                          .productSalesList
-                                                          .data?[index]
-                                                          .mainImage ??
+                                AnimatedCrossFade(
+                                    firstChild: 0.width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .categories,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_categories,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .productCategoryScreen
+                                                      .name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount: state
+                                                .productCategoryList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCategoryListItem(
+                                                  categoryImage: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .categoryImage ??
                                                       '',
-                                                  title: state
-                                                          .productSalesList
-                                                          .data?[index]
-                                                          .salesName ??
+                                                  categoryName: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .categoryName ??
                                                       '',
-                                                  description: parse(state
-                                                                  .productSalesList
+                                                  isHomePreference: state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .isHomePreference ??
+                                                      false,
+                                                  onTap: () {
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        RouteDefine
+                                                            .storeCategoryScreen
+                                                            .name,
+                                                        arguments: {
+                                                          AppStrings
+                                                                  .categoryIdString:
+                                                              state
+                                                                  .productCategoryList[
+                                                                      index]
+                                                                  .id,
+                                                          AppStrings
+                                                                  .categoryNameString:
+                                                              state
+                                                                  .productCategoryList[
+                                                                      index]
+                                                                  .categoryName
+                                                        });
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState:
+                                        state.productCategoryList.isEmpty
+                                            ? CrossFadeState.showFirst
+                                            : CrossFadeState.showSecond,
+                                    duration: Duration(milliseconds: 300)),
+                                // state.productCategoryList.isEmpty
+                                //     ? 0.width
+                                //     : Column(
+                                //         children: [
+                                //           buildListTitles(
+                                //               context: context,
+                                //               title:
+                                //                   AppLocalizations.of(context)!
+                                //                       .categories,
+                                //               subTitle:
+                                //                   AppLocalizations.of(context)!
+                                //                       .all_categories,
+                                //               onTap: () {
+                                //                 Navigator.pushNamed(
+                                //                     context,
+                                //                     RouteDefine
+                                //                         .productCategoryScreen
+                                //                         .name);
+                                //               }),
+                                //           SizedBox(
+                                //             width: getScreenWidth(context),
+                                //             height: 110,
+                                //             child: ListView.builder(
+                                //               itemCount: state
+                                //                   .productCategoryList.length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal:
+                                //                       AppConstants.padding_5),
+                                //               itemBuilder: (context, index) {
+                                //                 return buildCategoryListItem(
+                                //                     categoryImage: state
+                                //                             .productCategoryList[
+                                //                                 index]
+                                //                             .categoryImage ??
+                                //                         '',
+                                //                     categoryName: state
+                                //                             .productCategoryList[
+                                //                                 index]
+                                //                             .categoryName ??
+                                //                         '',
+                                //                     isHomePreference: state
+                                //                             .productCategoryList[
+                                //                                 index]
+                                //                             .isHomePreference ??
+                                //                         false,
+                                //                     onTap: () {
+                                //                       Navigator.pushNamed(
+                                //                           context,
+                                //                           RouteDefine
+                                //                               .storeCategoryScreen
+                                //                               .name,
+                                //                           arguments: {
+                                //                             AppStrings
+                                //                                     .categoryIdString:
+                                //                                 state
+                                //                                     .productCategoryList[
+                                //                                         index]
+                                //                                     .id,
+                                //                             AppStrings
+                                //                                     .categoryNameString:
+                                //                                 state
+                                //                                     .productCategoryList[
+                                //                                         index]
+                                //                                     .categoryName
+                                //                           });
+                                //                     });
+                                //               },
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                AnimatedCrossFade(
+                                    firstChild: 0.width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .companies,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_companies,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .companyScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount:
+                                                state.companiesList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCompanyListItem(
+                                                  companyLogo: state
+                                                          .companiesList[index]
+                                                          .brandLogo ??
+                                                      '',
+                                                  companyName: state
+                                                          .companiesList[index]
+                                                          .brandName ??
+                                                      '',
+                                                  isHomePreference: state
+                                                          .companiesList[index]
+                                                          .isHomePreference ??
+                                                      false,
+                                                  onTap: () {
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        RouteDefine
+                                                            .companyProductsScreen
+                                                            .name,
+                                                        arguments: {
+                                                          AppStrings
+                                                              .companyIdString: state
+                                                                  .companiesList[
+                                                                      index]
+                                                                  .id ??
+                                                              ''
+                                                        });
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState: state.companiesList.isEmpty
+                                        ? CrossFadeState.showFirst
+                                        : CrossFadeState.showSecond,
+                                    duration: Duration(milliseconds: 300)),
+                                // state.companiesList.isEmpty
+                                //     ? 0.width
+                                //     : Column(
+                                //         children: [
+                                //           buildListTitles(
+                                //               context: context,
+                                //               title:
+                                //                   AppLocalizations.of(context)!
+                                //                       .companies,
+                                //               subTitle:
+                                //                   AppLocalizations.of(context)!
+                                //                       .all_companies,
+                                //               onTap: () {
+                                //                 Navigator.pushNamed(
+                                //                     context,
+                                //                     RouteDefine
+                                //                         .companyScreen.name);
+                                //               }),
+                                //           SizedBox(
+                                //             width: getScreenWidth(context),
+                                //             height: 110,
+                                //             child: ListView.builder(
+                                //               itemCount:
+                                //                   state.companiesList.length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal:
+                                //                       AppConstants.padding_5),
+                                //               itemBuilder: (context, index) {
+                                //                 return buildCompanyListItem(
+                                //                     companyLogo: state
+                                //                             .companiesList[
+                                //                                 index]
+                                //                             .brandLogo ??
+                                //                         '',
+                                //                     companyName: state
+                                //                             .companiesList[
+                                //                                 index]
+                                //                             .brandName ??
+                                //                         '',
+                                //                     isHomePreference: state
+                                //                             .companiesList[
+                                //                                 index]
+                                //                             .isHomePreference ??
+                                //                         false,
+                                //                     onTap: () {
+                                //                       Navigator.pushNamed(
+                                //                           context,
+                                //                           RouteDefine
+                                //                               .companyProductsScreen
+                                //                               .name,
+                                //                           arguments: {
+                                //                             AppStrings
+                                //                                 .companyIdString: state
+                                //                                     .companiesList[
+                                //                                         index]
+                                //                                     .id ??
+                                //                                 ''
+                                //                           });
+                                //                     });
+                                //               },
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                AnimatedCrossFade(
+                                    firstChild: 0.width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .suppliers,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_suppliers,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .supplierScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 110,
+                                          child: ListView.builder(
+                                            itemCount: state
+                                                .suppliersList.data?.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildCompanyListItem(
+                                                  companyLogo: state
+                                                          .suppliersList
+                                                          .data?[index]
+                                                          .logo ??
+                                                      '',
+                                                  companyName: state
+                                                          .suppliersList
+                                                          .data?[index]
+                                                          .supplierDetail
+                                                          ?.companyName ??
+                                                      '',
+                                                  onTap: () {
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        RouteDefine
+                                                            .supplierProductsScreen
+                                                            .name,
+                                                        arguments: {
+                                                          AppStrings
+                                                              .supplierIdString: state
+                                                                  .suppliersList
                                                                   .data?[index]
-                                                                  .salesDescription ??
-                                                              '')
-                                                          .body
-                                                          ?.text ??
-                                                      '',
-                                                  price: double.parse(state
-                                                          .productSalesList
-                                                          .data?[index]
-                                                          .discountPercentage ??
-                                                      '0.0'),
-                                                  onButtonTap: () {
-                                                    showProductDetails(
-                                                        context: context,
-                                                        productId: state
+                                                                  .id ??
+                                                              ''
+                                                        });
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState:
+                                        state.suppliersList.data?.isEmpty ??
+                                                true
+                                            ? CrossFadeState.showFirst
+                                            : CrossFadeState.showSecond,
+                                    duration: Duration(milliseconds: 300)),
+                                // state.suppliersList.data?.isEmpty ?? true
+                                //     ? 0.width
+                                //     : Column(
+                                //         children: [
+                                //           buildListTitles(
+                                //               context: context,
+                                //               title:
+                                //                   AppLocalizations.of(context)!
+                                //                       .suppliers,
+                                //               subTitle:
+                                //                   AppLocalizations.of(context)!
+                                //                       .all_suppliers,
+                                //               onTap: () {
+                                //                 Navigator.pushNamed(
+                                //                     context,
+                                //                     RouteDefine
+                                //                         .supplierScreen.name);
+                                //               }),
+                                //           SizedBox(
+                                //             width: getScreenWidth(context),
+                                //             height: 110,
+                                //             child: ListView.builder(
+                                //               itemCount: state
+                                //                   .suppliersList.data?.length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal:
+                                //                       AppConstants.padding_5),
+                                //               itemBuilder: (context, index) {
+                                //                 return buildCompanyListItem(
+                                //                     companyLogo: state
+                                //                             .suppliersList
+                                //                             .data?[index]
+                                //                             .logo ??
+                                //                         '',
+                                //                     companyName: state
+                                //                             .suppliersList
+                                //                             .data?[index]
+                                //                             .supplierDetail
+                                //                             ?.companyName ??
+                                //                         '',
+                                //                     onTap: () {
+                                //                       Navigator.pushNamed(
+                                //                           context,
+                                //                           RouteDefine
+                                //                               .supplierProductsScreen
+                                //                               .name,
+                                //                           arguments: {
+                                //                             AppStrings
+                                //                                 .supplierIdString: state
+                                //                                     .suppliersList
+                                //                                     .data?[
+                                //                                         index]
+                                //                                     .id ??
+                                //                                 ''
+                                //                           });
+                                //                     });
+                                //               },
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                AnimatedCrossFade(
+                                    firstChild: 0.width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .sales,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .all_sales,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .productSaleScreen.name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 190,
+                                          child: ListView.builder(
+                                            itemCount: state
+                                                .productSalesList.data?.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildProductSaleListItem(
+                                                context: context,
+                                                saleImage: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .mainImage ??
+                                                    '',
+                                                title: state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .salesName ??
+                                                    '',
+                                                description: parse(state
                                                                 .productSalesList
                                                                 .data?[index]
-                                                                .id ??
-                                                            '');
-                                                  },
-                                                );
-                                              },
-                                            ),
+                                                                .salesDescription ??
+                                                            '')
+                                                        .body
+                                                        ?.text ??
+                                                    '',
+                                                price: double.parse(state
+                                                        .productSalesList
+                                                        .data?[index]
+                                                        .discountPercentage ??
+                                                    '0.0'),
+                                                onButtonTap: () {
+                                                  showProductDetails(
+                                                      context: context,
+                                                      productId: state
+                                                              .productSalesList
+                                                              .data?[index]
+                                                              .id ??
+                                                          '');
+                                                },
+                                              );
+                                            },
                                           ),
-                                        ],
-                                      ),
-                                state.recommendedProductsList.isEmpty
-                                    ? 0.width
-                                    : Column(
-                                        children: [
-                                          buildListTitles(
-                                              context: context,
-                                              title:
-                                                  AppLocalizations.of(context)!
-                                                      .recommended_for_you,
-                                              subTitle:
-                                                  AppLocalizations.of(context)!
-                                                      .more,
-                                              onTap: () {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    RouteDefine
-                                                        .recommendationProductsScreen
-                                                        .name);
-                                              }),
-                                          SizedBox(
-                                            width: getScreenWidth(context),
-                                            height: 170,
-                                            child: ListView.builder(
-                                              itemCount: state
-                                                  .recommendedProductsList
-                                                  .length,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.horizontal,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_5),
-                                              itemBuilder: (context, index) {
-                                                return buildRecommendationProductsListItem(
-                                                  context: context,
-                                                  productImage: state
-                                                          .recommendedProductsList[
-                                                              index]
-                                                          .mainImage ??
-                                                      '',
-                                                  productName: state
-                                                          .recommendedProductsList[
-                                                              index]
-                                                          .productName ??
-                                                      '',
-                                                  totalSale: state
-                                                          .recommendedProductsList[
-                                                              index]
-                                                          .totalSale ??
-                                                      0,
-                                                  price: state
-                                                          .recommendedProductsList[
-                                                              index]
-                                                          .productPrice
-                                                          ?.toDouble() ??
-                                                      0.0,
-                                                  onButtonTap: () {
-                                                    showProductDetails(
-                                                        context: context,
-                                                        productId: state
-                                                                .recommendedProductsList[
-                                                                    index]
-                                                                .id ??
-                                                            '');
-                                                  },
-                                                );
-                                              },
-                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState:
+                                        state.productSalesList.data?.isEmpty ??
+                                                true
+                                            ? CrossFadeState.showFirst
+                                            : CrossFadeState.showSecond,
+                                    duration: Duration(milliseconds: 300)),
+                                // state.productSalesList.data?.isEmpty ?? true
+                                //     ? 0.width
+                                //     : Column(
+                                //         children: [
+                                //           buildListTitles(
+                                //               context: context,
+                                //               title:
+                                //                   AppLocalizations.of(context)!
+                                //                       .sales,
+                                //               subTitle:
+                                //                   AppLocalizations.of(context)!
+                                //                       .all_sales,
+                                //               onTap: () {
+                                //                 Navigator.pushNamed(
+                                //                     context,
+                                //                     RouteDefine
+                                //                         .productSaleScreen
+                                //                         .name);
+                                //               }),
+                                //           SizedBox(
+                                //             width: getScreenWidth(context),
+                                //             height: 190,
+                                //             child: ListView.builder(
+                                //               itemCount: state.productSalesList
+                                //                   .data?.length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal:
+                                //                       AppConstants.padding_5),
+                                //               itemBuilder: (context, index) {
+                                //                 return buildProductSaleListItem(
+                                //                   context: context,
+                                //                   saleImage: state
+                                //                           .productSalesList
+                                //                           .data?[index]
+                                //                           .mainImage ??
+                                //                       '',
+                                //                   title: state
+                                //                           .productSalesList
+                                //                           .data?[index]
+                                //                           .salesName ??
+                                //                       '',
+                                //                   description: parse(state
+                                //                                   .productSalesList
+                                //                                   .data?[index]
+                                //                                   .salesDescription ??
+                                //                               '')
+                                //                           .body
+                                //                           ?.text ??
+                                //                       '',
+                                //                   price: double.parse(state
+                                //                           .productSalesList
+                                //                           .data?[index]
+                                //                           .discountPercentage ??
+                                //                       '0.0'),
+                                //                   onButtonTap: () {
+                                //                     showProductDetails(
+                                //                         context: context,
+                                //                         productId: state
+                                //                                 .productSalesList
+                                //                                 .data?[index]
+                                //                                 .id ??
+                                //                             '');
+                                //                   },
+                                //                 );
+                                //               },
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
+                                AnimatedCrossFade(
+                                    firstChild: 0.width,
+                                    secondChild: Column(
+                                      children: [
+                                        buildListTitles(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!
+                                                .recommended_for_you,
+                                            subTitle:
+                                                AppLocalizations.of(context)!
+                                                    .more,
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .recommendationProductsScreen
+                                                      .name);
+                                            }),
+                                        SizedBox(
+                                          width: getScreenWidth(context),
+                                          height: 170,
+                                          child: ListView.builder(
+                                            itemCount: state
+                                                .recommendedProductsList.length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    AppConstants.padding_5),
+                                            itemBuilder: (context, index) {
+                                              return buildRecommendationProductsListItem(
+                                                context: context,
+                                                productImage: state
+                                                        .recommendedProductsList[
+                                                            index]
+                                                        .mainImage ??
+                                                    '',
+                                                productName: state
+                                                        .recommendedProductsList[
+                                                            index]
+                                                        .productName ??
+                                                    '',
+                                                totalSale: state
+                                                        .recommendedProductsList[
+                                                            index]
+                                                        .totalSale ??
+                                                    0,
+                                                price: state
+                                                        .recommendedProductsList[
+                                                            index]
+                                                        .productPrice
+                                                        ?.toDouble() ??
+                                                    0.0,
+                                                onButtonTap: () {
+                                                  showProductDetails(
+                                                      context: context,
+                                                      productId: state
+                                                              .recommendedProductsList[
+                                                                  index]
+                                                              .id ??
+                                                          '');
+                                                },
+                                              );
+                                            },
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
+                                    ),
+                                    crossFadeState:
+                                        state.recommendedProductsList.isEmpty
+                                            ? CrossFadeState.showFirst
+                                            : CrossFadeState.showSecond,
+                                    duration: Duration(milliseconds: 300)),
+                                // state.recommendedProductsList.isEmpty
+                                //     ? 0.width
+                                //     : Column(
+                                //         children: [
+                                //           buildListTitles(
+                                //               context: context,
+                                //               title:
+                                //                   AppLocalizations.of(context)!
+                                //                       .recommended_for_you,
+                                //               subTitle:
+                                //                   AppLocalizations.of(context)!
+                                //                       .more,
+                                //               onTap: () {
+                                //                 Navigator.pushNamed(
+                                //                     context,
+                                //                     RouteDefine
+                                //                         .recommendationProductsScreen
+                                //                         .name);
+                                //               }),
+                                //           SizedBox(
+                                //             width: getScreenWidth(context),
+                                //             height: 170,
+                                //             child: ListView.builder(
+                                //               itemCount: state
+                                //                   .recommendedProductsList
+                                //                   .length,
+                                //               shrinkWrap: true,
+                                //               scrollDirection: Axis.horizontal,
+                                //               padding: EdgeInsets.symmetric(
+                                //                   horizontal:
+                                //                       AppConstants.padding_5),
+                                //               itemBuilder: (context, index) {
+                                //                 return buildRecommendationProductsListItem(
+                                //                   context: context,
+                                //                   productImage: state
+                                //                           .recommendedProductsList[
+                                //                               index]
+                                //                           .mainImage ??
+                                //                       '',
+                                //                   productName: state
+                                //                           .recommendedProductsList[
+                                //                               index]
+                                //                           .productName ??
+                                //                       '',
+                                //                   totalSale: state
+                                //                           .recommendedProductsList[
+                                //                               index]
+                                //                           .totalSale ??
+                                //                       0,
+                                //                   price: state
+                                //                           .recommendedProductsList[
+                                //                               index]
+                                //                           .productPrice
+                                //                           ?.toDouble() ??
+                                //                       0.0,
+                                //                   onButtonTap: () {
+                                //                     showProductDetails(
+                                //                         context: context,
+                                //                         productId: state
+                                //                                 .recommendedProductsList[
+                                //                                     index]
+                                //                                 .id ??
+                                //                             '');
+                                //                   },
+                                //                 );
+                                //               },
+                                //             ),
+                                //           ),
+                                //         ],
+                                //       ),
                                 90.height,
                               ],
                             ),
@@ -1388,7 +1746,14 @@ class StoreScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               )
                                             : Column(
@@ -1399,10 +1764,24 @@ class StoreScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_12,
+                                                            color: AppColors
+                                                                .saleRedColor),
+                                                  ),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               ),
                                       ),

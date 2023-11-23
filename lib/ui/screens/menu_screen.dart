@@ -8,6 +8,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
 
 class MenuRoute {
@@ -55,6 +56,7 @@ class MenuScreenWidget extends StatelessWidget {
                       itemCount: state.contentList.length + 2,
                       itemBuilder: (context, index) {
                         return AppContentTile(
+                            index: index,
                             title: index == 0
                                 ? AppLocalizations.of(context)!.my_orders
                                 : index == 1
@@ -66,18 +68,22 @@ class MenuScreenWidget extends StatelessWidget {
                             onTap: () {
                               index == 0
                                   ? Navigator.pushNamed(
-                                      context, RouteDefine.orderScreen.name)
+                                  context, RouteDefine.orderScreen.name)
                                   : index == 1
-                                      ? Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .questionAndAnswerScreen.name)
-                                      : Navigator.pushNamed(context,
-                                          RouteDefine.appContentScreen.name,
-                                          arguments: {
+                                  ? Navigator.pushNamed(
+                                  context,
+                                  RouteDefine
+                                      .questionAndAnswerScreen.name)
+                                  : Navigator.pushNamed(context,
+                                  RouteDefine.appContentScreen.name,
+                                  arguments: {
                                               AppStrings.appContentIdString:
                                                   state.contentList[index - 2]
                                                           .id ??
+                                                      '',
+                                              AppStrings.appContentNameString:
+                                                  state.contentList[index - 2]
+                                                          .contentName ??
                                                       ''
                                             });
                             });
@@ -91,37 +97,45 @@ class MenuScreenWidget extends StatelessWidget {
   }
 
   Widget AppContentTile(
-      {required String title, required void Function() onTap}) {
-    return Container(
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10)
-          ]),
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.padding_15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont, color: AppColors.blackColor),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: AppColors.blackColor,
-              ),
-            ],
+      {required int index,
+      required String title,
+      required void Function() onTap}) {
+    return DelayedWidget(
+      // delay: Duration(
+      //     milliseconds: AppConstants.listAnimationDelay +
+      //         (index * AppConstants.listAnimationItemDelay)),
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.15),
+                  blurRadius: AppConstants.blur_10)
+            ]),
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.padding_15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.blackColor),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppColors.blackColor,
+                ),
+              ],
+            ),
           ),
         ),
       ),

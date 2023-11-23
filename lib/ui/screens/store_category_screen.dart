@@ -12,6 +12,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -128,26 +129,31 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                     itemBuilder: (context,
                                                             index) =>
                                                         buildSubCategoryListItem(
+                                                            index: index,
                                                             context: context,
                                                             subCategoryName: state
-                                                                    .subCategoryList[
-                                                                        index]
-                                                                    .subCategoryName ??
+                                                                .subCategoryList[
+                                                            index]
+                                                                .subCategoryName ??
                                                                 '',
                                                             onTap: () {
                                                               //get subcategory wise plano grams
-                                                              context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(
-                                                                  subCategoryId: state
+                                                              context.read<
+                                                                  StoreCategoryBloc>()
+                                                                  .add(
+                                                                  StoreCategoryEvent
+                                                                      .changeSubCategoryDetailsEvent(
+                                                                      subCategoryId: state
                                                                           .subCategoryList[
-                                                                              index]
+                                                                      index]
                                                                           .id ??
-                                                                      '',
-                                                                  subCategoryName: state
+                                                                          '',
+                                                                      subCategoryName: state
                                                                           .subCategoryList[
-                                                                              index]
+                                                                      index]
                                                                           .subCategoryName ??
-                                                                      '',
-                                                                  context:
+                                                                          '',
+                                                                      context:
                                                                       context));
                                                             }),
                                                   ),
@@ -1392,40 +1398,42 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   }
 
   Widget buildSubCategoryListItem(
-      {required BuildContext context,
-      required String subCategoryName,
-      required void Function()? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.1),
-                  blurRadius: AppConstants.blur_10),
-            ]),
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_10),
-        padding: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_15,
-            vertical: AppConstants.padding_15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(
-              subCategoryName,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont, color: AppColors.blackColor),
-              maxLines: 1,
-            ),
-          ],
+      {required int index, required BuildContext context,
+        required String subCategoryName,
+        required void Function()? onTap}) {
+    return DelayedWidget(
+      child: InkWell(
+        onTap: onTap,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.1),
+                    blurRadius: AppConstants.blur_10),
+              ]),
+          margin: EdgeInsets.symmetric(
+              vertical: AppConstants.padding_5,
+              horizontal: AppConstants.padding_10),
+          padding: EdgeInsets.symmetric(
+              horizontal: AppConstants.padding_15,
+              vertical: AppConstants.padding_15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                subCategoryName,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+                maxLines: 1,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1576,7 +1584,23 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex ==
+                                                        -2)
+                                                        .basePrice
+                                                        .toStringAsFixed(
+                                                        2)}${AppLocalizations
+                                                        .of(context)!
+                                                        .currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color: AppColors
+                                                            .blackColor),),
                                                 ],
                                               )
                                             : Column(
@@ -1587,10 +1611,43 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex >= 0)
+                                                        .supplierSales[index]
+                                                        .saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_12,
+                                                        color: AppColors
+                                                            .saleRedColor),),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex >= 0)
+                                                        .supplierSales[index]
+                                                        .salePrice
+                                                        .toStringAsFixed(
+                                                        2)}${AppLocalizations
+                                                        .of(context)!
+                                                        .currency}(${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex >= 0)
+                                                        .supplierSales[index]
+                                                        .saleDiscount}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color: AppColors
+                                                            .blackColor),),
                                                 ],
                                               ),
                                       ),

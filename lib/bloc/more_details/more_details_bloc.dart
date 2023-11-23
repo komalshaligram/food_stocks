@@ -261,6 +261,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (profileResModel.status == 200) {
               preferencesHelper.setCartId(
                   cartId: profileResModel.data?.client?.cartId ?? '');
+              preferencesHelper.setAuthToken(
+                  accToken: profileResModel.data?.authToken?.accessToken ?? '');
               if ((profileResModel.data?.client?.clientData?.profileImage ??
                       '') !=
                   '') {

@@ -5,6 +5,7 @@ import 'package:food_stock/bloc/planogram_product/planogram_product_bloc.dart';
 import 'package:food_stock/data/model/res_model/planogram_res_model/planogram_res_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/themes/app_colors.dart';
@@ -61,13 +62,26 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
               child: GridView.builder(
-            itemCount: state.planogramProductList.length,
+                itemCount: state.planogramProductList.length,
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, childAspectRatio: 9 / 12),
             itemBuilder: (context, index) => buildPlanoGramProductItem(
-                context: context, index: index, isRTL: context.rtl),
+                productImage: state.planogramProductList[index].mainImage ?? '',
+                productName:
+                    state.planogramProductList[index].productName ?? '',
+                productPrice:
+                    state.planogramProductList[index].productPrice ?? 0.0,
+                totalSale: state.planogramProductList[index].totalSale ?? 0,
+                onPressed: () {
+                  showProductDetails(
+                      context: context,
+                      productId: state.planogramProductList[index].id ?? '');
+                },
+                context: context,
+                index: index,
+                isRTL: context.rtl),
           )),
         );
       },
@@ -77,143 +91,133 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   Widget buildPlanoGramProductItem(
       {required BuildContext context,
       required int index,
+      required String productImage,
+      required String productName,
+      required double productPrice,
+      required int totalSale,
+      required void Function() onPressed,
       required bool isRTL}) {
-    return BlocProvider.value(
-      value: context.read<PlanogramProductBloc>(),
-      child: BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
-        builder: (context1, state) {
-          return Container(
-            // height: 170,
-            // width: 140,
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
-              ],
+    return DelayedWidget(
+      child: Container(
+        // height: 170,
+        // width: 140,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10),
+          ],
+        ),
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_10,
+            horizontal: AppConstants.padding_5),
+        padding: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$productImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_5),
-            padding: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_5,
-                horizontal: AppConstants.padding_10),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.network(
-                    "${AppUrls.baseFileUrl}${state.planogramProductList[index]
-                        .mainImage}",
-                    height: 70,
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress?.cumulativeBytesLoaded !=
-                          loadingProgress?.expectedTotalBytes) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10)),
-                            ),
-                          ),
-                        );
-                      }
-                      return child;
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
-                      return Container(
-                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover),
-                      );
-                    },
-                  ),
-                ),
-                5.height,
-                Text(
-                  "${state.planogramProductList[index].productName}",
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_12,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.height,
-                Expanded(
-                  child: state.planogramProductList[index].totalSale == 0
-                      ? 0.width
-                      : Text(
-                    "${state.planogramProductList[index]
-                        .totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                5.height,
-                Center(
-                  child: CommonProductButtonWidget(
-                    title:
-                    "${state.planogramProductList[index].productPrice
-                        ?.toStringAsFixed(0)}${AppLocalizations.of(context)!
-                        .currency}",
-                    onPressed: () {
-                      showProductDetails(
-                          context: context,
-                          productId:
-                              state.planogramProductList[index].id ?? '');
-                    },
-                    textColor: AppColors.whiteColor,
-                    bgColor: AppColors.mainColor,
-                    borderRadius: AppConstants.radius_3,
-                    textSize: AppConstants.font_12,
-                  ),
-                )
-                // Center(
-                //   child: Container(
-                //     height: AppConstants.buttonHeightSmall,
-                //     width: double.maxFinite,
-                //     margin: EdgeInsets.symmetric(
-                //         horizontal: AppConstants.padding_10),
-                //     alignment: Alignment.center,
-                //     decoration: BoxDecoration(
-                //         color: AppColors.mainColor,
-                //         borderRadius: BorderRadius.all(
-                //             Radius.circular(AppConstants.radius_3))),
-                //     padding: EdgeInsets.symmetric(
-                //         vertical: AppConstants.padding_5,
-                //         horizontal: AppConstants.padding_10),
-                //     child: Text(
-                //       "${state.planogramProductList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                //       style: AppStyles.rkRegularTextStyle(
-                //           size: AppConstants.font_12,
-                //           fontWeight: FontWeight.bold,
-                //           color: AppColors.whiteColor),
-                //     ),
-                //   ),
-                // )
-              ],
+            5.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          );
-        },
+            5.height,
+            Expanded(
+              child: totalSale == 0
+                  ? 0.width
+                  : Text(
+                      "$totalSale ${AppLocalizations.of(context)!.discount}",
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_10,
+                          color: AppColors.saleRedColor,
+                          fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+            ),
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                    "${productPrice.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+                onPressed: onPressed,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+            // Center(
+            //   child: Container(
+            //     height: AppConstants.buttonHeightSmall,
+            //     width: double.maxFinite,
+            //     margin: EdgeInsets.symmetric(
+            //         horizontal: AppConstants.padding_10),
+            //     alignment: Alignment.center,
+            //     decoration: BoxDecoration(
+            //         color: AppColors.mainColor,
+            //         borderRadius: BorderRadius.all(
+            //             Radius.circular(AppConstants.radius_3))),
+            //     padding: EdgeInsets.symmetric(
+            //         vertical: AppConstants.padding_5,
+            //         horizontal: AppConstants.padding_10),
+            //     child: Text(
+            //       "${state.planogramProductList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
+            //       style: AppStyles.rkRegularTextStyle(
+            //           size: AppConstants.font_12,
+            //           fontWeight: FontWeight.bold,
+            //           color: AppColors.whiteColor),
+            //     ),
+            //   ),
+            // )
+          ],
+        ),
       ),
     );
   }
+
   void showProductDetails(
       {required BuildContext context, required String productId}) async {
     context.read<PlanogramProductBloc>().add(
@@ -472,7 +476,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               )
                                             : Column(
@@ -483,10 +494,24 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_12,
+                                                            color: AppColors
+                                                                .saleRedColor),
+                                                  ),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               ),
                                       ),

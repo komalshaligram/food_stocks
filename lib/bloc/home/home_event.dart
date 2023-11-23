@@ -42,4 +42,8 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getMessageListEvent({
     required BuildContext context,
   }) = _GetMessageListEvent;
+
+  const factory HomeEvent.getCartCountEvent({
+    required BuildContext context,
+  }) = _GetCartCountEvent;
 }

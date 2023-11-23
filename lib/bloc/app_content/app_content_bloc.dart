@@ -21,7 +21,8 @@ class AppContentBloc extends Bloc<AppContentEvent, AppContentState> {
     on<AppContentEvent>((event, emit) async {
       if (event is _GetAppContentDetailsEvent) {
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(
+              contentName: event.appContentName, isShimmering: true));
           final res = await DioClient(event.context)
               .get(path: "${AppUrls.getAppContentUrl}${event.appContentId}");
           GetAppContentDetailsResModel response =

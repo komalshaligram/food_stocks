@@ -4,11 +4,13 @@ part of 'app_content_bloc.dart';
 class AppContentState with _$AppContentState {
   const factory AppContentState({
     required Datum appContentDetails,
+    required String contentName,
     required bool isShimmering,
   }) = _AppContentState;
 
   factory AppContentState.initial() => AppContentState(
-        appContentDetails: Datum(),
+    appContentDetails: Datum(),
         isShimmering: false,
+        contentName: '',
       );
 }

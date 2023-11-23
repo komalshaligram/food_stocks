@@ -148,25 +148,26 @@ class MessageScreenWidget extends StatelessWidget {
     required String dateTime,
     required void Function() onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        margin: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_10,
-            vertical: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_10),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_10),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onTap,
         child: Row(
           children: [
             Container(

@@ -447,6 +447,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       } else if (event is _downloadFileEvent) {
         try {
+          emit(state.copyWith(isDownloading: true));
           Map<Permission, PermissionStatus> statuses = await [
             Permission.storage,
           ].request();
@@ -489,7 +490,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     title: AppStrings.downloadString,
                     bgColor: AppColors.mainColor);
               });
+              emit(state.copyWith(isDownloading: false));
             } else {
+              emit(state.copyWith(isDownloading: false));
               filePath = 'Error code: ' + response.statusCode.toString();
               debugPrint('download ${filePath}');
               showSnackBar(
@@ -498,9 +501,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
+            emit(state.copyWith(isDownloading: false));
             filePath = 'Can not fetch url';
           }
         } catch (e) {
+          emit(state.copyWith(isDownloading: false));
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,

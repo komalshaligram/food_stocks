@@ -625,6 +625,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       decoration: InputDecoration(
                                           border: InputBorder.none),
                                       maxLines: 5,
+                                      maxLength: 50,
                                     ),
                                   )
                                 ],
