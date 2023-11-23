@@ -19,6 +19,7 @@ class WalletState with _$WalletState {
     required List<Datum>walletTransactionsList,
     required int pageNum,
     required bool isLoadMore,
+    required bool isBottomOfProducts,
 
 
   }) = _WalletState;
@@ -39,7 +40,8 @@ class WalletState with _$WalletState {
     selectedDateRange: DateRange(DateTime.now(),DateTime.now()),
     walletTransactionsList: [],
     pageNum: 0,
-    isLoadMore: false
+    isLoadMore: false,
+    isBottomOfProducts: false,
       );
 }
 

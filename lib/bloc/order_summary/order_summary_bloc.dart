@@ -76,15 +76,35 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             })
           );
 
-          debugPrint('Order create url  = ${AppUrls.createOrderUrl}');
+          debugPrint('Order create url  = ${AppUrls.baseUrl}${AppUrls.createOrderUrl}');
           OrderSendResModel response = OrderSendResModel.fromJson(res);
           debugPrint('OrderSendResModel  = $response');
 
           if (response.status == 201) {
-            preferencesHelper.setOrderId(orderId: response.data!.id!);
-             Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
-          } else {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            try {
+              final res = await DioClient(event.context).post(
+                  '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
+                  options:Options(
+                      headers: {
+                        HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
+                      })
+              );
+              debugPrint('clear cart response_______${res}');
+              if (res["status"] == 201) {
+                Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
+              }
+              else{
+                showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+              }
+
+            }  on ServerException {}
+
+          }
+          else if(response.status == 403){
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+          }
+          else {
+            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
           }
         }  on ServerException {}
       }

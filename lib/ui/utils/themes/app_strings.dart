@@ -50,6 +50,8 @@ class AppStrings {
   static const cartProductIdString = 'cartProductId';
   static const categoryIdString = 'catregoryId';
   static const categoryNameString = 'catregoryName';
+  static const pdfString = 'PDF';
+  static const jsonString = 'JSON';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -133,9 +135,12 @@ class AppStrings {
   static const totalOrderString = 'totalOrder';
   static const deliveryDateString = 'deliveryDate';
   static const quantityString = 'quantity';
-  static const supplierOrderNumberString = 'orderNumber';
+  static const supplierOrderNumberString = 'supplierOrderNumber';
   static const totalAmountString = 'totalAmount';
   static const cartIdString = 'id';
+  static const driverNameString = 'driverName';
+  static const driverNumberString = 'driverNumber';
+
 
 
 }

@@ -31,8 +31,8 @@ class ProductDetailsBloc
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProductDataEvent) {
-        debugPrint('token___${preferencesHelper.getAuthToken()}');
-        debugPrint('id___${event.orderId}');
+        debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
+        debugPrint('[id]   ${event.orderId}');
 
         try {
           final res = await DioClient(event.context).get(
@@ -41,13 +41,12 @@ class ProductDetailsBloc
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
               }));
-
           debugPrint(
               'GetOrderById  url  = ${AppUrls.getOrderById}${event.orderId}');
-          debugPrint('GetOrderByIdModel  = $res');
+          debugPrint('GetOrderById res  = $res');
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-          debugPrint('GetOrderByIdModel  = $response');
+          debugPrint('GetOrderByIdModel res = $response');
 
           if (response.status == 200) {
             emit(state.copyWith(orderList: response));
@@ -63,7 +62,6 @@ class ProductDetailsBloc
           }
         } on ServerException {}
       } else if (event is _productProblemEvent) {
-
         List<int> index = [];
         if (state.productListIndex.contains(event.index)) {
           index.remove(event.index);
@@ -71,7 +69,8 @@ class ProductDetailsBloc
           index.add(event.index);
         }
         emit(state.copyWith(
-            /*isRefresh: !state.isRefresh,*/ productListIndex: index));
+            /*isRefresh: !state.isRefresh,*/
+            productListIndex: index));
       } else if (event is _radioButtonEvent) {
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
@@ -86,10 +85,7 @@ class ProductDetailsBloc
               productWeight: event.productWeight - 1,
               isRefresh: !state.isRefresh));
         } else {}
-      }
-
-      else if (event is _createIssueEvent) {
-
+      } else if (event is _createIssueEvent) {
         if (event.issue != '') {
           create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(
             supplierId: event.supplierId,
@@ -114,7 +110,7 @@ class ProductDetailsBloc
             debugPrint(
                 'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
-            debugPrint('order Id  = ${event.orderId}');
+            debugPrint('[order Id ] = ${event.orderId}');
             debugPrint('createIssue response = $response');
 
             if (response['status'] == 201) {
