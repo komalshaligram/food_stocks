@@ -10,6 +10,8 @@ class DeliveryConfirmReqModel with _$DeliveryConfirmReqModel {
   const factory DeliveryConfirmReqModel({
     String? signature,
     String? supplierId,
+    String? driverName,
+    String? driverNumber,
   }) = _DeliveryConfirmReqModel;
 
   factory DeliveryConfirmReqModel.fromJson(Map<String, dynamic> json) => _$DeliveryConfirmReqModelFromJson(json);

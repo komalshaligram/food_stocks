@@ -9,6 +9,7 @@ class BasketEvent with _$BasketEvent {
     required String supplierId,
     required String productId,
     required String cartProductId,
+
 }) = _productUpdateEvent;
 
   const factory BasketEvent.removeCartProductEvent({

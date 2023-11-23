@@ -24,19 +24,25 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
-      debugPrint('token___${preferencesHelper.getAuthToken()}');
-
+      debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
+        emit(state.copyWith(isShimmering: true));
       if(event is _getAllOrderEvent){
-        emit(state.copyWith(
-            isShimmering: state.pageNum == 0 ? true : false,
-            isLoadMore: state.pageNum == 0 ? false : true));
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfProducts) {
+          return;
+        }
         try {
+          emit(state.copyWith(
+              isShimmering: state.pageNum == 0 ? true : false,
+              isLoadMore: state.pageNum == 0 ? false : true));
+
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
-    //  orderId: preferencesHelper.getOrderId(),
             pageNum: state.pageNum + 1,
             pageLimit: AppConstants.oderPageLimit,
           );
-          debugPrint('OrderSendReqModel = $reqMap}');
+          debugPrint('[OrderSendReqModel] = $reqMap}');
           final res = await DioClient(event.context).post(
               AppUrls.getAllOrderUrl,
               data: reqMap,
@@ -46,17 +52,23 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                   })
           );
 
-          debugPrint('OrderSend url  = ${AppUrls.getAllOrderUrl}');
+          debugPrint('[OrderSend url]  = ${AppUrls.getAllOrderUrl}');
           GetAllOrderResModel response = GetAllOrderResModel.fromJson(res);
-          debugPrint('OrderSendResModel  = $response');
+          debugPrint('[OrderSendResModel] = $response');
 
           if (response.status == 200) {
             List<Datum> orderList = state.orderDetailsList.toList(growable: true);
-            orderList.addAll(response.data ?? []);
-            emit(state.copyWith(orderDetailsList: orderList,isShimmering: false, pageNum: state.pageNum + 1,isLoadMore: false,
-            orderList: response
-            ));
-           // showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+
+              orderList.addAll(response.data ?? []);
+              emit(state.copyWith(orderDetailsList: orderList,isShimmering: false, pageNum: state.pageNum + 1,isLoadMore: false,
+                  orderList: response
+              ));
+
+            emit(state.copyWith(
+                isBottomOfProducts: orderList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);

@@ -124,4 +124,11 @@ class FormFieldValidation {
     }
     return null;
   }
+
+  String? driverNameField(String value) {
+    if (value.isEmpty) {
+      return "Please enter driver name";
+    }
+    return null;
+  }
 }

@@ -93,6 +93,10 @@ class OrdersBySupplier with _$OrdersBySupplier {
     Status? deliverStatus,
     @JsonKey(name: "arrivalDate")
     String? arrivalDate,
+    @JsonKey(name: "supplierOrderNumber")
+    String? supplierOrderNumber,
+    @JsonKey(name: "orderDeliveryDate")
+    String? orderDeliveryDate,
     @JsonKey(name: "orderDate")
     String? orderDate,
     @JsonKey(name: "totalWeight")
@@ -101,8 +105,8 @@ class OrdersBySupplier with _$OrdersBySupplier {
     int? totalPayment,
     @JsonKey(name: "driverName")
     String? driverName,
-    @JsonKey(name: "diverNumber")
-    String? diverNumber,
+    @JsonKey(name: "driverNumber")
+    String? driverNumber,
     @JsonKey(name: "signature")
     String? signature,
     @JsonKey(name: "products")
@@ -125,12 +129,14 @@ class Product with _$Product {
     String? sku,
     @JsonKey(name: "brand")
     String? brand,
+    @JsonKey(name: "scale")
+    String? scale,
     @JsonKey(name: "category")
     Category? category,
     @JsonKey(name: "subCategory")
     SubCategory? subCategory,
     @JsonKey(name: "subSubCategory")
-    Category? subSubCategory,
+    SubSubCategory? subSubCategory,
     @JsonKey(name: "pricePerUnit")
     int? pricePerUnit,
     @JsonKey(name: "totalPayment")
@@ -140,7 +146,7 @@ class Product with _$Product {
     @JsonKey(name: "itemWeight")
     int? itemWeight,
     @JsonKey(name: "issueStatus")
-    Status? issueStatus,
+    IssueStatus? issueStatus,
     @JsonKey(name: "isIssue")
     bool? isIssue,
     @JsonKey(name: "issue")
@@ -158,9 +164,33 @@ class Product with _$Product {
 
 @freezed
 class Category with _$Category {
-  const factory Category() = _Category;
+  const factory Category({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "categoryName")
+    String? categoryName,
+    @JsonKey(name: "createdAt")
+    String? createdAt,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
+    @JsonKey(name: "__v")
+    int? v,
+    @JsonKey(name: "categoryImage")
+    String? categoryImage,
+    @JsonKey(name: "isHomePreference")
+    bool? isHomePreference,
+    @JsonKey(name: "order")
+    int? order,
+  }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+}
+
+@freezed
+class IssueStatus with _$IssueStatus {
+  const factory IssueStatus() = _IssueStatus;
+
+  factory IssueStatus.fromJson(Map<String, dynamic> json) => _$IssueStatusFromJson(json);
 }
 
 @freezed
@@ -181,4 +211,26 @@ class SubCategory with _$SubCategory {
   }) = _SubCategory;
 
   factory SubCategory.fromJson(Map<String, dynamic> json) => _$SubCategoryFromJson(json);
+}
+
+@freezed
+class SubSubCategory with _$SubSubCategory {
+  const factory SubSubCategory({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "subSubCategoryName")
+    String? subSubCategoryName,
+    @JsonKey(name: "parentCategoryId")
+    String? parentCategoryId,
+    @JsonKey(name: "subCategoryId")
+    String? subCategoryId,
+    @JsonKey(name: "createdAt")
+    String? createdAt,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
+    @JsonKey(name: "__v")
+    int? v,
+  }) = _SubSubCategory;
+
+  factory SubSubCategory.fromJson(Map<String, dynamic> json) => _$SubSubCategoryFromJson(json);
 }

@@ -9,6 +9,9 @@ class ShipmentVerificationEvent with _$ShipmentVerificationEvent {
     required String supplierId,
     required String signPath,
     required String orderId,
+    required String driverName,
+    required String driverNumber,
+
 }) = _deliveryConfirmEvent;
 }
 

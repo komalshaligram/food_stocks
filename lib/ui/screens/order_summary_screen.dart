@@ -129,12 +129,25 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                           ? Radius.circular(
                                               AppConstants.radius_30)
                                           : Radius.circular(AppConstants.radius_6))),
-                              child: Text(
-                                '${state.orderSummaryList.data?.cart!.first.totalAmount}${' : '}${AppLocalizations.of(context)!.total }',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
+                              child:
+                              RichText(
+                                text: TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .total,
+                                  style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.whiteColor,
-                                    fontWeight: FontWeight.w700),
+                                    size: AppConstants.normalFont,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text:
+                                        '${' : '}${state.orderSummaryList.data?.cart!.first.totalAmount}${AppLocalizations.of(context)!.currency}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            color: AppColors.whiteColor,
+                                            size: AppConstants.normalFont,
+                                            fontWeight: FontWeight.w700)),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -256,7 +269,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
-                    value:state.orderSummaryList.data!.data![index].totalAmount!.toString(),
+                    value:'${state.orderSummaryList.data!.data![index].totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,
