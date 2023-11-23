@@ -28,6 +28,9 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
         if (state.isBottomOfCompanies) {
           return;
         }
+        if (state.isShimmering) {
+          return;
+        }
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,

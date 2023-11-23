@@ -450,6 +450,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           Map<Permission, PermissionStatus> statuses = await [
             Permission.storage,
           ].request();
+          // if(statuses[Permission.storage]!.isDenied) {
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
+          //   return;
+          // }
+          debugPrint('os version : ${Platform.operatingSystemVersion}');
 
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -463,22 +471,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
-          // if (state.formsAndFilesList[event.fileIndex].url
-          //         ?.contains(AppStrings.tempString) ??
-          //     false) {
-          //   file =
-          //       File(state.formsAndFilesList[event.fileIndex].localUrl ?? '');
-          //   Uint8List fileBytes = file.readAsBytesSync();
-          //   File newFile = File('${dir.path}/${p.basename(file.path)}');
-          //   await newFile.writeAsBytes(fileBytes).then(
-          //     (value) {
-          //       showSnackBar(
-          //           context: event.context,
-          //           title: AppStrings.downloadString,
-          //           bgColor: AppColors.mainColor);
-          //     },
-          //   );
-          // } else {
           HttpClient httpClient = new HttpClient();
           String filePath = '';
           try {
@@ -498,23 +490,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     bgColor: AppColors.mainColor);
               });
             } else {
-                filePath = 'Error code: ' + response.statusCode.toString();
-                debugPrint('download ${filePath}');
-                showSnackBar(
-                    context: event.context,
-                    title: AppStrings.downloadFailedString,
-                    bgColor: AppColors.redColor);
-              }
-            } catch (ex) {
-              filePath = 'Can not fetch url';
+              filePath = 'Error code: ' + response.statusCode.toString();
+              debugPrint('download ${filePath}');
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.downloadFailedString,
+                  bgColor: AppColors.redColor);
             }
-          // }
-          // } else {
-          //   showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.docDownloadAllowPermissionString,
-          //       bgColor: AppColors.redColor);
-          // }
+          } catch (e) {
+            filePath = 'Can not fetch url';
+          }
         } catch (e) {
           showSnackBar(
               context: event.context,

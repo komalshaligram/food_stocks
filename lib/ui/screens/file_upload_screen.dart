@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,6 @@ class FileUploadScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     FileUploadBloc bloc = context.read<FileUploadBloc>();
     return BlocListener<FileUploadBloc, FileUploadState>(
       listener: (context, state) {
@@ -104,100 +104,113 @@ class FileUploadScreenWidget extends StatelessWidget {
                           )
                         : SingleChildScrollView(
                             child: Padding(
-                        padding: EdgeInsets.only(
-                            left: screenWidth * 0.1, right: screenWidth * 0.1),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            state.formsAndFilesList.isEmpty
-                                ? Container(
-                                    height: getScreenHeight(context),
-                                    width: getScreenWidth(context),
-                                    child: Center(
-                                      child: Text(
-                                        'No Files And Forms available',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.normalFont,
-                                            color: AppColors.textColor),
-                                      ),
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: state.formsAndFilesList.length,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return buildFormsAndFilesUploadFields(
-                                        fileIndex: index,
-                                        context: context,
-                                        fileName: state.formsAndFilesList[index]
-                                                .name ??
-                                            '',
-                                        url: state
-                                                .formsAndFilesList[index].url ??
-                                            '',
-                                        localUrl: state.formsAndFilesList[index]
-                                                .localUrl ??
-                                            '',
-                                        isUploading: state.isUploadLoading,
-                                        uploadIndex: state.uploadIndex,
-                                        isDownloadable: state
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  state.formsAndFilesList.isEmpty
+                                      ? Container(
+                                          height: getScreenHeight(context),
+                                          width: getScreenWidth(context),
+                                          child: Center(
+                                            child: Text(
+                                              'Forms and Files not available',
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .normalFont,
+                                                      color:
+                                                          AppColors.textColor),
+                                            ),
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              state.formsAndFilesList.length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            return buildFormsAndFilesUploadFields(
+                                              fileIndex: index,
+                                              context: context,
+                                              fileName: state
+                                                      .formsAndFilesList[index]
+                                                      .name ??
+                                                  '',
+                                              url: state
+                                                      .formsAndFilesList[index]
+                                                      .url ??
+                                                  '',
+                                              localUrl: state
+                                                      .formsAndFilesList[index]
+                                                      .localUrl ??
+                                                  '',
+                                              isUploading:
+                                                  state.isUploadLoading,
+                                              uploadIndex: state.uploadIndex,
+                                              isDownloadable: state
                                                       .formsAndFilesList[index]
                                                       .isForm ??
                                                   false,
-                                      );
-                                    },
+                                            );
+                                          },
+                                        ),
+                                  40.height,
+                                  CustomButtonWidget(
+                                    buttonText: state.isUpdate
+                                        ? AppLocalizations.of(context)!
+                                            .save
+                                            .toUpperCase()
+                                        : AppLocalizations.of(context)!
+                                            .next
+                                            .toUpperCase(),
+                                    fontColors: AppColors.whiteColor,
+                                    isLoading: state.isApiLoading,
+                                    onPressed: state.isApiLoading
+                                        ? null
+                                        : () {
+                                            bloc.add(
+                                                FileUploadEvent.uploadApiEvent(
+                                                    context: context));
+                                          },
+                                    bGColor: AppColors.mainColor,
                                   ),
-                            40.height,
-                            CustomButtonWidget(
-                              buttonText: state.isUpdate
-                                  ? AppLocalizations.of(context)!
-                                      .save
-                                      .toUpperCase()
-                                  : AppLocalizations.of(context)!
-                                      .next
-                                      .toUpperCase(),
-                              fontColors: AppColors.whiteColor,
-                              isLoading: state.isApiLoading,
-                              onPressed: state.isApiLoading
-                                  ? null
-                                  : () {
-                                      bloc.add(FileUploadEvent.uploadApiEvent(
-                                          context: context));
-                                    },
-                              bGColor: AppColors.mainColor,
+                                  20.height,
+                                  state.isUpdate
+                                      ? 0.width
+                                      : CustomButtonWidget(
+                                          buttonText:
+                                              AppLocalizations.of(context)!
+                                                  .skip,
+                                          fontColors: AppColors.mainColor,
+                                          borderColor: AppColors.mainColor,
+                                          onPressed: () async {
+                                            showSnackBar(
+                                                context: context,
+                                                title: AppStrings
+                                                    .registerSuccessString,
+                                                bgColor: AppColors.mainColor);
+                                            Navigator.popUntil(
+                                                context,
+                                                (route) =>
+                                                    route.name ==
+                                                    RouteDefine
+                                                        .connectScreen.name);
+                                            Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .bottomNavScreen.name);
+                                          },
+                                          bGColor: AppColors.whiteColor,
+                                        ),
+                                  20.height,
+                                ],
+                              ),
                             ),
-                            20.height,
-                            state.isUpdate
-                                ? 0.width
-                                : CustomButtonWidget(
-                                    buttonText:
-                                        AppLocalizations.of(context)!.skip,
-                                    fontColors: AppColors.mainColor,
-                                    borderColor: AppColors.mainColor,
-                                    onPressed: () async {
-                                      showSnackBar(
-                                          context: context,
-                                          title:
-                                              AppStrings.registerSuccessString,
-                                          bgColor: AppColors.mainColor);
-                                      Navigator.popUntil(
-                                          context,
-                                          (route) =>
-                                              route.name ==
-                                              RouteDefine.connectScreen.name);
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.bottomNavScreen.name);
-                                    },
-                                    bGColor: AppColors.whiteColor,
-                                  ),
-                            20.height,
-                          ],
-                        ),
-                      ),
-                    ),
-            ),
+                          ),
+                  ),
           );
         },
       ),
@@ -392,10 +405,15 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.file_copy_outlined,
-                                          color: AppColors.blueColor,
-                                          size: 30,
+                                        Transform(
+                                          alignment: Alignment.center,
+                                          transform: Matrix4.rotationY(
+                                              context.rtl ? pi : 0),
+                                          child: Icon(
+                                            Icons.file_copy_outlined,
+                                            color: AppColors.blueColor,
+                                            size: 30,
+                                          ),
                                         ),
                                         5.height,
                                         Text(

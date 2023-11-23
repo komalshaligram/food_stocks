@@ -65,11 +65,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, childAspectRatio: 9 / 11),
+                crossAxisCount: 3, childAspectRatio: 9 / 12),
             itemBuilder: (context, index) => buildPlanoGramProductItem(
-                context: context,
-                index: index,
-                isRTL: isRTLContent(context: context)),
+                context: context, index: index, isRTL: context.rtl),
           )),
         );
       },
@@ -286,7 +284,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: isRTLContent(context: context),
+                                  isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityIncreaseTap: () {

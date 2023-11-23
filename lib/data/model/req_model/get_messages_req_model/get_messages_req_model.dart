@@ -23,6 +23,7 @@ class GetMessagesReqModel with _$GetMessagesReqModel {
     @JsonKey(name: "sortField") String? sortField,
     @JsonKey(name: "sortOrder") String? sortOrder,
     @JsonKey(name: "search") String? search,
+    @JsonKey(name: "messageId") String? messageId,
   }) = _GetMessagesReqModel;
 
   factory GetMessagesReqModel.fromJson(Map<String, dynamic> json) =>

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -14,14 +17,13 @@ class CustomTextIconButtonWidget extends StatelessWidget {
   final double? titleSize;
   final double? width;
 
-  const CustomTextIconButtonWidget(
-      {super.key,
-      required this.title,
-      required this.onPressed,
-      this.svgImage,
-      this.cartCount,
-      this.titleSize,
-      this.width});
+  const CustomTextIconButtonWidget({super.key,
+    required this.title,
+    required this.onPressed,
+    this.svgImage,
+    this.cartCount,
+    this.titleSize,
+    this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +46,16 @@ class CustomTextIconButtonWidget extends StatelessWidget {
               children: [
                 svgImage == null
                     ? 0.height
-                    : SvgPicture.asset(svgImage!,
-                        height: 20, width: 20,
-                        fit: BoxFit.scaleDown,
-                        colorFilter: ColorFilter.mode(
-                            AppColors.whiteColor, BlendMode.srcIn)),
+                    : Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                        child: SvgPicture.asset(svgImage!,
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.scaleDown,
+                            colorFilter: ColorFilter.mode(
+                                AppColors.whiteColor, BlendMode.srcIn)),
+                      ),
                 7.width,
                 Text(
                   title,
@@ -61,23 +68,23 @@ class CustomTextIconButtonWidget extends StatelessWidget {
             cartCount == null
                 ? 0.height
                 : cartCount == 0
-                    ? 0.width
-                    : Container(
-                        height: 16,
-                        width: 24,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
-                        ),
-                        child: Text(
-                          '${cartCount == 0 ? '' : cartCount}',
-                          style: AppStyles.rkRegularTextStyle(
-                        fontWeight: FontWeight.w100,
-                          size: AppConstants.padding_10, color: AppColors.mainColor),
-                    ),
-                  ),
+                ? 0.width
+                : Container(
+              height: 16,
+              width: 24,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: const BorderRadius.all(
+                    Radius.circular(AppConstants.radius_100)),
+              ),
+              child: Text(
+                '${cartCount == 0 ? '' : cartCount}',
+                style: AppStyles.rkRegularTextStyle(
+                    fontWeight: FontWeight.w100,
+                    size: AppConstants.padding_10, color: AppColors.mainColor),
+              ),
+            ),
           ],
         ),
       ),

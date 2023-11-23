@@ -77,7 +77,7 @@ class MessageScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      'No Messages',
+                                      'Messages not found',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.textColor),
@@ -177,12 +177,8 @@ class MessageScreenWidget extends StatelessWidget {
                 color: index.isEven ? Colors.transparent : AppColors.mainColor,
               ),
               margin: EdgeInsets.only(
-                  left: isRTLContent(context: context)
-                      ? AppConstants.padding_10
-                      : 0,
-                  right: isRTLContent(context: context)
-                      ? 0
-                      : AppConstants.padding_10),
+                  left: context.rtl ? AppConstants.padding_10 : 0,
+                  right: context.rtl ? 0 : AppConstants.padding_10),
             ),
             Expanded(
               child: Column(

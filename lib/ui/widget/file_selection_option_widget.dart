@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -9,11 +12,10 @@ class FileSelectionOptionWidget extends StatelessWidget {
   final IconData icon;
   final void Function() onTap;
 
-  const FileSelectionOptionWidget(
-      {super.key,
-      required this.title,
-      required this.icon,
-      required this.onTap});
+  const FileSelectionOptionWidget({super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,13 @@ class FileSelectionOptionWidget extends StatelessWidget {
               style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.mediumFont, color: AppColors.blackColor),
             ),
-            Icon(
-              icon,
-              color: AppColors.blueColor,
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: Icon(
+                icon,
+                color: AppColors.blueColor,
+              ),
             ),
           ],
         ),

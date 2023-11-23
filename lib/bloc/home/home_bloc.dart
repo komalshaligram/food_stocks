@@ -57,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             cartCount: preferences.getCartCount()));
       } else if (event is _GetProductSalesListEvent) {
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(isProductSaleShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.getSaleProductsUrl,
               data: ProductSalesReqModel(
@@ -69,13 +69,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: saleProduct.numberOfUnit ?? 0)) ??
+                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
                 []);
             debugPrint('stock list len = ${productStockList.length}');
             emit(state.copyWith(
                 productSalesList: response,
                 productStockList: productStockList,
-                isShimmering: false));
+                isProductSaleShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,
@@ -86,7 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
-          emit(state.copyWith(isProductLoading: true));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
@@ -457,13 +457,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } on ServerException {}
       } else if (event is _GetMessageListEvent) {
         try {
+          emit(state.copyWith(isMessageShimmering: true));
           final res = await DioClient(event.context).post(
               AppUrls.getAllMessagesUrl,
               data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson());
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           if (response.status == 200) {
-            List<Message> messageList =
-                state.messageList.toList(growable: true);
+            List<Message> messageList = [];
             messageList.addAll(response.data
                     ?.map((message) => Message(
                           id: message.id,
@@ -482,7 +482,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             messageList.removeWhere(
                 (message) => (message.isPushNotification ?? false) == false);
             debugPrint('new message list len = ${messageList.length}');
-            emit(state.copyWith(messageList: messageList));
+            emit(state.copyWith(
+                messageList: messageList, isMessageShimmering: false));
           } else {
             showSnackBar(
                 context: event.context,

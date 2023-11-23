@@ -127,7 +127,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       height: 34,
                                       width: getScreenWidth(context) * 0.35,
                                       fit: BoxFit.fitHeight,
-                                      alignment: isRTLContent(context: context)
+                                      alignment: context.rtl
                                           ? Alignment.centerRight
                                           : Alignment.centerLeft,
                                       errorWidget: (context, url, error) {
@@ -221,11 +221,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context)!.app_language,
                                 isHebrewLang: state.isHebrewLanguage,
-                                onChanged: (bool value) => context
-                                    .read<ProfileMenuBloc>()
-                                    .add(
-                                        ProfileMenuEvent.changeAppLanguageEvent(
-                                            context: context))),
+                                onChanged: (bool value) {
+                                  context.read<ProfileMenuBloc>().add(
+                                      ProfileMenuEvent.changeAppLanguageEvent(
+                                          context: context));
+                                }),
                             90.height,
                           ],
                         ),
@@ -295,33 +295,40 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_15,
-            vertical: AppConstants.padding_8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont, color: AppColors.blackColor),
-            ),
-            SizedBox(
-              width: 45,
-              child: Transform.scale(
-                scaleX: 0.84,
-                scaleY: 0.8,
-                child: CupertinoSwitch(
-                  value: isHebrewLang,
-                  onChanged: onChanged,
-                  activeColor: AppColors.mainColor,
-                  thumbColor: AppColors.whiteColor,
-                  trackColor: AppColors.lightBorderColor,
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: () {
+          onChanged?.call(true);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppConstants.padding_15,
+              vertical: AppConstants.padding_8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont, color: AppColors.blackColor),
+              ),
+              SizedBox(
+                width: 45,
+                child: Transform.scale(
+                  scaleX: 0.84,
+                  scaleY: 0.8,
+                  child: CupertinoSwitch(
+                    value: isHebrewLang,
+                    onChanged: onChanged,
+                    activeColor: AppColors.mainColor,
+                    thumbColor: AppColors.whiteColor,
+                    trackColor: AppColors.lightBorderColor,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

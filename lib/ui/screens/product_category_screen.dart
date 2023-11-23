@@ -57,41 +57,56 @@ class ProductCategoryScreenWidget extends StatelessWidget {
           body: SafeArea(
               child: NotificationListener<ScrollNotification>(
             child: SingleChildScrollView(
+              physics: state.productCategoryList.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   state.isShimmering
                       ? ProductCategoryScreenShimmerWidget()
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: state.productCategoryList.length,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3),
-                          itemBuilder: (context, index) =>
-                              buildProductCategoryListItem(
-                                  context: context,
-                                  categoryImage: state
-                                          .productCategoryList[index]
-                                          .categoryImage ??
-                                      '',
-                                  categoryName: state.productCategoryList[index]
-                                          .categoryName ??
-                                      '',
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.storeCategoryScreen.name,
-                                        arguments: {
-                                          AppStrings.categoryIdString: state
-                                              .productCategoryList[index].id,
-                                          AppStrings.categoryNameString: state
-                                              .productCategoryList[index]
-                                              .categoryName
-                                        });
-                                  }),
-                        ),
+                      : state.productCategoryList.isEmpty
+                          ? Container(
+                              height: getScreenHeight(context) - 80,
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Categories not available',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.textColor),
+                              ),
+                            )
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.productCategoryList.length,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_10),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3),
+                              itemBuilder: (context, index) =>
+                                  buildProductCategoryListItem(
+                            context: context,
+                            categoryImage: state
+                                .productCategoryList[index]
+                                .categoryImage ??
+                                '',
+                            categoryName: state.productCategoryList[index]
+                                .categoryName ??
+                                '',
+                            onTap: () {
+                              Navigator.pushNamed(context,
+                                  RouteDefine.storeCategoryScreen.name,
+                                  arguments: {
+                                    AppStrings.categoryIdString: state
+                                        .productCategoryList[index].id,
+                                    AppStrings.categoryNameString: state
+                                        .productCategoryList[index]
+                                        .categoryName
+                                  });
+                            }),
+                  ),
                   state.isLoadMore
                       ? ProductCategoryScreenShimmerWidget()
                       : 0.width,

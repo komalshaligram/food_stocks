@@ -96,7 +96,7 @@ class ShipmentVerificationBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: 'sign missing',
+                title: 'Signature is missing',
                 bgColor: AppColors.redColor);
           }
         }

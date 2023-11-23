@@ -7,7 +7,7 @@ class HomeState with _$HomeState {
     required String UserCompanyLogoUrl,
     required int cartCount,
     required ProductSalesResModel productSalesList,
-    required bool isShimmering,
+    required bool isProductSaleShimmering,
     required bool isLoading,
     required bool isProductLoading,
     required List<Product> productDetails,
@@ -22,14 +22,15 @@ class HomeState with _$HomeState {
     required int orderThisMonth,
     required int balance,
     required List<Message> messageList,
+    required bool isMessageShimmering,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
-        UserImageUrl: '',
+    UserImageUrl: '',
         UserCompanyLogoUrl: '',
         cartCount: 0,
         productSalesList: ProductSalesResModel(),
-        isShimmering: false,
+        isProductSaleShimmering: false,
         isLoading: false,
         isProductLoading: false,
         productDetails: [],
@@ -44,5 +45,6 @@ class HomeState with _$HomeState {
         thisMonthExpense: 0,
         totalCredit: 0,
         messageList: [],
+        isMessageShimmering: false,
       );
 }

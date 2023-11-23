@@ -55,7 +55,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   cartProductId: element.cartProductId!,
                   scales: element.productDetails!.scales!));
             });
-
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+            await preferencesHelper.setCartCount(
+                count: temp.isEmpty
+                    ? preferencesHelper.getCartCount()
+                    : temp.length);
+            print('temp______$temp');
             emit(state.copyWith(
                 basketProductList: temp, isRefresh: !state.isRefresh));
           } else {
@@ -121,10 +127,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             data: {AppStrings.cartProductIdString: event.cartProductId},
           );
 
-          debugPrint('[remove cart res]  = $response');
+          debugPrint('remove cart res  = $response');
 
           if (response['status'] == 200) {
+            add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
+            print('index_____${event.listIndex}');
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
             Navigator.pop(event.context);
@@ -149,6 +157,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           debugPrint('[clear cart response] =  ${res}');
 
           if (res["status"] == 201) {
+            add(BasketEvent.setCartCountEvent(isClearCart: true));
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             list.clear();
@@ -165,6 +174,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         list = [...state.basketProductList];
         emit(state.copyWith(
             basketProductList: list, isRefresh: !state.isRefresh));
+      } else if (event is _SetCartCountEvent) {
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        await preferences.setCartCount(
+            count: event.isClearCart ? 0 : preferences.getCartCount() - 1);
       }
     });
   }

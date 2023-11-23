@@ -61,7 +61,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
                         productId: saleProduct.id ?? '',
-                        stock: saleProduct.numberOfUnit ?? 0)) ??
+                        stock: int.parse(saleProduct.numberOfUnit ?? '0'))) ??
                 []);
             debugPrint('new product sale list len = ${productSaleList.length}');
             debugPrint(
@@ -90,7 +90,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
-          emit(state.copyWith(isProductLoading: true));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());

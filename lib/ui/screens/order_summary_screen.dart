@@ -109,23 +109,23 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
                                   borderRadius: BorderRadius.only(
-                                      topLeft: isRTLContent(context: context)
-                                          ? Radius.circular(
-                                              AppConstants.radius_6)
-                                          : Radius.circular(
-                                              AppConstants.radius_30),
-                                      bottomLeft: isRTLContent(context: context)
-                                          ? Radius.circular(
-                                              AppConstants.radius_6)
-                                          : Radius.circular(
-                                              AppConstants.radius_30),
+                                      topLeft: context.rtl
+                                                ? Radius.circular(
+                                                    AppConstants.radius_6)
+                                                : Radius.circular(
+                                                    AppConstants.radius_30),
+                                      bottomLeft: context.rtl
+                                                ? Radius.circular(
+                                                    AppConstants.radius_6)
+                                                : Radius.circular(
+                                                    AppConstants.radius_30),
                                       bottomRight:
-                                          isRTLContent(context: context)
-                                              ? Radius.circular(
+                                      context.rtl
+                                                ? Radius.circular(
                                                   AppConstants.radius_30)
                                               : Radius.circular(
                                                   AppConstants.radius_6),
-                                      topRight: isRTLContent(context: context)
+                                      topRight: context.rtl
                                           ? Radius.circular(
                                               AppConstants.radius_30)
                                           : Radius.circular(AppConstants.radius_6))),
@@ -168,26 +168,28 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: AppColors.navSelectedColor,
                                     borderRadius: BorderRadius.only(
-                                        topLeft: isRTLContent(context: context)
-                                            ? Radius.circular(
-                                                AppConstants.radius_30)
-                                            : Radius.circular(
-                                                AppConstants.radius_6),
+                                        topLeft: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_30)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_6),
                                         bottomLeft:
-                                            isRTLContent(context: context)
-                                                ? Radius.circular(
+                                        context.rtl
+                                                  ? Radius.circular(
                                                     AppConstants.radius_30)
                                                 : Radius.circular(
                                                     AppConstants.radius_6),
                                         bottomRight:
-                                            isRTLContent(context: context)
-                                                ? Radius.circular(
+                                        context.rtl
+                                                  ? Radius.circular(
                                                     AppConstants.radius_6)
                                                 : Radius.circular(
                                                     AppConstants.radius_30),
-                                        topRight: isRTLContent(context: context)
-                                            ? Radius.circular(AppConstants.radius_6)
-                                            : Radius.circular(AppConstants.radius_30))),
+                                        topRight: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_6)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_30))),
                                 child: Text(
                                   AppLocalizations.of(context)!.send_order,
                                   style: AppStyles.rkRegularTextStyle(
