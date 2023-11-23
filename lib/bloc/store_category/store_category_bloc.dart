@@ -231,15 +231,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
-          emit(state.copyWith(isProductLoading: true));
+          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
+              ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
             List<List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
+                state.productStockList.toList(growable: true);
             int planoGramIndex = event.planoGramIndex;
             int productStockUpdateIndex = state.productStockList[planoGramIndex]
                 .indexWhere((productStock) =>
@@ -264,8 +264,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList[planoGramIndex][productStockUpdateIndex] =
                 productStockList[planoGramIndex][productStockUpdateIndex]
                     .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-            // debugPrint(
-            //     'product stock update index = ${state.planoGramsList[planoGramIndex].planogramName}[${state.planoGramsList[planoGramIndex].planogramproducts?[productStockUpdateIndex].id}]');
             debugPrint(
                 'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
             List<ProductSupplierModel> supplierList = [];

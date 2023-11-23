@@ -65,9 +65,11 @@ class ShipmentVerificationBloc
               DeliveryConfirmReqModel reqMap = DeliveryConfirmReqModel(
                 supplierId: event.supplierId,
                 signature: signUrl,
+                driverNumber: event.driverNumber,
+                 driverName: event.driverName
               );
               debugPrint('delivery Confirm ReqModel = $reqMap}');
-              final response = await DioClient(event.context).post(
+             final response = await DioClient(event.context).post(
                   '${AppUrls.deliveryConfirmUrl}${event.orderId}',
                   data: reqMap,
                   options: Options(headers: {
@@ -75,9 +77,9 @@ class ShipmentVerificationBloc
                   }));
 
               debugPrint('delivery Confirm url  = ${AppUrls.baseUrl}${AppUrls.deliveryConfirmUrl}${event.orderId}');
-              debugPrint('delivery Confirm response model  = $response');
+             debugPrint('delivery Confirm response model  = $response');
 
-              if (response['status'] == 200) {
+             if (response['status'] == 200) {
                 Navigator.pushNamed(
                     event.context, RouteDefine.bottomNavScreen.name);
                 showSnackBar(
@@ -94,7 +96,7 @@ class ShipmentVerificationBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: 'sign missing',
+                title: 'Signature is missing',
                 bgColor: AppColors.redColor);
           }
         }

@@ -47,7 +47,7 @@ class SplashScreenWidget extends StatelessWidget {
    getDeviceId() async {
     try {
        deviceId = await PlatformDeviceId.getDeviceId;
-       print('deviceId:$deviceId');
+      debugPrint('deviceId:$deviceId');
     } on PlatformException {
       deviceId = 'Failed to get deviceId.';
     }
@@ -65,11 +65,11 @@ class SplashScreenWidget extends StatelessWidget {
         registerOnAppOpenAttributionCallback: true,
         registerOnDeepLinkingCallback: false);
     _appsflyerSdk.onAppOpenAttribution((res) {
-      print("onAppOpenAttribution res: " + res.toString());
+      debugPrint("onAppOpenAttribution res: " + res.toString());
       return _appsflyerSdk?.logEvent('App Open', res);
     });
     _appsflyerSdk.onInstallConversionData((res) {
-      print("onInstallConversionData res: " + res.toString());
+      debugPrint("onInstallConversionData res: " + res.toString());
       return _appsflyerSdk?.logEvent('App Install', res);
     });
   }
@@ -85,7 +85,7 @@ class SplashScreenWidget extends StatelessWidget {
           getVersion(preferencesHelper);
           getDeviceId();
 
-          print(preferencesHelper.getUserLoggedIn());
+          debugPrint('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.bottomNavScreen.name);

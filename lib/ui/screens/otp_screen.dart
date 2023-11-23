@@ -93,7 +93,7 @@ class OTPScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         autoFocus: true,
                         fieldWidth: (getScreenWidth(context) -
-                                (getScreenWidth(context) * 0.2)) /
+                                (getScreenWidth(context) * 0.21)) /
                             5.55,
                         numberOfFields: 4,
                         borderWidth: 1,

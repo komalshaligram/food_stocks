@@ -170,7 +170,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 .id,
             address: state.addressController.text,
             email: state.emailController.text,
-             phoneNumber: preferencesHelper.getPhoneNumber(),
+           //  phoneNumber: preferencesHelper.getPhoneNumber(),
             clientDetail: ClientDetail(fax: state.faxController.text),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();

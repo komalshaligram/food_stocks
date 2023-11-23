@@ -1,8 +1,8 @@
 
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_all_order_res_model.freezed.dart';
 part 'get_all_order_res_model.g.dart';
+
 
 @freezed
 class GetAllOrderResModel with _$GetAllOrderResModel {
@@ -25,14 +25,16 @@ class Datum with _$Datum {
   const factory Datum({
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "orderNumber")
-    int? orderNumber,
+    @JsonKey(name: "createdAt")
+    String? createdAt,
     @JsonKey(name: "status")
     Status? status,
     @JsonKey(name: "client")
     Client? client,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
+    @JsonKey(name: "noOfIssues")
+    String? noOfIssues,
+    @JsonKey(name: "orderNumber")
+    String? orderNumber,
     @JsonKey(name: "totalAmount")
     String? totalAmount,
     @JsonKey(name: "totalWeight")
@@ -43,10 +45,8 @@ class Datum with _$Datum {
     int? products,
     @JsonKey(name: "suppliers")
     int? suppliers,
-    @JsonKey(name: "noOfIssues")
-    int? noOfIssues,
     @JsonKey(name: "isIssue")
-    bool? isIssue,
+    String? isIssue,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

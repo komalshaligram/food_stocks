@@ -105,3 +105,8 @@ bool isRTLContent({required BuildContext context}) {
   // debugPrint('rtl = ${rtlLocales.contains(locale) ? "true" : "false"}');
   return rtlLocales.contains(locale) ? true : false;
 }
+
+extension RTLExtension on BuildContext {
+  bool get rtl =>
+      [Locale('he')].contains(Localizations.localeOf(this)) ? true : false;
+}

@@ -9,12 +9,12 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
-import '../widget/basket_screen_shimmer_widget.dart';
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -27,7 +27,7 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          BasketBloc()/*..add(BasketEvent.getAllCartEvent(context: context))*/,
+          BasketBloc()..add(BasketEvent.getAllCartEvent(context: context)),
       child: const BasketScreenWidget(),
     );
   }
@@ -40,7 +40,10 @@ class BasketScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BasketBloc bloc = context.read<BasketBloc>();
     return BlocListener<BasketBloc, BasketState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        BlocProvider.of<BottomNavBloc>(context)
+            .add(BottomNavEvent.updateCartCountEvent());
+      },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
           return Scaffold(
@@ -97,31 +100,31 @@ class BasketScreenWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                               color: AppColors.mainColor,
                                               borderRadius: BorderRadius.only(
-                                                  topLeft: isRTLContent(context: context)
+                                                  topLeft: context.rtl
+                                                      ? Radius.circular(
+                                                          AppConstants.radius_5)
+                                                      : Radius.circular(AppConstants
+                                                          .radius_25),
+                                                  bottomLeft: context.rtl
                                                       ? Radius.circular(
                                                           AppConstants.radius_5)
                                                       : Radius.circular(
                                                           AppConstants
                                                               .radius_25),
-                                                  bottomLeft: isRTLContent(context: context)
+                                                  bottomRight: context.rtl
                                                       ? Radius.circular(
-                                                          AppConstants.radius_5)
-                                                      : Radius.circular(
                                                           AppConstants
-                                                              .radius_25),
-                                                  bottomRight: isRTLContent(
-                                                          context: context)
-                                                      ? Radius.circular(
-                                                          AppConstants.radius_25)
-                                                      : Radius.circular(AppConstants.radius_5),
-                                                  topRight: isRTLContent(context: context) ? Radius.circular(AppConstants.radius_25) : Radius.circular(AppConstants.radius_5))),
+                                                              .radius_25)
+                                                      : Radius.circular(
+                                                          AppConstants.radius_5),
+                                                  topRight: context.rtl ? Radius.circular(AppConstants.radius_25) : Radius.circular(AppConstants.radius_5))),
                                           child: (state.CartItemList.data?.cart!
                                                           .length ??
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              : Text(
-                                                  '${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}${' : '}${AppLocalizations.of(context)!.total}',
+                                              : /*Text(
+                                                  '${AppLocalizations.of(context)!.total}${' : '}${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                           size: getScreenWidth(
@@ -135,7 +138,43 @@ class BasketScreenWidget extends StatelessWidget {
                                                               .whiteColor,
                                                           fontWeight:
                                                               FontWeight.w700),
+                                                ),*/
+                                          RichText(
+                                            text: TextSpan(
+                                              text: AppLocalizations.of(context)!
+                                                  .total,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                    size: getScreenWidth(
+                                                        context) <=
+                                                        380
+                                                        ? AppConstants
+                                                        .smallFont
+                                                        : AppConstants
+                                                        .mediumFont,
+                                                    color: AppColors
+                                                        .whiteColor,
                                                 ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text:
+                                                    '${' : '}${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: getScreenWidth(
+                                                            context) <=
+                                                            380
+                                                            ? AppConstants
+                                                            .smallFont
+                                                            : AppConstants
+                                                            .normalFont,
+                                                        color: AppColors
+                                                            .whiteColor,
+                                                        fontWeight:
+                                                        FontWeight.w700)),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -160,21 +199,23 @@ class BasketScreenWidget extends StatelessWidget {
                                                 color:
                                                     AppColors.navSelectedColor,
                                                 borderRadius: BorderRadius.only(
-                                                    topLeft: isRTLContent(context: context)
-                                                        ? Radius.circular(AppConstants
-                                                            .radius_25)
-                                                        : Radius.circular(AppConstants
-                                                            .radius_4),
-                                                    bottomLeft: isRTLContent(context: context)
+                                                    topLeft: context.rtl
                                                         ? Radius.circular(AppConstants
                                                             .radius_25)
                                                         : Radius.circular(
                                                             AppConstants
                                                                 .radius_4),
-                                                    bottomRight: isRTLContent(context: context)
+                                                    bottomLeft: context.rtl
+                                                        ? Radius.circular(
+                                                            AppConstants
+                                                                .radius_25)
+                                                        : Radius.circular(
+                                                            AppConstants
+                                                                .radius_4),
+                                                    bottomRight: context.rtl
                                                         ? Radius.circular(AppConstants.radius_4)
                                                         : Radius.circular(AppConstants.radius_25),
-                                                    topRight: isRTLContent(context: context) ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
+                                                    topRight: context.rtl ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))),
                                             child: Text(
                                               AppLocalizations.of(context)!
                                                   .submit,
@@ -204,7 +245,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           SvgPicture.asset(
                                             AppImagePath.delete,
                                           ),
-                                          10.width,
+                                          15.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
@@ -221,12 +262,21 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
-                      state.isShimmering
-                          ? BasketScreenShimmerWidget()
+                      state.isShimmering && state.basketProductList.isEmpty
+                          ? /*BasketScreenShimmerWidget()*/ Expanded(
+                              child: Center(
+                                  child: Text(
+                                'Your cart is empty',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.normalFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400),
+                              )),
+                            )
                           : (state.basketProductList.length) != 0
                               ? Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 85),
+                                    padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
                                     child: ListView.builder(
                                       itemCount: state.basketProductList.length,
                                       shrinkWrap: true,
@@ -242,7 +292,7 @@ class BasketScreenWidget extends StatelessWidget {
                               : Expanded(
                                   child: Center(
                                       child: Text(
-                                    'Your cart is empty',
+                                        AppLocalizations.of(context)!.cart_empty,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
@@ -326,7 +376,7 @@ class BasketScreenWidget extends StatelessWidget {
                   } else {
                     showSnackBar(
                         context: context,
-                        title: AppStrings.stockNotAvailableString,
+                        title: AppStrings.outOfStockString,
                         bgColor: AppColors.redColor);
                   }
                 },
@@ -382,6 +432,7 @@ class BasketScreenWidget extends StatelessWidget {
                           color: AppColors.blackColor)),
                 ),
               ),
+              1.width,
               Container(
                 width: 70,
                 child: Text(

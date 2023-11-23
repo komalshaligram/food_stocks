@@ -51,8 +51,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ActivityTimeBloc, ActivityTimeState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       child: BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
         builder: (context, state) {
           return Scaffold(
@@ -62,21 +61,20 @@ class ActivityTimeScreenWidget extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               leadingWidth: 60,
-              title: Text(AppLocalizations.of(context).activity_time,
+              title: Text(AppLocalizations.of(context)!.activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.blackColor)),
               leading: GestureDetector(
                   onTap: () {
-                    if(!state.isUpdate){
+                    if (!state.isUpdate) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                    }
-                    else{
+                      Navigator.pushNamed(
+                          context, RouteDefine.connectScreen.name);
+                    } else {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       Navigator.pop(context);
                     }
-
                   },
                   child: Icon(
                     Icons.arrow_back_ios,
@@ -98,43 +96,45 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                          50.height,
-                         SizedBox(
-                           width: getScreenWidth(context) < 380 ? getScreenWidth(context) * 0.25: getScreenWidth(context) * 0.27,
-                         ),
-                          Container(
-                              width: getScreenWidth(context) * 0.25,
-                              height: 20,
-                              child: Text(
-                                AppLocalizations.of(context).from_time,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
+                                50.height,
+                                SizedBox(
+                                  width: getScreenWidth(context) < 380
+                                      ? getScreenWidth(context) * 0.25
+                                      : getScreenWidth(context) * 0.27,
                                 ),
-                              )),
-                          18.width,
-                          Container(
-                              width: getScreenWidth(context) * 0.25,
-                              height: 20,
-                              child: Text(
-                                AppLocalizations.of(context).until_time,
-                                style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor,
-                                ),
-                              )),
-                          10.height,
-                        ],
-                      ),
-                      state.OperationTimeList.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: state.OperationTimeList.length,
-                              shrinkWrap: true,
-                              // scrollDirection: Axis.vertical,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(
+                                Container(
+                                    width: getScreenWidth(context) * 0.25,
+                                    height: 20,
+                                    child: Text(
+                                      AppLocalizations.of(context)!.from_time,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor,
+                                      ),
+                                    )),
+                                18.width,
+                                Container(
+                                    width: getScreenWidth(context) * 0.25,
+                                    height: 20,
+                                    child: Text(
+                                      AppLocalizations.of(context)!.until_time,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor,
+                                      ),
+                                    )),
+                                10.height,
+                              ],
+                            ),
+                            state.OperationTimeList.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount: state.OperationTimeList.length,
+                                    shrinkWrap: true,
+                                    // scrollDirection: Axis.vertical,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
                                             vertical: AppConstants.padding_3),
                                         child: ActivityTimeRow(
                                           dayString: state
@@ -156,10 +156,10 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   right: getScreenWidth(context) * 0.08),
                               child: CustomButtonWidget(
                                 buttonText: state.isUpdate
-                                    ? AppLocalizations.of(context)
+                                    ? AppLocalizations.of(context)!
                                         .save
                                         .toUpperCase()
-                                    : AppLocalizations.of(context)
+                                    : AppLocalizations.of(context)!
                                         .next
                                         .toUpperCase(),
                                 fontColors: AppColors.whiteColor,
@@ -182,16 +182,17 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                         left: getScreenWidth(context) * 0.08,
                                         right: getScreenWidth(context) * 0.08),
                                     child: CustomButtonWidget(
-                                      buttonText: AppLocalizations.of(context)
+                                      buttonText: AppLocalizations.of(context)!
                                           .skip
                                           .toUpperCase()
                                           .toUpperCase(),
                                       fontColors: AppColors.mainColor,
                                       borderColor: AppColors.mainColor,
                                       onPressed: () {
-                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                        Navigator.pushNamed(
-                                            context, RouteDefine.fileUploadScreen.name);
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                        Navigator.pushNamed(context,
+                                            RouteDefine.fileUploadScreen.name);
                                       },
                                       bGColor: AppColors.whiteColor,
                                     ),
@@ -292,7 +293,7 @@ class ActivityTimeRow extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return state.OperationTimeList.isNotEmpty
                               ? Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
                                   child: Row(
                                     children: [
                                       index == 0
@@ -312,7 +313,9 @@ class ActivityTimeRow extends StatelessWidget {
                                                   0.18,
                                             ),
                                       SizedBox(
-                                        width: getScreenWidth(context) < 380 ?  getScreenWidth(context) * 0.001: getScreenWidth(context) * 0.03,
+                                        width: getScreenWidth(context) < 380
+                                            ? getScreenWidth(context) * 0.001
+                                            : getScreenWidth(context) * 0.03,
                                       ),
                                       TimeContainer(
                                         openingIndex: 1,
@@ -450,7 +453,9 @@ class TimeContainer extends StatelessWidget {
                         child: DefaultTextStyle(
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
-                             size: getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.font_22,
+                            size: getScreenWidth(context) <= 370
+                                ? AppConstants.font_14
+                                : AppConstants.font_22,
                           ),
                           child: SafeArea(
                             top: false,
@@ -496,7 +501,8 @@ class TimeContainer extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: AppConstants.padding_30,
                                             vertical: AppConstants.padding_5),
-                                        child: Text(AppLocalizations.of(context).ok))),
+                                        child: Text(
+                                            AppLocalizations.of(context)!.ok))),
                                 10.height,
                               ],
                             ),
@@ -511,7 +517,9 @@ class TimeContainer extends StatelessWidget {
                   Expanded(
                     child: Text(time == AppStrings.timeString ? '' : time,
                         style: AppStyles.rkRegularTextStyle(
-                          size: getScreenWidth(context) <= 370 ? AppConstants.smallFont : AppConstants.mediumFont,
+                          size: getScreenWidth(context) <= 370
+                              ? AppConstants.smallFont
+                              : AppConstants.mediumFont,
                           color: AppColors.blackColor,
                         )),
                   ),

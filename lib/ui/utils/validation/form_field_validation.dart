@@ -90,9 +90,9 @@ class FormFieldValidation {
   String? idField(String value) {
     RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
     if (value.isEmpty) {
-      return "Please enter israel ID number";
+      return "Please enter israel ID";
     } else if (!regex.hasMatch(value)) {
-      return "Please enter valid israel ID number";
+      return "Please enter valid israel ID";
     }
     return null;
   }
@@ -121,6 +121,13 @@ class FormFieldValidation {
       return "Please enter fax number";
     } else if (!regex.hasMatch(value)) {
       return "Please enter valid fax number";
+    }
+    return null;
+  }
+
+  String? driverNameField(String value) {
+    if (value.isEmpty) {
+      return "Please enter driver name";
     }
     return null;
   }

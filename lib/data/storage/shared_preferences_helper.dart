@@ -37,6 +37,8 @@ class SharedPreferencesHelper {
       await prefs.remove(phoneNumber);
       await prefs.remove(userCartId);
       await prefs.remove(walletId);
+      await prefs.remove(lang);
+      await prefs.remove(userOrderId);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
@@ -102,7 +104,7 @@ class SharedPreferencesHelper {
   }
 
   String getAppLanguage() {
-    return prefs.getString(lang) ?? 'en';
+    return prefs.getString(lang) ?? 'he';
   }
 
   bool getUserLoggedIn() {

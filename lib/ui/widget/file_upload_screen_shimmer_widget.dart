@@ -14,7 +14,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            20.height,
+            10.height,
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

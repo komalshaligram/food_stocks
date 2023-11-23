@@ -19,7 +19,7 @@ class SupplierProductsState with _$SupplierProductsState {
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
-    supplierId: '',
+        supplierId: '',
         productList: [],
         isShimmering: false,
         isLoading: false,

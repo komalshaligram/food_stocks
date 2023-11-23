@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,
-          title: AppStrings.appName,
+          title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
           initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,

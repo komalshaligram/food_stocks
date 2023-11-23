@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -40,7 +42,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
       listener: (context, state) {
-        bloc.add(BottomNavEvent.updateCartCountEvent());
+        // bloc.add(BottomNavEvent.updateCartCountEvent());
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -90,18 +92,21 @@ class BottomNavScreenWidget extends StatelessWidget {
                               _navItem(
                                   pos: 4,
                                   img: AppImagePath.home,
+                                  isRTL: context.rtl,
                                   state: state,
                                   onTap: () => bloc.add(
                                       BottomNavEvent.changePage(index: 4))),
                               _navItem(
                                   pos: 3,
                                   img: AppImagePath.store,
+                                  isRTL: context.rtl,
                                   state: state,
                                   onTap: () => bloc.add(
                                       BottomNavEvent.changePage(index: 3))),
                               _navItem(
                                   pos: 2,
                                   img: AppImagePath.cart,
+                                  isRTL: context.rtl,
                                   state: state,
                                   isCart: true,
                                   onTap: () => bloc.add(
@@ -109,12 +114,14 @@ class BottomNavScreenWidget extends StatelessWidget {
                               _navItem(
                                   pos: 1,
                                   img: AppImagePath.wallet,
+                                  isRTL: context.rtl,
                                   state: state,
                                   onTap: () => bloc.add(
                                       BottomNavEvent.changePage(index: 1))),
                               _navItem(
                                   pos: 0,
                                   img: AppImagePath.profile,
+                                  isRTL: context.rtl,
                                   state: state,
                                   onTap: () => bloc.add(
                                       BottomNavEvent.changePage(index: 0))),
@@ -133,10 +140,9 @@ class BottomNavScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _pageContainers(
-      {required double screenHeight,
-        required double screenWidth,
-        required BottomNavState state}) {
+  Widget _pageContainers({required double screenHeight,
+    required double screenWidth,
+    required BottomNavState state}) {
     return Container(
       height: screenHeight,
       width: screenWidth,
@@ -155,65 +161,70 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   Widget _navItem(
       {required int pos,
+      required bool isRTL,
       required String img,
       bool isCart = false,
       required void Function() onTap,
       required BottomNavState state}) {
-    return Stack(
-      children: [
-        Container(
-          height: 50,
-          width: 50,
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-              color: pos == state.index
-                  ? AppColors.navSelectedColor
-                  : AppColors.whiteColor,
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
-          child: InkWell(
-            // splashColor: Colors.transparent,
-            // highlightColor: Colors.transparent,
-            onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: [
+          Container(
+            height: 50,
+            width: 50,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+                color: pos == state.index
+                    ? AppColors.navSelectedColor
+                    : AppColors.whiteColor,
+                borderRadius: const BorderRadius.all(
+                    Radius.circular(AppConstants.radius_100))),
             child: Center(
-                child: SvgPicture.asset(
-                  img,
-                  height: 26,
-                  width: 26,
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                      pos == state.index
-                          ? AppColors.whiteColor
-                          : AppColors.navSelectedColor,
-                      BlendMode.srcIn),
-                )),
+                child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(isRTL ? pi : 0),
+              child: SvgPicture.asset(
+                img,
+                height: 26,
+                width: 26,
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    pos == state.index
+                        ? AppColors.whiteColor
+                        : AppColors.navSelectedColor,
+                    BlendMode.srcIn),
+              ),
+            )),
           ),
-        ),
-        isCart == false
-            ? const SizedBox()
-            : state.cartCount == 0
-                ? const SizedBox()
-                : Positioned(
-                    top: 5,
-                    right: 0,
-                    child: Container(
-                      height: 16,
-                      width: 24,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.notificationColor,
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(AppConstants.radius_100)),
-                        border:
-                            Border.all(color: AppColors.whiteColor, width: 1),
+          isCart == false
+              ? const SizedBox()
+              : state.cartCount == 0
+                  ? const SizedBox()
+                  : Positioned(
+                      top: 5,
+                      right: isRTL ? null : 0,
+                      left: isRTL ? 0 : null,
+                      child: Container(
+                        height: 16,
+                        width: 24,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.notificationColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                          border:
+                              Border.all(color: AppColors.whiteColor, width: 1),
+                        ),
+                        child: Text(
+                          '${state.cartCount}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: 10, color: AppColors.whiteColor),
+                        ),
                       ),
-                      child: Text(
-                        '${state.cartCount}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: 10, color: AppColors.whiteColor),
-                      ),
-                    ),
-                  )
-      ],
+                    )
+        ],
+      ),
     );
   }
 }

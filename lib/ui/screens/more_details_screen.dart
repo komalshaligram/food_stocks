@@ -43,7 +43,6 @@ class MoreDetailsScreen extends StatelessWidget {
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
                 : false)),
-
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -84,9 +83,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Text(
-                AppLocalizations.of(context).more_details,
-                style: AppStyles.rkRegularTextStyle(
-                    size: 16, color: Colors.black),
+                AppLocalizations.of(context)!.more_details,
+                style:
+                    AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
               ),
               backgroundColor: Colors.transparent,
               titleSpacing: 0,
@@ -106,273 +105,300 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                        10.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context).city,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: OutlineInputBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(
-                                          AppConstants.radius_20),
-                                      topLeft: Radius.circular(
-                                          AppConstants.radius_20)),
-                                  borderSide: BorderSide.none),
-                              builder: (context1) {
-                                return ValueListenableBuilder(
-                                    valueListenable: listNotifier,
-                                    builder: (context, _content, child) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Container(
-                                          height:
-                                              getScreenHeight(context) * 0.9,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              7.height,
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    child: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .city,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                                size: AppConstants
-                                                                    .mediumFont,
-                                                                color: AppColors
-                                                                    .blackColor)),
-                                                  ),
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pop(context1);
-                                                      },
-                                                      child: Icon(Icons.close))
-                                                ],
-                                              ),
-                                              15.height,
-                                              CustomFormField(
-                                                prefixIcon: Icon(
-                                                  Icons.search,
-                                                  color: AppColors.borderColor,
-                                                ),
-                                                onChangeValue: (value) {
-                                                  bloc.add(MoreDetailsEvent
-                                                      .citySearchEvent(
-                                                    search: value,
-                                                  ));
-                                                  list = state.cityList
-                                                      .where((city) =>
-                                                          city.contains(value))
-                                                      .toList();
-                                                  listNotifier.value = list;
-                                                },
-                                                controller:
-                                                    state.cityController,
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                hint: AppLocalizations.of(
-                                                        context)
-                                                    .city,
-                                                fillColor: AppColors.whiteColor,
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                validator: '',
-                                                textCapitalization:
-                                                    TextCapitalization.words,
-                                                autofocus: true,
-                                                cursorColor:
-                                                    AppColors.mainColor,
-                                              ),
-                                              7.height,
-                                              list.length == 0
-                                                  ? Expanded(
-                                                      child: Center(
-                                                        child: Text(
-                                                          AppStrings
-                                                              .cityNotFoundString,
-                                                          style: AppStyles
-                                                              .rkRegularTextStyle(
+                              10.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.city,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    shape: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(
+                                                AppConstants.radius_20),
+                                            topLeft: Radius.circular(
+                                                AppConstants.radius_20)),
+                                        borderSide: BorderSide.none),
+                                    builder: (context1) {
+                                      return ValueListenableBuilder(
+                                          valueListenable: listNotifier,
+                                          builder: (context, _content, child) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Container(
+                                                height:
+                                                    getScreenHeight(context) *
+                                                        0.9,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    7.height,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .city,
+                                                              style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
-                                                                      .smallFont,
+                                                                      .mediumFont,
                                                                   color: AppColors
-                                                                      .textColor),
+                                                                      .blackColor)),
                                                         ),
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context1);
+                                                            },
+                                                            child: Icon(
+                                                                Icons.close))
+                                                      ],
+                                                    ),
+                                                    15.height,
+                                                    CustomFormField(
+                                                      prefixIcon: Icon(
+                                                        Icons.search,
+                                                        color: AppColors
+                                                            .borderColor,
                                                       ),
-                                                    )
-                                                  : Expanded(
-                                                      child: ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount: list.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(10.0),
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {
-                                                                bloc.add(MoreDetailsEvent
-                                                                    .selectCityEvent(
-                                                                        city: list[
-                                                                            index],
-                                                                        context:
-                                                                            context));
-                                                                Navigator.pop(
-                                                                    context1);
-                                                              },
+                                                      onChangeValue: (value) {
+                                                        bloc.add(MoreDetailsEvent
+                                                            .citySearchEvent(
+                                                          search: value,
+                                                        ));
+                                                        list = state.cityList
+                                                            .where((city) =>
+                                                                city.contains(
+                                                                    value))
+                                                            .toList();
+                                                        listNotifier.value =
+                                                            list;
+                                                      },
+                                                      controller:
+                                                          state.cityController,
+                                                      keyboardType:
+                                                          TextInputType.text,
+                                                      hint: AppLocalizations.of(
+                                                              context)!
+                                                          .city,
+                                                      fillColor:
+                                                          AppColors.whiteColor,
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      validator: '',
+                                                      textCapitalization:
+                                                          TextCapitalization
+                                                              .words,
+                                                      autofocus: true,
+                                                      cursorColor:
+                                                          AppColors.mainColor,
+                                                    ),
+                                                    7.height,
+                                                    list.length == 0
+                                                        ? Expanded(
+                                                            child: Center(
                                                               child: Text(
-                                                                list[index]
-                                                                    .toString(),
-                                                                style: AppStyles
-                                                                    .rkRegularTextStyle(
-                                                                        size: AppConstants
-                                                                            .mediumFont),
+                                                                'Cities not available',
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                    size: AppConstants
+                                                                        .smallFont,
+                                                                    color: AppColors
+                                                                        .textColor),
                                                               ),
                                                             ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              },
-                            );
-                          },
-                          child: Container(
-                            height: 46,
-                            width: getScreenWidth(context),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              border: Border.all(color: AppColors.borderColor),
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_3)),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.selectCity,
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.mediumFont,
-                                      color: AppColors.blackColor),
-                                  // textAlign: TextAlign.right,
+                                                          )
+                                                        : Expanded(
+                                                            child: ListView
+                                                                .builder(
+                                                              shrinkWrap: true,
+                                                              itemCount:
+                                                                  list.length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          10.0),
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap: () {
+                                                                      bloc.add(MoreDetailsEvent.selectCityEvent(
+                                                                          city: list[
+                                                                              index],
+                                                                          context:
+                                                                              context));
+                                                                      Navigator.pop(
+                                                                          context1);
+                                                                    },
+                                                                    child: Text(
+                                                                      list[index]
+                                                                          .toString(),
+                                                                      style: AppStyles.rkRegularTextStyle(
+                                                                          size:
+                                                                              AppConstants.mediumFont),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  height: 46,
+                                  width: getScreenWidth(context),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    border: Border.all(
+                                        color: AppColors.borderColor),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(AppConstants.radius_3)),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        state.selectCity,
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.mediumFont,
+                                            color: AppColors.blackColor),
+                                        // textAlign: TextAlign.right,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context).full_address,
-                        ),
-                        CustomFormField(
-                          controller: state.addressController,
-                          inputformet: [/*FilteringTextInputFormatter.deny(
-                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
-                          keyboardType: TextInputType.text,
-                          hint: AppLocalizations.of(context).address,
-                          fillColor: AppColors.whiteColor,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.addressValString,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context).email,
-                        ),
-                        CustomFormField(
-                          controller: state.emailController,
-                          /*inputformet: [*//*FilteringTextInputFormatter.deny(
-                              RegExp(r'\s')),*//*LengthLimitingTextInputFormatter(15)],*/
-                          keyboardType: TextInputType.emailAddress,
-                          hint: "test2gmail.com",
-                          fillColor: AppColors.whiteColor,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.emailValString,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context).fax,
-                        ),
-                        CustomFormField(
-                          controller: state.faxController,
-                          inputformet: [/*FilteringTextInputFormatter.deny(
-                              RegExp(r'\s')),*/LengthLimitingTextInputFormatter(15)],
-                          keyboardType: TextInputType.number,
-                          hint: AppLocalizations.of(context).fax,
-                          fillColor: AppColors.whiteColor,
-                          textInputAction: TextInputAction.done,
-                          validator: AppStrings.faxValString,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context).logo_image,
-                          star: '',
-                        ),
-                        Container(
-                          height: getScreenHeight(context) * 0.2,
-                          alignment: Alignment.center,
-                          child: DottedBorder(
-                            color:/*state.companyLogo.isNotEmpty ?  state.image.path != ''
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name:
+                                    AppLocalizations.of(context)!.full_address,
+                              ),
+                              CustomFormField(
+                                controller: state.addressController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/
+                                  LengthLimitingTextInputFormatter(15)
+                                ],
+                                keyboardType: TextInputType.text,
+                                hint: AppLocalizations.of(context)!.address,
+                                fillColor: AppColors.whiteColor,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.addressValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.email,
+                              ),
+                              CustomFormField(
+                                controller: state.emailController,
+                                /*inputformet: [*/ /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/ /*LengthLimitingTextInputFormatter(15)],*/
+                                keyboardType: TextInputType.emailAddress,
+                                hint: "",
+                                fillColor: AppColors.whiteColor,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.emailValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.fax,
+                              ),
+                              CustomFormField(
+                                controller: state.faxController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/
+                                  LengthLimitingTextInputFormatter(15)
+                                ],
+                                keyboardType: TextInputType.number,
+                                hint: AppLocalizations.of(context)!.fax,
+                                fillColor: AppColors.whiteColor,
+                                textInputAction: TextInputAction.done,
+                                validator: AppStrings.faxValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.logo_image,
+                                star: '',
+                              ),
+                              Container(
+                                height: getScreenHeight(context) * 0.2,
+                                alignment: Alignment.center,
+                                child: DottedBorder(
+                                  color: /*state.companyLogo.isNotEmpty ?  state.image.path != ''
                                 ? AppColors.whiteColor
-                                : AppColors.whiteColor :*/ AppColors.borderColor,
-                            radius: Radius.circular(AppConstants.radius_3),
-                            borderType: BorderType.RRect,
-                            strokeWidth: 1,
-                            dashPattern: [3, 2],
-                            child: Container(
-                              color: AppColors.whiteColor,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) => Container(
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.whiteColor,
-                                                    borderRadius: BorderRadius.only(
-                                                        topRight:
-                                                            Radius.circular(
+                                : AppColors.whiteColor :*/
+                                      AppColors.borderColor,
+                                  radius:
+                                      Radius.circular(AppConstants.radius_3),
+                                  borderType: BorderType.RRect,
+                                  strokeWidth: 1,
+                                  dashPattern: [3, 2],
+                                  child: Container(
+                                    color: AppColors.whiteColor,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .whiteColor,
+                                                          borderRadius: BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      AppConstants
+                                                                          .radius_20),
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      AppConstants
+                                                                          .radius_20)),
+                                                        ),
+                                                        clipBehavior:
+                                                            Clip.hardEdge,
+                                                        padding: EdgeInsets.symmetric(
+                                                            horizontal:
                                                                 AppConstants
-                                                                    .radius_20),
-                                                        topLeft: Radius.circular(
-                                                            AppConstants
-                                                                .radius_20)),
-                                                  ),
-                                                  clipBehavior: Clip.hardEdge,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: AppConstants
-                                                          .padding_30,
-                                                      vertical: AppConstants
-                                                          .padding_20),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
+                                                                    .padding_30,
+                                                            vertical:
+                                                                AppConstants
+                                                                    .padding_20),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
                                                             Text(
                                                               AppLocalizations.of(
-                                                                      context)
+                                                                      context)!
                                                                   .upload_photo,
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
@@ -386,7 +412,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                             30.height,
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)
+                                                                        context)!
                                                                     .camera,
                                                                 icon: Icons
                                                                     .camera_alt_rounded,
@@ -401,7 +427,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                 }),
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)
+                                                                        context)!
                                                                     .gallery,
                                                                 icon:
                                                                     Icons.photo,
@@ -415,157 +441,183 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                       context);
                                                                 }),
                                                           ],
-                                                  ),
-                                                ),
-                                            backgroundColor:
-                                                Colors.transparent);
-                                      },
-                                      child: state.isUpdate
-                                          ? state.companyLogo.isNotEmpty
-                                              ? state.image.path != ''
-                                                  ? SizedBox(
-                                                      height: getScreenHeight(
-                                                              context) *
-                                                          0.18,
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      child: Image.file(
-                                                        File(state.image.path),
-                                                        fit: BoxFit.contain,
+                                                        ),
                                                       ),
-                                                    )
-                                                  : SizedBox(
-                                                      height: getScreenHeight(
-                                                              context) *
-                                                          0.19,
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      child: Image.network(
-                                                        '${AppUrls.baseFileUrl}${state.companyLogo}',
-                                                        fit:BoxFit.contain,
-                                                        loadingBuilder: (context,
-                                                            child,
-                                                            loadingProgress) {
-                                                          if (loadingProgress ==
-                                                              null) {
-                                                            return child;
-                                                          } else {
-                                                            return Center(
-                                                              child:
-                                                                  CupertinoActivityIndicator(
-                                                                color: AppColors
-                                                                    .blackColor,
-                                                              ),
-                                                            );
-                                                          }
-                                                        },
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                          return Container(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Text(
-                                                              AppStrings
-                                                                  .failedToLoadString,
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .textColor),
+                                                  backgroundColor:
+                                                      Colors.transparent);
+                                            },
+                                            child: state.isUpdate
+                                                ? state.companyLogo.isNotEmpty
+                                                    ? state.image.path != ''
+                                                        ? SizedBox(
+                                                            height:
+                                                                getScreenHeight(
+                                                                        context) *
+                                                                    0.18,
+                                                            width:
+                                                                getScreenWidth(
+                                                                    context),
+                                                            child: Image.file(
+                                                              File(state
+                                                                  .image.path),
+                                                              fit: BoxFit
+                                                                  .contain,
                                                             ),
-                                                          );
-                                                        },
+                                                          )
+                                                        : SizedBox(
+                                                            height:
+                                                                getScreenHeight(
+                                                                        context) *
+                                                                    0.19,
+                                                            width:
+                                                                getScreenWidth(
+                                                                    context),
+                                                            child:
+                                                                Image.network(
+                                                              '${AppUrls.baseFileUrl}${state.companyLogo}',
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                              loadingBuilder:
+                                                                  (context,
+                                                                      child,
+                                                                      loadingProgress) {
+                                                                if (loadingProgress ==
+                                                                    null) {
+                                                                  return child;
+                                                                } else {
+                                                                  return Center(
+                                                                    child:
+                                                                        CupertinoActivityIndicator(
+                                                                      color: AppColors
+                                                                          .blackColor,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                              errorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                return Container(
+                                                                  color: AppColors
+                                                                      .whiteColor,
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Text(
+                                                                    AppStrings
+                                                                        .failedToLoadString,
+                                                                    style: AppStyles.rkRegularTextStyle(
+                                                                        size: AppConstants
+                                                                            .font_14,
+                                                                        color: AppColors
+                                                                            .textColor),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          )
+                                                    : Icon(
+                                                        Icons
+                                                            .camera_alt_rounded,
+                                                        color:
+                                                            AppColors.blueColor,
+                                                        size: 30,
+                                                      )
+                                                : state.image.path != ''
+                                                    ? SizedBox(
+                                                        height: getScreenHeight(
+                                                                context) *
+                                                            0.18,
+                                                        width: getScreenWidth(
+                                                            context),
+                                                        child: Image.file(
+                                                          File(
+                                                              state.image.path),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Icons
+                                                            .camera_alt_rounded,
+                                                        color:
+                                                            AppColors.blueColor,
+                                                        size: 30,
+                                                      )),
+                                        state.isUpdate
+                                            ? state.companyLogo.isNotEmpty
+                                                ? SizedBox()
+                                                : Align(
+                                                    child: Container(
+                                                      width: getScreenWidth(
+                                                          context),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .upload_photo,
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                                size:
+                                                                    AppConstants
+                                                                        .font_14,
+                                                                color: AppColors
+                                                                    .textColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
                                                       ),
-                                                    )
-                                              : Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  color: AppColors.blueColor,
-                                                  size: 30,
-                                                )
-                                          : state.image.path != ''
-                                              ? SizedBox(
-                                                  height:
-                                                      getScreenHeight(context) *
-                                                          0.18,
-                                                  width:
-                                                      getScreenWidth(context),
-                                                  child: Image.file(
-                                                    File(state.image.path),
-                                                    fit: BoxFit.contain,
+                                                    ),
+                                                  )
+                                            : state.image.path != ''
+                                                ? const SizedBox()
+                                                : Align(
+                                                    child: Container(
+                                                      width: getScreenWidth(
+                                                          context),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .upload_photo,
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .font_14,
+                                                          color: AppColors
+                                                              .textColor,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                )
-                                              : Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  color: AppColors.blueColor,
-                                                  size: 30,
-                                                )),
-                                  state.isUpdate
-                                      ? state.companyLogo.isNotEmpty
-                                          ? SizedBox()
-                                          : Align(
-                                              child: Container(
-                                                width: getScreenWidth(context),
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .upload_photo,
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .textColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                ),
-                                              ),
-                                            )
-                                      : state.image.path != ''
-                                          ? const SizedBox()
-                                          : Align(
-                                              child: Container(
-                                                width: getScreenWidth(context),
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  AppLocalizations.of(context)
-                                                      .upload_photo,
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .textColor,
-                                                          ),
-                                                ),
-                                              ),
-                                            ),
-                                ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        50.height,
-                        CustomButtonWidget(
-                          buttonText: state.isUpdate
-                              ? AppLocalizations.of(context).save.toUpperCase()
-                              : AppLocalizations.of(context)
-                                  .next
-                                  .toUpperCase(),
-                          bGColor: AppColors.mainColor,
-                          isLoading: state.isLoading,
-                          onPressed: state.isLoading
-                              ? null
-                              : () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                      bloc.add(
-                                          MoreDetailsEvent.registrationApiEvent(
-                                              context: context));
+                              50.height,
+                              CustomButtonWidget(
+                                buttonText: state.isUpdate
+                                    ? AppLocalizations.of(context)!
+                                        .save
+                                        .toUpperCase()
+                                    : AppLocalizations.of(context)!
+                                        .next
+                                        .toUpperCase(),
+                                bGColor: AppColors.mainColor,
+                                isLoading: state.isLoading,
+                                onPressed: state.isLoading
+                                    ? null
+                                    : () {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          bloc.add(MoreDetailsEvent
+                                              .registrationApiEvent(
+                                                  context: context));
 
-
-                                    /*      if (state.isUpdate) {
+                                          /*      if (state.isUpdate) {
                               if (state.image.path.isNotEmpty) {
                                 bloc.add(MoreDetailsEvent
                                     .registrationApiEvent(
@@ -577,24 +629,24 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     bgColor: AppColors.redColor);
                               }
                             }*/
-                                  }
-                                },
-                          fontColors: AppColors.whiteColor,
+                                        }
+                                      },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                              20.height,
+                            ],
+                          ),
                         ),
-                        20.height,
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
           );
         },
       ),
     );
   }
 
- /* void alertDialog(BuildContext context) {
+/* void alertDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (c1) {
@@ -606,7 +658,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               bottom: AppConstants.padding_30),
           title: Align(
               alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context).upload_photo)),
+              child: Text(AppLocalizations.of(context)!.upload_photo)),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -632,8 +684,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(AppLocalizations.of(context).camera),
-                Text(AppLocalizations.of(context).gallery),
+                Text(AppLocalizations.of(context)!.camera),
+                Text(AppLocalizations.of(context)!.gallery),
               ],
             ),
           ],

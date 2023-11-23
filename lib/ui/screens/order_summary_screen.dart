@@ -42,7 +42,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context).order_summary,
+              title: AppLocalizations.of(context)!.order_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -109,32 +109,45 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
                                   borderRadius: BorderRadius.only(
-                                      topLeft: isRTLContent(context: context)
-                                          ? Radius.circular(
-                                              AppConstants.radius_6)
-                                          : Radius.circular(
-                                              AppConstants.radius_30),
-                                      bottomLeft: isRTLContent(context: context)
-                                          ? Radius.circular(
-                                              AppConstants.radius_6)
-                                          : Radius.circular(
-                                              AppConstants.radius_30),
+                                      topLeft: context.rtl
+                                                ? Radius.circular(
+                                                    AppConstants.radius_6)
+                                                : Radius.circular(
+                                                    AppConstants.radius_30),
+                                      bottomLeft: context.rtl
+                                                ? Radius.circular(
+                                                    AppConstants.radius_6)
+                                                : Radius.circular(
+                                                    AppConstants.radius_30),
                                       bottomRight:
-                                          isRTLContent(context: context)
-                                              ? Radius.circular(
+                                      context.rtl
+                                                ? Radius.circular(
                                                   AppConstants.radius_30)
                                               : Radius.circular(
                                                   AppConstants.radius_6),
-                                      topRight: isRTLContent(context: context)
+                                      topRight: context.rtl
                                           ? Radius.circular(
                                               AppConstants.radius_30)
                                           : Radius.circular(AppConstants.radius_6))),
-                              child: Text(
-                                '${state.orderSummaryList.data?.cart!.first.totalAmount}${' : '}${AppLocalizations.of(context).total }',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
+                              child:
+                              RichText(
+                                text: TextSpan(
+                                  text: AppLocalizations.of(context)!
+                                      .total,
+                                  style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.whiteColor,
-                                    fontWeight: FontWeight.w700),
+                                    size: AppConstants.normalFont,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text:
+                                        '${' : '}${state.orderSummaryList.data?.cart!.first.totalAmount}${AppLocalizations.of(context)!.currency}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            color: AppColors.whiteColor,
+                                            size: AppConstants.normalFont,
+                                            fontWeight: FontWeight.w700)),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -155,28 +168,30 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: AppColors.navSelectedColor,
                                     borderRadius: BorderRadius.only(
-                                        topLeft: isRTLContent(context: context)
-                                            ? Radius.circular(
-                                                AppConstants.radius_30)
-                                            : Radius.circular(
-                                                AppConstants.radius_6),
+                                        topLeft: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_30)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_6),
                                         bottomLeft:
-                                            isRTLContent(context: context)
-                                                ? Radius.circular(
+                                        context.rtl
+                                                  ? Radius.circular(
                                                     AppConstants.radius_30)
                                                 : Radius.circular(
                                                     AppConstants.radius_6),
                                         bottomRight:
-                                            isRTLContent(context: context)
-                                                ? Radius.circular(
+                                        context.rtl
+                                                  ? Radius.circular(
                                                     AppConstants.radius_6)
                                                 : Radius.circular(
                                                     AppConstants.radius_30),
-                                        topRight: isRTLContent(context: context)
-                                            ? Radius.circular(AppConstants.radius_6)
-                                            : Radius.circular(AppConstants.radius_30))),
+                                        topRight: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_6)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_30))),
                                 child: Text(
-                                  AppLocalizations.of(context).send_order,
+                                  AppLocalizations.of(context)!.send_order,
                                   style: AppStyles.rkRegularTextStyle(
                                     size: getScreenWidth(context) <= 380
                                         ? AppConstants.mediumFont
@@ -234,7 +249,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 children: [
                   CommonOrderContentWidget(
                     flexValue: 1,
-                    title: AppLocalizations.of(context).products,
+                    title: AppLocalizations.of(context)!.products,
                     value: state.orderSummaryList.data!.data![index].totalQuantity!.toString(),
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
@@ -244,7 +259,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   5.width,
                   CommonOrderContentWidget(
                     flexValue: 2,
-                    title: AppLocalizations.of(context).delivery_date,
+                    title: AppLocalizations.of(context)!.delivery_date,
                     value: '-',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
@@ -255,8 +270,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   5.width,
                   CommonOrderContentWidget(
                     flexValue: 2,
-                    title: AppLocalizations.of(context).total_order,
-                    value:state.orderSummaryList.data!.data![index].totalAmount!.toString(),
+                    title: AppLocalizations.of(context)!.total_order,
+                    value:'${state.orderSummaryList.data!.data![index].totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

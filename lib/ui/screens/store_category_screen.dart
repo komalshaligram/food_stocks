@@ -108,7 +108,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         getScreenWidth(context),
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                      'No Sub Categories',
+                                                      'Sub Categories not available',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: AppStyles
@@ -203,7 +203,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       getScreenWidth(context),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    'No products available',
+                                                    'Products not available',
                                                     textAlign: TextAlign.center,
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -325,7 +325,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       //   itemBuilder: (context, index) {
                                       //     return buildPlanoGramListItem(
                                       //         context: context,
-                                      //         isRTL: isRTLContent(context: context),
+                                      //         isRTL: context.rtl,
                                       //         width: getScreenWidth(context) / 3.2);
                                       //   },
                                       // )
@@ -393,19 +393,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         //             color: AppColors.mainColor,
                         //             borderRadius: BorderRadius.only(
                         //               topLeft: Radius.circular(
-                        //                   isRTLContent(context: context)
+                        //                   context.rtl
                         //                       ? AppConstants.radius_5
                         //                       : AppConstants.radius_100),
                         //               bottomLeft: Radius.circular(
-                        //                   isRTLContent(context: context)
+                        //                   context.rtl
                         //                       ? AppConstants.radius_5
                         //                       : AppConstants.radius_100),
                         //               topRight: Radius.circular(
-                        //                   isRTLContent(context: context)
+                        //                   context.rtl
                         //                       ? AppConstants.radius_100
                         //                       : AppConstants.radius_5),
                         //               bottomRight: Radius.circular(
-                        //                   isRTLContent(context: context)
+                        //                   context.rtl
                         //                       ? AppConstants.radius_100
                         //                       : AppConstants.radius_5),
                         //             ),
@@ -443,19 +443,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         //               color: AppColors.navSelectedColor,
                         //               borderRadius: BorderRadius.only(
                         //                 topLeft: Radius.circular(
-                        //                     isRTLContent(context: context)
+                        //                     context.rtl
                         //                         ? AppConstants.radius_100
                         //                         : AppConstants.radius_5),
                         //                 bottomLeft: Radius.circular(
-                        //                     isRTLContent(context: context)
+                        //                     context.rtl
                         //                         ? AppConstants.radius_100
                         //                         : AppConstants.radius_5),
                         //                 topRight: Radius.circular(
-                        //                     isRTLContent(context: context)
+                        //                     context.rtl
                         //                         ? AppConstants.radius_5
                         //                         : AppConstants.radius_100),
                         //                 bottomRight: Radius.circular(
-                        //                     isRTLContent(context: context)
+                        //                     context.rtl
                         //                         ? AppConstants.radius_5
                         //                         : AppConstants.radius_100),
                         //               ),
@@ -480,7 +480,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     )),
                 CommonSearchWidget(
                   isCategoryExpand: state.isCategoryExpand,
-                  isRTL: isRTLContent(context: context),
                   isStoreCategory: true,
                   onFilterTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
@@ -641,8 +640,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       required int index,
       required int subIndex,
       required double height,
-      required double width,
-      required bool isRTL}) {
+      required double width}) {
     return BlocProvider.value(
       value: context.read<StoreCategoryBloc>(),
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
@@ -1038,40 +1036,32 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock,
-                                  isRTL: isRTLContent(context: context),
+                                  isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity,
                                   onQuantityIncreaseTap: () {
                                     context.read<StoreCategoryBloc>().add(
                                         StoreCategoryEvent
                                             .increaseQuantityOfProduct(
-                                            context: context1));
+                                                context: context1));
                                   },
-                              onQuantityDecreaseTap: () {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent
-                                        .decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: TextEditingController(text: state
-                                  .productStockList[planoGramIndex][state
-                                  .productStockUpdateIndex].note)
-                                ..selection = TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset: state.productStockList[state
-                                            .planoGramUpdateIndex][state
-                                            .productStockUpdateIndex].note
-                                            .length)),
-                              onNoteChanged: (newNote) {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent.changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context.read<StoreCategoryBloc>().add(
+                                  onQuantityDecreaseTap: () {
+                                    context.read<StoreCategoryBloc>().add(
+                                        StoreCategoryEvent
+                                            .decreaseQuantityOfProduct(
+                                                context: context1));
+                                  },
+                                  noteController: TextEditingController(text: state.productStockList[planoGramIndex][state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<StoreCategoryBloc>().add(
+                                        StoreCategoryEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  isLoading: state.isLoading,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<StoreCategoryBloc>().add(
                                               StoreCategoryEvent
                                                   .addToCartProductEvent(
                                                       context: context1));
@@ -1270,14 +1260,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: subCategoryName?.isEmpty ?? true
-                ? null
-                : () {
-                    debugPrint('cate');
-                    BlocProvider.of<StoreCategoryBloc>(context).add(
-                        StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
-                            isSubCategory: true, context: context));
-                  },
+            onTap: () {
+              if (!(subCategoryName?.isEmpty ?? true)) {
+                debugPrint('cate');
+                BlocProvider.of<StoreCategoryBloc>(context).add(
+                    StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+                        isSubCategory: true, context: context));
+              }
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1387,7 +1377,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     context: context,
                                     index: index,
                                     subIndex: subIndex,
-                                    isRTL: isRTLContent(context: context),
                                     height: 150,
                                     width: getScreenWidth(context) / 3.2);
                               },

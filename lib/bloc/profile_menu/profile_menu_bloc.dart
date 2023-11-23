@@ -31,34 +31,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         emit(state.copyWith(
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
         emit(state.copyWith(userName: preferences.getUserName()));
-      } else if (event is _logOutEvent) {
-        showDialog(
-          context: event.context,
-          builder: (context) => CommonAlertDialog(
-            title: "Log Out",
-            subTitle: 'Are you sure?',
-            positiveTitle: 'Yes',
-            negativeTitle: 'No',
-            negativeOnTap: () {
-              Navigator.pop(context);
-            },
-            positiveOnTap: () async {
-              SharedPreferencesHelper preferencesHelper =
-                  SharedPreferencesHelper(
-                      prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.logOutSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(context);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.connectScreen.name);
-            },
-          ),
-        );
       } else if (event is _GetAppLanguage) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());

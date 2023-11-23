@@ -69,10 +69,12 @@ class AppConstants{
   static const int productCategoryPageLimit = 18;
   static const int productSubCategoryPageLimit = 18;
   static const int supplierProductPageLimit = 18;
+  static const int recommendationProductPageLimit = 18;
   static const int saleProductPageLimit = 18;
   static const int planogramProductPageLimit = 4;
   static const int qnaPageLimit = 10;
   static const int messagePageLimit = 10;
   static const int appContentPageLimit = 20;
   static const int oderPageLimit = 10;
+  static const int walletLimit = 10;
 }
