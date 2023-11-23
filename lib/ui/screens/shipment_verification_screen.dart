@@ -166,7 +166,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                                text: ' : 1524812',
+                                text: '${' : '}${args?[AppStrings.supplierOrderNumberString] ?? ''}',
                                 style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.blackColor,
                                     size: AppConstants.font_14,
@@ -186,7 +186,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'חיים משה',
+                               args?[AppStrings.driverNameString],
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.mediumFont,
                                 color: AppColors.blackColor,
@@ -216,7 +216,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  '054-5858996',
+                                  args?[AppStrings.driverNumberString],
                                   style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.whiteColor,
                                       size: AppConstants.font_14,
@@ -318,7 +318,12 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           context: context,
                           supplierId: args?[AppStrings.supplierIdString],
                           signPath: image.path,
-                          orderId: args?[AppStrings.orderIdString]));
+                          orderId: args?[AppStrings.orderIdString],
+                          driverName: args?[AppStrings.driverNameString],
+                        driverNumber: args?[AppStrings.driverNumberString]
+                      ),
+
+                      );
                     } else {
                       showSnackBar(
                           context: context,

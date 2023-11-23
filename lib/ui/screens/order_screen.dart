@@ -73,7 +73,7 @@ class OrderScreenWidget extends StatelessWidget {
                             : Expanded(
                                 child: Center(
                                     child: Text(
-                                  'Orders not found',
+                                      AppLocalizations.of(context)!.no_data,
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.normalFont,
                                       color: AppColors.blackColor,
@@ -88,14 +88,14 @@ class OrderScreenWidget extends StatelessWidget {
                 onNotification: (notification) {
                   if (notification.metrics.pixels ==
                       notification.metrics.maxScrollExtent) {
-                    if ((state.orderList.metaData!.totalFilteredCount ?? 0) >
-                        state.orderDetailsList.length) {
+                  /*  if ((state.orderList.metaData!.totalFilteredCount ?? 0) >
+                        state.orderDetailsList.length) {*/
                       context
                           .read<OrderBloc>()
                           .add(OrderEvent.getAllOrderEvent(context: context));
-                    } else {
+                 /*   } else {
                       return false;
-                    }
+                    }*/
                   }
                   return true;
                 },
@@ -110,46 +110,46 @@ class OrderScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        return Container(
-          margin: EdgeInsets.all(AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_15,
-              horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.15),
-                  blurRadius: AppConstants.blur_10),
-            ],
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    state.orderDetailsList[index].orderNumber.toString(),
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.normalFont,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, RouteDefine.orderDetailsScreen.name,
-                          arguments: {
-                            AppStrings.orderIdString:
-                                state.orderDetailsList[index].id,
-                            AppStrings.orderNumberString:
-                                state.orderDetailsList[index].orderNumber,
-                          });
-                    },
-                    child: Container(
+        return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                  context, RouteDefine.orderDetailsScreen.name,
+                  arguments: {
+                    AppStrings.orderIdString:
+                    state.orderDetailsList[index].id,
+                    AppStrings.orderNumberString:
+                    state.orderDetailsList[index].orderNumber,
+                  });
+          },
+          child: Container(
+            margin: EdgeInsets.all(AppConstants.padding_10),
+            padding: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_15,
+                horizontal: AppConstants.padding_10),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.15),
+                    blurRadius: AppConstants.blur_10),
+              ],
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      state.orderDetailsList[index].orderNumber.toString() ?? '',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.normalFont,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(
                             Radius.circular(AppConstants.radius_100)),
@@ -179,59 +179,60 @@ class OrderScreenWidget extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
+                    )
+                  ],
+                ),
+                7.height,
+                Row(
+                  children: [
+                    CommonOrderContentWidget(
+                      flexValue: 2,
+                      title: AppLocalizations.of(context)!.products,
+                      value:
+                          state.orderDetailsList[index].products.toString(),
+                      titleColor: AppColors.blackColor,
+                      valueColor: AppColors.blackColor,
+                      valueTextSize: AppConstants.smallFont,
                     ),
-                  )
-                ],
-              ),
-              7.height,
-              Row(
-                children: [
-                  CommonOrderContentWidget(
-                    flexValue: 2,
-                    title: AppLocalizations.of(context)!.products,
-                    value: state.orderDetailsList[index].products.toString(),
-                    titleColor: AppColors.blackColor,
-                    valueColor: AppColors.blackColor,
-                    valueTextSize: AppConstants.smallFont,
-                  ),
-                  5.width,
-                  CommonOrderContentWidget(
-                    flexValue: 2,
-                    title: AppLocalizations.of(context)!.suppliers,
-                    value: state.orderDetailsList[index].suppliers.toString(),
-                    titleColor: AppColors.blackColor,
-                    valueColor: AppColors.blackColor,
-                    valueTextSize: AppConstants.smallFont,
-                  ),
-                  5.width,
-                  CommonOrderContentWidget(
-                    flexValue: 3,
-                    title: AppLocalizations.of(context)!.order_date,
-                    value: state.orderDetailsList[index].createdAt
-                            ?.replaceRange(11, 16, '') ??
-                        '',
-                    titleColor: AppColors.blackColor,
-                    valueColor: AppColors.blackColor,
-                    valueTextSize: AppConstants.smallFont,
-                  ),
-                  5.width,
-                  CommonOrderContentWidget(
-                    flexValue: 3,
-                    title: AppLocalizations.of(context)!.order_status,
-                    value: state.orderDetailsList[index].status?.statusName
-                            ?.toString() ??
-                        '',
-                    titleColor: AppColors.blackColor,
-                    valueColor:
-                        state.orderDetailsList[index].status?.statusName ==
-                                AppLocalizations.of(context)!.pending_delivery
-                            ? AppColors.orangeColor
-                            : AppColors.mainColor,
-                    valueTextSize: AppConstants.smallFont,
-                  ),
-                ],
-              ),
-            ],
+                    5.width,
+                    CommonOrderContentWidget(
+                      flexValue: 2,
+                      title: AppLocalizations.of(context)!.suppliers,
+                      value: state.orderDetailsList[index].suppliers.toString(),
+                      titleColor: AppColors.blackColor,
+                      valueColor: AppColors.blackColor,
+                      valueTextSize: AppConstants.smallFont,
+                    ),
+                    5.width,
+                    CommonOrderContentWidget(
+                      flexValue: 3,
+                      title: AppLocalizations.of(context)!.order_date,
+                      value: state.orderDetailsList[index].createdAt
+                              ?.replaceRange(11, 16, '') ??
+                          '',
+                      titleColor: AppColors.blackColor,
+                      valueColor: AppColors.blackColor,
+                      valueTextSize: AppConstants.smallFont,
+                    ),
+                    5.width,
+                    CommonOrderContentWidget(
+                      flexValue: 3,
+                      title: AppLocalizations.of(context)!.order_status,
+                      value: state.orderDetailsList[index].status?.statusName
+                              ?.toString() ??
+                          '',
+                      titleColor: AppColors.blackColor,
+                      valueColor:
+                          state.orderDetailsList[index].status?.statusName ==
+                                  AppLocalizations.of(context)!.pending_delivery
+                              ? AppColors.orangeColor
+                              : AppColors.mainColor,
+                      valueTextSize: AppConstants.smallFont,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

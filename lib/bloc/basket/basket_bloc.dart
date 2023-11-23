@@ -72,11 +72,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       } else if (event is _productUpdateEvent) {
         if (event.productWeight != 0) {
           try {
-            print('supplierId_____${event.supplierId}');
-            print('productId_____${event.productId}');
-            print('getCartId____${preferencesHelper.getCartId()}');
-            print('cartProductId_____${event.cartProductId}');
-            print('weight_____${event.productWeight}');
+            debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
 
             UpdateCartReqModel reqMap = UpdateCartReqModel(
               supplierId: event.supplierId,
@@ -90,22 +86,27 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               data: reqMap,
             );
 
-            debugPrint('update cart reqMap  = $reqMap');
+            debugPrint('[update cart reqMap]  = $reqMap');
 
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             debugPrint('update response  = $response');
             if (response.status == 201) {
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
-              print('quantity____${response.data!.cartProduct!.quantity}');
+              int quantity = list[event.listIndex].totalQuantity!;
+              int payment = list[event.listIndex].totalPayment!;
+
               list[event.listIndex].totalQuantity =
                   response.data!.cartProduct!.quantity;
+              list[event.listIndex].totalPayment =
+                  ((payment / quantity) * response.data!.cartProduct!.quantity!)
+                      .toInt();
               emit(state.copyWith(
                   basketProductList: list, isRefresh: !state.isRefresh));
-              // showSnackBar(
-              //     context: event.context,
-              //     title: response.message!,
-              //     bgColor: AppColors.mainColor);
+              showSnackBar(
+                  context: event.context,
+                  title: response.message!,
+                  bgColor: AppColors.mainColor);
             } else {
               showSnackBar(
                   context: event.context,
@@ -153,7 +154,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     'Bearer ${preferencesHelper.getAuthToken()}'
               }));
 
-          debugPrint('clear cart response_______${res}');
+          debugPrint('[clear cart response] =  ${res}');
 
           if (res["status"] == 201) {
             add(BasketEvent.setCartCountEvent(isClearCart: true));

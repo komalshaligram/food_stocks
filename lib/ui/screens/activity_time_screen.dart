@@ -293,7 +293,7 @@ class ActivityTimeRow extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return state.OperationTimeList.isNotEmpty
                               ? Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
                                   child: Row(
                                     children: [
                                       index == 0

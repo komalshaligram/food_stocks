@@ -123,8 +123,8 @@ class BasketScreenWidget extends StatelessWidget {
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              : Text(
-                                                  '${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}${' : '}${AppLocalizations.of(context)!.total}',
+                                              : /*Text(
+                                                  '${AppLocalizations.of(context)!.total}${' : '}${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                           size: getScreenWidth(
@@ -138,7 +138,43 @@ class BasketScreenWidget extends StatelessWidget {
                                                               .whiteColor,
                                                           fontWeight:
                                                               FontWeight.w700),
+                                                ),*/
+                                          RichText(
+                                            text: TextSpan(
+                                              text: AppLocalizations.of(context)!
+                                                  .total,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                    size: getScreenWidth(
+                                                        context) <=
+                                                        380
+                                                        ? AppConstants
+                                                        .smallFont
+                                                        : AppConstants
+                                                        .mediumFont,
+                                                    color: AppColors
+                                                        .whiteColor,
                                                 ),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text:
+                                                    '${' : '}${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: getScreenWidth(
+                                                            context) <=
+                                                            380
+                                                            ? AppConstants
+                                                            .smallFont
+                                                            : AppConstants
+                                                            .normalFont,
+                                                        color: AppColors
+                                                            .whiteColor,
+                                                        fontWeight:
+                                                        FontWeight.w700)),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -209,7 +245,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           SvgPicture.asset(
                                             AppImagePath.delete,
                                           ),
-                                          10.width,
+                                          15.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
@@ -240,7 +276,7 @@ class BasketScreenWidget extends StatelessWidget {
                           : (state.basketProductList.length) != 0
                               ? Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 85),
+                                    padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
                                     child: ListView.builder(
                                       itemCount: state.basketProductList.length,
                                       shrinkWrap: true,
@@ -256,7 +292,7 @@ class BasketScreenWidget extends StatelessWidget {
                               : Expanded(
                                   child: Center(
                                       child: Text(
-                                    'Your cart is empty',
+                                        AppLocalizations.of(context)!.cart_empty,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
@@ -396,6 +432,7 @@ class BasketScreenWidget extends StatelessWidget {
                           color: AppColors.blackColor)),
                 ),
               ),
+              1.width,
               Container(
                 width: 70,
                 child: Text(

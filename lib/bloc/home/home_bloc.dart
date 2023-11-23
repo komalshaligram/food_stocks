@@ -408,10 +408,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           if (response.status == 200) {
             emit(state.copyWith(
-                thisMonthExpense: response.data!.currentMonth!.totalExpenses!,
-                lastMonthExpense: response.data!.previousMonth!.totalExpenses!,
-                balance: response.data!.balanceAmount!,
-                totalCredit: response.data!.totalCredit!));
+                thisMonthExpense: response.data?.currentMonth?.totalExpenses ?? 0,
+                lastMonthExpense: response.data?.previousMonth?.totalExpenses ?? 0,
+                balance: response.data?.balanceAmount ?? 0,
+                totalCredit: response.data?.totalCredit ?? 0
+            ));
           } else {
             showSnackBar(
                 context: event.context,

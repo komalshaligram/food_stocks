@@ -19,37 +19,36 @@ class OrderDetailsRoute {
   static Widget get route => OrderDetailsScreen();
 }
 
-
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderDetailsBloc()/*..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.idString] ?? ''))*/,
+      create: (context) =>
+          OrderDetailsBloc() /*..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.idString] ?? ''))*/,
       child: OrderDetailsScreenWidget(
         orderId: args?[AppStrings.orderIdString] ?? '',
-        orderNumber: args?[AppStrings.orderNumberString] ?? 0,
-
+        orderNumber: args?[AppStrings.orderNumberString] ?? '',
       ),
     );
   }
 }
 
 class OrderDetailsScreenWidget extends StatelessWidget {
- final String orderId;
- final int orderNumber;
-  const OrderDetailsScreenWidget({required this.orderId, required this.orderNumber});
+  final String orderId;
+  final String orderNumber;
+
+  const OrderDetailsScreenWidget(
+      {required this.orderId, required this.orderNumber});
 
   @override
   Widget build(BuildContext context) {
     OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();
     return BlocListener<OrderDetailsBloc, OrderDetailsState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
         builder: (context, state) {
           return SafeArea(
@@ -64,11 +63,16 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       vertical: AppConstants.padding_10,
                     ),
-                    child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
-                        ? CupertinoActivityIndicator() : CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.total,
-                      buttonValue: '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
-                    ),
+                    child:
+                        (state.orderByIdList.data?.ordersBySupplier?.length ??
+                                    0) ==
+                                0
+                            ? CupertinoActivityIndicator()
+                            : CircularButtonWidget(
+                                buttonName: AppLocalizations.of(context)!.total,
+                                buttonValue:
+                                    '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
+                              ),
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -76,19 +80,24 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 ),
               ),
               body: FocusDetector(
-                     onFocusGained: ()=> bloc.add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: orderId)),
-                     child:(state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
-                  ? OrderSummaryScreenShimmerWidget() : ListView.builder(
-                itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                itemBuilder: (context, index) =>
-                        orderListItem(index: index, context: context),
+                onFocusGained: () => bloc.add(
+                    OrderDetailsEvent.getOrderByIdEvent(
+                        context: context, orderId: orderId)),
+                child: (state.orderByIdList.data?.ordersBySupplier?.length ??
+                            0) ==
+                        0
+                    ? OrderSummaryScreenShimmerWidget()
+                    : ListView.builder(
+                        itemCount:
+                            state.orderByIdList.data?.ordersBySupplier?.length,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(
+                            vertical: AppConstants.padding_5),
+                        itemBuilder: (context, index) =>
+                            orderListItem(index: index, context: context),
+                      ),
               ),
-                   ),
-
-
             ),
           );
         },
@@ -99,32 +108,30 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
       builder: (context, state) {
-        return Container(
-          margin: EdgeInsets.all(AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_15,
-              horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.15),
-                  blurRadius: AppConstants.blur_10),
-            ],
-            borderRadius: BorderRadius.all(
-                Radius.circular(AppConstants.radius_5)),
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(
-                  context, RouteDefine.productDetailsScreen.name ,
-              arguments: {
-                   AppStrings.productIndexString : index,
-                   AppStrings.orderIdString: orderId,
-                AppStrings.orderNumberString : orderNumber,
-                  }
-              );
-            },
+        return GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name,
+                arguments: {
+                  AppStrings.productIndexString: index,
+                  AppStrings.orderIdString: orderId,
+                  AppStrings.orderNumberString: orderNumber,
+                });
+          },
+          child: Container(
+            margin: EdgeInsets.all(AppConstants.padding_10),
+            padding: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_15,
+                horizontal: AppConstants.padding_10),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.15),
+                    blurRadius: AppConstants.blur_10),
+              ],
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -132,19 +139,25 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      state.orderByIdList.data!.ordersBySupplier![index].supplierName!.toString(),
+                      state.orderByIdList.data!.ordersBySupplier![index]
+                          .supplierName!
+                          .toString(),
                       style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_14,
-                          color: AppColors.blackColor,
-                          ),
+                        size: AppConstants.font_14,
+                        color: AppColors.blackColor,
+                      ),
                     ),
                     Text(
-                      state.orderByIdList.data!.ordersBySupplier![index].deliverStatus!.statusName.toString(),
+                      state.orderByIdList.data!.ordersBySupplier![index]
+                          .deliverStatus!.statusName
+                          .toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color:/*state.supplierList[index].orderStatus == AppLocalizations.of(context)!.pending_delivery ?AppColors.orangeColor :*/  AppColors.mainColor,
-                          fontWeight: FontWeight.w700
-                      ),
+                          color: /*state.orderByIdList.data!.ordersBySupplier![index]
+                              .deliverStatus!.statusName == AppLocalizations.of(context)!.pending_delivery*/
+                          state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate == '' ? AppColors.orangeColor :
+                              AppColors.mainColor,
+                          fontWeight: FontWeight.w700),
                     )
                   ],
                 ),
@@ -154,7 +167,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 1,
                       title: AppLocalizations.of(context)!.products,
-                      value:  state.orderByIdList.data!.ordersBySupplier![index].products!.length.toString(),
+                      value: state.orderByIdList.data!.ordersBySupplier![index]
+                          .products!.length
+                          .toString(),
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w700,
@@ -164,7 +179,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.delivery_date,
-                      value:  '-',
+                      value: state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate != ''? '${state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.font_10,
@@ -175,7 +190,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.total_order,
-                      value: '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                      value:
+                          '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,
@@ -190,10 +206,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
       },
     );
   }
-
-
 }
-
 
 /*Container(
                         decoration: BoxDecoration(

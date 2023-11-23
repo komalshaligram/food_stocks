@@ -8,6 +8,8 @@ class OrderState with _$OrderState {
    required bool isLoadMore,
    required int pageNum,
    required List<Datum> orderDetailsList,
+   required bool isBottomOfProducts,
+
 
 
   }) = _OrderState;
@@ -17,7 +19,8 @@ class OrderState with _$OrderState {
      isShimmering: false,
      isLoadMore: false,
      pageNum: 0,
-     orderDetailsList: []
+     orderDetailsList: [],
+     isBottomOfProducts: false
 
   );
 

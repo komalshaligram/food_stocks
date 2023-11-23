@@ -5,6 +5,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import '../../bloc/order_successful/order_successful_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
@@ -45,7 +46,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                   vertical: AppConstants.padding_50),
               child: Column(
                 children: [
-                  Container(
+                  state.orderThisMonth < 0 ? WalletScreenShimmerWidget() : Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
