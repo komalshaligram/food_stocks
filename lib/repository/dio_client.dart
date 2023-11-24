@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -6,25 +5,26 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 
 import 'package:food_stock/ui/widget/no_internet_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ui/utils/themes/app_urls.dart';
 
 class DioClient {
-   final Dio _dio;
+  final Dio _dio;
   late BuildContext _context;
 
   DioClient(this._context)
       : _dio = Dio(
-
     BaseOptions(
         baseUrl: AppUrls.baseUrl,
         connectTimeout: const Duration(milliseconds: 60000),
         receiveTimeout: const Duration(milliseconds: 60000),
-
         headers: {
           HttpHeaders.acceptHeader: Headers.jsonContentType,
           HttpHeaders.authorizationHeader: 'Bearer 1',
@@ -52,24 +52,26 @@ class DioClient {
     if (kDebugMode) {
       debugPrint("app error data $e");
     }
- /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
+    /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
     onError(eInfo);*/
     return handler.next(e);
   }));
 
-
-   Future post(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-    Options? options
-  }) async {
-
+  Future post(String path,
+      {Object? data,
+        Map<String, dynamic>? queryParameters,
+        Options? options}) async {
+    SharedPreferencesHelper preferencesHelper =
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
       try {
-        Options requestOptions = options ?? Options();
+        Options requestOptions = options ??
+            Options(headers: {
+              HttpHeaders.authorizationHeader:
+              'Bearer ${preferencesHelper.getAuthToken()}'
+            });
         requestOptions.headers = requestOptions.headers ?? {};
 
         var response = await _dio.post(path,
@@ -79,7 +81,33 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
-        throw _createErrorEntity(e,context: _context);
+        // debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
+        // if((e.response?.statusCode ?? 401) == 401) {
+        //   showSnackBar(
+        //       context: _context,
+        //       title: e.response?.data.message ?? AppStrings.logOutSuccessString,
+        //       bgColor: AppColors.redColor);
+        //   var response = await _dio.put(AppUrls.logOutUrl,
+        //       queryParameters: queryParameters,
+        //       options: Options(headers: {
+        //         HttpHeaders.authorizationHeader:
+        //         'Bearer ${preferencesHelper.getAuthToken()}'
+        //       }));
+        //   if(response.statusCode == 200) {
+        //     await preferencesHelper.setUserLoggedIn();
+        //     debugPrint('Token Expired = ${response.data}');
+        //     showSnackBar(
+        //         context: _context,
+        //         title: response.data.message ?? AppStrings.logOutSuccessString,
+        //         bgColor: AppColors.mainColor);
+        //     Navigator.popUntil(_context,
+        //             (route) => route.name == RouteDefine.bottomNavScreen.name);
+        //     Navigator.pushNamed(
+        //         _context, RouteDefine.connectScreen.name);
+        //   }
+        // } else {
+        throw _createErrorEntity(e, context: _context);
+        // }
       }
     } else {
       debugPrint('no internet');
@@ -93,38 +121,41 @@ class DioClient {
   }
 
   // GET
-   Future<Map<String, dynamic>> get({
-     required String path,
-     Map<String, dynamic>? query,
-     Options? options
+  Future<Map<String, dynamic>> get(
+      {required String path,
+        Map<String, dynamic>? query,
+        Options? options}) async {
+    try {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final connectivityResult = await (Connectivity().checkConnectivity());
 
-   }) async {
-
-     final connectivityResult = await (Connectivity().checkConnectivity());
-
-     if (connectivityResult == ConnectivityResult.mobile ||
-         connectivityResult == ConnectivityResult.wifi ) {
-       try {
-         final response = await _dio.get(
-           path,
-           queryParameters: query,
-            options: options
-         );
-         debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
-         return response.data as Map<String, dynamic>;
-       } on DioException catch (e) {
-         throw _createErrorEntity(e,context:_context );
-       }
-     } else {
-       debugPrint('error');
-       throw Exception("Network Error");
-     }
-   }
-
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        try {
+          final response = await _dio.get(path,
+              queryParameters: query,
+              options: options ??
+                  Options(headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}'
+                  }));
+          debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
+          return response.data as Map<String, dynamic>;
+        } on DioException catch (e) {
+          throw _createErrorEntity(e, context: _context);
+        }
+      } else {
+        debugPrint('error');
+        throw Exception("Network Error");
+      }
+    } on DioException catch (e) {
+      throw _createErrorEntity(e);
+    }
+  }
 
   Future<Map<String, dynamic>> uploadFileProgressWithFormData(
-      {required String path,
-      required FormData formData}) async {
+      {required String path, required FormData formData}) async {
     try {
       final response = await _dio.post(
         path,
@@ -135,26 +166,29 @@ class DioClient {
       );
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
-      throw _createErrorEntity(e,context: _context);
+      throw _createErrorEntity(e, context: _context);
     }
   }
 
   // PUT
-  Future<Map<String, dynamic>> put({
-    required String path,
-    Object? data,
-    Map<String, dynamic>? query,
-    Options? options
-  }) async {
+  Future<Map<String, dynamic>> put(
+      {required String path,
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? query,
+        Options? options}) async {
     try {
-      Options requestOptions = options ?? Options();
-      requestOptions.headers = requestOptions.headers ?? {};
-      final response = await _dio.put(
-        path,
-        data: data,
-        queryParameters: query,
-          options: requestOptions
-      );
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final response = await _dio.put(path,
+          data: data,
+          queryParameters: query,
+          options: options ??
+              Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}',
+                },
+              ));
       return response.data;
     } on DioException catch (e) {
       throw _createErrorEntity(e);
@@ -166,13 +200,21 @@ class DioClient {
     required String path,
     Map<String, dynamic>? data,
     Map<String, dynamic>? query,
+    Options? options,
   }) async {
     try {
-      final response = await _dio.patch(
-        path,
-        data: data,
-        queryParameters: query,
-      );
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final response = await _dio.patch(path,
+          data: data,
+          queryParameters: query,
+          options: options ??
+              Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}',
+                },
+              ));
 
       return response.data;
     } on DioException catch (e) {
@@ -183,15 +225,23 @@ class DioClient {
   // delete
   Future delete(
       {required String path,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? query,
-      required BuildContext context}) async {
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? query,
+        Options? options,
+        required BuildContext context}) async {
     try {
-      final response = await _dio.delete(
-        path,
-        data: data,
-        queryParameters: query,
-      );
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final response = await _dio.delete(path,
+          data: data,
+          queryParameters: query,
+          options: options ??
+              Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}',
+                },
+              ));
       if (response.statusCode != 200) {
         debugPrint("Errorr!!!! ${response.data}");
         return showSnackBar(
@@ -201,7 +251,6 @@ class DioClient {
       } else {
         return response.data as Map<String, dynamic>;
       }
-
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
@@ -222,11 +271,11 @@ class ErrorEntity implements Exception {
   }
 }
 
-ErrorEntity _createErrorEntity(DioException error,{BuildContext? context}) {
+ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
-   //   showSnackBar(context: context, title: title, bgColor: bgColor);
-       showSnackBar(
+    //   showSnackBar(context: context, title: title, bgColor: bgColor);
+      showSnackBar(
           context: context!,
           title: "Connection timed out",
           bgColor: AppColors.redColor);

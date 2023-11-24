@@ -1,9 +1,9 @@
 class AppUrls {
   static const String baseUrl =
-      'http://192.168.1.46:8080/api' /*'http://182.70.118.201:3000/api'*/;
+      /*'http://192.168.1.46:8080/api'*/ 'http://182.70.118.201:3000/api';
 
   static const String baseFileUrl =
-      'http://192.168.1.46:8080/public/' /*'http://182.70.118.201:3000/public/'*/;
+      /*'http://192.168.1.46:8080/public/'*/ 'http://182.70.118.201:3000/public/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
@@ -69,7 +69,6 @@ class AppUrls {
       '/v1/store/globalSearch';
   static const String logOutUrl =
       '/v1/auth/logout';
-  static const String getRecommendationProductsUrl = '/v1/recommendation/products';
   static const String deleteMessageUrl = '/v1/notifications/deleteNotifications';
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
 }

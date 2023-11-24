@@ -85,7 +85,7 @@ class MessageContentBloc
           debugPrint('UpdateMessage req  = ${reqMap}');
           final response = await DioClient(event.context).put(
               path: AppUrls.updateMessageUrl,
-              data: reqMap,
+              data: reqMap.toJson(),
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
