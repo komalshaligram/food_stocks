@@ -77,30 +77,30 @@ class FileUploadScreenWidget extends StatelessWidget {
                 return Future.value(true);
               }
             },
-            child: Stack(
-              children: [
-                Scaffold(
-                  backgroundColor: AppColors.whiteColor,
-                  appBar: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    titleSpacing: 0,
-                    leadingWidth: 60,
-                    title: Text(AppLocalizations.of(context)!.forms_files,
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.blackColor)),
-                    leading: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: AppColors.blackColor,
-                        )),
-                  ),
-                  body: state.isShimmering
+            child: Scaffold(
+              backgroundColor: AppColors.whiteColor,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                titleSpacing: 0,
+                leadingWidth: 60,
+                title: Text(AppLocalizations.of(context)!.forms_files,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.blackColor)),
+                leading: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.blackColor,
+                    )),
+              ),
+              body: Stack(
+                children: [
+                  state.isShimmering
                       ? FileUploadScreenShimmerWidget()
                       : SafeArea(
                           child: state.isLoading
@@ -232,20 +232,20 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                         ),
-                ),
-                state.isDownloading
-                    ? Expanded(
-                        child: Container(
-                        height: getScreenHeight(context),
-                        width: getScreenWidth(context),
-                        color: Color.fromARGB(65, 0, 0, 0),
-                        alignment: Alignment.center,
-                        child: CupertinoActivityIndicator(
-                          color: AppColors.whiteColor,
-                        ),
-                      ))
-                    : 0.width,
-              ],
+                  state.isDownloading
+                      ? Expanded(
+                          child: Container(
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: Colors.transparent,
+                          alignment: Alignment.center,
+                          child: CupertinoActivityIndicator(
+                            color: AppColors.blackColor,
+                          ),
+                        ))
+                      : 0.width,
+                ],
+              ),
             ),
           );
         },
