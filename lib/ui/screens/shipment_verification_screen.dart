@@ -176,10 +176,10 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       ),
                       7.height,
                       Text(
-                        AppLocalizations.of(context)!.driver_name,
+                        '${AppLocalizations.of(context)!.driver_name}${' : '}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
-                            color: AppColors.orangeColor,
+                            color: AppColors.blackColor,
                             fontWeight: FontWeight.w700),
                       ),
                       Row(

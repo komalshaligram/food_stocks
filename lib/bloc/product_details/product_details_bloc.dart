@@ -50,10 +50,10 @@ class ProductDetailsBloc
 
           if (response.status == 200) {
             emit(state.copyWith(orderList: response));
-            showSnackBar(
+          /*  showSnackBar(
                 context: event.context,
                 title: response.message!,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.mainColor);*/
           } else {
             showSnackBar(
                 context: event.context,

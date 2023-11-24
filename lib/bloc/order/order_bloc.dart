@@ -25,7 +25,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
-        emit(state.copyWith(isShimmering: true));
+      //  emit(state.copyWith(isShimmering: true));
       if(event is _getAllOrderEvent){
         if (state.isLoadMore) {
           return;
@@ -42,7 +42,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             pageNum: state.pageNum + 1,
             pageLimit: AppConstants.oderPageLimit,
           );
-          debugPrint('[OrderSendReqModel] = $reqMap}');
+          debugPrint('[getAllOrder req] = $reqMap}');
           final res = await DioClient(event.context).post(
               AppUrls.getAllOrderUrl,
               data: reqMap,
@@ -52,25 +52,34 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                   })
           );
 
-          debugPrint('[OrderSend url]  = ${AppUrls.getAllOrderUrl}');
+          debugPrint('[getAllOrder url]  = ${AppUrls.getAllOrderUrl}');
           GetAllOrderResModel response = GetAllOrderResModel.fromJson(res);
-          debugPrint('[OrderSendResModel] = $response');
+          debugPrint('[getAllOrder res] = $response');
 
           if (response.status == 200) {
             List<Datum> orderList = state.orderDetailsList.toList(growable: true);
-
+            if ((response.metaData?.totalFilteredCount ?? 1) >
+                state.orderDetailsList.length) {
               orderList.addAll(response.data ?? []);
-              emit(state.copyWith(orderDetailsList: orderList,isShimmering: false, pageNum: state.pageNum + 1,isLoadMore: false,
+              emit(state.copyWith(orderDetailsList: orderList,
+                  isShimmering: false,
+                  pageNum: state.pageNum + 1,
+                  isLoadMore: false,
                   orderList: response
               ));
 
-            emit(state.copyWith(
-                isBottomOfProducts: orderList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
+              emit(state.copyWith(
+                  isBottomOfProducts: orderList.length ==
+                      (response.metaData?.totalFilteredCount ?? 1)
+                      ? true
+                      : false));
+            }
+            else {
+              emit(state.copyWith(isShimmering: false, isLoadMore: false));
+            }
+
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false,isShimmering: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
         }  on ServerException {

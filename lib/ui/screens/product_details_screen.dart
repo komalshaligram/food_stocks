@@ -244,7 +244,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 ),
                                 7.height,
                                 Text(
-                                  AppLocalizations.of(context)!.driver_name,
+                                  '${AppLocalizations.of(context)!.driver_name}${' : '}',
                                   style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.font_14,
                                     color: AppColors.blackColor,
@@ -280,19 +280,23 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                 fontWeight: FontWeight.w600),
                                           )
                                         : Container(
-                                            width: 150,
+                                           // width: 150,
                                             // height: 40,
-                                            child: CustomFormField(
-                                              controller: driverController,
-                                              inputformet: [
-                                                LengthLimitingTextInputFormatter(
-                                                    15)],
-                                              keyboardType: TextInputType.text,
-                                              hint: '',
-                                              validator:
-                                                  AppStrings.driverNameString,
-                                              fillColor: Colors.white,
+                                            child: Expanded(
+                                              flex: 3,
+                                              child: CustomFormField(
+                                                controller: driverController,
+                                                inputformet: [
+                                                  LengthLimitingTextInputFormatter(
+                                                      20)],
+                                                keyboardType: TextInputType.text,
+                                                hint: '',
+                                                validator:
+                                                    AppStrings.driverNameString,
+                                                fillColor: Colors.white,
+                                              ),
                                             )),
+                                   15.width,
                                    (state
                                                     .orderList
                                                     .data
@@ -354,17 +358,20 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                 )),
                                           )
                                         : Container(
-                                            width: 150,
+                                           // width: 150,
                                             // height: 35,
-                                            child: CustomFormField(
-                                              controller: phoneNumberController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              hint: AppStrings.hintNumberString,
-                                              validator:
-                                                  AppStrings.mobileValString,
-                                              fillColor: Colors.white,
-                                              border: 30,
+                                            child: Expanded(
+                                              flex: 3,
+                                              child: CustomFormField(
+                                                controller: phoneNumberController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                hint: AppStrings.hintNumberString,
+                                                validator:
+                                                    AppStrings.mobileValString,
+                                                fillColor: Colors.white,
+                                                border: 30,
+                                              ),
                                             ),
                                           ),
                                   ],
@@ -639,6 +646,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .productId!,
                                 supplierId: state.orderList.data!
                                     .ordersBySupplier![productIndex].id!,
+                               scale : state.orderList.data?.ordersBySupplier?[productIndex].products![index].scale.toString() ?? ''
                               )
                             : SizedBox();
                       },
@@ -682,7 +690,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       required String image,
       required int listIndex,
       required String productId,
-      required String supplierId}) {
+      required String supplierId, required String scale}) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -776,7 +784,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //10.width,
                                   Text(
-                                    '${weight.toString()}${AppLocalizations.of(context)!.kg}',
+                                    '${weight.toString()}${' '}${scale}',
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
                                       size: AppConstants.font_12,

@@ -21,7 +21,7 @@ class HomeState with _$HomeState {
     required int lastMonthExpense,
     required int orderThisMonth,
     required int balance,
-    required List<Message> messageList,
+    required List<MessageData> messageList,
     required bool isMessageShimmering,
   }) = _HomeState;
 

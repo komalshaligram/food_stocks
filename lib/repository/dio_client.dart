@@ -142,14 +142,18 @@ class DioClient {
   // PUT
   Future<Map<String, dynamic>> put({
     required String path,
-    Map<String, dynamic>? data,
+    Object? data,
     Map<String, dynamic>? query,
+    Options? options
   }) async {
     try {
+      Options requestOptions = options ?? Options();
+      requestOptions.headers = requestOptions.headers ?? {};
       final response = await _dio.put(
         path,
         data: data,
         queryParameters: query,
+          options: requestOptions
       );
       return response.data;
     } on DioException catch (e) {

@@ -87,8 +87,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                             prefs: await SharedPreferences.getInstance());
                     final res = await DioClient(event.context)
                         .post(AppUrls.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: preferencesHelper.getUserId()
-                    });
+                      AppStrings.idParamString: preferencesHelper.getUserId(),
+                    },
+                        options: Options(
+                          headers: {
+                            HttpHeaders.authorizationHeader:
+                            'Bearer ${preferencesHelper.getAuthToken()}',
+                          },
+                        )
+                    );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     Map<String, dynamic> newModel =

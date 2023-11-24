@@ -196,7 +196,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(isLoading: true));
             final res = await DioClient(event.context).post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
-                data: /*updatedProfileModel.toJson()*/ req);
+                data: /*updatedProfileModel.toJson()*/ req,
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                )
+            );
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
@@ -252,7 +259,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(isLoading: true));
             final response = await DioClient(event.context)
-                .post(AppUrls.RegistrationUrl, data: reqMap);
+                .post(AppUrls.RegistrationUrl, data: reqMap
+            );
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -261,6 +269,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (profileResModel.status == 200) {
               preferencesHelper.setCartId(
                   cartId: profileResModel.data?.client?.cartId ?? '');
+              preferencesHelper.setAuthToken(
+                  accToken: profileResModel.data?.authToken?.accessToken ?? '');
               if ((profileResModel.data?.client?.clientData?.profileImage ??
                       '') !=
                   '') {
@@ -323,7 +333,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(
                         id: preferencesHelper.getUserId())
-                    .toJson());
+                    .toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                )
+            );
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {

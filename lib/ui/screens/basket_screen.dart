@@ -149,7 +149,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                         context) <=
                                                         380
                                                         ? AppConstants
-                                                        .smallFont
+                                                        .font_14
                                                         : AppConstants
                                                         .mediumFont,
                                                     color: AppColors
@@ -404,18 +404,23 @@ class BasketScreenWidget extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  bloc.add(BasketEvent.productUpdateEvent(
-                    listIndex: index,
-                    productWeight:
-                        state.basketProductList[index].totalQuantity! - 1,
-                    context: context,
-                    productId: state
-                        .CartItemList.data!.data![index].productDetails!.id!,
-                    supplierId: state
-                        .CartItemList.data!.data![index].suppliers!.first.id!,
-                    cartProductId:
-                        state.CartItemList.data!.data![index].cartProductId!,
-                  ));
+                  if(state.basketProductList[index].totalQuantity! > 1){
+                    bloc.add(BasketEvent.productUpdateEvent(
+                      listIndex: index,
+                      productWeight:
+                      state.basketProductList[index].totalQuantity! - 1,
+                      context: context,
+                      productId: state
+                          .CartItemList.data!.data![index].productDetails!.id!,
+                      supplierId: state
+                          .CartItemList.data!.data![index].suppliers!.first.id!,
+                      cartProductId:
+                      state.CartItemList.data!.data![index].cartProductId!,
+                    ));
+                  }
+                  else{
+                    debugPrint("quantity can't decrease");
+                  }
                 },
                 child: Container(
                   width: AppConstants.containerSize_25,

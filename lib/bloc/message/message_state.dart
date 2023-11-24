@@ -3,7 +3,7 @@ part of 'message_bloc.dart';
 @freezed
 class MessageState with _$MessageState {
   const factory MessageState({
-    required List<Message> messageList,
+    required List<MessageData> messageList,
     required bool isShimmering,
     required int pageNum,
     required bool isBottomOfMessage,

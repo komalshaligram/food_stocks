@@ -117,7 +117,7 @@ class WalletScreenWidget extends StatelessWidget {
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
                   child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: state.walletTransactionsList.isEmpty ? NeverScrollableScrollPhysics(): AlwaysScrollableScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -266,16 +266,17 @@ class WalletScreenWidget extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2),
                                     child: LineChart(
-                                      LineChartData(
+                                        LineChartData(
                                         borderData: FlBorderData(show: false),
                                         lineTouchData: LineTouchData(
+                                        touchSpotThreshold: 30.0,
                                           getTouchLineEnd:
                                               (barData, spotIndex) {
                                             return 46;
                                           },
                                           enabled: true,
-                                          touchTooltipData:
-                                              LineTouchTooltipData(
+                                          touchTooltipData: LineTouchTooltipData(
+                                                fitInsideHorizontally: true,
                                             getTooltipItems: (value) {
                                               return value.map((e) {
                                                 return LineTooltipItem(
@@ -358,7 +359,7 @@ class WalletScreenWidget extends StatelessWidget {
                         15.width,
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_15),
+                              horizontal: AppConstants.padding_10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -405,7 +406,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         color: AppColors.whiteColor,
                                       ),
                                       child: Container(
-                                        width: getScreenWidth(context) * 0.51,
+                                        width:  getScreenWidth(context) * 0.56,
                                         height: 30,
                                         child: DateRangeField(
                                           decoration: InputDecoration(
@@ -413,7 +414,9 @@ class WalletScreenWidget extends StatelessWidget {
                                               prefixIcon: Icon(
                                                   Icons.keyboard_arrow_down),
                                               contentPadding:
-                                                  EdgeInsets.all(0)),
+                                                  EdgeInsets.all(0),
+
+                                          ),
                                           showDateRangePicker: (
                                               {required pickerBuilder,
                                               required widgetContext}) {
@@ -439,7 +442,6 @@ class WalletScreenWidget extends StatelessWidget {
                                                       range: state.selectedDateRange));
                                             } else {
                                               selectedDateRange = value;
-
                                               bloc.add(
                                                   WalletEvent.getDateRangeEvent(
                                                       context: context,
@@ -456,8 +458,7 @@ class WalletScreenWidget extends StatelessWidget {
 
                                             //  minDate = DateTime(state.yearList.last ,1,1);
                                           },
-                                          selectedDateRange:
-                                              state.selectedDateRange,
+                                          selectedDateRange: state.selectedDateRange,
                                           pickerBuilder: (BuildContext context,
                                               dynamic Function(DateRange?)
                                                   onDateRangeChanged) {
@@ -537,7 +538,7 @@ class WalletScreenWidget extends StatelessWidget {
                     if (notification.metrics.pixels ==
                         notification.metrics.maxScrollExtent) {
                         if ((state.balanceSheetList.metaData
-                            ?.totalFilteredCount ?? 0) >
+                            ?.totalFilteredCount ?? 1) >
                             state.walletTransactionsList.length) {
                           context.read<WalletBloc>().add(
                               WalletEvent.getAllWalletTransactionEvent(

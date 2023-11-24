@@ -7,13 +7,13 @@ part 'all_wallet_transaction_res_model.g.dart';
 @freezed
 class AllWalletTransactionResModel with _$AllWalletTransactionResModel {
   const factory AllWalletTransactionResModel({
-    @JsonKey(name: "status")
+
     int? status,
-    @JsonKey(name: "data")
+
     List<Datum>? data,
-    @JsonKey(name: "metaData")
+
     MetaData? metaData,
-    @JsonKey(name: "message")
+
     String? message,
   }) = _AllWalletTransactionResModel;
 
@@ -25,21 +25,21 @@ class Datum with _$Datum {
   const factory Datum({
     @JsonKey(name: "_id")
     String? id,
-    @JsonKey(name: "amount")
+
     String? amount,
-    @JsonKey(name: "Username")
+
     String? username,
-    @JsonKey(name: "orderId")
-    int? orderId,
-    @JsonKey(name: "type")
+
+    String? orderId,
+
     String? type,
-    @JsonKey(name: "income")
+
     String? income,
-    @JsonKey(name: "outcome")
+
     String? outcome,
-    @JsonKey(name: "balance")
+
     String? balance,
-    @JsonKey(name: "createdAt")
+
     String? createdAt,
   }) = _Datum;
 
@@ -49,11 +49,11 @@ class Datum with _$Datum {
 @freezed
 class MetaData with _$MetaData {
   const factory MetaData({
-    @JsonKey(name: "currentPage")
+
     int? currentPage,
-    @JsonKey(name: "totalFilteredCount")
+
     int? totalFilteredCount,
-    @JsonKey(name: "totalFilteredPage")
+
     int? totalFilteredPage,
   }) = _MetaData;
 

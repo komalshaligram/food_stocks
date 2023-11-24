@@ -58,10 +58,12 @@ class AppUrls {
   static const String getAllQNAUrl =
       '/v1/client/questionandanswer/getAllQuestionAndAnswer';
   static const String getAllMessagesUrl = '/v1/client/usermessages/getMessages';
+  static const String getNotificationMessageUrl = '/v1/notifications/getNotifications';
   static const String getAllAppContentsUrl =
       '/v1/client/contents/getAllContents';
   static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
   static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
-  static const String getRecommendationProductsUrl =
-      '/v1/recommendation/products';
+  static const String getRecommendationProductsUrl = '/v1/recommendation/products';
+  static const String deleteMessageUrl = '/v1/notifications/deleteNotifications';
+  static const String updateMessageUrl = '/v1/notifications/seenNotification';
 }
