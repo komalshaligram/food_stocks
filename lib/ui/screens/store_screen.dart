@@ -3,6 +3,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -805,6 +806,106 @@ class StoreScreenWidget extends StatelessWidget {
                       onFilterTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion());
                       },
+                      onSearchTap: () {
+                        bloc.add(
+                            StoreEvent.changeCategoryExpansion(isOpened: true));
+                      },
+                      onSearch: (String search) {
+                        bloc.add(StoreEvent.globalSearchEvent(
+                            context: context, search: search));
+                      },
+                      onOutSideTap: () {
+                        bloc.add(StoreEvent.changeCategoryExpansion(
+                            isOpened: false));
+                      },
+                      onSearchItemTap: () {
+                        bloc.add(StoreEvent.changeCategoryExpansion());
+                      },
+                      controller: TextEditingController(text: state.search)
+                        ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: state.search.length)),
+                      searchList: state.searchList,
+                      searchResultWidget: state.searchList.isEmpty
+                          ? Center(
+                        child: Text(
+                          'Search result not found',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.textColor),
+                        ),
+                      )
+                          : ListView.builder(
+                              itemCount: state.searchList.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return _buildSearchItem(
+                                    context: context,
+                                    searchName: state.searchList[index].name,
+                                    searchImage: state.searchList[index].image,
+                                    searchType:
+                                    state.searchList[index].searchType,
+                                    isShowSearchLabel: index == 0
+                                        ? true
+                                        : state.searchList[index].searchType !=
+                                        state.searchList[index - 1]
+                                            .searchType
+                                        ? true
+                                        : false,
+                                    onTap: () {
+                                      state.searchList[index].searchType ==
+                                          SearchTypes.sale ? showProductDetails(
+                                          context: context,
+                                          productId: state.searchList[index]
+                                              .searchId,
+                                          isBarcode: true) :
+                                      Navigator.pushNamed(
+                                          context,
+                                          state.searchList[index].searchType ==
+                                              SearchTypes.category
+                                              ? RouteDefine
+                                              .storeCategoryScreen.name
+                                              : state.searchList[index]
+                                              .searchType ==
+                                              SearchTypes.company
+                                              ? RouteDefine
+                                              .companyProductsScreen
+                                              .name
+                                              : RouteDefine
+                                              .supplierProductsScreen
+                                              .name,
+                                          arguments: state.searchList[index]
+                                              .searchType ==
+                                              SearchTypes.category
+                                              ? {
+                                            AppStrings.categoryIdString:
+                                            state.searchList[index]
+                                                .searchId,
+                                            AppStrings.categoryNameString:
+                                            state.searchList[index]
+                                                .name,
+                                          }
+                                              : state.searchList[index]
+                                              .searchType ==
+                                              SearchTypes.company
+                                              ? {
+                                            AppStrings
+                                                .companyIdString:
+                                            state
+                                                .searchList[index]
+                                                .searchId
+                                          }
+                                              : {
+                                            AppStrings
+                                                .supplierIdString:
+                                            state
+                                                .searchList[index]
+                                                .searchId
+                                          });
+                                      bloc.add(
+                                          StoreEvent.changeCategoryExpansion());
+                                    });
+                              },
+                      ),
                       onScanTap: () async {
                         String scanResult = await scanBarcodeOrQRCode(
                             context: context,
@@ -824,44 +925,6 @@ class StoreScreenWidget extends StatelessWidget {
                               isBarcode: true);
                         }*/
                       },
-                      controller: TextEditingController(),
-                      onOutSideTap: () {
-                        bloc.add(
-                            StoreEvent.changeCategoryExpansion(isOpened: true));
-                      },
-                      searchList: state.searchList,
-                      searchResultWidget: state.searchList.isEmpty
-                          ? Center(
-                              child: Text(
-                                'Search result not found',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: state.searchList.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return _buildSearchItem(
-                                    searchName: state.searchList[index].name,
-                                    searchImage: state.searchList[index].image,
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.storeCategoryScreen.name,
-                                          arguments: {
-                                            AppStrings.categoryIdString: state
-                                                .searchList[index].searchId,
-                                            AppStrings.categoryNameString:
-                                                state.searchList[index].name
-                                          });
-                                      bloc.add(
-                                          StoreEvent.changeCategoryExpansion(
-                                              isOpened: true));
-                                    });
-                              },
-                            ),
-                      onSearchItemTap: () {},
                     ),
                   ],
                 ),
@@ -873,54 +936,86 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchItem(
-      {required String searchName,
-      required String searchImage,
-      required void Function() onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: 35,
-        decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            border: Border(
-                bottom: BorderSide(
-                    color: AppColors.borderColor.withOpacity(0.5), width: 1))),
-        padding: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_20,
-            vertical: AppConstants.padding_5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.network(
-              '${AppUrls.baseFileUrl}$searchImage',
-              fit: BoxFit.fitHeight,
-              height: 35,
-              width: 40,
-              errorBuilder: (context, error, stackTrace) {
-                return 40.width;
-              },
-            ),
-            10.width,
-            Text(
-              searchName,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_12,
+  Widget _buildSearchItem({
+    required BuildContext context,
+    required String searchName,
+    required String searchImage,
+    required SearchTypes searchType,
+    required bool isShowSearchLabel,
+    required void Function() onTap,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        isShowSearchLabel
+            ? Padding(
+          padding: const EdgeInsets.only(
+              left: AppConstants.padding_20,
+              right: AppConstants.padding_20,
+              top: AppConstants.padding_15,
+              bottom: AppConstants.padding_5),
+          child: Text(
+            searchType == SearchTypes.category
+                ? AppLocalizations.of(context)!.categories
+                : searchType == SearchTypes.company
+                ? AppLocalizations.of(context)!.companies
+                : searchType == SearchTypes.sale
+                ? AppLocalizations.of(context)!.sales
+                : AppLocalizations.of(context)!.suppliers,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.smallFont,
                 color: AppColors.blackColor,
-              ),
+                fontWeight: FontWeight.w500),
+          ),
+        )
+            : 0.width,
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: 35,
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                border: Border(
+                    bottom: BorderSide(
+                        color: AppColors.borderColor.withOpacity(0.5),
+                        width: 1))),
+            padding: EdgeInsets.symmetric(
+                horizontal: AppConstants.padding_20,
+                vertical: AppConstants.padding_5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.network(
+                  '${AppUrls.baseFileUrl}$searchImage',
+                  fit: BoxFit.fitHeight,
+                  height: 35,
+                  width: 40,
+                  errorBuilder: (context, error, stackTrace) {
+                    return 40.width;
+                  },
+                ),
+                10.width,
+                Text(
+                  searchName,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_12,
+                    color: AppColors.blackColor,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
-  Padding buildListTitles(
-      {required BuildContext context,
-      required String title,
-      required void Function() onTap,
-      required subTitle}) {
+  Padding buildListTitles({required BuildContext context,
+    required String title,
+    required void Function() onTap,
+    required subTitle}) {
     return Padding(
       padding: const EdgeInsets.only(
         left: AppConstants.padding_10,

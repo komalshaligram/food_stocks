@@ -19,22 +19,25 @@ class CommonSearchWidget extends StatelessWidget {
   final Widget searchResultWidget;
   final void Function() onScanTap;
   final void Function() onFilterTap;
+  final void Function() onSearchTap;
   final void Function() onOutSideTap;
+  final void Function(String) onSearch;
   final void Function() onSearchItemTap;
   final List<SearchModel> searchList;
   final TextEditingController controller;
 
-  const CommonSearchWidget(
-      {super.key,
-      required this.isCategoryExpand,
-      required this.isStoreCategory,
-      required this.searchResultWidget,
-      required this.controller,
-      required this.onScanTap,
-      required this.onFilterTap,
-      required this.onOutSideTap,
-      required this.onSearchItemTap,
-      required this.searchList});
+  const CommonSearchWidget({super.key,
+    required this.isCategoryExpand,
+    required this.isStoreCategory,
+    required this.searchResultWidget,
+    required this.controller,
+    required this.onScanTap,
+    required this.onFilterTap,
+    required this.onSearchTap,
+    required this.onOutSideTap,
+    required this.onSearch,
+    required this.onSearchItemTap,
+    required this.searchList});
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +144,9 @@ class CommonSearchWidget extends StatelessWidget {
                           ),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
+                          onTap: onSearchTap,
+                          onChanged: onSearch,
+                          onSubmitted: onSearch,
                         ),
                       ),
                       InkWell(
@@ -169,20 +175,6 @@ class CommonSearchWidget extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: AppConstants.padding_20,
-                                    right: AppConstants.padding_20,
-                                    top: AppConstants.padding_15,
-                                    bottom: AppConstants.padding_5),
-                                child: Text(
-                                  AppLocalizations.of(context)!.categories,
-                                  style: AppStyles.rkBoldTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.blackColor,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
                               Expanded(
                                 child: searchResultWidget,
                               ),

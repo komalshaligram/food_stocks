@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -85,10 +86,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     SharedPreferencesHelper preferencesHelper =
                         SharedPreferencesHelper(
                             prefs: await SharedPreferences.getInstance());
-                    final res = await DioClient(event.context)
-                        .post(AppUrls.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: preferencesHelper.getUserId()
-                    });
+                    final res = await DioClient(event.context).post(
+                        AppUrls.getProfileDetailsUrl,
+                        data: {
+                          AppStrings.idParamString:
+                              preferencesHelper.getUserId()
+                        },
+                        options: Options(headers: {
+                          HttpHeaders.authorizationHeader:
+                              'Bearer ${preferencesHelper.getAuthToken()}'
+                        }));
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     Map<String, dynamic> newModel =
@@ -451,29 +458,39 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           Map<Permission, PermissionStatus> statuses = await [
             Permission.storage,
           ].request();
-          // if(statuses[Permission.storage]!.isDenied) {
-          //   showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.docDownloadAllowPermissionString,
-          //       bgColor: AppColors.redColor);
-          //   return;
-          // }
-          debugPrint('os version : ${Platform.operatingSystemVersion}');
-
-          PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-          String buildNumber = packageInfo.buildNumber;
-          debugPrint('build number $buildNumber');
-          // if (statuses[Permission.storage]!.isGranted) {
+          if (Platform.isAndroid) {
+            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+            print('Running on android version ${androidInfo.version.sdkInt}');
+            if (androidInfo.version.sdkInt < 33) {
+              if (statuses[Permission.storage]!.isDenied) {
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.docDownloadAllowPermissionString,
+                    bgColor: AppColors.redColor);
+                return;
+              }
+            }
+          } else {
+            //for ios permission
+          }
+          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          //
+          // String buildNumber = packageInfo.buildNumber;
+          // debugPrint('build number $buildNumber');
+          // if(statuses[Permission.storage]!.isGranted) {
           File file;
           Directory dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
+            // dir = await getApplicationDocumentsDirectory();
             dir = Directory('/storage/emulated/0/Documents');
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
           HttpClient httpClient = new HttpClient();
           String filePath = '';
+          debugPrint(
+              'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
           try {
             var request = await httpClient.getUrl(Uri.parse(
                 "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
@@ -504,6 +521,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(isDownloading: false));
             filePath = 'Can not fetch url';
           }
+          // } else {
+          //   emit(state.copyWith(isDownloading: false));
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
+          // }
         } catch (e) {
           emit(state.copyWith(isDownloading: false));
           showSnackBar(

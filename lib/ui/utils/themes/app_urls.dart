@@ -64,4 +64,8 @@ class AppUrls {
   static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
   static const String getRecommendationProductsUrl =
       '/v1/recommendation/products';
+  static const String getGlobalSearchResultUrl =
+      '/v1/store/globalSearch';
+  static const String logOutUrl =
+      '/v1/auth/logout';
 }
