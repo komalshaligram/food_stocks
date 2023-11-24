@@ -61,7 +61,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 count: temp.isEmpty
                     ? preferencesHelper.getCartCount()
                     : temp.length);
-            print('temp______$temp');
             emit(state.copyWith(
                 basketProductList: temp, isRefresh: !state.isRefresh));
           } else {
@@ -70,7 +69,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           }
         } on ServerException {}
       } else if (event is _productUpdateEvent) {
-        if (event.productWeight != 0) {
+      //  if (event.productWeight != 0) {
           try {
             debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
 
@@ -114,12 +113,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   bgColor: AppColors.mainColor);
             }
           } on ServerException {}
-        } else {
+       // }
+        /* else {
           showSnackBar(
               context: event.context,
               title: "Quantity can't decrease",
               bgColor: AppColors.mainColor);
-        }
+        }*/
       } else if (event is _removeCartProductEvent) {
         try {
           final response = await DioClient(event.context).post(

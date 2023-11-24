@@ -273,7 +273,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       width: 1),
                                                   shape: BoxShape.circle),
                                               alignment: Alignment.center,
-                                              child: Text('4',
+                                              child: Text(state.messageList.length.toString(),
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                           size: AppConstants
@@ -629,19 +629,19 @@ class HomeScreenWidget extends StatelessWidget {
                                             messageListItem(
                                                 context: context,
                                                 title: state.messageList[index]
-                                                        .title ??
+                                                        .message?.title ??
                                                     '',
                                                 content: parse(state
                                                                 .messageList[
                                                                     index]
-                                                                .fulltext ??
+                                                                .message?.body ??
                                                             '')
                                                         .body
                                                         ?.text ??
                                                     '',
                                                 dateTime: state
                                                         .messageList[index]
-                                                        .updatedAt ??
+                                                        .updatedAt?.replaceRange(11, 19, '') ??
                                                     '',
                                                 onTap: () {
                                                   Navigator.pushNamed(
@@ -650,10 +650,9 @@ class HomeScreenWidget extends StatelessWidget {
                                                           .messageContentScreen
                                                           .name,
                                                       arguments: {
-                                                        AppStrings
-                                                                .messageDataString:
-                                                            state.messageList[
-                                                                index]
+                                                        AppStrings.messageDataString: state.messageList[index],
+                                                        AppStrings.messageIdString : state.messageList[index].id,
+                                                        AppStrings.isReadMoreString : true,
                                                       });
                                                 }),
                                       ),

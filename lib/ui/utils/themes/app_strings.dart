@@ -14,6 +14,8 @@ class AppStrings {
   static const clearString = 'Clear';
   static const deleteString = 'Delete';
   static const deliverString = 'deliver';
+  static const statusString = 'status';
+
 
   //language Strings
   static const englishString = 'en';
@@ -67,6 +69,7 @@ class AppStrings {
   static const messageDataString = 'messageDataParam';
   static const appContentIdString = 'appContentIdParam';
   static const appContentNameString = 'appContentNameParam';
+
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
@@ -129,4 +132,6 @@ class AppStrings {
   static const cartIdString = 'id';
   static const driverNameString = 'driverName';
   static const driverNumberString = 'driverNumber';
+  static const messageIdString = 'messageId';
+  static const isReadMoreString = 'isReadMore';
 }

@@ -36,6 +36,7 @@ class MessageScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  /*  MessageBloc bloc = context.read<MessageBloc>();*/
     return BlocListener<MessageBloc, MessageState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageBloc, MessageState>(
@@ -48,7 +49,7 @@ class MessageScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.messages,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pop(context);
+                 Navigator.pushNamed(context,RouteDefine.bottomNavScreen.name);
                 },
                 // trailingWidget: Center(
                 //   child: GestureDetector(
@@ -95,15 +96,15 @@ class MessageScreenWidget extends StatelessWidget {
                                       index: index,
                                       context: context,
                                       title:
-                                          state.messageList[index].title ?? '',
+                                          state.messageList[index].message?.title ?? '',
                                       content: parse(state.messageList[index]
-                                                      .fulltext ??
+                                                      .message?.body ??
                                                   '')
                                               .body
                                               ?.text ??
                                           '',
                                       dateTime:
-                                          state.messageList[index].updatedAt ??
+                                          state.messageList[index].id ??
                                               '',
                                       onTap: () {
                                         Navigator.pushNamed(
@@ -112,9 +113,11 @@ class MessageScreenWidget extends StatelessWidget {
                                                 .messageContentScreen.name,
                                             arguments: {
                                               AppStrings.messageDataString:
-                                                  state.messageList[index]
+                                                  state.messageList[index],
+                                              AppStrings.messageIdString:state.messageList[index].id
                                             });
                                       },
+                                          isRead: state.messageList[index].isRead ?? false,
                                     ),
                                   ),
                         state.isLoadMore
@@ -146,7 +149,7 @@ class MessageScreenWidget extends StatelessWidget {
     required String title,
     required String content,
     required String dateTime,
-    required void Function() onTap,
+    required void Function() onTap, required bool isRead,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -175,7 +178,7 @@ class MessageScreenWidget extends StatelessWidget {
               width: 16,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: index.isEven ? Colors.transparent : AppColors.mainColor,
+                color: isRead ? AppColors.mainColor : Colors.transparent,
               ),
               margin: EdgeInsets.only(
                   left: context.rtl ? AppConstants.padding_10 : 0,

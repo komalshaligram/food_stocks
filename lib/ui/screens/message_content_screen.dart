@@ -7,6 +7,7 @@ import '../../bloc/message_content/message_content_bloc.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -24,7 +25,9 @@ class MessageContentScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => MessageContentBloc()
         ..add(MessageContentEvent.getMessageDataEvent(
-            messageData: args?[AppStrings.messageDataString])),
+            messageData: args?[AppStrings.messageDataString],isReadMore: args?[AppStrings.isReadMoreString] ?? false))
+      ..add(MessageContentEvent.MessageUpdateEvent(messageId: args?[AppStrings.messageIdString] ?? false, context: context,
+      )),
       child: MessageContentScreenWidget(),
     );
   }
@@ -35,6 +38,7 @@ class MessageContentScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MessageContentBloc bloc = context.read<MessageContentBloc>();
     return BlocListener<MessageContentBloc, MessageContentState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(
@@ -51,7 +55,26 @@ class MessageContentScreenWidget extends StatelessWidget {
                 },
                 trailingWidget: Center(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context1) => CommonAlertDialog(
+                          title: "Delete",
+                          subTitle: 'Are you sure?',
+                          positiveTitle: 'Yes',
+                          negativeTitle: 'No',
+                          negativeOnTap: () {
+                            Navigator.pop(context1);
+                          },
+                          positiveOnTap: () async {
+                            bloc.add(MessageContentEvent.MessageDeleteEvent(
+                                messageId: state.message.id ?? '', context: context,dialogContext: context1,
+                            ));
+                          },
+                        ),
+                      );
+
+                    },
                     child: Text(
                       AppLocalizations.of(context)!.delete,
                       style: AppStyles.rkRegularTextStyle(
@@ -66,6 +89,7 @@ class MessageContentScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Container(
+                  width: double.maxFinite,
                   margin: EdgeInsets.only(
                       left: AppConstants.padding_10,
                       right: AppConstants.padding_10,
@@ -86,26 +110,32 @@ class MessageContentScreenWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        state.message.title ?? '',
+                        state.message.message?.title ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.blackColor,
                             fontWeight: FontWeight.w500),
                       ),
                       5.height,
-                      Text(
-                        state.message.updatedAt ?? '',
+                     Text(
+                        state.message.createdAt ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.font_10,
                             color: AppColors.textColor),
                       ),
                       5.height,
                       Text(
-                        parse(state.message.fulltext ?? '').body?.text ?? '',
+                        parse(state.message.message?.body ?? '').body?.text ?? '',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.font_12,
                             color: AppColors.blackColor),
-                      )
+                      ),
+                      Text(
+                        parse(state.message.message?.summary ?? '').body?.text ?? '',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_12,
+                            color: AppColors.blackColor),
+                      ),
                     ],
                   ),
                 ),

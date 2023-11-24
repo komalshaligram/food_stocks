@@ -478,30 +478,38 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         try {
           emit(state.copyWith(isMessageShimmering: true));
           final res = await DioClient(event.context).post(
-              AppUrls.getAllMessagesUrl,
-              data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson());
-          GetMessagesResModel response = GetMessagesResModel.fromJson(res);
+            //  AppUrls.getAllMessagesUrl,
+              AppUrls.getNotificationMessageUrl,
+              data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferences.getAuthToken()}',
+                },
+              )
+          );
+         GetMessagesResModel response =GetMessagesResModel.fromJson(res);
           if (response.status == 200) {
-            List<Message> messageList = [];
+            List<MessageData> messageList = [];
             messageList.addAll(response.data
-                    ?.map((message) => Message(
+                    ?.map((message) => MessageData(
                           id: message.id,
-                          contentName: message.contentName,
-                          title: message.title,
-                          fulltext: message.fulltext,
-                          isPushNotification: message.isPushNotification,
-                          isEmail: message.isEmail,
-                          subPage: message.subPage,
-                          linkToPage: message.linkToPage,
+                          isRead: message.isRead,
+                          message:Message(
+                            id: message.message?.id ?? '',
+                            title: message.message?.title ?? '',
+                            summary: message.message?.summary ?? '',
+                            body: message.message?.body ?? '',
+                          ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
                         ))
                     .toList() ??
                 []);
-            messageList.removeWhere(
-                (message) => (message.isPushNotification ?? false) == false);
+           /* messageList.removeWhere(
+                (message) => (message.isPushNotification ?? false) == false);*/
             debugPrint('new message list len = ${messageList.length}');
-            emit(state.copyWith(
+         emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
             showSnackBar(

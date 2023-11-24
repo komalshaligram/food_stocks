@@ -51,12 +51,12 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
       if(event is _orderSendEvent){
         List<Product> ProductReqMap = [];
-        state.orderSummaryList.data!.data!.forEach((element) {
-          debugPrint('supplierId_____${element.suppliers!.id}');
-          debugPrint('product id_____${element.productDetails!.first.id}');
+        state.orderSummaryList.data?.data?.forEach((element) {
+          debugPrint('supplierId_____${element.suppliers?.id}');
+          debugPrint('product id_____${element.productDetails?.first.id}');
           ProductReqMap.add(Product(
-            supplierId: element.suppliers!.id,
-            productId: element.productDetails!.first.id,
+            supplierId: element.suppliers?.id,
+            productId: element.productDetails?.first.id,
              quantity: element.totalQuantity,
           ));
         });

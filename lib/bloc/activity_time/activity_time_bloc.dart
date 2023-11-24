@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -57,7 +60,15 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           try {
             final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
-                    .toJson());
+                    .toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}',
+                  },
+                )
+
+            );
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
 
@@ -514,7 +525,14 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   AppUrls.updateProfileDetailsUrl +
                       "/" +
                       preferences.getUserId(),
-                  data: /*reqMap.toJson()*/ req);
+                  data: /*reqMap.toJson()*/ req,
+                  options: Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                      'Bearer ${preferences.getAuthToken()}',
+                    },
+                  )
+              );
 
               debugPrint('operation update req _____${req}');
 
