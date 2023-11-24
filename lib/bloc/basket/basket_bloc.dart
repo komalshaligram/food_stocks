@@ -51,7 +51,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails!.productName!,
                   mainImage: element.productDetails!.mainImage!,
-                  totalPayment: element.totalAmount!.toString(),
+                  totalPayment: element.totalAmount!.toDouble(),
                   cartProductId: element.cartProductId!,
                   scales: element.productDetails!.scales!));
             });
@@ -93,13 +93,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
               int quantity = list[event.listIndex].totalQuantity!;
-          //   double payment = list[event.listIndex].totalPayment!;
+            int payment = list[event.listIndex].totalPayment!.round();
 
               list[event.listIndex].totalQuantity =
                   response.data!.cartProduct!.quantity;
-              list[event.listIndex].totalPayment = list[event.listIndex].totalPayment!.toString()
-                  /*((payment / quantity) * response.data!.cartProduct!.quantity!)
-                      .toInt()*/;
+              list[event.listIndex].totalPayment = /*list[event.listIndex].totalPayment!.toString()*/
+                  ((payment / quantity) * response.data!.cartProduct!.quantity!)
+                      .toDouble();
               emit(state.copyWith(
                   basketProductList: list, isRefresh: !state.isRefresh));
               showSnackBar(
