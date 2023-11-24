@@ -21,48 +21,47 @@ class DioClient {
 
   DioClient(this._context)
       : _dio = Dio(
-    BaseOptions(
-        baseUrl: AppUrls.baseUrl,
-        connectTimeout: const Duration(milliseconds: 60000),
-        receiveTimeout: const Duration(milliseconds: 60000),
-        headers: {
-          HttpHeaders.acceptHeader: Headers.jsonContentType,
-          HttpHeaders.authorizationHeader: 'Bearer 1',
+          BaseOptions(
+              baseUrl: AppUrls.baseUrl,
+              connectTimeout: const Duration(milliseconds: 60000),
+              receiveTimeout: const Duration(milliseconds: 60000),
+              headers: {
+                HttpHeaders.acceptHeader: Headers.jsonContentType,
+                HttpHeaders.authorizationHeader: 'Bearer 1',
+              },
+              validateStatus: (status) {
+                if (status == 401) {
+                  return false;
+                } else {
+                  return true;
+                }
+              },
+              contentType: Headers.jsonContentType,
+              responseType: ResponseType.json),
+        )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+            // print("app request data ${options.data}");
+            return handler.next(options);
+          }, onResponse: (response, handler) {
+            if (kDebugMode) {
+              debugPrint("app response data ${response.data}");
+            }
 
-        },
-        validateStatus: (status) {
-          if (status == 401) {
-            return false;
-          } else {
-            return true;
-          }
-        },
-        contentType: Headers.jsonContentType,
-        responseType: ResponseType.json),
-  )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-    // print("app request data ${options.data}");
-    return handler.next(options);
-  }, onResponse: (response, handler) {
-    if (kDebugMode) {
-      debugPrint("app response data ${response.data}");
-    }
-
-    return handler.next(response);
-  }, onError: (DioException e, handler) {
-    if (kDebugMode) {
-      debugPrint("app error data $e");
-    }
-    /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
+            return handler.next(response);
+          }, onError: (DioException e, handler) {
+            if (kDebugMode) {
+              debugPrint("app error data $e");
+            }
+            /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
     onError(eInfo);*/
-    return handler.next(e);
-  }));
+            return handler.next(e);
+          }));
 
   Future post(String path,
       {Object? data,
-        Map<String, dynamic>? queryParameters,
-        Options? options}) async {
+      Map<String, dynamic>? queryParameters,
+      Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
-    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
@@ -70,7 +69,7 @@ class DioClient {
         Options requestOptions = options ??
             Options(headers: {
               HttpHeaders.authorizationHeader:
-              'Bearer ${preferencesHelper.getAuthToken()}'
+                  'Bearer ${preferencesHelper.getAuthToken()}'
             });
         requestOptions.headers = requestOptions.headers ?? {};
 
@@ -123,11 +122,11 @@ class DioClient {
   // GET
   Future<Map<String, dynamic>> get(
       {required String path,
-        Map<String, dynamic>? query,
-        Options? options}) async {
+      Map<String, dynamic>? query,
+      Options? options}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -138,7 +137,7 @@ class DioClient {
               options: options ??
                   Options(headers: {
                     HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}'
+                        'Bearer ${preferencesHelper.getAuthToken()}'
                   }));
           debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
           return response.data as Map<String, dynamic>;
@@ -173,12 +172,12 @@ class DioClient {
   // PUT
   Future<Map<String, dynamic>> put(
       {required String path,
-        Map<String, dynamic>? data,
-        Map<String, dynamic>? query,
-        Options? options}) async {
+      Map<String, dynamic>? data,
+      Map<String, dynamic>? query,
+      Options? options}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       final response = await _dio.put(path,
           data: data,
           queryParameters: query,
@@ -186,7 +185,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
+                      'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
       return response.data;
@@ -204,7 +203,7 @@ class DioClient {
   }) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       final response = await _dio.patch(path,
           data: data,
           queryParameters: query,
@@ -212,7 +211,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
+                      'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
 
@@ -225,13 +224,13 @@ class DioClient {
   // delete
   Future delete(
       {required String path,
-        Map<String, dynamic>? data,
-        Map<String, dynamic>? query,
-        Options? options,
-        required BuildContext context}) async {
+      Map<String, dynamic>? data,
+      Map<String, dynamic>? query,
+      Options? options,
+      required BuildContext context}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       final response = await _dio.delete(path,
           data: data,
           queryParameters: query,
@@ -239,7 +238,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
+                      'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
       if (response.statusCode != 200) {
