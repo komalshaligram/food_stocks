@@ -458,7 +458,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '$productPrice${AppLocalizations.of(context)!.currency}',
+                                      '${productPrice.toStringAsFixed(1)}${AppLocalizations.of(context)!.currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
                                           color: AppColors.blackColor,
@@ -625,6 +625,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       decoration: InputDecoration(
                                           border: InputBorder.none),
                                       maxLines: 5,
+                                      maxLength: 50,
                                     ),
                                   )
                                 ],

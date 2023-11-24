@@ -27,7 +27,7 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          BasketBloc()..add(BasketEvent.getAllCartEvent(context: context)),
+          BasketBloc() /*..add(BasketEvent.getAllCartEvent(context: context))*/,
       child: const BasketScreenWidget(),
     );
   }

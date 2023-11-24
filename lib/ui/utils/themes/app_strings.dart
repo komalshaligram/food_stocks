@@ -68,6 +68,7 @@ class AppStrings {
   static const planogramProductsParamString = 'planogramProductsParam';
   static const messageDataString = 'messageDataParam';
   static const appContentIdString = 'appContentIdParam';
+  static const appContentNameString = 'appContentNameParam';
 
 
   //toast strings

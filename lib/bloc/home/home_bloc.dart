@@ -20,6 +20,7 @@ import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.d
     as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
+import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
@@ -55,6 +56,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UserImageUrl: preferences.getUserImageUrl(),
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             cartCount: preferences.getCartCount()));
+      } else if (event is _GetCartCountEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+              '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
+              options: Options(headers: {
+                HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}'
+              }));
+
+          GetAllCartResModel response = GetAllCartResModel.fromJson(res);
+          if (response.status == 200) {
+            debugPrint('main cart count = ${response.data?.data?.length}');
+            await preferences.setCartCount(
+                count:
+                    response.data?.data?.length ?? preferences.getCartCount());
+            emit(state.copyWith(cartCount: preferences.getCartCount()));
+          }
+        } on ServerException {}
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isProductSaleShimmering: true));

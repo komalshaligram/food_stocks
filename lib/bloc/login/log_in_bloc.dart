@@ -58,6 +58,10 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           emit(state.copyWith(
             isLoading: false,
           ));
+        } catch (e) {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
         }
       }
     });

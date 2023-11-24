@@ -20,6 +20,7 @@ class StoreState with _$StoreState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required bool isCartCountChange,
+    required String search,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
@@ -40,5 +41,6 @@ class StoreState with _$StoreState {
         isSelectSupplier: false,
         productSupplierList: [],
         isCartCountChange: false,
+        search: '',
       );
 }

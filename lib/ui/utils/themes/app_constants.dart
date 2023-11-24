@@ -62,6 +62,10 @@ class AppConstants{
   //shimmer text height
   static const double shimmerTextHeight = 20;
 
+  //list item animation delay
+  static const int listAnimationDelay = 200;
+  static const int listAnimationItemDelay = 50;
+
   //pagination
   static const int defaultPageLimit = 6;
   static const int supplierPageLimit = 18;
