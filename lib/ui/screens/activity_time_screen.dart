@@ -310,7 +310,7 @@ class ActivityTimeRow extends StatelessWidget {
                                               ))
                                           : Container(
                                               width: getScreenWidth(context) *
-                                                  0.18,
+                                                  0.22,
                                             ),
                                       SizedBox(
                                         width: getScreenWidth(context) < 380

@@ -29,6 +29,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 part 'wallet_event.dart';
 
@@ -229,6 +230,23 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             Permission.storage,
           ].request();
 
+          if (Platform.isAndroid) {
+            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+            print('Running on android version ${androidInfo.version.sdkInt}');
+            if (androidInfo.version.sdkInt < 33) {
+              if (statuses[Permission.storage]!.isDenied) {
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.docDownloadAllowPermissionString,
+                    bgColor: AppColors.redColor);
+                return;
+              }
+            }
+          } else {
+            //for ios permission
+          }
+
           File file;
           Directory dir;
           String filePath = '';
@@ -312,3 +330,4 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     });
   }
 }
+

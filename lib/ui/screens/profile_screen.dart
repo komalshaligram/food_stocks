@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,6 +76,7 @@ class ProfileScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
+          debugPrint('image   1   ${state.image}');
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -272,8 +275,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   .withOpacity(0.1),
                                         ),
                                         child: state.isUpdate
-                                            ? state.UserImageUrl.contains(
-                                                    AppStrings.tempString)
+                                            ? state.UserImageUrl.isNotEmpty ?
+                                            state.image.path!= ''
                                                 ? ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -340,10 +343,15 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         BorderRadius.circular(
                                                             40),
                                                     child: Image.file(
-                                                      state.image,
+                                                      File(state.image.path),
                                                       fit: BoxFit.cover,
                                                     ),
-                                                  ),
+                                                  ):  Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: AppColors
+                                              .textColor,
+                                        )
                                       ),
                                       Positioned(
                                         right: 1,
@@ -454,7 +462,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                                 RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(15)
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint:

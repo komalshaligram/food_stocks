@@ -41,6 +41,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   String mobileNo = '';
 
   ProfileBloc() : super(ProfileState.initial()) {
+
     on<ProfileEvent>((event, emit) async {
       SharedPreferencesHelper preferences =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -171,7 +172,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
-                    .toJson());
+                    .toJson(),
+              options: Options(
+            headers: {
+            HttpHeaders.authorizationHeader:
+            'Bearer ${preferences.getAuthToken()}',
+            },
+            )
+            );
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
@@ -179,8 +187,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
-                  UserImageUrl:
-                  response.data?.clients?.first.profileImage ?? '',
+                  UserImageUrl: response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
                       ?.firstWhere((businessType) =>
                               businessType.id ==
@@ -288,7 +295,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
-              data: /*updatedProfileModel.toJson()*/ req);
+              data: /*updatedProfileModel.toJson()*/ req,
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferences.getAuthToken()}',
+                },
+              )
+          );
 
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);

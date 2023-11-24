@@ -24,9 +24,9 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
 
-        debugPrint('UserImageUrl  ${preferences.getUserImageUrl()}');
-        debugPrint('username   ${preferences.getUserName()}');
-        debugPrint('logo  ${preferences.getUserCompanyLogoUrl()}');
+        debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
+        debugPrint('[username]   ${preferences.getUserName()}');
+        debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
         emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
         emit(state.copyWith(
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
