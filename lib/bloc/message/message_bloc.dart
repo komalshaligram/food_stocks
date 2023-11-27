@@ -27,8 +27,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageState.initial()) {
     on<MessageEvent>((event, emit) async {
       if (event is _GetMessageListEvent) {
-        SharedPreferencesHelper preferences =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
         if (state.isLoadMore) {
           return;
         }
@@ -49,10 +49,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}',
+                      'Bearer ${preferences.getAuthToken()}',
                 },
-              )
-          );
+              ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           debugPrint(
               'getMessage   url  = ${AppUrls.baseUrl}${AppUrls.getNotificationMessageUrl}');
@@ -63,21 +62,21 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             List<MessageData> messageList =
                 state.messageList.toList(growable: true);
             messageList.addAll(response.data
-                ?.map((message) => MessageData(
-              id: message.id,
-              isRead: message.isRead,
-              message:Message(
-                id: message.message?.id ?? '',
-                title: message.message?.title ?? '',
-                summary: message.message?.summary ?? '',
-                body: message.message?.body ?? '',
-              ),
-              createdAt: message.createdAt,
-              updatedAt: message.updatedAt,
-            ))
-                .toList() ??
+                    ?.map((message) => MessageData(
+                          id: message.id,
+                          isRead: message.isRead,
+                          message: Message(
+                            id: message.message?.id ?? '',
+                            title: message.message?.title ?? '',
+                            summary: message.message?.summary ?? '',
+                            body: message.message?.body ?? '',
+                          ),
+                          createdAt: message.createdAt,
+                          updatedAt: message.updatedAt,
+                        ))
+                    .toList() ??
                 []);
-           /* messageList.removeWhere(
+            /* messageList.removeWhere(
                 (message) => (message.isPushNotification ?? false) == false);*/
             debugPrint('new message list len = ${messageList.length}');
             emit(state.copyWith(
@@ -100,6 +99,34 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+      } else if (event is _RemoveOrUpdateMessageEvent) {
+        List<MessageData> messageList =
+            state.messageList.toList(growable: true);
+        debugPrint('message list len before delete = ${messageList.length}');
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        debugPrint('message count = ${preferencesHelper.getMessageCount()}');
+        debugPrint(
+            'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
+        if (event.isRead) {
+          if (messageList[messageList.indexOf(messageList
+                      .firstWhere((message) => message.id == event.messageId))]
+                  .isRead ==
+              false) {
+            await preferencesHelper.setMessageCount(
+                count: preferencesHelper.getMessageCount() - 1);
+            messageList[messageList.indexOf(messageList
+                    .firstWhere((message) => message.id == event.messageId))] =
+                messageList[messageList.indexOf(messageList.firstWhere(
+                        (message) => message.id == event.messageId))]
+                    .copyWith(isRead: true);
+          }
+        }
+        if (event.isDelete) {
+          messageList.removeWhere((message) => message.id == event.messageId);
+          debugPrint('message list len after delete = ${messageList.length}');
+        }
+        emit(state.copyWith(messageList: messageList));
       }
     });
   }

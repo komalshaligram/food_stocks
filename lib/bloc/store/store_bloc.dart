@@ -353,7 +353,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.maxQuantityMsgString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -387,7 +387,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.selectSupplierMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
@@ -395,7 +395,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.minQuantityMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         try {

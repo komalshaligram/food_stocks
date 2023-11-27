@@ -55,19 +55,23 @@ class MessageContentBloc
           debugPrint('DeleteMessage response  = ${response}');
 
           if (response[AppStrings.statusString] == 200) {
-            emit(state.copyWith(message: MessageData()));
             Navigator.pop(event.dialogContext);
-            if (state.isReadMore) {
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.bottomNavScreen.name,
-              );
-            } else {
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.messageScreen.name,
-              );
-            }
+            Navigator.pop(event.context, {
+              AppStrings.messageIdString: event.messageId,
+              AppStrings.messageReadString: !(state.message.isRead ?? true),
+              AppStrings.messageDeleteString: true,
+            });
+            // if (state.isReadMore) {
+            //   Navigator.pushNamed(
+            //     event.context,
+            //     RouteDefine.bottomNavScreen.name,
+            //   );
+            // } else {
+            //   Navigator.pushNamed(
+            //     event.context,
+            //     RouteDefine.messageScreen.name,
+            //   );
+            // }
           } else {
             /* showSnackBar(
                 context: event.context,

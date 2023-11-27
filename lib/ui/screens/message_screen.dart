@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/bloc/message/message_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -36,7 +37,6 @@ class MessageScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  /*  MessageBloc bloc = context.read<MessageBloc>();*/
     return BlocListener<MessageBloc, MessageState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageBloc, MessageState>(
@@ -49,7 +49,8 @@ class MessageScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.messages,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                 Navigator.pushNamed(context,RouteDefine.bottomNavScreen.name);
+                  Navigator.pushNamed(
+                      context, RouteDefine.bottomNavScreen.name);
                 },
                 // trailingWidget: Center(
                 //   child: GestureDetector(
@@ -93,10 +94,11 @@ class MessageScreenWidget extends StatelessWidget {
                                         vertical: AppConstants.padding_10),
                                     itemBuilder: (context, index) =>
                                         messageListItem(
-                                      index: index,
+                                          index: index,
                                       context: context,
-                                      title:
-                                          state.messageList[index].message?.title ?? '',
+                                      title: state.messageList[index].message
+                                              ?.title ??
+                                          '',
                                       content: parse(state.messageList[index]
                                                       .message?.body ??
                                                   '')
@@ -104,20 +106,33 @@ class MessageScreenWidget extends StatelessWidget {
                                               ?.text ??
                                           '',
                                       dateTime:
-                                          state.messageList[index].id ??
-                                              '',
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine
-                                                .messageContentScreen.name,
-                                            arguments: {
+                                          state.messageList[index].id ?? '',
+                                      onTap: () async {
+                                        dynamic messageNewData =
+                                            await Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .messageContentScreen.name,
+                                                arguments: {
                                               AppStrings.messageDataString:
                                                   state.messageList[index],
-                                              AppStrings.messageIdString:state.messageList[index].id
+                                              AppStrings.messageIdString:
+                                                  state.messageList[index].id
                                             });
+                                        debugPrint('message = $messageNewData');
+                                        context.read<MessageBloc>().add(
+                                            MessageEvent.removeOrUpdateMessageEvent(
+                                                messageId: messageNewData[
+                                                    AppStrings.messageIdString],
+                                                isRead: messageNewData[
+                                                    AppStrings
+                                                        .messageReadString],
+                                                isDelete: messageNewData[
+                                                    AppStrings
+                                                        .messageDeleteString]));
                                       },
-                                          isRead: state.messageList[index].isRead ?? false,
+                                      isRead: state.messageList[index].isRead ??
+                                          false,
                                     ),
                                   ),
                         state.isLoadMore
@@ -149,7 +164,8 @@ class MessageScreenWidget extends StatelessWidget {
     required String title,
     required String content,
     required String dateTime,
-    required void Function() onTap, required bool isRead,
+    required void Function() onTap,
+    required bool isRead,
   }) {
     return Container(
       decoration: BoxDecoration(

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -52,9 +53,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         debugPrint(
             'getUserCompanyLogoUrl ${preferences.getUserCompanyLogoUrl()}');
         debugPrint('cart count ${preferences.getCartCount()}');
+        debugPrint('message count ${preferences.getMessageCount()}');
         emit(state.copyWith(
             UserImageUrl: preferences.getUserImageUrl(),
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
+            messageCount: preferences.getMessageCount(),
             cartCount: preferences.getCartCount()));
       } else if (event is _GetCartCountEvent) {
         try {
@@ -72,6 +75,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 count:
                     response.data?.data?.length ?? preferences.getCartCount());
             emit(state.copyWith(cartCount: preferences.getCartCount()));
+          }
+        } on ServerException {}
+        //message count
+        try {
+          final res = await DioClient(event.context).post(
+              AppUrls.getUnreadMessageCountUrl,
+              options: Options(headers: {
+                HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}'
+              }));
+
+          MessageCountResModel response = MessageCountResModel.fromJson(res);
+          if (response.status == 200) {
+            print('unread message count = ${response.data}');
+            await preferences.setMessageCount(
+                count: response.data ?? preferences.getMessageCount());
+            emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } on ServerException {}
       } else if (event is _GetProductSalesListEvent) {
@@ -226,7 +246,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.maxQuantityMsgString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -322,7 +342,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.selectSupplierMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
@@ -330,7 +350,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.minQuantityMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         try {
@@ -427,11 +447,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           if (response.status == 200) {
             emit(state.copyWith(
-                thisMonthExpense: response.data?.currentMonth?.totalExpenses ?? 0,
-                lastMonthExpense: response.data?.previousMonth?.totalExpenses ?? 0,
+                thisMonthExpense:
+                    response.data?.currentMonth?.totalExpenses ?? 0,
+                lastMonthExpense:
+                    response.data?.previousMonth?.totalExpenses ?? 0,
                 balance: response.data?.balanceAmount ?? 0,
-                totalCredit: response.data?.totalCredit ?? 0
-            ));
+                totalCredit: response.data?.totalCredit ?? 0));
           } else {
             showSnackBar(
                 context: event.context,
@@ -478,24 +499,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         try {
           emit(state.copyWith(isMessageShimmering: true));
           final res = await DioClient(event.context).post(
-            //  AppUrls.getAllMessagesUrl,
+              //  AppUrls.getAllMessagesUrl,
               AppUrls.getNotificationMessageUrl,
               data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}',
+                      'Bearer ${preferences.getAuthToken()}',
                 },
-              )
-          );
-         GetMessagesResModel response =GetMessagesResModel.fromJson(res);
+              ));
+          GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           if (response.status == 200) {
             List<MessageData> messageList = [];
             messageList.addAll(response.data
                     ?.map((message) => MessageData(
                           id: message.id,
                           isRead: message.isRead,
-                          message:Message(
+                          message: Message(
                             id: message.message?.id ?? '',
                             title: message.message?.title ?? '',
                             summary: message.message?.summary ?? '',
@@ -506,10 +526,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         ))
                     .toList() ??
                 []);
-           /* messageList.removeWhere(
+            /* messageList.removeWhere(
                 (message) => (message.isPushNotification ?? false) == false);*/
             debugPrint('new message list len = ${messageList.length}');
-         emit(state.copyWith(
+            emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
             showSnackBar(
@@ -518,6 +538,39 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
+      } else if (event is _SetMessageCountEvent) {
+        emit(state.copyWith(
+            messageCount: state.messageCount + event.messageCount));
+      } else if (event is _RemoveOrUpdateMessageEvent) {
+        List<MessageData> messageList =
+            state.messageList.toList(growable: true);
+        debugPrint('message list len before delete = ${messageList.length}');
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        debugPrint('message count = ${preferencesHelper.getMessageCount()}');
+        debugPrint(
+            'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
+        if (event.isRead) {
+          if (messageList[messageList.indexOf(messageList
+                      .firstWhere((message) => message.id == event.messageId))]
+                  .isRead ==
+              false) {
+            await preferencesHelper.setMessageCount(
+                count: preferencesHelper.getMessageCount() - 1);
+            messageList[messageList.indexOf(messageList
+                    .firstWhere((message) => message.id == event.messageId))] =
+                messageList[messageList.indexOf(messageList.firstWhere(
+                        (message) => message.id == event.messageId))]
+                    .copyWith(isRead: true);
+            emit(state.copyWith(messageCount: state.messageCount - 1));
+          }
+        }
+        if (event.isDelete) {
+          messageList.removeWhere((message) => message.id == event.messageId);
+          debugPrint('message list len after delete = ${messageList.length}');
+        }
+        emit(state.copyWith(messageList: []));
+        emit(state.copyWith(messageList: messageList));
       }
     });
   }

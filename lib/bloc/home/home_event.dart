@@ -32,6 +32,9 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.setCartCountEvent() = _SetCartCountEvent;
 
+  const factory HomeEvent.setMessageCountEvent({required int messageCount}) =
+      _SetMessageCountEvent;
+
   const factory HomeEvent.getWalletRecordEvent(
       {required BuildContext context}) = _getWalletRecordEvent;
 
@@ -46,4 +49,9 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getCartCountEvent({
     required BuildContext context,
   }) = _GetCartCountEvent;
+
+  const factory HomeEvent.removeOrUpdateMessageEvent(
+      {required String messageId,
+      required bool isRead,
+      required bool isDelete}) = _RemoveOrUpdateMessageEvent;
 }

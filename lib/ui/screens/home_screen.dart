@@ -74,9 +74,9 @@ class HomeScreenWidget extends StatelessWidget {
                   bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
                 }
-                if (state.messageList.isEmpty) {
-                  bloc.add(HomeEvent.getMessageListEvent(context: context));
-                }
+                // if (state.messageList.isEmpty) {
+                //   bloc.add(HomeEvent.getMessageListEvent(context: context));
+                // }
               },
               child: SafeArea(
                 child: Column(
@@ -257,29 +257,32 @@ class HomeScreenWidget extends StatelessWidget {
                                             fit: BoxFit.scaleDown,
                                           ),
                                         ),
-                                        Positioned(
-                                            top: 8,
-                                            right: context.rtl ? null : 7,
-                                            left: context.rtl ? 7 : null,
-                                            child: Container(
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .notificationColor,
-                                                  border: Border.all(
-                                                      color:
+                                        state.messageCount <= 0
+                                            ? 0.width
+                                            : Positioned(
+                                                top: 8,
+                                                right: context.rtl ? null : 7,
+                                                left: context.rtl ? 7 : null,
+                                                child: Container(
+                                                  height: 16,
+                                                  width: 16,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .notificationColor,
+                                                      border: Border.all(
+                                                          color:
                                                           AppColors.whiteColor,
                                                       width: 1),
                                                   shape: BoxShape.circle),
                                               alignment: Alignment.center,
-                                              child: Text(state.messageList.length.toString(),
-                                                  style: AppStyles
-                                                      .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_8,
-                                                          color: AppColors
-                                                              .whiteColor)),
+                                              child: Text(
+                                                      '${state.messageCount <= 10 ? state.messageCount : '10+'}',
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .font_8,
+                                                              color: AppColors
+                                                                  .whiteColor)),
                                             ))
                                       ],
                                     ),
@@ -484,11 +487,12 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .data?[index]
                                                               .salesDescription ??
                                                           '',
-                                                      price: double.parse(state
-                                                              .productSalesList
-                                                              .data?[index]
-                                                              .discountPercentage ??
-                                                          '0.0'),
+                                                      salePercentage:
+                                                          double.parse(state
+                                                                  .productSalesList
+                                                                  .data?[index]
+                                                                  .discountPercentage ??
+                                                              '0.0'),
                                                       onButtonTap: () {
                                                         showProductDetails(
                                                             context: context,
@@ -634,26 +638,53 @@ class HomeScreenWidget extends StatelessWidget {
                                                 content: parse(state
                                                                 .messageList[
                                                                     index]
-                                                                .message?.body ??
+                                                                .message
+                                                                ?.body ??
                                                             '')
                                                         .body
                                                         ?.text ??
                                                     '',
                                                 dateTime: state
                                                         .messageList[index]
-                                                        .updatedAt?.replaceRange(11, 19, '') ??
+                                                        .updatedAt
+                                                        ?.replaceRange(
+                                                            11, 19, '') ??
                                                     '',
-                                                onTap: () {
-                                                  Navigator.pushNamed(
-                                                      context,
-                                                      RouteDefine
-                                                          .messageContentScreen
-                                                          .name,
-                                                      arguments: {
-                                                        AppStrings.messageDataString: state.messageList[index],
-                                                        AppStrings.messageIdString : state.messageList[index].id,
-                                                        AppStrings.isReadMoreString : true,
+                                                onTap: () async {
+                                                  dynamic messageNewData =
+                                                      await Navigator.pushNamed(
+                                                          context,
+                                                          RouteDefine
+                                                              .messageContentScreen
+                                                              .name,
+                                                          arguments: {
+                                                        AppStrings
+                                                                .messageDataString:
+                                                            state.messageList[
+                                                                index],
+                                                        AppStrings
+                                                                .messageIdString:
+                                                            state
+                                                                .messageList[
+                                                                    index]
+                                                                .id,
+                                                        AppStrings
+                                                                .isReadMoreString:
+                                                            true,
                                                       });
+                                                  debugPrint(
+                                                      'message = $messageNewData');
+                                                  context.read<HomeBloc>().add(HomeEvent
+                                                      .removeOrUpdateMessageEvent(
+                                                          messageId: messageNewData[
+                                                              AppStrings
+                                                                  .messageIdString],
+                                                          isRead: messageNewData[
+                                                              AppStrings
+                                                                  .messageReadString],
+                                                          isDelete: messageNewData[
+                                                              AppStrings
+                                                                  .messageDeleteString]));
                                                 }),
                                       ),
                                     ],
@@ -711,7 +742,7 @@ class HomeScreenWidget extends StatelessWidget {
     required String saleImage,
     required String title,
     required String description,
-    required double price,
+    required double salePercentage,
     required void Function() onButtonTap,
   }) {
     return Container(
@@ -796,7 +827,7 @@ class HomeScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-                  "${price.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                  "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -1179,7 +1210,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -1207,7 +1238,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -1426,7 +1457,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -1508,7 +1539,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
