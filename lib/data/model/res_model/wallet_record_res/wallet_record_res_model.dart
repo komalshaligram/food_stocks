@@ -27,9 +27,9 @@ class Data with _$Data {
     @JsonKey(name: "previousMonth")
     Month? previousMonth,
     @JsonKey(name: "balanceAmount")
-    int? balanceAmount,
+    double? balanceAmount,
     @JsonKey(name: "totalCredit")
-    int? totalCredit,
+    double? totalCredit,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -43,7 +43,7 @@ class Month with _$Month {
     @JsonKey(name: "month")
     int? month,
     @JsonKey(name: "totalExpenses")
-    int? totalExpenses,
+    double? totalExpenses,
     @JsonKey(name: "expensePercentage")
     String? expensePercentage,
   }) = _Month;

@@ -88,7 +88,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                                    '${state.orderList.data!.ordersBySupplier![productIndex].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                               ),
                   ),
                   onTap: () {
@@ -214,7 +214,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       flexValue: 2,
                                       title: AppLocalizations.of(context)!
                                           .total_order,
-                                      value: '${state.orderList.data?.ordersBySupplier![productIndex].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                                      value: '${state.orderList.data?.ordersBySupplier![productIndex].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w500,
@@ -422,7 +422,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                     .deliverStatus
                                                     ?.statusName
                                                     .toString() ??
-                                                ''),
+                                                '',
+                                          issue : state.orderList.data?.ordersBySupplier?.first.products?.first.issue,
+                                          isIssue : state.orderList.data?.ordersBySupplier?.first.products?.first.isIssue,
+                                        ),
                                   ),
                           ),
                         ],
@@ -465,8 +468,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             .orderList
                                             .data
                                             ?.ordersBySupplier![productIndex]
-                                            .totalPayment
-                                            .toString() ??
+                                            .totalPayment?.toStringAsFixed(2) ??
                                         '',
                                     AppStrings.deliveryDateString: /*state
                                         .orderList
@@ -482,7 +484,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         .products!
                                         .length
                                         .toString(),
-                                    AppStrings.totalAmountString: state.orderList.data?.orderData?.first.totalAmount?.toString() ?? 0,
+                                    AppStrings.totalAmountString: state.orderList.data?.orderData?.first.totalAmount?.toStringAsFixed(2) ?? 0,
                                     AppStrings.orderIdString: orderId,
                                     AppStrings.supplierIdString: state
                                         .orderList
@@ -516,7 +518,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   Widget productListItem(
       {required int index,
       required BuildContext context,
-      required String status}) {
+      required String status, String? issue, bool? isIssue}) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
@@ -549,8 +551,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   AppLocalizations.of(context)!
                       .pending_delivery ?
                   Checkbox(
-                      value:
-                          state.productListIndex.contains(index) ? true : false,
+                      value: (isIssue ?? false) ? true :   state.productListIndex.contains(index) ? true : false ,
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppConstants.radius_3),
@@ -595,7 +596,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               5.width,
               Text(
-                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].totalPayment.toString() ?? ''}${AppLocalizations.of(context)!.currency}',
+                '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].totalPayment?.toStringAsFixed(2) ?? ''}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,
@@ -613,7 +614,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       .pending_delivery ?
                    GestureDetector(
                       onTap: () {
-                        state.productListIndex.contains(index)
+                      ( isIssue! || state.productListIndex.contains(index))
                             ? ProductProblemBottomSheet(
                                 context: context,
                                 productName: state
@@ -629,12 +630,12 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .ordersBySupplier![productIndex]
                                     .products![index]
                                     .itemWeight!,
-                                price: state
+                                price: double.parse(state
                                     .orderList
                                     .data!
                                     .ordersBySupplier![productIndex]
                                     .products![index]
-                                    .totalPayment!,
+                                    .totalPayment!.toStringAsFixed(2)),
                                 image:
                                     '${state.orderList.data!.ordersBySupplier![productIndex].products![index].mainImage ?? ''}',
                                 listIndex: index,
@@ -646,7 +647,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     .productId!,
                                 supplierId: state.orderList.data!
                                     .ordersBySupplier![productIndex].id!,
-                               scale : state.orderList.data?.ordersBySupplier?[productIndex].products![index].scale.toString() ?? ''
+                               scale : state.orderList.data?.ordersBySupplier?[productIndex].products![index].scale.toString() ?? '',
+                          isIssue : isIssue,
+                          issue:issue
+                            
                               )
                             : SizedBox();
                       },
@@ -656,7 +660,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             vertical: AppConstants.padding_5,
                             horizontal: AppConstants.padding_5),
                         decoration: BoxDecoration(
-                          color: state.productListIndex.contains(index)
+                          color: (isIssue ?? false) ? AppColors.mainColor: state.productListIndex.contains(index)
                               ? AppColors.mainColor
                               : AppColors.lightBorderColor,
                           border: Border.all(color: AppColors.lightGreyColor),
@@ -686,11 +690,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required String productName,
       required int weight,
-      required int price,
+      required double price,
       required String image,
       required int listIndex,
       required String productId,
-      required String supplierId, required String scale}) {
+      required String supplierId, required String scale, bool? isIssue, String? issue}) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

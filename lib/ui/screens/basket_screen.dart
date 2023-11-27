@@ -74,8 +74,7 @@ class BasketScreenWidget extends StatelessWidget {
                                     Radius.circular(AppConstants.radius_40)),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -90,13 +89,13 @@ class BasketScreenWidget extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Container(
-                                          width: getScreenWidth(context) * 0.36,
+                                          //width: getScreenWidth(context) * 0.36,
                                           height: AppConstants.containerSize_50,
                                           alignment: Alignment.center,
                                           padding: EdgeInsets.symmetric(
                                               vertical: AppConstants.padding_5,
                                               horizontal:
-                                                  AppConstants.padding_5),
+                                                  AppConstants.padding_10),
                                           decoration: BoxDecoration(
                                               color: AppColors.mainColor,
                                               borderRadius: BorderRadius.only(
@@ -158,7 +157,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                    '${' : '}${state.CartItemList.data!.cart!.first.totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
+                                                    '${' : '}${/*state.CartItemList.data!.cart!.first.totalAmount?.toStringAsFixed(2)*/state.totalPayment.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
@@ -167,7 +166,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                             ? AppConstants
                                                             .smallFont
                                                             : AppConstants
-                                                            .normalFont,
+                                                            .smallFont,
                                                         color: AppColors
                                                             .whiteColor,
                                                         fontWeight:
@@ -185,8 +184,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                     .orderSummaryScreen.name);
                                           },
                                           child: Container(
-                                            width:
-                                                getScreenWidth(context) * 0.22,
+                                           // width: getScreenWidth(context) * 0.22,
                                             height:
                                                 AppConstants.containerSize_50,
                                             alignment: Alignment.center,
@@ -194,7 +192,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                 vertical:
                                                     AppConstants.padding_5,
                                                 horizontal:
-                                                    AppConstants.padding_5),
+                                                    AppConstants.padding_10),
                                             decoration: BoxDecoration(
                                                 color:
                                                     AppColors.navSelectedColor,
@@ -245,7 +243,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           SvgPicture.asset(
                                             AppImagePath.delete,
                                           ),
-                                          15.width,
+                                          10.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
@@ -262,6 +260,7 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
+
                       state.isShimmering && state.basketProductList.isEmpty
                           ? /*BasketScreenShimmerWidget()*/ Expanded(
                               child: Center(
@@ -346,15 +345,16 @@ class BasketScreenWidget extends StatelessWidget {
                   );
                 },
               ),
-              Container(
-                width: 60,
-                child: Text(
-                  state.basketProductList[index].productName!,
-                  style: TextStyle(
-                    color: AppColors.blackColor,
-                    fontSize: AppConstants.font_14,
+              Expanded(
+                  child: Container(
+                    child: Text(
+                      state.basketProductList[index].productName!,
+                      style: TextStyle(
+                        color: AppColors.blackColor,
+                        fontSize: AppConstants.font_14,
+                      ),
+                    ),
                   ),
-                ),
               ),
               3.width,
               GestureDetector(
@@ -372,6 +372,8 @@ class BasketScreenWidget extends StatelessWidget {
                           .CartItemList.data!.data![index].suppliers!.first.id!,
                       cartProductId:
                           state.CartItemList.data!.data![index].cartProductId!,
+                      totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment
+
                     ));
                   } else {
                     showSnackBar(
@@ -395,6 +397,7 @@ class BasketScreenWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              5.width,
               Text(
                 '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
                 style: TextStyle(
@@ -402,6 +405,7 @@ class BasketScreenWidget extends StatelessWidget {
                   fontSize: AppConstants.font_12,
                 ),
               ),
+              5.width,
               GestureDetector(
                 onTap: () {
                   if(state.basketProductList[index].totalQuantity! > 1){
@@ -416,6 +420,7 @@ class BasketScreenWidget extends StatelessWidget {
                           .CartItemList.data!.data![index].suppliers!.first.id!,
                       cartProductId:
                       state.CartItemList.data!.data![index].cartProductId!,
+                       totalPayment:/* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
                     ));
                   }
                   else{
@@ -437,11 +442,11 @@ class BasketScreenWidget extends StatelessWidget {
                           color: AppColors.blackColor)),
                 ),
               ),
-              1.width,
-              Container(
-                width: 70,
+              5.width,
+              Flexible(
+               // width: 70,
                 child: Text(
-                  '${state.basketProductList[index].totalPayment.toString() + AppLocalizations.of(context)!.currency}',
+                  '${state.basketProductList[index].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                   style: TextStyle(
                       color: AppColors.blackColor,
                       fontSize: AppConstants.font_14,

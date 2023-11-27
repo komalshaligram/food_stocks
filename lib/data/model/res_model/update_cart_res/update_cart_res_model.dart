@@ -40,11 +40,11 @@ class CartProduct with _$CartProduct {
     @JsonKey(name: "supplierId")
     String? supplierId,
     @JsonKey(name: "actualPrice")
-    int? actualPrice,
+    double? actualPrice,
     @JsonKey(name: "cartId")
     String? cartId,
     @JsonKey(name: "discountedprice")
-    int? discountedprice,
+    double? discountedprice,
     @JsonKey(name: "createdAt")
     String? createdAt,
     @JsonKey(name: "updatedAt")
