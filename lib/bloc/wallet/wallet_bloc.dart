@@ -77,11 +77,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           if (response.status == 200) {
             emit(state.copyWith(
                 thisMonthExpense:
-                    response.data?.currentMonth?.totalExpenses ?? 0,
+                    response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
                 lastMonthExpense:
-                    response.data?.previousMonth?.totalExpenses ?? 0,
-                balance: response.data?.balanceAmount ?? 0,
-                totalCredit: response.data?.totalCredit ?? 0));
+                    response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
+                balance: response.data?.balanceAmount?.toDouble() ?? 0,
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
           } else {
             showSnackBar(
                 context: event.context,

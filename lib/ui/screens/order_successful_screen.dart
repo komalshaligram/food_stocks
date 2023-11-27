@@ -108,7 +108,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                 ),
                                 6.height,
                                 BalanceIndicator(
-                                  balance: state.balance,
+                                  balance: state.balance.toInt(),
                                 ),
                               ],
                             )),
@@ -127,7 +127,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .total_credit,
                                         value:
-                                            '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                   ),
                                   10.width,
                                   Flexible(
@@ -137,7 +137,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .this_months_expenses,
                                         value:
-                                            '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                   ),
                                 ],
                               ),
@@ -151,7 +151,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!
                                             .last_months_expenses,
                                         value:
-                                            '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                            '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                   ),
                                   10.width,
                                   Flexible(

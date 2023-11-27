@@ -152,7 +152,7 @@ class OrderScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      state.orderDetailsList[index].orderNumber.toString() ?? '',
+                      state.orderDetailsList[index].orderNumber.toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.normalFont,
                           color: AppColors.blackColor,
@@ -181,7 +181,7 @@ class OrderScreenWidget extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '${state.orderDetailsList[index].totalAmount ?? ''}${AppLocalizations.of(context)!.currency}',
+                          '${double.parse(state.orderDetailsList[index].totalAmount.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,

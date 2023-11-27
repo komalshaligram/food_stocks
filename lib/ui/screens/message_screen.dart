@@ -178,7 +178,7 @@ class MessageScreenWidget extends StatelessWidget {
               width: 16,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isRead ? AppColors.mainColor : Colors.transparent,
+                color: isRead ? Colors.transparent: AppColors.mainColor,
               ),
               margin: EdgeInsets.only(
                   left: context.rtl ? AppConstants.padding_10 : 0,

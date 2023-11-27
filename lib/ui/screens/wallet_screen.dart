@@ -44,6 +44,16 @@ class WalletScreenWidget extends StatelessWidget {
   DateTime? startDate;
   DateTime? endDate;
 
+  List<DropdownMenuItem<String>> get dropdownItems{
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("USA"),value: "USA"),
+      DropdownMenuItem(child: Text("Canada"),value: "Canada"),
+      DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
+      DropdownMenuItem(child: Text("England"),value: "England"),
+    ];
+    return menuItems;
+  }
+
   @override
   Widget build(BuildContext context) {
 /*    final List<FlSpot> chartData = [
@@ -162,7 +172,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                          balance: state.balance,
+                                          balance: state.balance.toInt(),
                                         ),
                                       ],
                                     )),
@@ -182,7 +192,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .total_credit,
                                                 value:
-                                                    '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -193,7 +203,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .this_months_expenses,
                                                 value:
-                                                    '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                         ],
                                       ),
@@ -208,7 +218,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .last_months_expenses,
                                                 value:
-                                                    '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -453,9 +463,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                 endDate: value.end,
                                                 startDate: value.start,
                                               ));
-
                                             }
-
                                             //  minDate = DateTime(state.yearList.last ,1,1);
                                           },
                                           selectedDateRange: state.selectedDateRange,
@@ -587,6 +595,10 @@ class WalletScreenWidget extends StatelessWidget {
         isDense: true,
         underline: SizedBox(),
         value: date,
+    borderRadius: BorderRadius.all(Radius.zero),
+        padding: EdgeInsets.all(10),
+        dropdownColor: AppColors.whiteColor,
+       alignment: Alignment.bottomCenter,
         items: dateList.map((e) {
           return DropdownMenuItem<int>(
             value: e,
@@ -600,8 +612,19 @@ class WalletScreenWidget extends StatelessWidget {
           bloc.add(
               WalletEvent.getTotalExpenseEvent(year: value, context: context1));
         },
-      ),
+/*    dateList.map((e){
+    return DropdownMenuItem<int>(
+    value: e,
+    child: Text(e.toString(), style:
+    AppStyles.rkRegularTextStyle(size: AppConstants.font_12)),
     );
+  },
+  ).toList(),
+  onChanged: (val) {
+
+    _dropDownValue = val;
+    }*/
+    ));
   }
 
   Widget listWidget({required BuildContext context, required int listIndex}) {
@@ -614,7 +637,7 @@ class WalletScreenWidget extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     state.walletTransactionsList[listIndex].createdAt!
@@ -632,36 +655,33 @@ class WalletScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      state.walletTransactionsList[listIndex].type.toString() ==
-                              'Order'
-                          ? '${'-'}${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}'
-                          : '${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: state.walletTransactionsList[listIndex].type
-                                      .toString() ==
-                                  'Monthly Credits'
-                              ? AppColors.mainColor
-                              : AppColors.redColor,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  20.width,
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, RouteDefine.orderSuccessfulScreen.name),
-                    child: CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.balance_status,
-                      buttonValue:
-                          '${state.walletTransactionsList[listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
-                    ),
-                  ),
-                ],
+              30.width,
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  state.walletTransactionsList[listIndex].type.toString() ==
+                          'Order'
+                      ? '${'-'}${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'
+                      : '${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: state.walletTransactionsList[listIndex].type
+                                  .toString() ==
+                              'Monthly Credits'
+                          ? AppColors.mainColor
+                          : AppColors.redColor,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              20.width,
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, RouteDefine.orderSuccessfulScreen.name),
+                child: CircularButtonWidget(
+                  buttonName: AppLocalizations.of(context)!.balance_status,
+                  buttonValue:
+                      '${double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                ),
               ),
             ],
           );

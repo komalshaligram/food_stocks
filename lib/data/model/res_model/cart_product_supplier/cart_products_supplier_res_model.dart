@@ -1,7 +1,9 @@
 
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'cart_products_supplier_res_model.freezed.dart';
 part 'cart_products_supplier_res_model.g.dart';
+
 
 
 @freezed
@@ -36,7 +38,7 @@ class Cart with _$Cart {
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    double? totalAmount,
   }) = _Cart;
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
@@ -49,12 +51,14 @@ class Datum with _$Datum {
     String? id,
     @JsonKey(name: "suppliers")
     Suppliers? suppliers,
+    @JsonKey(name: "sales")
+    Sales? sales,
     @JsonKey(name: "productDetails")
     List<ProductDetail>? productDetails,
     @JsonKey(name: "totalQuantity")
     int? totalQuantity,
     @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    double? totalAmount,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -84,6 +88,46 @@ class Image with _$Image {
   }) = _Image;
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+}
+
+@freezed
+class Sales with _$Sales {
+  const factory Sales({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "status")
+    String? status,
+    @JsonKey(name: "supplierDetails")
+    String? supplierDetails,
+    @JsonKey(name: "salesName")
+    String? salesName,
+    @JsonKey(name: "discountPercentage")
+    int? discountPercentage,
+    @JsonKey(name: "salesType")
+    String? salesType,
+    @JsonKey(name: "salesDescription")
+    String? salesDescription,
+    @JsonKey(name: "fromDate")
+    String? fromDate,
+    @JsonKey(name: "endDate")
+    String? endDate,
+    @JsonKey(name: "salesTerms")
+    String? salesTerms,
+    @JsonKey(name: "createdBy")
+    String? createdBy,
+    @JsonKey(name: "updatedBy")
+    String? updatedBy,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
+    @JsonKey(name: "createdAt")
+    String? createdAt,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
+    @JsonKey(name: "__v")
+    int? v,
+  }) = _Sales;
+
+  factory Sales.fromJson(Map<String, dynamic> json) => _$SalesFromJson(json);
 }
 
 @freezed

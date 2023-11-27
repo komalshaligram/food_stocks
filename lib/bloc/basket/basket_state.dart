@@ -9,6 +9,7 @@ class BasketState with _$BasketState {
     required bool isShimmering,
     required int productWeight,
     required List<ProductDetailsModel>basketProductList,
+    required double totalPayment,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -17,6 +18,7 @@ class BasketState with _$BasketState {
      isShimmering: false,
      productWeight: 0,
        basketProductList : [],
+     totalPayment: 0
 );
 }
 

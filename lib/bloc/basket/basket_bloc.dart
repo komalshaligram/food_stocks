@@ -51,10 +51,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails!.productName!,
                   mainImage: element.productDetails!.mainImage!,
-                  totalPayment: element.totalAmount!.toString(),
+                  totalPayment: double.parse(element.totalAmount!.toString()),
                   cartProductId: element.cartProductId!,
                   scales: element.productDetails!.scales!));
             });
+
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             await preferencesHelper.setCartCount(
@@ -62,7 +63,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     ? preferencesHelper.getCartCount()
                     : temp.length);
             emit(state.copyWith(
-                basketProductList: temp, isRefresh: !state.isRefresh));
+                basketProductList: temp, isRefresh: !state.isRefresh ,totalPayment: response.data!.cart!.first.totalAmount!));
           } else {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
             //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
@@ -93,19 +94,30 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
               int quantity = list[event.listIndex].totalQuantity!;
-          //   double payment = list[event.listIndex].totalPayment!;
-
+            double payment = list[event.listIndex].totalPayment!;
               list[event.listIndex].totalQuantity =
                   response.data!.cartProduct!.quantity;
-              list[event.listIndex].totalPayment = list[event.listIndex].totalPayment!.toString()
-                  /*((payment / quantity) * response.data!.cartProduct!.quantity!)
-                      .toInt()*/;
+              list[event.listIndex].totalPayment =
+                  ((payment / quantity) * response.data!.cartProduct!.quantity!);
+              double newAmount = (payment / quantity);
+
+
+              double totalAmount = 0;
+              if(list[event.listIndex].totalPayment! > payment){
+                totalAmount = event.totalPayment + newAmount;
+              }
+              else{
+                totalAmount = event.totalPayment - newAmount;
+              }
+              print('total amount   ${totalAmount}');
+
               emit(state.copyWith(
-                  basketProductList: list, isRefresh: !state.isRefresh));
-              showSnackBar(
+                  basketProductList: list,totalPayment: totalAmount, isRefresh: !state.isRefresh));
+              print('total payment__vcc__${state.totalPayment}');
+             /* showSnackBar(
                   context: event.context,
                   title: response.message!,
-                  bgColor: AppColors.mainColor);
+                  bgColor: AppColors.mainColor);*/
             } else {
               showSnackBar(
                   context: event.context,
