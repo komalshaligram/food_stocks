@@ -42,7 +42,7 @@ class OrderDatum with _$OrderDatum {
     @JsonKey(name: "client")
     Client? client,
     @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    double? totalAmount,
     @JsonKey(name: "totalWeight")
     int? totalWeight,
     @JsonKey(name: "surfaceWeight")
@@ -102,7 +102,7 @@ class OrdersBySupplier with _$OrdersBySupplier {
     @JsonKey(name: "totalWeight")
     int? totalWeight,
     @JsonKey(name: "totalPayment")
-    int? totalPayment,
+    double? totalPayment,
     @JsonKey(name: "driverName")
     String? driverName,
     @JsonKey(name: "driverNumber")
@@ -138,11 +138,11 @@ class Product with _$Product {
     @JsonKey(name: "subSubCategory")
     SubSubCategory? subSubCategory,
     @JsonKey(name: "pricePerUnit")
-    int? pricePerUnit,
+    double? pricePerUnit,
     @JsonKey(name: "totalPayment")
-    int? totalPayment,
+    double? totalPayment,
     @JsonKey(name: "discountedPrice")
-    int? discountedPrice,
+    double? discountedPrice,
     @JsonKey(name: "itemWeight")
     int? itemWeight,
     @JsonKey(name: "issueStatus")

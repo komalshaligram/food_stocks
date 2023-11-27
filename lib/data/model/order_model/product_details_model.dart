@@ -4,7 +4,7 @@ class ProductDetailsModel{
    String? productName ;
    String? mainImage;
    int? totalQuantity;
-   String? totalPayment;
+   double? totalPayment;
    bool isProductIssue;
    bool isDelete;
   String cartProductId;

@@ -58,9 +58,9 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             supplierId: element.suppliers?.id,
             productId: element.productDetails?.first.id,
              quantity: element.totalQuantity,
+            saleId: element.sales?.id
           ));
         });
-
 
         try {
           OrderSendReqModel reqMap = OrderSendReqModel(
