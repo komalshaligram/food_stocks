@@ -458,7 +458,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${productPrice.toStringAsFixed(1)}${AppLocalizations.of(context)!.currency}',
+                                      '${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
                                           color: AppColors.blackColor,
@@ -477,7 +477,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
@@ -486,7 +486,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       onTap: onQuantityIncreaseTap,
                                       child: Container(
                                         height: 50,
-                                        width: 50,
+                                        width: 40,
                                         // padding: EdgeInsets.symmetric(
                                         //     horizontal: AppConstants.padding_10),
                                         decoration: BoxDecoration(
@@ -519,34 +519,39 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       ),
                                     ),
                                     5.width,
-                                    Container(
-                                      width: 75,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomLeft: Radius.circular(
-                                              AppConstants.radius_5),
-                                          bottomRight: Radius.circular(
-                                              AppConstants.radius_5),
-                                          topRight: Radius.circular(
-                                              AppConstants.radius_5),
+                                    Flexible(
+                                      child: Container(
+                                        // width: max,
+                                        height: 50,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppConstants.padding_15),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(
+                                                AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(
+                                                AppConstants.radius_5),
+                                            bottomRight: Radius.circular(
+                                                AppConstants.radius_5),
+                                            topRight: Radius.circular(
+                                                AppConstants.radius_5),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
                                         ),
-                                        border: Border.all(
-                                            color: AppColors.navSelectedColor,
-                                            width: 1),
-                                      ),
-                                      // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '$productQuantity',
-                                        style: AppStyles.rkBoldTextStyle(
-                                            size: AppConstants.font_30,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w700),
-                                        maxLines: 1,
+                                        // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '$productQuantity',
+                                          style: AppStyles.rkBoldTextStyle(
+                                              size: AppConstants.font_30,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w700),
+                                          maxLines: 1,
+                                        ),
                                       ),
                                     ),
                                     5.width,
@@ -554,7 +559,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       onTap: onQuantityDecreaseTap,
                                       child: Container(
                                         height: 50,
-                                        width: 50,
+                                        width: 40,
                                         // padding: EdgeInsets.symmetric(
                                         //     horizontal: AppConstants.padding_10),
                                         decoration: BoxDecoration(
@@ -611,8 +616,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   Container(
                                     // height: 120,
                                     width: getScreenWidth(context),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_10),
+                                    padding: EdgeInsets.only(
+                                        left: AppConstants.padding_10,
+                                        right: AppConstants.padding_10,
+                                        bottom: AppConstants.padding_5),
                                     decoration: BoxDecoration(
                                         color: AppColors.notesBGColor,
                                         borderRadius: BorderRadius.all(
@@ -624,7 +631,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       textInputAction: TextInputAction.done,
                                       decoration: InputDecoration(
                                           border: InputBorder.none),
-                                      maxLines: 5,
+                                      maxLines: 3,
                                       maxLength: 50,
                                     ),
                                   )

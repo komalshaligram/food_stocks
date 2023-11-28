@@ -59,6 +59,9 @@ class AppConstants{
   //file quality
   static const int fileQuality = 50;
 
+  //amount fractional length
+  static const int amountFrLength = 2;
+
   //shimmer text height
   static const double shimmerTextHeight = 20;
 

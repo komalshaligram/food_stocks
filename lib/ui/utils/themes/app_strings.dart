@@ -69,7 +69,8 @@ class AppStrings {
   static const messageDataString = 'messageDataParam';
   static const appContentIdString = 'appContentIdParam';
   static const appContentNameString = 'appContentNameParam';
-
+  static const messageReadString = 'messageReadSParam';
+  static const messageDeleteString = 'messageDeleteParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';

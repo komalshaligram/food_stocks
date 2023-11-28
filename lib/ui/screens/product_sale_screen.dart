@@ -104,10 +104,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     .body
                                     ?.text ??
                                     '',
-                                price: double.parse(state
-                                    .productSalesList[index]
-                                    .discountPercentage ??
-                                    '0.0'),
+                                salePercentage: double.parse(state
+                                          .productSalesList[index]
+                                          .discountPercentage ??
+                                      '0.0'),
                                 onButtonTap: () {
                                   showProductDetails(
                                     context: context,
@@ -147,7 +147,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String saleImage,
     required String title,
     required String description,
-    required double price,
+    required double salePercentage,
     required void Function() onButtonTap,
   }) {
     return DelayedWidget(
@@ -235,7 +235,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${price.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
                 onPressed: onButtonTap,
                 // height: 35,
                 textColor: AppColors.whiteColor,
@@ -503,7 +503,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -531,7 +531,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -740,7 +740,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -823,7 +823,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

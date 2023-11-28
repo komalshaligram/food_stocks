@@ -480,6 +480,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
+                                  FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(15)
                                 ],
                                 keyboardType: TextInputType.number,
@@ -498,7 +499,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(15)
+
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint: "",
@@ -525,6 +527,7 @@ class ProfileScreenWidget extends StatelessWidget {
                             return newValue;
 
                           }),*/
+                                  FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(15)
                                 ],
                                 keyboardType: TextInputType.number,
@@ -541,7 +544,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               CustomFormField(
                                 controller: state.contactController,
                                 inputformet: [
-                                  LengthLimitingTextInputFormatter(15)
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint: "",
