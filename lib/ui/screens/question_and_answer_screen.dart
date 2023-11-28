@@ -6,6 +6,7 @@ import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -83,9 +84,12 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
                                             question:
                                                 state.qnaList[index].question ??
                                                     '',
-                                            answer:
-                                                state.qnaList[index].answer ??
-                                                    '');
+                                            answer: parse(state.qnaList[index]
+                                                            .answer ??
+                                                        '')
+                                                    .documentElement
+                                                    ?.text ??
+                                                '');
                                       },
                                     ),
                           state.isLoadMore

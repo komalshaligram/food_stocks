@@ -298,7 +298,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(35)
+                                  LengthLimitingTextInputFormatter(50)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint: AppLocalizations.of(context)!.address,
@@ -329,6 +329,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
+                                  FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(15)
                                 ],
                                 keyboardType: TextInputType.number,
