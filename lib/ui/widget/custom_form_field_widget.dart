@@ -105,6 +105,7 @@ class CustomFormField extends StatelessWidget {
       keyboardType: _keyboardType,
       obscureText: isObscure,
       onChanged: onChangeValue,
+      // maxLength: maxLimits,
       textCapitalization: TextCapitalization.sentences,
       //   textInputAction: _inputAction,
       onTap: onTap,
@@ -126,7 +127,7 @@ class CustomFormField extends StatelessWidget {
           hintStyle: TextStyle(
             color: AppColors.textColor,
           ),
-
+          // counterText: '',
           errorStyle: TextStyle(
               color: AppColors.redColor,
               height: height,

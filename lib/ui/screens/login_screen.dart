@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -92,8 +93,9 @@ class LogInScreenWidget extends StatelessWidget {
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
                           hint: AppStrings.hintNumberString,
+                          inputformet: [FilteringTextInputFormatter.digitsOnly],
                           fillColor: AppColors.whiteColor,
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           validator: AppStrings.mobileValString,
                         ),
                         30.height,

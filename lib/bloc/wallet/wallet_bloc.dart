@@ -226,27 +226,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         emit(state.copyWith(year: event.year));
       } else if (event is _exportWalletTransactionEvent) {
         try {
-          Map<Permission, PermissionStatus> statuses = await [
-            Permission.storage,
-          ].request();
-
-          if (Platform.isAndroid) {
-            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-            print('Running on android version ${androidInfo.version.sdkInt}');
-            if (androidInfo.version.sdkInt < 33) {
-              if (statuses[Permission.storage]!.isDenied) {
-                showSnackBar(
-                    context: event.context,
-                    title: AppStrings.docDownloadAllowPermissionString,
-                    bgColor: AppColors.redColor);
-                return;
-              }
-            }
-          } else {
-            //for ios permission
-          }
-
           File file;
           Directory dir;
           String filePath = '';

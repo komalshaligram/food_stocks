@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart';
 import 'package:food_stock/ui/widget/more_details_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/more_details/more_details_bloc.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -413,34 +415,90 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                             30.height,
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)!
-                                                                    .camera,
-                                                                icon: Icons
-                                                                    .camera_alt_rounded,
-                                                                onTap: () {
-                                                                  bloc.add(MoreDetailsEvent.pickLogoImageEvent(
-                                                                      context:
-                                                                          context,
-                                                                      isFromCamera:
-                                                                          true));
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                }),
+                                                                            context)!
+                                                                        .camera,
+                                                                    icon: Icons
+                                                                        .camera_alt_rounded,
+                                                                    onTap:
+                                                                        () async {
+                                                                      Map<Permission,
+                                                                              PermissionStatus>
+                                                                          statuses =
+                                                                          await [
+                                                                        Permission
+                                                                            .camera,
+                                                                      ].request();
+                                                                      if (Platform
+                                                                          .isAndroid) {
+                                                                        if (!statuses[Permission.camera]!
+                                                                            .isGranted) {
+                                                                          showSnackBar(
+                                                                              context: context,
+                                                                              title: AppStrings.cameraAllowPermissionString,
+                                                                              bgColor: AppColors.redColor);
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          return;
+                                                                        }
+                                                                      } else if (Platform
+                                                                          .isIOS) {
+                                                                        // Navigator.pop(context);
+                                                                      }
+                                                                      bloc.add(MoreDetailsEvent.pickLogoImageEvent(
+                                                                          context:
+                                                                              context,
+                                                                          isFromCamera:
+                                                                              true));
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }),
                                                             FileSelectionOptionWidget(
                                                                 title: AppLocalizations.of(
-                                                                        context)!
-                                                                    .gallery,
-                                                                icon:
-                                                                    Icons.photo,
-                                                                onTap: () {
-                                                                  bloc.add(MoreDetailsEvent.pickLogoImageEvent(
-                                                                      context:
-                                                                          context,
-                                                                      isFromCamera:
-                                                                          false));
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                }),
+                                                                            context)!
+                                                                        .gallery,
+                                                                    icon: Icons
+                                                                        .photo,
+                                                                    onTap:
+                                                                        () async {
+                                                                      Map<Permission,
+                                                                              PermissionStatus>
+                                                                          statuses =
+                                                                          await [
+                                                                        Permission
+                                                                            .storage,
+                                                                      ].request();
+                                                                      if (Platform
+                                                                          .isAndroid) {
+                                                                        DeviceInfoPlugin
+                                                                            deviceInfo =
+                                                                            DeviceInfoPlugin();
+                                                                        AndroidDeviceInfo
+                                                                            androidInfo =
+                                                                            await deviceInfo.androidInfo;
+                                                                        if (androidInfo.version.sdkInt <
+                                                                            33) {
+                                                                          if (!statuses[Permission.storage]!
+                                                                              .isGranted) {
+                                                                            showSnackBar(
+                                                                                context: context,
+                                                                                title: AppStrings.storageAllowPermissionString,
+                                                                                bgColor: AppColors.redColor);
+                                                                            Navigator.pop(context);
+                                                                            return;
+                                                                          }
+                                                                        }
+                                                                      } else if (Platform
+                                                                          .isIOS) {
+                                                                        // Navigator.pop(context);
+                                                                      }
+                                                                      bloc.add(MoreDetailsEvent.pickLogoImageEvent(
+                                                                          context:
+                                                                              context,
+                                                                          isFromCamera:
+                                                                              false));
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }),
                                                           ],
                                                         ),
                                                       ),

@@ -61,8 +61,14 @@ class FormFieldValidation {
   }
 
   String? businessNameField(String value) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
     if (value.isEmpty) {
       return 'Please enter your business name';
+    } else if (regex.hasMatch(value)) {
+      return 'Please enter alphabets only';
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid business name';
     }
     return null;
   }
@@ -79,10 +85,13 @@ class FormFieldValidation {
 
   String? ownerNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
     if (value.isEmpty) {
       return 'Please enter owner name';
     } else if (regex.hasMatch(value)) {
       return 'Please enter alphabets only';
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid owner name';
     }
     return null;
   }
@@ -98,18 +107,27 @@ class FormFieldValidation {
   }
 
   String? contactNameField(String value) {
-    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
     if (value.isEmpty) {
       return "Please enter contact name";
     } else if (regex.hasMatch(value)) {
       return 'Enter alphabets only';
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid contact name';
     }
     return null;
   }
 
   String? addressNameField(String value) {
+    RegExp regex = RegExp(r"^(?=.*?[!#$%&'*@<>:)(;₹+=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
     if (value.isEmpty) {
       return "Please enter address";
+    } else if (regex.hasMatch(value)) {
+      return "Please enter valid address";
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid address';
     }
     return null;
   }

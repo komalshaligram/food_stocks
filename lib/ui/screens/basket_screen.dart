@@ -15,6 +15,7 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/basket_screen_shimmer_widget.dart';
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -260,20 +261,21 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
-
-                      state.isShimmering && state.basketProductList.isEmpty
-                          ? /*BasketScreenShimmerWidget()*/ Expanded(
-                              child: Center(
-                                  child: Text(
-                                'Your cart is empty',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.normalFont,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                              )),
-                            )
-                          : (state.basketProductList.length) != 0
+                      state.isShimmering
+                          ? BasketScreenShimmerWidget()
+                          : state.basketProductList.isEmpty
                               ? Expanded(
+                                  child: Center(
+                                      child: Text(
+                                    'Your cart is empty',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w400),
+                                  )),
+                                )
+                              : (state.basketProductList.length) != 0
+                                  ? Expanded(
                                   child: Padding(
                                     padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
                                     child: ListView.builder(
