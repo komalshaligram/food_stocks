@@ -477,7 +477,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _GetMessageListEvent) {
         try {
           emit(state.copyWith(isMessageShimmering: true));
-          final res = await DioClient(event.context).post(
+          final res =  await DioClient(event.context).post(
             //  AppUrls.getAllMessagesUrl,
               AppUrls.getNotificationMessageUrl,
               data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),

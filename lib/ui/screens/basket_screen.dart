@@ -372,7 +372,9 @@ class BasketScreenWidget extends StatelessWidget {
                           .CartItemList.data!.data![index].suppliers!.first.id!,
                       cartProductId:
                           state.CartItemList.data!.data![index].cartProductId!,
-                      totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment
+                      totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
+                        saleId:  state.CartItemList.data!.data![index].sales!.first.id.toString(),
+
 
                     ));
                   } else {
@@ -421,6 +423,7 @@ class BasketScreenWidget extends StatelessWidget {
                       cartProductId:
                       state.CartItemList.data!.data![index].cartProductId!,
                        totalPayment:/* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
+                      saleId:  state.CartItemList.data!.data![index].sales!.first.id.toString(),
                     ));
                   }
                   else{
@@ -482,7 +485,7 @@ class BasketScreenWidget extends StatelessWidget {
     BasketBloc bloc = context.read<BasketBloc>();
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context1) => AlertDialog(
               contentPadding: EdgeInsets.all(20.0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
@@ -509,6 +512,8 @@ class BasketScreenWidget extends StatelessWidget {
                             context: context,
                             cartProductId: cartProductId,
                             listIndex: listIndex,
+                      dialogContext: context1
+
                           ));
                   },
                   child: Container(

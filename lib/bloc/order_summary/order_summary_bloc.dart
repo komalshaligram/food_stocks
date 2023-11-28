@@ -58,7 +58,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             supplierId: element.suppliers?.id,
             productId: element.productDetails?.first.id,
              quantity: element.totalQuantity,
-            saleId: element.sales?.id
+            saleId: element.sales?.id ?? ''
           ));
         });
 
@@ -94,7 +94,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
               else{
-                showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+              //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
               }
 
             }  on ServerException {}

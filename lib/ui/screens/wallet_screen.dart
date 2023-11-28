@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
@@ -335,8 +336,6 @@ class WalletScreenWidget extends StatelessWidget {
                                                 String? month = monthMap[value];
                                                 return Text(
                                                   month.toString(),
-                                                  textDirection:
-                                                      TextDirection.ltr,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                     size: AppConstants.font_8,
@@ -383,9 +382,9 @@ class WalletScreenWidget extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      bloc.add(WalletEvent
+                                      state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
                                           .exportWalletTransactionEvent(
-                                              context: context));
+                                              context: context)) : SizedBox();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -395,7 +394,7 @@ class WalletScreenWidget extends StatelessWidget {
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.circular(
                                               AppConstants.radius_3)),
-                                      child: Text(
+                                      child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
                                         AppLocalizations.of(context)!.export,
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
@@ -577,7 +576,7 @@ class WalletScreenWidget extends StatelessWidget {
     WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
+          horizontal: AppConstants.padding_5,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.radius_7),
         border: Border.all(color: AppColors.borderColor),
@@ -593,8 +592,8 @@ class WalletScreenWidget extends StatelessWidget {
         ),
         elevation: 0,
         isDense: true,
-        underline: SizedBox(),
         value: date,
+    underline: SizedBox(),
     borderRadius: BorderRadius.all(Radius.zero),
         padding: EdgeInsets.all(10),
         dropdownColor: AppColors.whiteColor,
@@ -611,19 +610,7 @@ class WalletScreenWidget extends StatelessWidget {
           bloc.add(WalletEvent.getDropDownElementEvent(year: value!));
           bloc.add(
               WalletEvent.getTotalExpenseEvent(year: value, context: context1));
-        },
-/*    dateList.map((e){
-    return DropdownMenuItem<int>(
-    value: e,
-    child: Text(e.toString(), style:
-    AppStyles.rkRegularTextStyle(size: AppConstants.font_12)),
-    );
-  },
-  ).toList(),
-  onChanged: (val) {
-
-    _dropDownValue = val;
-    }*/
+        }
     ));
   }
 
@@ -695,7 +682,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-      height: getScreenHeight(context) * 0.41,
+      height: getScreenHeight(context) * 0.42,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

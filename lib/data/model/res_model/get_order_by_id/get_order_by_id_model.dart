@@ -1,7 +1,9 @@
 
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_order_by_id_model.freezed.dart';
 part 'get_order_by_id_model.g.dart';
+
 
 
 @freezed
@@ -77,6 +79,8 @@ class Status with _$Status {
     String? updatedAt,
     @JsonKey(name: "__v")
     int? v,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
@@ -146,7 +150,7 @@ class Product with _$Product {
     @JsonKey(name: "itemWeight")
     int? itemWeight,
     @JsonKey(name: "issueStatus")
-    IssueStatus? issueStatus,
+    Status? issueStatus,
     @JsonKey(name: "isIssue")
     bool? isIssue,
     @JsonKey(name: "issue")
@@ -181,16 +185,11 @@ class Category with _$Category {
     bool? isHomePreference,
     @JsonKey(name: "order")
     int? order,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
-}
-
-@freezed
-class IssueStatus with _$IssueStatus {
-  const factory IssueStatus() = _IssueStatus;
-
-  factory IssueStatus.fromJson(Map<String, dynamic> json) => _$IssueStatusFromJson(json);
 }
 
 @freezed
@@ -208,6 +207,8 @@ class SubCategory with _$SubCategory {
     String? updatedAt,
     @JsonKey(name: "__v")
     int? v,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
   }) = _SubCategory;
 
   factory SubCategory.fromJson(Map<String, dynamic> json) => _$SubCategoryFromJson(json);
@@ -230,6 +231,8 @@ class SubSubCategory with _$SubSubCategory {
     String? updatedAt,
     @JsonKey(name: "__v")
     int? v,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
   }) = _SubSubCategory;
 
   factory SubSubCategory.fromJson(Map<String, dynamic> json) => _$SubSubCategoryFromJson(json);

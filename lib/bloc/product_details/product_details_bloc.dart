@@ -72,9 +72,11 @@ class ProductDetailsBloc
             /*isRefresh: !state.isRefresh,*/
             productListIndex: index));
       } else if (event is _radioButtonEvent) {
+
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
             isRefresh: !state.isRefresh));
+
       } else if (event is _productIncrementEvent) {
         emit(state.copyWith(
             productWeight: event.productWeight + 1,
