@@ -264,22 +264,22 @@ class BasketScreenWidget extends StatelessWidget {
                             )
                           : SizedBox(),
                       state.isShimmering
-                          ? BasketScreenShimmerWidget()
-                          : state.basketProductList.isEmpty
+                          ? BasketScreenShimmerWidget() :
+                        /*  : state.basketProductList.isEmpty
                               ? Expanded(
                                   child: Center(
                                       child: Text(
-                                    'Your cart is empty',
+                                        AppLocalizations.of(context)!.cart_empty,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w400),
                                   )),
                                 )
-                              : (state.basketProductList.length) != 0
+                              :*/ (state.basketProductList.length) != 0
                                   ? Expanded(
                                   child: Padding(
-                                    padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
+                                    padding: EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
                                     child: ListView.builder(
                                       itemCount: state.basketProductList.length,
                                       shrinkWrap: true,
@@ -363,8 +363,7 @@ class BasketScreenWidget extends StatelessWidget {
               3.width,
               GestureDetector(
                 onTap: () {
-                  print('saleId_____${state.CartItemList.data?.data?[index].sales}');
-                  print('saleId__11___${state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? ''}');
+
                   if (state.CartItemList.data!.data![index].productStock! >=
                       state.basketProductList[index].totalQuantity! + 1) {
                     bloc.add(BasketEvent.productUpdateEvent(
@@ -379,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
                       cartProductId:
                           state.CartItemList.data?.data?[index].cartProductId ?? '',
                       totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                        saleId: state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? '',
+                        saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
                     ));
                   } else {
                     showSnackBar(
@@ -427,7 +426,7 @@ class BasketScreenWidget extends StatelessWidget {
                       cartProductId:
                       state.CartItemList.data!.data![index].cartProductId!,
                        totalPayment:/* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                      saleId: state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? '',
+                      saleId:((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
                     ));
                   }
                   else{
@@ -512,7 +511,7 @@ class BasketScreenWidget extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: () {
                     updateClearString == AppStrings.clearString
-                        ? bloc.add(BasketEvent.clearCartEvent(context: context))
+                        ? bloc.add(BasketEvent.clearCartEvent(context: context1))
                         : bloc.add(BasketEvent.removeCartProductEvent(
                             context: context,
                             cartProductId: cartProductId,

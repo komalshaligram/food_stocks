@@ -52,11 +52,13 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           try {
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
+
             OtpReqModel reqMap = OtpReqModel(
                 contact: event.contact,
                 otp: event.otp,
                 tokenId: preferencesHelper.getFCMToken());
             debugPrint('otp req = $reqMap');
+
             final res = await DioClient(event.context)
                 .post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');

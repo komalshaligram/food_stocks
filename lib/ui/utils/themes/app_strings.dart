@@ -18,6 +18,7 @@ class AppStrings {
   static const statusString = 'status';
 
 
+
   //language Strings
   static const englishString = 'en';
   static const hebrewString = 'he';

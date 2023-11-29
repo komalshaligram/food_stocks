@@ -479,12 +479,7 @@ class TimeContainer extends StatelessWidget {
                                         final DateTime time = value;
                                         final DateFormat formatter =
                                             DateFormat('HH:mm');
-                                        if(openingIndex == 0 &&  datetime == AppStrings.timeString){
-                                         datetime = AppStrings.hr24String;
-                                        }
-                                        else{
-                                          datetime = formatter.format(time);
-                                        }
+                                        datetime = formatter.format(time);
                                       }),
                                 ),
                                 GestureDetector(
