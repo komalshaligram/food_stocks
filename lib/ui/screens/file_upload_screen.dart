@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -69,148 +71,192 @@ class FileUploadScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<FileUploadBloc, FileUploadState>(
         builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.whiteColor,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              titleSpacing: 0,
-              leadingWidth: 60,
-              title: Text(AppLocalizations.of(context)!.forms_files,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blackColor)),
-              leading: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: AppColors.blackColor,
-                  )),
-            ),
-            body: state.isShimmering
-                ? FileUploadScreenShimmerWidget()
-                : SafeArea(
-                    child: state.isLoading
-                        ? Container(
-                            height: getScreenHeight(context),
-                            child: Center(
-                              child: CupertinoActivityIndicator(
-                                color: AppColors.blackColor,
-                              ),
-                            ),
-                          )
-                        : SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  state.formsAndFilesList.isEmpty
-                                      ? Container(
-                                          height: getScreenHeight(context),
-                                          width: getScreenWidth(context),
-                                          child: Center(
-                                            child: Text(
-                                              'Forms and Files not available',
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                      size: AppConstants
-                                                          .normalFont,
-                                                      color:
-                                                          AppColors.textColor),
-                                            ),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              state.formsAndFilesList.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            return buildFormsAndFilesUploadFields(
-                                              fileIndex: index,
-                                              context: context,
-                                              fileName: state
-                                                      .formsAndFilesList[index]
-                                                      .name ??
-                                                  '',
-                                              url: state
-                                                      .formsAndFilesList[index]
-                                                      .url ??
-                                                  '',
-                                              localUrl: state
-                                                      .formsAndFilesList[index]
-                                                      .localUrl ??
-                                                  '',
-                                              isUploading:
-                                                  state.isUploadLoading,
-                                              uploadIndex: state.uploadIndex,
-                                              isDownloadable: state
-                                                      .formsAndFilesList[index]
-                                                      .isForm ??
-                                                  false,
-                                            );
-                                          },
-                                        ),
-                                  40.height,
-                                  CustomButtonWidget(
-                                    buttonText: state.isUpdate
-                                        ? AppLocalizations.of(context)!
-                                            .save
-                                            .toUpperCase()
-                                        : AppLocalizations.of(context)!
-                                            .next
-                                            .toUpperCase(),
-                                    fontColors: AppColors.whiteColor,
-                                    isLoading: state.isApiLoading,
-                                    onPressed: state.isApiLoading
-                                        ? null
-                                        : () {
-                                            bloc.add(
-                                                FileUploadEvent.uploadApiEvent(
-                                                    context: context));
-                                          },
-                                    bGColor: AppColors.mainColor,
+          return WillPopScope(
+            onWillPop: () {
+              if (state.isDownloading) {
+                return Future.value(false);
+              } else {
+                return Future.value(true);
+              }
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.whiteColor,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                titleSpacing: 0,
+                leadingWidth: 60,
+                title: Text(AppLocalizations.of(context)!.forms_files,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.blackColor)),
+                leading: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.blackColor,
+                    )),
+              ),
+              body: Stack(
+                children: [
+                  state.isShimmering
+                      ? FileUploadScreenShimmerWidget()
+                      : SafeArea(
+                          child: state.isLoading
+                              ? Container(
+                                  height: getScreenHeight(context),
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(
+                                      color: AppColors.blackColor,
+                                    ),
                                   ),
-                                  20.height,
-                                  state.isUpdate
-                                      ? 0.width
-                                      : CustomButtonWidget(
-                                          buttonText:
-                                              AppLocalizations.of(context)!
-                                                  .skip,
-                                          fontColors: AppColors.mainColor,
-                                          borderColor: AppColors.mainColor,
-                                          onPressed: () async {
-                                            showSnackBar(
-                                                context: context,
-                                                title: AppStrings
-                                                    .registerSuccessString,
-                                                bgColor: AppColors.mainColor);
-                                            Navigator.popUntil(
-                                                context,
-                                                (route) =>
-                                                    route.name ==
-                                                    RouteDefine
-                                                        .connectScreen.name);
-                                            Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .bottomNavScreen.name);
-                                          },
-                                          bGColor: AppColors.whiteColor,
+                                )
+                              : SingleChildScrollView(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AppConstants.padding_20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        state.formsAndFilesList.isEmpty
+                                            ? Container(
+                                                height:
+                                                    getScreenHeight(context),
+                                                width: getScreenWidth(context),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Forms and Files not available',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .normalFont,
+                                                            color: AppColors
+                                                                .textColor),
+                                                  ),
+                                                ),
+                                              )
+                                            : ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: state
+                                                    .formsAndFilesList.length,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return buildFormsAndFilesUploadFields(
+                                                    fileIndex: index,
+                                                    context: context,
+                                                    fileName: state
+                                                            .formsAndFilesList[
+                                                                index]
+                                                            .name ??
+                                                        '',
+                                                    url: state
+                                                            .formsAndFilesList[
+                                                                index]
+                                                            .url ??
+                                                        '',
+                                                    localUrl: state
+                                                            .formsAndFilesList[
+                                                                index]
+                                                            .localUrl ??
+                                                        '',
+                                                    isUploading:
+                                                        state.isUploadLoading,
+                                                    uploadIndex:
+                                                        state.uploadIndex,
+                                                    isDownloadable: state
+                                                            .formsAndFilesList[
+                                                                index]
+                                                            .isForm ??
+                                                        false,
+                                                  );
+                                                },
+                                              ),
+                                        40.height,
+                                        CustomButtonWidget(
+                                          buttonText: state.isUpdate
+                                              ? AppLocalizations.of(context)!
+                                                  .save
+                                                  .toUpperCase()
+                                              : AppLocalizations.of(context)!
+                                                  .next
+                                                  .toUpperCase(),
+                                          fontColors: AppColors.whiteColor,
+                                          isLoading: state.isApiLoading,
+                                          onPressed: state.isApiLoading
+                                              ? null
+                                              : () {
+                                                  bloc.add(FileUploadEvent
+                                                      .uploadApiEvent(
+                                                          context: context));
+                                                },
+                                          bGColor: AppColors.mainColor,
                                         ),
-                                  20.height,
-                                ],
-                              ),
+                                        20.height,
+                                        state.isUpdate
+                                            ? 0.width
+                                            : CustomButtonWidget(
+                                                buttonText: AppLocalizations.of(
+                                                        context)!
+                                                    .skip,
+                                                fontColors: AppColors.mainColor,
+                                                borderColor:
+                                                    AppColors.mainColor,
+                                                onPressed: () async {
+                                                  showSnackBar(
+                                                      context: context,
+                                                      title: AppStrings
+                                                          .registerSuccessString,
+                                                      bgColor:
+                                                          AppColors.mainColor);
+                                                  Navigator.popUntil(
+                                                      context,
+                                                      (route) =>
+                                                          route.name ==
+                                                          RouteDefine
+                                                              .connectScreen
+                                                              .name);
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      RouteDefine
+                                                          .bottomNavScreen
+                                                          .name);
+                                                },
+                                                bGColor: AppColors.whiteColor,
+                                              ),
+                                        20.height,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ),
+                  state.isDownloading
+                      ? Container(
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: Colors.transparent,
+                          alignment: Alignment.center,
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10))),
+                            alignment: Alignment.center,
+                            child: CupertinoActivityIndicator(
+                              color: AppColors.blackColor,
                             ),
                           ),
-                  ),
+                        )
+                      : 0.width,
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -248,11 +294,33 @@ class FileUploadScreenWidget extends StatelessWidget {
                 ),
                 isDownloadable /* && url.isNotEmpty*/
                     ? ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.download,
+                  buttonText: AppLocalizations.of(context)!.download,
                         fontSize: AppConstants.smallFont,
                         radius: AppConstants.radius_5,
                         bGColor: AppColors.blueColor,
-                        onPressed: () {
+                        onPressed: () async {
+                          Map<Permission, PermissionStatus> statuses = await [
+                            Permission.storage,
+                          ].request();
+                          if (Platform.isAndroid) {
+                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                            AndroidDeviceInfo androidInfo =
+                                await deviceInfo.androidInfo;
+                            print(
+                                'Running on android version ${androidInfo.version.sdkInt}');
+                            if (androidInfo.version.sdkInt < 33) {
+                              if (!statuses[Permission.storage]!.isGranted) {
+                                showSnackBar(
+                                    context: context,
+                                    title:
+                                        AppStrings.storageAllowPermissionString,
+                                    bgColor: AppColors.redColor);
+                                return;
+                              }
+                            }
+                          } else {
+                            //for ios permission
+                          }
                           context.read<FileUploadBloc>().add(
                               FileUploadEvent.downloadFileEvent(
                                   context: context, fileIndex: fileIndex));
@@ -306,7 +374,25 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       title:
                                           AppLocalizations.of(context)!.camera,
                                       icon: Icons.camera_alt_rounded,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.camera,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          if (!statuses[Permission.camera]!
+                                              .isGranted) {
+                                            showSnackBar(
+                                                context: context,
+                                                title: AppStrings
+                                                    .cameraAllowPermissionString,
+                                                bgColor: AppColors.redColor);
+                                            Navigator.pop(context);
+                                            return;
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,
@@ -325,7 +411,31 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       title:
                                           AppLocalizations.of(context)!.gallery,
                                       icon: Icons.photo,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.storage,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          DeviceInfoPlugin deviceInfo =
+                                              DeviceInfoPlugin();
+                                          AndroidDeviceInfo androidInfo =
+                                              await deviceInfo.androidInfo;
+                                          if (androidInfo.version.sdkInt < 33) {
+                                            if (!statuses[Permission.storage]!
+                                                .isGranted) {
+                                              showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings
+                                                      .storageAllowPermissionString,
+                                                  bgColor: AppColors.redColor);
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,
@@ -343,7 +453,31 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   FileSelectionOptionWidget(
                                       title: "Document",
                                       icon: Icons.file_open_rounded,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.storage,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          DeviceInfoPlugin deviceInfo =
+                                              DeviceInfoPlugin();
+                                          AndroidDeviceInfo androidInfo =
+                                              await deviceInfo.androidInfo;
+                                          if (androidInfo.version.sdkInt < 33) {
+                                            if (!statuses[Permission.storage]!
+                                                .isGranted) {
+                                              showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings
+                                                      .storageAllowPermissionString,
+                                                  bgColor: AppColors.redColor);
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,

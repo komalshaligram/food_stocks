@@ -6,6 +6,7 @@ class AppStrings {
   static const androidString = 'Android';
   static const iosString = 'IOS';
   static const timeString = '00:00';
+  static const hr24String = '24:00';
   static const tempString = 'temp';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
@@ -14,6 +15,8 @@ class AppStrings {
   static const clearString = 'Clear';
   static const deleteString = 'Delete';
   static const deliverString = 'deliver';
+  static const statusString = 'status';
+
 
   //language Strings
   static const englishString = 'en';
@@ -66,6 +69,9 @@ class AppStrings {
   static const planogramProductsParamString = 'planogramProductsParam';
   static const messageDataString = 'messageDataParam';
   static const appContentIdString = 'appContentIdParam';
+  static const appContentNameString = 'appContentNameParam';
+  static const messageReadString = 'messageReadSParam';
+  static const messageDeleteString = 'messageDeleteParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
@@ -83,11 +89,13 @@ class AppStrings {
       'File size must be less then ${AppConstants.fileSizeCap}KB';
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
-      'Please select only image and document files';
+      'Please select only image, pdf and document files';
   static const downloadString = 'Downloaded successfully!';
   static const downloadFailedString = 'Failed to download';
-  static const docDownloadAllowPermissionString =
+  static const storageAllowPermissionString =
       'Please allow storage permission from settings';
+  static const cameraAllowPermissionString =
+      'Please allow camera permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
   static const openingTimeAfterPreviousClosingString =
       'Please select opening time after previous closing time';
@@ -106,8 +114,8 @@ class AppStrings {
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
   static const clearCartPopUpString = 'Are you sure you want to clear cart?';
-  static const deleteProductPopUpString =
-      'Are you sure you want to delete product?';
+  static const deleteProductPopUpString = 'Are you sure you want to delete product?';
+  static const selectNextDayShiftString = 'please select next day shift';
 
   //hint strings
   static const hintNumberString = '1234567890';
@@ -128,4 +136,6 @@ class AppStrings {
   static const cartIdString = 'id';
   static const driverNameString = 'driverName';
   static const driverNumberString = 'driverNumber';
+  static const messageIdString = 'messageId';
+  static const isReadMoreString = 'isReadMore';
 }

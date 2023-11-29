@@ -20,10 +20,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -42,7 +44,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
     on<StoreCategoryEvent>((event, emit) async {
       if (event is _ChangeCategoryExpansionEvent) {
         if (event.isOpened != null) {
-          emit(state.copyWith(isCategoryExpand: false));
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
@@ -77,6 +79,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     SearchModel(
                         searchId: category.id ?? '',
                         name: category.categoryName ?? '',
+                        searchType: SearchTypes.category,
                         image: category.categoryImage ?? '')) ??
                 []);
             debugPrint('store search list = ${searchList.length}');
@@ -372,7 +375,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.maxQuantityMsgString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -466,7 +469,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.selectSupplierMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         if (state
@@ -477,7 +480,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           showSnackBar(
               context: event.context,
               title: AppStrings.minQuantityMsgString,
-              bgColor: AppColors.mainColor);
+              bgColor: AppColors.redColor);
           return;
         }
         try {
@@ -573,6 +576,70 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         debugPrint('cart count = ${preferences.getCartCount()}');
+      } else if (event is _GlobalSearchEvent) {
+        emit(state.copyWith(search: event.search));
+        try {
+          GlobalSearchReqModel globalSearchReqModel =
+              GlobalSearchReqModel(search: event.search);
+          // emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).post(
+              AppUrls.getGlobalSearchResultUrl,
+              data: globalSearchReqModel.toJson());
+          GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+          if (response.status == 200) {
+            List<SearchModel> searchList = [];
+            //category search result
+            searchList.addAll(response.data?.categoryData
+                    ?.map((category) => SearchModel(
+                        searchId: category.id ?? '',
+                        name: category.categoryName ?? '',
+                        searchType: SearchTypes.category,
+                        image: category.categoryImage ?? ''))
+                    .toList() ??
+                []);
+            //company search result
+            searchList.addAll(response.data?.companyData
+                    ?.map((company) => SearchModel(
+                        searchId: company.id ?? '',
+                        name: company.brandName ?? '',
+                        searchType: SearchTypes.company,
+                        image: company.brandLogo ?? ''))
+                    .toList() ??
+                []);
+            //sale search result
+            searchList.addAll(response.data?.saleData
+                    ?.map((sale) => SearchModel(
+                        searchId: sale.id ?? '',
+                        name: sale.productName ?? '',
+                        searchType: SearchTypes.sale,
+                        image: sale.mainImage ?? ''))
+                    .toList() ??
+                []);
+            //supplier search result
+            searchList.addAll(response.data?.supplierProductData
+                    ?.map((supplier) => SearchModel(
+                        searchId: supplier.id ?? '',
+                        name: supplier.productName ?? '',
+                        searchType: SearchTypes.supplier,
+                        image: supplier.mainImage ?? ''))
+                    .toList() ??
+                []);
+            debugPrint('store search list = ${searchList.length}');
+            emit(state.copyWith(searchList: searchList /*, isShimmering: false*/
+                ));
+          } else {
+            emit(state.copyWith(searchList: []));
+            // emit(state.copyWith(isShimmering: false));
+            // showSnackBar(
+            //     context: event.context,
+            //     title: response.message ?? AppStrings.somethingWrongString,
+            //     bgColor: AppColors.mainColor);
+          }
+        } on ServerException {
+          // emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          // emit(state.copyWith(isShimmering: false));
+        }
       }
     });
   }

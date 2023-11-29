@@ -48,4 +48,8 @@ class StoreEvent with _$StoreEvent {
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory StoreEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory StoreEvent.globalSearchEvent(
+      {required String search,
+      required BuildContext context}) = _GlobalSearchEvent;
 }

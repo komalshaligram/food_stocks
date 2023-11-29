@@ -1,8 +1,10 @@
 
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+
 part 'get_all_cart_res_model.freezed.dart';
 part 'get_all_cart_res_model.g.dart';
+
 
 
 @freezed
@@ -37,7 +39,7 @@ class Cart with _$Cart {
     @JsonKey(name: "_id")
     String? id,
     @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    double? totalAmount,
   }) = _Cart;
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
@@ -57,11 +59,13 @@ class Datum with _$Datum {
     @JsonKey(name: "productStock")
     int? productStock,
     @JsonKey(name: "sales")
-    List<dynamic>? sales,
+    List<Sale>? sales,
     @JsonKey(name: "totalQuantity")
     int? totalQuantity,
     @JsonKey(name: "totalAmount")
-    int? totalAmount,
+    String? totalAmount,
+    @JsonKey(name: "note")
+    String? note,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -77,7 +81,7 @@ class ProductDetails with _$ProductDetails {
     @JsonKey(name: "mainImage")
     String? mainImage,
     @JsonKey(name: "itemsWeight")
-    int? itemsWeight,
+    double? itemsWeight,
     @JsonKey(name: "images")
     List<Image>? images,
     @JsonKey(name: "scales")
@@ -97,6 +101,46 @@ class Image with _$Image {
   }) = _Image;
 
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
+}
+
+@freezed
+class Sale with _$Sale {
+  const factory Sale({
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "status")
+    String? status,
+    @JsonKey(name: "supplierDetails")
+    String? supplierDetails,
+    @JsonKey(name: "salesName")
+    String? salesName,
+    @JsonKey(name: "discountPercentage")
+    int? discountPercentage,
+    @JsonKey(name: "salesType")
+    String? salesType,
+    @JsonKey(name: "salesDescription")
+    String? salesDescription,
+    @JsonKey(name: "fromDate")
+    String? fromDate,
+    @JsonKey(name: "endDate")
+    String? endDate,
+    @JsonKey(name: "salesTerms")
+    String? salesTerms,
+    @JsonKey(name: "createdBy")
+    String? createdBy,
+    @JsonKey(name: "updatedBy")
+    String? updatedBy,
+    @JsonKey(name: "isDeleted")
+    bool? isDeleted,
+    @JsonKey(name: "createdAt")
+    String? createdAt,
+    @JsonKey(name: "updatedAt")
+    String? updatedAt,
+    @JsonKey(name: "__v")
+    int? v,
+  }) = _Sale;
+
+  factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 }
 
 @freezed

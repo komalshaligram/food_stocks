@@ -1,6 +1,11 @@
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+
 part 'profile_res_model.freezed.dart';
 part 'profile_res_model.g.dart';
+
 
 @freezed
 class ProfileResModel with _$ProfileResModel {
@@ -21,9 +26,23 @@ class Data with _$Data {
   const factory Data({
     @JsonKey(name: "client")
     Client? client,
+    @JsonKey(name: "authToken")
+    AuthToken? authToken,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+}
+
+@freezed
+class AuthToken with _$AuthToken {
+  const factory AuthToken({
+    @JsonKey(name: "accessToken")
+    String? accessToken,
+    @JsonKey(name: "refreshToken")
+    String? refreshToken,
+  }) = _AuthToken;
+
+  factory AuthToken.fromJson(Map<String, dynamic> json) => _$AuthTokenFromJson(json);
 }
 
 @freezed

@@ -71,7 +71,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${state.orderByIdList.data!.orderData!.first.totalAmount!.toString()}${AppLocalizations.of(context)!.currency}',
+                                    '${state.orderByIdList.data!.orderData!.first.totalAmount!.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                               ),
                   ),
                   onTap: () {
@@ -191,7 +191,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.total_order,
                       value:
-                          '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment.toString()}${AppLocalizations.of(context)!.currency}',
+                          '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,

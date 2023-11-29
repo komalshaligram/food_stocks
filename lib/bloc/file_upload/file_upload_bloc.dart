@@ -17,10 +17,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -87,8 +85,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                             prefs: await SharedPreferences.getInstance());
                     final res = await DioClient(event.context)
                         .post(AppUrls.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: preferencesHelper.getUserId()
-                    });
+                      AppStrings.idParamString: preferencesHelper.getUserId(),
+                    },
+                        options: Options(
+                          headers: {
+                            HttpHeaders.authorizationHeader:
+                            'Bearer ${preferencesHelper.getAuthToken()}',
+                          },
+                        )
+                    );
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     Map<String, dynamic> newModel =
@@ -447,32 +452,24 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       } else if (event is _downloadFileEvent) {
         try {
-          Map<Permission, PermissionStatus> statuses = await [
-            Permission.storage,
-          ].request();
-          // if(statuses[Permission.storage]!.isDenied) {
-          //   showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.docDownloadAllowPermissionString,
-          //       bgColor: AppColors.redColor);
-          //   return;
-          // }
-          debugPrint('os version : ${Platform.operatingSystemVersion}');
-
-          PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-          String buildNumber = packageInfo.buildNumber;
-          debugPrint('build number $buildNumber');
-          // if (statuses[Permission.storage]!.isGranted) {
+          emit(state.copyWith(isDownloading: true));
+          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          //
+          // String buildNumber = packageInfo.buildNumber;
+          // debugPrint('build number $buildNumber');
+          // if(statuses[Permission.storage]!.isGranted) {
           File file;
           Directory dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
+            // dir = await getApplicationDocumentsDirectory();
             dir = Directory('/storage/emulated/0/Documents');
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
           HttpClient httpClient = new HttpClient();
           String filePath = '';
+          debugPrint(
+              'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
           try {
             var request = await httpClient.getUrl(Uri.parse(
                 "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
@@ -489,7 +486,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     title: AppStrings.downloadString,
                     bgColor: AppColors.mainColor);
               });
+              emit(state.copyWith(isDownloading: false));
             } else {
+              emit(state.copyWith(isDownloading: false));
               filePath = 'Error code: ' + response.statusCode.toString();
               debugPrint('download ${filePath}');
               showSnackBar(
@@ -498,9 +497,18 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
+            emit(state.copyWith(isDownloading: false));
             filePath = 'Can not fetch url';
           }
+          // } else {
+          //   emit(state.copyWith(isDownloading: false));
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.docDownloadAllowPermissionString,
+          //       bgColor: AppColors.redColor);
+          // }
         } catch (e) {
+          emit(state.copyWith(isDownloading: false));
           showSnackBar(
               context: event.context,
               title: AppStrings.somethingWrongString,

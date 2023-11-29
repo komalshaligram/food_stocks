@@ -10,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
 
@@ -82,6 +83,7 @@ class SupplierScreenWidget extends StatelessWidget {
                                       crossAxisCount: 3),
                               itemBuilder: (context, index) =>
                                   buildSupplierListItem(
+                                      index: index,
                                       context: context,
                                       supplierLogo:
                                           state.suppliersList[index].logo ?? '',
@@ -95,8 +97,8 @@ class SupplierScreenWidget extends StatelessWidget {
                                                 .supplierProductsScreen.name,
                                             arguments: {
                                               AppStrings.supplierIdString: state
-                                                      .suppliersList[index]
-                                                      .id ??
+                                                  .suppliersList[index]
+                                                  .id ??
                                                   ''
                                             });
                                       }),
@@ -125,91 +127,97 @@ class SupplierScreenWidget extends StatelessWidget {
   }
 
   Widget buildSupplierListItem(
-      {required String supplierLogo,
+      {required int index,
+      required String supplierLogo,
       required String supplierName,
       required BuildContext context,
       required void Function() onTap}) {
-    return Container(
-      height: getScreenHeight(context),
-      width: getScreenWidth(context),
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10)
-        ],
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$supplierLogo",
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: getScreenHeight(context),
-                        width: getScreenWidth(context),
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_10),
-                              topRight:
-                                  Radius.circular(AppConstants.radius_10)),
+    return DelayedWidget(
+      child: Container(
+        height: getScreenHeight(context),
+        width: getScreenWidth(context),
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_10,
+            horizontal: AppConstants.padding_5),
+        decoration: BoxDecoration(
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          color: AppColors.whiteColor,
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10)
+          ],
+        ),
+        child: InkWell(
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          onTap: onTap,
+          child: Column(
+            children: [
+              Expanded(
+                child: Image.network(
+                  "${AppUrls.baseFileUrl}$supplierLogo",
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress?.cumulativeBytesLoaded !=
+                        loadingProgress?.expectedTotalBytes) {
+                      return CommonShimmerWidget(
+                        child: Container(
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(AppConstants.radius_10),
+                                topRight:
+                                    Radius.circular(AppConstants.radius_10)),
+                          ),
                         ),
+                      );
+                    }
+                    return child;
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    // debugPrint('product category list image error : $error');
+                    return Container(
+                      height: getScreenHeight(context),
+                      width: getScreenWidth(context),
+                      color: AppColors.whiteColor,
+                      child: Image.asset(
+                        AppImagePath.imageNotAvailable5,
+                        fit: BoxFit.cover,
                       ),
                     );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('product category list image error : $error');
-                  return Container(
-                    height: getScreenHeight(context),
-                    width: getScreenWidth(context),
-                    color: AppColors.whiteColor,
-                    child: Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(
-                  vertical: AppConstants.padding_5,
-                  horizontal: AppConstants.padding_5),
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppConstants.radius_10),
-                    bottomRight: Radius.circular(AppConstants.radius_10)),
-                // border: Border.all(color: AppColors.whiteColor, width: 1),
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(
+                    vertical: AppConstants.padding_5,
+                    horizontal: AppConstants.padding_5),
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppConstants.radius_10),
+                      bottomRight: Radius.circular(AppConstants.radius_10)),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
+                ),
+                child: Text(
+                  supplierName,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_12, color: AppColors.whiteColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
               ),
-              child: Text(
-                supplierName,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12, color: AppColors.whiteColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

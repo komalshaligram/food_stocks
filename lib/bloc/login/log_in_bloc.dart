@@ -21,9 +21,11 @@ part 'log_in_bloc.freezed.dart';
 class LogInBloc extends Bloc<LogInEvent, LogInState> {
   LogInBloc() : super(LogInState.initial()) {
     on<LogInEvent>((event, emit) async {
+      if (state.isLoading) {
+        return;
+      }
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -31,6 +33,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               contact: event.contactNumber, isRegistration: event.isRegister);
           debugPrint(
               'login req = ${event.contactNumber}___${event.isRegister}');
+          debugPrint('url3 = ${AppUrls.existingUserLoginUrl}');
           final res = await DioClient(event.context).post(
             AppUrls.existingUserLoginUrl,
             data: reqMap,
@@ -55,6 +58,10 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             ));
           }
         } on ServerException {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
+        } catch (e) {
           emit(state.copyWith(
             isLoading: false,
           ));

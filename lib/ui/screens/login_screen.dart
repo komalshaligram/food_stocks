@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -89,11 +90,16 @@ class LogInScreenWidget extends StatelessWidget {
                                 color: Colors.black)),
                         30.height,
                         CustomFormField(
+                          inputformet: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            /*FilteringTextInputFormatter.deny(
+                                RegExp(r'\s')),*/
+                          ],
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
                           hint: AppStrings.hintNumberString,
                           fillColor: AppColors.whiteColor,
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           validator: AppStrings.mobileValString,
                         ),
                         30.height,

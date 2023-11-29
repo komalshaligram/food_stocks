@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/bloc/message/message_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -48,7 +49,8 @@ class MessageScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.messages,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                      context, RouteDefine.bottomNavScreen.name);
                 },
                 // trailingWidget: Center(
                 //   child: GestureDetector(
@@ -92,29 +94,45 @@ class MessageScreenWidget extends StatelessWidget {
                                         vertical: AppConstants.padding_10),
                                     itemBuilder: (context, index) =>
                                         messageListItem(
-                                      index: index,
+                                          index: index,
                                       context: context,
-                                      title:
-                                          state.messageList[index].title ?? '',
+                                      title: state.messageList[index].message
+                                              ?.title ??
+                                          '',
                                       content: parse(state.messageList[index]
-                                                      .fulltext ??
+                                                      .message?.body ??
                                                   '')
                                               .body
                                               ?.text ??
                                           '',
                                       dateTime:
-                                          state.messageList[index].updatedAt ??
-                                              '',
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine
-                                                .messageContentScreen.name,
-                                            arguments: {
+                                          state.messageList[index].id ?? '',
+                                      onTap: () async {
+                                        dynamic messageNewData =
+                                            await Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .messageContentScreen.name,
+                                                arguments: {
                                               AppStrings.messageDataString:
-                                                  state.messageList[index]
+                                                  state.messageList[index],
+                                              AppStrings.messageIdString:
+                                                  state.messageList[index].id
                                             });
+                                        debugPrint('message = $messageNewData');
+                                        context.read<MessageBloc>().add(
+                                            MessageEvent.removeOrUpdateMessageEvent(
+                                                messageId: messageNewData[
+                                                    AppStrings.messageIdString],
+                                                isRead: messageNewData[
+                                                    AppStrings
+                                                        .messageReadString],
+                                                isDelete: messageNewData[
+                                                    AppStrings
+                                                        .messageDeleteString]));
                                       },
+                                      isRead: state.messageList[index].isRead ??
+                                          false,
                                     ),
                                   ),
                         state.isLoadMore
@@ -147,26 +165,28 @@ class MessageScreenWidget extends StatelessWidget {
     required String content,
     required String dateTime,
     required void Function() onTap,
+    required bool isRead,
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        margin: EdgeInsets.symmetric(
-            horizontal: AppConstants.padding_10,
-            vertical: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_10),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10),
+        ],
+      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: AppConstants.padding_10,
+          vertical: AppConstants.padding_5),
+      padding: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_10),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onTap,
         child: Row(
           children: [
             Container(
@@ -174,7 +194,7 @@ class MessageScreenWidget extends StatelessWidget {
               width: 16,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: index.isEven ? Colors.transparent : AppColors.mainColor,
+                color: isRead ? Colors.transparent : AppColors.mainColor,
               ),
               margin: EdgeInsets.only(
                   left: context.rtl ? AppConstants.padding_10 : 0,

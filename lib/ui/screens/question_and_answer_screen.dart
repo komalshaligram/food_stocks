@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/question_and_answer/question_and_answer_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -56,6 +58,7 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          5.height,
                           state.isShimmering
                               ? QuestionAndAnswerScreenShimmerWidget()
                               : state.qnaList.isEmpty
@@ -77,12 +80,16 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
                                           const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return qnaItem(
+                                            index: index,
                                             question:
                                                 state.qnaList[index].question ??
                                                     '',
-                                            answer:
-                                                state.qnaList[index].answer ??
-                                                    '');
+                                            answer: parse(state.qnaList[index]
+                                                            .answer ??
+                                                        '')
+                                                    .documentElement
+                                                    ?.text ??
+                                                '');
                                       },
                                     ),
                           state.isLoadMore
@@ -110,51 +117,56 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget qnaItem({required String question, required String answer}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_8),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.15),
-            blurRadius: AppConstants.blur_10,
-          ),
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-      ),
-      clipBehavior: Clip.hardEdge,
-      child: ExpansionTile(
-        collapsedIconColor: AppColors.greyColor,
-        iconColor: AppColors.mainColor,
-        title: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-          child: Text(
-            question,
-            style: AppStyles.rkBoldTextStyle(
-              size: AppConstants.smallFont,
-              color: AppColors.blackColor,
-              fontWeight: FontWeight.w500,
+  Widget qnaItem(
+      {required int index, required String question, required String answer}) {
+    return DelayedWidget(
+      // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+            horizontal: AppConstants.padding_10,
+            vertical: AppConstants.padding_8),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10,
             ),
-          ),
+          ],
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
-        children: [
-          Container(
-            color: AppColors.lightBorderColor.withOpacity(0.5),
+        clipBehavior: Clip.hardEdge,
+        child: ExpansionTile(
+          collapsedIconColor: AppColors.greyColor,
+          iconColor: AppColors.mainColor,
+          title: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-            child: ListTile(
-              title: Text(
-                answer,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14, color: AppColors.blackColor),
+                const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+            child: Text(
+              question,
+              style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.smallFont,
+                color: AppColors.blackColor,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
-        ],
+          children: [
+            Container(
+              color: AppColors.lightBorderColor.withOpacity(0.5),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.padding_5),
+              child: ListTile(
+                title: Text(
+                  answer,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14, color: AppColors.blackColor),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

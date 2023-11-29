@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
@@ -6,11 +10,13 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
@@ -43,6 +49,16 @@ class WalletScreenWidget extends StatelessWidget {
   DateTime? minDate;
   DateTime? startDate;
   DateTime? endDate;
+
+  List<DropdownMenuItem<String>> get dropdownItems{
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("USA"),value: "USA"),
+      DropdownMenuItem(child: Text("Canada"),value: "Canada"),
+      DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
+      DropdownMenuItem(child: Text("England"),value: "England"),
+    ];
+    return menuItems;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +133,7 @@ class WalletScreenWidget extends StatelessWidget {
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
                   child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: state.walletTransactionsList.isEmpty ? NeverScrollableScrollPhysics(): AlwaysScrollableScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -162,7 +178,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                          balance: state.balance,
+                                          balance: state.balance.toInt(),
                                         ),
                                       ],
                                     )),
@@ -182,7 +198,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .total_credit,
                                                 value:
-                                                    '${state.totalCredit}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -193,7 +209,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .this_months_expenses,
                                                 value:
-                                                    '${state.thisMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                         ],
                                       ),
@@ -208,7 +224,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .last_months_expenses,
                                                 value:
-                                                    '${state.lastMonthExpense}${AppLocalizations.of(context)!.currency}'),
+                                                    '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -266,16 +282,17 @@ class WalletScreenWidget extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2),
                                     child: LineChart(
-                                      LineChartData(
+                                        LineChartData(
                                         borderData: FlBorderData(show: false),
                                         lineTouchData: LineTouchData(
+                                        touchSpotThreshold: 30.0,
                                           getTouchLineEnd:
                                               (barData, spotIndex) {
                                             return 46;
                                           },
                                           enabled: true,
-                                          touchTooltipData:
-                                              LineTouchTooltipData(
+                                          touchTooltipData: LineTouchTooltipData(
+                                                fitInsideHorizontally: true,
                                             getTooltipItems: (value) {
                                               return value.map((e) {
                                                 return LineTooltipItem(
@@ -324,8 +341,6 @@ class WalletScreenWidget extends StatelessWidget {
                                                 String? month = monthMap[value];
                                                 return Text(
                                                   month.toString(),
-                                                  textDirection:
-                                                      TextDirection.ltr,
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                     size: AppConstants.font_8,
@@ -358,7 +373,7 @@ class WalletScreenWidget extends StatelessWidget {
                         15.width,
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_15),
+                              horizontal: AppConstants.padding_10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -371,10 +386,37 @@ class WalletScreenWidget extends StatelessWidget {
                               Row(
                                 children: [
                                   GestureDetector(
-                                    onTap: () {
-                                      bloc.add(WalletEvent
+                                    onTap: () async {
+                                      Map<Permission, PermissionStatus>
+                                          statuses = await [
+                                        Permission.storage,
+                                      ].request();
+
+                                      if (Platform.isAndroid) {
+                                        DeviceInfoPlugin deviceInfo =
+                                            DeviceInfoPlugin();
+                                        AndroidDeviceInfo androidInfo =
+                                            await deviceInfo.androidInfo;
+                                        print(
+                                            'Running on android version ${androidInfo.version.sdkInt}');
+                                        if (androidInfo.version.sdkInt < 33) {
+                                          if (!statuses[Permission.storage]!
+                                              .isGranted) {
+                                            showSnackBar(
+                                                context: context,
+                                                title: AppStrings
+                                                    .storageAllowPermissionString,
+                                                bgColor: AppColors.redColor);
+                                            return;
+                                          }
+                                        }
+                                      } else {
+                                        //for ios permission
+                                      }
+
+                                      state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
                                           .exportWalletTransactionEvent(
-                                              context: context));
+                                              context: context)) : SizedBox();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -384,7 +426,7 @@ class WalletScreenWidget extends StatelessWidget {
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.circular(
                                               AppConstants.radius_3)),
-                                      child: Text(
+                                      child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
                                         AppLocalizations.of(context)!.export,
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
@@ -405,7 +447,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         color: AppColors.whiteColor,
                                       ),
                                       child: Container(
-                                        width: getScreenWidth(context) * 0.51,
+                                        width:  getScreenWidth(context) * 0.56,
                                         height: 30,
                                         child: DateRangeField(
                                           decoration: InputDecoration(
@@ -413,7 +455,9 @@ class WalletScreenWidget extends StatelessWidget {
                                               prefixIcon: Icon(
                                                   Icons.keyboard_arrow_down),
                                               contentPadding:
-                                                  EdgeInsets.all(0)),
+                                                  EdgeInsets.all(0),
+
+                                          ),
                                           showDateRangePicker: (
                                               {required pickerBuilder,
                                               required widgetContext}) {
@@ -439,7 +483,6 @@ class WalletScreenWidget extends StatelessWidget {
                                                       range: state.selectedDateRange));
                                             } else {
                                               selectedDateRange = value;
-
                                               bloc.add(
                                                   WalletEvent.getDateRangeEvent(
                                                       context: context,
@@ -451,13 +494,10 @@ class WalletScreenWidget extends StatelessWidget {
                                                 endDate: value.end,
                                                 startDate: value.start,
                                               ));
-
                                             }
-
                                             //  minDate = DateTime(state.yearList.last ,1,1);
                                           },
-                                          selectedDateRange:
-                                              state.selectedDateRange,
+                                          selectedDateRange: state.selectedDateRange,
                                           pickerBuilder: (BuildContext context,
                                               dynamic Function(DateRange?)
                                                   onDateRangeChanged) {
@@ -537,7 +577,7 @@ class WalletScreenWidget extends StatelessWidget {
                     if (notification.metrics.pixels ==
                         notification.metrics.maxScrollExtent) {
                         if ((state.balanceSheetList.metaData
-                            ?.totalFilteredCount ?? 0) >
+                            ?.totalFilteredCount ?? 1) >
                             state.walletTransactionsList.length) {
                           context.read<WalletBloc>().add(
                               WalletEvent.getAllWalletTransactionEvent(
@@ -568,7 +608,7 @@ class WalletScreenWidget extends StatelessWidget {
     WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
+          horizontal: AppConstants.padding_5,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.radius_7),
         border: Border.all(color: AppColors.borderColor),
@@ -584,8 +624,12 @@ class WalletScreenWidget extends StatelessWidget {
         ),
         elevation: 0,
         isDense: true,
-        underline: SizedBox(),
         value: date,
+    underline: SizedBox(),
+    borderRadius: BorderRadius.all(Radius.zero),
+        padding: EdgeInsets.all(10),
+        dropdownColor: AppColors.whiteColor,
+       alignment: Alignment.bottomCenter,
         items: dateList.map((e) {
           return DropdownMenuItem<int>(
             value: e,
@@ -598,9 +642,8 @@ class WalletScreenWidget extends StatelessWidget {
           bloc.add(WalletEvent.getDropDownElementEvent(year: value!));
           bloc.add(
               WalletEvent.getTotalExpenseEvent(year: value, context: context1));
-        },
-      ),
-    );
+        }
+    ));
   }
 
   Widget listWidget({required BuildContext context, required int listIndex}) {
@@ -613,7 +656,7 @@ class WalletScreenWidget extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     state.walletTransactionsList[listIndex].createdAt!
@@ -631,36 +674,33 @@ class WalletScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      state.walletTransactionsList[listIndex].type.toString() ==
-                              'Order'
-                          ? '${'-'}${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}'
-                          : '${state.walletTransactionsList[listIndex].amount.toString()}${AppLocalizations.of(context)!.currency}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: state.walletTransactionsList[listIndex].type
-                                      .toString() ==
-                                  'Monthly Credits'
-                              ? AppColors.mainColor
-                              : AppColors.redColor,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  20.width,
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, RouteDefine.orderSuccessfulScreen.name),
-                    child: CircularButtonWidget(
-                      buttonName: AppLocalizations.of(context)!.balance_status,
-                      buttonValue:
-                          '${state.walletTransactionsList[listIndex].balance.toString()}${AppLocalizations.of(context)!.currency}',
-                    ),
-                  ),
-                ],
+              10.width,
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  state.walletTransactionsList[listIndex].type.toString() ==
+                          'Order'
+                      ? '${'-'}${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'
+                      : '${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: state.walletTransactionsList[listIndex].type
+                                  .toString() ==
+                              'Monthly Credits'
+                          ? AppColors.mainColor
+                          : AppColors.redColor,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              10.width,
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, RouteDefine.orderSuccessfulScreen.name),
+                child: CircularButtonWidget(
+                  buttonName: AppLocalizations.of(context)!.balance_status,
+                  buttonValue:
+                      '${double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                ),
               ),
             ],
           );

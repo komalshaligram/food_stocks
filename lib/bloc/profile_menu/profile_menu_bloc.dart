@@ -24,9 +24,9 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
 
-        debugPrint('UserImageUrl  ${preferences.getUserImageUrl()}');
-        debugPrint('username   ${preferences.getUserName()}');
-        debugPrint('logo  ${preferences.getUserCompanyLogoUrl()}');
+        debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
+        debugPrint('[username]   ${preferences.getUserName()}');
+        debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
         emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
         emit(state.copyWith(
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
@@ -54,6 +54,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
               await preferencesHelper.setUserLoggedIn();
+              await Provider.of<LocaleProvider>(event.context, listen: false)
+                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
               showSnackBar(
                   context: event.context,
                   title: AppStrings.logOutSuccessString,

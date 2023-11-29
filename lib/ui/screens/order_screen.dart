@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order/order_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/common_order_content_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../routes/app_routes.dart';
@@ -57,20 +58,23 @@ class OrderScreenWidget extends StatelessWidget {
                     state.isShimmering
                         ? OrderSummaryScreenShimmerWidget()
                         : (state.orderDetailsList.length) != 0
-                            ? Expanded(
+                            ? SizedBox(
+                      height: getScreenHeight(context) * 0.85,
                                 child: ListView.builder(
-                                  scrollDirection: Axis.vertical,
+                                  //scrollDirection: Axis.vertical,
                                   itemCount: state.orderDetailsList.length,
                                   shrinkWrap: true,
                                   physics: (state.orderDetailsList.length) == 0
                                       ? const NeverScrollableScrollPhysics()
                                       : const AlwaysScrollableScrollPhysics(),
+                                //  physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
                                       orderListItem(
                                           index: index, context: context),
                                 ),
                               )
-                            : Expanded(
+                            : SizedBox(
+                      height: getScreenHeight(context) * 0.8,
                                 child: Center(
                                     child: Text(
                                       AppLocalizations.of(context)!.no_data,
@@ -88,14 +92,14 @@ class OrderScreenWidget extends StatelessWidget {
                 onNotification: (notification) {
                   if (notification.metrics.pixels ==
                       notification.metrics.maxScrollExtent) {
-                  /*  if ((state.orderList.metaData!.totalFilteredCount ?? 0) >
-                        state.orderDetailsList.length) {*/
+                    if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
+                        state.orderDetailsList.length) {
                       context
                           .read<OrderBloc>()
                           .add(OrderEvent.getAllOrderEvent(context: context));
-                 /*   } else {
+                    } else {
                       return false;
-                    }*/
+                    }
                   }
                   return true;
                 },
@@ -110,6 +114,7 @@ class OrderScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
+
         return GestureDetector(
             onTap: () {
               Navigator.pushNamed(
@@ -143,7 +148,7 @@ class OrderScreenWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      state.orderDetailsList[index].orderNumber.toString() ?? '',
+                      state.orderDetailsList[index].orderNumber.toString(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.normalFont,
                           color: AppColors.blackColor,
@@ -172,7 +177,7 @@ class OrderScreenWidget extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '${state.orderDetailsList[index].totalAmount ?? ''}${AppLocalizations.of(context)!.currency}',
+                          '${double.parse(state.orderDetailsList[index].totalAmount.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,
@@ -212,7 +217,7 @@ class OrderScreenWidget extends StatelessWidget {
                           '',
                       titleColor: AppColors.blackColor,
                       valueColor: AppColors.blackColor,
-                      valueTextSize: AppConstants.smallFont,
+                      valueTextSize: getScreenWidth(context) < 380 ? AppConstants.font_14 : AppConstants.smallFont,
                     ),
                     5.width,
                     CommonOrderContentWidget(

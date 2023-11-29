@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -95,6 +96,30 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     buildRecommendationProducts(
                                         context: context,
                                         index: index,
+                                        productImage: state
+                                                .recommendationProductsList[
+                                                    index]
+                                                .mainImage ??
+                                            '',
+                                        productName: state
+                                                .recommendationProductsList[
+                                                    index]
+                                                .productName ??
+                                            '',
+                                        productPrice: state
+                                                .recommendationProductsList[
+                                                    index]
+                                                .productPrice ??
+                                            0.0,
+                                        onPressed: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
+                                                      .recommendationProductsList[
+                                                          index]
+                                                      .id ??
+                                                  '');
+                                        },
                                         isRTL: context.rtl),
                               ),
                     state.isLoadMore
@@ -121,107 +146,99 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildRecommendationProducts(
-      {required BuildContext context,
-      required int index,
-      required bool isRTL}) {
-    return BlocProvider.value(
-      value: context.read<RecommendationProductsBloc>(),
-      child:
-          BlocBuilder<RecommendationProductsBloc, RecommendationProductsState>(
-        builder: (context, state) {
-          return Container(
-            // height: 150,
-            // width: 130,
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
-              ],
+  Widget buildRecommendationProducts({
+    required BuildContext context,
+    required int index,
+    required String productImage,
+    required String productName,
+    required double productPrice,
+    required void Function() onPressed,
+    required bool isRTL,
+  }) {
+    return DelayedWidget(
+      child: Container(
+        // height: 150,
+        // width: 130,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10),
+          ],
+        ),
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_10,
+            horizontal: AppConstants.padding_5),
+        padding: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$productImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_5),
-            padding: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_5,
-                horizontal: AppConstants.padding_10),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.network(
-                    "${AppUrls.baseFileUrl}${state.recommendationProductsList[index].mainImage}",
-                    height: 70,
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress?.cumulativeBytesLoaded !=
-                          loadingProgress?.expectedTotalBytes) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10)),
-                            ),
-                          ),
-                        );
-                      }
-                      return child;
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
-                      return Container(
-                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover),
-                      );
-                    },
-                  ),
-                ),
-                5.height,
-                Text(
-                  "${state.recommendationProductsList[index].productName}",
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_12,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.height,
-                Expanded(
-                  child: 0.width,
-                ),
-                5.height,
-                Center(
-                  child: CommonProductButtonWidget(
-                    title:
-                        "${state.recommendationProductsList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                    onPressed: () {
-                      showProductDetails(
-                          context: context,
-                          productId:
-                              state.recommendationProductsList[index].id ?? '');
-                    },
-                    textColor: AppColors.whiteColor,
-                    bgColor: AppColors.mainColor,
-                    borderRadius: AppConstants.radius_3,
-                    textSize: AppConstants.font_12,
-                  ),
-                )
-              ],
+            5.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          );
-        },
+            5.height,
+            Expanded(
+              child: 0.width,
+            ),
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+                onPressed: onPressed,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -489,7 +506,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               )
                                             : Column(
@@ -500,10 +524,24 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_12,
+                                                            color: AppColors
+                                                                .saleRedColor),
+                                                  ),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               ),
                                       ),
@@ -706,7 +744,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -789,7 +827,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

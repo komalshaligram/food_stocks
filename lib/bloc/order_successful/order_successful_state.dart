@@ -4,11 +4,11 @@ part of 'order_successful_bloc.dart';
 @freezed
 class OrderSuccessfulState with _$OrderSuccessfulState {
   const factory OrderSuccessfulState({
-    required int totalCredit,
-    required int thisMonthExpense,
-    required int lastMonthExpense,
+    required double totalCredit,
+    required double thisMonthExpense,
+    required double lastMonthExpense,
     required int orderThisMonth,
-    required int balance,
+    required double balance,
   }) = _OrderSuccessfulState;
 
   factory OrderSuccessfulState.initial() =>

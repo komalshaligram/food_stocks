@@ -9,6 +9,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
@@ -174,6 +175,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title: AppLocalizations.of(context)
                                     .business_details,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(
                                       context, RouteDefine.profileScreen.name,
                                       arguments: {
@@ -184,6 +186,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context).more_details,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.moreDetailsScreen.name,
                                       arguments: {
@@ -194,6 +197,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context).activity_time,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.activityTimeScreen.name,
                                       arguments: {
@@ -204,6 +208,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context).forms_files,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.fileUploadScreen.name,
                                       arguments: {
@@ -242,36 +247,39 @@ class ProfileMenuScreenWidget extends StatelessWidget {
   }
 
   Widget profileMenuTiles({required title, required void Function() onTap}) {
-    return Container(
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10)
-          ]),
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.padding_15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont, color: AppColors.blackColor),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: AppColors.blackColor,
-              ),
-            ],
+    return DelayedWidget(
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius:
+                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.15),
+                  blurRadius: AppConstants.blur_10)
+            ]),
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.padding_15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.blackColor),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppColors.blackColor,
+                ),
+              ],
+            ),
           ),
         ),
       ),

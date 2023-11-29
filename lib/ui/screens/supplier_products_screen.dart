@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -60,12 +61,12 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
+              ),
             ),
-          ),
-          body: SafeArea(
-            child: NotificationListener<ScrollNotification>(
-              child: SingleChildScrollView(
-                physics: state.productList.isEmpty
+            body: SafeArea(
+              child: NotificationListener<ScrollNotification>(
+                child: SingleChildScrollView(
+                  physics: state.productList.isEmpty
                       ? const NeverScrollableScrollPhysics()
                       : const AlwaysScrollableScrollPhysics(),
                   child: Column(
@@ -79,83 +80,83 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       //       width: getScreenWidth(context) / 3,
                       //       clipBehavior: Clip.hardEdge,
                       //       margin: EdgeInsets.symmetric(
-                    //           vertical: AppConstants.padding_10,
-                    //           horizontal: AppConstants.padding_5),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.all(
-                    //             Radius.circular(AppConstants.radius_10)),
-                    //         color: AppColors.whiteColor,
-                    //         boxShadow: [
-                    //           BoxShadow(
-                    //               color: AppColors.shadowColor.withOpacity(0.15),
-                    //               blurRadius: AppConstants.blur_10)
-                    //         ],
-                    //       ),
-                    //       child: Image.network(
-                    //         "${AppUrls.baseFileUrl}",
-                    //         fit: BoxFit.cover,
-                    //         loadingBuilder: (context, child, loadingProgress) {
-                    //           if (loadingProgress?.cumulativeBytesLoaded !=
-                    //               loadingProgress?.expectedTotalBytes) {
-                    //             return Container(
-                    //               height: getScreenWidth(context) / 3,
-                    //               width: getScreenWidth(context) / 3,
-                    //               alignment: Alignment.center,
-                    //               color: AppColors.whiteColor,
-                    //               child: CupertinoActivityIndicator(
-                    //                 color: AppColors.blackColor,
-                    //               ),
-                    //             );
-                    //           }
-                    //           return child;
-                    //         },
-                    //         errorBuilder: (context, error, stackTrace) {
-                    //           // debugPrint('product category list image error : $error');
-                    //           return Container(
-                    //             color: AppColors.whiteColor,
-                    //           );
-                    //         },
-                    //       ),
-                    //     ),
-                    //     Positioned(
-                    //       bottom: 0,
-                    //       left: AppConstants.padding_5,
-                    //       right: AppConstants.padding_5,
-                    //       child: Container(
-                    //         // height: 20,
-                    //         // width: 80,
-                    //         alignment: Alignment.center,
-                    //         padding: EdgeInsets.symmetric(
-                    //             vertical: AppConstants.padding_5,
-                    //             horizontal: AppConstants.padding_5),
-                    //         decoration: BoxDecoration(
-                    //           color: AppColors.mainColor,
-                    //           borderRadius: BorderRadius.only(
-                    //               bottomLeft:
-                    //                   Radius.circular(AppConstants.radius_10),
-                    //               bottomRight:
-                    //                   Radius.circular(AppConstants.radius_10)),
-                    //           // border: Border.all(color: AppColors.whiteColor, width: 1),
-                    //         ),
-                    //         child: Text(
-                    //           'supplierName',
-                    //           style: AppStyles.rkRegularTextStyle(
-                    //               size: AppConstants.font_12,
-                    //               color: AppColors.whiteColor),
-                    //           maxLines: 1,
-                    //           overflow: TextOverflow.ellipsis,
-                    //           textAlign: TextAlign.center,
-                    //         ),
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
-                    // 10.height,
-                    state.isShimmering
-                        ? SupplierProductsScreenShimmerWidget()
-                        : state.productList.isEmpty
-                        ? Container(
-                      height: getScreenHeight(context) - 80,
+                      //           vertical: AppConstants.padding_10,
+                      //           horizontal: AppConstants.padding_5),
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.all(
+                      //             Radius.circular(AppConstants.radius_10)),
+                      //         color: AppColors.whiteColor,
+                      //         boxShadow: [
+                      //           BoxShadow(
+                      //               color: AppColors.shadowColor.withOpacity(0.15),
+                      //               blurRadius: AppConstants.blur_10)
+                      //         ],
+                      //       ),
+                      //       child: Image.network(
+                      //         "${AppUrls.baseFileUrl}",
+                      //         fit: BoxFit.cover,
+                      //         loadingBuilder: (context, child, loadingProgress) {
+                      //           if (loadingProgress?.cumulativeBytesLoaded !=
+                      //               loadingProgress?.expectedTotalBytes) {
+                      //             return Container(
+                      //               height: getScreenWidth(context) / 3,
+                      //               width: getScreenWidth(context) / 3,
+                      //               alignment: Alignment.center,
+                      //               color: AppColors.whiteColor,
+                      //               child: CupertinoActivityIndicator(
+                      //                 color: AppColors.blackColor,
+                      //               ),
+                      //             );
+                      //           }
+                      //           return child;
+                      //         },
+                      //         errorBuilder: (context, error, stackTrace) {
+                      //           // debugPrint('product category list image error : $error');
+                      //           return Container(
+                      //             color: AppColors.whiteColor,
+                      //           );
+                      //         },
+                      //       ),
+                      //     ),
+                      //     Positioned(
+                      //       bottom: 0,
+                      //       left: AppConstants.padding_5,
+                      //       right: AppConstants.padding_5,
+                      //       child: Container(
+                      //         // height: 20,
+                      //         // width: 80,
+                      //         alignment: Alignment.center,
+                      //         padding: EdgeInsets.symmetric(
+                      //             vertical: AppConstants.padding_5,
+                      //             horizontal: AppConstants.padding_5),
+                      //         decoration: BoxDecoration(
+                      //           color: AppColors.mainColor,
+                      //           borderRadius: BorderRadius.only(
+                      //               bottomLeft:
+                      //                   Radius.circular(AppConstants.radius_10),
+                      //               bottomRight:
+                      //                   Radius.circular(AppConstants.radius_10)),
+                      //           // border: Border.all(color: AppColors.whiteColor, width: 1),
+                      //         ),
+                      //         child: Text(
+                      //           'supplierName',
+                      //           style: AppStyles.rkRegularTextStyle(
+                      //               size: AppConstants.font_12,
+                      //               color: AppColors.whiteColor),
+                      //           maxLines: 1,
+                      //           overflow: TextOverflow.ellipsis,
+                      //           textAlign: TextAlign.center,
+                      //         ),
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
+                      // 10.height,
+                      state.isShimmering
+                          ? SupplierProductsScreenShimmerWidget()
+                          : state.productList.isEmpty
+                              ? Container(
+                                  height: getScreenHeight(context) - 80,
                                   width: getScreenWidth(context),
                                   alignment: Alignment.center,
                                   child: Text(
@@ -165,8 +166,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         color: AppColors.textColor),
                                   ),
                                 )
-                        : GridView.builder(
-                      itemCount: state.productList.length,
+                              : GridView.builder(
+                                  itemCount: state.productList.length,
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.symmetric(
@@ -179,19 +180,36 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       buildSupplierProducts(
                                           context: context,
                                           index: index,
+                                          productImage: state.productList[index]
+                                                  .mainImage ??
+                                              '',
+                                          productName: state.productList[index]
+                                                  .productName ??
+                                              '',
+                                          productPrice: state.productList[index]
+                                                  .productPrice ??
+                                              0.0,
+                                          onPressed: () {
+                                            showProductDetails(
+                                                context: context,
+                                                productId: state
+                                                        .productList[index]
+                                                        .productId ??
+                                                    '');
+                                          },
                                           isRTL: context.rtl),
                                 ),
                       state.isLoadMore
                           ? SupplierProductsScreenShimmerWidget()
                           : 0.width,
                     ],
+                  ),
                 ),
-              ),
-              onNotification: (notification) {
-                if (notification.metrics.pixels ==
-                    notification.metrics.maxScrollExtent) {
-                  if (!state.isLoadMore) {
-                    context.read<SupplierProductsBloc>().add(
+                onNotification: (notification) {
+                  if (notification.metrics.pixels ==
+                      notification.metrics.maxScrollExtent) {
+                    if (!state.isLoadMore) {
+                      context.read<SupplierProductsBloc>().add(
                           SupplierProductsEvent.getSupplierProductsListEvent(
                               context: context));
                     }
@@ -209,113 +227,108 @@ class SupplierProductsScreenWidget extends StatelessWidget {
   Widget buildSupplierProducts(
       {required BuildContext context,
       required int index,
+      required String productImage,
+      required String productName,
+      required double productPrice,
+      required void Function() onPressed,
       required bool isRTL}) {
-    return BlocProvider.value(
-      value: context.read<SupplierProductsBloc>(),
-      child: BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
-        builder: (context, state) {
-          return Container(
-            // height: 150,
-            // width: 130,
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
-              ],
+    return DelayedWidget(
+      child: Container(
+        // height: 150,
+        // width: 130,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10),
+          ],
+        ),
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_10,
+            horizontal: AppConstants.padding_5),
+        padding: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$productImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                      ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_5),
-            padding: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_5,
-                horizontal: AppConstants.padding_10),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.network(
-                    "${AppUrls.baseFileUrl}${state.productList[index].mainImage}",
-                    height: 70,
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress?.cumulativeBytesLoaded !=
-                          loadingProgress?.expectedTotalBytes) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10)),
-                            ),
-                          ),
-                        );
-                      }
-                      return child;
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
-                      return Container(
-                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover),
-                      );
-                    },
-                  ),
-                ),
-                5.height,
-                Text(
-                  "${state.productList[index].productName}",
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_12,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.height,
-                Expanded(
-                  child: 0.width,
-                  // child: state.planoGramsList[index].planogramproducts?[subIndex].totalSale == 0
-                  //     ? 0.width
-                  //     : Text(
-                  //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
-                  //   style: AppStyles.rkRegularTextStyle(
-                  //       size: AppConstants.font_10,
-                  //       color: AppColors.saleRedColor,
-                  //       fontWeight: FontWeight.w600),
-                  //   maxLines: 2,
-                  //   overflow: TextOverflow.ellipsis,
-                  // ),
-                ),
-                5.height,
-                Center(
-                  child: CommonProductButtonWidget(
-                    title:
-                        "${state.productList[index].productPrice?.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-                    onPressed: () {
-                      showProductDetails(
-                          context: context,
-                          productId: state.productList[index].productId ?? '');
-                    },
-                    textColor: AppColors.whiteColor,
-                    bgColor: AppColors.mainColor,
-                    borderRadius: AppConstants.radius_3,
-                    textSize: AppConstants.font_12,
-                  ),
-                )
-              ],
+            5.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          );
-        },
+            5.height,
+            Expanded(
+              child: 0.width,
+              // child: state.planoGramsList[index].planogramproducts?[subIndex].totalSale == 0
+              //     ? 0.width
+              //     : Text(
+              //   "${state.planoGramsList[index].planogramproducts?[subIndex].totalSale} ${AppLocalizations.of(context)!.discount}",
+              //   style: AppStyles.rkRegularTextStyle(
+              //       size: AppConstants.font_10,
+              //       color: AppColors.saleRedColor,
+              //       fontWeight: FontWeight.w600),
+              //   maxLines: 2,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
+            ),
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                "${productPrice.toStringAsFixed(
+                    AppConstants.amountFrLength)}${AppLocalizations.of(context)!
+                    .currency}",
+                onPressed: onPressed,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -578,7 +591,25 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex ==
+                                                        -2)
+                                                        .basePrice
+                                                        .toStringAsFixed(
+                                                        AppConstants
+                                                            .amountFrLength)}${AppLocalizations
+                                                        .of(context)!
+                                                        .currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color: AppColors
+                                                            .blackColor),
+                                                  ),
                                                 ],
                                               )
                                             : Column(
@@ -589,10 +620,42 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_12,
+                                                            color: AppColors
+                                                                .saleRedColor),
+                                                  ),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex >= 0)
+                                                        .supplierSales[index]
+                                                        .salePrice
+                                                        .toStringAsFixed(
+                                                        AppConstants
+                                                            .amountFrLength)}${AppLocalizations
+                                                        .of(context)!
+                                                        .currency}(${state
+                                                        .productSupplierList
+                                                        .firstWhere((
+                                                        supplier) =>
+                                                    supplier.selectedIndex >= 0)
+                                                        .supplierSales[index]
+                                                        .saleDiscount
+                                                        .toStringAsFixed(0)}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: AppConstants
+                                                            .font_14,
+                                                        color: AppColors
+                                                            .blackColor),
+                                                  ),
                                                 ],
                                               ),
                                       ),
@@ -794,8 +857,16 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
-                                                              style: AppStyles.rkRegularTextStyle(
+                                                              'Price : ${state
+                                                                  .productSupplierList[index]
+                                                                  .basePrice
+                                                                  .toStringAsFixed(
+                                                                  AppConstants
+                                                                      .amountFrLength)}${AppLocalizations
+                                                                  .of(context)!
+                                                                  .currency}',
+                                                              style: AppStyles
+                                                                  .rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
                                                                   color: AppColors
@@ -877,8 +948,22 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
-                                                              style: AppStyles.rkRegularTextStyle(
+                                                              'Price : ${state
+                                                                  .productSupplierList[index]
+                                                                  .supplierSales[subIndex]
+                                                                  .salePrice
+                                                                  .toStringAsFixed(
+                                                                  AppConstants
+                                                                      .amountFrLength)}${AppLocalizations
+                                                                  .of(context)!
+                                                                  .currency}(${state
+                                                                  .productSupplierList[index]
+                                                                  .supplierSales[subIndex]
+                                                                  .saleDiscount
+                                                                  .toStringAsFixed(
+                                                                  0)}%)',
+                                                              style: AppStyles
+                                                                  .rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
                                                                   color: AppColors

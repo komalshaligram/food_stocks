@@ -51,16 +51,17 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
       if(event is _orderSendEvent){
         List<Product> ProductReqMap = [];
-        state.orderSummaryList.data!.data!.forEach((element) {
-          debugPrint('supplierId_____${element.suppliers!.id}');
-          debugPrint('product id_____${element.productDetails!.first.id}');
+        state.orderSummaryList.data?.data?.forEach((element) {
+          debugPrint('supplierId_____${element.suppliers?.id}');
+          debugPrint('product id_____${element.productDetails?.first.id}');
+
           ProductReqMap.add(Product(
-            supplierId: element.suppliers!.id,
-            productId: element.productDetails!.first.id,
+            supplierId: element.suppliers?.id,
+            productId: element.productDetails?.first.id,
              quantity: element.totalQuantity,
+            saleId: element.sales?.id ?? ''
           ));
         });
-
 
         try {
           OrderSendReqModel reqMap = OrderSendReqModel(
@@ -94,7 +95,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
               else{
-                showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+              //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
               }
 
             }  on ServerException {}

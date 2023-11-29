@@ -9,12 +9,17 @@ class BasketEvent with _$BasketEvent {
     required String supplierId,
     required String productId,
     required String cartProductId,
+    required double totalPayment,
+    required String saleId,
+
   }) = _productUpdateEvent;
 
   const factory BasketEvent.removeCartProductEvent({
     required int listIndex,
+    required BuildContext dialogContext,
     required BuildContext context,
     required String cartProductId,
+    required double totalAmount,
   }) = _removeCartProductEvent;
 
   const factory BasketEvent.getAllCartEvent({required BuildContext context}) =

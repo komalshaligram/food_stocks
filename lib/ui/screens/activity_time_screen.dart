@@ -297,20 +297,22 @@ class ActivityTimeRow extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       index == 0
-                                          ? Container(
-                                              width: getScreenWidth(context) *
-                                                  0.22,
-                                              child: Text(
-                                                dayString,
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                  size: AppConstants.smallFont,
-                                                  color: AppColors.textColor,
-                                                ),
-                                              ))
+                                          ? Expanded(
+                                            child: Container(
+                                              /*  width: getScreenWidth(context) *
+                                                    0.22,*/
+                                                child: Text(
+                                                  dayString,
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                    size: AppConstants.smallFont,
+                                                    color: AppColors.textColor,
+                                                  ),
+                                                )),
+                                          )
                                           : Container(
                                               width: getScreenWidth(context) *
-                                                  0.18,
+                                                  0.22,
                                             ),
                                       SizedBox(
                                         width: getScreenWidth(context) < 380
@@ -477,7 +479,12 @@ class TimeContainer extends StatelessWidget {
                                         final DateTime time = value;
                                         final DateFormat formatter =
                                             DateFormat('HH:mm');
-                                        datetime = formatter.format(time);
+                                        if(openingIndex == 0 &&  datetime == AppStrings.timeString){
+                                         datetime = AppStrings.hr24String;
+                                        }
+                                        else{
+                                          datetime = formatter.format(time);
+                                        }
                                       }),
                                 ),
                                 GestureDetector(

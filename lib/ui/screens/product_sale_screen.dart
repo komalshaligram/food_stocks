@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -88,7 +89,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     childAspectRatio: 9 / 13),
                             itemBuilder: (context, index) {
                               return buildProductSaleListItem(
-                                context: context,
+                                index: index,
+                                  context: context,
                                   saleImage:
                                       state.productSalesList[index].mainImage ??
                                           '',
@@ -99,21 +101,21 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                   .productSalesList[index]
                                                   .salesDescription ??
                                               '')
-                                          .body
-                                          ?.text ??
-                                      '',
-                                  price: double.parse(state
+                                    .body
+                                    ?.text ??
+                                    '',
+                                salePercentage: double.parse(state
                                           .productSalesList[index]
                                           .discountPercentage ??
                                       '0.0'),
-                                  onButtonTap: () {
-                                    showProductDetails(
-                                      context: context,
-                                      productId:
-                                          state.productSalesList[index].id ??
-                                              '',
-                                    );
-                                  },
+                                onButtonTap: () {
+                                  showProductDetails(
+                                    context: context,
+                                    productId:
+                                    state.productSalesList[index].id ??
+                                        '',
+                                  );
+                                },
                                 );
                               },
                           ),
@@ -140,105 +142,110 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }
 
   Widget buildProductSaleListItem({
+    required int index,
     required BuildContext context,
     required String saleImage,
     required String title,
     required String description,
-    required double price,
+    required double salePercentage,
     required void Function() onButtonTap,
   }) {
-    return Container(
-      // height: 170,
-      // width: 140,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
-        ],
-      ),
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$saleImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
-                  return CommonShimmerWidget(
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
+    return DelayedWidget(
+      // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
+      child: Container(
+        // height: 170,
+        // width: 140,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withOpacity(0.15),
+                blurRadius: AppConstants.blur_10),
+          ],
+        ),
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_10,
+            horizontal: AppConstants.padding_5),
+        padding: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.network(
+                "${AppUrls.baseFileUrl}$saleImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress?.cumulativeBytesLoaded !=
+                      loadingProgress?.expectedTotalBytes) {
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppConstants.radius_10)),
+                        ),
+                        // alignment: Alignment.center,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
-                      // alignment: Alignment.center,
-                      // child: CupertinoActivityIndicator(
-                      //   color: AppColors.blackColor,
-                      // ),
-                    ),
+                    );
+                  }
+                  return child;
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
+                },
+              ),
             ),
-          ),
-          5.height,
-          Text(
-            title,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.saleRedColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: Text(
-              description,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_10, color: AppColors.blackColor),
-              maxLines: 3,
+            5.height,
+            Text(
+              title,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.saleRedColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${price.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-              onPressed: onButtonTap,
-              // height: 35,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
+            5.height,
+            Expanded(
+              child: Text(
+                description,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10, color: AppColors.blackColor),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                onPressed: onButtonTap,
+                // height: 35,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -496,7 +503,14 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               )
                                             : Column(
@@ -507,10 +521,24 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}'),
+                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_12,
+                                                            color: AppColors
+                                                                .saleRedColor),
+                                                  ),
                                                   2.height,
                                                   Text(
-                                                      'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount}%)'),
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
+                                                  ),
                                                 ],
                                               ),
                                       ),
@@ -712,7 +740,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -795,7 +823,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

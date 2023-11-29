@@ -12,7 +12,7 @@ class TotalExpenseResModel with _$TotalExpenseResModel {
     @JsonKey(name: "data")
     List<Datum>? data,
     @JsonKey(name: "totalYearlyExpenses")
-    int? totalYearlyExpenses,
+    double? totalYearlyExpenses,
     @JsonKey(name: "message")
     String? message,
   }) = _TotalExpenseResModel;
@@ -28,7 +28,7 @@ class Datum with _$Datum {
     @JsonKey(name: "month")
     int? month,
     @JsonKey(name: "totalExpenses")
-    int? totalExpenses,
+    double? totalExpenses,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

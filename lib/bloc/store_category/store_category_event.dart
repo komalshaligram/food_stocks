@@ -54,4 +54,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
   const factory StoreCategoryEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory StoreCategoryEvent.globalSearchEvent(
+      {required String search,
+      required BuildContext context}) = _GlobalSearchEvent;
 }

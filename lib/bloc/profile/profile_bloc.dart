@@ -18,11 +18,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
 // import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
-import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart' as file;
+import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
+    as file;
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -77,6 +79,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   AppConstants.fileSizeCap &&
               imageSize.split(' ').last == 'KB') {
             try {
+              emit(state.copyWith(isFileUploading: true));
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
               final response =
                   await DioClient(event.context).uploadFileProgressWithFormData(
@@ -90,23 +93,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ),
               );
               FileUploadModel profileImageModel =
-              FileUploadModel.fromJson(response);
+                  FileUploadModel.fromJson(response);
               debugPrint('img url = ${profileImageModel.filepath}');
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
                 debugPrint("image1 = ${imgUrl}\n${profileImageModel.filepath}");
                 emit(state.copyWith(
+                    isFileUploading: false,
                     image: File(croppedImage?.path ?? pickedFile.path),
                     UserImageUrl: profileImageModel.filepath ?? ''));
+                debugPrint(
+                    "image1 = ${croppedImage?.path}\n${pickedFile.path}");
+                debugPrint("image1 = ${state.image}");
               }
             } on ServerException {
+              emit(state.copyWith(isFileUploading: false));
               showSnackBar(
                   context: event.context,
                   title: AppStrings.imageNotSetString,
                   bgColor: AppColors.redColor);
+            } catch (e) {
+              emit(state.copyWith(isFileUploading: false));
             }
           } else {
-            emit(state.copyWith(isFileSizeExceeds: true));
+            emit(state.copyWith(
+                isFileSizeExceeds: true, isFileUploading: false));
             emit(state.copyWith(isFileSizeExceeds: false));
             // showSnackBar(
             //     context: event.context,
@@ -135,7 +146,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               context: event.context,
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.mainColor);
-        }
+        } catch (e) {}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
       } else if (event is _navigateToMoreDetailsScreenEvent) {
@@ -143,7 +154,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           phoneNumber: mobileNo.trim(),
           profileImage: state.UserImageUrl,
           clientDetail: ClientDetail(
-            bussinessId: int.tryParse(state.idController.text.trim()) ?? 0,
+            bussinessId: int.tryParse(state.idController.text) ?? 0,
             bussinessName: state.businessNameController.text.trim(),
             ownerName: state.ownerNameController.text.trim(),
             clientTypeId: state.businessTypeList.data?.clientTypes
@@ -151,7 +162,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                     businessType.businessType == state.selectedBusinessType)
                 .id,
             // applicationVersion: '1.0.0',
-            israelId: state.hpController.text.trim(),
+            israelId: state.hpController.text,
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
                 : AppStrings.iosString,
@@ -171,7 +182,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
-                    .toJson());
+                    .toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        'Bearer ${preferences.getAuthToken()}',
+                  },
+                ));
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
@@ -180,9 +197,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(
                 state.copyWith(
                   UserImageUrl:
-                  response.data?.clients?.first.profileImage ?? '',
+                      response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
-                      ?.firstWhere((businessType) =>
+                          ?.firstWhere((businessType) =>
                               businessType.id ==
                               response.data?.clients?.first.clientDetail
                                   ?.clientTypeId)
@@ -193,7 +210,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                      response.data?.clients?.first.clientDetail?.israelId),
+                          response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -219,33 +236,30 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         }
       } else if (event is _updateProfileDetailsEvent) {
-        if(state.image.path != ''){
-          Map<String, dynamic> req1 = {
-           AppStrings.profileUpdateString : imgUrl
-          };
-          try{
+        if (state.image.path != '') {
+          Map<String, dynamic> req1 = {AppStrings.profileUpdateString: imgUrl};
+          try {
             final res = await DioClient(event.context).post(
               "${AppUrls.fileUpdateUrl}/${preferences.getUserId()}",
               data: req1,
             );
             debugPrint('update profile image req_______${req1}');
-            file.FileUpdateResModel response = file.FileUpdateResModel.fromJson(res);
+            file.FileUpdateResModel response =
+                file.FileUpdateResModel.fromJson(res);
 
-            if(response.status == 200){
+            if (response.status == 200) {
               preferences.removeProfileImage();
-              preferences.setUserImageUrl(imageUrl: response.data!.client!.profileImage.toString());
+              preferences.setUserImageUrl(
+                  imageUrl: response.data!.client!.profileImage.toString());
               debugPrint('update profile image req________${response}');
               imgUrl = response.data!.client!.profileImage.toString();
-            }
-            else{
+            } else {
               showSnackBar(
                   context: event.context,
                   title: AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
-
             }
-          }
-          on ServerException {
+          } on ServerException {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
@@ -288,7 +302,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
               AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
-              data: /*updatedProfileModel.toJson()*/ req);
+              data: /*updatedProfileModel.toJson()*/ req,
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                      'Bearer ${preferences.getAuthToken()}',
+                },
+              ));
 
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);

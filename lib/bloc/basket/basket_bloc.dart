@@ -51,35 +51,47 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails!.productName!,
                   mainImage: element.productDetails!.mainImage!,
-                  totalPayment: element.totalAmount,
+                  totalPayment: double.parse(element.totalAmount!.toString()),
                   cartProductId: element.cartProductId!,
                   scales: element.productDetails!.scales!));
             });
+
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
                 prefs: await SharedPreferences.getInstance());
             await preferencesHelper.setCartCount(
                 count: temp.isEmpty
                     ? preferencesHelper.getCartCount()
                     : temp.length);
-            print('temp______$temp');
             emit(state.copyWith(
-                basketProductList: temp, isRefresh: !state.isRefresh));
+                basketProductList: temp, isRefresh: !state.isRefresh ,totalPayment: response.data!.cart!.first.totalAmount!));
           } else {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
             //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       } else if (event is _productUpdateEvent) {
-        if (event.productWeight != 0) {
+      //  if (event.productWeight != 0) {
           try {
             debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-
-            UpdateCartReqModel reqMap = UpdateCartReqModel(
-              supplierId: event.supplierId,
-              quantity: event.productWeight,
-              productId: event.productId,
-              cartProductId: event.cartProductId,
-            );
+            debugPrint('[getCartId]  = ${event.saleId != ''}');
+            UpdateCartReqModel reqMap = UpdateCartReqModel();
+            if(event.saleId != ''){
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+                  saleId: event.saleId
+              );
+            }
+            else{
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+              );
+            }
 
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
@@ -94,19 +106,30 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
               int quantity = list[event.listIndex].totalQuantity!;
-              int payment = list[event.listIndex].totalPayment!;
-
+            double payment = list[event.listIndex].totalPayment!;
               list[event.listIndex].totalQuantity =
                   response.data!.cartProduct!.quantity;
               list[event.listIndex].totalPayment =
-                  ((payment / quantity) * response.data!.cartProduct!.quantity!)
-                      .toInt();
+                  ((payment / quantity) * response.data!.cartProduct!.quantity!);
+              double newAmount = (payment / quantity);
+
+
+              double totalAmount = 0;
+              if(list[event.listIndex].totalPayment! > payment){
+                totalAmount = event.totalPayment + newAmount;
+              }
+              else{
+                totalAmount = event.totalPayment - newAmount;
+              }
+
+
               emit(state.copyWith(
-                  basketProductList: list, isRefresh: !state.isRefresh));
-              showSnackBar(
+                  basketProductList: list,totalPayment: totalAmount, isRefresh: !state.isRefresh));
+
+             /* showSnackBar(
                   context: event.context,
                   title: response.message!,
-                  bgColor: AppColors.mainColor);
+                  bgColor: AppColors.mainColor);*/
             } else {
               showSnackBar(
                   context: event.context,
@@ -114,12 +137,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   bgColor: AppColors.mainColor);
             }
           } on ServerException {}
-        } else {
+       // }
+        /* else {
           showSnackBar(
               context: event.context,
               title: "Quantity can't decrease",
               bgColor: AppColors.mainColor);
-        }
+        }*/
       } else if (event is _removeCartProductEvent) {
         try {
           final response = await DioClient(event.context).post(
@@ -132,17 +156,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           if (response['status'] == 200) {
             add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
-            print('index_____${event.listIndex}');
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
-            Navigator.pop(event.context);
+            Navigator.pop(event.dialogContext);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh));
-
-            // showSnackBar(context: event.context, title: response['message'], bgColor: AppColors.mainColor);
+                basketProductList: list, isRefresh: !state.isRefresh ,totalPayment: state.totalPayment - event.totalAmount));
+             showSnackBar(context: event.context, title: 'Item deleted', bgColor: AppColors.mainColor);
           } else {
             Navigator.pop(event.context);
-            // showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
+             showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {

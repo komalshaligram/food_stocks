@@ -7,11 +7,11 @@ class WalletState with _$WalletState {
     required List<int> yearList,
     required AllWalletTransactionResModel balanceSheetList,
     required String language,
-    required int totalCredit,
-    required int thisMonthExpense,
-    required int lastMonthExpense,
+    required double totalCredit,
+    required double thisMonthExpense,
+    required double lastMonthExpense,
     required int orderThisMonth,
-    required int balance,
+    required double balance,
     required List<FlSpot> monthlyExpenseList,
     required bool isShimmering,
     required String currentDate,
@@ -20,8 +20,7 @@ class WalletState with _$WalletState {
     required int pageNum,
     required bool isLoadMore,
     required bool isBottomOfProducts,
-
-
+    required bool isExportShimmering,
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -42,6 +41,7 @@ class WalletState with _$WalletState {
     pageNum: 0,
     isLoadMore: false,
     isBottomOfProducts: false,
+    isExportShimmering: false,
       );
 }
 

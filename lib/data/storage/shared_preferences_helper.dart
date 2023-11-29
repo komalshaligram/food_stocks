@@ -10,6 +10,7 @@ class SharedPreferencesHelper {
   static const String userImage = "userImage";
   static const String userCompanyLogo = "companyLogo";
   static const String userCartCount = "cartCount";
+  static const String userMessageCount = "messageCount";
   static const String appVersion = 'appVersion';
   static const String fcmToken = 'fcmToken';
   static const String userOrderId = 'userOrderId';
@@ -34,10 +35,10 @@ class SharedPreferencesHelper {
       await prefs.remove(userImage);
       await prefs.remove(userCompanyLogo);
       await prefs.remove(userCartCount);
+      await prefs.remove(userMessageCount);
       await prefs.remove(phoneNumber);
       await prefs.remove(userCartId);
       await prefs.remove(walletId);
-      await prefs.remove(lang);
       await prefs.remove(userOrderId);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
@@ -85,6 +86,10 @@ class SharedPreferencesHelper {
 
   Future<void> setCartCount({required int count}) async {
     await prefs.setInt(userCartCount, count);
+  }
+
+  Future<void> setMessageCount({required int count}) async {
+    await prefs.setInt(userMessageCount, count);
   }
 
   Future<void> setOrderId({required String orderId}) async {
@@ -145,6 +150,10 @@ class SharedPreferencesHelper {
 
   int getCartCount() {
     return prefs.getInt(userCartCount) ?? 0;
+  }
+
+  int getMessageCount() {
+    return prefs.getInt(userMessageCount) ?? 0;
   }
 
   String getOrderId() {

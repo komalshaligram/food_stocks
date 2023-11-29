@@ -27,6 +27,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required List<SearchModel> searchList,
+    required String search,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => const StoreCategoryState(
@@ -54,5 +55,6 @@ class StoreCategoryState with _$StoreCategoryState {
         isSelectSupplier: false,
         productSupplierList: [],
         searchList: [],
+        search: '',
       );
 }

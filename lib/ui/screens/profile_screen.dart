@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +14,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/profile_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
@@ -74,6 +78,7 @@ class ProfileScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
+          debugPrint('image   1   ${state.image}');
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -159,11 +164,37 @@ class ProfileScreenWidget extends StatelessWidget {
                                                               .camera,
                                                       icon: Icons
                                                           .camera_alt_rounded,
-                                                      onTap: () {
+                                                      onTap: () async {
+                                                        Map<Permission,
+                                                                PermissionStatus>
+                                                            statuses = await [
+                                                          Permission.camera,
+                                                        ].request();
+                                                        if (Platform
+                                                            .isAndroid) {
+                                                          if (!statuses[
+                                                                  Permission
+                                                                      .camera]!
+                                                              .isGranted) {
+                                                            showSnackBar(
+                                                                context:
+                                                                    context,
+                                                                title: AppStrings
+                                                                    .cameraAllowPermissionString,
+                                                                bgColor: AppColors
+                                                                    .redColor);
+                                                            Navigator.pop(
+                                                                context);
+                                                            return;
+                                                          }
+                                                        } else if (Platform
+                                                            .isIOS) {
+                                                          // Navigator.pop(context);
+                                                        }
                                                         bloc.add(ProfileEvent
                                                             .pickProfileImageEvent(
                                                                 context:
-                                                                    context1,
+                                                                    context,
                                                                 isFromCamera:
                                                                     true));
                                                         Navigator.pop(context);
@@ -181,7 +212,45 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   context)!
                                                               .gallery,
                                                       icon: Icons.photo,
-                                                      onTap: () {
+                                                      onTap: () async {
+                                                        Map<Permission,
+                                                                PermissionStatus>
+                                                            statuses = await [
+                                                          Permission.storage,
+                                                        ].request();
+                                                        if (Platform
+                                                            .isAndroid) {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt <
+                                                              33) {
+                                                            if (!statuses[
+                                                                    Permission
+                                                                        .storage]!
+                                                                .isGranted) {
+                                                              showSnackBar(
+                                                                  context:
+                                                                      context,
+                                                                  title: AppStrings
+                                                                      .storageAllowPermissionString,
+                                                                  bgColor: AppColors
+                                                                      .redColor);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              return;
+                                                            }
+                                                          }
+                                                        } else if (Platform
+                                                            .isIOS) {
+                                                          // Navigator.pop(context);
+                                                        }
                                                         bloc.add(ProfileEvent
                                                             .pickProfileImageEvent(
                                                                 context:
@@ -257,64 +326,97 @@ class ProfileScreenWidget extends StatelessWidget {
                                   child: Stack(
                                     children: [
                                       Container(
-                                        height: AppConstants.containerHeight_80,
-                                        width: AppConstants.containerHeight_80,
-                                        margin: EdgeInsets.only(
-                                            bottom: AppConstants.padding_3,
-                                            right: AppConstants.padding_3,
-                                            left: AppConstants.padding_3),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(200),
-                                          color: state.UserImageUrl.isNotEmpty
-                                              ? AppColors.whiteColor
-                                              : AppColors.mainColor
-                                                  .withOpacity(0.1),
-                                        ),
-                                        child: state.isUpdate
-                                            ? state.UserImageUrl.contains(
-                                                    AppStrings.tempString)
-                                                ? ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40),
-                                                    child: Image.file(
-                                                      state.image,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40),
-                                                    child: Image.network(
-                                                      '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                                      fit: BoxFit.fill,
-                                                      loadingBuilder: (context,
-                                                          child,
-                                                          loadingProgress) {
-                                                        if (loadingProgress ==
-                                                            null) {
-                                                          return child;
-                                                        } else {
-                                                          return Center(
-                                                            child:
-                                                                CupertinoActivityIndicator(
-                                                              color: AppColors
-                                                                  .blackColor,
-                                                            ),
-                                                          );
-                                                        }
-                                                      },
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return Icon(
+                                          height:
+                                              AppConstants.containerHeight_80,
+                                          width:
+                                              AppConstants.containerHeight_80,
+                                          margin: EdgeInsets.only(
+                                              bottom: AppConstants.padding_3,
+                                              right: AppConstants.padding_3,
+                                              left: AppConstants.padding_3),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.5,
+                                                color: state
+                                                        .UserImageUrl.isNotEmpty
+                                                    ? AppColors.lightBorderColor
+                                                    : Colors.transparent),
+                                            borderRadius:
+                                                BorderRadius.circular(200),
+                                            color: state.UserImageUrl.isNotEmpty
+                                                ? AppColors.whiteColor
+                                                : AppColors.mainColor
+                                                    .withOpacity(0.1),
+                                          ),
+                                          child: state.isUpdate
+                                              ? state.isFileUploading
+                                                  ? Center(
+                                                      child:
+                                                          CupertinoActivityIndicator(
+                                                        color: AppColors
+                                                            .blackColor,
+                                                      ),
+                                                    )
+                                                  : state.UserImageUrl.isEmpty
+                                                      ? Icon(
                                                           Icons.person,
                                                           size: 60,
                                                           color: AppColors
                                                               .textColor,
                                                         )
-                                                            /*Container(
+                                                      : state.UserImageUrl
+                                                              .contains(AppStrings
+                                                                  .tempString)
+                                                          ? ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child: Image.file(
+                                                                state.image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child:
+                                                                  Image.network(
+                                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                loadingBuilder:
+                                                                    (context,
+                                                                        child,
+                                                                        loadingProgress) {
+                                                                  if (loadingProgress ==
+                                                                      null) {
+                                                                    return child;
+                                                                  } else {
+                                                                    return Center(
+                                                                      child:
+                                                                          CupertinoActivityIndicator(
+                                                                        color: AppColors
+                                                                            .blackColor,
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    size: 60,
+                                                                    color: AppColors
+                                                                        .textColor,
+                                                                  )
+                                                                      /*Container(
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color: AppColors
@@ -326,27 +428,28 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     0.5),
                                                             width: 1)),
                                                   )*/
-                                                            ;
-                                                      },
-                                                    ))
-                                            : state.image.path == ""
-                                                ? Icon(
-                                                    Icons.person,
-                                                    size: 60,
-                                                    color: AppColors.textColor,
-                                                  )
-                                                : ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40),
-                                                    child: Image.file(
-                                                      state.image,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                      ),
+                                                                      ;
+                                                                },
+                                                              ))
+                                              : state.image.path.isEmpty
+                                                  ? Icon(
+                                                      Icons.person,
+                                                      size: 60,
+                                                      color:
+                                                          AppColors.textColor,
+                                                    )
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40),
+                                                      child: Image.file(
+                                                        state.image,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )),
                                       Positioned(
-                                        right: 1,
+                                        right: context.rtl ? null : 1,
+                                        left: context.rtl ? 1 : null,
                                         bottom: 1,
                                         child: Container(
                                             width: 29,
@@ -454,7 +557,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                                 RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(15)
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint:
@@ -472,7 +575,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(15)
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(9)
                                 ],
                                 keyboardType: TextInputType.number,
                                 hint: "",
@@ -490,7 +594,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
-                                  LengthLimitingTextInputFormatter(15)
+
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint: "",
@@ -517,8 +622,10 @@ class ProfileScreenWidget extends StatelessWidget {
                             return newValue;
 
                           }),*/
-                                  LengthLimitingTextInputFormatter(15)
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(9)
                                 ],
+                                // maxLimits: 9,
                                 keyboardType: TextInputType.number,
                                 hint: "",
                                 fillColor: Colors.transparent,
@@ -533,7 +640,7 @@ class ProfileScreenWidget extends StatelessWidget {
                               CustomFormField(
                                 controller: state.contactController,
                                 inputformet: [
-                                  LengthLimitingTextInputFormatter(15)
+                                  LengthLimitingTextInputFormatter(20)
                                 ],
                                 keyboardType: TextInputType.text,
                                 hint: "",

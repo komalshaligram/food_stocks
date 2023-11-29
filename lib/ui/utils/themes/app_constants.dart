@@ -59,8 +59,15 @@ class AppConstants{
   //file quality
   static const int fileQuality = 50;
 
+  //amount fractional length
+  static const int amountFrLength = 2;
+
   //shimmer text height
   static const double shimmerTextHeight = 20;
+
+  //list item animation delay
+  static const int listAnimationDelay = 200;
+  static const int listAnimationItemDelay = 50;
 
   //pagination
   static const int defaultPageLimit = 6;

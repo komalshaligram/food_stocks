@@ -53,11 +53,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  (state.orderSummaryList.data?.data!.length ?? 0) == 0
+                  (state.orderSummaryList.data?.data?.length ?? 0) == 0
                     ? Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
                         child: ListView.builder(
-                          itemCount: state.orderSummaryList.data?.data!.length,
+                          itemCount: state.orderSummaryList.data?.data?.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           padding: EdgeInsets.symmetric(
@@ -66,7 +66,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               orderListItem(index: index, context: context),
                         ),
                       ),
-                (state.orderSummaryList.data?.data!.length ?? 0) == 0
+                (state.orderSummaryList.data?.data?.length ?? 0) == 0
                     ? 0.width
                     : Align(
                         alignment: Alignment.bottomCenter,
@@ -141,7 +141,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   children: <TextSpan>[
                                     TextSpan(
                                         text:
-                                        '${' : '}${state.orderSummaryList.data?.cart!.first.totalAmount}${AppLocalizations.of(context)!.currency}',
+                                        '${' : '}${state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                         style: AppStyles.rkRegularTextStyle(
                                             color: AppColors.whiteColor,
                                             size: AppConstants.normalFont,
@@ -157,7 +157,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 bloc.add(OrderSummaryEvent.orderSendEvent(
-                                    context: context));
+                                    context: context,
+
+                                ));
                               },
                               child: Container(
                                 height: AppConstants.containerHeight_60,
@@ -238,7 +240,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                state.orderSummaryList.data!.data![index].suppliers!.contactName!,
+                state.orderSummaryList.data?.data?[index].suppliers?.contactName! ?? '',
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_14,
                     color: AppColors.blackColor,
@@ -250,7 +252,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 1,
                     title: AppLocalizations.of(context)!.products,
-                    value: state.orderSummaryList.data!.data![index].totalQuantity!.toString(),
+                    value: state.orderSummaryList.data?.data?[index].totalQuantity?.toString() ?? '',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w700,
@@ -271,7 +273,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
-                    value:'${state.orderSummaryList.data!.data![index].totalAmount.toString()}${AppLocalizations.of(context)!.currency}',
+                    value:'${state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? ''}${AppLocalizations.of(context)!.currency}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,
