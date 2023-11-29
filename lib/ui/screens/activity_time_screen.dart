@@ -479,10 +479,14 @@ class TimeContainer extends StatelessWidget {
                                         final DateTime time = value;
                                         final DateFormat formatter =
                                             DateFormat('HH:mm');
+                                        print('datetime_____${time}');
+
                                         if(openingIndex == 0 &&  datetime == AppStrings.timeString){
+                                          print('datetime___1__${datetime}');
                                          datetime = AppStrings.hr24String;
                                         }
                                         else{
+                                          print('datetime___2__${datetime}');
                                           datetime = formatter.format(time);
                                         }
                                       }),
