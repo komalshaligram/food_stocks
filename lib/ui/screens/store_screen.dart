@@ -811,6 +811,12 @@ class StoreScreenWidget extends StatelessWidget {
                             StoreEvent.changeCategoryExpansion(isOpened: true));
                       },
                       onSearch: (String search) {
+                        if (search.length < 3) {
+                          bloc.add(StoreEvent.globalSearchEvent(
+                              context: context, search: search));
+                        }
+                      },
+                      onSearchSubmit: (String search) {
                         bloc.add(StoreEvent.globalSearchEvent(
                             context: context, search: search));
                       },
@@ -989,7 +995,7 @@ class StoreScreenWidget extends StatelessWidget {
               children: [
                 Image.network(
                   '${AppUrls.baseFileUrl}$searchImage',
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.scaleDown,
                   height: 35,
                   width: 40,
                   errorBuilder: (context, error, stackTrace) {

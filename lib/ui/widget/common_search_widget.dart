@@ -22,22 +22,25 @@ class CommonSearchWidget extends StatelessWidget {
   final void Function() onSearchTap;
   final void Function() onOutSideTap;
   final void Function(String) onSearch;
+  final void Function(String) onSearchSubmit;
   final void Function() onSearchItemTap;
   final List<SearchModel> searchList;
   final TextEditingController controller;
 
-  const CommonSearchWidget({super.key,
-    required this.isCategoryExpand,
-    required this.isStoreCategory,
-    required this.searchResultWidget,
-    required this.controller,
-    required this.onScanTap,
-    required this.onFilterTap,
-    required this.onSearchTap,
-    required this.onOutSideTap,
-    required this.onSearch,
-    required this.onSearchItemTap,
-    required this.searchList});
+  const CommonSearchWidget(
+      {super.key,
+      required this.isCategoryExpand,
+      required this.isStoreCategory,
+      required this.searchResultWidget,
+      required this.controller,
+      required this.onScanTap,
+      required this.onFilterTap,
+      required this.onSearchTap,
+      required this.onOutSideTap,
+      required this.onSearch,
+      required this.onSearchSubmit,
+      required this.onSearchItemTap,
+      required this.searchList});
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +149,7 @@ class CommonSearchWidget extends StatelessWidget {
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,
                           onChanged: onSearch,
-                          onSubmitted: onSearch,
+                          onSubmitted: onSearchSubmit,
                         ),
                       ),
                       InkWell(

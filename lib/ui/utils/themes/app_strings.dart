@@ -89,11 +89,13 @@ class AppStrings {
       'File size must be less then ${AppConstants.fileSizeCap}KB';
   static const selectBusinessTypeString = 'Please select your business type';
   static const selectValidDocumentFormatString =
-      'Please select only image and document files';
+      'Please select only image, pdf and document files';
   static const downloadString = 'Downloaded successfully!';
   static const downloadFailedString = 'Failed to download';
-  static const docDownloadAllowPermissionString =
+  static const storageAllowPermissionString =
       'Please allow storage permission from settings';
+  static const cameraAllowPermissionString =
+      'Please allow camera permission from settings';
   static const uploadDocumentFirstString = 'Please upload document first';
   static const openingTimeAfterPreviousClosingString =
       'Please select opening time after previous closing time';

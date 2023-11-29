@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +17,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -456,25 +453,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _downloadFileEvent) {
         try {
           emit(state.copyWith(isDownloading: true));
-          Map<Permission, PermissionStatus> statuses = await [
-            Permission.storage,
-          ].request();
-          if (Platform.isAndroid) {
-            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-            AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-            print('Running on android version ${androidInfo.version.sdkInt}');
-            if (androidInfo.version.sdkInt < 33) {
-              if (statuses[Permission.storage]!.isDenied) {
-                showSnackBar(
-                    context: event.context,
-                    title: AppStrings.docDownloadAllowPermissionString,
-                    bgColor: AppColors.redColor);
-                return;
-              }
-            }
-          } else {
-            //for ios permission
-          }
           // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           //
           // String buildNumber = packageInfo.buildNumber;

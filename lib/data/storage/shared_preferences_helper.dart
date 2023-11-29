@@ -39,7 +39,6 @@ class SharedPreferencesHelper {
       await prefs.remove(phoneNumber);
       await prefs.remove(userCartId);
       await prefs.remove(walletId);
-      await prefs.remove(lang);
       await prefs.remove(userOrderId);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);

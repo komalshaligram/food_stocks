@@ -168,9 +168,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityId: state.cityListResModel?.data?.cities
                 ?.firstWhere((city) => city.cityName == state.selectCity)
                 .id,
-            address: state.addressController.text,
+            address: state.addressController.text.trim(),
             email: state.emailController.text,
-           //  phoneNumber: preferencesHelper.getPhoneNumber(),
+            //  phoneNumber: preferencesHelper.getPhoneNumber(),
             clientDetail: ClientDetail(fax: state.faxController.text),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();

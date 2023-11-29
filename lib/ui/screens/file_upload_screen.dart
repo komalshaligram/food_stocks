@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/file_upload_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/file_upload/file_upload_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -233,16 +235,24 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 ),
                         ),
                   state.isDownloading
-                      ? Expanded(
-                          child: Container(
+                      ? Container(
                           height: getScreenHeight(context),
                           width: getScreenWidth(context),
                           color: Colors.transparent,
                           alignment: Alignment.center,
-                          child: CupertinoActivityIndicator(
-                            color: AppColors.blackColor,
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10))),
+                            alignment: Alignment.center,
+                            child: CupertinoActivityIndicator(
+                              color: AppColors.blackColor,
+                            ),
                           ),
-                        ))
+                        )
                       : 0.width,
                 ],
               ),
@@ -284,11 +294,33 @@ class FileUploadScreenWidget extends StatelessWidget {
                 ),
                 isDownloadable /* && url.isNotEmpty*/
                     ? ButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.download,
+                  buttonText: AppLocalizations.of(context)!.download,
                         fontSize: AppConstants.smallFont,
                         radius: AppConstants.radius_5,
                         bGColor: AppColors.blueColor,
-                        onPressed: () {
+                        onPressed: () async {
+                          Map<Permission, PermissionStatus> statuses = await [
+                            Permission.storage,
+                          ].request();
+                          if (Platform.isAndroid) {
+                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                            AndroidDeviceInfo androidInfo =
+                                await deviceInfo.androidInfo;
+                            print(
+                                'Running on android version ${androidInfo.version.sdkInt}');
+                            if (androidInfo.version.sdkInt < 33) {
+                              if (!statuses[Permission.storage]!.isGranted) {
+                                showSnackBar(
+                                    context: context,
+                                    title:
+                                        AppStrings.storageAllowPermissionString,
+                                    bgColor: AppColors.redColor);
+                                return;
+                              }
+                            }
+                          } else {
+                            //for ios permission
+                          }
                           context.read<FileUploadBloc>().add(
                               FileUploadEvent.downloadFileEvent(
                                   context: context, fileIndex: fileIndex));
@@ -342,7 +374,25 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       title:
                                           AppLocalizations.of(context)!.camera,
                                       icon: Icons.camera_alt_rounded,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.camera,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          if (!statuses[Permission.camera]!
+                                              .isGranted) {
+                                            showSnackBar(
+                                                context: context,
+                                                title: AppStrings
+                                                    .cameraAllowPermissionString,
+                                                bgColor: AppColors.redColor);
+                                            Navigator.pop(context);
+                                            return;
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,
@@ -361,7 +411,31 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       title:
                                           AppLocalizations.of(context)!.gallery,
                                       icon: Icons.photo,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.storage,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          DeviceInfoPlugin deviceInfo =
+                                              DeviceInfoPlugin();
+                                          AndroidDeviceInfo androidInfo =
+                                              await deviceInfo.androidInfo;
+                                          if (androidInfo.version.sdkInt < 33) {
+                                            if (!statuses[Permission.storage]!
+                                                .isGranted) {
+                                              showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings
+                                                      .storageAllowPermissionString,
+                                                  bgColor: AppColors.redColor);
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,
@@ -379,7 +453,31 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   FileSelectionOptionWidget(
                                       title: "Document",
                                       icon: Icons.file_open_rounded,
-                                      onTap: () {
+                                      onTap: () async {
+                                        Map<Permission, PermissionStatus>
+                                            statuses = await [
+                                          Permission.storage,
+                                        ].request();
+                                        if (Platform.isAndroid) {
+                                          DeviceInfoPlugin deviceInfo =
+                                              DeviceInfoPlugin();
+                                          AndroidDeviceInfo androidInfo =
+                                              await deviceInfo.androidInfo;
+                                          if (androidInfo.version.sdkInt < 33) {
+                                            if (!statuses[Permission.storage]!
+                                                .isGranted) {
+                                              showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings
+                                                      .storageAllowPermissionString,
+                                                  bgColor: AppColors.redColor);
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          }
+                                        } else if (Platform.isIOS) {
+                                          // Navigator.pop(context);
+                                        }
                                         context.read<FileUploadBloc>().add(
                                             FileUploadEvent.pickDocumentEvent(
                                                 context: context,

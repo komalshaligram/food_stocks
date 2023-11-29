@@ -16,6 +16,7 @@ class ProfileState with _$ProfileState {
     required bool isLoading,
     required bool isShimmering,
     required bool isFileSizeExceeds,
+    required bool isFileUploading,
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
@@ -31,6 +32,7 @@ class ProfileState with _$ProfileState {
       isLoading: false,
       isShimmering: false,
       isFileSizeExceeds: false,
+      isFileUploading: false,
       UserImageUrl: '');
 }
 

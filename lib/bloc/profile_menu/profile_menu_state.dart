@@ -13,6 +13,6 @@ class ProfileMenuState with _$ProfileMenuState {
         UserImageUrl: '',
         UserCompanyLogoUrl: '',
         userName: '',
-        isHebrewLanguage: false,
+        isHebrewLanguage: true,
       );
 }
