@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -547,7 +548,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
-              horizontal: AppConstants.padding_5),
+              horizontal: AppConstants.padding_3),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
@@ -590,23 +591,28 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               state.orderList.data?.ordersBySupplier![productIndex]
                           .products![index].mainImage !=
                       null
-                  ? Image.network(
+                  ? CachedNetworkImage(imageUrl: '${AppUrls.baseFileUrl}${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].mainImage ?? ''}',
+                  width: AppConstants.containerSize_50,
+                  height: AppConstants.containerSize_50,
+                 )
+              /*Image.network(
                       '${AppUrls.baseFileUrl}${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].mainImage ?? ''}',
                       width: AppConstants.containerSize_50,
                       height: AppConstants.containerSize_50,
-                    )
+                    )*/
                   : SizedBox(),
-              Container(
-                width: 55,
-                child: Text(
-                  state.orderList.data?.ordersBySupplier![productIndex]
-                          .products![index].productName
-                          .toString() ??
-                      '',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14, color: AppColors.blackColor),
-                ),
+              15.width,
+          Container(
+            width: 50,
+            child: Text(
+                state.orderList.data?.ordersBySupplier![productIndex]
+                    .products![index].productName
+                    .toString() ??
+                    '',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_14, color: AppColors.blackColor),
               ),
+          ),
               10.width,
               Text(
                 '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].itemWeight.toString() ?? ''}${' '}${state.orderList.data?.ordersBySupplier?[productIndex].products![index].scale.toString() ?? ''}',
@@ -615,7 +621,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   size: AppConstants.font_12,
                 ),
               ),
-              5.width,
+              10.width,
               Text(
                 '${state.orderList.data?.ordersBySupplier?[productIndex].products?[index].totalPayment?.toStringAsFixed(2) ?? ''}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(

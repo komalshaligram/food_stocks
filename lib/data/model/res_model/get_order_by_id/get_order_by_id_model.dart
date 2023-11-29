@@ -46,9 +46,9 @@ class OrderDatum with _$OrderDatum {
     @JsonKey(name: "totalAmount")
     double? totalAmount,
     @JsonKey(name: "totalWeight")
-    int? totalWeight,
+    double? totalWeight,
     @JsonKey(name: "surfaceWeight")
-    int? surfaceWeight,
+    double? surfaceWeight,
   }) = _OrderDatum;
 
   factory OrderDatum.fromJson(Map<String, dynamic> json) => _$OrderDatumFromJson(json);
@@ -104,7 +104,7 @@ class OrdersBySupplier with _$OrdersBySupplier {
     @JsonKey(name: "orderDate")
     String? orderDate,
     @JsonKey(name: "totalWeight")
-    int? totalWeight,
+    double? totalWeight,
     @JsonKey(name: "totalPayment")
     double? totalPayment,
     @JsonKey(name: "driverName")

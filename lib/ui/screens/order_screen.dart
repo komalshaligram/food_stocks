@@ -58,8 +58,8 @@ class OrderScreenWidget extends StatelessWidget {
                     state.isShimmering
                         ? OrderSummaryScreenShimmerWidget()
                         : (state.orderDetailsList.length) != 0
-                            ? SizedBox(
-                      height: getScreenHeight(context) * 0.85,
+                            ? Expanded(
+                      /*height: getScreenHeight(context) * 0.85,*/
                                 child: ListView.builder(
                                   //scrollDirection: Axis.vertical,
                                   itemCount: state.orderDetailsList.length,

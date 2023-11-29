@@ -73,7 +73,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       //  if (event.productWeight != 0) {
           try {
             debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-            debugPrint('[getCartId]  = ${event.saleId != ''}');
+            debugPrint('[getSaleId]  = ${event.saleId != ''}');
             UpdateCartReqModel reqMap = UpdateCartReqModel();
             if(event.saleId != ''){
                reqMap = UpdateCartReqModel(
@@ -81,7 +81,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   quantity: event.productWeight,
                   productId: event.productId,
                   cartProductId: event.cartProductId,
-                  saleId: event.saleId
+                 saleId: event.saleId
               );
             }
             else{
@@ -99,6 +99,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             );
 
             debugPrint('[update cart reqMap]  = $reqMap');
+            debugPrint('[url]  = ${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}');
 
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             debugPrint('update response  = $response');
