@@ -51,7 +51,7 @@ class ShipmentVerificationBloc
                 },
               ),
             );
-            debugPrint('fileUpload url = ${AppUrls.fileUploadUrl}');
+            debugPrint('fileUpload url = ${AppUrls.baseUrl}${AppUrls.fileUploadUrl}');
             FileUploadModel signModel = FileUploadModel.fromJson(response);
             debugPrint('img url = ${signModel.filepath}');
             if (signModel.filepath != '') {
@@ -60,7 +60,7 @@ class ShipmentVerificationBloc
             }
           } on ServerException {}
 
-          if (signUrl.isNotEmpty) {
+         if (signUrl.isNotEmpty) {
             try {
               DeliveryConfirmReqModel reqMap = DeliveryConfirmReqModel(
                 supplierId: event.supplierId,

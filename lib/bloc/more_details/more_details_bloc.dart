@@ -254,7 +254,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 tokenId: preferencesHelper.getFCMToken(),
                 lastSeen: DateTime.now(),
               ));
-
+          debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));

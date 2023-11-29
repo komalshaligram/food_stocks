@@ -26,6 +26,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
       }
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         try {
@@ -40,7 +41,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           );
           debugPrint('login res = $res');
           LoginResModel response = LoginResModel.fromJson(res);
-
+          debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('LoginReqModel --- ${response}');
           debugPrint('login response --- ${response}');
 

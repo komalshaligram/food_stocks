@@ -156,10 +156,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                             flex: 2,
                             child: GestureDetector(
                               onTap: () {
-                                bloc.add(OrderSummaryEvent.orderSendEvent(
-                                    context: context,
-
-                                ));
+                               state.isEnable ? SizedBox(): bloc.add(OrderSummaryEvent.orderSendEvent(
+                                 context: context,
+                                 isEnable: true,
+                               ));
                               },
                               child: Container(
                                 height: AppConstants.containerHeight_60,
