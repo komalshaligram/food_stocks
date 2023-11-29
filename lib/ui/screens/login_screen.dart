@@ -90,6 +90,10 @@ class LogInScreenWidget extends StatelessWidget {
                                 color: Colors.black)),
                         30.height,
                         CustomFormField(
+                          inputformet: [
+                            FilteringTextInputFormatter.deny(
+                                RegExp(r'\s')),
+                          ],
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
                           hint: AppStrings.hintNumberString,

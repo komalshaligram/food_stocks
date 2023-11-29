@@ -53,46 +53,41 @@ class OrderScreenWidget extends StatelessWidget {
             ),
             body: SafeArea(
               child: NotificationListener<ScrollNotification>(
-                child: SingleChildScrollView(
-                    physics: (state.orderDetailsList.length) == 0
-                                        ? const NeverScrollableScrollPhysics()
-                                        : const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      state.isShimmering
-                          ? OrderSummaryScreenShimmerWidget()
-                          : (state.orderDetailsList.length) != 0
-                              ? SizedBox(
-                        height: getScreenHeight(context) * 0.9,
-                                  child: ListView.builder(
-                                    //scrollDirection: Axis.vertical,
-                                    itemCount: state.orderDetailsList.length,
-                                    shrinkWrap: true,
-                                  /*  physics: (state.orderDetailsList.length) == 0
-                                        ? const NeverScrollableScrollPhysics()
-                                        : const AlwaysScrollableScrollPhysics(),*/
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) =>
-                                        orderListItem(
-                                            index: index, context: context),
-                                  ),
-                                )
-                              : SizedBox(
-                        height: getScreenHeight(context),
-                                  child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.no_data,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w400),
-                                  )),
+                child: Column(
+                  children: [
+                    state.isShimmering
+                        ? OrderSummaryScreenShimmerWidget()
+                        : (state.orderDetailsList.length) != 0
+                            ? SizedBox(
+                      height: getScreenHeight(context) * 0.85,
+                                child: ListView.builder(
+                                  //scrollDirection: Axis.vertical,
+                                  itemCount: state.orderDetailsList.length,
+                                  shrinkWrap: true,
+                                  physics: (state.orderDetailsList.length) == 0
+                                      ? const NeverScrollableScrollPhysics()
+                                      : const AlwaysScrollableScrollPhysics(),
+                                //  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) =>
+                                      orderListItem(
+                                          index: index, context: context),
                                 ),
-                      state.isLoadMore
-                          ? OrderSummaryScreenShimmerWidget()
-                          : 0.width,
-                    ],
-                  ),
+                              )
+                            : SizedBox(
+                      height: getScreenHeight(context) * 0.8,
+                                child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.no_data,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w400),
+                                )),
+                              ),
+                    state.isLoadMore
+                        ? OrderSummaryScreenShimmerWidget()
+                        : 0.width,
+                  ],
                 ),
                 onNotification: (notification) {
                   if (notification.metrics.pixels ==
@@ -119,6 +114,7 @@ class OrderScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
+
         return GestureDetector(
             onTap: () {
               Navigator.pushNamed(

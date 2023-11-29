@@ -74,12 +74,18 @@ class Datum with _$Datum {
 @freezed
 class ProductDetails with _$ProductDetails {
   const factory ProductDetails({
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "productName") String? productName,
-    @JsonKey(name: "mainImage") String? mainImage,
-    @JsonKey(name: "itemsWeight") double? itemsWeight,
-    @JsonKey(name: "images") List<Image>? images,
-    @JsonKey(name: "scales") String? scales,
+    @JsonKey(name: "_id")
+    String? id,
+    @JsonKey(name: "productName")
+    String? productName,
+    @JsonKey(name: "mainImage")
+    String? mainImage,
+    @JsonKey(name: "itemsWeight")
+    double? itemsWeight,
+    @JsonKey(name: "images")
+    List<Image>? images,
+    @JsonKey(name: "scales")
+    String? scales,
   }) = _ProductDetails;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => _$ProductDetailsFromJson(json);

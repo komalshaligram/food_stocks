@@ -33,6 +33,7 @@ class ProductDetailsBloc
       if (event is _getProductDataEvent) {
         debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
         debugPrint('[id]   ${event.orderId}');
+       emit(state.copyWith(phoneNumber: preferencesHelper.getPhoneNumber()));
 
         try {
           final res = await DioClient(event.context).get(
@@ -72,17 +73,19 @@ class ProductDetailsBloc
             /*isRefresh: !state.isRefresh,*/
             productListIndex: index));
       } else if (event is _radioButtonEvent) {
+
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
             isRefresh: !state.isRefresh));
+
       } else if (event is _productIncrementEvent) {
         emit(state.copyWith(
-            productWeight: event.productWeight + 1,
+            productWeight: event.productWeight.round() + 1,
             isRefresh: !state.isRefresh));
       } else if (event is _productDecrementEvent) {
         if (event.productWeight >= 1) {
           emit(state.copyWith(
-              productWeight: event.productWeight - 1,
+              productWeight: event.productWeight.round() - 1,
               isRefresh: !state.isRefresh));
         } else {}
       } else if (event is _createIssueEvent) {

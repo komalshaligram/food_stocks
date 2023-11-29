@@ -6,6 +6,7 @@ class AppStrings {
   static const androidString = 'Android';
   static const iosString = 'IOS';
   static const timeString = '00:00';
+  static const hr24String = '24:00';
   static const tempString = 'temp';
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
@@ -113,8 +114,8 @@ class AppStrings {
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
   static const clearCartPopUpString = 'Are you sure you want to clear cart?';
-  static const deleteProductPopUpString =
-      'Are you sure you want to delete product?';
+  static const deleteProductPopUpString = 'Are you sure you want to delete product?';
+  static const selectNextDayShiftString = 'please select next day shift';
 
   //hint strings
   static const hintNumberString = '1234567890';

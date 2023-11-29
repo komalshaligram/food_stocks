@@ -114,7 +114,7 @@ class OTPScreenWidget extends StatelessWidget {
                             fontSize: 30, fontWeight: FontWeight.bold),
                         onCodeChanged: (String code) {
                           bloc.add(OtpEvent.updateOtpCodeEvent(
-                              codeLength: code.length));
+                              codeLength: code.length,));
                         },
                         onSubmit: (verificationCode) {
                           // otpCode = verificationCode;
