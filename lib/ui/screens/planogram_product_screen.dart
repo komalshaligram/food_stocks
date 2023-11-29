@@ -264,9 +264,19 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                                  productImage:
-                                      state.productDetails.first.mainImage ??
-                                          '',
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context.read<PlanogramProductBloc>().add(
+                                        PlanogramProductEvent
+                                            .updateImageIndexEvent(
+                                                index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ?? '',
+                                    ...state.productDetails.first.images?.map(
+                                            (image) => image.imageUrl ?? '') ??
+                                        []
+                                  ],
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',

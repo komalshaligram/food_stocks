@@ -496,7 +496,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                   },
                   onSearch: (String search) {
-                    if (search.length < 3) {
+                    if (search.length > 2) {
                       bloc.add(StoreCategoryEvent.globalSearchEvent(
                           context: context, search: search));
                     }
@@ -1114,9 +1114,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              productImage:
-                              state.productDetails.first.mainImage ??
-                                  '',
+                              productImageIndex: state.imageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages:
+                              [
+                                state.productDetails.first.mainImage ??
+                                    '',
+                                ...state.productDetails.first.images?.map((
+                                    image) => image.imageUrl ?? '') ?? []
+                              ],
                               productName:
                               state.productDetails.first.productName ??
                                   '',

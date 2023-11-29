@@ -30,9 +30,9 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         emit(state.copyWith(isLoading: true));
         try {
           LoginReqModel reqMap = LoginReqModel(
-              contact: event.contactNumber, isRegistration: event.isRegister);
+              contact: event.contactNumber, isRegistration: state.isRegister);
           debugPrint(
-              'login req = ${event.contactNumber}___${event.isRegister}');
+              'login req = ${event.contactNumber}___${state.isRegister}');
           debugPrint('url3 = ${AppUrls.existingUserLoginUrl}');
           final res = await DioClient(event.context).post(
             AppUrls.existingUserLoginUrl,
@@ -66,6 +66,8 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             isLoading: false,
           ));
         }
+      } else if (event is _ChangeAuthEvent) {
+        emit(state.copyWith(isRegister: event.isRegister));
       }
     });
   }

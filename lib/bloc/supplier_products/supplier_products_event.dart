@@ -32,4 +32,8 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory SupplierProductsEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory SupplierProductsEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

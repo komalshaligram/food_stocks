@@ -106,6 +106,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
+            List<ProductSale> saleProductsList =
+                response.data?.toList(growable: true) ?? [];
+            saleProductsList.removeWhere(
+                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+            debugPrint('sale Products = ${saleProductsList.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
             ProductStockModel barcodeStock = productStockList.removeLast();
@@ -116,7 +122,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 []);
             productStockList.add(barcodeStock);
             emit(state.copyWith(
-                productSalesList: response,
+                productSalesList: response.data ?? [],
                 productStockList: productStockList,
                 isShimmering: false));
           } else {
@@ -447,8 +453,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    note: '',
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '');
             add(StoreEvent.setCartCountEvent());
-            emit(state.copyWith(isLoading: false, isCartCountChange: true));
+            emit(state.copyWith(
+                isLoading: false,
+                productStockList: productStockList,
+                isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
@@ -469,7 +487,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -588,6 +606,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           // emit(state.copyWith(isShimmering: false));
         }
+      } else if (event is _UpdateImageIndexEvent) {
+        emit(state.copyWith(imageIndex: event.index));
       }
     });
   }

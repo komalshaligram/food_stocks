@@ -104,7 +104,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
-            // response.data.removeWhere((sale) => sale.fromDate)
+            List<ProductSale> saleProductsList =
+                response.data?.toList(growable: true) ?? [];
+            saleProductsList.map((sale) => debugPrint('${sale.endDate}'));
+            saleProductsList.removeWhere(
+                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+            debugPrint('sale Products = ${saleProductsList.length}');
+            debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList = [];
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(
@@ -113,7 +119,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 []);
             debugPrint('stock list len = ${productStockList.length}');
             emit(state.copyWith(
-                productSalesList: response,
+                productSalesList: response.data ?? [],
                 productStockList: productStockList,
                 isProductSaleShimmering: false));
           } else {
@@ -403,7 +409,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            emit(state.copyWith(isLoading: false, isCartCountChange: true));
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    note: '',
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '');
+            emit(state.copyWith(
+                isLoading: false,
+                productStockList: productStockList,
+                isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.setCartCountEvent());
             showSnackBar(
@@ -416,7 +434,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -448,11 +466,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
           if (response.status == 200) {
             emit(state.copyWith(
-                thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
-                lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
+                thisMonthExpense:
+                    response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
+                lastMonthExpense:
+                    response.data?.previousMonth?.totalExpenses?.toDouble() ??
+                        0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0
-            ));
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
           } else {
             showSnackBar(
                 context: event.context,
@@ -571,6 +591,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         emit(state.copyWith(messageList: []));
         emit(state.copyWith(messageList: messageList));
+      } else if (event is _UpdateImageIndexEvent) {
+        emit(state.copyWith(imageIndex: event.index));
       }
     });
   }

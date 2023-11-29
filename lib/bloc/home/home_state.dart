@@ -7,7 +7,7 @@ class HomeState with _$HomeState {
     required String UserCompanyLogoUrl,
     required int cartCount,
     required int messageCount,
-    required ProductSalesResModel productSalesList,
+    required List<ProductSale> productSalesList,
     required bool isProductSaleShimmering,
     required bool isLoading,
     required bool isProductLoading,
@@ -22,6 +22,7 @@ class HomeState with _$HomeState {
     required double lastMonthExpense,
     required int orderThisMonth,
     required double balance,
+    required int imageIndex,
     required List<MessageData> messageList,
     required bool isMessageShimmering,
   }) = _HomeState;
@@ -31,7 +32,7 @@ class HomeState with _$HomeState {
         UserCompanyLogoUrl: '',
         cartCount: 0,
         messageCount: 0,
-        productSalesList: ProductSalesResModel(),
+        productSalesList: [],
         isProductSaleShimmering: false,
         isLoading: false,
         isProductLoading: false,
@@ -46,6 +47,7 @@ class HomeState with _$HomeState {
         orderThisMonth: 0,
         thisMonthExpense: 0,
         totalCredit: 0,
+        imageIndex: 0,
         messageList: [],
         isMessageShimmering: false,
       );

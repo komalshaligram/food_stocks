@@ -28,6 +28,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<ProductSupplierModel> productSupplierList,
     required List<SearchModel> searchList,
     required String search,
+    required int imageIndex,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => const StoreCategoryState(
@@ -56,5 +57,6 @@ class StoreCategoryState with _$StoreCategoryState {
         productSupplierList: [],
         searchList: [],
         search: '',
+        imageIndex: 0,
       );
 }

@@ -7,9 +7,6 @@ class OtpEvent with _$OtpEvent {
   const factory OtpEvent.changeOtpEvent({required String otp}) =
       _ChangeOtpEvent;
 
-  const factory OtpEvent.updateOtpCodeEvent({required int codeLength}) =
-  _updateOtpCodeEvent;
-
   const factory OtpEvent.updateOtpTimer() = _UpdateTimerEvent;
   const factory OtpEvent.cancelOtpTimerSubscription() = _cancelTimerscriptionEvent;
   const factory OtpEvent.otpApiEvent({

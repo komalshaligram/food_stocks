@@ -30,4 +30,8 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.setCartCountEvent() =
       _SetCartCountEvent;
+
+  const factory RecommendationProductsEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

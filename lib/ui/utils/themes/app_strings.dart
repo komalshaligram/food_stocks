@@ -75,6 +75,7 @@ class AppStrings {
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
+  static const otpResendSuccessString = 'OTP resend Successfully!';
   static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
   static const addCartSuccessString = 'Product added to Cart';

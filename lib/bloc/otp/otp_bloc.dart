@@ -44,6 +44,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       }
 
       if (event is _otpApiEvent) {
+        if (state.isLoading) {
+          return;
+        }
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
@@ -80,7 +83,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   title: response.message ?? AppStrings.loginSuccessString,
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
+                      (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
               emit(state.copyWith(isLoading: false));
@@ -102,8 +105,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         }
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
-      } else if (event is _updateOtpCodeEvent) {
-        emit(state.copyWith(codeLength: event.codeLength));
+        debugPrint('new otp = ${state.otp}');
       }
     });
   }
