@@ -81,7 +81,7 @@ class ProductDetails with _$ProductDetails {
     @JsonKey(name: "mainImage")
     String? mainImage,
     @JsonKey(name: "itemsWeight")
-    int? itemsWeight,
+    double? itemsWeight,
     @JsonKey(name: "images")
     List<Image>? images,
     @JsonKey(name: "scales")

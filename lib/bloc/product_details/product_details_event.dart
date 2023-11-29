@@ -14,13 +14,13 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   }) = _radioButtonEvent;
 
   const factory ProductDetailsEvent.productIncrementEvent({
-    required int productWeight,
+    required double productWeight,
     required int listIndex,
     required BuildContext context
   }) = _productIncrementEvent;
 
   const factory ProductDetailsEvent.productDecrementEvent({
-    required int productWeight,
+    required double productWeight,
     required int listIndex,
   }) = _productDecrementEvent;
 

@@ -218,8 +218,15 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.time.isNotEmpty) {
           String? selectedTime;
           selectedTime = state.time;
-          List<ActivityTimeModel> temp = [];
+          print('state.time____${state.time}');
+          if(event.openingIndex == 0){
+            if(event.time == '00:00'){
+              selectedTime = '24:00';
+              emit(state.copyWith(time: selectedTime));
+            }
+          }
 
+          List<ActivityTimeModel> temp = [];
           temp.addAll(state.OperationTimeList);
           String openingTime =
               temp[event.rowIndex].monday[event.timeIndex].from!;
@@ -341,38 +348,45 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _addMoreTimeZoneEventEvent) {
         List<ActivityTimeModel> temp = [];
         temp.addAll(state.OperationTimeList);
-
-        if (state.OperationTimeList[event.rowIndex].monday.length > 1) {
-          int len = state.OperationTimeList[event.rowIndex].monday.length;
-          if (state.OperationTimeList[event.rowIndex].monday[len - 1].from !=
-                  AppStrings.timeString &&
-              state.OperationTimeList[event.rowIndex].monday[len - 1].until !=
-                  AppStrings.timeString) {
-            temp[event.rowIndex].monday.add(
-                Day(from: AppStrings.timeString, until: AppStrings.timeString));
-            emit(state.copyWith(
-                OperationTimeList: temp, isRefresh: !state.isRefresh));
+        if(state.time != AppStrings.hr24String){
+          if (state.OperationTimeList[event.rowIndex].monday.length > 1) {
+            int len = state.OperationTimeList[event.rowIndex].monday.length;
+            if (state.OperationTimeList[event.rowIndex].monday[len - 1].from !=
+                AppStrings.timeString &&
+                state.OperationTimeList[event.rowIndex].monday[len - 1].until !=
+                    AppStrings.timeString) {
+              temp[event.rowIndex].monday.add(
+                  Day(from: AppStrings.timeString, until: AppStrings.timeString));
+              emit(state.copyWith(
+                  OperationTimeList: temp, isRefresh: !state.isRefresh));
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectPreviousShiftString,
+                  bgColor: AppColors.redColor);
+            }
           } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.selectPreviousShiftString,
-                bgColor: AppColors.redColor);
+            if (state.OperationTimeList[event.rowIndex].monday[0].from !=
+                AppStrings.timeString &&
+                state.OperationTimeList[event.rowIndex].monday[0].until !=
+                    AppStrings.timeString) {
+              temp[event.rowIndex].monday.add(
+                  Day(from: AppStrings.timeString, until: AppStrings.timeString));
+              emit(state.copyWith(
+                  OperationTimeList: temp, isRefresh: !state.isRefresh));
+            } else {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectFirstShiftString,
+                  bgColor: AppColors.redColor);
+            }
           }
-        } else {
-          if (state.OperationTimeList[event.rowIndex].monday[0].from !=
-                  AppStrings.timeString &&
-              state.OperationTimeList[event.rowIndex].monday[0].until !=
-                  AppStrings.timeString) {
-            temp[event.rowIndex].monday.add(
-                Day(from: AppStrings.timeString, until: AppStrings.timeString));
-            emit(state.copyWith(
-                OperationTimeList: temp, isRefresh: !state.isRefresh));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.selectFirstShiftString,
-                bgColor: AppColors.redColor);
-          }
+        }
+        else{
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.selectNextDayShiftString,
+              bgColor: AppColors.redColor);
         }
       }
 

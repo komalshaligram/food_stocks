@@ -10,6 +10,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required int selectedRadioTile,
     required List<int>productListIndex,
     required int productWeight,
+    required String phoneNumber,
 
   }) = _ProductDetailsState;
 
@@ -21,6 +22,7 @@ class ProductDetailsState with _$ProductDetailsState {
   orderList: GetOrderByIdModel(),
   productListIndex: [],
     productWeight: 0,
+    phoneNumber: '',
 
   );
 }

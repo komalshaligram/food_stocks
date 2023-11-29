@@ -73,13 +73,25 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       //  if (event.productWeight != 0) {
           try {
             debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-
-            UpdateCartReqModel reqMap = UpdateCartReqModel(
-              supplierId: event.supplierId,
-              quantity: event.productWeight,
-              productId: event.productId,
-              cartProductId: event.cartProductId,
-            );
+            debugPrint('[getCartId]  = ${event.saleId != ''}');
+            UpdateCartReqModel reqMap = UpdateCartReqModel();
+            if(event.saleId != ''){
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+                  saleId: event.saleId
+              );
+            }
+            else{
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+              );
+            }
 
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
@@ -109,11 +121,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               else{
                 totalAmount = event.totalPayment - newAmount;
               }
-              print('total amount   ${totalAmount}');
+
 
               emit(state.copyWith(
                   basketProductList: list,totalPayment: totalAmount, isRefresh: !state.isRefresh));
-              print('total payment__vcc__${state.totalPayment}');
+
              /* showSnackBar(
                   context: event.context,
                   title: response.message!,
@@ -144,17 +156,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           if (response['status'] == 200) {
             add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
-            print('index_____${event.listIndex}');
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
-            Navigator.pop(event.context);
+            Navigator.pop(event.dialogContext);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh));
-
-            // showSnackBar(context: event.context, title: response['message'], bgColor: AppColors.mainColor);
+                basketProductList: list, isRefresh: !state.isRefresh ,totalPayment: state.totalPayment - event.totalAmount));
+             showSnackBar(context: event.context, title: 'Item deleted', bgColor: AppColors.mainColor);
           } else {
             Navigator.pop(event.context);
-            // showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
+             showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {

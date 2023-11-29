@@ -175,6 +175,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title: AppLocalizations.of(context)!
                                     .business_details,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(
                                       context, RouteDefine.profileScreen.name,
                                       arguments: {
@@ -185,6 +186,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context)!.more_details,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.moreDetailsScreen.name,
                                       arguments: {
@@ -195,6 +197,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context)!.activity_time,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.activityTimeScreen.name,
                                       arguments: {
@@ -205,6 +208,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title:
                                     AppLocalizations.of(context)!.forms_files,
                                 onTap: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
                                       RouteDefine.fileUploadScreen.name,
                                       arguments: {

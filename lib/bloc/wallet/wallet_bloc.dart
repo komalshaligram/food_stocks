@@ -111,7 +111,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           if (response.status == 200) {
             List<FlSpot> temp = [];
             List<int> number = List<int>.generate(12, (i) => i);
-            final reverseList = number.reversed.toList();
+            List<int> reverseList ;
+            if(preferencesHelper.getAppLanguage() == 'he'){
+               reverseList = number.reversed.toList();
+             }
+             else{
+              reverseList = number.toList();
+             }
+
             response.data!.forEach((element) {
               temp.add(FlSpot(
                   reverseList[element.month!.toInt() - 1].toDouble(),
@@ -225,6 +232,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       } else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
       } else if (event is _exportWalletTransactionEvent) {
+        emit(state.copyWith(isExportShimmering: true));
         try {
           Map<Permission, PermissionStatus> statuses = await [
             Permission.storage,
@@ -274,6 +282,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               ExportWalletTransactionsResModel.fromJson(res);
           debugPrint('ExportWalletTransactions response  = ${response}');
           if (response.status == 200) {
+            emit(state.copyWith(isExportShimmering: false));
             Uint8List pdf = base64.decode(response.data.toString());
             filePath =
                 '${dir.path}/${preferencesHelper.getUserName()}${'_'}${TimeOfDay.fromDateTime(DateTime.now()).hour}${'.'}${TimeOfDay.fromDateTime(DateTime.now()).minute}${'.pdf'}';
@@ -286,12 +295,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                   bgColor: AppColors.mainColor);
             });
           } else {
+            emit(state.copyWith(isExportShimmering: false));
             showSnackBar(
                 context: event.context,
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {   emit(state.copyWith(isExportShimmering: false));}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
