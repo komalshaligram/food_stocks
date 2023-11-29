@@ -137,11 +137,11 @@ class StoreScreenWidget extends StatelessWidget {
                                             index]
                                                 .categoryName ??
                                                 '',
-                                            isHomePreference: state
+                                            isHomePreference: true /*state
                                                 .productCategoryList[
                                             index]
                                                 .isHomePreference ??
-                                                false,
+                                                false*/,
                                             onTap: () {
                                               Navigator.pushNamed(
                                                   context,
