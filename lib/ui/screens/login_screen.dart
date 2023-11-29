@@ -91,13 +91,13 @@ class LogInScreenWidget extends StatelessWidget {
                         30.height,
                         CustomFormField(
                           inputformet: [
-                            FilteringTextInputFormatter.deny(
-                                RegExp(r'\s')),
+                            FilteringTextInputFormatter.digitsOnly,
+                            /*FilteringTextInputFormatter.deny(
+                                RegExp(r'\s')),*/
                           ],
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
                           hint: AppStrings.hintNumberString,
-                          inputformet: [FilteringTextInputFormatter.digitsOnly],
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.done,
                           validator: AppStrings.mobileValString,

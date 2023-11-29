@@ -995,7 +995,7 @@ class StoreScreenWidget extends StatelessWidget {
               children: [
                 Image.network(
                   '${AppUrls.baseFileUrl}$searchImage',
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.scaleDown,
                   height: 35,
                   width: 40,
                   errorBuilder: (context, error, stackTrace) {
