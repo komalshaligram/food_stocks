@@ -43,6 +43,7 @@ class DioClient {
             return handler.next(options);
           }, onResponse: (response, handler) {
             if (kDebugMode) {
+              debugPrint("app url ${AppUrls.baseUrl}");
               debugPrint("app response data ${response.data}");
             }
 

@@ -104,6 +104,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
+            // response.data.removeWhere((sale) => sale.fromDate)
             List<ProductStockModel> productStockList = [];
             productStockList.addAll(response.data?.map((saleProduct) =>
                     ProductStockModel(

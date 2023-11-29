@@ -270,12 +270,12 @@ class HomeScreenWidget extends StatelessWidget {
                                                       color: AppColors
                                                           .notificationColor,
                                                       border: Border.all(
-                                                          color:
-                                                          AppColors.whiteColor,
-                                                      width: 1),
-                                                  shape: BoxShape.circle),
-                                              alignment: Alignment.center,
-                                              child: Text(
+                                                          color: AppColors
+                                                              .whiteColor,
+                                                          width: 1),
+                                                      shape: BoxShape.circle),
+                                                  alignment: Alignment.center,
+                                                  child: Text(
                                                       '${state.messageCount <= 10 ? state.messageCount : '10+'}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
@@ -283,7 +283,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                                   .font_8,
                                                               color: AppColors
                                                                   .whiteColor)),
-                                            ))
+                                                ))
                                       ],
                                     ),
                                   ),
@@ -430,7 +430,15 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                             20.height,
                             AnimatedCrossFade(
-                                firstChild: 0.width,
+                                firstChild: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      buildListTitles(),
+                                      buildListItems(context, height: 120),
+                                      15.height,
+                                    ]),
                                 secondChild: (state
                                             .productSalesList.data?.isEmpty ??
                                         true)
@@ -733,6 +741,60 @@ class HomeScreenWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildListTitles() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          buildTextFieldTitle(),
+          buildTextFieldTitle(),
+        ],
+      ),
+    );
+  }
+
+  CommonShimmerWidget buildListItems(BuildContext context, {double? height}) {
+    return CommonShimmerWidget(
+      child: Container(
+        width: getScreenWidth(context),
+        height: height ?? 110,
+        margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppConstants.radius_10),
+          ),
+          color: AppColors.whiteColor,
+        ),
+        // child: ListView.builder(
+        //   itemCount: 6,
+        //   shrinkWrap: true,
+        //   scrollDirection: Axis.horizontal,
+        //   padding:
+        //       EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        //   itemBuilder: (context, index) {
+        //     return buildCategoryListItem();
+        //   },
+        // ),
+      ),
+    );
+  }
+
+  Widget buildTextFieldTitle() {
+    return CommonShimmerWidget(
+      child: Container(
+        height: AppConstants.shimmerTextHeight,
+        width: 100,
+        margin: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+        ),
       ),
     );
   }

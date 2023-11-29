@@ -578,9 +578,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _GlobalSearchEvent) {
         emit(state.copyWith(search: event.search));
-        if (state.search.length < 3) {
-          return;
-        }
         try {
           GlobalSearchReqModel globalSearchReqModel =
               GlobalSearchReqModel(search: event.search);

@@ -526,10 +526,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       } else if (event is _GlobalSearchEvent) {
         emit(state.copyWith(search: event.search));
         debugPrint('data1 = ${state.search}');
-        if (state.search.length < 3) {
-          return;
-        }
-        debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
               GlobalSearchReqModel(search: event.search);
@@ -539,7 +535,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           if (response.status == 200) {
-            debugPrint('data1 = ${response.data}');
             List<SearchModel> searchList = [];
             //category search result
             searchList.addAll(response.data?.categoryData
@@ -581,7 +576,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(searchList: searchList /*, isShimmering: false*/
                 ));
           } else {
-            debugPrint('data1 = ${state.search}');
             emit(state.copyWith(searchList: []));
             // emit(state.copyWith(isShimmering: false));
             // showSnackBar(
@@ -589,7 +583,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //     title: response.message ?? AppStrings.somethingWrongString,
             //     bgColor: AppColors.mainColor);
           }
-          debugPrint('data1 = ${state.search}');
         } on ServerException {
           // emit(state.copyWith(isShimmering: false));
         } catch (exc) {

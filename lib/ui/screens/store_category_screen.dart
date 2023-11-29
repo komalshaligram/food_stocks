@@ -491,23 +491,26 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         )),
                     CommonSearchWidget(
                       isCategoryExpand: state.isCategoryExpand,
-                      isStoreCategory: true,
-                      onFilterTap: () {
-                        bloc.add(
-                            StoreCategoryEvent.changeCategoryExpansionEvent());
-                      },
-                      onSearch: (String search) {
-                        bloc.add(StoreCategoryEvent.globalSearchEvent(
-                            context: context, search: search));
-                      },
-                      onSearchTap: () {
-                        bloc.add(
-                            StoreCategoryEvent.changeCategoryExpansionEvent(
-                                isOpened: true));
-                      },
-                      onOutSideTap: () {
-                        bloc.add(
-                            StoreCategoryEvent.changeCategoryExpansionEvent(
+                  isStoreCategory: true,
+                  onFilterTap: () {
+                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
+                  },
+                  onSearch: (String search) {
+                    if (search.length < 3) {
+                      bloc.add(StoreCategoryEvent.globalSearchEvent(
+                          context: context, search: search));
+                    }
+                  },
+                  onSearchSubmit: (String search) {
+                    bloc.add(StoreCategoryEvent.globalSearchEvent(
+                        context: context, search: search));
+                  },
+                  onSearchTap: () {
+                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
+                        isOpened: true));
+                  },
+                  onOutSideTap: () {
+                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
                                 isOpened: false));
                       },
                       onSearchItemTap: () {
@@ -672,7 +675,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               children: [
                 Image.network(
                   '${AppUrls.baseFileUrl}$searchImage',
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.scaleDown,
                   height: 35,
                   width: 40,
                   errorBuilder: (context, error, stackTrace) {
