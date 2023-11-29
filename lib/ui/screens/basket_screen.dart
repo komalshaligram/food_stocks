@@ -235,7 +235,9 @@ class BasketScreenWidget extends StatelessWidget {
                                           updateClearString:
                                               AppStrings.clearString,
                                           listIndex: 0,
-                                          cartProductId: '');
+                                          cartProductId: '',
+                                      totalAmount : 0.0,
+                                      );
                                     },
                                     child: Container(
                                       child: Row(
@@ -359,6 +361,8 @@ class BasketScreenWidget extends StatelessWidget {
               3.width,
               GestureDetector(
                 onTap: () {
+                  print('saleId_____${state.CartItemList.data?.data?[index].sales}');
+                  print('saleId__11___${state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? ''}');
                   if (state.CartItemList.data!.data![index].productStock! >=
                       state.basketProductList[index].totalQuantity! + 1) {
                     bloc.add(BasketEvent.productUpdateEvent(
@@ -371,11 +375,9 @@ class BasketScreenWidget extends StatelessWidget {
                       supplierId: state
                           .CartItemList.data!.data![index].suppliers!.first.id!,
                       cartProductId:
-                          state.CartItemList.data!.data![index].cartProductId!,
+                          state.CartItemList.data?.data?[index].cartProductId ?? '',
                       totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                        saleId:  state.CartItemList.data!.data![index].sales!.first.id.toString(),
-
-
+                        saleId: state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? '',
                     ));
                   } else {
                     showSnackBar(
@@ -423,7 +425,7 @@ class BasketScreenWidget extends StatelessWidget {
                       cartProductId:
                       state.CartItemList.data!.data![index].cartProductId!,
                        totalPayment:/* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                      saleId:  state.CartItemList.data!.data![index].sales!.first.id.toString(),
+                      saleId: state.CartItemList.data?.data?[index].sales!.isEmpty != null ? '' : state.CartItemList.data?.data?[index].sales?.first.id ?? '',
                     ));
                   }
                   else{
@@ -463,6 +465,7 @@ class BasketScreenWidget extends StatelessWidget {
                     updateClearString: AppStrings.deleteString,
                     cartProductId: state.basketProductList[index].cartProductId,
                     listIndex: index,
+                    totalAmount : state.basketProductList[index].totalPayment!,
                   );
                 },
                 child: SvgPicture.asset(
@@ -480,7 +483,7 @@ class BasketScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String updateClearString,
     required String cartProductId,
-    required int listIndex,
+    required int listIndex,  double? totalAmount,
   }) {
     BasketBloc bloc = context.read<BasketBloc>();
     showDialog(
@@ -512,8 +515,8 @@ class BasketScreenWidget extends StatelessWidget {
                             context: context,
                             cartProductId: cartProductId,
                             listIndex: listIndex,
-                      dialogContext: context1
-
+                      dialogContext: context1,
+                      totalAmount: totalAmount!
                           ));
                   },
                   child: Container(
@@ -535,7 +538,7 @@ class BasketScreenWidget extends StatelessWidget {
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context1);
                   },
                   child: Container(
                     padding:

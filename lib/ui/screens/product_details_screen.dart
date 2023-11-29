@@ -461,7 +461,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       return true;
                     })*/
                 //
-                        : _formKey.currentState?.validate() ?? false
+                        : _formKey.currentState?.validate() ?? false ? state.phoneNumber != phoneNumberController.text
                             ? Navigator.pushNamed(context,
                                 RouteDefine.shipmentVerificationScreen.name,
                                 arguments: {
@@ -518,7 +518,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             .supplierOrderNumber ??
                                         0
                                   })
-                            : SizedBox();
+                            :  showSnackBar(
+                        context: context,
+                        title: 'User Number & driver Number is same',
+                        bgColor: AppColors.mainColor): SizedBox();
                   },
                   buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
@@ -657,7 +660,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         .data!
                                         .ordersBySupplier![productIndex]
                                         .products![index]
-                                        .itemWeight!,
+                                        .itemWeight!.toDouble(),
                                     price: double.parse(state
                                         .orderList
                                         .data!
@@ -722,7 +725,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   ProductProblemBottomSheet(
       {required BuildContext context,
       required String productName,
-      required int weight,
+      required double weight,
       required double price,
       required String image,
       required int listIndex,
@@ -955,7 +958,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required String problem,
         required  int value,
-      int weight = 0,
+      double weight = 0,
       required int listIndex, required String scale, required int groupValue, int? missingQuantity , String? note,
 
       }) {
@@ -971,7 +974,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           if (state.productWeight == 0) {
             weight = weight;
           } else {
-            weight = state.productWeight;
+            weight = state.productWeight.toDouble();
           }
           return Container(
             height: value == 4 ? 160 : 50,

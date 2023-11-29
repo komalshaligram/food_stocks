@@ -642,7 +642,7 @@ class WalletScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              30.width,
+              10.width,
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Text(
@@ -660,7 +660,7 @@ class WalletScreenWidget extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              20.width,
+              10.width,
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
                     context, RouteDefine.orderSuccessfulScreen.name),

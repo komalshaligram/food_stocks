@@ -73,14 +73,25 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       //  if (event.productWeight != 0) {
           try {
             debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-
-            UpdateCartReqModel reqMap = UpdateCartReqModel(
-              supplierId: event.supplierId,
-              quantity: event.productWeight,
-              productId: event.productId,
-              cartProductId: event.cartProductId,
-              saleId: event.saleId ?? ''
-            );
+            debugPrint('[getCartId]  = ${event.saleId != ''}');
+            UpdateCartReqModel reqMap = UpdateCartReqModel();
+            if(event.saleId != ''){
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+                  saleId: event.saleId
+              );
+            }
+            else{
+               reqMap = UpdateCartReqModel(
+                  supplierId: event.supplierId,
+                  quantity: event.productWeight,
+                  productId: event.productId,
+                  cartProductId: event.cartProductId,
+              );
+            }
 
             final res = await DioClient(event.context).post(
               '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
@@ -149,7 +160,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             list.removeAt(event.listIndex);
             Navigator.pop(event.dialogContext);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh));
+                basketProductList: list, isRefresh: !state.isRefresh ,totalPayment: state.totalPayment - event.totalAmount));
              showSnackBar(context: event.context, title: 'Item deleted', bgColor: AppColors.mainColor);
           } else {
             Navigator.pop(event.context);

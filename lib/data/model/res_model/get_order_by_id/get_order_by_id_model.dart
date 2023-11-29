@@ -148,7 +148,7 @@ class Product with _$Product {
     @JsonKey(name: "discountedPrice")
     double? discountedPrice,
     @JsonKey(name: "itemWeight")
-    int? itemWeight,
+    double? itemWeight,
     @JsonKey(name: "issueStatus")
     Status? issueStatus,
     @JsonKey(name: "isIssue")
