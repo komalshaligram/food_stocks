@@ -413,6 +413,20 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         try {
           if (formsAndFilesList[event.index].url?.isEmpty ?? true) {
             return;
+          } else if (formsAndFilesList[event.index]
+                  .url
+                  ?.contains(AppStrings.tempString) ??
+              false) {
+            formsAndFilesList[event.index] =
+                formsAndFilesList[event.index].copyWith(localUrl: '', url: '');
+            emit(state.copyWith(formsAndFilesList: formsAndFilesList));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+            // add(FileUploadEvent.uploadApiEvent(
+            //     context: event.context, isFromDelete: true));
+            return;
           }
           emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
           RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(

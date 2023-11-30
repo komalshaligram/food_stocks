@@ -47,9 +47,7 @@ class OTPScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
-      listener: (context, state) async {
-
-      },
+      listener: (context, state) async {},
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
           return Scaffold(
@@ -62,6 +60,7 @@ class OTPScreenWidget extends StatelessWidget {
                     : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
+                  debugPrint('register ${isRegister}');
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
                   Navigator.pushNamed(context, RouteDefine.loginScreen.name);
                 },
@@ -113,11 +112,9 @@ class OTPScreenWidget extends StatelessWidget {
                         textStyle: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                         onCodeChanged: (String code) {
-                          bloc.add(OtpEvent.updateOtpCodeEvent(
-                              codeLength: code.length,));
+                          bloc.add(OtpEvent.changeOtpEvent(otp: code));
                         },
                         onSubmit: (verificationCode) {
-                          // otpCode = verificationCode;
                           bloc.add(
                               OtpEvent.changeOtpEvent(otp: verificationCode));
                         }, // end onSubmit
@@ -135,14 +132,19 @@ class OTPScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                                if (state.otp.length != 4 &&
-                                    state.codeLength == 1) {
+                                debugPrint('otp1 = ${state.otp}');
+                                debugPrint('otp1 = ${isRegister}');
+                                if (state.otp.isEmpty) {
+                                  showSnackBar(
+                                      context: context,
+                                      title: AppStrings.enterOtpString,
+                                      bgColor: AppColors.redColor);
+                                } else if (state.otp.length != 4) {
                                   showSnackBar(
                                       context: context,
                                       title: AppStrings.enter4DigitOtpCode,
                                       bgColor: AppColors.redColor);
-                                } else if (state.otp.length == 4 &&
-                                    state.codeLength != 0) {
+                                } else {
                                   if (isRegister == true) {
                                     Navigator.pushNamed(
                                         context, RouteDefine.profileScreen.name,
@@ -156,17 +158,40 @@ class OTPScreenWidget extends StatelessWidget {
                                         isRegister: isRegister,
                                         context: context));
                                   }
-                                } else if (state.otp.length == 0) {
-                                  showSnackBar(
-                                      context: context,
-                                      title: AppStrings.enterOtpString,
-                                      bgColor: AppColors.redColor);
-                                } else {
-                                  showSnackBar(
-                                      context: context,
-                                      title: AppStrings.enter4DigitOtpCode,
-                                      bgColor: AppColors.redColor);
                                 }
+
+                                // if (state.otp.length != 4 &&
+                                //     state.codeLength == 1) {
+                                //   showSnackBar(
+                                //       context: context,
+                                //       title: AppStrings.enter4DigitOtpCode,
+                                //       bgColor: AppColors.redColor);
+                                // } else if (state.otp.length == 4 &&
+                                //     state.codeLength != 0) {
+                                //   if (isRegister == true) {
+                                //     Navigator.pushNamed(
+                                //         context, RouteDefine.profileScreen.name,
+                                //         arguments: {
+                                //           AppStrings.contactString: contact
+                                //         });
+                                //   } else {
+                                //     bloc.add(OtpEvent.otpApiEvent(
+                                //         contact: contact,
+                                //         otp: state.otp,
+                                //         isRegister: isRegister,
+                                //         context: context));
+                                //   }
+                                // } else if (state.otp.length == 0) {
+                                //   showSnackBar(
+                                //       context: context,
+                                //       title: AppStrings.enterOtpString,
+                                //       bgColor: AppColors.redColor);
+                                // } else {
+                                //   showSnackBar(
+                                //       context: context,
+                                //       title: AppStrings.enter4DigitOtpCode,
+                                //       bgColor: AppColors.redColor);
+                                // }
                               },
                         fontColors: AppColors.whiteColor,
                       ),
@@ -177,8 +202,7 @@ class OTPScreenWidget extends StatelessWidget {
                         AppLocalizations.of(context)!
                             .not_receive_verification_code,
                         style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            color: Colors.black),
+                            size: AppConstants.smallFont, color: Colors.black),
                       ),
                     ),
                     20.height,
@@ -204,7 +228,11 @@ class OTPScreenWidget extends StatelessWidget {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                                  bloc.add(OtpEvent.setOtpTimer());
+                            bloc.add(OtpEvent.setOtpTimer());
+                                  showSnackBar(
+                                      context: context,
+                                      title: AppStrings.otpResendSuccessString,
+                                      bgColor: AppColors.mainColor);
                                 },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

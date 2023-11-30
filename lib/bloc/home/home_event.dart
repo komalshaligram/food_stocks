@@ -54,4 +54,8 @@ class HomeEvent with _$HomeEvent {
       {required String messageId,
       required bool isRead,
       required bool isDelete}) = _RemoveOrUpdateMessageEvent;
+
+  const factory HomeEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

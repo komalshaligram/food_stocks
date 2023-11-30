@@ -23,24 +23,19 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    if (temp[AppStrings.isRegisterString] == null) {
-      temp[AppStrings.isRegisterString] = true;
-    } else {
-      temp[AppStrings.isRegisterString];
-    }
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => LogInBloc(),
-      child: LogInScreenWidget(isRegister: temp[AppStrings.isRegisterString]),
+      create: (context) => LogInBloc()
+        ..add(LogInEvent.changeAuthEvent(
+            isRegister: args?[AppStrings.isRegisterString] ?? false)),
+      child: LogInScreenWidget(),
     );
   }
 }
 
 class LogInScreenWidget extends StatelessWidget {
-  final bool isRegister;
-
-  LogInScreenWidget({required this.isRegister});
+  LogInScreenWidget({super.key});
 
   final TextEditingController phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -53,7 +48,7 @@ class LogInScreenWidget extends StatelessWidget {
         if (state.isLoginSuccess) {
           Navigator.pushNamed(context, RouteDefine.otpScreen.name, arguments: {
             AppStrings.contactString: phoneController.text.toString(),
-            AppStrings.isRegisterString: isRegister
+            AppStrings.isRegisterString: state.isRegister
           });
         }
       },
@@ -64,7 +59,7 @@ class LogInScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: isRegister
+                title: state.isRegister
                     ? AppLocalizations.of(context)!.register
                     : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
@@ -113,12 +108,10 @@ class LogInScreenWidget extends StatelessWidget {
                               : () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                      context.read<LogInBloc>().add(
-                                          LogInEvent.logInApiDataEvent(
-                                              contactNumber:
-                                                  phoneController.text,
-                                              isRegister: isRegister,
-                                              context: context));
+                                    context.read<LogInBloc>().add(
+                                        LogInEvent.logInApiDataEvent(
+                                            contactNumber: phoneController.text,
+                                            context: context));
                                   }
                                 },
                           fontColors: AppColors.whiteColor,

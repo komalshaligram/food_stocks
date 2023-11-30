@@ -16,6 +16,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isBottomOfProducts,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required int imageIndex,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -32,5 +33,6 @@ class SupplierProductsState with _$SupplierProductsState {
         isBottomOfProducts: false,
         isSelectSupplier: false,
         productSupplierList: [],
+        imageIndex: 0,
       );
 }
