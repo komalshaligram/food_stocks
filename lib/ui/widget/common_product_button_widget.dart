@@ -39,6 +39,7 @@ class CommonProductButtonWidget extends StatelessWidget {
       height: height ?? AppConstants.buttonHeightSmall,
       width: width,
       clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
@@ -58,6 +59,7 @@ class CommonProductButtonWidget extends StatelessWidget {
           elevation: 0,
           height: height ?? AppConstants.buttonHeightSmall,
           minWidth: width,
+          padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
           onPressed: null /*isLoading ? null : onPressed*/,
           child: isLoading
               ? CupertinoActivityIndicator(

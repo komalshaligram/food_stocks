@@ -314,8 +314,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                               ),
                               CustomFormField(
                                 controller: state.emailController,
-                                /*inputformet: [*/ /*FilteringTextInputFormatter.deny(
-                              RegExp(r'\s')),*/ /*LengthLimitingTextInputFormatter(15)],*/
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/
+                                  LengthLimitingTextInputFormatter(25)
+                                ],
                                 keyboardType: TextInputType.emailAddress,
                                 hint: "",
                                 fillColor: AppColors.whiteColor,
@@ -332,8 +335,12 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
                                   FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(15)
+                                  LengthLimitingTextInputFormatter(11)
                                 ],
+                                onChangeValue: (FAX) {
+                                  bloc.add(MoreDetailsEvent.setFAXFormatEvent(
+                                      FAX: FAX));
+                                },
                                 keyboardType: TextInputType.number,
                                 hint: AppLocalizations.of(context)!.fax,
                                 fillColor: AppColors.whiteColor,

@@ -306,10 +306,11 @@ class FileUploadScreenWidget extends StatelessWidget {
                             DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
                             AndroidDeviceInfo androidInfo =
                                 await deviceInfo.androidInfo;
-                            print(
+                            debugPrint(
                                 'Running on android version ${androidInfo.version.sdkInt}');
                             if (androidInfo.version.sdkInt < 33) {
                               if (!statuses[Permission.storage]!.isGranted) {
+                                debugPrint('Dont go');
                                 showSnackBar(
                                     context: context,
                                     title:
@@ -344,6 +345,13 @@ class FileUploadScreenWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
+                    if (isUploading) {
+                      showSnackBar(
+                          context: context,
+                          title: AppStrings.uploadingMsgString,
+                          bgColor: AppColors.redColor);
+                      return;
+                    }
                     showModalBottomSheet(
                         context: context,
                         builder: (context1) => Container(
@@ -372,11 +380,11 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   30.height,
                                   FileSelectionOptionWidget(
                                       title:
-                                          AppLocalizations.of(context)!.camera,
+                                      AppLocalizations.of(context)!.camera,
                                       icon: Icons.camera_alt_rounded,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                            statuses = await [
+                                        statuses = await [
                                           Permission.camera,
                                         ].request();
                                         if (Platform.isAndroid) {
@@ -405,22 +413,22 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     height: 1,
                                     width: getScreenWidth(context),
                                     color:
-                                        AppColors.borderColor.withOpacity(0.5),
+                                    AppColors.borderColor.withOpacity(0.5),
                                   ),
                                   FileSelectionOptionWidget(
                                       title:
-                                          AppLocalizations.of(context)!.gallery,
+                                      AppLocalizations.of(context)!.gallery,
                                       icon: Icons.photo,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                            statuses = await [
+                                        statuses = await [
                                           Permission.storage,
                                         ].request();
                                         if (Platform.isAndroid) {
                                           DeviceInfoPlugin deviceInfo =
-                                              DeviceInfoPlugin();
+                                          DeviceInfoPlugin();
                                           AndroidDeviceInfo androidInfo =
-                                              await deviceInfo.androidInfo;
+                                          await deviceInfo.androidInfo;
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
@@ -448,21 +456,21 @@ class FileUploadScreenWidget extends StatelessWidget {
                                     height: 1,
                                     width: getScreenWidth(context),
                                     color:
-                                        AppColors.borderColor.withOpacity(0.5),
+                                    AppColors.borderColor.withOpacity(0.5),
                                   ),
                                   FileSelectionOptionWidget(
                                       title: "Document",
                                       icon: Icons.file_open_rounded,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                            statuses = await [
+                                        statuses = await [
                                           Permission.storage,
                                         ].request();
                                         if (Platform.isAndroid) {
                                           DeviceInfoPlugin deviceInfo =
-                                              DeviceInfoPlugin();
+                                          DeviceInfoPlugin();
                                           AndroidDeviceInfo androidInfo =
-                                              await deviceInfo.androidInfo;
+                                          await deviceInfo.androidInfo;
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
@@ -489,30 +497,30 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   url.isEmpty
                                       ? 0.width
                                       : Column(
-                                          children: [
-                                            Container(
-                                              height: 1,
-                                              width: getScreenWidth(context),
-                                              color: AppColors.borderColor
-                                                  .withOpacity(0.5),
-                                            ),
-                                            FileSelectionOptionWidget(
-                                                title: AppLocalizations.of(
-                                                        context)!
-                                                    .remove,
-                                                icon: Icons.delete,
-                                                onTap: () {
-                                                  context
-                                                      .read<FileUploadBloc>()
-                                                      .add(FileUploadEvent
-                                                          .deleteFileEvent(
-                                                              context: context,
-                                                              index:
-                                                                  fileIndex));
-                                                  Navigator.pop(context);
-                                                }),
-                                          ],
-                                        ),
+                                    children: [
+                                      Container(
+                                        height: 1,
+                                        width: getScreenWidth(context),
+                                        color: AppColors.borderColor
+                                            .withOpacity(0.5),
+                                      ),
+                                      FileSelectionOptionWidget(
+                                          title: AppLocalizations.of(
+                                              context)!
+                                              .remove,
+                                          icon: Icons.delete,
+                                          onTap: () {
+                                            context
+                                                .read<FileUploadBloc>()
+                                                .add(FileUploadEvent
+                                                .deleteFileEvent(
+                                                context: context,
+                                                index:
+                                                fileIndex));
+                                            Navigator.pop(context);
+                                          }),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),

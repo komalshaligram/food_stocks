@@ -212,6 +212,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           emit(state.copyWith(isLoading: false));
         }
       } else if (event is _pickDocumentEvent) {
+        if (state.isUploadLoading) {
+          return;
+        }
         XFile? pickedFile;
         if (event.isDocument) {
           pickedFile = await ImagePicker()
@@ -229,8 +232,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           CroppedFile? croppedImage;
           if (fileType.contains('pdf') ||
               fileType.contains('doc') ||
-              fileType.contains('docx')) {
-          } else if (fileType.contains('jpg') ||
+              fileType.contains('docx')) {} else if (fileType.contains('jpg') ||
               fileType.contains('png') ||
               fileType.contains('jpeg') ||
               fileType.contains('heic')) {
@@ -257,12 +259,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             return;
           }
           if (int.parse(fileSize.split(' ').first) <=
-                  AppConstants.fileSizeCap &&
+              AppConstants.fileSizeCap &&
               fileSize.split(' ').last == 'KB') {
             debugPrint(
                 'file upload = ${pickedFile.path}\n${croppedImage?.path}');
             List<FormAndFileModel> formAndFileList =
-                state.formsAndFilesList.toList(growable: true);
+            state.formsAndFilesList.toList(growable: true);
             FormData formData = FormData.fromMap({
               formAndFileList[event.fileIndex].isForm ?? false
                   ? AppStrings.formString
@@ -277,7 +279,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               emit(state.copyWith(
                   isUploadLoading: true, uploadIndex: event.fileIndex));
               final res =
-                  await DioClient(event.context).uploadFileProgressWithFormData(
+              await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
                 formData: formData,
               );

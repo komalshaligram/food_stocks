@@ -1463,6 +1463,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -1537,8 +1539,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                             .read<HomeBloc>()
                                                             .add(HomeEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context

@@ -90,6 +90,7 @@ class AppStrings {
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';
   static const selectBusinessTypeString = 'Please select your business type';
+  static const uploadingMsgString = 'Please wait while uploading';
   static const selectValidDocumentFormatString =
       'Please select only image, pdf and document files';
   static const downloadString = 'Downloaded successfully!';

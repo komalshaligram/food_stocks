@@ -666,6 +666,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -741,8 +743,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                                 PlanogramProductBloc>()
                                                             .add(PlanogramProductEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context
