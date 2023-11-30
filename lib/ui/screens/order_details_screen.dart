@@ -28,7 +28,7 @@ class OrderDetailsScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) =>
-          OrderDetailsBloc() /*..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.idString] ?? ''))*/,
+          OrderDetailsBloc()..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.orderIdString] ?? '')),
       child: OrderDetailsScreenWidget(
         orderId: args?[AppStrings.orderIdString] ?? '',
         orderNumber: args?[AppStrings.orderNumberString] ?? '',
@@ -80,9 +80,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 ),
               ),
               body: FocusDetector(
-                onFocusGained: () => bloc.add(
+                onFocusGained: () {
+                  /*bloc.add(
                     OrderDetailsEvent.getOrderByIdEvent(
-                        context: context, orderId: orderId)),
+                        context: context, orderId: orderId));*/
+                },
                 child: (state.orderByIdList.data?.ordersBySupplier?.length ??
                             0) ==
                         0
