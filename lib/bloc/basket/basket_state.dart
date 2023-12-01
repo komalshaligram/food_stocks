@@ -11,6 +11,7 @@ class BasketState with _$BasketState {
     required List<ProductDetailsModel>basketProductList,
     required double totalPayment,
     required bool isLoading,
+    required int productImageIndex,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -20,7 +21,8 @@ class BasketState with _$BasketState {
      productWeight: 0,
        basketProductList : [],
      totalPayment: 0,
-     isLoading: false
+     isLoading: false,productImageIndex: 0
+
 
 );
 }

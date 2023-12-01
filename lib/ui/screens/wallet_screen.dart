@@ -11,7 +11,6 @@ import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -180,7 +179,9 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                          balance: state.balance.toInt(),
+                                          pendingBalance: state.balance,
+                                          expense: 100 -state.expensePercentage,
+                                          totalBalance: 100
                                         ),
                                       ],
                                     )),
@@ -369,7 +370,7 @@ class WalletScreenWidget extends StatelessWidget {
                                 ),
                               ),
                         15.height,
-                        7.width,
+                        20.width,
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppConstants.padding_10),
@@ -514,7 +515,7 @@ class WalletScreenWidget extends StatelessWidget {
                         Column(
                           children: [
                             Padding(
-                              padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
+                              padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.12),
                               child: state.isShimmering
                                   ? OrderSummaryScreenShimmerWidget()
                                   : state.walletTransactionsList.length != 0
@@ -693,14 +694,10 @@ class WalletScreenWidget extends StatelessWidget {
                 ),
               ),
             //  10.width,
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                    context, RouteDefine.orderSuccessfulScreen.name),
-                child: CircularButtonWidget(
-                  buttonName: AppLocalizations.of(context)!.balance_status,
-                  buttonValue:
-                      '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
-                ),
+              CircularButtonWidget(
+                buttonName: AppLocalizations.of(context)!.balance_status,
+                buttonValue:
+                    '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
               ),
             ],
           );
@@ -714,7 +711,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-     height: getScreenHeight(context) >= 725 ?  0.41 :getScreenHeight(context) * 0.48 ,
+     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.5 :getScreenHeight(context)/2 ,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

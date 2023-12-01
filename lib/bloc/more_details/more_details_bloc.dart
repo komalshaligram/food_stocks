@@ -12,6 +12,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 
@@ -231,6 +232,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 bgColor: AppColors.redColor);
           }
         } else {
+          PackageInfo packageInfo = await PackageInfo.fromPlatform();
+          String version = packageInfo.version;
+          print('version____${version}');
+
           ProfileModel reqMap = ProfileModel(
               profileImage: profileModel.profileImage,
               phoneNumber: profileModel.phoneNumber,
@@ -252,6 +257,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 israelId: profileModel.clientDetail?.israelId,
                 tokenId: preferencesHelper.getFCMToken(),
                 lastSeen: DateTime.now(),
+                applicationVersion: version
               ));
           debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('profile reqMap + $reqMap');

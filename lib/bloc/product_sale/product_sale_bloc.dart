@@ -57,8 +57,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 response.data?.toList(growable: true) ?? [];
             saleProductsList
                 .forEach((sale) => debugPrint('p = ${sale.endDate}'));
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+        /*    saleProductsList.removeWhere(
+                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);*/
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductSale> productSaleList =

@@ -69,7 +69,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
+    print('size____${getScreenHeight(context)}');
     return BlocListener<ProductDetailsBloc, ProductDetailsState>(
       listener: (context, state) {},
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
@@ -266,7 +266,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             // width: 150,
                                             // height: 40,
                                             child: Expanded(
-                                            flex: 3,
+                                            flex: 4,
                                             child: CustomFormField(
                                               controller: driverController,
                                               inputformet: [
@@ -337,7 +337,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             // width: 150,
                                             // height: 35,
                                             child: Expanded(
-                                              flex: 3,
+                                              flex: 5,
                                               child: CustomFormField(
                                                 inputformet: [
                                                   FilteringTextInputFormatter
@@ -576,7 +576,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   : SizedBox(),
               getScreenHeight(context) >= 730 ? 7.width : 2.width,
               Container(
-                width: 50,
+                width:  state.orderBySupplierProduct.orderDeliveryDate != ''? 50 : 65,
                 child: Text(
                   state.orderBySupplierProduct.products![index].productName
                       .toString(),

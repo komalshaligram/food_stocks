@@ -40,14 +40,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     on<WalletEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
+      var date = new DateTime.now().toString();
+      var date1 = new DateTime.now();
+      var dateParse = DateTime.parse(date.toString());
       if (event is _checkLanguage) {
 
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
       } else if (event is _getYearListEvent) {
         emit(state.copyWith(isShimmering: true));
-        var date = new DateTime.now().toString();
-        var dateParse = DateTime.parse(date);
         int formattedYear = dateParse.year.toInt();
         List<int> temp = [
           formattedYear,
@@ -80,7 +80,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 lastMonthExpense:
                     response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
+            ));
           } else {
             showSnackBar(
                 context: event.context,
@@ -145,12 +147,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
 
+
+
           AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
               userId: preferencesHelper.getUserId(),
               pageNum: state.pageNum + 1,
               pageLimit: AppConstants.walletLimit,
-              startDate: event.startDate,
-              endDate: event.endDate);
+              startDate: event.startDate ?? date1,
+              endDate: event.endDate ?? date1);
 
           debugPrint('AllWalletTransactionReqModel = $reqMap}');
 

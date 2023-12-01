@@ -107,8 +107,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
             saleProductsList.map((sale) => debugPrint('${sale.endDate}'));
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+           /* saleProductsList.removeWhere(
+                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);*/
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList = [];
@@ -481,7 +481,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     response.data?.previousMonth?.totalExpenses?.toDouble() ??
                         0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
+            ));
+
           } else {
             showSnackBar(
                 context: event.context,
