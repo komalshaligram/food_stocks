@@ -43,7 +43,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "fax") String? fax,
     @JsonKey(name: "lastSeen") DateTime? lastSeen,
     // @JsonKey(name: "monthlyCredits") int? monthlyCredits,
-    // @JsonKey(name: "applicationVersion") String? applicationVersion,
+     @JsonKey(name: "applicationVersion") String? applicationVersion,
     @JsonKey(name: "deviceType") String? deviceType,
   }) = _ClientDetail;
 

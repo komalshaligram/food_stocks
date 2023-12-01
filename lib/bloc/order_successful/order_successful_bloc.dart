@@ -49,7 +49,9 @@ class OrderSuccessfulBloc
                 thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
                 lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
+            ));
           } else {
             showSnackBar(
                 context: event.context,

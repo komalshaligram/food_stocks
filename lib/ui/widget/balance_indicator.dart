@@ -6,21 +6,23 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
 
 class BalanceIndicator extends StatelessWidget {
-  final int balance;
+  final double pendingBalance;
+  final double expense;
+  final double totalBalance;
 
-  BalanceIndicator({super.key, required this.balance});
+  BalanceIndicator({super.key, required this.pendingBalance ,required this.expense , required this.totalBalance});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 70,
-      width: 70,
+      height: 80,
+      width: 80,
       child: SfRadialGauge(
         backgroundColor: Colors.transparent,
         axes: [
           RadialAxis(
             minimum: 0,
-            maximum: 10000,
+            maximum: totalBalance,
             showLabels: false,
             showTicks: false,
             startAngle: 270,
@@ -34,7 +36,7 @@ class BalanceIndicator extends StatelessWidget {
               GaugeAnnotation(
                 angle: 270,
                 widget: Text(
-                  '$balance\n${AppLocalizations.of(context)!.currency}',
+                 '$pendingBalance\n${AppLocalizations.of(context)!.currency}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_14,
                       color: AppColors.blackColor,
@@ -50,7 +52,7 @@ class BalanceIndicator extends StatelessWidget {
                 animationDuration: 300,
                 animationType: AnimationType.ease,
                 cornerStyle: CornerStyle.bothCurve,
-                value: balance.toDouble(),
+                value: expense,
                 width: 6,
               ),
             ],

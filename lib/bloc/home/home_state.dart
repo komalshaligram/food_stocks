@@ -25,6 +25,7 @@ class HomeState with _$HomeState {
     required int imageIndex,
     required List<MessageData> messageList,
     required bool isMessageShimmering,
+    required double expensePercentage,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -50,5 +51,6 @@ class HomeState with _$HomeState {
         imageIndex: 0,
         messageList: [],
         isMessageShimmering: false,
+    expensePercentage: 0
       );
 }

@@ -11,7 +11,6 @@ import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -37,7 +36,8 @@ class WalletScreen extends StatelessWidget {
       create: (context) => WalletBloc()
         ..add(WalletEvent.getYearListEvent())
         ..add(WalletEvent.getWalletRecordEvent(context: context))
-        ..add(WalletEvent.getOrderCountEvent(context: context)),
+        ..add(WalletEvent.getOrderCountEvent(context: context))
+      ..add(WalletEvent.checkLanguage()),
       child: WalletScreenWidget(),
     );
   }
@@ -179,7 +179,9 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                          balance: state.balance.toInt(),
+                                          pendingBalance: state.balance,
+                                          expense: 100 -state.expensePercentage,
+                                          totalBalance: 100
                                         ),
                                       ],
                                     )),
@@ -271,11 +273,11 @@ class WalletScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                        20.height,
+                        30.height,
                         state.monthlyExpenseList.isEmpty
                             ? WalletScreenShimmerWidget()
                             : Padding(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: SizedBox(
                                   height: getScreenHeight(context) * 0.21,
                                   width: double.maxFinite,
@@ -286,24 +288,21 @@ class WalletScreenWidget extends StatelessWidget {
                                         LineChartData(
                                         borderData: FlBorderData(show: false),
                                         lineTouchData: LineTouchData(
-                                        touchSpotThreshold: 30.0,
-                                          getTouchLineEnd:
-                                              (barData, spotIndex) {
-                                            return 46;
-                                          },
+                                      //  touchSpotThreshold: 30.0,
+
                                           enabled: true,
                                           touchTooltipData: LineTouchTooltipData(
                                                 fitInsideHorizontally: true,
                                             getTooltipItems: (value) {
                                               return value.map((e) {
                                                 return LineTooltipItem(
-                                                    "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total} : ${AppLocalizations.of(context)!.currency}${e.y}",
+                                                    "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y}${AppLocalizations.of(context)!.currency}",
                                                     TextStyle(fontSize: 8));
                                               }).toList();
                                             },
                                             tooltipBgColor: Colors.transparent,
                                             showOnTopOfTheChartBoxArea: true,
-                                            tooltipMargin: 5,
+                                            tooltipMargin: 0,
                                           ),
                                         ),
                                         lineBarsData: [
@@ -371,7 +370,7 @@ class WalletScreenWidget extends StatelessWidget {
                                 ),
                               ),
                         15.height,
-                        7.width,
+                        20.width,
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppConstants.padding_10),
@@ -422,7 +421,7 @@ class WalletScreenWidget extends StatelessWidget {
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
-                                          horizontal: AppConstants.padding_8),
+                                          horizontal: state.language == "en" ? AppConstants.padding_5 : AppConstants.padding_8),
                                       decoration: BoxDecoration(
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.circular(
@@ -438,7 +437,7 @@ class WalletScreenWidget extends StatelessWidget {
                                   5.width,
                                   Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5,
+                                          horizontal: state.language == "en" ? 0 :AppConstants.padding_5,
                                           vertical: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
@@ -516,7 +515,7 @@ class WalletScreenWidget extends StatelessWidget {
                         Column(
                           children: [
                             Padding(
-                              padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.1),
+                              padding:  EdgeInsets.only(bottom: getScreenHeight(context) * 0.12),
                               child: state.isShimmering
                                   ? OrderSummaryScreenShimmerWidget()
                                   : state.walletTransactionsList.length != 0
@@ -628,7 +627,7 @@ class WalletScreenWidget extends StatelessWidget {
         value: date,
     underline: SizedBox(),
     borderRadius: BorderRadius.all(Radius.zero),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         dropdownColor: AppColors.whiteColor,
        alignment: Alignment.bottomCenter,
         items: dateList.map((e) {
@@ -695,14 +694,10 @@ class WalletScreenWidget extends StatelessWidget {
                 ),
               ),
             //  10.width,
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                    context, RouteDefine.orderSuccessfulScreen.name),
-                child: CircularButtonWidget(
-                  buttonName: AppLocalizations.of(context)!.balance_status,
-                  buttonValue:
-                      '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
-                ),
+              CircularButtonWidget(
+                buttonName: AppLocalizations.of(context)!.balance_status,
+                buttonValue:
+                    '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
               ),
             ],
           );
@@ -716,7 +711,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-     height: getScreenHeight(context) >= 725 ?  0.41 :getScreenHeight(context) * 0.48 ,
+     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.5 :getScreenHeight(context)/2 ,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,
