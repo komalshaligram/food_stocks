@@ -107,8 +107,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+            // saleProductsList.removeWhere(
+            //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =
@@ -264,6 +264,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
@@ -273,6 +275,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
+                          stock: int.parse(supplier.productStock ?? '0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -529,6 +532,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
                       supplierList[event.supplierIndex].supplierId,
+                  stock: supplierList[event.supplierIndex].stock,
+                  quantity: 0,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
@@ -593,7 +598,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         image: sale.mainImage ?? ''))
                     .toList() ??
                 []);
-            //supplier search result
+            // supplier search result
+            searchList.addAll(response.data?.supplierData
+                    ?.map((supplier) => SearchModel(
+                        searchId: supplier.id ?? '',
+                        name: supplier.supplierDetail?.companyName ?? '',
+                        searchType: SearchTypes.supplier,
+                        image: supplier.logo ?? ''))
+                    .toList() ??
+                []);
+            //supplier products result
             searchList.addAll(response.data?.supplierProductData
                     ?.map((supplier) => SearchModel(
                         searchId: supplier.id ?? '',

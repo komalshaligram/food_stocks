@@ -35,6 +35,7 @@ class Data with _$Data {
     @JsonKey(name: "saleData") List<SaleDatum>? saleData,
     @JsonKey(name: "supplierProductData")
     List<SupplierProductDatum>? supplierProductData,
+    @JsonKey(name: "supplierData") List<SupplierDatum>? supplierData,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -118,6 +119,146 @@ class Image with _$Image {
 }
 
 @freezed
+class SupplierDatum with _$SupplierDatum {
+  const factory SupplierDatum({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "password") String? password,
+    @JsonKey(name: "phoneNumber") String? phoneNumber,
+    @JsonKey(name: "address") String? address,
+    @JsonKey(name: "cityId") String? cityId,
+    @JsonKey(name: "contactName") String? contactName,
+    @JsonKey(name: "statusId") String? statusId,
+    @JsonKey(name: "logo") String? logo,
+    @JsonKey(name: "adminTypeId") String? adminTypeId,
+    @JsonKey(name: "supplierDetail") SupplierDetail? supplierDetail,
+    @JsonKey(name: "createdBy") String? createdBy,
+    @JsonKey(name: "updatedBy") String? updatedBy,
+    @JsonKey(name: "isDeleted") bool? isDeleted,
+    @JsonKey(name: "createdAt") String? createdAt,
+    @JsonKey(name: "updatedAt") String? updatedAt,
+    @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "lastSeen") dynamic lastSeen,
+    @JsonKey(name: "status") Status? status,
+    @JsonKey(name: "fromDate") dynamic fromDate,
+    @JsonKey(name: "order") String? order,
+    @JsonKey(name: "totalIncome") String? totalIncome,
+    @JsonKey(name: "incomeByThisMonth") String? incomeByThisMonth,
+    @JsonKey(name: "_idSearch") String? idSearch,
+  }) = _SupplierDatum;
+
+  factory SupplierDatum.fromJson(Map<String, dynamic> json) =>
+      _$SupplierDatumFromJson(json);
+}
+
+@freezed
+class Status with _$Status {
+  const factory Status({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "statusName") String? statusName,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "isDeleted") bool? isDeleted,
+  }) = _Status;
+
+  factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
+}
+
+@freezed
+class SupplierDetail with _$SupplierDetail {
+  const factory SupplierDetail({
+    @JsonKey(name: "companyIdNumber") int? companyIdNumber,
+    @JsonKey(name: "companyName") String? companyName,
+    @JsonKey(name: "suppliersTypeId") String? suppliersTypeId,
+    @JsonKey(name: "hasImport") bool? hasImport,
+    @JsonKey(name: "hasLogistics") bool? hasLogistics,
+    @JsonKey(name: "hasDistribution") bool? hasDistribution,
+    @JsonKey(name: "categoriesIds") List<String>? categoriesIds,
+    @JsonKey(name: "suplierPolicy") List<SuplierPolicy>? suplierPolicy,
+    @JsonKey(name: "hasDistributionPolicy") bool? hasDistributionPolicy,
+    @JsonKey(name: "distributionDetails")
+    DistributionDetails? distributionDetails,
+    @JsonKey(name: "order") dynamic order,
+    @JsonKey(name: "isHomePreference") bool? isHomePreference,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+  }) = _SupplierDetail;
+
+  factory SupplierDetail.fromJson(Map<String, dynamic> json) =>
+      _$SupplierDetailFromJson(json);
+}
+
+@freezed
+class DistributionDetails with _$DistributionDetails {
+  const factory DistributionDetails({
+    @JsonKey(name: "A1") A1? a1,
+    @JsonKey(name: "center") A1? center,
+    @JsonKey(name: "east") A1? east,
+    @JsonKey(name: "judea") A1? judea,
+    @JsonKey(name: "north") A1? north,
+    @JsonKey(name: "south") A1? south,
+    @JsonKey(name: "west") A1? west,
+  }) = _DistributionDetails;
+
+  factory DistributionDetails.fromJson(Map<String, dynamic> json) =>
+      _$DistributionDetailsFromJson(json);
+}
+
+@freezed
+class A1 with _$A1 {
+  const factory A1({
+    @JsonKey(name: "Sunday") Day? sunday,
+    @JsonKey(name: "Monday") Day? monday,
+    @JsonKey(name: "Tuesday") Day? tuesday,
+    @JsonKey(name: "Wednesday") Day? wednesday,
+    @JsonKey(name: "Thursday") Day? thursday,
+    @JsonKey(name: "Friday") Day? friday,
+    @JsonKey(name: "Saturday") Day? saturday,
+  }) = _A1;
+
+  factory A1.fromJson(Map<String, dynamic> json) => _$A1FromJson(json);
+}
+
+@freezed
+class Day with _$Day {
+  const factory Day({
+    @JsonKey(name: "startTime") String? startTime,
+    @JsonKey(name: "endTime") String? endTime,
+  }) = _Day;
+
+  factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
+}
+
+@freezed
+class SuplierPolicy with _$SuplierPolicy {
+  const factory SuplierPolicy({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "policyHeading") String? policyHeading,
+    @JsonKey(name: "toggleSwitchKey") String? toggleSwitchKey,
+    @JsonKey(name: "fields") List<Field>? fields,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "toggleSwitchValue") bool? toggleSwitchValue,
+  }) = _SuplierPolicy;
+
+  factory SuplierPolicy.fromJson(Map<String, dynamic> json) =>
+      _$SuplierPolicyFromJson(json);
+}
+
+@freezed
+class Field with _$Field {
+  const factory Field({
+    @JsonKey(name: "fieldKey") String? fieldKey,
+    @JsonKey(name: "fieldType") String? fieldType,
+    @JsonKey(name: "_id") String? id,
+  }) = _Field;
+
+  factory Field.fromJson(Map<String, dynamic> json) => _$FieldFromJson(json);
+}
+
+@freezed
 class SupplierProductDatum with _$SupplierProductDatum {
   const factory SupplierProductDatum({
     @JsonKey(name: "_id") String? id,
@@ -139,7 +280,7 @@ class SupplierProductDatum with _$SupplierProductDatum {
     @JsonKey(name: "updatedAt") String? updatedAt,
     @JsonKey(name: "productId") String? productId,
     @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "productPrice") int? productPrice,
+    @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "productStock") int? productStock,
   }) = _SupplierProductDatum;
 

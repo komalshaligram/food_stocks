@@ -57,8 +57,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 response.data?.toList(growable: true) ?? [];
             saleProductsList
                 .forEach((sale) => debugPrint('p = ${sale.endDate}'));
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+            // saleProductsList.removeWhere(
+            //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductSale> productSaleList =
@@ -112,6 +112,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
@@ -121,6 +123,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
+                          stock: int.parse(supplier.productStock ?? '0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -265,6 +268,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                       : supplierList[event.supplierIndex]
                           .supplierSales[event.supplierSaleIndex]
                           .salePrice,
+                  stock: supplierList[event.supplierIndex].stock,
+                  quantity: 0,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : supplierList[event.supplierIndex]

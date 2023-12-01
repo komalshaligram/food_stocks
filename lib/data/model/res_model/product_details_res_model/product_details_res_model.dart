@@ -97,6 +97,7 @@ class SupplierSale with _$SupplierSale {
     @JsonKey(name: "supplierName") String? supplierName,
     @JsonKey(name: "supplierCompanyName") String? supplierCompanyName,
     @JsonKey(name: "productPrice") String? productPrice,
+    @JsonKey(name: "productStock") String? productStock,
     @JsonKey(name: "saleProduct") List<SaleProduct>? saleProduct,
   }) = _SupplierSale;
 

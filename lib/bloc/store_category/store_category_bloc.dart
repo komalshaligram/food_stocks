@@ -269,15 +269,18 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
             debugPrint(
                 'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');
             supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ?? '',
+                    ?.map((supplier) => ProductSupplierModel(
+                          supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
+                          stock: int.parse(supplier.productStock ?? '0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[planoGramIndex]
@@ -446,17 +449,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             [state.productStockUpdateIndex]
                 .copyWith(
                 productSupplierIds:
-                supplierList[event.supplierIndex].supplierId,
-                totalPrice: event.supplierSaleIndex == -2
-                    ? supplierList[event.supplierIndex].basePrice
-                    : supplierList[event.supplierIndex]
-                    .supplierSales[event.supplierSaleIndex]
-                    .salePrice,
-                productSaleId: event.supplierSaleIndex == -2
-                    ? ''
-                    : supplierList[event.supplierIndex]
-                    .supplierSales[event.supplierSaleIndex]
-                    .saleId);
+                        supplierList[event.supplierIndex].supplierId,
+                    stock: supplierList[event.supplierIndex].stock,
+                    quantity: 0,
+                    totalPrice: event.supplierSaleIndex == -2
+                        ? supplierList[event.supplierIndex].basePrice
+                        : supplierList[event.supplierIndex]
+                            .supplierSales[event.supplierSaleIndex]
+                            .salePrice,
+                    productSaleId: event.supplierSaleIndex == -2
+                        ? ''
+                        : supplierList[event.supplierIndex]
+                            .supplierSales[event.supplierSaleIndex]
+                            .saleId);
         debugPrint(
             'stock supplier id = ${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productSupplierIds}');
         debugPrint(

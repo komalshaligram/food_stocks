@@ -93,7 +93,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } on ServerException {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isProductSaleShimmering: true));
@@ -107,8 +108,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
             saleProductsList.map((sale) => debugPrint('${sale.endDate}'));
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+            // saleProductsList.removeWhere(
+            //     (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList = [];
@@ -151,6 +152,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             //     'response supplier id = ${response.product?.first.supplierSales?.supplier?.id ?? ''}');
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             supplierList.addAll(response.product?.first.supplierSales
                     ?.map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
@@ -198,9 +201,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           //                 Sale()) ??
                           // -1
                           // : -1,
+                          stock: int.parse(supplier.productStock ?? '0'),
                           supplierSales: supplier.saleProduct
                                   ?.map((sale) => SupplierSaleModel(
-                              saleId: sale.saleId ?? '',
+                                      saleId: sale.saleId ?? '',
                                       saleName: sale.saleName ?? '',
                                       saleDescription:
                                           parse(sale.salesDescription ?? '')
@@ -322,6 +326,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       supplierList[event.supplierIndex]
                           .supplierSales[event.supplierSaleIndex]
                           .salePrice,
+                  stock: supplierList[event.supplierIndex].stock,
+                  quantity: 0,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : /*supplierList[event.supplierIndex].selectedIndex ==
@@ -488,7 +494,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
@@ -523,7 +530,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
-        } on ServerException {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _GetMessageListEvent) {
         try {
           emit(state.copyWith(isMessageShimmering: true));

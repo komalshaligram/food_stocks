@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -123,7 +124,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   onTap: () {
                                     showModalBottomSheet(
                                         context: context,
-                                        builder: (context) => Container(
+                                        builder: (context1) => Container(
                                               decoration: BoxDecoration(
                                                 color: AppColors.whiteColor,
                                                 borderRadius: BorderRadius.only(
@@ -144,7 +145,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                 children: [
                                                   Text(
                                                     AppLocalizations.of(
-                                                            context)!
+                                                            context1)!
                                                         .upload_photo,
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -159,8 +160,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   30.height,
                                                   FileSelectionOptionWidget(
                                                       title:
-                                                          AppLocalizations.of(
-                                                                  context)!
+                                                      AppLocalizations.of(
+                                                                  context1)!
                                                               .camera,
                                                       icon: Icons
                                                           .camera_alt_rounded,
@@ -184,7 +185,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 bgColor: AppColors
                                                                     .redColor);
                                                             Navigator.pop(
-                                                                context);
+                                                                context1);
                                                             return;
                                                           }
                                                         } else if (Platform
@@ -197,21 +198,19 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     context,
                                                                 isFromCamera:
                                                                     true));
-                                                        Navigator.pop(context);
+                                                        Navigator.pop(context1);
                                                       }),
-                                                  Container(
-                                                    height: 1,
-                                                    width:
-                                                        getScreenWidth(context),
-                                                    color: AppColors.borderColor
-                                                        .withOpacity(0.5),
-                                                  ),
                                                   FileSelectionOptionWidget(
                                                       title:
                                                           AppLocalizations.of(
-                                                                  context)!
+                                                                  context1)!
                                                               .gallery,
                                                       icon: Icons.photo,
+                                                      lastItem: state
+                                                              .UserImageUrl
+                                                              .isEmpty
+                                                          ? true
+                                                          : false,
                                                       onTap: () async {
                                                         Map<Permission,
                                                                 PermissionStatus>
@@ -243,7 +242,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   bgColor: AppColors
                                                                       .redColor);
                                                               Navigator.pop(
-                                                                  context);
+                                                                  context1);
                                                               return;
                                                             }
                                                           }
@@ -257,33 +256,47 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     context,
                                                                 isFromCamera:
                                                                     false));
-                                                        Navigator.pop(context);
+                                                        Navigator.pop(context1);
                                                       }),
-                                                  // Column(
-                                                  //   children: [
-                                                  //     Container(
-                                                  //       height: 1,
-                                                  //       width: getScreenWidth(context),
-                                                  //       color: AppColors.borderColor
-                                                  //           .withOpacity(0.5),
-                                                  //     ),
-                                                  //     FileSelectionOptionWidget(
-                                                  //         title: AppLocalizations.of(
-                                                  //             context)!
-                                                  //             .remove,
-                                                  //         icon: Icons.delete,
-                                                  //         onTap: () {
-                                                  //           // context
-                                                  //           //     .read<ProfileBloc>()
-                                                  //           //     .add(ProfileEvent
-                                                  //           //     .deleteFileEvent(
-                                                  //           //     context: context,
-                                                  //           //     index:
-                                                  //           //     fileIndex));
-                                                  //           Navigator.pop(context);
-                                                  //         }),
-                                                  //   ],
-                                                  // )
+                                                  state.UserImageUrl.isEmpty
+                                                      ? 0.width
+                                                      : FileSelectionOptionWidget(
+                                                          title: AppLocalizations
+                                                                  .of(context1)!
+                                                              .remove,
+                                                          icon: Icons.delete,
+                                                          lastItem: true,
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context1);
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (context2) =>
+                                                                  CommonAlertDialog(
+                                                                title: "Remove",
+                                                                subTitle:
+                                                                    'Are you sure?',
+                                                                positiveTitle:
+                                                                    'Yes',
+                                                                negativeTitle:
+                                                                    'No',
+                                                                negativeOnTap:
+                                                                    () {
+                                                                  Navigator.pop(
+                                                                      context2);
+                                                                },
+                                                                positiveOnTap:
+                                                                    () async {
+                                                                  bloc.add(ProfileEvent
+                                                                      .deleteFileEvent(
+                                                                          context:
+                                                                              context));
+                                                                  Navigator.pop(
+                                                                      context2);
+                                                                },
+                                                              ),
+                                                            );
+                                                          })
                                                 ],
                                               ),
                                             ),

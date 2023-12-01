@@ -91,7 +91,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         : CircularButtonWidget(
                             buttonName: AppLocalizations.of(context)!.total,
                             buttonValue:
-                                '${bloc.splitNumber(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                '${(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                           ),
                   ),
                   onTap: () {
@@ -204,7 +204,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       title: AppLocalizations.of(context)!
                                           .total_order,
                                       value:
-                                          '${bloc.splitNumber(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                          '${(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w500,
@@ -585,7 +585,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
@@ -593,7 +593,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               10.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,

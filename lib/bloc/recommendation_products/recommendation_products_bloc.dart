@@ -124,6 +124,8 @@ class RecommendationProductsBloc
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
@@ -133,6 +135,7 @@ class RecommendationProductsBloc
                           companyName: supplier.supplierCompanyName ?? '',
                           basePrice:
                               double.parse(supplier.productPrice ?? '0.0'),
+                          stock: int.parse(supplier.productStock ?? '0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   state
                                       .productStockList[productStockUpdateIndex]
@@ -272,6 +275,8 @@ class RecommendationProductsBloc
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
                       supplierList[event.supplierIndex].supplierId,
+                  stock: supplierList[event.supplierIndex].stock,
+                  quantity: 0,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]

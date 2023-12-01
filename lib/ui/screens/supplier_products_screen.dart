@@ -318,6 +318,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
               child: CommonProductButtonWidget(
                 title:
                 "${productPrice.toStringAsFixed(
+                    AppConstants.amountFrLength) == "0.00" ? '0' : productPrice
+                    .toStringAsFixed(
                     AppConstants.amountFrLength)}${AppLocalizations.of(context)!
                     .currency}",
                 onPressed: onPressed,

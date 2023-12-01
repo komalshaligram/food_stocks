@@ -496,14 +496,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
                   },
                   onSearch: (String search) {
-                    if (search.length > 2) {
-                      bloc.add(StoreCategoryEvent.globalSearchEvent(
-                          context: context, search: search));
-                    }
+                    // if (search.length > 2) {
+                    //   bloc.add(StoreCategoryEvent.globalSearchEvent(
+                    //       context: context, search: search));
+                    // }
                   },
                   onSearchSubmit: (String search) {
-                    bloc.add(StoreCategoryEvent.globalSearchEvent(
-                        context: context, search: search));
+                    // bloc.add(StoreCategoryEvent.globalSearchEvent(
+                    //     context: context, search: search));
                   },
                   onSearchTap: () {
                     bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
@@ -833,6 +833,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   child: CommonProductButtonWidget(
                     title:
                     "${state.planoGramsList[index].planogramproducts?[subIndex]
+                        .productPrice?.toStringAsFixed(
+                        AppConstants.amountFrLength) == "0.00" ? '0' : state
+                        .planoGramsList[index].planogramproducts?[subIndex]
                         .productPrice?.toStringAsFixed(
                         AppConstants.amountFrLength)}${AppLocalizations.of(
                         context)!.currency}",
@@ -1356,9 +1359,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required String categoryName,
     String? subCategoryName}) {
     return Container(
-      margin: const EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_10),
+      width: getScreenWidth(context),
+      margin: EdgeInsets.only(top: AppConstants.padding_10,
+          left: context.rtl ? 0 : AppConstants.padding_10,
+          right: context.rtl ? AppConstants.padding_10 : 0,
+          bottom: AppConstants.padding_10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1426,19 +1431,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  subCategoryName ?? '',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      color: AppColors.blackColor),
-                  textAlign: TextAlign.end,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            child: Text(
+              subCategoryName ?? '',
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont,
+                  color: AppColors.blackColor),
+              // textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

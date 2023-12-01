@@ -15,6 +15,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -365,161 +366,212 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   borderType: BorderType.RRect,
                                   strokeWidth: 1,
                                   dashPattern: [3, 2],
-                                  child: Container(
-                                    color: AppColors.whiteColor,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: AppColors
-                                                              .whiteColor,
-                                                          borderRadius: BorderRadius.only(
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      AppConstants
-                                                                          .radius_20),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      AppConstants
-                                                                          .radius_20)),
-                                                        ),
-                                                        clipBehavior:
-                                                            Clip.hardEdge,
-                                                        padding: EdgeInsets.symmetric(
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_30,
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_20),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .upload_photo,
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .normalFont,
-                                                                  color: AppColors
-                                                                      .blackColor,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                            30.height,
-                                                            FileSelectionOptionWidget(
-                                                                title: AppLocalizations.of(
-                                                                            context)!
-                                                                        .camera,
-                                                                    icon: Icons
-                                                                        .camera_alt_rounded,
-                                                                    onTap:
-                                                                        () async {
-                                                                      Map<Permission,
-                                                                              PermissionStatus>
-                                                                          statuses =
-                                                                          await [
-                                                                        Permission
-                                                                            .camera,
-                                                                      ].request();
-                                                                      if (Platform
-                                                                          .isAndroid) {
-                                                                        if (!statuses[Permission.camera]!
-                                                                            .isGranted) {
-                                                                          showSnackBar(
-                                                                              context: context,
-                                                                              title: AppStrings.cameraAllowPermissionString,
-                                                                              bgColor: AppColors.redColor);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          return;
-                                                                        }
-                                                                      } else if (Platform
-                                                                          .isIOS) {
-                                                                        // Navigator.pop(context);
-                                                                      }
-                                                                      bloc.add(MoreDetailsEvent.pickLogoImageEvent(
-                                                                          context:
-                                                                              context,
-                                                                          isFromCamera:
-                                                                              true));
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    }),
-                                                            FileSelectionOptionWidget(
-                                                                title: AppLocalizations.of(
-                                                                            context)!
-                                                                        .gallery,
-                                                                    icon: Icons
-                                                                        .photo,
-                                                                    onTap:
-                                                                        () async {
-                                                                      Map<Permission,
-                                                                              PermissionStatus>
-                                                                          statuses =
-                                                                          await [
-                                                                        Permission
-                                                                            .storage,
-                                                                      ].request();
-                                                                      if (Platform
-                                                                          .isAndroid) {
-                                                                        DeviceInfoPlugin
-                                                                            deviceInfo =
-                                                                            DeviceInfoPlugin();
-                                                                        AndroidDeviceInfo
-                                                                            androidInfo =
-                                                                            await deviceInfo.androidInfo;
-                                                                        if (androidInfo.version.sdkInt <
-                                                                            33) {
-                                                                          if (!statuses[Permission.storage]!
-                                                                              .isGranted) {
-                                                                            showSnackBar(
-                                                                                context: context,
-                                                                                title: AppStrings.storageAllowPermissionString,
-                                                                                bgColor: AppColors.redColor);
-                                                                            Navigator.pop(context);
-                                                                            return;
-                                                                          }
-                                                                        }
-                                                                      } else if (Platform
-                                                                          .isIOS) {
-                                                                        // Navigator.pop(context);
-                                                                      }
-                                                                      bloc.add(MoreDetailsEvent.pickLogoImageEvent(
-                                                                          context:
-                                                                              context,
-                                                                          isFromCamera:
-                                                                              false));
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    }),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                  backgroundColor:
-                                                      Colors.transparent);
-                                            },
-                                            child: state.isUpdate
-                                                ? state.companyLogo.isNotEmpty
-                                                    ? state.image.path != ''
-                                                        ? SizedBox(
-                                                            height:
-                                                                getScreenHeight(
-                                                                        context) *
-                                                                    0.18,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context1) => Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.whiteColor,
+                                                  borderRadius: BorderRadius.only(
+                                                      topRight: Radius.circular(
+                                                          AppConstants
+                                                              .radius_20),
+                                                      topLeft: Radius.circular(
+                                                          AppConstants
+                                                              .radius_20)),
+                                                ),
+                                                clipBehavior: Clip.hardEdge,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        AppConstants.padding_30,
+                                                    vertical: AppConstants
+                                                        .padding_20),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context1)!
+                                                          .upload_photo,
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .normalFont,
+                                                              color: AppColors
+                                                                  .blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                    ),
+                                                    30.height,
+                                                    FileSelectionOptionWidget(
+                                                        title:
+                                                            AppLocalizations.of(
+                                                                    context1)!
+                                                                .camera,
+                                                        icon: Icons
+                                                            .camera_alt_rounded,
+                                                        onTap: () async {
+                                                          Map<Permission,
+                                                                  PermissionStatus>
+                                                              statuses = await [
+                                                            Permission.camera,
+                                                          ].request();
+                                                          if (Platform
+                                                              .isAndroid) {
+                                                            if (!statuses[
+                                                                    Permission
+                                                                        .camera]!
+                                                                .isGranted) {
+                                                              showSnackBar(
+                                                                  context:
+                                                                      context,
+                                                                  title: AppStrings
+                                                                      .cameraAllowPermissionString,
+                                                                  bgColor: AppColors
+                                                                      .redColor);
+                                                              Navigator.pop(
+                                                                  context1);
+                                                              return;
+                                                            }
+                                                          } else if (Platform
+                                                              .isIOS) {
+                                                            // Navigator.pop(context);
+                                                          }
+                                                          bloc.add(MoreDetailsEvent
+                                                              .pickLogoImageEvent(
+                                                                  context:
+                                                                      context,
+                                                                  isFromCamera:
+                                                                      true));
+                                                          Navigator.pop(
+                                                              context);
+                                                        }),
+                                                    FileSelectionOptionWidget(
+                                                        title:
+                                                            AppLocalizations.of(
+                                                                    context1)!
+                                                                .gallery,
+                                                        icon: Icons.photo,
+                                                        lastItem: state
+                                                                .companyLogo
+                                                                .isEmpty
+                                                            ? true
+                                                            : false,
+                                                        onTap: () async {
+                                                          Map<Permission,
+                                                                  PermissionStatus>
+                                                              statuses = await [
+                                                            Permission.storage,
+                                                          ].request();
+                                                          if (Platform
+                                                              .isAndroid) {
+                                                            DeviceInfoPlugin
+                                                                deviceInfo =
+                                                                DeviceInfoPlugin();
+                                                            AndroidDeviceInfo
+                                                                androidInfo =
+                                                                await deviceInfo
+                                                                    .androidInfo;
+                                                            if (androidInfo
+                                                                    .version
+                                                                    .sdkInt <
+                                                                33) {
+                                                              if (!statuses[
+                                                                      Permission
+                                                                          .storage]!
+                                                                  .isGranted) {
+                                                                showSnackBar(
+                                                                    context:
+                                                                        context,
+                                                                    title: AppStrings
+                                                                        .storageAllowPermissionString,
+                                                                    bgColor:
+                                                                        AppColors
+                                                                            .redColor);
+                                                                Navigator.pop(
+                                                                    context1);
+                                                                return;
+                                                              }
+                                                            }
+                                                          } else if (Platform
+                                                              .isIOS) {
+                                                            // Navigator.pop(context);
+                                                          }
+                                                          bloc.add(MoreDetailsEvent
+                                                              .pickLogoImageEvent(
+                                                                  context:
+                                                                      context,
+                                                                  isFromCamera:
+                                                                      false));
+                                                          Navigator.pop(
+                                                              context1);
+                                                        }),
+                                                    state.companyLogo.isEmpty
+                                                        ? 0.width
+                                                        : FileSelectionOptionWidget(
+                                                            title: AppLocalizations
+                                                                    .of(context1)!
+                                                                .remove,
+                                                            icon: Icons.delete,
+                                                            lastItem: true,
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context1);
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context2) =>
+                                                                        CommonAlertDialog(
+                                                                  title:
+                                                                      "Remove",
+                                                                  subTitle:
+                                                                      'Are you sure?',
+                                                                  positiveTitle:
+                                                                      'Yes',
+                                                                  negativeTitle:
+                                                                      'No',
+                                                                  negativeOnTap:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context2);
+                                                                  },
+                                                                  positiveOnTap:
+                                                                      () async {
+                                                                    bloc.add(MoreDetailsEvent.deleteFileEvent(
+                                                                        context:
+                                                                            context));
+                                                                    Navigator.pop(
+                                                                        context2);
+                                                                  },
+                                                                ),
+                                                              );
+                                                            })
+                                                  ],
+                                                ),
+                                              ),
+                                          backgroundColor: Colors.transparent);
+                                    },
+                                    child: Container(
+                                      color: AppColors.whiteColor,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          state.isUpdate
+                                              ? state.companyLogo.isNotEmpty
+                                                  ? state.image.path != ''
+                                                      ? Expanded(
+                                                          child: SizedBox(
+                                                            // height:
+                                                            //     getScreenHeight(
+                                                            //             context) *
+                                                            //         0.18,
                                                             width:
                                                                 getScreenWidth(
                                                                     context),
@@ -529,136 +581,129 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                               fit: BoxFit
                                                                   .contain,
                                                             ),
-                                                          )
-                                                        : SizedBox(
-                                                            height:
-                                                                getScreenHeight(
-                                                                        context) *
-                                                                    0.19,
-                                                            width:
-                                                                getScreenWidth(
-                                                                    context),
-                                                            child:
-                                                                Image.network(
-                                                              '${AppUrls.baseFileUrl}${state.companyLogo}',
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                              loadingBuilder:
-                                                                  (context,
-                                                                      child,
-                                                                      loadingProgress) {
-                                                                if (loadingProgress ==
-                                                                    null) {
-                                                                  return child;
-                                                                } else {
-                                                                  return Center(
-                                                                    child:
-                                                                        CupertinoActivityIndicator(
-                                                                      color: AppColors
-                                                                          .blackColor,
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                              errorBuilder:
-                                                                  (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                return Container(
-                                                                  color: AppColors
-                                                                      .whiteColor,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child: Text(
-                                                                    AppStrings
-                                                                        .failedToLoadString,
-                                                                    style: AppStyles.rkRegularTextStyle(
-                                                                        size: AppConstants
-                                                                            .font_14,
-                                                                        color: AppColors
-                                                                            .textColor),
+                                                          ),
+                                                        )
+                                                      : SizedBox(
+                                                          height:
+                                                              getScreenHeight(
+                                                                      context) *
+                                                                  0.19,
+                                                          width: getScreenWidth(
+                                                              context),
+                                                          child: Image.network(
+                                                            '${AppUrls.baseFileUrl}${state.companyLogo}',
+                                                            fit: BoxFit.contain,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              } else {
+                                                                return Center(
+                                                                  child:
+                                                                      CupertinoActivityIndicator(
+                                                                    color: AppColors
+                                                                        .blackColor,
                                                                   ),
                                                                 );
-                                                              },
-                                                            ),
-                                                          )
-                                                    : Icon(
-                                                        Icons
-                                                            .camera_alt_rounded,
-                                                        color:
-                                                            AppColors.blueColor,
-                                                        size: 30,
-                                                      )
-                                                : state.image.path != ''
-                                                    ? SizedBox(
-                                                        height: getScreenHeight(
-                                                                context) *
-                                                            0.18,
+                                                              }
+                                                            },
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Container(
+                                                                color: AppColors
+                                                                    .whiteColor,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                  AppStrings
+                                                                      .failedToLoadString,
+                                                                  style: AppStyles.rkRegularTextStyle(
+                                                                      size: AppConstants
+                                                                          .font_14,
+                                                                      color: AppColors
+                                                                          .textColor),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        )
+                                                  : Icon(
+                                                      Icons.camera_alt_rounded,
+                                                      color:
+                                                          AppColors.blueColor,
+                                                      size: 30,
+                                                    )
+                                              : state.image.path != ''
+                                                  ? SizedBox(
+                                                      height: getScreenHeight(
+                                                              context) *
+                                                          0.18,
+                                                      width: getScreenWidth(
+                                                          context),
+                                                      child: Image.file(
+                                                        File(state.image.path),
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.camera_alt_rounded,
+                                                      color:
+                                                          AppColors.blueColor,
+                                                      size: 30,
+                                                    ),
+                                          state.isUpdate
+                                              ? state.companyLogo.isNotEmpty
+                                                  ? SizedBox()
+                                                  : Align(
+                                                      child: Container(
                                                         width: getScreenWidth(
                                                             context),
-                                                        child: Image.file(
-                                                          File(
-                                                              state.image.path),
-                                                          fit: BoxFit.contain,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .upload_photo,
+                                                          style: AppStyles
+                                                              .rkRegularTextStyle(
+                                                                  size: AppConstants
+                                                                      .font_14,
+                                                                  color: AppColors
+                                                                      .textColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
                                                         ),
-                                                      )
-                                                    : Icon(
-                                                        Icons
-                                                            .camera_alt_rounded,
-                                                        color:
-                                                            AppColors.blueColor,
-                                                        size: 30,
-                                                      )),
-                                        state.isUpdate
-                                            ? state.companyLogo.isNotEmpty
-                                                ? SizedBox()
-                                                : Align(
-                                                    child: Container(
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .upload_photo,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                                size:
-                                                                    AppConstants
-                                                                        .font_14,
-                                                                color: AppColors
-                                                                    .textColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400),
                                                       ),
-                                                    ),
-                                                  )
-                                            : state.image.path != ''
-                                                ? const SizedBox()
-                                                : Align(
-                                                    child: Container(
-                                                      width: getScreenWidth(
-                                                          context),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .upload_photo,
-                                                        style: AppStyles
-                                                            .rkRegularTextStyle(
-                                                          size: AppConstants
-                                                              .font_14,
-                                                          color: AppColors
-                                                              .textColor,
+                                                    )
+                                              : state.image.path != ''
+                                                  ? const SizedBox()
+                                                  : Align(
+                                                      child: Container(
+                                                        width: getScreenWidth(
+                                                            context),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .upload_photo,
+                                                          style: AppStyles
+                                                              .rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .textColor,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

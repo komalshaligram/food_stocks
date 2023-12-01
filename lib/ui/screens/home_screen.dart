@@ -430,17 +430,103 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            AnimatedCrossFade(
-                                firstChild: Column(
+                            // AnimatedCrossFade(
+                            //     firstChild: Column(
+                            //         mainAxisSize: MainAxisSize.min,
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           buildListTitles(),
+                            //           buildListItems(context, height: 140),
+                            //           15.height,
+                            //         ]),
+                            //     secondChild: (state.productSalesList.isEmpty)
+                            //         ? 0.width
+                            //         : Column(
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             mainAxisSize: MainAxisSize.min,
+                            //             children: [
+                            //               titleRowWidget(
+                            //                   context: context,
+                            //                   title:
+                            //                       AppLocalizations.of(context)!
+                            //                           .sales,
+                            //                   allContentTitle:
+                            //                       AppLocalizations.of(context)!
+                            //                           .all_sales,
+                            //                   onTap: () {
+                            //                     Navigator.pushNamed(
+                            //                         context,
+                            //                         RouteDefine
+                            //                             .productSaleScreen
+                            //                             .name);
+                            //                   }),
+                            //               SizedBox(
+                            //                 height: 190,
+                            //                 child: ListView.builder(
+                            //                     itemCount: state
+                            //                                 .productSalesList
+                            //                                 .length <
+                            //                             6
+                            //                         ? state
+                            //                             .productSalesList.length
+                            //                         : 6,
+                            //                     scrollDirection:
+                            //                         Axis.horizontal,
+                            //                     shrinkWrap: true,
+                            //                     itemBuilder: (context, index) =>
+                            //                         buildProductSaleListItem(
+                            //                           context: context,
+                            //                           saleImage: state
+                            //                                   .productSalesList[
+                            //                                       index]
+                            //                                   .mainImage ??
+                            //                               '',
+                            //                           title: state
+                            //                                   .productSalesList[
+                            //                                       index]
+                            //                                   .salesName ??
+                            //                               '',
+                            //                           description: state
+                            //                                   .productSalesList[
+                            //                                       index]
+                            //                                   .salesDescription ??
+                            //                               '',
+                            //                           salePercentage: double.parse(state
+                            //                                   .productSalesList[
+                            //                                       index]
+                            //                                   .discountPercentage ??
+                            //                               '0.0'),
+                            //                           onButtonTap: () {
+                            //                             showProductDetails(
+                            //                                 context: context,
+                            //                                 productId: state
+                            //                                         .productSalesList[
+                            //                                             index]
+                            //                                         .id ??
+                            //                                     '');
+                            //                           },
+                            //                         )),
+                            //               ),
+                            //               10.height,
+                            //             ],
+                            //           ),
+                            //     crossFadeState: state.isProductSaleShimmering
+                            //         ? CrossFadeState.showFirst
+                            //         : CrossFadeState.showSecond,
+                            //     duration: Duration(milliseconds: 450)),
+                            state.isProductSaleShimmering
+                                ? Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      buildListTitles(),
-                                      buildListItems(context, height: 140),
-                                      15.height,
-                                    ]),
-                                secondChild: (state.productSalesList.isEmpty)
+                                        buildListTitles(),
+                                        buildListItems(context, height: 160),
+                                        15.height,
+                                      ])
+                                : state.productSalesList.isEmpty
                                     ? 0.width
                                     : Column(
                                         crossAxisAlignment:
@@ -512,77 +598,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           10.height,
                                         ],
                                       ),
-                                crossFadeState: state.isProductSaleShimmering
-                                    ? CrossFadeState.showFirst
-                                    : CrossFadeState.showSecond,
-                                duration: Duration(milliseconds: 450)),
-                            // state.isProductSaleShimmering
-                            //     ? 0.width
-                            //     : Column(
-                            //         mainAxisSize: MainAxisSize.min,
-                            //         children: [
-                            //           titleRowWidget(
-                            //               context: context,
-                            //               title: AppLocalizations.of(context)!
-                            //                   .sales,
-                            //               allContentTitle:
-                            //                   AppLocalizations.of(context)!
-                            //                       .all_sales,
-                            //               onTap: () {
-                            //                 Navigator.pushNamed(
-                            //                     context,
-                            //                     RouteDefine
-                            //                         .productSaleScreen.name);
-                            //               }),
-                            //           SizedBox(
-                            //             height: 190,
-                            //             child: ListView.builder(
-                            //                 itemCount: (state.productSalesList
-                            //                                 .data?.length ??
-                            //                             0) <
-                            //                         6
-                            //                     ? state.productSalesList.data
-                            //                         ?.length
-                            //                     : 6,
-                            //                 scrollDirection: Axis.horizontal,
-                            //                 shrinkWrap: true,
-                            //                 itemBuilder: (context, index) =>
-                            //                     buildProductSaleListItem(
-                            //                       context: context,
-                            //                       saleImage: state
-                            //                               .productSalesList
-                            //                               .data?[index]
-                            //                               .mainImage ??
-                            //                           '',
-                            //                       title: state
-                            //                               .productSalesList
-                            //                               .data?[index]
-                            //                               .salesName ??
-                            //                           '',
-                            //                       description: state
-                            //                               .productSalesList
-                            //                               .data?[index]
-                            //                               .salesDescription ??
-                            //                           '',
-                            //                       price: double.parse(state
-                            //                               .productSalesList
-                            //                               .data?[index]
-                            //                               .discountPercentage ??
-                            //                           '0.0'),
-                            //                       onButtonTap: () {
-                            //                         showProductDetails(
-                            //                             context: context,
-                            //                             productId: state
-                            //                                     .productSalesList
-                            //                                     .data?[index]
-                            //                                     .id ??
-                            //                                 '');
-                            //                       },
-                            //                     )),
-                            //           ),
-                            //           10.height,
-                            //         ],
-                            //       ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -963,12 +978,15 @@ class HomeScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .first.productDescription ??
                                       '',
-                                  productPrice: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity,
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
+                                  productPrice:
+                                      state.productStockList[state.productStockUpdateIndex].totalPrice *
+                                          state
+                                              .productStockList[
+                                                  state.productStockUpdateIndex]
+                                              .quantity,
+                                  productScaleType:
+                                      state.productDetails.first.scales?.scaleType ??
+                                          '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,

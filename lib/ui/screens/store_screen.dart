@@ -811,14 +811,14 @@ class StoreScreenWidget extends StatelessWidget {
                             StoreEvent.changeCategoryExpansion(isOpened: true));
                       },
                       onSearch: (String search) {
-                        if (search.length > 2) {
-                          bloc.add(StoreEvent.globalSearchEvent(
-                              context: context, search: search));
-                        }
+                        // if (search.length > 2) {
+                        //   bloc.add(StoreEvent.globalSearchEvent(
+                        //       context: context, search: search));
+                        // }
                       },
                       onSearchSubmit: (String search) {
-                        bloc.add(StoreEvent.globalSearchEvent(
-                            context: context, search: search));
+                        // bloc.add(StoreEvent.globalSearchEvent(
+                        //     context: context, search: search));
                       },
                       onOutSideTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion(
@@ -1344,6 +1344,8 @@ class StoreScreenWidget extends StatelessWidget {
             child: CommonProductButtonWidget(
               title:
               "${price.toStringAsFixed(
+                  AppConstants.amountFrLength) == "0.00" ? '0' : price
+                  .toStringAsFixed(
                   AppConstants.amountFrLength)}${AppLocalizations.of(context)!
                   .currency}",
               onPressed: onButtonTap,

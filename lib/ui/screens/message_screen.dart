@@ -105,8 +105,10 @@ class MessageScreenWidget extends StatelessWidget {
                                               .body
                                               ?.text ??
                                           '',
-                                      dateTime:
-                                          state.messageList[index].id ?? '',
+                                      dateTime: state
+                                              .messageList[index].updatedAt
+                                              ?.replaceRange(16, 19, '') ??
+                                          '',
                                       onTap: () async {
                                         dynamic messageNewData =
                                             await Navigator.pushNamed(
