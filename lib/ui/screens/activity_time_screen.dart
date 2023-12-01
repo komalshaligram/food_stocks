@@ -275,7 +275,7 @@ class ActivityTimeRow extends StatelessWidget {
     return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(
       builder: (context, state) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             13.height,
             Expanded(
@@ -310,10 +310,12 @@ class ActivityTimeRow extends StatelessWidget {
                                                   ),
                                                 )),
                                           )
-                                          : Container(
-                                              width: getScreenWidth(context) *
-                                                  0.22,
-                                            ),
+                                          : Expanded(
+                                            child: Container(
+                                               /* width: getScreenWidth(context) *
+                                                    0.22,*/
+                                              ),
+                                          ),
                                       SizedBox(
                                         width: getScreenWidth(context) < 380
                                             ? getScreenWidth(context) * 0.001

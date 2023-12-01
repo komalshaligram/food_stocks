@@ -8,6 +8,5 @@ class OrderSummaryEvent with _$OrderSummaryEvent {
 }) = _getDataEvent;
   const factory OrderSummaryEvent.orderSendEvent({
     required BuildContext context,
-    required bool isEnable,
 }) = _orderSendEvent;
 }

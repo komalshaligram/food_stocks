@@ -37,6 +37,7 @@ class ShipmentVerificationBloc
 
       if (event is _deliveryConfirmEvent) {
         String signUrl = '';
+        emit(state.copyWith(isLoading: true));
         if (event.signPath.isNotEmpty) {
           try {
             debugPrint('sign path____${event.signPath}');
@@ -80,20 +81,24 @@ class ShipmentVerificationBloc
              debugPrint('delivery Confirm response model  = $response');
 
              if (response['status'] == 200) {
-                Navigator.pushNamed(
-                    event.context, RouteDefine.bottomNavScreen.name);
+             /*   Navigator.pushNamed(
+                    event.context, RouteDefine.bottomNavScreen.name);*/
+               emit(state.copyWith(isLoading: true));
+               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.orderScreen.name, (Route route) => route.settings.name == RouteDefine.menuScreen.name);
                 showSnackBar(
                     context: event.context,
                     title: response['message'],
                     bgColor: AppColors.mainColor);
               } else {
+               emit(state.copyWith(isLoading: true));
                 showSnackBar(
                     context: event.context,
                     title: response['message'],
                     bgColor: AppColors.mainColor);
               }
-            } on ServerException {}
+            } on ServerException { emit(state.copyWith(isLoading: true));}
           } else {
+           emit(state.copyWith(isLoading: true));
             showSnackBar(
                 context: event.context,
                 title: 'Signature is missing',
