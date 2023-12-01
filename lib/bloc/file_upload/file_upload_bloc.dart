@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:food_stock/data/model/form_and_file_model/form_and_file_model.dart';
 import 'package:food_stock/data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';
@@ -453,6 +454,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _downloadFileEvent) {
         try {
           emit(state.copyWith(isDownloading: true));
+
           // PackageInfo packageInfo = await PackageInfo.fromPlatform();
           //
           // String buildNumber = packageInfo.buildNumber;
@@ -460,7 +462,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           // if(statuses[Permission.storage]!.isGranted) {
           File file;
           Directory dir;
-          if (defaultTargetPlatform == TargetPlatform.android) {
+          if (  defaultTargetPlatform == TargetPlatform.android) {
             // dir = await getApplicationDocumentsDirectory();
             dir = Directory('/storage/emulated/0/Documents');
           } else {
@@ -470,6 +472,45 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           String filePath = '';
           debugPrint(
               'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
+          /*try{
+            var request = await httpClient.getUrl(Uri.parse(
+                "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
+            var response = await request.close();
+            if(response.statusCode ==200){
+              final taskId = await FlutterDownloader.enqueue(
+                url:  "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}",
+                headers: {}, // optional: header send with url (auth token etc)
+                savedDir: '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}',
+                showNotification: true, // show download progress in status bar (for Android)
+                openFileFromNotification: true,
+                saveInPublicStorage: true// click on notification to open downloaded file (for Android)
+              );
+              debugPrint("taskId:$taskId");
+              if(taskId!.isNotEmpty){
+                showSnackBar(
+                    context: event.context,
+                    title: AppStrings.downloadString,
+                    bgColor: AppColors.mainColor);
+                emit(state.copyWith(isDownloading: false));
+              }else{
+                showSnackBar(
+                    context: event.context,
+                    title: 'error',
+                    bgColor: AppColors.redColor);
+              }
+            }else {
+              emit(state.copyWith(isDownloading: false));
+              filePath = 'Error code: ' + response.statusCode.toString();
+              debugPrint('download ${filePath}');
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.downloadFailedString,
+                  bgColor: AppColors.redColor);
+            }
+          }catch(e){
+            emit(state.copyWith(isDownloading: false));
+            filePath = 'Can not fetch url';
+          }*/
           try {
             var request = await httpClient.getUrl(Uri.parse(
                 "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));

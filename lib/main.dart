@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/push_notification_service.dart';
@@ -17,6 +18,7 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
+    await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     runApp(
       MaterialApp(

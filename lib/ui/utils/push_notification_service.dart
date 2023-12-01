@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -35,7 +37,13 @@ class PushNotificationService {
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    String? fcmToken='';
+    if (Platform.isIOS) {
+      fcmToken = await FirebaseMessaging.instance.getAPNSToken();
+    } else {
+      fcmToken = await FirebaseMessaging.instance.getToken();
+    }
+
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -48,6 +56,7 @@ class PushNotificationService {
         print("details:$details");
       },
     );
+
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
       //  consoleLog(message, key: 'firebase_message');
@@ -73,6 +82,7 @@ class PushNotificationService {
       }
     });
   }
+
 
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance

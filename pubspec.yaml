@@ -75,8 +75,8 @@ dependencies:
   flutter_date_range_picker: ^0.0.14
   html: ^0.15.4
   device_info_plus: ^9.1.1
-
-
+  flutter_downloader: ^1.11.5
+  background_downloader: ^7.12.3
 
 
 
