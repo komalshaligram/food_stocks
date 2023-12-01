@@ -74,6 +74,7 @@ class HomeScreenWidget extends StatelessWidget {
                   bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
                 }
+                bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 // if (state.messageList.isEmpty) {
                 //   bloc.add(HomeEvent.getMessageListEvent(context: context));
                 // }

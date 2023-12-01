@@ -158,7 +158,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                    '${' : '}${/*state.CartItemList.data!.cart!.first.totalAmount?.toStringAsFixed(2)*/state.totalPayment.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                                    '${' : '}${bloc.splitNumber(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
@@ -220,7 +220,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                   .submit,
                                               style:
                                                   AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.normalFont,
+                                                size: AppConstants.mediumFont,
                                                 color: AppColors.whiteColor,
                                               ),
                                             ),
@@ -258,7 +258,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  5.width,
+                                  3.width,
                                 ],
                               ),
                             )
@@ -363,28 +363,32 @@ class BasketScreenWidget extends StatelessWidget {
               3.width,
               GestureDetector(
                 onTap: () {
-
-                  if (state.CartItemList.data!.data![index].productStock! >=
-                      state.basketProductList[index].totalQuantity! + 1) {
-                    bloc.add(BasketEvent.productUpdateEvent(
-                      listIndex: index,
-                      productWeight:
-                          state.basketProductList[index].totalQuantity! + 1,
-                      context: context,
-                      productId: state
-                          .CartItemList.data!.data![index].productDetails!.id!,
-                      supplierId: state
-                          .CartItemList.data!.data![index].suppliers!.first.id!,
-                      cartProductId:
-                          state.CartItemList.data?.data?[index].cartProductId ?? '',
-                      totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                        saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
-                    ));
-                  } else {
-                    showSnackBar(
+                  if(!state.isLoading){
+                    if (state.CartItemList.data!.data![index].productStock! >=
+                        state.basketProductList[index].totalQuantity! + 1) {
+                      bloc.add(BasketEvent.productUpdateEvent(
+                        listIndex: index,
+                        productWeight:
+                        state.basketProductList[index].totalQuantity! + 1,
                         context: context,
-                        title: AppStrings.outOfStockString,
-                        bgColor: AppColors.redColor);
+                        productId: state
+                            .CartItemList.data!.data![index].productDetails!.id!,
+                        supplierId: state
+                            .CartItemList.data!.data![index].suppliers!.first.id!,
+                        cartProductId:
+                        state.CartItemList.data?.data?[index].cartProductId ?? '',
+                        totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
+                        saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
+                      ));
+                    } else {
+                      showSnackBar(
+                          context: context,
+                          title: AppStrings.outOfStockString,
+                          bgColor: AppColors.redColor);
+                    }
+                  }
+                  else{
+                    debugPrint('please wait');
                   }
                 },
                 child: Container(
@@ -413,25 +417,30 @@ class BasketScreenWidget extends StatelessWidget {
               5.width,
               GestureDetector(
                 onTap: () {
-                  if(state.basketProductList[index].totalQuantity! > 1){
-                    bloc.add(BasketEvent.productUpdateEvent(
-                      listIndex: index,
-                      productWeight:
-                      state.basketProductList[index].totalQuantity! - 1,
-                      context: context,
-                      productId: state
-                          .CartItemList.data!.data![index].productDetails!.id!,
-                      supplierId: state
-                          .CartItemList.data!.data![index].suppliers!.first.id!,
-                      cartProductId:
-                      state.CartItemList.data!.data![index].cartProductId!,
-                       totalPayment:/* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                      saleId:((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
-                    ));
-                  }
-                  else{
-                    debugPrint("quantity can't decrease");
-                  }
+        if(!state.isLoading) {
+          if (state.basketProductList[index].totalQuantity! > 1) {
+            bloc.add(BasketEvent.productUpdateEvent(
+              listIndex: index,
+              productWeight:
+              state.basketProductList[index].totalQuantity! - 1,
+              context: context,
+              productId: state
+                  .CartItemList.data!.data![index].productDetails!.id!,
+              supplierId: state
+                  .CartItemList.data!.data![index].suppliers!.first.id!,
+              cartProductId:
+              state.CartItemList.data!.data![index].cartProductId!,
+              totalPayment: /* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state
+                  .totalPayment,
+              saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
+                  0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
+                  .id ?? '')),
+            ));
+          }
+        }
+        else{
+          debugPrint('please wait');
+        }
                 },
                 child: Container(
                   width: AppConstants.containerSize_25,
@@ -449,10 +458,9 @@ class BasketScreenWidget extends StatelessWidget {
                 ),
               ),
               5.width,
-              Flexible(
+              Flexible(//state.basketProductList[index].totalPayment?.toStringAsFixed(2)
                // width: 70,
-                child: Text(
-                  '${state.basketProductList[index].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                child: Text(bloc.splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0.00"),
                   style: TextStyle(
                       color: AppColors.blackColor,
                       fontSize: AppConstants.font_14,

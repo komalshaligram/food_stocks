@@ -5,11 +5,16 @@ class OrderSummaryState with _$OrderSummaryState {
   const factory OrderSummaryState({
 
     required CartProductsSupplierResModel orderSummaryList,
-  required bool isEnable,
+    required bool isLoading,
+    required bool isShimmering,
+    required bool isEnable,
+
 }) = _OrderSummaryState;
 
   factory OrderSummaryState.initial() => OrderSummaryState(
  orderSummaryList: CartProductsSupplierResModel(),
-    isEnable: false,
+    isLoading: false,
+    isShimmering: false,
+    isEnable: false
   );
 }

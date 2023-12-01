@@ -123,6 +123,7 @@ class WalletScreenWidget extends StatelessWidget {
                         endDate: endDate,
                         startDate: startDate,
                       ));
+                 bloc.add(WalletEvent.getWalletRecordEvent(context: context));
                }
                 bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
@@ -198,7 +199,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .total_credit,
                                                 value:
-                                                    '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    '${bloc.splitNumber(state.totalCredit.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -209,7 +210,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .this_months_expenses,
                                                 value:
-                                                    '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    '${bloc.splitNumber(state.thisMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                         ],
                                       ),
@@ -224,7 +225,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .last_months_expenses,
                                                 value:
-                                                    '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                    '${bloc.splitNumber(state.lastMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -370,7 +371,7 @@ class WalletScreenWidget extends StatelessWidget {
                                 ),
                               ),
                         15.height,
-                        15.width,
+                        7.width,
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppConstants.padding_10),
@@ -434,7 +435,7 @@ class WalletScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  10.width,
+                                  5.width,
                                   Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: AppConstants.padding_5,
@@ -447,7 +448,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         color: AppColors.whiteColor,
                                       ),
                                       child: Container(
-                                        width:  getScreenWidth(context) * 0.56,
+                                        width:  getScreenWidth(context) * 0.60,
                                         height: 30,
                                         child: DateRangeField(
                                           decoration: InputDecoration(
@@ -651,6 +652,7 @@ class WalletScreenWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
+          WalletBloc bloc = context.read<WalletBloc>();
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -674,14 +676,14 @@ class WalletScreenWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              10.width,
+            //  10.width,
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Text(
                   state.walletTransactionsList[listIndex].type.toString() ==
                           'Order'
-                      ? '${'-'}${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'
-                      : '${double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                      ? '${'-'}${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'
+                      : '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: state.walletTransactionsList[listIndex].type
@@ -692,14 +694,14 @@ class WalletScreenWidget extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              10.width,
+            //  10.width,
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
                     context, RouteDefine.orderSuccessfulScreen.name),
                 child: CircularButtonWidget(
                   buttonName: AppLocalizations.of(context)!.balance_status,
                   buttonValue:
-                      '${double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                      '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                 ),
               ),
             ],
@@ -714,7 +716,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-      height: getScreenHeight(context) * 0.41,
+     height: getScreenHeight(context) >= 725 ?  0.41 :getScreenHeight(context) * 0.48 ,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

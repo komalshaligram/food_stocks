@@ -50,6 +50,7 @@ class AppStrings {
   static const categoryNameString = 'catregoryName';
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
+  static const orderBySupplierId = 'orderSupplierId';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -128,7 +129,7 @@ class AppStrings {
   static const contactString = 'contact';
   static const idString = 'id';
   static const orderIdString = 'orderId';
-  static const productIndexString = 'index';
+  static const productDataString = 'productData';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';
   static const totalOrderString = 'totalOrder';
