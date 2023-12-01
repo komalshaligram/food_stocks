@@ -27,8 +27,9 @@ class OrderDetailsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) =>
-          OrderDetailsBloc()..add(OrderDetailsEvent.getOrderByIdEvent(context: context,orderId: args?[AppStrings.orderIdString] ?? '')),
+      create: (context) => OrderDetailsBloc()
+        ..add(OrderDetailsEvent.getOrderByIdEvent(
+            context: context, orderId: args?[AppStrings.orderIdString] ?? '')),
       child: OrderDetailsScreenWidget(
         orderId: args?[AppStrings.orderIdString] ?? '',
         orderNumber: args?[AppStrings.orderNumberString] ?? '',
@@ -71,7 +72,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${state.orderByIdList.data!.orderData!.first.totalAmount!.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                    '${bloc.splitNumber(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                               ),
                   ),
                   onTap: () {
@@ -110,11 +111,13 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
       builder: (context, state) {
+        OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();
         return GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name,
                 arguments: {
-                  AppStrings.productIndexString: index,
+                  AppStrings.productDataString:
+                      state.orderByIdList.data!.ordersBySupplier![index],
                   AppStrings.orderIdString: orderId,
                   AppStrings.orderNumberString: orderNumber,
                 });
@@ -157,8 +160,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           size: AppConstants.smallFont,
                           color: /*state.orderByIdList.data!.ordersBySupplier![index]
                               .deliverStatus!.statusName == AppLocalizations.of(context)!.pending_delivery*/
-                          state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate == '' ? AppColors.orangeColor :
-                              AppColors.mainColor,
+                              state.orderByIdList.data!.ordersBySupplier![index]
+                                          .orderDeliveryDate ==
+                                      ''
+                                  ? AppColors.orangeColor
+                                  : AppColors.mainColor,
                           fontWeight: FontWeight.w700),
                     )
                   ],
@@ -181,7 +187,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.delivery_date,
-                      value: state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate != ''? '${state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}' : '-',
+                      value: state.orderByIdList.data!.ordersBySupplier![index]
+                                  .orderDeliveryDate !=
+                              ''
+                          ? '${state.orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}'
+                          : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.font_10,
@@ -193,7 +203,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.total_order,
                       value:
-                          '${state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                          '${bloc.splitNumber(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,

@@ -26,8 +26,8 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
 
   const factory ProductDetailsEvent.getProductDataEvent({
     required BuildContext context,
-    required int productIndex,
     required String orderId,
+    required OrdersBySupplier orderBySupplierProduct,
   }) = _getProductDataEvent;
 
   const factory ProductDetailsEvent.createIssueEvent({

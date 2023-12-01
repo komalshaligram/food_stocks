@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
@@ -72,8 +73,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           margin: EdgeInsets.only(
-                              left: AppConstants.padding_40,
-                              right: AppConstants.padding_40,
+                              left: AppConstants.padding_30,
+                              right: AppConstants.padding_30,
                               top: AppConstants.padding_10,
                               bottom: AppConstants.padding_30),
                           decoration: BoxDecoration(
@@ -99,7 +100,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            flex: 3,
+                            flex: 5,
                             child: Container(
                               height: AppConstants.containerHeight_60,
                               alignment: Alignment.center,
@@ -141,7 +142,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   children: <TextSpan>[
                                     TextSpan(
                                         text:
-                                        '${' : '}${state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                        '${' : '}${bloc.splitNumber(state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                                         style: AppStyles.rkRegularTextStyle(
                                             color: AppColors.whiteColor,
                                             size: AppConstants.normalFont,
@@ -153,13 +154,14 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                           ),
                           6.width,
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: GestureDetector(
                               onTap: () {
-                               state.isEnable ? SizedBox(): bloc.add(OrderSummaryEvent.orderSendEvent(
-                                 context: context,
-                                 isEnable: true,
-                               ));
+                              if(!state.isLoading){
+                                bloc.add(OrderSummaryEvent.orderSendEvent(
+                                  context: context,
+                                ));
+                              }
                               },
                               child: Container(
                                 height: AppConstants.containerHeight_60,
@@ -192,7 +194,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                                       AppConstants.radius_6)
                                                   : Radius.circular(
                                                       AppConstants.radius_30))),
-                                child: Text(
+                                child: state.isLoading ? CupertinoActivityIndicator() : Text(
                                   AppLocalizations.of(context)!.send_order,
                                   style: AppStyles.rkRegularTextStyle(
                                     size: getScreenWidth(context) <= 380
@@ -218,6 +220,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
   }
 
   Widget orderListItem({required int index, required BuildContext context}) {
+    OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Container(
@@ -273,7 +276,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
-                    value:'${state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? ''}${AppLocalizations.of(context)!.currency}',
+                    value:'${bloc.splitNumber(state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,
