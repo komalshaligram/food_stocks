@@ -216,30 +216,33 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   autoPlayCurve: Curves.decelerate,
                                   pageSnapping: true)),
                         ),
-                        Positioned(
-                            bottom: 5,
-                            child: Container(
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: productImages
-                                    .asMap()
-                                    .entries
+                        productImages.length < 2
+                            ? 0.width
+                            : Positioned(
+                                bottom: 5,
+                                child: Container(
+                                  width: getScreenWidth(context),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: productImages
+                                        .asMap()
+                                        .entries
                                     .map((productImage) => Container(
-                                          height: 7,
-                                          width: 7,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  AppConstants.padding_2),
-                                          decoration: BoxDecoration(
-                                              color: productImageIndex ==
-                                                      productImage.key
-                                                  ? AppColors.mainColor
-                                                  : AppColors.borderColor,
-                                              shape: BoxShape.circle),
-                                        ))
+                                  height: 7,
+                                  width: 7,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                      AppConstants.padding_2),
+                                  decoration: BoxDecoration(
+                                      color: productImageIndex ==
+                                          productImage.key
+                                          ? AppColors.mainColor
+                                          : AppColors.borderColor,
+                                      shape: BoxShape.circle),
+                                ))
                                     .toList(),
                               ),
                             ))
@@ -522,47 +525,49 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     )
                         : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
-                                style: AppStyles.rkBoldTextStyle(
-                                    size: AppConstants.font_30,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              Text(
+                              Container(
+                                width: (getScreenWidth(context) - 30) / 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                      style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_30,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text(
                                 "${parse(productSaleDescription).body?.text}",
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.font_14,
-                                    color: AppColors.blackColor,
-                                    fontWeight: FontWeight.w400),
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_14,
+                                          color: AppColors.blackColor,
+                                          fontWeight: FontWeight.w400),
+                                      maxLines: 5,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: onQuantityIncreaseTap,
-                                child: Container(
-                                  height: 50,
-                                  width: 40,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     horizontal: AppConstants.padding_10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.iconBGColor,
-                                    borderRadius: BorderRadius.only(
+                              Container(
+                                width: (getScreenWidth(context) - 30) / 2,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: onQuantityIncreaseTap,
+                                      child: Container(
+                                        height: 50,
+                                        width: 40,
+                                        // padding: EdgeInsets.symmetric(
+                                        //     horizontal: AppConstants.padding_10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(isRTL
                                           ? AppConstants.radius_5
                                           : AppConstants.radius_50),
@@ -590,41 +595,40 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ),
                               ),
                               5.width,
-                              Flexible(
-                                child: Container(
-                                  // width: max,
-                                  height: 50,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                      AppConstants.padding_15),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.iconBGColor,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          AppConstants.radius_5),
-                                      bottomLeft: Radius.circular(
-                                          AppConstants.radius_5),
-                                      bottomRight: Radius.circular(
-                                          AppConstants.radius_5),
-                                      topRight: Radius.circular(
-                                          AppConstants.radius_5),
+                              Expanded(
+                                      child: Container(
+                                        // width: max,
+                                        height: 50,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppConstants.padding_10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.iconBGColor,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(
+                                                AppConstants.radius_5),
+                                            bottomLeft: Radius.circular(
+                                                AppConstants.radius_5),
+                                            bottomRight: Radius.circular(
+                                                AppConstants.radius_5),
+                                            topRight: Radius.circular(
+                                                AppConstants.radius_5),
+                                          ),
+                                          border: Border.all(
+                                              color: AppColors.navSelectedColor,
+                                              width: 1),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '$productQuantity',
+                                          style: AppStyles.rkBoldTextStyle(
+                                              size: AppConstants.font_26,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w700),
+                                          // maxLines: 1,
+                                        ),
+                                      ),
                                     ),
-                                    border: Border.all(
-                                        color: AppColors.navSelectedColor,
-                                        width: 1),
-                                  ),
-                                  // padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    '$productQuantity',
-                                    style: AppStyles.rkBoldTextStyle(
-                                        size: AppConstants.font_30,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w700),
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ),
                               5.width,
                               GestureDetector(
                                 onTap: onQuantityDecreaseTap,

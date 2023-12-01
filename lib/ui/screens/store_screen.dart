@@ -2032,9 +2032,11 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .add(StoreEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                index,
-                                                supplierSaleIndex:
-                                                -2));
+                                                                        index,
+                                                                    context:
+                                                                        context,
+                                                                    supplierSaleIndex:
+                                                                        -2));
                                             context
                                                 .read<StoreBloc>()
                                                 .add(StoreEvent
@@ -2115,9 +2117,11 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .add(StoreEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                index,
-                                                supplierSaleIndex:
-                                                subIndex));
+                                                                        index,
+                                                                    context:
+                                                                        context,
+                                                                    supplierSaleIndex:
+                                                                        subIndex));
                                             context
                                                 .read<StoreBloc>()
                                                 .add(StoreEvent

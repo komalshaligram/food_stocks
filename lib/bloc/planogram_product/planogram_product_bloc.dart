@@ -76,6 +76,8 @@ class PlanogramProductBloc
                     ?.map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
+                          basePrice:
+                              double.parse(supplier.productPrice ?? '0.0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   (state
                                           .productStockList[
@@ -139,10 +141,19 @@ class PlanogramProductBloc
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity +
+                            .quantity +
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');

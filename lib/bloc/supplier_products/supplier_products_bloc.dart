@@ -253,11 +253,27 @@ class SupplierProductsBloc
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
+            // if(productStockList[state.productStockUpdateIndex]
+            //     .quantity == 0) {
+            //   productStockList[state.productStockUpdateIndex] =
+            //       productStockList[state.productStockUpdateIndex].copyWith(
+            //           quantity: 4999);
+            // } else {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
                             .quantity +
                         1);
+            // }
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));

@@ -23,6 +23,7 @@ class ProductSaleEvent with _$ProductSaleEvent {
 
   const factory ProductSaleEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory ProductSaleEvent.addToCartProductEvent(

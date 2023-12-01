@@ -28,4 +28,8 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.changeBusinessTypeEvent(
       {required String newBusinessType}) = _ChangeBusinessTypeEventEvent;
+
+  factory ProfileEvent.deleteFileEvent({
+    required BuildContext context,
+  }) = _deleteFileEvent;
 }

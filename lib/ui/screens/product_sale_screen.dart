@@ -692,6 +692,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -767,8 +769,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                                 ProductSaleBloc>()
                                                             .add(ProductSaleEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context
