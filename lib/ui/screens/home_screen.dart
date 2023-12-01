@@ -361,7 +361,9 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                              balance: state.balance.toInt(),
+                                                pendingBalance: state.balance,
+                                                expense: 100 -state.expensePercentage,
+                                                totalBalance: 100
                                             ),
                                           ],
                                         )),
@@ -381,7 +383,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                        '${bloc.splitNumber(state.totalCredit.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -392,7 +394,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                        '${bloc.splitNumber(state.thisMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -407,7 +409,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                                        '${bloc.splitNumber(state.lastMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(

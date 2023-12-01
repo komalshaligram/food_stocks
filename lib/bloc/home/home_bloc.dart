@@ -487,7 +487,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     response.data?.previousMonth?.totalExpenses?.toDouble() ??
                         0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0));
+                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
+            ));
+
           } else {
             showSnackBar(
                 context: event.context,
@@ -612,5 +615,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(imageIndex: event.index));
       }
     });
+  }
+  String splitNumber(String price) {
+    var splitPrice = price.split(".");
+    if (splitPrice[1] == "00") {
+      return splitPrice[0];
+    } else {
+      return price.toString();
+    }
   }
 }

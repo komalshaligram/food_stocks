@@ -9,6 +9,7 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
     required double lastMonthExpense,
     required int orderThisMonth,
     required double balance,
+    required double expensePercentage,
   }) = _OrderSuccessfulState;
 
   factory OrderSuccessfulState.initial() =>
@@ -18,6 +19,7 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
         orderThisMonth: 0,
         thisMonthExpense: 0,
         totalCredit: 0,
+        expensePercentage: 0
       );
 
 }

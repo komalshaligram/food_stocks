@@ -69,7 +69,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
+    print('size____${getScreenHeight(context)}');
     return BlocListener<ProductDetailsBloc, ProductDetailsState>(
       listener: (context, state) {},
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
@@ -166,7 +166,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     CommonOrderContentWidget(
-                                      flexValue: 1,
+                                      flexValue: 2,
                                       title: AppLocalizations.of(context)!
                                           .products,
                                       value: state.orderBySupplierProduct
@@ -176,11 +176,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w700,
-                                      valueTextSize: AppConstants.mediumFont,
+                                      valueTextSize: AppConstants.smallFont,
                                     ),
                                     5.width,
                                     CommonOrderContentWidget(
-                                      flexValue: 2,
+                                      flexValue: 3,
                                       title: AppLocalizations.of(context)!
                                           .delivery_date,
                                       value: (state.orderBySupplierProduct
@@ -194,13 +194,13 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                           : '-',
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
-                                      valueTextSize: AppConstants.font_10,
+                                      valueTextSize: AppConstants.smallFont,
                                       valueTextWeight: FontWeight.w500,
-                                      columnPadding: AppConstants.padding_10,
+                                     // columnPadding: AppConstants.padding_5,
                                     ),
                                     5.width,
                                     CommonOrderContentWidget(
-                                      flexValue: 2,
+                                      flexValue: 3,
                                       title: AppLocalizations.of(context)!
                                           .total_order,
                                       value:
@@ -209,6 +209,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w500,
                                       valueTextSize: AppConstants.smallFont,
+                                     // columnPadding: AppConstants.padding_5,
                                     ),
                                   ],
                                 ),
@@ -265,7 +266,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             // width: 150,
                                             // height: 40,
                                             child: Expanded(
-                                            flex: 3,
+                                            flex: 4,
                                             child: CustomFormField(
                                               controller: driverController,
                                               inputformet: [
@@ -336,7 +337,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             // width: 150,
                                             // height: 35,
                                             child: Expanded(
-                                              flex: 3,
+                                              flex: 5,
                                               child: CustomFormField(
                                                 inputformet: [
                                                   FilteringTextInputFormatter
@@ -515,7 +516,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
-              horizontal: AppConstants.padding_3),
+              horizontal: getScreenHeight(context) >= 730 ? AppConstants.padding_3 :0),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
@@ -561,7 +562,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         bloc.add(ProductDetailsEvent.productProblemEvent(
                             isProductProblem: value!, index: index));
                       })
-                  : SizedBox(),
+                  : 0.width,
               /* state.orderList.data?.ordersBySupplier![productIndex]
                           .products![index].mainImage !=*/
               state.orderBySupplierProduct.products?.first.mainImage != null
@@ -573,9 +574,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     )
 
                   : SizedBox(),
-              15.width,
+              getScreenHeight(context) >= 730 ? 7.width : 2.width,
               Container(
-                width: 50,
+                width:  state.orderBySupplierProduct.orderDeliveryDate != ''? 50 : 65,
                 child: Text(
                   state.orderBySupplierProduct.products![index].productName
                       .toString(),
@@ -583,7 +584,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.font_14, color: AppColors.blackColor),
                 ),
               ),
-              10.width,
+              getScreenHeight(context) >= 730 ? 5.width : 1.width,
               Text(
                 '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                 style: AppStyles.rkRegularTextStyle(
@@ -591,7 +592,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   size: AppConstants.font_12,
                 ),
               ),
-              10.width,
+              getScreenHeight(context) >= 730 ? 5.width : 3.width,
               Text(
                 '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(

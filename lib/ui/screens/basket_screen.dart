@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
+import '../widget/common_shimmer_widget.dart';
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -288,7 +290,8 @@ class BasketScreenWidget extends StatelessWidget {
                                           vertical: AppConstants.padding_5),
                                       itemBuilder: (context, index) =>
                                           basketListItem(
-                                              index: index, context: context),
+                                              index: index, context: context,
+                                          ),
                                     ),
                                   ),
                                 )
@@ -318,170 +321,183 @@ class BasketScreenWidget extends StatelessWidget {
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
 
-        return Container(
-          margin: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_5,
-              horizontal: AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_3,
-              horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.15),
-                  blurRadius: AppConstants.blur_10),
-            ],
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.network(
-                '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-                width: AppConstants.containerSize_50,
-                height: AppConstants.containerSize_50,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: AppConstants.containerSize_50,
-                    height: AppConstants.containerSize_50,
-                  );
-                },
-              ),
-              Expanded(
-                  child: Container(
-                    child: Text(
-                      state.basketProductList[index].productName!,
-                      style: TextStyle(
-                        color: AppColors.blackColor,
-                        fontSize: AppConstants.font_14,
+        return GestureDetector(
+          onTap: (){
+            showProductDetails(
+                context: context,
+                index: index
+
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_5,
+                horizontal: AppConstants.padding_10),
+            padding: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_3,
+                horizontal: AppConstants.padding_10),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.15),
+                    blurRadius: AppConstants.blur_10),
+              ],
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+               state.basketProductList[index].mainImage == ''? Image.asset(AppImagePath.imageNotAvailable5,
+                 width: AppConstants.containerSize_50,
+                 height: AppConstants.containerSize_50,
+                 fit: BoxFit.cover,
+               ) : Image.network(
+                  '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
+                  width: AppConstants.containerSize_50,
+                  height: AppConstants.containerSize_50,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: AppConstants.containerSize_50,
+                      height: AppConstants.containerSize_50,
+                    );
+                  },
+                ),
+                Expanded(
+                    child: Container(
+                      child: Text(
+                        state.basketProductList[index].productName!,
+                        style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: AppConstants.font_14,
+                        ),
                       ),
                     ),
-                  ),
-              ),
-              3.width,
-              GestureDetector(
-                onTap: () {
-                  if(!state.isLoading){
-                    if (state.CartItemList.data!.data![index].productStock! >=
-                        state.basketProductList[index].totalQuantity! + 1) {
-                      bloc.add(BasketEvent.productUpdateEvent(
-                        listIndex: index,
-                        productWeight:
-                        state.basketProductList[index].totalQuantity! + 1,
-                        context: context,
-                        productId: state
-                            .CartItemList.data!.data![index].productDetails!.id!,
-                        supplierId: state
-                            .CartItemList.data!.data![index].suppliers!.first.id!,
-                        cartProductId:
-                        state.CartItemList.data?.data?[index].cartProductId ?? '',
-                        totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
-                        saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
-                      ));
-                    } else {
-                      showSnackBar(
+                ),
+                3.width,
+                GestureDetector(
+                  onTap: () {
+                    if(!state.isLoading){
+                      if (state.CartItemList.data!.data![index].productStock! >=
+                          state.basketProductList[index].totalQuantity! + 1) {
+                        bloc.add(BasketEvent.productUpdateEvent(
+                          listIndex: index,
+                          productWeight:
+                          state.basketProductList[index].totalQuantity! + 1,
                           context: context,
-                          title: AppStrings.outOfStockString,
-                          bgColor: AppColors.redColor);
+                          productId: state
+                              .CartItemList.data!.data![index].productDetails!.id!,
+                          supplierId: state
+                              .CartItemList.data!.data![index].suppliers!.first.id!,
+                          cartProductId:
+                          state.CartItemList.data?.data?[index].cartProductId ?? '',
+                          totalPayment: /*state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state.totalPayment,
+                          saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
+                        ));
+                      } else {
+                        showSnackBar(
+                            context: context,
+                            title: AppStrings.outOfStockString,
+                            bgColor: AppColors.redColor);
+                      }
                     }
-                  }
-                  else{
-                    debugPrint('please wait');
-                  }
-                },
-                child: Container(
-                  width: AppConstants.containerSize_25,
-                  height: AppConstants.containerSize_25,
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radius_4),
-                      border: Border.all(color: AppColors.navSelectedColor),
-                      color: AppColors.pageColor),
-                  child: Icon(
-                    Icons.add,
-                    size: 15,
-                    color: AppColors.blackColor,
+                    else{
+                      debugPrint('please wait');
+                    }
+                  },
+                  child: Container(
+                    width: AppConstants.containerSize_25,
+                    height: AppConstants.containerSize_25,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_4),
+                        border: Border.all(color: AppColors.navSelectedColor),
+                        color: AppColors.pageColor),
+                    child: Icon(
+                      Icons.add,
+                      size: 15,
+                      color: AppColors.blackColor,
+                    ),
                   ),
                 ),
-              ),
-              5.width,
-              Text(
-                '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
-                style: TextStyle(
-                  color: AppColors.blackColor,
-                  fontSize: AppConstants.font_12,
-                ),
-              ),
-              5.width,
-              GestureDetector(
-                onTap: () {
-        if(!state.isLoading) {
-          if (state.basketProductList[index].totalQuantity! > 1) {
-            bloc.add(BasketEvent.productUpdateEvent(
-              listIndex: index,
-              productWeight:
-              state.basketProductList[index].totalQuantity! - 1,
-              context: context,
-              productId: state
-                  .CartItemList.data!.data![index].productDetails!.id!,
-              supplierId: state
-                  .CartItemList.data!.data![index].suppliers!.first.id!,
-              cartProductId:
-              state.CartItemList.data!.data![index].cartProductId!,
-              totalPayment: /* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state
-                  .totalPayment,
-              saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
-                  0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
-                  .id ?? '')),
-            ));
-          }
-        }
-        else{
-          debugPrint('please wait');
-        }
-                },
-                child: Container(
-                  width: AppConstants.containerSize_25,
-                  height: AppConstants.containerSize_25,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.radius_4),
-                      border: Border.all(color: AppColors.navSelectedColor),
-                      color: AppColors.pageColor),
-                  child: Text('-',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.mediumFont,
-                          color: AppColors.blackColor)),
-                ),
-              ),
-              5.width,
-              Flexible(//state.basketProductList[index].totalPayment?.toStringAsFixed(2)
-               // width: 70,
-                child: Text(bloc.splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0.00"),
+                5.width,
+                Text(
+                  '${state.basketProductList[index].totalQuantity}',
                   style: TextStyle(
-                      color: AppColors.blackColor,
-                      fontSize: AppConstants.font_14,
-                      fontWeight: FontWeight.w700),
+                    color: AppColors.blackColor,
+                    fontSize: AppConstants.font_12,
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  deleteDialog(
-                    context: context,
-                    updateClearString: AppStrings.deleteString,
-                    cartProductId: state.basketProductList[index].cartProductId,
-                    listIndex: index,
-                    totalAmount : state.basketProductList[index].totalPayment!,
-                  );
-                },
-                child: SvgPicture.asset(
-                  AppImagePath.delete,
+                5.width,
+                GestureDetector(
+                  onTap: () {
+          if(!state.isLoading) {
+            if (state.basketProductList[index].totalQuantity! > 1) {
+              bloc.add(BasketEvent.productUpdateEvent(
+                listIndex: index,
+                productWeight:
+                state.basketProductList[index].totalQuantity! - 1,
+                context: context,
+                productId: state
+                    .CartItemList.data!.data![index].productDetails!.id!,
+                supplierId: state
+                    .CartItemList.data!.data![index].suppliers!.first.id!,
+                cartProductId:
+                state.CartItemList.data!.data![index].cartProductId!,
+                totalPayment: /* state.CartItemList.data!.cart!.first.totalAmount!.toDouble()*/state
+                    .totalPayment,
+                saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
+                    0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
+                    .id ?? '')),
+              ));
+            }
+          }
+          else{
+            debugPrint('please wait');
+          }
+                  },
+                  child: Container(
+                    width: AppConstants.containerSize_25,
+                    height: AppConstants.containerSize_25,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_4),
+                        border: Border.all(color: AppColors.navSelectedColor),
+                        color: AppColors.pageColor),
+                    child: Text('-',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.mediumFont,
+                            color: AppColors.blackColor)),
+                  ),
                 ),
-              ),
-            ],
+                5.width,
+                Flexible(
+                  child: Text(
+                   '${bloc.splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0.00")}${AppLocalizations.of(context)!.currency}',
+                    style: TextStyle(
+                        color: AppColors.blackColor,
+                        fontSize: AppConstants.font_14,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    deleteDialog(
+                      context: context,
+                      updateClearString: AppStrings.deleteString,
+                      cartProductId: state.basketProductList[index].cartProductId,
+                      listIndex: index,
+                      totalAmount : state.basketProductList[index].totalPayment!,
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    AppImagePath.delete,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -567,5 +583,323 @@ class BasketScreenWidget extends StatelessWidget {
                 )
               ],
             ));
+  }
+
+  void showProductDetails(
+      {required BuildContext context, required int index}) async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      // showDragHandle: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context1) {
+        return BlocProvider.value(
+          value: context.read<BasketBloc>(),
+          child: DraggableScrollableSheet(
+            expand: false,
+          //  maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
+          //  minChildSize: 0.6,
+         //   initialChildSize: 0.6,
+          //  shouldCloseOnMinExtent: false,
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocProvider.value(
+                  value: context.read<BasketBloc>(),
+                  child: BlocBuilder<BasketBloc, BasketState>(
+                    builder: (context, state) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(AppConstants.radius_30),
+                            topRight: Radius.circular(AppConstants.radius_30),
+                          ),
+                          color: AppColors.whiteColor,
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Scaffold(
+                          backgroundColor: AppColors.whiteColor,
+                          body: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(AppConstants.radius_30),
+                                  topRight: Radius.circular(AppConstants.radius_30),
+                                ),
+                                color: AppColors.whiteColor,
+                              ),
+                              padding: EdgeInsets.only(
+                                  top: AppConstants.padding_10,
+                                  bottom: MediaQuery.of(context).viewInsets.bottom),
+                              clipBehavior: Clip.hardEdge,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Expanded(child: 0.width),
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          state.CartItemList.data?.data?[index].productDetails?.productName ??
+                                              '',
+                                          style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.normalFont,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 36,
+                                              color: AppColors.blackColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  5.height,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '${ (double.parse(state.CartItemList.data?.data?[index].productDetails?.itemsWeight!.toStringAsFixed(1) ?? '')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1))}${state.CartItemList.data?.data?[index].productDetails?.scales ?? ''}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont, color: AppColors.blackColor),
+                                      ),
+                                      Text(
+                                        ' | ',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont, color: AppColors.blackColor),
+                                      ),
+                                      Text(
+                                        '${state.CartItemList.data?.data?[index].suppliers?.first.contactName ?? ''}',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont, color: AppColors.blackColor),
+                                      ),
+                                    ],
+                                  ),
+                                  10.height,
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      controller: scrollController,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Stack(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      bottom: 20,
+                                                      right: AppConstants.padding_10,
+                                                      left: AppConstants.padding_10,
+                                                      top: AppConstants.padding_10),
+                                                  child: CarouselSlider(
+                                                    // carouselController: carouselController,
+                                                      items: [ state.CartItemList.data?.data?[index].productDetails?.mainImage ?? '',
+                                                        ...?state.CartItemList.data?.data?[index].productDetails?.images?.map(
+                                                                (image) => image.imageUrl ?? '')
+                                                            ].map(
+                                                              (productImage) =>
+                                                          Image.network(
+                                                            "${AppUrls.baseFileUrl}$productImage",
+                                                            height: 150,
+                                                            fit: BoxFit.fitHeight,
+                                                            loadingBuilder: (context, child,
+                                                                loadingProgress) {
+                                                              if (loadingProgress
+                                                                  ?.cumulativeBytesLoaded !=
+                                                                  loadingProgress
+                                                                      ?.expectedTotalBytes) {
+                                                                return CommonShimmerWidget(
+                                                                  child: Container(
+                                                                    height: 150,
+                                                                    width: 150,
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                      AppColors.whiteColor,
+                                                                      borderRadius: BorderRadius
+                                                                          .all(Radius.circular(
+                                                                          AppConstants
+                                                                              .radius_10)),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }
+                                                              return child;
+                                                            },
+                                                            errorBuilder:
+                                                                (context, error, stackTrace) {
+                                                              // debugPrint('product category list image error : $error');
+                                                              return Image.asset(
+                                                                AppImagePath.imageNotAvailable5,
+                                                                fit: BoxFit.cover,
+                                                                // width: 90,
+                                                                height: 150,
+                                                              );
+                                                            },
+                                                          ))
+                                                          .toList(),
+                                                      options: CarouselOptions(
+                                                          height: 150,
+                                                          onPageChanged: (index, p1) {
+                                                  context.read<BasketBloc>().add(
+                                                  BasketEvent.updateImageIndexEvent(
+                                                  index: index));
+                                                  },
+                                                          initialPage: 1,
+                                                          aspectRatio: 16 / 9,
+                                                          scrollDirection: Axis.horizontal,
+                                                          enableInfiniteScroll: false,
+                                                          autoPlayCurve: Curves.decelerate,
+                                                          pageSnapping: true)),
+                                                ),
+                                                [ state.CartItemList.data?.data?[index].productDetails?.mainImage ?? '',
+                                                  ...?state.CartItemList.data?.data?[index].productDetails?.images?.map(
+                                                          (image) => image.imageUrl ?? '')
+                                                      ].length < 2
+                                                    ? 0.width
+                                                    : Positioned(
+                                                    bottom: 5,
+                                                    child: Container(
+                                                      width: getScreenWidth(context),
+                                                      alignment: Alignment.center,
+                                                      child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.center,
+                                                        children: [ state.CartItemList.data?.data?[index].productDetails?.mainImage ?? '',
+                                                          ...?state.CartItemList.data?.data?[index].productDetails?.images?.map(
+                                                                  (image) => image.imageUrl ?? '')
+                                                              ]
+                                                            .asMap()
+                                                            .entries
+                                                            .map((productImage) => Container(
+                                                          height: 7,
+                                                          width: 7,
+                                                          margin: EdgeInsets.symmetric(
+                                                              horizontal:
+                                                              AppConstants.padding_2),
+                                                          decoration: BoxDecoration(
+                                                              color: state.productImageIndex ==
+                                                                  productImage.key
+                                                                  ? AppColors.mainColor
+                                                                  : AppColors.borderColor,
+                                                              shape: BoxShape.circle),
+                                                        ))
+                                                            .toList(),
+                                                      ),
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                          5.width,
+                                          Text(
+                                            state.CartItemList.data?.data?[index].productDetails?.productName ??
+                                                '',
+                                            style: AppStyles.rkBoldTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.greyColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          Text(
+                                            '${double.parse(state.CartItemList.data?.data?[index].totalAmount ?? '')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1)}${AppLocalizations.of(context)!.currency}',
+                                            style: AppStyles.rkBoldTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          (state.CartItemList.data?.data?[index].sales!.length ?? 0) > 0 ? Text(
+                                            '${state.CartItemList.data?.data?[index].sales?.first.salesDescription ?? ''}',
+                                            style: AppStyles.rkBoldTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ) : SizedBox(),
+
+                                          (state.CartItemList.data?.data?[index].note ?? '').isNotEmpty ?Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: AppConstants.padding_20,
+                                                   ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(context)!.note,
+                                                      style: AppStyles.rkRegularTextStyle(
+                                                          size: AppConstants.font_14,
+                                                          color: AppColors.greyColor,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    10.height,
+                                                    Container(
+                                                      width: getScreenWidth(context),
+                                                      padding: EdgeInsets.only(
+                                                          left: AppConstants.padding_10,
+                                                          right: AppConstants.padding_10,
+                                                          bottom: AppConstants.padding_5),
+                                                      decoration: BoxDecoration(
+                                                          color: AppColors.notesBGColor,
+                                                          borderRadius: BorderRadius.all(
+                                                              Radius.circular(
+                                                                  AppConstants.radius_5))),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+                                                        child: Text(state.CartItemList.data?.data?[index].note ?? '',
+                                                          style: AppStyles.rkRegularTextStyle(
+                                                              size: AppConstants.font_14,
+                                                              color: AppColors.blackColor),
+                                                        ),
+                                                      )
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ) : SizedBox(),
+                                          // 160.height,
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ));
+            },
+          ),
+        );
+      },
+    );
   }
 }

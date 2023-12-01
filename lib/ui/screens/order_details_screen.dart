@@ -68,7 +68,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                         (state.orderByIdList.data?.ordersBySupplier?.length ??
                                     0) ==
                                 0
-                            ? CupertinoActivityIndicator()
+                            ? SizedBox()
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
@@ -173,7 +173,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 Row(
                   children: [
                     CommonOrderContentWidget(
-                      flexValue: 1,
+                      flexValue: 2,
                       title: AppLocalizations.of(context)!.products,
                       value: state.orderByIdList.data!.ordersBySupplier![index]
                           .products!.length
@@ -185,7 +185,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
-                      flexValue: 2,
+                      flexValue: 3,
                       title: AppLocalizations.of(context)!.delivery_date,
                       value: state.orderByIdList.data!.ordersBySupplier![index]
                                   .orderDeliveryDate !=
@@ -194,9 +194,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
-                      valueTextSize: AppConstants.font_10,
+                      valueTextSize: AppConstants.smallFont,
                       valueTextWeight: FontWeight.w500,
-                      columnPadding: AppConstants.padding_8,
+                     // columnPadding: AppConstants.padding_8,
                     ),
                     5.width,
                     CommonOrderContentWidget(

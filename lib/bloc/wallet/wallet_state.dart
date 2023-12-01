@@ -21,6 +21,7 @@ class WalletState with _$WalletState {
     required bool isLoadMore,
     required bool isBottomOfProducts,
     required bool isExportShimmering,
+    required double expensePercentage,
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -42,6 +43,7 @@ class WalletState with _$WalletState {
     isLoadMore: false,
     isBottomOfProducts: false,
     isExportShimmering: false,
+    expensePercentage: 0
       );
 }
 
