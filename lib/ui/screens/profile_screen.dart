@@ -259,6 +259,31 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     false));
                                                         Navigator.pop(context);
                                                       }),
+                                                  // Column(
+                                                  //   children: [
+                                                  //     Container(
+                                                  //       height: 1,
+                                                  //       width: getScreenWidth(context),
+                                                  //       color: AppColors.borderColor
+                                                  //           .withOpacity(0.5),
+                                                  //     ),
+                                                  //     FileSelectionOptionWidget(
+                                                  //         title: AppLocalizations.of(
+                                                  //             context)!
+                                                  //             .remove,
+                                                  //         icon: Icons.delete,
+                                                  //         onTap: () {
+                                                  //           // context
+                                                  //           //     .read<ProfileBloc>()
+                                                  //           //     .add(ProfileEvent
+                                                  //           //     .deleteFileEvent(
+                                                  //           //     context: context,
+                                                  //           //     index:
+                                                  //           //     fileIndex));
+                                                  //           Navigator.pop(context);
+                                                  //         }),
+                                                  //   ],
+                                                  // )
                                                 ],
                                               ),
                                             ),
