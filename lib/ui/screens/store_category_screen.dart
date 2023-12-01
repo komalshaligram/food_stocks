@@ -1920,6 +1920,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
                                                 index,
+                                                context: context,
                                                 supplierSaleIndex:
                                                 -2));
                                             context
@@ -2003,9 +2004,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 .add(StoreCategoryEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                index,
-                                                supplierSaleIndex:
-                                                subIndex));
+                                                                        index,
+                                                                    context:
+                                                                        context,
+                                                                    supplierSaleIndex:
+                                                                        subIndex));
                                             context
                                                 .read<
                                                 StoreCategoryBloc>()

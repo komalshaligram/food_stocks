@@ -25,6 +25,7 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory HomeEvent.addToCartProductEvent(

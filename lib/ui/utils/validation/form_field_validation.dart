@@ -133,11 +133,11 @@ class FormFieldValidation {
   }
 
   String? faxField(String value) {
-    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+    // RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
 
     if (value.isEmpty) {
       return "Please enter fax number";
-    } else if (!regex.hasMatch(value)) {
+    } else if (value.length < 15 /*!regex.hasMatch(value)*/) {
       return "Please enter valid fax number";
     }
     return null;

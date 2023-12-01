@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -40,12 +41,22 @@ class ProfileMenuScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
     return BlocListener<ProfileMenuBloc, ProfileMenuState>(
-      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        if (previous.isHebrewLanguage != current.isHebrewLanguage) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      listener: (context, state) {
+        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 4));
+      },
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {
           return FocusDetector(
             onFocusGained: () {
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
+              bloc.add(ProfileMenuEvent.getAppLanguage());
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,

@@ -336,9 +336,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+            Navigator.pop(event.context);
           }
         } on ServerException {
           // emit(state.copyWith(isProductLoading: false));
+          Navigator.pop(event.context);
+        } catch (e) {
+          Navigator.pop(event.context);
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
@@ -346,6 +350,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]

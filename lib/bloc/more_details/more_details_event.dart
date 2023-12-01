@@ -31,4 +31,7 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
   factory MoreDetailsEvent.getProfileMoreDetailsEvent(
       {required BuildContext context,
       required bool isUpdate}) = _getProfileMoreDetailsEvent;
+
+  factory MoreDetailsEvent.setFAXFormatEvent({required String FAX}) =
+      _SetFAXFormatEvent;
 }

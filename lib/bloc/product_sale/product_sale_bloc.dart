@@ -194,6 +194,15 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
