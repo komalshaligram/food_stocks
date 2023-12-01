@@ -76,6 +76,8 @@ class PlanogramProductBloc
                     ?.map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',
                           companyName: supplier.supplierCompanyName ?? '',
+                          basePrice:
+                              double.parse(supplier.productPrice ?? '0.0'),
                           selectedIndex: (supplier.supplierId ?? '') ==
                                   (state
                                           .productStockList[
@@ -139,10 +141,19 @@ class PlanogramProductBloc
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity +
+                            .quantity +
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -306,8 +317,18 @@ class PlanogramProductBloc
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    note: '',
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '');
             add(PlanogramProductEvent.setCartCountEvent());
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(
+                isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -318,7 +339,7 @@ class PlanogramProductBloc
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -335,6 +356,8 @@ class PlanogramProductBloc
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         debugPrint('cart count = ${preferences.getCartCount()}');
+      } else if (event is _UpdateImageIndexEvent) {
+        emit(state.copyWith(imageIndex: event.index));
       }
     });
   }

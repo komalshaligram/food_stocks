@@ -33,7 +33,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}',
-
           );
           debugPrint('CartProductsSupplier url   = ${AppUrls.listingCartProductsSupplierUrl}${preferencesHelper.getCartId()}');
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
@@ -51,9 +50,11 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
       if(event is _orderSendEvent){
         List<Product> ProductReqMap = [];
+       emit(state.copyWith(isLoading: true));
         state.orderSummaryList.data?.data?.forEach((element) {
           debugPrint('supplierId_____${element.suppliers?.id}');
           debugPrint('product id_____${element.productDetails?.first.id}');
+          debugPrint('sale id_____${element.sales?.id ?? ''}');
 
           ProductReqMap.add(Product(
             supplierId: element.suppliers?.id,
@@ -63,7 +64,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           ));
         });
 
-        try {
+      try {
           OrderSendReqModel reqMap = OrderSendReqModel(
            products: ProductReqMap
           );
@@ -92,6 +93,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               );
               debugPrint('clear cart response_______${res}');
               if (res["status"] == 201) {
+                emit(state.copyWith(isLoading: false));
+                preferencesHelper.setCartCount(count: 0);
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
               else{
@@ -102,13 +105,23 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
 
           }
           else if(response.status == 403){
+            emit(state.copyWith(isLoading: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
           }
           else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+            emit(state.copyWith(isLoading: false));
           }
-        }  on ServerException {}
+        }  on ServerException { emit(state.copyWith(isLoading: false));}
       }
     });
+  }
+  String splitNumber(String price) {
+    var splitPrice = price.split(".");
+    if (splitPrice[1] == "00") {
+      return splitPrice[0];
+    } else {
+      return price.toString();
+    }
   }
 }

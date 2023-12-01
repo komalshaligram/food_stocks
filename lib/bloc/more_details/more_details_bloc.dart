@@ -200,10 +200,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
+                        'Bearer ${preferencesHelper.getAuthToken()}',
                   },
-                )
-            );
+                ));
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
@@ -254,13 +253,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 tokenId: preferencesHelper.getFCMToken(),
                 lastSeen: DateTime.now(),
               ));
-
+          debugPrint('token_____${preferencesHelper.getFCMToken()}');
           debugPrint('profile reqMap + $reqMap');
           try {
             emit(state.copyWith(isLoading: true));
             final response = await DioClient(event.context)
-                .post(AppUrls.RegistrationUrl, data: reqMap
-            );
+                .post(AppUrls.RegistrationUrl, data: reqMap);
 
             res.ProfileResModel profileResModel =
                 res.ProfileResModel.fromJson(response);
@@ -337,10 +335,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
+                        'Bearer ${preferencesHelper.getAuthToken()}',
                   },
-                )
-            );
+                ));
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
@@ -370,6 +367,29 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 bgColor: AppColors.redColor);
           }
         }
+      } else if (event is _SetFAXFormatEvent) {
+        RegExp regEx = RegExp(r'(\d)');
+        String newFaxNumber = '';
+        List<RegExpMatch> matches = regEx.allMatches(event.FAX).toList();
+        debugPrint('FAX = ${event.FAX}');
+        debugPrint('FAX len = ${matches.length}');
+        for (int i = 0; i < matches.length; i++) {
+          if (i == 0) {
+            newFaxNumber = '(${matches[i][0]}';
+          } else if (i == 2) {
+            newFaxNumber += '${matches[i][0]})-';
+          } else if (i == 5) {
+            newFaxNumber += '${matches[i][0]}-';
+          } else {
+            newFaxNumber += '${matches[i][0]}';
+          }
+        }
+
+        debugPrint('FAX = $newFaxNumber');
+        emit(state.copyWith(
+            faxController: TextEditingController(text: newFaxNumber)
+              ..selection = TextSelection.fromPosition(
+                  TextPosition(offset: newFaxNumber.length))));
       }
     });
   }

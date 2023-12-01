@@ -23,10 +23,15 @@ class ProductSaleEvent with _$ProductSaleEvent {
 
   const factory ProductSaleEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory ProductSaleEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory ProductSaleEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory ProductSaleEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

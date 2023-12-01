@@ -58,8 +58,8 @@ class OrderScreenWidget extends StatelessWidget {
                     state.isShimmering
                         ? OrderSummaryScreenShimmerWidget()
                         : (state.orderDetailsList.length) != 0
-                            ? SizedBox(
-                      height: getScreenHeight(context) * 0.85,
+                            ? Expanded(
+                      /*height: getScreenHeight(context) * 0.85,*/
                                 child: ListView.builder(
                                   //scrollDirection: Axis.vertical,
                                   itemCount: state.orderDetailsList.length,
@@ -114,7 +114,7 @@ class OrderScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-
+        OrderBloc bloc = context.read<OrderBloc>();
         return GestureDetector(
             onTap: () {
               Navigator.pushNamed(
@@ -177,7 +177,7 @@ class OrderScreenWidget extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '${double.parse(state.orderDetailsList[index].totalAmount.toString()).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                          '${bloc.splitNumber(double.parse(state.orderDetailsList[index].totalAmount.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.font_14,
                               color: AppColors.whiteColor,
@@ -210,7 +210,7 @@ class OrderScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
-                      flexValue: 3,
+                      flexValue: 4,
                       title: AppLocalizations.of(context)!.order_date,
                       value: state.orderDetailsList[index].createdAt
                               ?.replaceRange(11, 16, '') ??
@@ -221,7 +221,7 @@ class OrderScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
-                      flexValue: 3,
+                      flexValue: 4,
                       title: AppLocalizations.of(context)!.order_status,
                       value: state.orderDetailsList[index].status?.statusName
                               ?.toString() ??

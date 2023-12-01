@@ -5,7 +5,7 @@ class StoreState with _$StoreState {
   const factory StoreState({
     required bool isCategoryExpand,
     required List<Category> productCategoryList,
-    required ProductSalesResModel productSalesList,
+    required List<ProductSale> productSalesList,
     required List<RecommendationData> recommendedProductsList,
     required SuppliersResModel suppliersList,
     required List<Brand> companiesList,
@@ -21,12 +21,13 @@ class StoreState with _$StoreState {
     required List<ProductSupplierModel> productSupplierList,
     required bool isCartCountChange,
     required String search,
+    required int imageIndex,
   }) = _StoreState;
 
   factory StoreState.initial() => const StoreState(
     isCategoryExpand: false,
         productCategoryList: [],
-        productSalesList: ProductSalesResModel(),
+        productSalesList: [],
         recommendedProductsList: [],
         suppliersList: SuppliersResModel(),
         companiesList: [],
@@ -42,5 +43,6 @@ class StoreState with _$StoreState {
         productSupplierList: [],
         isCartCountChange: false,
         search: '',
+        imageIndex: 0,
       );
 }

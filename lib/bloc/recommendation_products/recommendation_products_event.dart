@@ -23,6 +23,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory RecommendationProductsEvent.addToCartProductEvent(
@@ -30,4 +31,8 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.setCartCountEvent() =
       _SetCartCountEvent;
+
+  const factory RecommendationProductsEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

@@ -7,6 +7,6 @@ class OrderSummaryEvent with _$OrderSummaryEvent {
     required BuildContext context
 }) = _getDataEvent;
   const factory OrderSummaryEvent.orderSendEvent({
-    required BuildContext context
+    required BuildContext context,
 }) = _orderSendEvent;
 }

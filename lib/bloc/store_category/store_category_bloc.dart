@@ -275,18 +275,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             supplierList.addAll(response.product?.first.supplierSales
                 ?.map((supplier) => ProductSupplierModel(
               supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
-              selectedIndex: (supplier.supplierId ?? '') ==
-                  state
-                      .productStockList[planoGramIndex]
-                  [productStockUpdateIndex]
-                      .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
-                        (sale) =>
-                    sale.saleId ==
-                        state
-                            .productStockList[
+                          companyName: supplier.supplierCompanyName ?? '',
+                          basePrice:
+                              double.parse(supplier.productPrice ?? '0.0'),
+                          selectedIndex: (supplier.supplierId ?? '') ==
+                                  state
+                                      .productStockList[planoGramIndex]
+                                          [productStockUpdateIndex]
+                                      .productSupplierIds
+                              ? supplier.saleProduct?.indexOf(
+                                          supplier.saleProduct?.firstWhere(
+                                                (sale) =>
+                                                    sale.saleId ==
+                                                    state
+                                                        .productStockList[
                         planoGramIndex][
                         productStockUpdateIndex]
                             .productSaleId,
@@ -344,9 +346,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+            Navigator.pop(event.context);
           }
         } on ServerException {
+          Navigator.pop(event.context);
           // emit(state.copyWith(isProductLoading: false));
+        } catch (e) {
+          Navigator.pop(event.context);
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
@@ -358,15 +364,25 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockList[state.planoGramUpdateIndex]
               [state.productStockUpdateIndex]
                   .stock) {
-            productStockList[state.planoGramUpdateIndex]
-            [state.productStockUpdateIndex] =
-                productStockList[state.planoGramUpdateIndex]
-                [state.productStockUpdateIndex]
-                    .copyWith(
-                    quantity: productStockList[state.planoGramUpdateIndex]
+            if (productStockList[state.planoGramUpdateIndex]
                     [state.productStockUpdateIndex]
-                        .quantity +
-                        1);
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
+            productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex] =
+                productStockList[state.planoGramUpdateIndex]
+                        [state.productStockUpdateIndex]
+                    .copyWith(
+                        quantity: productStockList[state.planoGramUpdateIndex]
+                                    [state.productStockUpdateIndex]
+                                .quantity +
+                            1);
             debugPrint(
                 'product quantity = ${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: []));
@@ -547,8 +563,21 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            List<List<ProductStockModel>> productStockList =
+                state.productStockList.toList(growable: true);
+            productStockList[state.planoGramUpdateIndex]
+                    [state.productStockUpdateIndex] =
+                productStockList[state.planoGramUpdateIndex]
+                        [state.productStockUpdateIndex]
+                    .copyWith(
+                        note: '',
+                        quantity: 0,
+                        productSupplierIds: '',
+                        totalPrice: 0.0,
+                        productSaleId: '');
             add(StoreCategoryEvent.setCartCountEvent());
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(
+                isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -559,7 +588,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -640,6 +669,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } catch (exc) {
           // emit(state.copyWith(isShimmering: false));
         }
+      } else if (event is _UpdateImageIndexEvent) {
+        emit(state.copyWith(imageIndex: event.index));
       }
     });
   }

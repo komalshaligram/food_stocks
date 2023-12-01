@@ -10,7 +10,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/all_wallet_transaction_req/all_wallet_transaction_req_model.dart';
@@ -29,7 +28,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 part 'wallet_event.dart';
 
@@ -317,6 +315,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         } on ServerException {}
       }
     });
+  }
+  String splitNumber(String price) {
+    var splitPrice = price.split(".");
+    if (splitPrice[1] == "00") {
+      return splitPrice[0];
+    } else {
+      return price.toString();
+    }
   }
 }
 

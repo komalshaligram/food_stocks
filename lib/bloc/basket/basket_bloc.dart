@@ -63,81 +63,85 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     ? preferencesHelper.getCartCount()
                     : temp.length);
             emit(state.copyWith(
-                basketProductList: temp, isRefresh: !state.isRefresh ,totalPayment: response.data!.cart!.first.totalAmount!));
+                basketProductList: temp,
+                isRefresh: !state.isRefresh,
+                totalPayment: response.data!.cart!.first.totalAmount!));
           } else {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
             //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       } else if (event is _productUpdateEvent) {
-      //  if (event.productWeight != 0) {
-          try {
-            debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-            debugPrint('[getCartId]  = ${event.saleId != ''}');
-            UpdateCartReqModel reqMap = UpdateCartReqModel();
-            if(event.saleId != ''){
-               reqMap = UpdateCartReqModel(
-                  supplierId: event.supplierId,
-                  quantity: event.productWeight,
-                  productId: event.productId,
-                  cartProductId: event.cartProductId,
-                  saleId: event.saleId
-              );
-            }
-            else{
-               reqMap = UpdateCartReqModel(
-                  supplierId: event.supplierId,
-                  quantity: event.productWeight,
-                  productId: event.productId,
-                  cartProductId: event.cartProductId,
-              );
-            }
 
-            final res = await DioClient(event.context).post(
-              '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
-              data: reqMap,
+        //  if (event.productWeight != 0) {
+        emit(state.copyWith(isLoading: true));
+        try {
+          debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
+          debugPrint('[getSaleId]  = ${event.saleId != ''}');
+          UpdateCartReqModel reqMap = UpdateCartReqModel();
+          if (event.saleId != '') {
+            reqMap = UpdateCartReqModel(
+                supplierId: event.supplierId,
+                quantity: event.productWeight,
+                productId: event.productId,
+                cartProductId: event.cartProductId,
+                saleId: event.saleId);
+          } else {
+            reqMap = UpdateCartReqModel(
+              supplierId: event.supplierId,
+              quantity: event.productWeight,
+              productId: event.productId,
+              cartProductId: event.cartProductId,
             );
+          }
 
-            debugPrint('[update cart reqMap]  = $reqMap');
+          final res = await DioClient(event.context).post(
+            '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
+            data: reqMap,
+          );
 
-            UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-            debugPrint('update response  = $response');
-            if (response.status == 201) {
-              List<ProductDetailsModel> list = [];
-              list = [...state.basketProductList];
-              int quantity = list[event.listIndex].totalQuantity!;
+          debugPrint('[update cart reqMap]  = $reqMap');
+          debugPrint(
+              '[url]  = ${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}');
+
+          UpdateCartResModel response = UpdateCartResModel.fromJson(res);
+          debugPrint('update response  = $response');
+          if (response.status == 201) {
+            List<ProductDetailsModel> list = [];
+            list = [...state.basketProductList];
+            int quantity = list[event.listIndex].totalQuantity!;
             double payment = list[event.listIndex].totalPayment!;
-              list[event.listIndex].totalQuantity =
-                  response.data!.cartProduct!.quantity;
-              list[event.listIndex].totalPayment =
-                  ((payment / quantity) * response.data!.cartProduct!.quantity!);
-              double newAmount = (payment / quantity);
+            list[event.listIndex].totalQuantity =
+                response.data!.cartProduct!.quantity;
+            list[event.listIndex].totalPayment =
+                ((payment / quantity) * response.data!.cartProduct!.quantity!);
+            double newAmount = (payment / quantity);
 
+            double totalAmount = 0;
+            if (list[event.listIndex].totalPayment! > payment) {
+              totalAmount = event.totalPayment + newAmount;
+            } else {
+              totalAmount = event.totalPayment - newAmount;
+            }
 
-              double totalAmount = 0;
-              if(list[event.listIndex].totalPayment! > payment){
-                totalAmount = event.totalPayment + newAmount;
-              }
-              else{
-                totalAmount = event.totalPayment - newAmount;
-              }
+            emit(state.copyWith(
+                basketProductList: list,
+                totalPayment: totalAmount,
+                isLoading: false,
+            ));
 
-
-              emit(state.copyWith(
-                  basketProductList: list,totalPayment: totalAmount, isRefresh: !state.isRefresh));
-
-             /* showSnackBar(
+            /* showSnackBar(
                   context: event.context,
                   title: response.message!,
                   bgColor: AppColors.mainColor);*/
-            } else {
-              showSnackBar(
-                  context: event.context,
-                  title: response.message!,
-                  bgColor: AppColors.mainColor);
-            }
-          } on ServerException {}
-       // }
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {}
+        // }
         /* else {
           showSnackBar(
               context: event.context,
@@ -160,11 +164,19 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             list.removeAt(event.listIndex);
             Navigator.pop(event.dialogContext);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh ,totalPayment: state.totalPayment - event.totalAmount));
-             showSnackBar(context: event.context, title: 'Item deleted', bgColor: AppColors.mainColor);
+                basketProductList: list,
+                isRefresh: !state.isRefresh,
+                totalPayment: state.totalPayment - event.totalAmount));
+            showSnackBar(
+                context: event.context,
+                title: 'Item deleted',
+                bgColor: AppColors.mainColor);
           } else {
             Navigator.pop(event.context);
-             showSnackBar(context: event.context, title:response['message'], bgColor: AppColors.mainColor);
+            showSnackBar(
+                context: event.context,
+                title: response['message'],
+                bgColor: AppColors.mainColor);
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {
@@ -203,5 +215,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             count: event.isClearCart ? 0 : preferences.getCartCount() - 1);
       }
     });
+  }
+
+  String splitNumber(String price) {
+    var splitPrice = price.split(".");
+    if (splitPrice[1] == "00") {
+      return splitPrice[0];
+    } else {
+      return price.toString();
+    }
   }
 }

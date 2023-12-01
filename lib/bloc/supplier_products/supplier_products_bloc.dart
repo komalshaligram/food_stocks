@@ -253,11 +253,27 @@ class SupplierProductsBloc
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            if (productStockList[state.productStockUpdateIndex]
+                .productSupplierIds
+                .isEmpty) {
+              showSnackBar(
+                  context: event.context,
+                  title: AppStrings.selectSupplierMsgString,
+                  bgColor: AppColors.redColor);
+              return;
+            }
+            // if(productStockList[state.productStockUpdateIndex]
+            //     .quantity == 0) {
+            //   productStockList[state.productStockUpdateIndex] =
+            //       productStockList[state.productStockUpdateIndex].copyWith(
+            //           quantity: 4999);
+            // } else {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
                             .quantity +
                         1);
+            // }
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
@@ -400,8 +416,18 @@ class SupplierProductsBloc
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    note: '',
+                    quantity: 0,
+                    productSupplierIds: '',
+                    totalPrice: 0.0,
+                    productSaleId: '');
             add(SupplierProductsEvent.setCartCountEvent());
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(
+                isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.addCartSuccessString,
@@ -412,7 +438,7 @@ class SupplierProductsBloc
             showSnackBar(
                 context: event.context,
                 title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -429,6 +455,8 @@ class SupplierProductsBloc
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         debugPrint('cart count = ${preferences.getCartCount()}');
+      } else if (event is _UpdateImageIndexEvent) {
+        emit(state.copyWith(imageIndex: event.index));
       }
     });
   }

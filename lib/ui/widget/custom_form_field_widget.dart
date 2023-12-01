@@ -38,12 +38,13 @@ class CustomFormField extends StatelessWidget {
     this.textFieldLabelSize,
     this.inputformet,
     this.autofocus = false,
-    this.textInputAction,  TextCapitalization textCapitalization = TextCapitalization.words,
+    this.textInputAction,
+    TextCapitalization textCapitalization = TextCapitalization.words,
     this.cursorColor = Colors.green,
     this.contentPaddingBottom = 0.0,
     this.contentPaddingTop = 0.0,
     this.border = 3.0,
-
+    this.textDirection,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         //   _inputAction = inputAction,
@@ -88,12 +89,13 @@ class CustomFormField extends StatelessWidget {
   final double contentPaddingTop;
   final double contentPaddingBottom;
   final double border;
-
+  final TextDirection? textDirection;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: _controller,
+      // textDirection: textDirection,
       inputFormatters: inputformet,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       style: AppStyles.rkRegularTextStyle(
@@ -114,6 +116,8 @@ class CustomFormField extends StatelessWidget {
       onSaved: onSaved,
       autofocus: autofocus,
       cursorColor: cursorColor,
+      // textAlign: textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
+      // maxLength: maxLimits,
       validator: (value) =>
           AuthFormValidation().formValidation(value!, _validator),
       decoration: InputDecoration(

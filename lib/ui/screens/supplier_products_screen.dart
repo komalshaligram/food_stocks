@@ -379,9 +379,19 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
-                                  productImage:
-                                      state.productDetails.first.mainImage ??
-                                          '',
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context.read<SupplierProductsBloc>().add(
+                                        SupplierProductsEvent
+                                            .updateImageIndexEvent(
+                                                index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ?? '',
+                                    ...state.productDetails.first.images?.map(
+                                            (image) => image.imageUrl ?? '') ??
+                                        []
+                                  ],
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -800,6 +810,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -883,8 +895,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                 SupplierProductsBloc>()
                                                             .add(SupplierProductsEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context

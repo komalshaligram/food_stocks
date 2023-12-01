@@ -49,6 +49,7 @@ class AppConstants{
   static const double font_12 = 12;
   static const double font_14 = 14;
   static const double font_30 = 30;
+  static const double font_26 = 26;
   static const double font_22 = 22;
 
   static const double blur_10 = 10;

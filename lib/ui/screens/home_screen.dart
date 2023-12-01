@@ -70,10 +70,11 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                if (state.productSalesList.data?.isEmpty ?? true) {
+                if (state.productSalesList.isEmpty) {
                   bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
                 }
+                bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 // if (state.messageList.isEmpty) {
                 //   bloc.add(HomeEvent.getMessageListEvent(context: context));
                 // }
@@ -436,12 +437,10 @@ class HomeScreenWidget extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       buildListTitles(),
-                                      buildListItems(context, height: 120),
+                                      buildListItems(context, height: 140),
                                       15.height,
                                     ]),
-                                secondChild: (state
-                                            .productSalesList.data?.isEmpty ??
-                                        true)
+                                secondChild: (state.productSalesList.isEmpty)
                                     ? 0.width
                                     : Column(
                                         crossAxisAlignment:
@@ -466,14 +465,13 @@ class HomeScreenWidget extends StatelessWidget {
                                           SizedBox(
                                             height: 190,
                                             child: ListView.builder(
-                                                itemCount:
-                                                    (state.productSalesList.data
-                                                                    ?.length ??
-                                                                0) <
-                                                            6
-                                                        ? state.productSalesList
-                                                            .data?.length
-                                                        : 6,
+                                                itemCount: state
+                                                            .productSalesList
+                                                            .length <
+                                                        6
+                                                    ? state
+                                                        .productSalesList.length
+                                                    : 6,
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 shrinkWrap: true,
@@ -481,32 +479,30 @@ class HomeScreenWidget extends StatelessWidget {
                                                     buildProductSaleListItem(
                                                       context: context,
                                                       saleImage: state
-                                                              .productSalesList
-                                                              .data?[index]
+                                                              .productSalesList[
+                                                                  index]
                                                               .mainImage ??
                                                           '',
                                                       title: state
-                                                              .productSalesList
-                                                              .data?[index]
+                                                              .productSalesList[
+                                                                  index]
                                                               .salesName ??
                                                           '',
                                                       description: state
-                                                              .productSalesList
-                                                              .data?[index]
+                                                              .productSalesList[
+                                                                  index]
                                                               .salesDescription ??
                                                           '',
-                                                      salePercentage:
-                                                          double.parse(state
-                                                                  .productSalesList
-                                                                  .data?[index]
-                                                                  .discountPercentage ??
-                                                              '0.0'),
+                                                      salePercentage: double.parse(state
+                                                              .productSalesList[
+                                                                  index]
+                                                              .discountPercentage ??
+                                                          '0.0'),
                                                       onButtonTap: () {
                                                         showProductDetails(
                                                             context: context,
                                                             productId: state
-                                                                    .productSalesList
-                                                                    .data?[
+                                                                    .productSalesList[
                                                                         index]
                                                                     .id ??
                                                                 '');
@@ -831,32 +827,28 @@ class HomeScreenWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$saleImage",
+            child: CachedNetworkImage(
+              imageUrl: "${AppUrls.baseFileUrl}$saleImage",
               height: 70,
               fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
-                  return CommonShimmerWidget(
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_10)),
-                      ),
-                      // alignment: Alignment.center,
-                      // child: CupertinoActivityIndicator(
-                      //   color: AppColors.blackColor,
-                      // ),
+              placeholder: (context, url) {
+                return CommonShimmerWidget(
+                  child: Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(AppConstants.radius_10)),
                     ),
-                  );
-                }
-                return child;
+                    // alignment: Alignment.center,
+                    // child: CupertinoActivityIndicator(
+                    //   color: AppColors.blackColor,
+                    // ),
+                  ),
+                );
               },
-              errorBuilder: (context, error, stackTrace) {
+              errorWidget: (context, error, stackTrace) {
                 // debugPrint('sale list image error : $error');
                 return Container(
                   child: Image.asset(AppImagePath.imageNotAvailable5,
@@ -946,10 +938,19 @@ class HomeScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                                  context: context,
-                                  productImage:
-                                      state.productDetails.first.mainImage ??
-                                          '',
+                              context: context,
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.updateImageIndexEvent(
+                                            index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ?? '',
+                                    ...state.productDetails.first.images?.map(
+                                            (image) => image.imageUrl ?? '') ??
+                                        []
+                                  ],
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -1463,6 +1464,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -1537,8 +1540,10 @@ class HomeScreenWidget extends StatelessWidget {
                                                             .read<HomeBloc>()
                                                             .add(HomeEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context

@@ -3,7 +3,7 @@ part of 'product_sale_bloc.dart';
 @freezed
 class ProductSaleState with _$ProductSaleState {
   const factory ProductSaleState({
-    required List<Datum> productSalesList,
+    required List<ProductSale> productSalesList,
     required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required bool isShimmering,
@@ -15,6 +15,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isBottomOfProducts,
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
+    required int imageIndex,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => const ProductSaleState(
@@ -30,5 +31,6 @@ class ProductSaleState with _$ProductSaleState {
         isBottomOfProducts: false,
         isSelectSupplier: false,
         productSupplierList: [],
+        imageIndex: 0,
       );
 }

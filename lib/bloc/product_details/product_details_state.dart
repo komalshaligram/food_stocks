@@ -5,12 +5,14 @@ class ProductDetailsState with _$ProductDetailsState {
 
   const factory ProductDetailsState({
     required bool isProductProblem,
-    required GetOrderByIdModel orderList,
     required bool isRefresh,
     required int selectedRadioTile,
     required List<int>productListIndex,
     required int productWeight,
     required String phoneNumber,
+    required OrdersBySupplier orderBySupplierProduct,
+    required bool isShimmering,
+    required bool isLoading,
 
   }) = _ProductDetailsState;
 
@@ -19,10 +21,12 @@ class ProductDetailsState with _$ProductDetailsState {
     isProductProblem: false,
     isRefresh: false,
     selectedRadioTile: 0,
-  orderList: GetOrderByIdModel(),
   productListIndex: [],
     productWeight: 0,
     phoneNumber: '',
+    orderBySupplierProduct: OrdersBySupplier(),
+     isShimmering: false,
+    isLoading: false
 
   );
 }

@@ -333,6 +333,54 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               title: AppStrings.somethingWrongString,
               bgColor: AppColors.redColor);
         }
+      } else if (event is _deleteFileEvent) {
+        // try {
+        //   if (state.UserImageUrl.isEmpty) {
+        //     return;
+        //   } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
+        //     emit(state.copyWith(UserImageUrl: '', image: File('')));
+        //     showSnackBar(
+        //         context: event.context,
+        //         title: AppStrings.removeSuccessString,
+        //         bgColor: AppColors.mainColor);
+        //     return;
+        //   }
+        //   emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
+        //   RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
+        //       path: formsAndFilesList[event.index].url);
+        //   debugPrint('delete file req = ${reqModel.path}');
+        //   final res = await DioClient(event.context)
+        //       .post(AppUrls.removeFileUrl, data: reqModel);
+        //   RemoveFormAndFileResModel response =
+        //   RemoveFormAndFileResModel.fromJson(res);
+        //   debugPrint('delete file res = ${response.message}');
+        //   if (response.status == 200) {
+        //     emit(state.copyWith(isUploadLoading: false));
+        //     formsAndFilesList[event.index] =
+        //         formsAndFilesList[event.index].copyWith(localUrl: '');
+        //     formsAndFilesList[event.index] =
+        //         formsAndFilesList[event.index].copyWith(url: '');
+        //     emit(state.copyWith(formsAndFilesList: formsAndFilesList));
+        //     // showSnackBar(
+        //     //     context: event.context,
+        //     //     title: response.message ?? AppStrings.removeSuccessString,
+        //     //     bgColor: AppColors.mainColor);
+        //     add(FileUploadEvent.uploadApiEvent(
+        //         context: event.context, isFromDelete: true));
+        //   } else {
+        //     emit(state.copyWith(isUploadLoading: false));
+        //     showSnackBar(
+        //         context: event.context,
+        //         title: response.message ?? AppStrings.somethingWrongString,
+        //         bgColor: AppColors.redColor);
+        //   }
+        // } catch (e) {
+        //   emit(state.copyWith(isUploadLoading: false));
+        //   showSnackBar(
+        //       context: event.context,
+        //       title: AppStrings.somethingWrongString,
+        //       bgColor: AppColors.redColor);
+        // }
       }
     });
   }

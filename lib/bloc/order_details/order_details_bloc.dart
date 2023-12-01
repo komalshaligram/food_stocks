@@ -15,41 +15,53 @@ import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_details_event.dart';
+
 part 'order_details_state.dart';
+
 part 'order_details_bloc.freezed.dart';
 
 class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
-  OrderDetailsBloc() : super( OrderDetailsState.initial()) {
+  OrderDetailsBloc() : super(OrderDetailsState.initial()) {
     on<OrderDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
-      SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
-   if(event is _getOrderByIdEvent){
-   debugPrint('token___${preferencesHelper.getAuthToken()}');
-   debugPrint('id___${event.orderId}');
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      if (event is _getOrderByIdEvent) {
+        debugPrint('token___${preferencesHelper.getAuthToken()}');
+        debugPrint('id___${event.orderId}');
+        try {
+          final res = await DioClient(event.context).get(
+              path: '${AppUrls.getOrderById}${event.orderId}',
+              options: Options(headers: {
+                HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}'
+              }));
 
-   try {
-     final res = await DioClient(event.context).get(
-        path : '${AppUrls.getOrderById}${event.orderId}',
-         options:Options(
-             headers: {
-               HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
-             })
-     );
+          debugPrint(
+              'GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
+          debugPrint('GetOrderByIdModel  = $res');
+          GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
+          debugPrint('GetOrderByIdModel  = $response');
 
-     debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
-     debugPrint('GetOrderByIdModel  = $res');
-     GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-     debugPrint('GetOrderByIdModel  = $response');
-
-    if (response.status == 200) {
-       emit(state.copyWith(orderByIdList: response));
-   //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-     } else {
-       showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-     }
-   }  on ServerException {}
- }
+          if (response.status == 200) {
+            emit(state.copyWith(orderByIdList: response));
+            //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+          } else {
+            showSnackBar(
+                context: event.context,
+                title: response.message!,
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {}
+      }
     });
+  }
+
+  String splitNumber(String price) {
+    var splitPrice = price.split(".");
+    if (splitPrice[1] == "00") {
+      return splitPrice[0];
+    } else {
+      return price.toString();
+    }
   }
 }

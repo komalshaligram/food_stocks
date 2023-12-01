@@ -23,10 +23,15 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
 
   const factory PlanogramProductEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory PlanogramProductEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory PlanogramProductEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory PlanogramProductEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

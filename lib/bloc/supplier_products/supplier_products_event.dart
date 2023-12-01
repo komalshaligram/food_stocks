@@ -26,10 +26,15 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory SupplierProductsEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
   const factory SupplierProductsEvent.setCartCountEvent() = _SetCartCountEvent;
+
+  const factory SupplierProductsEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

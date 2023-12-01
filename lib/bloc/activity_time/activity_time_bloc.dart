@@ -219,11 +219,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           String? selectedTime;
           selectedTime = state.time;
           print('state.time____${state.time}');
-          if(event.openingIndex == 0){
-            if(event.time == '00:00'){
-              selectedTime = '24:00';
+          if(event.openingIndex == 0  && event.time == AppStrings.timeString){
+              selectedTime = AppStrings.hr24String;
               emit(state.copyWith(time: selectedTime));
-            }
           }
 
           List<ActivityTimeModel> temp = [];

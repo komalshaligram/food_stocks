@@ -45,6 +45,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.supplierSelectionEvent(
       {required int supplierIndex,
+      required BuildContext context,
       required int supplierSaleIndex}) = _SupplierSelectionEvent;
 
   const factory StoreCategoryEvent.addToCartProductEvent(
@@ -58,4 +59,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.globalSearchEvent(
       {required String search,
       required BuildContext context}) = _GlobalSearchEvent;
+
+  const factory StoreCategoryEvent.updateImageIndexEvent({
+    required int index,
+  }) = _UpdateImageIndexEvent;
 }

@@ -19,7 +19,7 @@ String productSalesResModelToJson(ProductSalesResModel data) =>
 class ProductSalesResModel with _$ProductSalesResModel {
   const factory ProductSalesResModel({
     @JsonKey(name: "status") int? status,
-    @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "data") List<ProductSale>? data,
     @JsonKey(name: "metaData") MetaData? metaData,
   }) = _ProductSalesResModel;
 
@@ -28,8 +28,8 @@ class ProductSalesResModel with _$ProductSalesResModel {
 }
 
 @freezed
-class Datum with _$Datum {
-  const factory Datum({
+class ProductSale with _$ProductSale {
+  const factory ProductSale({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "category") String? category,
     @JsonKey(name: "subcategories") String? subcategories,
@@ -52,9 +52,10 @@ class Datum with _$Datum {
     @JsonKey(name: "salesDescription") String? salesDescription,
     @JsonKey(name: "fromDate") DateTime? fromDate,
     @JsonKey(name: "endDate") DateTime? endDate,
-  }) = _Datum;
+  }) = _ProductSale;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  factory ProductSale.fromJson(Map<String, dynamic> json) =>
+      _$ProductSaleFromJson(json);
 }
 
 @freezed

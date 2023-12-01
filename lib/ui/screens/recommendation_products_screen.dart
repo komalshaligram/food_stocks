@@ -289,9 +289,20 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
-                                  productImage:
-                                      state.productDetails.first.mainImage ??
-                                          '',
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context
+                                        .read<RecommendationProductsBloc>()
+                                        .add(RecommendationProductsEvent
+                                            .updateImageIndexEvent(
+                                                index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ?? '',
+                                    ...state.productDetails.first.images?.map(
+                                            (image) => image.imageUrl ?? '') ??
+                                        []
+                                  ],
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -687,6 +698,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
@@ -762,8 +775,10 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                                 RecommendationProductsBloc>()
                                                             .add(RecommendationProductsEvent
                                                                 .supplierSelectionEvent(
-                                                                    supplierIndex:
+                                                            supplierIndex:
                                                                         index,
+                                                                    context:
+                                                                        context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context

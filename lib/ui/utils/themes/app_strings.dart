@@ -18,6 +18,7 @@ class AppStrings {
   static const statusString = 'status';
 
 
+
   //language Strings
   static const englishString = 'en';
   static const hebrewString = 'he';
@@ -49,6 +50,7 @@ class AppStrings {
   static const categoryNameString = 'catregoryName';
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
+  static const orderBySupplierId = 'orderSupplierId';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -75,6 +77,7 @@ class AppStrings {
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
+  static const otpResendSuccessString = 'OTP resend Successfully!';
   static const loginSuccessString = 'Logged in Successfully!';
   static const updateSuccessString = 'Updated Successfully!';
   static const addCartSuccessString = 'Product added to Cart';
@@ -88,6 +91,7 @@ class AppStrings {
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';
   static const selectBusinessTypeString = 'Please select your business type';
+  static const uploadingMsgString = 'Please wait while uploading';
   static const selectValidDocumentFormatString =
       'Please select only image, pdf and document files';
   static const downloadString = 'Downloaded successfully!';
@@ -125,7 +129,7 @@ class AppStrings {
   static const contactString = 'contact';
   static const idString = 'id';
   static const orderIdString = 'orderId';
-  static const productIndexString = 'index';
+  static const productDataString = 'productData';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';
   static const totalOrderString = 'totalOrder';
