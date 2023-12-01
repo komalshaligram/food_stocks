@@ -37,7 +37,8 @@ class WalletScreen extends StatelessWidget {
       create: (context) => WalletBloc()
         ..add(WalletEvent.getYearListEvent())
         ..add(WalletEvent.getWalletRecordEvent(context: context))
-        ..add(WalletEvent.getOrderCountEvent(context: context)),
+        ..add(WalletEvent.getOrderCountEvent(context: context))
+      ..add(WalletEvent.checkLanguage()),
       child: WalletScreenWidget(),
     );
   }
@@ -271,11 +272,11 @@ class WalletScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                        20.height,
+                        30.height,
                         state.monthlyExpenseList.isEmpty
                             ? WalletScreenShimmerWidget()
                             : Padding(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: SizedBox(
                                   height: getScreenHeight(context) * 0.21,
                                   width: double.maxFinite,
@@ -286,24 +287,21 @@ class WalletScreenWidget extends StatelessWidget {
                                         LineChartData(
                                         borderData: FlBorderData(show: false),
                                         lineTouchData: LineTouchData(
-                                        touchSpotThreshold: 30.0,
-                                          getTouchLineEnd:
-                                              (barData, spotIndex) {
-                                            return 46;
-                                          },
+                                      //  touchSpotThreshold: 30.0,
+
                                           enabled: true,
                                           touchTooltipData: LineTouchTooltipData(
                                                 fitInsideHorizontally: true,
                                             getTooltipItems: (value) {
                                               return value.map((e) {
                                                 return LineTooltipItem(
-                                                    "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total} : ${AppLocalizations.of(context)!.currency}${e.y}",
+                                                    "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y}${AppLocalizations.of(context)!.currency}",
                                                     TextStyle(fontSize: 8));
                                               }).toList();
                                             },
                                             tooltipBgColor: Colors.transparent,
                                             showOnTopOfTheChartBoxArea: true,
-                                            tooltipMargin: 5,
+                                            tooltipMargin: 0,
                                           ),
                                         ),
                                         lineBarsData: [
@@ -422,7 +420,7 @@ class WalletScreenWidget extends StatelessWidget {
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
-                                          horizontal: AppConstants.padding_8),
+                                          horizontal: state.language == "en" ? AppConstants.padding_5 : AppConstants.padding_8),
                                       decoration: BoxDecoration(
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.circular(
@@ -438,7 +436,7 @@ class WalletScreenWidget extends StatelessWidget {
                                   5.width,
                                   Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5,
+                                          horizontal: state.language == "en" ? 0 :AppConstants.padding_5,
                                           vertical: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
@@ -628,7 +626,7 @@ class WalletScreenWidget extends StatelessWidget {
         value: date,
     underline: SizedBox(),
     borderRadius: BorderRadius.all(Radius.zero),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         dropdownColor: AppColors.whiteColor,
        alignment: Alignment.bottomCenter,
         items: dateList.map((e) {

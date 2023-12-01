@@ -218,7 +218,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.time.isNotEmpty) {
           String? selectedTime;
           selectedTime = state.time;
-          print('state.time____${state.time}');
           if(event.openingIndex == 0  && event.time == AppStrings.timeString){
               selectedTime = AppStrings.hr24String;
               emit(state.copyWith(time: selectedTime));

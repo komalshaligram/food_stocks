@@ -20,7 +20,7 @@ class BalanceIndicator extends StatelessWidget {
         axes: [
           RadialAxis(
             minimum: 0,
-            maximum: 10000,
+            maximum: 100,
             showLabels: false,
             showTicks: false,
             startAngle: 270,

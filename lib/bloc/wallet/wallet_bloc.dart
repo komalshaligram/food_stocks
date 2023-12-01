@@ -42,6 +42,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _checkLanguage) {
+
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
       } else if (event is _getYearListEvent) {
         emit(state.copyWith(isShimmering: true));
