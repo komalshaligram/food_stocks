@@ -26,8 +26,13 @@ class CompanyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('company args = $args');
     return BlocProvider(
       create: (context) => CompanyBloc()
+        ..add(CompanyEvent.setSearchEvent(
+            search: args?[AppStrings.searchString] ?? ''))
         ..add(CompanyEvent.getCompaniesListEvent(context: context)),
       child: CompanyScreenWidget(),
     );

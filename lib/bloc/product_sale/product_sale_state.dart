@@ -4,6 +4,7 @@ part of 'product_sale_bloc.dart';
 class ProductSaleState with _$ProductSaleState {
   const factory ProductSaleState({
     required List<ProductSale> productSalesList,
+    required String search,
     required List<Product> productDetails,
     required List<ProductStockModel> productStockList,
     required bool isShimmering,
@@ -19,7 +20,8 @@ class ProductSaleState with _$ProductSaleState {
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => const ProductSaleState(
-        productSalesList: [],
+    productSalesList: [],
+        search: '',
         productDetails: [],
         isShimmering: false,
         isLoading: false,

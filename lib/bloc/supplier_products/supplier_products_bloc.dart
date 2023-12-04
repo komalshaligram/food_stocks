@@ -37,8 +37,10 @@ class SupplierProductsBloc
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
       if (event is _GetSupplierProductsIdEvent) {
-        emit(state.copyWith(supplierId: event.supplierId));
-        debugPrint('supplier id = ${state.supplierId}');
+        emit(
+            state.copyWith(supplierId: event.supplierId, search: event.search));
+        debugPrint(
+            'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
         if (state.isLoadMore) {
           return;
@@ -53,10 +55,18 @@ class SupplierProductsBloc
           SupplierProductsReqModel request = SupplierProductsReqModel(
               supplierId: state.supplierId,
               pageLimit: AppConstants.supplierProductPageLimit,
-              pageNum: state.pageNum + 1);
-          debugPrint('supplier products req = ${request.toJson()}');
+              pageNum: state.pageNum + 1,
+              search: state.search);
+          Map<String, dynamic> req = request.toJson();
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == '';
+          });
+          debugPrint('supplier products req = $req');
           final res = await DioClient(event.context)
-              .post(AppUrls.getSupplierProductsUrl, data: request.toJson());
+              .post(AppUrls.getSupplierProductsUrl, data: req);
           SupplierProductsResModel response =
               SupplierProductsResModel.fromJson(res);
           debugPrint('supplier Products res = ${response.data}');

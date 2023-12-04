@@ -334,7 +334,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(
                 /*
                 companyLogo: preferences.getUserCompanyLogoUrl(),*/
-                isShimmering: true));
+                isUpdating: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(
@@ -352,7 +352,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
-                isShimmering: false,
+                isUpdating: false,
                 selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),
@@ -363,16 +363,20 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 companyLogo: response.data?.clients?.first.logo ?? '',
               ));
             } else {
+              emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
+            emit(state.copyWith(isUpdating: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+          } catch (e) {
+            emit(state.copyWith(isUpdating: false));
           }
         }
       } else if (event is _SetFAXFormatEvent) {

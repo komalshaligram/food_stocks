@@ -49,7 +49,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               AppUrls.getSaleProductsUrl,
               data: ProductSalesReqModel(
                       pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.saleProductPageLimit)
+                      pageLimit: AppConstants.saleProductPageLimit,
+                      search: state.search)
                   .toJson());
           ProductSalesResModel response = ProductSalesResModel.fromJson(res);
           if (response.status == 200) {
@@ -396,6 +397,8 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
+      } else if (event is _SetSearchEvent) {
+        emit(state.copyWith(search: event.search));
       }
     });
   }

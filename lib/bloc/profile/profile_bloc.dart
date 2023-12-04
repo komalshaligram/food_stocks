@@ -175,8 +175,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
-          emit(state.copyWith(isShimmering: true));
-          debugPrint('shimmering true');
+          emit(state.copyWith(isUpdating: true));
           try {
             debugPrint('mobile = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
@@ -196,6 +195,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
+                  isUpdating: false,
                   UserImageUrl:
                       response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
@@ -210,7 +210,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                          response.data?.clients?.first.clientDetail?.israelId),
+                      response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -223,16 +223,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ),
               );
             } else {
+              emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
+            emit(state.copyWith(isUpdating: false));
             // showSnackBar(
             //     context: event.context,
             //     title: AppStrings.somethingWrongString,
             //     bgColor: AppColors.redColor);
+          } catch (e) {
+            emit(state.copyWith(isUpdating: false));
           }
         }
       } else if (event is _updateProfileDetailsEvent) {

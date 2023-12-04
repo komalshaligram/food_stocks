@@ -3,7 +3,8 @@ part of 'supplier_products_bloc.dart';
 @freezed
 class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.getSupplierProductsIdEvent(
-      {required String supplierId}) = _GetSupplierProductsIdEvent;
+      {required String supplierId,
+      required String search}) = _GetSupplierProductsIdEvent;
 
   const factory SupplierProductsEvent.getSupplierProductsListEvent(
       {required BuildContext context}) = _GetSupplierProductsListEvent;

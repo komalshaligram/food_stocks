@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/store_category/store_category_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -46,6 +47,7 @@ class StoreCategoryScreen extends StatelessWidget {
         ..add(StoreCategoryEvent.changeCategoryDetailsEvent(
             categoryId: args?[AppStrings.categoryIdString] ?? '',
             categoryName: args?[AppStrings.categoryNameString] ?? '',
+            search: args?[AppStrings.searchString] ?? '',
             context: context))..add(
           StoreCategoryEvent.getProductCategoriesListEvent(context: context)),
       child: StoreCategoryScreenWidget(),
@@ -491,26 +493,29 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         )),
                     CommonSearchWidget(
                       isCategoryExpand: state.isCategoryExpand,
-                  isStoreCategory: true,
-                  onFilterTap: () {
-                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent());
-                  },
-                  onSearch: (String search) {
-                    // if (search.length > 2) {
-                    //   bloc.add(StoreCategoryEvent.globalSearchEvent(
-                    //       context: context, search: search));
-                    // }
-                  },
-                  onSearchSubmit: (String search) {
-                    // bloc.add(StoreCategoryEvent.globalSearchEvent(
-                    //     context: context, search: search));
-                  },
-                  onSearchTap: () {
-                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
-                        isOpened: true));
-                  },
-                  onOutSideTap: () {
-                    bloc.add(StoreCategoryEvent.changeCategoryExpansionEvent(
+                      isSearching: state.isSearching,
+                      onFilterTap: () {
+                        bloc.add(
+                            StoreCategoryEvent.changeCategoryExpansionEvent());
+                      },
+                      onSearch: (String search) {
+                        if (search.length > 2) {
+                          bloc.add(StoreCategoryEvent.globalSearchEvent(
+                              context: context, search: search));
+                        }
+                      },
+                      onSearchSubmit: (String search) {
+                        bloc.add(StoreCategoryEvent.globalSearchEvent(
+                            context: context, search: search));
+                      },
+                      onSearchTap: () {
+                        bloc.add(
+                            StoreCategoryEvent.changeCategoryExpansionEvent(
+                                isOpened: true));
+                      },
+                      onOutSideTap: () {
+                        bloc.add(
+                            StoreCategoryEvent.changeCategoryExpansionEvent(
                                 isOpened: false));
                       },
                       onSearchItemTap: () {
@@ -539,6 +544,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               searchName: state.searchList[index].name,
                               searchImage: state.searchList[index].image,
                               searchType: state.searchList[index].searchType,
+                              isMoreResults: state.searchList
+                                  .where((search) =>
+                              search.searchType ==
+                                  state.searchList[index]
+                                      .searchType)
+                                  .toList()
+                                  .length ==
+                                  10,
                               isShowSearchLabel: index == 0
                                   ? true
                                   : state.searchList[index].searchType !=
@@ -546,8 +559,79 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       .searchType
                                   ? true
                                   : false,
+                              onSeeAllTap: () async {
+                                if (state.searchList[index].searchType ==
+                                    SearchTypes.category
+                                ) {
+                                  dynamic result = await Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.productCategoryScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch,
+                                        AppStrings.fromStoreCategoryString: true
+                                      });
+                                  if (result != null) {
+                                    bloc.add(StoreCategoryEvent
+                                        .changeCategoryDetailsEvent(
+                                        categoryId:
+                                        result[AppStrings.categoryIdString],
+                                        categoryName:
+                                        result[AppStrings.categoryNameString],
+                                        search: state.search,
+                                        context: context));
+                                  }
+                                } else {
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.company ?
+                                  Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.companyScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      }) :
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.supplier ?
+                                  Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.supplierScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      }) :
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.sale
+                                      ? Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.productSaleScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      })
+                                      : Navigator
+                                      .pushNamed(context,
+                                      RouteDefine.supplierProductsScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      });
+                                }
+                                bloc.add(StoreCategoryEvent
+                                    .changeCategoryExpansionEvent());
+                              },
                               onTap: () {
                                 state.searchList[index].searchType ==
+                                    SearchTypes.sale ||
+                                    state.searchList[index].searchType ==
+                                        SearchTypes.product
+                                    ? showProductDetails(
+                                    context: context,
+                                    productId: state
+                                        .searchList[index].searchId,
+                                    planoGramIndex: 0,
+                                    isBarcode: true)
+                                    : state.searchList[index].searchType ==
                                     SearchTypes.category
                                     ? bloc.add(StoreCategoryEvent
                                     .changeCategoryDetailsEvent(
@@ -555,33 +639,22 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     state.searchList[index].searchId,
                                     categoryName:
                                     state.searchList[index].name,
+                                    search: state.search,
                                     context: context))
                                     : state.searchList[index].searchType ==
-                                    SearchTypes.sale
-                                    ? showProductDetails(
-                                    context: context,
-                                    productId: state
-                                        .searchList[index].searchId,
-                                    planoGramIndex: 0,
-                                    isBarcode: true)
-                                    : Navigator.pushNamed(
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(context, RouteDefine
+                                    .companyProductsScreen
+                                    .name, arguments: {
+                                  AppStrings.companyIdString: state
+                                      .searchList[index].searchId
+                                }) : Navigator.pushNamed(
                                     context,
-                                    state.searchList[index].searchType ==
-                                        SearchTypes.company
-                                        ? RouteDefine
-                                        .companyProductsScreen
-                                        .name
-                                        : RouteDefine
+                                    RouteDefine
                                         .supplierProductsScreen
                                         .name,
-                                    arguments: state.searchList[index]
-                                        .searchType ==
-                                        SearchTypes.company
-                                        ? {
-                                      AppStrings.companyIdString: state
-                                          .searchList[index].searchId
-                                    }
-                                        : {
+                                    arguments:
+                                    {
                                       AppStrings.supplierIdString: state
                                           .searchList[index].searchId
                                     });
@@ -626,9 +699,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String searchName,
     required String searchImage,
+    required bool isMoreResults,
     required SearchTypes searchType,
     required bool isShowSearchLabel,
     required void Function() onTap,
+    required void Function() onSeeAllTap,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -641,18 +716,35 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               right: AppConstants.padding_20,
               top: AppConstants.padding_15,
               bottom: AppConstants.padding_5),
-          child: Text(
-            searchType == SearchTypes.category
-                ? AppLocalizations.of(context)!.categories
-                : searchType == SearchTypes.company
-                ? AppLocalizations.of(context)!.companies
-                : searchType == SearchTypes.sale
-                ? AppLocalizations.of(context)!.sales
-                : AppLocalizations.of(context)!.suppliers,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w500),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                searchType == SearchTypes.category
+                    ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.company
+                    ? AppLocalizations.of(context)!.companies
+                    : searchType == SearchTypes.sale
+                    ? AppLocalizations.of(context)!.sales
+                    : AppLocalizations.of(context)!.suppliers,
+                style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+              isMoreResults
+                  ? GestureDetector(
+                onTap: onSeeAllTap,
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.mainColor),
+                ),
+              )
+                  : 0.width,
+            ],
           ),
         )
             : 0.width,
@@ -673,14 +765,30 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.network(
-                  '${AppUrls.baseFileUrl}$searchImage',
-                  fit: BoxFit.scaleDown,
+                Container(
                   height: 35,
                   width: 40,
-                  errorBuilder: (context, error, stackTrace) {
-                    return 40.width;
-                  },
+                  child: Image.network(
+                    '${AppUrls.baseFileUrl}$searchImage',
+                    fit: BoxFit.scaleDown,
+                    height: 35,
+                    width: 40,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return CommonShimmerWidget(child: Container(width: 40,
+                          height: 35,
+                          color: AppColors.whiteColor,));
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return SvgPicture.asset(
+                        AppImagePath.splashLogo, fit: BoxFit.scaleDown,
+                        width: 40,
+                        height: 35,);
+                    },
+                  ),
                 ),
                 10.width,
                 Text(
@@ -2003,11 +2111,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 .add(StoreCategoryEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                subIndex));
                                             context
                                                 .read<
                                                 StoreCategoryBloc>()

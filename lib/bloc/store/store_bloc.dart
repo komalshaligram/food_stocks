@@ -62,7 +62,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           final res = await DioClient(event.context).post(
               AppUrls.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
-                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                      pageNum: 1, pageLimit: AppConstants.searchPageLimit)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
@@ -563,12 +563,19 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-              GlobalSearchReqModel(search: event.search);
-          // emit(state.copyWith(isShimmering: true));
+              GlobalSearchReqModel(search: state.search);
+          emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
               data: globalSearchReqModel.toJson());
+          debugPrint('data1 = $res');
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+          debugPrint('cat len = ${response.data?.categoryData?.length}');
+          debugPrint('com len = ${response.data?.companyData?.length}');
+          debugPrint('sale len = ${response.data?.saleData?.length}');
+          debugPrint('sup len = ${response.data?.supplierData?.length}');
+          debugPrint(
+              'sup prod len = ${response.data?.supplierProductData?.length}');
           if (response.status == 200) {
             List<SearchModel> searchList = [];
             //category search result
@@ -589,15 +596,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         image: company.brandLogo ?? ''))
                     .toList() ??
                 []);
-            //sale search result
-            searchList.addAll(response.data?.saleData
-                    ?.map((sale) => SearchModel(
-                        searchId: sale.id ?? '',
-                        name: sale.productName ?? '',
-                        searchType: SearchTypes.sale,
-                        image: sale.mainImage ?? ''))
-                    .toList() ??
-                []);
             // supplier search result
             searchList.addAll(response.data?.supplierData
                     ?.map((supplier) => SearchModel(
@@ -607,30 +605,41 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         image: supplier.logo ?? ''))
                     .toList() ??
                 []);
+            //sale search result
+            searchList.addAll(response.data?.saleData
+                    ?.map((sale) => SearchModel(
+                        searchId: sale.id ?? '',
+                        name: sale.productName ?? '',
+                        searchType: SearchTypes.sale,
+                        image: sale.mainImage ?? ''))
+                    .toList() ??
+                []);
             //supplier products result
             searchList.addAll(response.data?.supplierProductData
                     ?.map((supplier) => SearchModel(
-                        searchId: supplier.id ?? '',
+                        searchId: supplier.productId ?? '',
                         name: supplier.productName ?? '',
-                        searchType: SearchTypes.supplier,
+                        searchType: SearchTypes.product,
                         image: supplier.mainImage ?? ''))
                     .toList() ??
                 []);
             debugPrint('store search list = ${searchList.length}');
-            emit(state.copyWith(searchList: searchList /*, isShimmering: false*/
-                ));
+            emit(state.copyWith(
+                searchList: searchList,
+                previousSearch: state.search,
+                isSearching: false));
           } else {
-            emit(state.copyWith(searchList: []));
-            // emit(state.copyWith(isShimmering: false));
+            // emit(state.copyWith(searchList: []));
+            emit(state.copyWith(isSearching: false));
             // showSnackBar(
             //     context: event.context,
             //     title: response.message ?? AppStrings.somethingWrongString,
             //     bgColor: AppColors.mainColor);
           }
         } on ServerException {
-          // emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(isSearching: false));
         } catch (exc) {
-          // emit(state.copyWith(isShimmering: false));
+          emit(state.copyWith(isSearching: false));
         }
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));

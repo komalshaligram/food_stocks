@@ -1,6 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/data/model/res_model/logout_res_model/logout_res_model.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +43,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           emit(state.copyWith(isHebrewLanguage: true));
         }
       } else if (event is _logOutEvent) {
+        bool isLoagout = false;
         showDialog(
           context: event.context,
           builder: (context) => CommonAlertDialog(
@@ -49,24 +54,54 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             negativeOnTap: () {
               Navigator.pop(context);
             },
-            positiveOnTap: () async {
-              SharedPreferencesHelper preferencesHelper =
-                  SharedPreferencesHelper(
-                      prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
-              await Provider.of<LocaleProvider>(event.context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.logOutSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(context);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.connectScreen.name);
-            },
-          ),
+            positiveOnTap: isLoagout
+                ? null
+                : () async {
+                    SharedPreferencesHelper preferencesHelper =
+                        SharedPreferencesHelper(
+                            prefs: await SharedPreferences.getInstance());
+                    try {
+                      isLoagout = true;
+                      final res = await DioClient(event.context)
+                          .put(path: AppUrls.logOutUrl);
+                      LogoutResModel response = LogoutResModel.fromJson(res);
+                      if (response.status == 200) {
+                        await preferencesHelper.setUserLoggedIn();
+                        await Provider.of<LocaleProvider>(event.context,
+                                listen: false)
+                            .setAppLocale(
+                                locale: Locale(AppStrings.hebrewString));
+                        showSnackBar(
+                            context: event.context,
+                            title: response.message ??
+                                AppStrings.logOutSuccessString,
+                            bgColor: AppColors.mainColor);
+                        Navigator.pop(context);
+                        Navigator.popUntil(
+                            event.context,
+                            (route) =>
+                                route.name == RouteDefine.bottomNavScreen.name);
+                        Navigator.pushNamed(
+                            event.context, RouteDefine.connectScreen.name);
+                        isLoagout = false;
+                      } else {
+                        isLoagout = false;
+                        showSnackBar(
+                            context: event.context,
+                            title: response.message ??
+                                AppStrings.somethingWrongString,
+                            bgColor: AppColors.redColor);
+                        Navigator.pop(context);
+                      }
+                    } on ServerException {
+                      isLoagout = false;
+                      Navigator.pop(context);
+                    } catch (e) {
+                      isLoagout = false;
+                      Navigator.pop(context);
+                    }
+                  },
+              ),
         );
       } else if (event is _ChangeAppLanguageEvent) {
         if (state.isHebrewLanguage) {

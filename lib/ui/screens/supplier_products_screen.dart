@@ -30,13 +30,19 @@ class SupplierProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map?;
+    debugPrint('supplier products args = $args');
     return BlocProvider(
-      create: (context) => SupplierProductsBloc()
+      create: (context) =>
+      SupplierProductsBloc()
         ..add(SupplierProductsEvent.getSupplierProductsIdEvent(
-            supplierId: args?[AppStrings.supplierIdString]))
-        ..add(SupplierProductsEvent.getSupplierProductsListEvent(
-            context: context)),
+            supplierId: args?[AppStrings.supplierIdString] ?? '',
+            search: args?[AppStrings.searchString] ?? ''))..add(
+          SupplierProductsEvent.getSupplierProductsListEvent(
+              context: context)),
       child: SupplierProductsScreenWidget(),
     );
   }
