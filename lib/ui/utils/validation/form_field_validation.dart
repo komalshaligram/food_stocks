@@ -144,8 +144,14 @@ class FormFieldValidation {
   }
 
   String? driverNameField(String value) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
     if (value.isEmpty) {
-      return "Please enter driver name";
+      return 'Please enter driver name';
+    } else if (regex.hasMatch(value)) {
+      return 'Please enter alphabets only';
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid driver name';
     }
     return null;
   }

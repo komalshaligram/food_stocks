@@ -50,8 +50,8 @@ class ProductSale with _$ProductSale {
     @JsonKey(name: "salesName") String? salesName,
     @JsonKey(name: "discountPercentage") String? discountPercentage,
     @JsonKey(name: "salesDescription") String? salesDescription,
-    @JsonKey(name: "fromDate") DateTime? fromDate,
-    @JsonKey(name: "endDate") DateTime? endDate,
+    @JsonKey(name: "fromDate") String? fromDate,
+    @JsonKey(name: "endDate") String? endDate,
   }) = _ProductSale;
 
   factory ProductSale.fromJson(Map<String, dynamic> json) =>

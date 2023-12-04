@@ -112,7 +112,9 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                   ),
                                   6.height,
                                   BalanceIndicator(
-                                    balance: state.balance.toInt(),
+                                    pendingBalance: state.balance,
+                                      expense: 100 - state.expensePercentage,
+                                      totalBalance: 100
                                   ),
                                 ],
                               )),

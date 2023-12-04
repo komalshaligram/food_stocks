@@ -107,8 +107,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           if (response.status == 200) {
             List<ProductSale> saleProductsList =
                 response.data?.toList(growable: true) ?? [];
-            saleProductsList.removeWhere(
-                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);
+       /*     saleProductsList.removeWhere(
+                (sale) => sale.endDate?.isBefore(DateTime.now()) ?? true);*/
             debugPrint('sale Products = ${saleProductsList.length}');
             debugPrint('sale Products = ${response.data?.length}');
             List<ProductStockModel> productStockList =

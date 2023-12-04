@@ -18,45 +18,50 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 38, right: 38),
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: getScreenHeight(context) * 0.15,
-                ),
-                SvgPicture.asset(
-                  AppImagePath.splashLogo,
-                  height: getScreenHeight(context) * 0.12,
-                  width: getScreenWidth(context) * 0.47,
-                ),
-                SizedBox(
-                  height: getScreenHeight(context) * 0.07,
-                ),
-                CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context).register,
-                  bGColor: AppColors.mainColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-                        arguments: {AppStrings.isRegisterString: true});
-                  },
-                ),
-                const SizedBox(
-                  height: AppConstants.padding_20,
-                ),
-                CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context).login,
-                  fontColors: AppColors.mainColor,
-                  borderColor: AppColors.mainColor,
-                  onPressed: () {
-                    Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-                        arguments: {AppStrings.isRegisterString: false});
-                  },
-                ),
-              ],
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 38, right: 38),
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: getScreenHeight(context) * 0.15,
+                  ),
+                  SvgPicture.asset(
+                    AppImagePath.splashLogo,
+                    height: getScreenHeight(context) * 0.12,
+                    width: getScreenWidth(context) * 0.47,
+                  ),
+                  SizedBox(
+                    height: getScreenHeight(context) * 0.07,
+                  ),
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.register,
+                    bGColor: AppColors.mainColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                          arguments: {AppStrings.isRegisterString: true});
+                    },
+                  ),
+                  const SizedBox(
+                    height: AppConstants.padding_20,
+                  ),
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.login,
+                    fontColors: AppColors.mainColor,
+                    borderColor: AppColors.mainColor,
+                    onPressed: () {
+                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                          arguments: {AppStrings.isRegisterString: false});
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

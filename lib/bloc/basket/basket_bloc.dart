@@ -214,6 +214,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         await preferences.setCartCount(
             count: event.isClearCart ? 0 : preferences.getCartCount() - 1);
       }
+      else if(event is _updateImageIndexEvent){
+        emit(state.copyWith(productImageIndex: event.index));
+      }
     });
   }
 
