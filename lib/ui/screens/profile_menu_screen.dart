@@ -229,9 +229,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             profileMenuTiles(
                                 title: AppLocalizations.of(context).logout,
                                 onTap: () {
-                                  context.read<ProfileMenuBloc>().add(
+                                  bloc.add(ProfileMenuEvent.logOutEvent(context: context));
+                               /*   context.read<ProfileMenuBloc>().add(
                                       ProfileMenuEvent.logOutEvent(
-                                          context: context));
+                                          context: context));*/
                                 }),
                             menuSwitchTile(
                                 title:

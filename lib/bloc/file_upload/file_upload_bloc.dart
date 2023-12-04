@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+
 import 'package:food_stock/data/model/form_and_file_model/form_and_file_model.dart';
 import 'package:food_stock/data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import 'package:food_stock/data/model/res_model/file_update_res_model/file_update_res_model.dart';

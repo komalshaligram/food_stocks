@@ -48,6 +48,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             negativeTitle: 'No',
             negativeOnTap: () {
               Navigator.pop(context);
+              emit(state.copyWith(isLogOut: false));
             },
             positiveOnTap: () async {
               SharedPreferencesHelper preferencesHelper =
@@ -60,6 +61,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   context: event.context,
                   title: AppStrings.logOutSuccessString,
                   bgColor: AppColors.mainColor);
+              emit(state.copyWith(isLogOut: true));
               Navigator.pop(context);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.bottomNavScreen.name);
