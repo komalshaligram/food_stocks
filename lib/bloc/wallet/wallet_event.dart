@@ -33,6 +33,9 @@ class WalletEvent with _$WalletEvent {
 
   const factory WalletEvent.exportWalletTransactionEvent({
     required BuildContext context,
+    required DateTime? startDate,
+    required DateTime? endDate,
+
 }) = _exportWalletTransactionEvent;
 
   const factory WalletEvent.getOrderCountEvent({

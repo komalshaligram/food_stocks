@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -278,8 +277,6 @@ class WalletScreenWidget extends StatelessWidget {
                                         LineChartData(
                                         borderData: FlBorderData(show: false),
                                         lineTouchData: LineTouchData(
-                                      //  touchSpotThreshold: 30.0,
-
                                           enabled: true,
                                           touchTooltipData: LineTouchTooltipData(
                                                 fitInsideHorizontally: true,
@@ -291,7 +288,7 @@ class WalletScreenWidget extends StatelessWidget {
                                               }).toList();
                                             },
                                             tooltipBgColor: Colors.transparent,
-                                            showOnTopOfTheChartBoxArea: true,
+                                            showOnTopOfTheChartBoxArea: false,
                                             tooltipMargin: 0,
                                           ),
                                         ),
@@ -406,7 +403,12 @@ class WalletScreenWidget extends StatelessWidget {
 
                                       state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
                                           .exportWalletTransactionEvent(
-                                              context: context)) : SizedBox();
+                                              context: context,
+                                        startDate: startDate ?? DateTime.now(),
+                                        endDate: endDate ?? DateTime.now(),
+
+
+                                      )) : SizedBox();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -650,8 +652,7 @@ class WalletScreenWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    state.walletTransactionsList[listIndex].createdAt!
-                        .replaceRange(11, 16, '')
+                    state.walletTransactionsList[listIndex].createdAt!.replaceRange(11, 16, '')
                         .toString(),
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12,
@@ -701,7 +702,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2 ,
+     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

@@ -12,6 +12,10 @@ class ExportWalletTransactionsReqModel with _$ExportWalletTransactionsReqModel {
     String? responseType,
     @JsonKey(name: "userId")
     String? userId,
+    @JsonKey(name: "startDate")
+    String? startDate,
+    @JsonKey(name: "endDate")
+    String? endDate,
   }) = _ExportWalletTransactionsReqModel;
 
   factory ExportWalletTransactionsReqModel.fromJson(Map<String, dynamic> json) => _$ExportWalletTransactionsReqModelFromJson(json);
