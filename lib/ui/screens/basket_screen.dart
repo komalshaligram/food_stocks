@@ -10,6 +10,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
@@ -829,17 +830,20 @@ class BasketScreenWidget extends StatelessWidget {
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          (state.CartItemList.data?.data?[index].sales!.length ?? 0) > 0 ? Text(
-                                            '${state.CartItemList.data?.data?[index].sales?.first.salesDescription ?? ''}',
-                                            style: AppStyles.rkBoldTextStyle(
-                                              size: AppConstants.smallFont,
-                                              color: AppColors.blackColor,
-                                              fontWeight: FontWeight.w600,
+                                          10.height,
+                                          (state.CartItemList.data?.data?[index].sales!.length ?? 0) > 0 ? Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              "${parse(state.CartItemList.data?.data?[index].sales?.first.salesDescription).body?.text}",
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_14,
+                                                color: AppColors.greyColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              textAlign: TextAlign.center,
                                             ),
-                                            textAlign: TextAlign.center,
                                           ) : SizedBox(),
-
-                                          (state.CartItemList.data?.data?[index].note ?? '').isNotEmpty ?Column(
+                                          (state.CartItemList.data?.data?[index].note ?? '').isNotEmpty ? Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Container(

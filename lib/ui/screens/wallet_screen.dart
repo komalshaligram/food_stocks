@@ -50,16 +50,6 @@ class WalletScreenWidget extends StatelessWidget {
   DateTime? startDate;
   DateTime? endDate;
 
-  List<DropdownMenuItem<String>> get dropdownItems{
-    List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("USA"),value: "USA"),
-      DropdownMenuItem(child: Text("Canada"),value: "Canada"),
-      DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
-      DropdownMenuItem(child: Text("England"),value: "England"),
-    ];
-    return menuItems;
-  }
-
   @override
   Widget build(BuildContext context) {
 /*    final List<FlSpot> chartData = [
@@ -85,7 +75,7 @@ class WalletScreenWidget extends StatelessWidget {
       4: AppLocalizations.of(context)!.aug,
       5: AppLocalizations.of(context)!.jul,
       6: AppLocalizations.of(context)!.jun,
-      7: AppLocalizations.of(context)!.may,
+      7: AppLocalizations.of(context)!.may1,
       8: AppLocalizations.of(context)!.apr,
       9: AppLocalizations.of(context)!.mar,
       10: AppLocalizations.of(context)!.feb,
@@ -180,7 +170,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         6.height,
                                         BalanceIndicator(
                                           pendingBalance: state.balance,
-                                          expense: 100 -state.expensePercentage,
+                                          expense: 100 - state.expensePercentage,
                                           totalBalance: 100
                                         ),
                                       ],
@@ -554,7 +544,7 @@ class WalletScreenWidget extends StatelessWidget {
                                           },
                                         )
                                       : Container(
-                                          height: 200,
+                                          height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /5 :getScreenHeight(context)/9,
                                           child: Center(
                                               child: Text(
                                                 AppLocalizations.of(context)!.no_data,
@@ -711,7 +701,7 @@ class WalletScreenWidget extends StatelessWidget {
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
     return Container(
-     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.5 :getScreenHeight(context)/2 ,
+     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2 ,
       child: DateRangePickerWidget(
         doubleMonth: doubleMonth,
         initialDateRange: selectedDateRange,

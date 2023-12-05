@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -304,12 +303,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           final res =
               await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
                   data: reqMap,
-                  options: Options(
+             /*     options: Options(
                     headers: {
                       HttpHeaders.authorizationHeader:
                           'Bearer ${preferencesHelper.getAuthToken()}',
                     },
-                  ));
+                  )*/);
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
