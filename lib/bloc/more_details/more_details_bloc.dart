@@ -69,13 +69,17 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 selectCity:
                     cityListResModel.data!.cities!.first.cityName.toString()));
           } else {
+            emit(state.copyWith(isShimmering: false));
             debugPrint('cityListResModel____${cityListResModel}');
           }
         } on ServerException {
+          emit(state.copyWith(isShimmering: false));
           // showSnackBar(
           //     context: event.context,
           //     title: e.toString(),
           //     bgColor: AppColors.redColor);
+        } catch (e) {
+          emit(state.copyWith(isShimmering: false));
         }
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
