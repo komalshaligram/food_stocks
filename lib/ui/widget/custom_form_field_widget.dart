@@ -116,7 +116,9 @@ class CustomFormField extends StatelessWidget {
       onSaved: onSaved,
       autofocus: autofocus,
       cursorColor: cursorColor,
-      // textAlign: textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
+      textDirection: textDirection,
+      textAlign:
+          textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
       // maxLength: maxLimits,
       validator: (value) =>
           AuthFormValidation().formValidation(value!, _validator),
@@ -126,6 +128,8 @@ class CustomFormField extends StatelessWidget {
           prefixIcon: prefixIcon,
           suffix: suffixIcon,
           hintText: _hint,
+          hintTextDirection:
+              textDirection == TextDirection.ltr ? TextDirection.ltr : null,
           filled: true,
           fillColor: _fillColor,
           hintStyle: TextStyle(

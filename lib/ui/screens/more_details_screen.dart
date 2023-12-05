@@ -355,6 +355,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                           MoreDetailsEvent.setFAXFormatEvent(
                                               FAX: FAX));
                                     },
+                                    textDirection:
+                                        context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
                                     hint: AppLocalizations.of(context)!.fax,
                                     fillColor: AppColors.whiteColor,

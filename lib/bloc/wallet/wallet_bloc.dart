@@ -271,6 +271,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 '${dir.path}/${preferencesHelper.getUserName()}${'_'}${TimeOfDay.fromDateTime(DateTime.now()).hour}${'.'}${TimeOfDay.fromDateTime(DateTime.now()).minute}${'.pdf'}';
             file = File(filePath);
             debugPrint('[path]   ${filePath}');
+            if (file.existsSync()) {
+              debugPrint('File exist');
+              file.deleteSync();
+              // file = File(filePath);
+            }
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
               showSnackBar(
                   context: event.context,

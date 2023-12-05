@@ -325,6 +325,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
+            await preferences.setUserName(name: state.ownerNameController.text);
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,

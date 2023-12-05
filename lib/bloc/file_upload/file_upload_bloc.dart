@@ -475,10 +475,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           // debugPrint('build number $buildNumber');
           // if(statuses[Permission.storage]!.isGranted) {
           File file;
-          Directory dir;
+          Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
             // dir = await getApplicationDocumentsDirectory();
             dir = Directory('/storage/emulated/0/Documents');
+            debugPrint('dir = ${await dir.stat()}');
+            // return;
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
@@ -493,10 +495,18 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             if (response.statusCode == 200) {
               Uint8List fileBytes =
                   await consolidateHttpClientResponseBytes(response);
+              // debugPrint('File bytes = $fileBytes');
               filePath =
                   '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}';
               file = File(filePath);
-              await file.writeAsBytes(fileBytes).then((value) {
+              if (file.existsSync()) {
+                debugPrint('File exist');
+                file.deleteSync(recursive: true);
+                // file = File(filePath);
+              }
+              await file
+                  .writeAsBytes(fileBytes, mode: FileMode.write, flush: true)
+                  .then((value) {
                 showSnackBar(
                     context: event.context,
                     title: AppStrings.downloadString,
@@ -515,6 +525,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } catch (e) {
             emit(state.copyWith(isDownloading: false));
             filePath = 'Can not fetch url';
+            debugPrint('file error = ${e}');
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.downloadFailedString,
+                bgColor: AppColors.redColor);
           }
           // } else {
           //   emit(state.copyWith(isDownloading: false));

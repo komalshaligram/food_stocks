@@ -427,20 +427,26 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       error,
                                                       stackTrace) {
                                                     return Container(
-                                                      color: AppColors
-                                                          .whiteColor,
-                                                      alignment:
-                                                      Alignment
-                                                          .center,
-                                                      child: Text(
-                                                        AppStrings
-                                                            .failedToLoadString,
-                                                        style: AppStyles.rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .textColor),
-                                                      ),
+                                                      decoration: BoxDecoration(
+                                                                        color: AppColors
+                                                                            .whiteColor,
+                                                                        shape: BoxShape
+                                                                            .circle),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child: Text(
+                                                                      AppStrings
+                                                                          .failedToLoadString,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: AppStyles.rkRegularTextStyle(
+                                                                          size: AppConstants
+                                                                              .font_14,
+                                                                          color:
+                                                                              AppColors.textColor),
+                                                                    ),
                                                     );
                                                   },
                                                 ),
