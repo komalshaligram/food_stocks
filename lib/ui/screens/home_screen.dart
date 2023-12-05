@@ -630,7 +630,32 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                             30.height,
                             state.messageList.isEmpty
-                                ? 0.width
+                                ? Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                  child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .messages,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont, color: AppColors.blackColor),
+                                  ),
+                                  Container(
+                                    height: getScreenHeight(context)/6,
+                                    width: getScreenWidth(context),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Messages not found',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.textColor),
+                                    ),
+                                  )
+                              ],
+                            ),
+                                )
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [

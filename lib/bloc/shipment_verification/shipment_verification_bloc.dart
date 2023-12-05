@@ -32,10 +32,14 @@ class ShipmentVerificationBloc
       debugPrint('token___${preferencesHelper.getAuthToken()}');
 
       if (event is _signatureEvent) {
-        emit(state.copyWith(isSignaturePadActive: true));
+        emit(state.copyWith(isSignaturePadActive: true , isDelete: false));
       }
 
-      if (event is _deliveryConfirmEvent) {
+      else if(event is _signDeleteEvent){
+        emit(state.copyWith(isDelete: true));
+      }
+
+    else  if (event is _deliveryConfirmEvent) {
         String signUrl = '';
         emit(state.copyWith(isLoading: true));
         if (event.signPath.isNotEmpty) {
