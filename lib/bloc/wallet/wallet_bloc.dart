@@ -240,10 +240,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           File file;
           Directory dir;
           String filePath = '';
-          if (defaultTargetPlatform == TargetPlatform.android) {
+          if (Platform.isAndroid) {
+            //dir = (await getExternalStorageDirectories(type: StorageDirectory.downloads))![0];
             dir = Directory('/storage/emulated/0/Documents');
           } else {
             dir = await getApplicationDocumentsDirectory();
+           // dir = await getApplicationSupportDirectory();
           }
 
           ExportWalletTransactionsReqModel reqMap =
@@ -268,8 +270,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             Uint8List pdf = base64.decode(response.data.toString());
             filePath =
                 '${dir.path}/${preferencesHelper.getUserName()}${'_'}${TimeOfDay.fromDateTime(DateTime.now()).hour}${'.'}${TimeOfDay.fromDateTime(DateTime.now()).minute}${'.pdf'}';
-            file = File(filePath);
-            debugPrint('[path]   ${filePath}');
+            await Directory(filePath).create(recursive: true);
+            file =new File(filePath);
+            debugPrint('[path]${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
               showSnackBar(
                   context: event.context,

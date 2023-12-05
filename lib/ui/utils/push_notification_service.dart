@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
@@ -14,9 +16,12 @@ class PushNotificationService {
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
-        // notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
+        debugPrint("onMessageOpenedApp: $message");
+      //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
     );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
     enableIOSNotifications();
     await registerNotificationListeners();
   }
@@ -38,12 +43,12 @@ class PushNotificationService {
       requestAlertPermission: false,
     );
     String? fcmToken='';
-    if (Platform.isIOS) {
+   /* if (Platform.isIOS) {
       fcmToken = await FirebaseMessaging.instance.getAPNSToken();
     } else {
       fcmToken = await FirebaseMessaging.instance.getToken();
-    }
-
+    }*/
+    fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -83,6 +88,11 @@ class PushNotificationService {
     });
   }
 
+  @pragma('vm:entry-point')
+  Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    debugPrint("Handling a background message: ${message.messageId}");
+    debugPrint("Handling a background message: ${message.data.toString()}");
+  }
 
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance

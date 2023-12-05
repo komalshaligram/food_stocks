@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
@@ -177,39 +178,75 @@ class ProductSaleScreenWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.network(
-                "${AppUrls.baseFileUrl}$saleImage",
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: 70,
+                maxHeightDiskCache: (70-45).round(),
                 fit: BoxFit.fitHeight,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress?.cumulativeBytesLoaded !=
-                      loadingProgress?.expectedTotalBytes) {
-                    return CommonShimmerWidget(
-                      child: Container(
-                        height: 70,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
-                        ),
-                        // alignment: Alignment.center,
-                        // child: CupertinoActivityIndicator(
-                        //   color: AppColors.blackColor,
-                        // ),
+                alignment: Alignment.center,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 90,
+                      width: 90,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
                       ),
-                    );
-                  }
-                  return child;
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
-                  return Container(
-                    child: Image.asset(AppImagePath.imageNotAvailable5,
-                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
+                    ),
                   );
                 },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
+                  return Container(
+                    // padding: EdgeInsets.only(
+                    //     bottom: AppConstants.padding_10, top: 0),
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
+                    ),
+                  );
+                },
+
               ),
+              // child: Image.network(
+              //   "${AppUrls.baseFileUrl}$saleImage",
+              //   height: 70,
+              //   fit: BoxFit.fitHeight,
+              //   loadingBuilder: (context, child, loadingProgress) {
+              //     if (loadingProgress?.cumulativeBytesLoaded !=
+              //         loadingProgress?.expectedTotalBytes) {
+              //       return CommonShimmerWidget(
+              //         child: Container(
+              //           height: 70,
+              //           width: 70,
+              //           decoration: BoxDecoration(
+              //             color: AppColors.whiteColor,
+              //             borderRadius: BorderRadius.all(
+              //                 Radius.circular(AppConstants.radius_10)),
+              //           ),
+              //           // alignment: Alignment.center,
+              //           // child: CupertinoActivityIndicator(
+              //           //   color: AppColors.blackColor,
+              //           // ),
+              //         ),
+              //       );
+              //     }
+              //     return child;
+              //   },
+              //   errorBuilder: (context, error, stackTrace) {
+              //     // debugPrint('sale list image error : $error');
+              //     return Container(
+              //       child: Image.asset(AppImagePath.imageNotAvailable5,
+              //           height: 70, width: double.maxFinite, fit: BoxFit.cover),
+              //     );
+              //   },
+              // ),
             ),
             5.height,
             Text(

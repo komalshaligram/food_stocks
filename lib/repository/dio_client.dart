@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -17,6 +18,7 @@ import '../ui/utils/themes/app_urls.dart';
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
+  bool isLoggedIn = false;
 
   DioClient(this._context)
       : _dio = Dio(
@@ -40,12 +42,12 @@ class DioClient {
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
             // print("app request data ${options.data}");
             return handler.next(options);
-          }, onResponse: (response, handler) {
+          },
+      onResponse: (response, handler) {
             if (kDebugMode) {
               debugPrint("app url ${AppUrls.baseUrl}");
               debugPrint("app response data ${response.data}");
             }
-
             return handler.next(response);
           }, onError: (DioException e, handler) {
             if (kDebugMode) {
@@ -80,33 +82,31 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
-        // debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
-        // if((e.response?.statusCode ?? 401) == 401) {
-        //   showSnackBar(
-        //       context: _context,
-        //       title: e.response?.data.message ?? AppStrings.logOutSuccessString,
-        //       bgColor: AppColors.redColor);
-        //   var response = await _dio.put(AppUrls.logOutUrl,
-        //       queryParameters: queryParameters,
-        //       options: Options(headers: {
-        //         HttpHeaders.authorizationHeader:
-        //         'Bearer ${preferencesHelper.getAuthToken()}'
-        //       }));
-        //   if(response.statusCode == 200) {
-        //     await preferencesHelper.setUserLoggedIn();
-        //     debugPrint('Token Expired = ${response.data}');
-        //     showSnackBar(
-        //         context: _context,
-        //         title: response.data.message ?? AppStrings.logOutSuccessString,
-        //         bgColor: AppColors.mainColor);
-        //     Navigator.popUntil(_context,
-        //             (route) => route.name == RouteDefine.bottomNavScreen.name);
-        //     Navigator.pushNamed(
-        //         _context, RouteDefine.connectScreen.name);
-        //   }
-        // } else {
-        throw _createErrorEntity(e, context: _context);
-        // }
+        isLoggedIn =  await preferencesHelper.getUserLoggedIn();
+        if(e.response?.statusCode == 401 && isLoggedIn) {
+          debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
+          var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+            "userId" : preferencesHelper.getUserId()
+          });
+          if(response1. statusCode == 200 && isLoggedIn) {
+            await preferencesHelper.setUserLoggedIn(isLoggedIn: false);
+            debugPrint('Token Expired = ${response1.data}');
+            isLoggedIn = false;
+             /* showSnackBar(
+                  context: _context,
+                  title: AppStrings.logOutSuccessString,
+                  bgColor: AppColors.mainColor);*/
+
+            Navigator.popUntil(_context,
+                    (route) => route.name == RouteDefine.bottomNavScreen.name);
+            Navigator.pushNamed(
+                _context, RouteDefine.connectScreen.name);
+            ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+
+          }
+        } else {
+          throw _createErrorEntity(e, context: _context);
+        }
       }
     } else {
       debugPrint('no internet');
@@ -310,11 +310,11 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
               bgColor: AppColors.redColor);
           return ErrorEntity(code: 400, message: "Bad request");
         case 401:
-          showSnackBar(
+         /* showSnackBar(
               context: context!,
-              title: "Permission denied",
-              bgColor: AppColors.redColor);
-          return ErrorEntity(code: 401, message: "Permission denied");
+              title: "Token Expired,Please Log in again",
+              bgColor: AppColors.redColor);*/
+          return ErrorEntity(code: 401, message: "Token Expired,Please Log in again");
         case 500:
           showSnackBar(
               context: context!,
@@ -359,7 +359,7 @@ void onError(ErrorEntity eInfo) {
       debugPrint("Server syntax error");
       break;
     case 401:
-      debugPrint("You are denied to continue");
+      debugPrint("Your Token is expired!");
       break;
     case 500:
       debugPrint("Server internal error");

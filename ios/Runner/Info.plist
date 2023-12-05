@@ -66,5 +66,7 @@
     </dict>
     <key>FDAllFilesDownloadedMessage</key>
     <string>All files have been downloaded</string>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
 </dict>
 </plist>

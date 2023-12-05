@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/company/company_bloc.dart';
@@ -157,7 +158,35 @@ class CompanyScreenWidget extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: Image.network(
+                child: CachedNetworkImage(
+                  imageUrl:   "${AppUrls.baseFileUrl}$companyLogo",
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  placeholder: (context, url) => CommonShimmerWidget(
+                    child: Container(
+                      height: getScreenHeight(context),
+                      width: getScreenWidth(context),
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft:
+                            Radius.circular(AppConstants.radius_10),
+                            topRight:
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
+                    color: AppColors.whiteColor,
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              /*  child: Image.network(
                   "${AppUrls.baseFileUrl}$companyLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
@@ -193,7 +222,7 @@ class CompanyScreenWidget extends StatelessWidget {
                       ),
                     );
                   },
-                ),
+                ),*/
               ),
               Container(
                 alignment: Alignment.center,

@@ -471,23 +471,18 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         try {
           emit(state.copyWith(isDownloading: true));
 
-          // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-          //
-          // String buildNumber = packageInfo.buildNumber;
-          // debugPrint('build number $buildNumber');
-          // if(statuses[Permission.storage]!.isGranted) {
           File file;
           Directory dir;
-          if (  defaultTargetPlatform == TargetPlatform.android) {
-            // dir = await getApplicationDocumentsDirectory();
+          if (Platform.isAndroid) {
+          //   dir = (await getExternalStorageDirectories(type: StorageDirectory.downloads))![0];
             dir = Directory('/storage/emulated/0/Documents');
           } else {
             dir = await getApplicationDocumentsDirectory();
+            //dir = await getApplicationSupportDirectory();
           }
           HttpClient httpClient = new HttpClient();
           String filePath = '';
-          debugPrint(
-              'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
+
           /*try{
             var request = await httpClient.getUrl(Uri.parse(
                 "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
@@ -534,8 +529,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             if (response.statusCode == 200) {
               Uint8List fileBytes =
                   await consolidateHttpClientResponseBytes(response);
+
               filePath =
                   '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}';
+              await Directory(filePath).create(recursive: true);
               file = File(filePath);
               await file.writeAsBytes(fileBytes).then((value) {
                 showSnackBar(
