@@ -485,8 +485,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 : showSnackBar(
                                     context: context,
                                     title:
-                                        'User Number & driver Number is same',
-                                    bgColor: AppColors.mainColor)
+                                        'User Number & driver Number are same',
+                                    bgColor: AppColors.redColor)
                             : SizedBox();
                   },
                   buttonText: AppLocalizations.of(context)!.next,
@@ -574,33 +574,68 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     )
                   : SizedBox(),
               getScreenHeight(context) >= 730 ? 7.width : 2.width,
-              Container(
-                width: state.orderBySupplierProduct.orderDeliveryDate != ''
-                    ? 50
-                    : 65,
-                child: Text(
-                  state.orderBySupplierProduct.products![index].productName
-                      .toString(),
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14, color: AppColors.blackColor),
-                ),
+              state.orderBySupplierProduct.orderDeliveryDate != '' ?  Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 100,
+                    child: Text(
+                      state.orderBySupplierProduct.products![index].productName
+                          .toString(),
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14, color: AppColors.blackColor,fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                    style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.blackColor,
+                      size: AppConstants.font_12,
+                    ),
+                  ),
+                  Text(
+                    '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.blackColor,
+                        size: AppConstants.font_14,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ) : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 100,
+                    child: Text(
+                      state.orderBySupplierProduct.products![index].productName
+                          .toString(),
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14, color: AppColors.blackColor),
+                    ),
+                  ),
+
+                  Text(
+                    '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                    style: AppStyles.rkRegularTextStyle(
+                      color: AppColors.blackColor,
+                      size: AppConstants.font_12,
+                    ),
+                  ),
+                  10.width,
+                  Text(
+                    '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                    style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.blackColor,
+                        size: AppConstants.font_14,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ],
               ),
-              getScreenHeight(context) >= 730 ? 5.width : 1.width,
-              Text(
-                '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
-                style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor,
-                  size: AppConstants.font_12,
-                ),
-              ),
-              getScreenHeight(context) >= 730 ? 5.width : 3.width,
-              Text(
-                '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
-                style: AppStyles.rkRegularTextStyle(
-                    color: AppColors.blackColor,
-                    size: AppConstants.font_14,
-                    fontWeight: FontWeight.w700),
-              ),
+
+
+
+
+
 /*        state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate!= ''?*/
               /*        state
                   .orderList
