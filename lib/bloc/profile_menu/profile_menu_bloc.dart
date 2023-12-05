@@ -4,11 +4,14 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import '../../data/error/exceptions.dart';
 import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
+import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
+import '../../ui/utils/themes/app_urls.dart';
 import '../../ui/widget/common_alert_dialog.dart';
 
 part 'profile_menu_event.dart';
@@ -20,9 +23,12 @@ part 'profile_menu_bloc.freezed.dart';
 class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
   ProfileMenuBloc() : super(ProfileMenuState.initial()) {
     on<ProfileMenuEvent>((event, emit) async {
+
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
+
       if (event is _getPreferenceDataEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+
 
         debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
         debugPrint('[username]   ${preferences.getUserName()}');
@@ -50,21 +56,45 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               Navigator.pop(context);
             },
             positiveOnTap: () async {
-              SharedPreferencesHelper preferencesHelper =
+              try {
+
+                final response = await DioClient(event.context).put(
+                    path: AppUrls.logOutUrl,
+                  data: {
+                    "userId" : preferences.getUserId()
+                  }
+              );
+
+                debugPrint(
+                    'logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
+
+                debugPrint('logOut response  = ${response}');
+
+                if (response[AppStrings.statusString] == 200) {
+                  SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
-              await Provider.of<LocaleProvider>(event.context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.logOutSuccessString,
-                  bgColor: AppColors.mainColor);
-              Navigator.pop(context);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.connectScreen.name);
+                  await preferencesHelper.setUserLoggedIn();
+                  await Provider.of<LocaleProvider>(event.context, listen: false)
+                      .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.logOutSuccessString,
+                      bgColor: AppColors.mainColor);
+                  Navigator.pop(context);
+                  Navigator.popUntil(event.context,
+                          (route) => route.name == RouteDefine.bottomNavScreen.name);
+                  Navigator.pushNamed(
+                      event.context, RouteDefine.connectScreen.name);
+
+                } else {
+                   showSnackBar(
+                context: event.context,
+                title: response[AppStrings.messageString],
+                bgColor: AppColors.mainColor);
+                }
+              } on ServerException {}
+
             },
           ),
         );

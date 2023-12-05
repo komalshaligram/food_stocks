@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -35,10 +33,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
-              options: Options(headers: {
+            /*  options: Options(headers: {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
-              }));
+              })*/);
 
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
           debugPrint('GetAllCartResModel  = $response');
@@ -183,10 +181,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
-              options: Options(headers: {
+         /*     options: Options(headers: {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
-              }));
+              })*/);
 
           debugPrint('[clear cart response] =  ${res}');
 

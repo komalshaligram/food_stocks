@@ -18,6 +18,8 @@ import '../ui/utils/themes/app_urls.dart';
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
+  bool isLogOut = false;
+  bool isLoggedIn = true;
 
   DioClient(this._context)
       : _dio = Dio(
@@ -41,12 +43,11 @@ class DioClient {
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
             // print("app request data ${options.data}");
             return handler.next(options);
-          }, onResponse: (response, handler) {
+          }, onResponse: (response, handler) async {
             if (kDebugMode) {
               debugPrint("app url ${AppUrls.baseUrl}");
               debugPrint("app response data ${response.data}");
             }
-
             return handler.next(response);
           }, onError: (DioException e, handler) {
             if (kDebugMode) {
@@ -81,33 +82,37 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
-        // debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
-        // if((e.response?.statusCode ?? 401) == 401) {
-        //   showSnackBar(
-        //       context: _context,
-        //       title: e.response?.data.message ?? AppStrings.logOutSuccessString,
-        //       bgColor: AppColors.redColor);
-        //   var response = await _dio.put(AppUrls.logOutUrl,
-        //       queryParameters: queryParameters,
-        //       options: Options(headers: {
-        //         HttpHeaders.authorizationHeader:
-        //         'Bearer ${preferencesHelper.getAuthToken()}'
-        //       }));
-        //   if(response.statusCode == 200) {
-        //     await preferencesHelper.setUserLoggedIn();
-        //     debugPrint('Token Expired = ${response.data}');
-        //     showSnackBar(
-        //         context: _context,
-        //         title: response.data.message ?? AppStrings.logOutSuccessString,
-        //         bgColor: AppColors.mainColor);
-        //     Navigator.popUntil(_context,
-        //             (route) => route.name == RouteDefine.bottomNavScreen.name);
-        //     Navigator.pushNamed(
-        //         _context, RouteDefine.connectScreen.name);
-        //   }
-        // } else {
+        print('islogout1____${isLogOut}');
+        isLoggedIn =  await preferencesHelper.getUserLoggedIn();
+        if(e.response?.statusCode == 401 && isLoggedIn) {
+
+          debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
+
+          var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+            "userId" : preferencesHelper.getUserId()
+          });
+
+          if(response1. statusCode == 200 && !isLogOut) {
+            isLogOut = true;
+
+            print('islogout____${isLogOut}');
+             await preferencesHelper.setUserLoggedIn(isLoggedIn: false);
+            debugPrint('Token Expired = ${response1.data}');
+            showSnackBar(
+                context: _context,
+                title: AppStrings.logOutSuccessString,
+                bgColor: AppColors.mainColor);
+
+            Navigator.popUntil(_context,
+                    (route) => route.name == RouteDefine.bottomNavScreen.name);
+            Navigator.pushNamed(
+                _context, RouteDefine.connectScreen.name);
+             ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+
+          }
+        } else {
         throw _createErrorEntity(e, context: _context);
-        // }
+        }
       }
     } else {
       debugPrint('no internet');

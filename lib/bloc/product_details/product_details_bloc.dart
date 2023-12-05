@@ -1,7 +1,6 @@
-import 'dart:io';
+
 
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,10 +37,10 @@ class ProductDetailsBloc
         try {
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getOrderById}${event.orderId}',
-              options: Options(headers: {
+           /*   options: Options(headers: {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
-              }));
+              })*/);
           debugPrint(
               'GetOrderById  url  = ${AppUrls.getOrderById}${event.orderId}');
           debugPrint('GetOrderById res  = $res');
@@ -106,10 +105,10 @@ class ProductDetailsBloc
             final response = await DioClient(event.context).post(
                 '${AppUrls.createIssueUrl}${event.orderId}',
                 data: reqMap,
-                options: Options(headers: {
+            /*    options: Options(headers: {
                   HttpHeaders.authorizationHeader:
                       'Bearer ${preferencesHelper.getAuthToken()}'
-                }));
+                })*/);
 
             debugPrint(
                 'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');

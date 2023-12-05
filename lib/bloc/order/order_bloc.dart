@@ -46,7 +46,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           final res = await DioClient(event.context).post(
               AppUrls.getAllOrderUrl,
               data: reqMap,
-              options:Options(
+             options:Options(
                   headers: {
                     HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
                   })

@@ -374,6 +374,101 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     .withOpacity(0.1),
                                           ),
                                           child: state.isUpdate
+                                              ? state.UserImageUrl.isNotEmpty
+                                              ? state.image.path != ''
+                                              ? SizedBox(
+                                            height:
+                                            getScreenHeight(
+                                                context) *
+                                                0.18,
+                                            width:
+                                            getScreenWidth(
+                                                context),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  40),
+                                              child: Image.file(
+                                                state.image,
+                                                fit: BoxFit
+                                                    .cover,
+                                              ),
+                                            )
+                                          )
+                                              : ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(
+                                                40),
+                                                child: Image.network(
+                                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                  fit: BoxFit
+                                                      .contain,
+                                                  loadingBuilder:
+                                                      (context,
+                                                      child,
+                                                      loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                        CupertinoActivityIndicator(
+                                                          color: AppColors
+                                                              .blackColor,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  errorBuilder:
+                                                      (context,
+                                                      error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: AppColors
+                                                          .whiteColor,
+                                                      alignment:
+                                                      Alignment
+                                                          .center,
+                                                      child: Text(
+                                                        AppStrings
+                                                            .failedToLoadString,
+                                                        style: AppStyles.rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .textColor),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                              :Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )
+                                              : state.image.path != ''
+                                              ? ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(
+                                                40),
+                                                child: Image.file(
+                                                  File(
+                                                      state.image.path),
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )
+                                              : Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )),/*state.isUpdate
                                               ? state.isFileUploading
                                                   ? Center(
                                                       child:
@@ -441,7 +536,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     color: AppColors
                                                                         .textColor,
                                                                   )
-                                                                      /*Container(
+                                                                      *//*Container(
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color: AppColors
@@ -452,11 +547,11 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 .withOpacity(
                                                                     0.5),
                                                             width: 1)),
-                                                  )*/
+                                                  )*//*
                                                                       ;
                                                                 },
                                                               ))
-                                              : state.image.path.isEmpty
+                                              : state.image.path == ''
                                                   ? Icon(
                                                       Icons.person,
                                                       size: 60,
@@ -471,7 +566,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         state.image,
                                                         fit: BoxFit.cover,
                                                       ),
-                                                    )),
+                                                    )),*/
                                       Positioned(
                                         right: context.rtl ? null : 1,
                                         left: context.rtl ? 1 : null,

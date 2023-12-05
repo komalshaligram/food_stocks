@@ -198,12 +198,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             final res = await DioClient(event.context).post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
                 data: /*updatedProfileModel.toJson()*/ req,
-                options: Options(
+            /*    options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
                         'Bearer ${preferencesHelper.getAuthToken()}',
                   },
-                ));
+                )*/);
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
@@ -338,12 +338,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 data: req.ProfileDetailsReqModel(
                         id: preferencesHelper.getUserId())
                     .toJson(),
-                options: Options(
+           /*     options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
                         'Bearer ${preferencesHelper.getAuthToken()}',
                   },
-                ));
+                )*/);
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
