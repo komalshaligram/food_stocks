@@ -48,8 +48,9 @@ class MessageScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.messages,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, RouteDefine.bottomNavScreen.name);
+                  // Navigator.pushNamed(
+                  //     context, RouteDefine.bottomNavScreen.name);
+                  Navigator.pop(context);
                 },
                 // trailingWidget: Center(
                 //   child: GestureDetector(

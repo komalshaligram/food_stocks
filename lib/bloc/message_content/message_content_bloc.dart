@@ -60,17 +60,6 @@ class MessageContentBloc
               AppStrings.messageReadString: !(state.message.isRead ?? true),
               AppStrings.messageDeleteString: true,
             });
-            // if (state.isReadMore) {
-            //   Navigator.pushNamed(
-            //     event.context,
-            //     RouteDefine.bottomNavScreen.name,
-            //   );
-            // } else {
-            //   Navigator.pushNamed(
-            //     event.context,
-            //     RouteDefine.messageScreen.name,
-            //   );
-            // }
           } else {
             /* showSnackBar(
                 context: event.context,

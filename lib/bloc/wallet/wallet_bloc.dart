@@ -70,7 +70,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
           WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-          debugPrint('WalletRecordResModel  = $response');
+      //    debugPrint('WalletRecordResModel  = $response');
 
           if (response.status == 200) {
             emit(state.copyWith(
@@ -81,7 +81,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                         0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
+                expensePercentage : double.parse(response.data?.currentMonth?.expensePercentage ?? '')
             ));
           } else {
             showSnackBar(
@@ -108,7 +108,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
           expense.TotalExpenseResModel response =
               expense.TotalExpenseResModel.fromJson(res);
-          debugPrint('TotalExpenseResModel  = $response');
+        //  debugPrint('TotalExpenseResModel  = $response');
 
           if (response.status == 200) {
             List<FlSpot> temp = [];
@@ -147,9 +147,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true));
-
-
-
           AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
               userId: preferencesHelper.getUserId(),
               pageNum: state.pageNum + 1,
@@ -168,12 +165,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
           AllWalletTransactionResModel response =
               AllWalletTransactionResModel.fromJson(res);
-          debugPrint('AllWalletTransactionResModel  = $response');
+         // debugPrint('AllWalletTransactionResModel  = $response');
 
           if (response.status == 200) {
 
 
-              debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
+           //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
 
               List<Datum> temp = state.walletTransactionsList.toList(growable: true);
               if ((response.metaData?.totalFilteredCount ?? 1) >
@@ -186,7 +183,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                   isLoadMore: false,
                   isShimmering: false,
                 ));
-                debugPrint('[list length]     ${state.walletTransactionsList.length}');
+             //   debugPrint('[list length]     ${state.walletTransactionsList.length}');
                 emit(state.copyWith(
                     isBottomOfProducts: temp.length ==
                             (response.metaData?.totalFilteredCount ?? 1)
@@ -217,7 +214,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               pageNum: 0,
               isLoadMore: false,
               isShimmering: false,
-
           ));
 
          emit(state.copyWith(
@@ -252,6 +248,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             userId: preferencesHelper.getUserId(),
             exportType: AppStrings.pdfString,
             responseType: AppStrings.jsonString,
+             startDate: event.startDate.toString(),
+             endDate:event.endDate.toString(),
           );
 
           debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
@@ -263,19 +261,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           ExportWalletTransactionsResModel response =
               ExportWalletTransactionsResModel.fromJson(res);
-          debugPrint('ExportWalletTransactions response  = ${response}');
+       //   debugPrint('ExportWalletTransactions response  = ${response}');
           if (response.status == 200) {
             emit(state.copyWith(isExportShimmering: false));
             Uint8List pdf = base64.decode(response.data.toString());
             filePath =
-                '${dir.path}/${preferencesHelper.getUserName()}${'_'}${TimeOfDay.fromDateTime(DateTime.now()).hour}${'.'}${TimeOfDay.fromDateTime(DateTime.now()).minute}${'.pdf'}';
+                '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
             file = File(filePath);
-            debugPrint('[path]   ${filePath}');
-            if (file.existsSync()) {
-              debugPrint('File exist');
-              file.deleteSync();
-              // file = File(filePath);
-            }
+           // debugPrint('[path]   ${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
               showSnackBar(
                   context: event.context,
@@ -289,7 +282,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {   emit(state.copyWith(isExportShimmering: false));}
+        } on ServerException {emit(state.copyWith(isExportShimmering: false));}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
@@ -299,7 +292,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               .inDays;
 
           var now = DateTime.now();
-
           GetOrderCountReqModel reqMap = GetOrderCountReqModel(
             startDate: DateTime(now.year, now.month, 1),
             endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
@@ -319,7 +311,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-          debugPrint('getOrdersCount response  = ${response}');
+       //   debugPrint('getOrdersCount response  = ${response}');
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
