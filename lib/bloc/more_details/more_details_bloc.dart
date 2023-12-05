@@ -16,6 +16,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 
+import '../../data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
     as file;
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
@@ -24,6 +25,7 @@ import '../../data/model/res_model/profile_details_update_res_model/profile_deta
     as reqUpdate;
 import '../../data/model/res_model/profile_res_model/profile_res_model.dart'
     as res;
+import '../../data/model/res_model/remove_form_and_file_res_model/remove_form_and_file_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -67,13 +69,17 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 selectCity:
                     cityListResModel.data!.cities!.first.cityName.toString()));
           } else {
+            emit(state.copyWith(isShimmering: false));
             debugPrint('cityListResModel____${cityListResModel}');
           }
         } on ServerException {
+          emit(state.copyWith(isShimmering: false));
           // showSnackBar(
           //     context: event.context,
           //     title: e.toString(),
           //     bgColor: AppColors.redColor);
+        } catch (e) {
+          emit(state.copyWith(isShimmering: false));
         }
       } else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
@@ -332,7 +338,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(
                 /*
                 companyLogo: preferences.getUserCompanyLogoUrl(),*/
-                isShimmering: true));
+                isUpdating: true));
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(
@@ -350,7 +356,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
-                isShimmering: false,
+                isUpdating: false,
                 selectCity: response.data?.clients?.first.city!.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),
@@ -361,16 +367,20 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 companyLogo: response.data?.clients?.first.logo ?? '',
               ));
             } else {
+              emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
+            emit(state.copyWith(isUpdating: false));
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+          } catch (e) {
+            emit(state.copyWith(isUpdating: false));
           }
         }
       } else if (event is _SetFAXFormatEvent) {
@@ -390,12 +400,54 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             newFaxNumber += '${matches[i][0]}';
           }
         }
-
         debugPrint('FAX = $newFaxNumber');
         emit(state.copyWith(
             faxController: TextEditingController(text: newFaxNumber)
               ..selection = TextSelection.fromPosition(
                   TextPosition(offset: newFaxNumber.length))));
+      } else if (event is _deleteFileEvent) {
+        try {
+          if (state.companyLogo.isEmpty) {
+            return;
+          } else if (state.companyLogo.contains(AppStrings.tempString)) {
+            emit(state.copyWith(companyLogo: '', image: File('')));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+            return;
+          }
+          emit(state.copyWith(isLoading: true));
+          RemoveFormAndFileReqModel reqModel =
+              RemoveFormAndFileReqModel(path: state.companyLogo);
+          debugPrint('delete file req = ${reqModel.path}');
+          final res = await DioClient(event.context)
+              .post(AppUrls.removeFileUrl, data: reqModel);
+          RemoveFormAndFileResModel response =
+              RemoveFormAndFileResModel.fromJson(res);
+          debugPrint('delete file res = ${response.message}');
+          if (response.status == 200) {
+            await preferencesHelper.removeCompanyLogo();
+            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(companyLogo: '', image: File('')));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+          } else {
+            emit(state.copyWith(isLoading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } catch (e) {
+          emit(state.copyWith(isLoading: false));
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
       }
     });
   }

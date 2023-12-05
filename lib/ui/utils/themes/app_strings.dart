@@ -16,7 +16,7 @@ class AppStrings {
   static const deleteString = 'Delete';
   static const deliverString = 'deliver';
   static const statusString = 'status';
-
+  static const updateString = 'Updating';
 
 
   //language Strings
@@ -74,6 +74,8 @@ class AppStrings {
   static const appContentNameString = 'appContentNameParam';
   static const messageReadString = 'messageReadSParam';
   static const messageDeleteString = 'messageDeleteParam';
+  static const searchString = 'searchParam';
+  static const fromStoreCategoryString = 'fromStoreCategoryParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';

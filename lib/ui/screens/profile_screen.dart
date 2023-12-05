@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -105,111 +106,110 @@ class ProfileScreenWidget extends StatelessWidget {
             ),
             body: state.isShimmering
                 ? /*Shimmer.fromColors(child: Container(height: 100, width: 200,), baseColor: AppColors.greyColor, highlightColor: AppColors.saleRedColor)*/ ProfileScreenShimmerWidget()
-                : SafeArea(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: getScreenWidth(context1) * 0.1,
-                            right: getScreenWidth(context1) * 0.1),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              10.height,
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) => Container(
-                                              decoration: BoxDecoration(
-                                                color: AppColors.whiteColor,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight: Radius.circular(
-                                                        AppConstants.radius_20),
-                                                    topLeft: Radius.circular(
-                                                        AppConstants
-                                                            .radius_20)),
-                                              ),
-                                              clipBehavior: Clip.hardEdge,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      AppConstants.padding_30,
-                                                  vertical:
-                                                      AppConstants.padding_20),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .upload_photo,
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .normalFont,
-                                                            color: AppColors
-                                                                .blackColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
+                : Stack(
+                    children: [
+                      SafeArea(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: getScreenWidth(context1) * 0.1,
+                                right: getScreenWidth(context1) * 0.1),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  10.height,
+                                  Center(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context1) => Container(
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.whiteColor,
+                                                    borderRadius: BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(
+                                                                AppConstants
+                                                                    .radius_20),
+                                                        topLeft: Radius.circular(
+                                                            AppConstants
+                                                                .radius_20)),
                                                   ),
-                                                  30.height,
-                                                  FileSelectionOptionWidget(
-                                                      title:
-                                                          AppLocalizations.of(
-                                                                  context)!
+                                                  clipBehavior: Clip.hardEdge,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: AppConstants
+                                                          .padding_30,
+                                                      vertical: AppConstants
+                                                          .padding_20),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context1)!
+                                                            .upload_photo,
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                                size: AppConstants
+                                                                    .normalFont,
+                                                                color: AppColors
+                                                                    .blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                      ),
+                                                      30.height,
+                                                      FileSelectionOptionWidget(
+                                                          title: AppLocalizations
+                                                                  .of(context1)!
                                                               .camera,
-                                                      icon: Icons
-                                                          .camera_alt_rounded,
-                                                      onTap: () async {
-                                                        Map<Permission,
-                                                                PermissionStatus>
-                                                            statuses = await [
-                                                          Permission.camera,
-                                                        ].request();
-                                                        if (Platform
-                                                            .isAndroid) {
-                                                          if (!statuses[
-                                                                  Permission
-                                                                      .camera]!
-                                                              .isGranted) {
-                                                            showSnackBar(
-                                                                context:
-                                                                    context,
-                                                                title: AppStrings
-                                                                    .cameraAllowPermissionString,
-                                                                bgColor: AppColors
-                                                                    .redColor);
+                                                          icon: Icons
+                                                              .camera_alt_rounded,
+                                                          onTap: () async {
+                                                            Map<Permission,
+                                                                    PermissionStatus>
+                                                                statuses =
+                                                                await [
+                                                              Permission.camera,
+                                                            ].request();
+                                                            if (Platform
+                                                                .isAndroid) {
+                                                              if (!statuses[
+                                                                      Permission
+                                                                          .camera]!
+                                                                  .isGranted) {
+                                                                showSnackBar(
+                                                                    context:
+                                                                        context,
+                                                                    title: AppStrings
+                                                                        .cameraAllowPermissionString,
+                                                                    bgColor:
+                                                                        AppColors
+                                                                            .redColor);
+                                                                Navigator.pop(
+                                                                    context1);
+                                                                return;
+                                                              }
+                                                            } else if (Platform
+                                                                .isIOS) {
+                                                              // Navigator.pop(context);
+                                                            }
+                                                            bloc.add(ProfileEvent
+                                                                .pickProfileImageEvent(
+                                                                    context:
+                                                                        context,
+                                                                    isFromCamera:
+                                                                        true));
                                                             Navigator.pop(
-                                                                context);
-                                                            return;
-                                                          }
-                                                        } else if (Platform
-                                                            .isIOS) {
-                                                          // Navigator.pop(context);
-                                                        }
-                                                        bloc.add(ProfileEvent
-                                                            .pickProfileImageEvent(
-                                                                context:
-                                                                    context,
-                                                                isFromCamera:
-                                                                    true));
-                                                        Navigator.pop(context);
-                                                      }),
-                                                  Container(
-                                                    height: 1,
-                                                    width:
-                                                        getScreenWidth(context),
-                                                    color: AppColors.borderColor
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                  FileSelectionOptionWidget(
-                                                      title:
-                                                          AppLocalizations.of(
-                                                                  context)!
+                                                                context1);
+                                                          }),
+                                                      FileSelectionOptionWidget(
+                                                          title: AppLocalizations
+                                                                  .of(context1)!
                                                               .gallery,
                                                       icon: Icons.photo,
                                                       onTap: () async {
@@ -715,113 +715,128 @@ class ProfileScreenWidget extends StatelessWidget {
                                   /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
 
-                                  LengthLimitingTextInputFormatter(20)
-                                ],
-                                keyboardType: TextInputType.text,
-                                hint: "",
-                                fillColor: Colors.transparent,
-                                textInputAction: TextInputAction.next,
-                                validator: AppStrings.ownerNameValString,
-                              ),
-                              7.height,
-                              CustomContainerWidget(
-                                name: AppLocalizations.of(context)!.israel_id,
-                              ),
-                              CustomFormField(
-                                controller: state.idController,
-                                inputformet: [
-                                  /*TextInputFormatter.withFunction((oldValue, newValue) {
-                            print('old____${oldValue}');
-                            print('new____${newValue}');
-                            print('hgsjdsds _____${newValue.text.length < 1}');
-                            if(newValue.text.length == 1){
-                              FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s'));
-                              return TextEditingValue(text: state.idController.text);
-                            }
-                            return newValue;
+                                      LengthLimitingTextInputFormatter(20)
+                                    ],
+                                    keyboardType: TextInputType.text,
+                                    hint: "",
+                                    fillColor: Colors.transparent,
+                                    textInputAction: TextInputAction.next,
+                                    validator: AppStrings.ownerNameValString,
+                                  ),
+                                  7.height,
+                                  CustomContainerWidget(
+                                    name:
+                                        AppLocalizations.of(context)!.israel_id,
+                                  ),
+                                  CustomFormField(
+                                    controller: state.idController,
+                                    inputformet: [
+                                      /*TextInputFormatter.withFunction((oldValue, newValue) {
+                                print('old____${oldValue}');
+                                print('new____${newValue}');
+                                print('hgsjdsds _____${newValue.text.length < 1}');
+                                if(newValue.text.length == 1){
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'\s'));
+                                  return TextEditingValue(text: state.idController.text);
+                                }
+                                return newValue;
 
-                          }),*/
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(9)
-                                ],
-                                // maxLimits: 9,
-                                keyboardType: TextInputType.number,
-                                hint: "",
-                                fillColor: Colors.transparent,
-                                textInputAction: TextInputAction.next,
-                                validator: AppStrings.idValString,
-                              ),
-                              CustomContainerWidget(
-                                name:
-                                    AppLocalizations.of(context)!.contact_name,
-                              ),
-                              7.height,
-                              CustomFormField(
-                                controller: state.contactController,
-                                inputformet: [
-                                  LengthLimitingTextInputFormatter(20)
-                                ],
-                                keyboardType: TextInputType.text,
-                                hint: "",
-                                fillColor: Colors.transparent,
-                                textInputAction: TextInputAction.done,
-                                validator: AppStrings.contactNameValString,
-                              ),
-                              40.height,
-                              CustomButtonWidget(
-                                buttonText: state.isUpdate
-                                    ? AppLocalizations.of(context)!
-                                        .save
-                                        .toUpperCase()
-                                    : AppLocalizations.of(context)!
-                                        .next
-                                        .toUpperCase(),
-                                bGColor: AppColors.mainColor,
-                                isLoading: state.isLoading,
-                                onPressed: state.isLoading
-                                    ? null
-                                    : () {
-                                        // if (state.UserImageUrl != '') {
-                                        if (state
-                                                .selectedBusinessType.isEmpty ||
-                                            state.selectedBusinessType != '') {
-                                          if (_formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            if (state.isUpdate) {
-                                              bloc.add(ProfileEvent
-                                                  .updateProfileDetailsEvent(
-                                                      context: context1));
+                              }),*/
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(9)
+                                    ],
+                                    // maxLimits: 9,
+                                    keyboardType: TextInputType.number,
+                                    hint: "",
+                                    fillColor: Colors.transparent,
+                                    textInputAction: TextInputAction.next,
+                                    validator: AppStrings.idValString,
+                                  ),
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!
+                                        .contact_name,
+                                  ),
+                                  7.height,
+                                  CustomFormField(
+                                    controller: state.contactController,
+                                    inputformet: [
+                                      LengthLimitingTextInputFormatter(20)
+                                    ],
+                                    keyboardType: TextInputType.text,
+                                    hint: "",
+                                    fillColor: Colors.transparent,
+                                    textInputAction: TextInputAction.done,
+                                    validator: AppStrings.contactNameValString,
+                                  ),
+                                  40.height,
+                                  CustomButtonWidget(
+                                    buttonText: state.isUpdate
+                                        ? AppLocalizations.of(context)!
+                                            .save
+                                            .toUpperCase()
+                                        : AppLocalizations.of(context)!
+                                            .next
+                                            .toUpperCase(),
+                                    bGColor: AppColors.mainColor,
+                                    isLoading: state.isLoading,
+                                    onPressed: state.isLoading
+                                        ? null
+                                        : () {
+                                            // if (state.UserImageUrl != '') {
+                                            if (state.selectedBusinessType
+                                                    .isEmpty ||
+                                                state.selectedBusinessType !=
+                                                    '') {
+                                              if (_formKey.currentState
+                                                      ?.validate() ??
+                                                  false) {
+                                                if (state.isUpdate) {
+                                                  bloc.add(ProfileEvent
+                                                      .updateProfileDetailsEvent(
+                                                          context: context1));
+                                                } else {
+                                                  bloc.add(ProfileEvent
+                                                      .navigateToMoreDetailsScreenEvent(
+                                                          context: context1));
+                                                }
+                                              }
                                             } else {
-                                              bloc.add(ProfileEvent
-                                                  .navigateToMoreDetailsScreenEvent(
-                                                      context: context1));
+                                              showSnackBar(
+                                                  context: context,
+                                                  title: AppStrings
+                                                      .selectBusinessTypeString,
+                                                  bgColor: AppColors.redColor);
                                             }
-                                          }
-                                        } else {
-                                          showSnackBar(
-                                              context: context,
-                                              title: AppStrings
-                                                  .selectBusinessTypeString,
-                                              bgColor: AppColors.redColor);
-                                        }
-                                        // } else {
-                                        //   showSnackBar(
-                                        //       context: context,
-                                        //       title:
-                                        //           AppStrings.selectProfileImageString,
-                                        //       bgColor: AppColors.redColor);
-                                        // }
-                                      },
-                                fontColors: AppColors.whiteColor,
+                                            // } else {
+                                            //   showSnackBar(
+                                            //       context: context,
+                                            //       title:
+                                            //           AppStrings.selectProfileImageString,
+                                            //       bgColor: AppColors.redColor);
+                                            // }
+                                          },
+                                    fontColors: AppColors.whiteColor,
+                                  ),
+                                  20.height,
+                                ],
                               ),
-                              20.height,
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      state.isUpdating
+                          ? Container(
+                              color: Color.fromARGB(10, 0, 0, 0),
+                              height: getScreenHeight(context),
+                              width: getScreenWidth(context),
+                              alignment: Alignment.center,
+                              child: CupertinoActivityIndicator(
+                                color: AppColors.blackColor,
+                              ),
+                            )
+                          : 0.width,
+                    ],
                   ),
           );
         },

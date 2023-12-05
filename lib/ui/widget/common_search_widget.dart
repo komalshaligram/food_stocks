@@ -15,7 +15,7 @@ import '../utils/themes/app_styles.dart';
 
 class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;
-  final bool isStoreCategory;
+  final bool isSearching;
   final Widget searchResultWidget;
   final void Function() onScanTap;
   final void Function() onFilterTap;
@@ -27,20 +27,19 @@ class CommonSearchWidget extends StatelessWidget {
   final List<SearchModel> searchList;
   final TextEditingController controller;
 
-  const CommonSearchWidget(
-      {super.key,
-      required this.isCategoryExpand,
-      required this.isStoreCategory,
-      required this.searchResultWidget,
-      required this.controller,
-      required this.onScanTap,
-      required this.onFilterTap,
-      required this.onSearchTap,
-      required this.onOutSideTap,
-      required this.onSearch,
-      required this.onSearchSubmit,
-      required this.onSearchItemTap,
-      required this.searchList});
+  const CommonSearchWidget({super.key,
+    required this.isCategoryExpand,
+    required this.isSearching,
+    required this.searchResultWidget,
+    required this.controller,
+    required this.onScanTap,
+    required this.onFilterTap,
+    required this.onSearchTap,
+    required this.onOutSideTap,
+    required this.onSearch,
+    required this.onSearchSubmit,
+    required this.onSearchItemTap,
+    required this.searchList});
 
   @override
   Widget build(BuildContext context) {
@@ -138,13 +137,16 @@ class CommonSearchWidget extends StatelessWidget {
                             prefixIcon: Transform(
                               alignment: Alignment.center,
                               transform:
-                                  Matrix4.rotationY(context.rtl ? pi : 0),
+                              Matrix4.rotationY(context.rtl ? pi : 0),
                               child: Icon(
                                 Icons.search,
                                 color: AppColors.greyColor,
                               ),
                             ),
                           ),
+                          onTapOutside: (event) =>
+                              FocusScope.of(context)
+                                  .unfocus(),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,
@@ -178,6 +180,16 @@ class CommonSearchWidget extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              isSearching
+                                  ? LinearProgressIndicator(
+                                color: AppColors.mainColor,
+                                minHeight: 3,
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    AppConstants.radius_5)),
+                                backgroundColor:
+                                AppColors.mainColor.withOpacity(0.5),
+                              )
+                                  : 3.height,
                               Expanded(
                                 child: searchResultWidget,
                               ),

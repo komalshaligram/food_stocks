@@ -15,6 +15,7 @@ class ProfileState with _$ProfileState {
     required String UserImageUrl,
     required bool isLoading,
     required bool isShimmering,
+    required bool isUpdating,
     required bool isFileSizeExceeds,
     required bool isFileUploading,
   }) = _ProfileState;
@@ -31,6 +32,7 @@ class ProfileState with _$ProfileState {
       contactController: TextEditingController(),
       isLoading: false,
       isShimmering: false,
+      isUpdating: false,
       isFileSizeExceeds: false,
       isFileUploading: false,
       UserImageUrl: '');

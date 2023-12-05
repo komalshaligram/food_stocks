@@ -75,7 +75,7 @@ class WalletScreenWidget extends StatelessWidget {
       4: AppLocalizations.of(context)!.aug,
       5: AppLocalizations.of(context)!.jul,
       6: AppLocalizations.of(context)!.jun,
-      7: AppLocalizations.of(context)!.may1,
+      7: AppLocalizations.of(context)!.may,
       8: AppLocalizations.of(context)!.apr,
       9: AppLocalizations.of(context)!.mar,
       10: AppLocalizations.of(context)!.feb,
