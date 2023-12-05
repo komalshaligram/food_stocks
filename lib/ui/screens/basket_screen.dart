@@ -249,11 +249,11 @@ class BasketScreenWidget extends StatelessWidget {
                                           SvgPicture.asset(
                                             AppImagePath.delete,
                                           ),
-                                          10.width,
+                                          5.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.smallFont,
+                                              size: AppConstants.font_14,
                                               color: AppColors.greyColor,
                                             ),
                                           ),
