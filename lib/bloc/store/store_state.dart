@@ -21,6 +21,8 @@ class StoreState with _$StoreState {
     required List<ProductSupplierModel> productSupplierList,
     required bool isCartCountChange,
     required String search,
+    required bool isSearching,
+    required String previousSearch,
     required int imageIndex,
   }) = _StoreState;
 
@@ -43,6 +45,8 @@ class StoreState with _$StoreState {
         productSupplierList: [],
         isCartCountChange: false,
         search: '',
+        isSearching: false,
+        previousSearch: '',
         imageIndex: 0,
       );
 }

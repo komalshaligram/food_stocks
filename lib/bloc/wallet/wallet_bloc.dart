@@ -77,7 +77,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 thisMonthExpense:
                     response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
                 lastMonthExpense:
-                    response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
+                    response.data?.previousMonth?.totalExpenses?.toDouble() ??
+                        0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage : double.parse(response.data?.currentMonth!.expensePercentage ?? '')
@@ -88,7 +89,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _getTotalExpenseEvent) {
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(
@@ -316,7 +318,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
-        } on ServerException {}
+        } on ServerException {
+        } catch (e) {}
       }
     });
   }

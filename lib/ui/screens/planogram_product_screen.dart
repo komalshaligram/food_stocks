@@ -181,7 +181,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
                 onPressed: onPressed,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,

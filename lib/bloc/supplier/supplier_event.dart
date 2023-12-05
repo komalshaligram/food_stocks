@@ -4,4 +4,7 @@ part of 'supplier_bloc.dart';
 class SupplierEvent with _$SupplierEvent {
   const factory SupplierEvent.getSuppliersListEvent(
       {required BuildContext context}) = _GetSuppliersListEvent;
+
+  const factory SupplierEvent.setSearchEvent({required String search}) =
+      _SetSearchEvent;
 }

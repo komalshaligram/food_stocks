@@ -36,7 +36,8 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
               AppUrls.getSuppliersUrl,
               data: SuppliersReqModel(
                       pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.supplierPageLimit)
+                      pageLimit: AppConstants.supplierPageLimit,
+                      search: state.search)
                   .toJson());
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           if (response.status == 200) {
@@ -64,6 +65,8 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+      } else if (event is _SetSearchEvent) {
+        emit(state.copyWith(search: event.search));
       }
     });
   }

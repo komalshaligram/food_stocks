@@ -27,8 +27,15 @@ class ProductCategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('category args = $args');
     return BlocProvider(
       create: (context) => ProductCategoryBloc()
+        ..add(ProductCategoryEvent.setSearchEvent(
+            search: args?[AppStrings.searchString] ?? '',
+            isFromStoreCategory:
+                args?[AppStrings.fromStoreCategoryString] ?? false))
         ..add(ProductCategoryEvent.getProductCategoriesListEvent(
             context: context)),
       child: ProductCategoryScreenWidget(),
@@ -99,18 +106,38 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                               .categoryName ??
                                           '',
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine.storeCategoryScreen.name,
-                                            arguments: {
-                                              AppStrings.categoryIdString: state
-                                                  .productCategoryList[index].id,
-                                              AppStrings.categoryNameString: state
-                                                  .productCategoryList[index]
-                                                  .categoryName
-                                            });
+                                        state.isFromStoreCategory
+                                            ? Navigator.pop(context, {
+                                                AppStrings.categoryIdString:
+                                                    state
+                                                        .productCategoryList[
+                                                            index]
+                                                        .id,
+                                                AppStrings.categoryNameString:
+                                                    state
+                                                        .productCategoryList[
+                                                            index]
+                                                        .categoryName
+                                              })
+                                            : Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .storeCategoryScreen.name,
+                                                arguments: {
+                                                    AppStrings.categoryIdString:
+                                                        state
+                                                            .productCategoryList[
+                                                                index]
+                                                            .id,
+                                                    AppStrings
+                                                            .categoryNameString:
+                                                        state
+                                                            .productCategoryList[
+                                                                index]
+                                                            .categoryName
+                                                  });
                                       }),
-                  ),
+                            ),
                   state.isLoadMore
                       ? ProductCategoryScreenShimmerWidget()
                       : 0.width,
@@ -197,7 +224,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                       height: getScreenHeight(context),
                       width: getScreenWidth(context),
                       color: AppColors.whiteColor,
-                      padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                      // padding: EdgeInsets.only(bottom: AppConstants.padding_20),
                       child: Image.asset(
                         AppImagePath.imageNotAvailable5,
                         fit: BoxFit.cover,

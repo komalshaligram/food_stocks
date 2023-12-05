@@ -39,7 +39,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
               AppUrls.getCompaniesUrl,
               data: CompanyReqModel(
                       pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.supplierPageLimit)
+                      pageLimit: AppConstants.supplierPageLimit,
+                      search: state.search)
                   .toJson());
           CompanyResModel response = CompanyResModel.fromJson(res);
           if (response.status == 200) {
@@ -67,6 +68,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+      } else if (event is _SetSearchEvent) {
+        emit(state.copyWith(search: event.search));
       }
     });
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -137,11 +138,13 @@ class StoreScreenWidget extends StatelessWidget {
                                             index]
                                                 .categoryName ??
                                                 '',
-                                            isHomePreference: true /*state
+                                            isHomePreference:
+                                            state
                                                 .productCategoryList[
                                             index]
                                                 .isHomePreference ??
-                                                false*/,
+                                                false
+                                            ,
                                             onTap: () {
                                               Navigator.pushNamed(
                                                   context,
@@ -529,8 +532,8 @@ class StoreScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     height: 190,
                                     child: ListView.builder(
-                                      itemCount: state
-                                          .productSalesList.length,
+                                      itemCount:
+                                      state.productSalesList.length,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       padding: EdgeInsets.symmetric(
@@ -540,35 +543,32 @@ class StoreScreenWidget extends StatelessWidget {
                                         return buildProductSaleListItem(
                                           context: context,
                                           saleImage: state
-                                              .productSalesList
-                                          [index]
+                                              .productSalesList[index]
                                               .mainImage ??
                                               '',
                                           title: state
-                                              .productSalesList
-                                          [index]
+                                              .productSalesList[index]
                                               .salesName ??
                                               '',
                                           description: parse(state
-                                              .productSalesList
-                                          [index]
+                                              .productSalesList[
+                                          index]
                                               .salesDescription ??
                                               '')
                                               .body
                                               ?.text ??
                                               '',
                                           price: double.parse(state
-                                              .productSalesList
-                                          [index]
+                                              .productSalesList[index]
                                               .discountPercentage ??
                                               '0.0'),
                                           onButtonTap: () {
                                             showProductDetails(
                                                 context: context,
                                                 productId: state
-                                                              .productSalesList[
-                                                                  index]
-                                                              .id ??
+                                                    .productSalesList[
+                                                index]
+                                                    .id ??
                                                     '');
                                           },
                                         );
@@ -579,7 +579,7 @@ class StoreScreenWidget extends StatelessWidget {
                               ),
                               crossFadeState:
                               state.productSalesList.isEmpty
-                                            ? CrossFadeState.showFirst
+                                  ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
                           // state.productSalesList.data?.isEmpty ?? true
@@ -802,7 +802,7 @@ class StoreScreenWidget extends StatelessWidget {
                     ),
                     CommonSearchWidget(
                       isCategoryExpand: state.isCategoryExpand,
-                      isStoreCategory: false,
+                      isSearching: state.isSearching,
                       onFilterTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion());
                       },
@@ -850,6 +850,14 @@ class StoreScreenWidget extends StatelessWidget {
                               searchImage: state.searchList[index].image,
                               searchType:
                               state.searchList[index].searchType,
+                              isMoreResults: state.searchList
+                                  .where((search) =>
+                              search.searchType ==
+                                  state.searchList[index]
+                                      .searchType)
+                                  .toList()
+                                  .length ==
+                                  10,
                               isShowSearchLabel: index == 0
                                   ? true
                                   : state.searchList[index].searchType !=
@@ -857,55 +865,90 @@ class StoreScreenWidget extends StatelessWidget {
                                       .searchType
                                   ? true
                                   : false,
-                              onTap: () {
+                              onSeeAllTap: () {
                                 state.searchList[index].searchType ==
-                                    SearchTypes.sale ? showProductDetails(
-                                    context: context,
-                                    productId: state.searchList[index]
-                                        .searchId,
-                                    isBarcode: true) :
+                                    SearchTypes.category
+                                    ? Navigator.pushNamed(context,
+                                    RouteDefine.productCategoryScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state
+                                          .previousSearch
+                                    })
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.company ?
                                 Navigator.pushNamed(
                                     context,
+                                    RouteDefine.companyScreen.name, arguments: {
+                                  AppStrings.searchString: state.previousSearch
+                                }) :
+                                state.searchList[index].searchType ==
+                                    SearchTypes.supplier ?
+                                Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.supplierScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state
+                                          .previousSearch
+                                    }) :
+                                state.searchList[index].searchType ==
+                                    SearchTypes.sale
+                                    ? Navigator.pushNamed(
+                                    context,
+                                    RouteDefine.productSaleScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state
+                                          .previousSearch
+                                    })
+                                    : Navigator
+                                    .pushNamed(context,
+                                    RouteDefine.supplierProductsScreen.name,
+                                    arguments: {
+                                      AppStrings.searchString: state
+                                          .previousSearch
+                                    });
+                                debugPrint('see all');
+                              },
+                              onTap: () {
+                                state.searchList[index].searchType ==
+                                    SearchTypes.sale ||
                                     state.searchList[index].searchType ==
-                                        SearchTypes.category
-                                        ? RouteDefine
-                                        .storeCategoryScreen.name
-                                        : state.searchList[index]
-                                        .searchType ==
-                                        SearchTypes.company
-                                        ? RouteDefine
-                                        .companyProductsScreen
-                                        .name
-                                        : RouteDefine
+                                        SearchTypes.product
+                                    ? showProductDetails(
+                                    context: context,
+                                    productId: state
+                                        .searchList[index].searchId,
+                                    isBarcode: true)
+                                    : state.searchList[index].searchType ==
+                                    SearchTypes.category
+                                    ? Navigator.pushNamed(context, RouteDefine
+                                    .storeCategoryScreen.name, arguments: {
+                                  AppStrings
+                                      .categoryIdString:
+                                  state
+                                      .searchList[index]
+                                      .searchId,
+                                  AppStrings
+                                      .categoryNameString:
+                                  state
+                                      .searchList[index]
+                                      .name,
+                                  AppStrings.searchString: state.search
+                                }) : state.searchList[index].searchType ==
+                                    SearchTypes.company
+                                    ? Navigator.pushNamed(context, RouteDefine
+                                    .companyProductsScreen
+                                    .name, arguments: {
+                                  AppStrings.companyIdString: state
+                                      .searchList[index].searchId
+                                }) : Navigator.pushNamed(
+                                    context,
+                                    RouteDefine
                                         .supplierProductsScreen
                                         .name,
-                                    arguments: state.searchList[index]
-                                        .searchType ==
-                                        SearchTypes.category
-                                        ? {
-                                      AppStrings.categoryIdString:
-                                      state.searchList[index]
-                                          .searchId,
-                                      AppStrings.categoryNameString:
-                                      state.searchList[index]
-                                          .name,
-                                    }
-                                        : state.searchList[index]
-                                        .searchType ==
-                                        SearchTypes.company
-                                        ? {
-                                      AppStrings
-                                          .companyIdString:
-                                      state
-                                          .searchList[index]
-                                          .searchId
-                                    }
-                                        : {
-                                      AppStrings
-                                          .supplierIdString:
-                                      state
-                                          .searchList[index]
-                                          .searchId
+                                    arguments:
+                                    {
+                                      AppStrings.supplierIdString: state
+                                          .searchList[index].searchId
                                     });
                                 bloc.add(
                                     StoreEvent.changeCategoryExpansion());
@@ -948,7 +991,9 @@ class StoreScreenWidget extends StatelessWidget {
     required String searchImage,
     required SearchTypes searchType,
     required bool isShowSearchLabel,
+    required bool isMoreResults,
     required void Function() onTap,
+    required void Function() onSeeAllTap,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -961,18 +1006,37 @@ class StoreScreenWidget extends StatelessWidget {
               right: AppConstants.padding_20,
               top: AppConstants.padding_15,
               bottom: AppConstants.padding_5),
-          child: Text(
-            searchType == SearchTypes.category
-                ? AppLocalizations.of(context)!.categories
-                : searchType == SearchTypes.company
-                ? AppLocalizations.of(context)!.companies
-                : searchType == SearchTypes.sale
-                ? AppLocalizations.of(context)!.sales
-                : AppLocalizations.of(context)!.suppliers,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w500),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                searchType == SearchTypes.category
+                    ? AppLocalizations.of(context)!.categories
+                    : searchType == SearchTypes.company
+                    ? AppLocalizations.of(context)!.companies
+                    : searchType == SearchTypes.sale
+                    ? AppLocalizations.of(context)!.sales
+                    : searchType == SearchTypes.supplier
+                    ? AppLocalizations.of(context)!.suppliers
+                    : AppLocalizations.of(context)!.products,
+                style: AppStyles.rkBoldTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+              isMoreResults
+                  ? GestureDetector(
+                onTap: onSeeAllTap,
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.mainColor),
+                ),
+              )
+                  : 0.width,
+            ],
           ),
         )
             : 0.width,
@@ -993,14 +1057,30 @@ class StoreScreenWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.network(
-                  '${AppUrls.baseFileUrl}$searchImage',
-                  fit: BoxFit.scaleDown,
+                Container(
                   height: 35,
                   width: 40,
-                  errorBuilder: (context, error, stackTrace) {
-                    return 40.width;
-                  },
+                  child: Image.network(
+                    '${AppUrls.baseFileUrl}$searchImage',
+                    fit: BoxFit.scaleDown,
+                    height: 35,
+                    width: 40,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return CommonShimmerWidget(child: Container(width: 40,
+                          height: 35,
+                          color: AppColors.whiteColor,));
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return SvgPicture.asset(
+                        AppImagePath.splashLogo, fit: BoxFit.scaleDown,
+                        width: 40,
+                        height: 35,);
+                    },
+                  ),
                 ),
                 10.width,
                 Text(
@@ -1079,43 +1159,43 @@ class StoreScreenWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                        top: AppConstants.padding_5,
-                        left: AppConstants.padding_5,
-                        right: AppConstants.padding_5,
-                        bottom: AppConstants.padding_20),
-                    child: CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
-                      fit: BoxFit.contain,
-                      height: 65,
-                      width: 80,
-                      alignment: Alignment.center,
-                      placeholder: (context, url) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 90,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                            ),
-                            // alignment: Alignment.center,
-                            // child: CupertinoActivityIndicator(
-                            //   color: AppColors.blackColor,
-                            // ),
-                          ),
-                        );
-                      },
-                      errorWidget: (context, error, stackTrace) {
-                        // debugPrint('product category list image error : $error');
-                        return Container(
-                          // padding: EdgeInsets.only(
-                          //     bottom: AppConstants.padding_10, top: 0),
-                          child: Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                            width: 90,
-                            height: 90,
-                          ),
-                        );
+                  top: AppConstants.padding_5,
+                  left: AppConstants.padding_5,
+                  right: AppConstants.padding_5,
+                  bottom: AppConstants.padding_20),
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
+                fit: BoxFit.contain,
+                height: 65,
+                width: 80,
+                alignment: Alignment.center,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 90,
+                      width: 90,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
+                    ),
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
+                  return Container(
+                    // padding: EdgeInsets.only(
+                    //     bottom: AppConstants.padding_10, top: 0),
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
+                    ),
+                  );
                 },
               ),
             ),
@@ -1138,9 +1218,11 @@ class StoreScreenWidget extends StatelessWidget {
                   // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
                 clipBehavior: Clip.hardEdge,
-                child: CommonMarqueeWidget(
+                child:
+                CommonMarqueeWidget(
                   direction: Axis.horizontal,
-                  child: Text(
+                  child:
+                  Text(
                     categoryName,
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12,
@@ -1243,7 +1325,8 @@ class StoreScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-              "${price.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+              "${price.toStringAsFixed(
+                  0)}%" /*${AppLocalizations.of(context)!.currency}*/,
               onPressed: onButtonTap,
               // height: 35,
               textColor: AppColors.whiteColor,
@@ -1343,7 +1426,9 @@ class StoreScreenWidget extends StatelessWidget {
           Center(
             child: CommonProductButtonWidget(
               title:
-              "${price.toStringAsFixed(
+              "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00"
+                  ? '0'
+                  : price.toStringAsFixed(
                   AppConstants.amountFrLength)}${AppLocalizations.of(context)!
                   .currency}",
               onPressed: onButtonTap,
@@ -1482,34 +1567,34 @@ class StoreScreenWidget extends StatelessWidget {
           children: [
             Padding(
               padding:
-                        const EdgeInsets.only(bottom: AppConstants.padding_20),
-                    child: CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
-                      fit: BoxFit.scaleDown,
-                      height: 70,
+              const EdgeInsets.only(bottom: AppConstants.padding_20),
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
+                fit: BoxFit.scaleDown,
+                height: 70,
+                width: 90,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 90,
                       width: 90,
-                      placeholder: (context, url) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 90,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                            ),
-                          ),
-                        );
-                      },
-                      errorWidget: (context, error, stackTrace) {
-                        // debugPrint('product category list image error : $error');
-                        return Container(
-                          child: Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                            width: 90,
-                            height: 90,
-                          ),
-                        );
-                      },
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                      ),
+                    ),
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
+                  return Container(
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
+                    ),
+                  );
+                },
               ),
             ),
             Positioned(
@@ -1534,9 +1619,11 @@ class StoreScreenWidget extends StatelessWidget {
                       Radius.circular(AppConstants.radius_10)),
                   // border: Border.all(color: AppColors.whiteColor, width: 1),
                 ),
-                child: CommonMarqueeWidget(
+                child:
+                CommonMarqueeWidget(
                   direction: Axis.horizontal,
-                  child: Text(
+                  child:
+                  Text(
                     companyName,
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12,
@@ -1554,7 +1641,8 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCategoryFilterItem({required String category, required void Function() onTap}) {
+  Widget buildCategoryFilterItem(
+      {required String category, required void Function() onTap}) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -1596,7 +1684,10 @@ class StoreScreenWidget extends StatelessWidget {
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
+                (MediaQuery
+                    .of(context)
+                    .viewPadding
+                    .top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
@@ -1621,44 +1712,56 @@ class StoreScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ?? '',
-                                    ...state.productDetails.first.images?.map(
-                                            (image) => image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productName: state.productDetails.first.productName ??
-                                      '',
-                                  productCompanyName:
-                                      state.productDetails.first.brandName ??
-                                          '',
-                                  productDescription:
-                                      parse(state.productDetails.first.productDescription ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
+                              productImageIndex: state.imageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages: [
+                                state.productDetails.first.mainImage ?? '',
+                                ...state.productDetails.first.images?.map(
+                                        (image) => image.imageUrl ?? '') ??
+                                    []
+                              ],
+                              productName: state.productDetails.first
+                                  .productName ??
+                                  '',
+                              productCompanyName:
+                              state.productDetails.first.brandName ??
+                                  '',
+                              productDescription:
+                              parse(state.productDetails.first
+                                  .productDescription ?? '')
+                                  .body
+                                  ?.text ??
+                                  '',
                               productSaleDescription:
-                              parse(state.productDetails.first.productDescription ?? '')
+                              parse(state.productDetails.first
+                                  .productDescription ?? '')
                                   .body
                                   ?.text ??
                                   '',
                               productPrice: state
-                                  .productStockList[state.productStockUpdateIndex]
+                                  .productStockList[
+                              state.productStockUpdateIndex]
                                   .totalPrice *
-                                  state.productStockList[state.productStockUpdateIndex].quantity,
-                              productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                              productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                              supplierWidget: buildSupplierSelection(context: context),
-                              productStock: state.productStockList[state.productStockUpdateIndex].stock,
+                                  state
+                                      .productStockList[state
+                                      .productStockUpdateIndex]
+                                      .quantity,
+                              productScaleType: state.productDetails.first
+                                  .scales?.scaleType ?? '',
+                              productWeight: state.productDetails.first
+                                  .itemsWeight?.toDouble() ?? 0.0,
+                              supplierWidget: buildSupplierSelection(
+                                  context: context),
+                              productStock: state.productStockList[state
+                                  .productStockUpdateIndex].stock,
                               isRTL: context.rtl,
                               scrollController: scrollController,
-                              productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                              productQuantity: state.productStockList[state
+                                  .productStockUpdateIndex].quantity,
                               onQuantityIncreaseTap: () {
                                 context.read<StoreBloc>().add(
                                     StoreEvent.increaseQuantityOfProduct(
@@ -1669,7 +1772,14 @@ class StoreScreenWidget extends StatelessWidget {
                                     StoreEvent.decreaseQuantityOfProduct(
                                         context: context1));
                               },
-                              noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                              noteController: TextEditingController(
+                                  text: state.productStockList[state
+                                      .productStockUpdateIndex].note)
+                                ..selection = TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: state.productStockList[state
+                                            .productStockUpdateIndex].note
+                                            .length)),
                               onNoteChanged: (newNote) {
                                 context.read<StoreBloc>().add(
                                     StoreEvent.changeNoteOfProduct(
@@ -1792,7 +1902,10 @@ class StoreScreenWidget extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
+                                '${state.productSupplierList
+                                    .firstWhere((supplier) =>
+                                supplier.selectedIndex != -1)
+                                    .companyName}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.font_14,
                                     color: AppColors.blackColor,
@@ -1837,17 +1950,13 @@ class StoreScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        'Price : ${state
-                                            .productSupplierList
+                                        'Price : ${state.productSupplierList
                                             .firstWhere((supplier) =>
-                                        supplier.selectedIndex ==
-                                            -2)
+                                        supplier.selectedIndex == -2)
                                             .basePrice
-                                            .toStringAsFixed(
-                                            AppConstants
-                                                .amountFrLength)}${AppLocalizations
-                                            .of(context)!
-                                            .currency}',
+                                            .toStringAsFixed(AppConstants
+                                            .amountFrLength)}${AppLocalizations
+                                            .of(context)!.currency}',
                                         style: AppStyles
                                             .rkRegularTextStyle(
                                             size: AppConstants
@@ -1865,7 +1974,10 @@ class StoreScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
+                                        '${state.productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex >= 0)
+                                            .supplierSales[index].saleName}',
                                         style: AppStyles
                                             .rkRegularTextStyle(
                                             size: AppConstants
@@ -1875,22 +1987,17 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                       2.height,
                                       Text(
-                                        'Price : ${state
+                                        'Price : ${state.productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex >= 0)
+                                            .supplierSales[index].salePrice
+                                            .toStringAsFixed(AppConstants
+                                            .amountFrLength)}${AppLocalizations
+                                            .of(context)!.currency}(${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
-                                            .supplierSales[index]
-                                            .salePrice
-                                            .toStringAsFixed(
-                                            AppConstants
-                                                .amountFrLength)}${AppLocalizations
-                                            .of(context)!
-                                            .currency}(${state
-                                            .productSupplierList
-                                            .firstWhere((supplier) =>
-                                        supplier.selectedIndex >= 0)
-                                            .supplierSales[index]
-                                            .saleDiscount
+                                            .supplierSales[index].saleDiscount
                                             .toStringAsFixed(0)}%)',
                                         style: AppStyles
                                             .rkRegularTextStyle(
@@ -2003,7 +2110,8 @@ class StoreScreenWidget extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    '${state.productSupplierList[index].companyName}',
+                                    '${state.productSupplierList[index]
+                                        .companyName}',
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.font_14,
                                         color: AppColors.blackColor,
@@ -2032,11 +2140,11 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .add(StoreEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        -2));
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                -2));
                                             context
                                                 .read<StoreBloc>()
                                                 .add(StoreEvent
@@ -2097,8 +2205,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       .toStringAsFixed(
                                                       AppConstants
                                                           .amountFrLength)}${AppLocalizations
-                                                      .of(context)!
-                                                      .currency}',
+                                                      .of(context)!.currency}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -2117,11 +2224,11 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .add(StoreEvent
                                                 .supplierSelectionEvent(
                                                 supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                subIndex));
                                             context
                                                 .read<StoreBloc>()
                                                 .add(StoreEvent
@@ -2140,7 +2247,9 @@ class StoreScreenWidget extends StatelessWidget {
                                                         AppConstants
                                                             .radius_10)),
                                                 border: Border.all(
-                                                    color: state.productSupplierList[index].selectedIndex ==
+                                                    color: state
+                                                        .productSupplierList[index]
+                                                        .selectedIndex ==
                                                         subIndex
                                                         ? AppColors
                                                         .mainColor
@@ -2173,8 +2282,12 @@ class StoreScreenWidget extends StatelessWidget {
                                               MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
-                                                  style: AppStyles.rkRegularTextStyle(
+                                                  '${state
+                                                      .productSupplierList[index]
+                                                      .supplierSales[subIndex]
+                                                      .saleName}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
                                                       size: AppConstants
                                                           .font_12,
                                                       color: AppColors
@@ -2194,8 +2307,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .saleDiscount
-                                                      .toStringAsFixed(
-                                                      0)}%)',
+                                                      .toStringAsFixed(0)}%)',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -2210,11 +2322,15 @@ class StoreScreenWidget extends StatelessWidget {
                                                           context:
                                                           context,
                                                           saleCondition:
-                                                          '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
+                                                          '${state
+                                                              .productSupplierList[index]
+                                                              .supplierSales[subIndex]
+                                                              .saleDescription}');
                                                     },
                                                     child: Text(
                                                       'Read condition',
-                                                      style: AppStyles.rkRegularTextStyle(
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
                                                           size: AppConstants
                                                               .font_10,
                                                           color: AppColors
@@ -2246,14 +2362,16 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  void showConditionDialog({required BuildContext context, required String saleCondition}) {
+  void showConditionDialog(
+      {required BuildContext context, required String saleCondition}) {
     showDialog(
         context: context,
-        builder: (context) => CommonSaleDescriptionDialog(
-            title: saleCondition,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            buttonTitle: "OK"));
+        builder: (context) =>
+            CommonSaleDescriptionDialog(
+                title: saleCondition,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                buttonTitle: "OK"));
   }
 }

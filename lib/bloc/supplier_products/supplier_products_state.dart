@@ -4,6 +4,7 @@ part of 'supplier_products_bloc.dart';
 class SupplierProductsState with _$SupplierProductsState {
   const factory SupplierProductsState({
     required String supplierId,
+    required String search,
     required List<Datum> productList,
     required bool isShimmering,
     required bool isLoading,
@@ -20,7 +21,8 @@ class SupplierProductsState with _$SupplierProductsState {
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
-        supplierId: '',
+    supplierId: '',
+        search: '',
         productList: [],
         isShimmering: false,
         isLoading: false,

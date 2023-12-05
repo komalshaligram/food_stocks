@@ -37,7 +37,8 @@ class ProductCategoryBloc
               AppUrls.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
                       pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.productCategoryPageLimit)
+                      pageLimit: AppConstants.productCategoryPageLimit,
+                      search: state.search)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
@@ -67,6 +68,10 @@ class ProductCategoryBloc
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+      } else if (event is _SetSearchEvent) {
+        emit(state.copyWith(
+            search: event.search,
+            isFromStoreCategory: event.isFromStoreCategory));
       }
     });
   }

@@ -587,7 +587,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               getScreenHeight(context) >= 730 ? 5.width : 1.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
@@ -595,7 +595,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               getScreenHeight(context) >= 730 ? 5.width : 3.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,

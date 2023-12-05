@@ -18,9 +18,10 @@ String supplierProductsReqModelToJson(SupplierProductsReqModel data) =>
 @freezed
 class SupplierProductsReqModel with _$SupplierProductsReqModel {
   const factory SupplierProductsReqModel({
+    @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "pageLimit") int? pageLimit,
     @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "search") String? search,
   }) = _SupplierProductsReqModel;
 
   factory SupplierProductsReqModel.fromJson(Map<String, dynamic> json) =>

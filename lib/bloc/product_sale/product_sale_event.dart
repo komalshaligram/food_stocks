@@ -34,4 +34,7 @@ class ProductSaleEvent with _$ProductSaleEvent {
   const factory ProductSaleEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory ProductSaleEvent.setSearchEvent({required String search}) =
+      _SetSearchEvent;
 }
