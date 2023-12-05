@@ -145,8 +145,9 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .isHomePreference ??
                                                 false
                                             ,
-                                            onTap: () {
-                                              Navigator.pushNamed(
+                                            onTap: () async {
+                                              /*dynamic searchResult = */ await Navigator
+                                                  .pushNamed(
                                                   context,
                                                   RouteDefine
                                                       .storeCategoryScreen
@@ -165,6 +166,9 @@ class StoreScreenWidget extends StatelessWidget {
                                                     index]
                                                         .categoryName
                                                   });
+                                              // if(searchResult != null) {
+                                              //
+                                              // }
                                             });
                                       },
                                     ),

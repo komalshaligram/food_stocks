@@ -9,6 +9,7 @@ class MessageState with _$MessageState {
     required bool isBottomOfMessage,
     required bool isLoadMore,
     required bool isMessageRead,
+    required List<String> deletedMessageList,
   }) = _MessageState;
 
   factory MessageState.initial() => MessageState(
@@ -18,5 +19,6 @@ class MessageState with _$MessageState {
         isBottomOfMessage: false,
         isLoadMore: false,
         isMessageRead: false,
+        deletedMessageList: [],
       );
 }
