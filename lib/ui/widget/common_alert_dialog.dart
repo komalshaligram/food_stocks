@@ -31,13 +31,10 @@ class CommonAlertDialog extends StatelessWidget {
               size: AppConstants.mediumFont,
               color: AppColors.blackColor,
               fontWeight: FontWeight.bold)),
-      content:Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        child: Text(
-          subTitle,
-          style: AppStyles.rkRegularTextStyle(
-              color: AppColors.blackColor, size: AppConstants.font_14),
-        ),
+      content: Text(
+        subTitle,
+        style: AppStyles.rkRegularTextStyle(
+            color: AppColors.blackColor, size: AppConstants.font_14),
       ),
       actionsPadding: EdgeInsets.only(
           right: AppConstants.padding_20,

@@ -3,7 +3,6 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
 
 class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {
   const QuestionAndAnswerScreenShimmerWidget({super.key});

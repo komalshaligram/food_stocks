@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_stock/bloc/home/home_bloc.dart';
 import 'package:food_stock/bloc/message/message_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -49,8 +48,9 @@ class MessageScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.messages,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, RouteDefine.bottomNavScreen.name);
+                  // Navigator.pushNamed(
+                  //     context, RouteDefine.bottomNavScreen.name);
+                  Navigator.pop(context);
                 },
                 // trailingWidget: Center(
                 //   child: GestureDetector(
@@ -105,8 +105,10 @@ class MessageScreenWidget extends StatelessWidget {
                                               .body
                                               ?.text ??
                                           '',
-                                      dateTime:
-                                          state.messageList[index].id ?? '',
+                                      dateTime: state
+                                              .messageList[index].updatedAt
+                                              ?.replaceRange(16, 19, '') ??
+                                          '',
                                       onTap: () async {
                                         dynamic messageNewData =
                                             await Navigator.pushNamed(

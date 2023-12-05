@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
+import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationService {
@@ -72,8 +73,8 @@ class PushNotificationService {
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          notification.title,
-          notification.body,
+          parse(notification.title ?? '').body?.text ?? '',
+          parse(notification.body ?? '').body?.text ?? '',
           flutter_local_notifications.NotificationDetails(
             android: AndroidNotificationDetails(
               channel.id,

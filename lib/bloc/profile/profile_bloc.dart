@@ -21,9 +21,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
+import '../../data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
     as file;
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
+import '../../data/model/res_model/remove_form_and_file_res_model/remove_form_and_file_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -173,8 +175,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
-          emit(state.copyWith(isShimmering: true));
-          debugPrint('shimmering true');
+          emit(state.copyWith(isUpdating: true));
           try {
             debugPrint('mobile = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
@@ -194,6 +195,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
+                  isUpdating: false,
                   UserImageUrl:
                       response.data?.clients?.first.profileImage ?? '',
                   selectedBusinessType: state.businessTypeList.data?.clientTypes
@@ -208,7 +210,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                          response.data?.clients?.first.clientDetail?.israelId),
+                      response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -221,16 +223,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ),
               );
             } else {
+              emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
                   title: response.message ?? AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
+            emit(state.copyWith(isUpdating: false));
             // showSnackBar(
             //     context: event.context,
             //     title: AppStrings.somethingWrongString,
             //     bgColor: AppColors.redColor);
+          } catch (e) {
+            emit(state.copyWith(isUpdating: false));
           }
         }
       } else if (event is _updateProfileDetailsEvent) {
@@ -246,7 +252,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 file.FileUpdateResModel.fromJson(res);
 
             if (response.status == 200) {
-              preferences.removeProfileImage();
+              await preferences.removeProfileImage();
               preferences.setUserImageUrl(
                   imageUrl: response.data!.client!.profileImage.toString());
               debugPrint('update profile image req________${response}');
@@ -256,12 +262,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   context: event.context,
                   title: AppStrings.somethingWrongString,
                   bgColor: AppColors.redColor);
+              return;
             }
           } on ServerException {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.somethingWrongString,
                 bgColor: AppColors.redColor);
+            return;
+          } catch (e) {
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+            return;
           }
         }
 
@@ -311,6 +325,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           reqUpdate.ProfileDetailsUpdateResModel response =
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
+            await preferences.setUserName(name: state.ownerNameController.text);
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
@@ -332,53 +347,48 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
-        // try {
-        //   if (state.UserImageUrl.isEmpty) {
-        //     return;
-        //   } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
-        //     emit(state.copyWith(UserImageUrl: '', image: File('')));
-        //     showSnackBar(
-        //         context: event.context,
-        //         title: AppStrings.removeSuccessString,
-        //         bgColor: AppColors.mainColor);
-        //     return;
-        //   }
-        //   emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
-        //   RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
-        //       path: formsAndFilesList[event.index].url);
-        //   debugPrint('delete file req = ${reqModel.path}');
-        //   final res = await DioClient(event.context)
-        //       .post(AppUrls.removeFileUrl, data: reqModel);
-        //   RemoveFormAndFileResModel response =
-        //   RemoveFormAndFileResModel.fromJson(res);
-        //   debugPrint('delete file res = ${response.message}');
-        //   if (response.status == 200) {
-        //     emit(state.copyWith(isUploadLoading: false));
-        //     formsAndFilesList[event.index] =
-        //         formsAndFilesList[event.index].copyWith(localUrl: '');
-        //     formsAndFilesList[event.index] =
-        //         formsAndFilesList[event.index].copyWith(url: '');
-        //     emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-        //     // showSnackBar(
-        //     //     context: event.context,
-        //     //     title: response.message ?? AppStrings.removeSuccessString,
-        //     //     bgColor: AppColors.mainColor);
-        //     add(FileUploadEvent.uploadApiEvent(
-        //         context: event.context, isFromDelete: true));
-        //   } else {
-        //     emit(state.copyWith(isUploadLoading: false));
-        //     showSnackBar(
-        //         context: event.context,
-        //         title: response.message ?? AppStrings.somethingWrongString,
-        //         bgColor: AppColors.redColor);
-        //   }
-        // } catch (e) {
-        //   emit(state.copyWith(isUploadLoading: false));
-        //   showSnackBar(
-        //       context: event.context,
-        //       title: AppStrings.somethingWrongString,
-        //       bgColor: AppColors.redColor);
-        // }
+        try {
+          if (state.UserImageUrl.isEmpty) {
+            return;
+          } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
+            emit(state.copyWith(UserImageUrl: '', image: File('')));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+            return;
+          }
+          emit(state.copyWith(isFileUploading: true));
+          RemoveFormAndFileReqModel reqModel =
+              RemoveFormAndFileReqModel(path: state.UserImageUrl);
+          debugPrint('delete file req = ${reqModel.path}');
+          final res = await DioClient(event.context)
+              .post(AppUrls.removeFileUrl, data: reqModel);
+          RemoveFormAndFileResModel response =
+              RemoveFormAndFileResModel.fromJson(res);
+          debugPrint('delete file res = ${response.message}');
+          if (response.status == 200) {
+            await preferences.removeProfileImage();
+            emit(state.copyWith(isFileUploading: false));
+            emit(state.copyWith(UserImageUrl: '', image: File('')));
+            showSnackBar(
+                context: event.context,
+                title: AppStrings.removeSuccessString,
+                bgColor: AppColors.mainColor);
+          } else {
+            emit(state.copyWith(isFileUploading: false));
+            showSnackBar(
+                context: event.context,
+                title: response.message ?? AppStrings.somethingWrongString,
+                bgColor: AppColors.redColor);
+          }
+        } catch (e) {
+          emit(state.copyWith(isFileUploading: false));
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.somethingWrongString,
+              bgColor: AppColors.redColor);
+        }
       }
     });
   }

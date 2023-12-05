@@ -20,6 +20,7 @@ class CompanyReqModel with _$CompanyReqModel {
   const factory CompanyReqModel({
     @JsonKey(name: "pageNum") int? pageNum,
     @JsonKey(name: "pageLimit") int? pageLimit,
+    @JsonKey(name: "search") String? search,
   }) = _CompanyReqModel;
 
   factory CompanyReqModel.fromJson(Map<String, dynamic> json) =>

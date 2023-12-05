@@ -13,6 +13,7 @@ class ProductSupplierModel with _$ProductSupplierModel {
     @Default([]) List<SupplierSaleModel> supplierSales,
     @Default(0) int quantity,
     @Default(0.0) double basePrice,
+    @Default(0) int stock,
     // @Default(false) bool isSelected,
     @Default(-1) int selectedIndex,
   }) = _ProductSupplierModel;

@@ -8,20 +8,17 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
       {required BuildContext context,
       required bool isFromCamera}) = _pickLogoImageEvent;
 
-  factory MoreDetailsEvent.getProfileModelEvent(
-      {
-        required ProfileModel profileModel,
-        required BuildContext context,
-
-      }) = _getProfileModelEvent;
+  factory MoreDetailsEvent.getProfileModelEvent({
+    required ProfileModel profileModel,
+    required BuildContext context,
+  }) = _getProfileModelEvent;
 
   factory MoreDetailsEvent.registrationApiEvent(
       {required BuildContext context}) = _registrationApiEvent;
 
   factory MoreDetailsEvent.citySearchEvent({
     required String search,
-
-}) = _citySearchEvent;
+  }) = _citySearchEvent;
 
   factory MoreDetailsEvent.selectCityEvent({
     required String city,
@@ -34,4 +31,8 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
 
   factory MoreDetailsEvent.setFAXFormatEvent({required String FAX}) =
       _SetFAXFormatEvent;
+
+  factory MoreDetailsEvent.deleteFileEvent({
+    required BuildContext context,
+  }) = _deleteFileEvent;
 }

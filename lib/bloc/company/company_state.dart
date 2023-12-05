@@ -4,6 +4,7 @@ part of 'company_bloc.dart';
 class CompanyState with _$CompanyState {
   const factory CompanyState({
     required List<Brand> companiesList,
+    required String search,
     required bool isShimmering,
     required int pageNum,
     required bool isLoadMore,
@@ -11,7 +12,8 @@ class CompanyState with _$CompanyState {
   }) = _CompanyState;
 
   factory CompanyState.initial() => CompanyState(
-        companiesList: [],
+    companiesList: [],
+        search: '',
         isShimmering: false,
         pageNum: 0,
         isLoadMore: false,

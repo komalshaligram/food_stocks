@@ -16,7 +16,7 @@ class AppStrings {
   static const deleteString = 'Delete';
   static const deliverString = 'deliver';
   static const statusString = 'status';
-
+  static const updateString = 'Updating';
 
 
   //language Strings
@@ -74,6 +74,9 @@ class AppStrings {
   static const appContentNameString = 'appContentNameParam';
   static const messageReadString = 'messageReadSParam';
   static const messageDeleteString = 'messageDeleteParam';
+  static const searchString = 'searchParam';
+  static const searchResultString = 'searchResultParam';
+  static const fromStoreCategoryString = 'fromStoreCategoryParam';
 
   //toast strings
   static const registerSuccessString = 'Registered Successfully!';
@@ -93,7 +96,7 @@ class AppStrings {
   static const selectBusinessTypeString = 'Please select your business type';
   static const uploadingMsgString = 'Please wait while uploading';
   static const selectValidDocumentFormatString =
-      'Please select only image, pdf and document files';
+      'Please select only jpg, jpeg, png, heic, pdf and document files';
   static const downloadString = 'Downloaded successfully!';
   static const downloadFailedString = 'Failed to download';
   static const storageAllowPermissionString =

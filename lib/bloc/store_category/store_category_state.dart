@@ -28,6 +28,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<ProductSupplierModel> productSupplierList,
     required List<SearchModel> searchList,
     required String search,
+    required bool isSearching,
+    required String previousSearch,
     required int imageIndex,
   }) = _StoreCategoryState;
 
@@ -57,6 +59,8 @@ class StoreCategoryState with _$StoreCategoryState {
         productSupplierList: [],
         searchList: [],
         search: '',
+        isSearching: false,
+        previousSearch: '',
         imageIndex: 0,
       );
 }

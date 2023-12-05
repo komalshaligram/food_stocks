@@ -24,7 +24,7 @@ class AppConfig {
   factory AppConfig.stag() {
     return AppConfig(
         flavor: 'stag',
-        appName: 'Food Stock',
+        appName: 'Food Stock Stag',
         appBaseUrl: 'http://192.168.1.46:3000/api',
         primaryColor: Colors.green);
   }
@@ -32,7 +32,7 @@ class AppConfig {
   factory AppConfig.prod() {
     return AppConfig(
         flavor: 'prod',
-        appName: 'Food Stock Prod',
+        appName: 'Food Stock',
         appBaseUrl: 'http://182.70.118.201:3000/api',
         primaryColor: Colors.red);
   }

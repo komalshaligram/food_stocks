@@ -19,6 +19,7 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/button_widget.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/file_selection_option_widget.dart';
 
@@ -410,12 +411,6 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: false));
                                         Navigator.pop(context1);
                                       }),
-                                  Container(
-                                    height: 1,
-                                    width: getScreenWidth(context),
-                                    color:
-                                    AppColors.borderColor.withOpacity(0.5),
-                                  ),
                                   FileSelectionOptionWidget(
                                       title:
                                       AppLocalizations.of(context)!.gallery,
@@ -453,25 +448,20 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 isDocument: false));
                                         Navigator.pop(context1);
                                       }),
-                                  Container(
-                                    height: 1,
-                                    width: getScreenWidth(context),
-                                    color:
-                                    AppColors.borderColor.withOpacity(0.5),
-                                  ),
                                   FileSelectionOptionWidget(
                                       title: "Document",
                                       icon: Icons.file_open_rounded,
+                                      lastItem: url.isEmpty ? true : false,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                        statuses = await [
+                                            statuses = await [
                                           Permission.storage,
                                         ].request();
                                         if (Platform.isAndroid) {
                                           DeviceInfoPlugin deviceInfo =
-                                          DeviceInfoPlugin();
+                                              DeviceInfoPlugin();
                                           AndroidDeviceInfo androidInfo =
-                                          await deviceInfo.androidInfo;
+                                              await deviceInfo.androidInfo;
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
@@ -497,31 +487,37 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       }),
                                   url.isEmpty
                                       ? 0.width
-                                      : Column(
-                                    children: [
-                                      Container(
-                                        height: 1,
-                                        width: getScreenWidth(context),
-                                        color: AppColors.borderColor
-                                            .withOpacity(0.5),
-                                      ),
-                                      FileSelectionOptionWidget(
-                                          title: AppLocalizations.of(
-                                              context)!
+                                      : FileSelectionOptionWidget(
+                                          title: AppLocalizations.of(context)!
                                               .remove,
                                           icon: Icons.delete,
+                                          lastItem: true,
                                           onTap: () {
-                                            context
-                                                .read<FileUploadBloc>()
-                                                .add(FileUploadEvent
-                                                .deleteFileEvent(
-                                                context: context,
-                                                index:
-                                                fileIndex));
                                             Navigator.pop(context);
+                                            showDialog(
+                                              context: context,
+                                              builder: (context2) =>
+                                                  CommonAlertDialog(
+                                                title: "Remove",
+                                                subTitle: 'Are you sure?',
+                                                positiveTitle: 'Yes',
+                                                negativeTitle: 'No',
+                                                negativeOnTap: () {
+                                                  Navigator.pop(context2);
+                                                },
+                                                positiveOnTap: () async {
+                                                  context
+                                                      .read<FileUploadBloc>()
+                                                      .add(FileUploadEvent
+                                                          .deleteFileEvent(
+                                                              context: context,
+                                                              index:
+                                                                  fileIndex));
+                                                  Navigator.pop(context2);
+                                                },
+                                              ),
+                                            );
                                           }),
-                                    ],
-                                  ),
                                 ],
                               ),
                             ),

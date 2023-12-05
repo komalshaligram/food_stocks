@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +23,12 @@ part 'profile_menu_bloc.freezed.dart';
 class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
   ProfileMenuBloc() : super(ProfileMenuState.initial()) {
     on<ProfileMenuEvent>((event, emit) async {
+
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
+
       if (event is _getPreferenceDataEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+
 
         debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
         debugPrint('[username]   ${preferences.getUserName()}');
@@ -48,25 +54,47 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             negativeTitle: 'No',
             negativeOnTap: () {
               Navigator.pop(context);
-              emit(state.copyWith(isLogOut: false));
             },
             positiveOnTap: () async {
-              SharedPreferencesHelper preferencesHelper =
+              try {
+
+                final response = await DioClient(event.context).put(
+                    path: AppUrls.logOutUrl,
+                  data: {
+                    "userId" : preferences.getUserId()
+                  }
+              );
+
+                debugPrint(
+                    'logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
+
+                debugPrint('logOut response  = ${response}');
+
+                if (response[AppStrings.statusString] == 200) {
+                  SharedPreferencesHelper preferencesHelper =
                   SharedPreferencesHelper(
                       prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
-              await Provider.of<LocaleProvider>(event.context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.logOutSuccessString,
-                  bgColor: AppColors.mainColor);
-              emit(state.copyWith(isLogOut: true));
-              Navigator.pop(context);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.connectScreen.name);
+                  await preferencesHelper.setUserLoggedIn();
+                  await Provider.of<LocaleProvider>(event.context, listen: false)
+                      .setAppLocale(locale: Locale(AppStrings.hebrewString));
+                  showSnackBar(
+                      context: event.context,
+                      title: AppStrings.logOutSuccessString,
+                      bgColor: AppColors.mainColor);
+                  Navigator.pop(context);
+                  Navigator.popUntil(event.context,
+                          (route) => route.name == RouteDefine.bottomNavScreen.name);
+                  Navigator.pushNamed(
+                      event.context, RouteDefine.connectScreen.name);
+
+                } else {
+                   showSnackBar(
+                context: event.context,
+                title: response[AppStrings.messageString],
+                bgColor: AppColors.mainColor);
+                }
+              } on ServerException {}
+
             },
           ),
         );

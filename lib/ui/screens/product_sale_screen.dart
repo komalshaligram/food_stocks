@@ -14,6 +14,7 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
@@ -30,9 +31,18 @@ class ProductSaleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map?;
+    debugPrint('product sale args = $args');
     return BlocProvider(
-      create: (context) => ProductSaleBloc()
-        ..add(ProductSaleEvent.getProductSalesListEvent(context: context)),
+      create: (context) =>
+      ProductSaleBloc()
+        ..add(ProductSaleEvent.setSearchEvent(
+            search: args?[AppStrings.searchString] ?? ''))..add(
+          ProductSaleEvent.getProductSalesListEvent(context: context)),
       child: ProductSaleScreenWidget(),
     );
   }

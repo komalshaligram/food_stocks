@@ -18,7 +18,8 @@ import '../ui/utils/themes/app_urls.dart';
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
-  bool isLoggedIn = false;
+  bool isLogOut = false;
+  bool isLoggedIn = true;
 
   DioClient(this._context)
       : _dio = Dio(
@@ -42,8 +43,7 @@ class DioClient {
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
             // print("app request data ${options.data}");
             return handler.next(options);
-          },
-      onResponse: (response, handler) {
+          }, onResponse: (response, handler) async {
             if (kDebugMode) {
               debugPrint("app url ${AppUrls.baseUrl}");
               debugPrint("app response data ${response.data}");
@@ -82,30 +82,36 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
+        print('islogout1____${isLogOut}');
         isLoggedIn =  await preferencesHelper.getUserLoggedIn();
         if(e.response?.statusCode == 401 && isLoggedIn) {
+
           debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
+
           var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
-          if(response1. statusCode == 200 && isLoggedIn) {
-            await preferencesHelper.setUserLoggedIn(isLoggedIn: false);
+
+          if(response1. statusCode == 200 && !isLogOut) {
+            isLogOut = true;
+
+            print('islogout____${isLogOut}');
+             await preferencesHelper.setUserLoggedIn(isLoggedIn: false);
             debugPrint('Token Expired = ${response1.data}');
-            isLoggedIn = false;
-             /* showSnackBar(
-                  context: _context,
-                  title: AppStrings.logOutSuccessString,
-                  bgColor: AppColors.mainColor);*/
+            showSnackBar(
+                context: _context,
+                title: AppStrings.logOutSuccessString,
+                bgColor: AppColors.mainColor);
 
             Navigator.popUntil(_context,
                     (route) => route.name == RouteDefine.bottomNavScreen.name);
             Navigator.pushNamed(
                 _context, RouteDefine.connectScreen.name);
-            ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+             ScaffoldMessenger.of(_context).hideCurrentSnackBar();
 
           }
         } else {
-          throw _createErrorEntity(e, context: _context);
+        throw _createErrorEntity(e, context: _context);
         }
       }
     } else {
@@ -310,11 +316,11 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
               bgColor: AppColors.redColor);
           return ErrorEntity(code: 400, message: "Bad request");
         case 401:
-         /* showSnackBar(
+          showSnackBar(
               context: context!,
-              title: "Token Expired,Please Log in again",
-              bgColor: AppColors.redColor);*/
-          return ErrorEntity(code: 401, message: "Token Expired,Please Log in again");
+              title: "Permission denied",
+              bgColor: AppColors.redColor);
+          return ErrorEntity(code: 401, message: "Permission denied");
         case 500:
           showSnackBar(
               context: context!,
@@ -359,7 +365,7 @@ void onError(ErrorEntity eInfo) {
       debugPrint("Server syntax error");
       break;
     case 401:
-      debugPrint("Your Token is expired!");
+      debugPrint("You are denied to continue");
       break;
     case 500:
       debugPrint("Server internal error");

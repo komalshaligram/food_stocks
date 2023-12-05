@@ -21,5 +21,6 @@ enum SearchTypes {
   category,
   company,
   supplier,
+  product,
   sale,
 }

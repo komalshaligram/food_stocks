@@ -239,17 +239,18 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       color: productImageIndex ==
                                           productImage.key
-                                          ? AppColors.mainColor
-                                          : AppColors.borderColor,
-                                      shape: BoxShape.circle),
+                                                      ? AppColors.mainColor
+                                                      : AppColors.borderColor,
+                                                  shape: BoxShape.circle),
+                                            ))
+                                        .toList(),
+                                  ),
                                 ))
-                                    .toList(),
-                              ),
-                            ))
                       ],
                     ),
                   ),
-                  productStock == 0 ? 0.width : supplierWidget,
+                  /*false */ /*productStock == 0*/ /* ? 0.width : */
+                  supplierWidget,
                   // : AnimatedCrossFade(
                   //     firstChild: Container(
                   //       width: getScreenWidth(context),
@@ -533,7 +534,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                      '${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                       style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.font_30,
                                           color: AppColors.blackColor,

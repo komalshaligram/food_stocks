@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -35,10 +33,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
-              options: Options(headers: {
+            /*  options: Options(headers: {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
-              }));
+              })*/);
 
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
           debugPrint('GetAllCartResModel  = $response');
@@ -76,8 +74,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         //  if (event.productWeight != 0) {
         emit(state.copyWith(isLoading: true));
         try {
-          debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
-          debugPrint('[getSaleId]  = ${event.saleId != ''}');
+        //  debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
+        //  debugPrint('[getSaleId]  = ${event.saleId != ''}');
           UpdateCartReqModel reqMap = UpdateCartReqModel();
           if (event.saleId != '') {
             reqMap = UpdateCartReqModel(
@@ -101,11 +99,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           );
 
           debugPrint('[update cart reqMap]  = $reqMap');
-          debugPrint(
-              '[url]  = ${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}');
+        //  debugPrint('[url]  = ${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}');
 
           UpdateCartResModel response = UpdateCartResModel.fromJson(res);
-          debugPrint('update response  = $response');
+         // debugPrint('update response  = $response');
           if (response.status == 201) {
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
@@ -183,10 +180,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
-              options: Options(headers: {
+         /*     options: Options(headers: {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferencesHelper.getAuthToken()}'
-              }));
+              })*/);
 
           debugPrint('[clear cart response] =  ${res}');
 

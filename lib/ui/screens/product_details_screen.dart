@@ -69,7 +69,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('size____${getScreenHeight(context)}');
     return BlocListener<ProductDetailsBloc, ProductDetailsState>(
       listener: (context, state) {},
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
@@ -196,7 +195,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       valueColor: AppColors.blackColor,
                                       valueTextSize: AppConstants.smallFont,
                                       valueTextWeight: FontWeight.w500,
-                                     // columnPadding: AppConstants.padding_5,
+                                      // columnPadding: AppConstants.padding_5,
                                     ),
                                     5.width,
                                     CommonOrderContentWidget(
@@ -209,7 +208,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w500,
                                       valueTextSize: AppConstants.smallFont,
-                                     // columnPadding: AppConstants.padding_5,
+                                      // columnPadding: AppConstants.padding_5,
                                     ),
                                   ],
                                 ),
@@ -516,7 +515,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
-              horizontal: getScreenHeight(context) >= 730 ? AppConstants.padding_3 :0),
+              horizontal:
+                  getScreenHeight(context) >= 730 ? AppConstants.padding_3 : 0),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
@@ -572,11 +572,12 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       width: AppConstants.containerSize_50,
                       height: AppConstants.containerSize_50,
                     )
-
                   : SizedBox(),
               getScreenHeight(context) >= 730 ? 7.width : 2.width,
               Container(
-                width:  state.orderBySupplierProduct.orderDeliveryDate != ''? 50 : 65,
+                width: state.orderBySupplierProduct.orderDeliveryDate != ''
+                    ? 50
+                    : 65,
                 child: Text(
                   state.orderBySupplierProduct.products![index].productName
                       .toString(),
@@ -586,7 +587,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               getScreenHeight(context) >= 730 ? 5.width : 1.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                 style: AppStyles.rkRegularTextStyle(
                   color: AppColors.blackColor,
                   size: AppConstants.font_12,
@@ -594,7 +595,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               ),
               getScreenHeight(context) >= 730 ? 5.width : 3.width,
               Text(
-                '${bloc.splitNumber(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                 style: AppStyles.rkRegularTextStyle(
                     color: AppColors.blackColor,
                     size: AppConstants.font_14,
@@ -680,15 +681,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       : AppColors.lightBorderColor,
                               border:
                                   Border.all(color: AppColors.lightGreyColor),
-                              borderRadius: BorderRadius.circular(
-                                  AppConstants.radius_3),
+                              borderRadius:
+                                  BorderRadius.circular(AppConstants.radius_3),
                             ),
                             child: Text(
                               AppLocalizations.of(context)!.product_issue,
                               style: AppStyles.rkRegularTextStyle(
                                   color: (isIssue ?? false) ||
-                                          state.productListIndex
-                                              .contains(index)
+                                          state.productListIndex.contains(index)
                                       ? AppColors.whiteColor
                                       : AppColors.blackColor,
                                   size: AppConstants.font_12,
@@ -801,7 +801,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 children: [
                                   image != ''
                                       ? CachedNetworkImage(
-                                    imageUrl: '${AppUrls.baseFileUrl}${image}',
+                                          imageUrl:
+                                              '${AppUrls.baseFileUrl}${image}',
                                           width: AppConstants.containerSize_50,
                                           height: AppConstants.containerSize_50,
                                         )
@@ -989,7 +990,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
@@ -1060,7 +1061,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       ),
                                     )
                                   : SizedBox(),
-                             3.width,
+                              3.width,
                               value == 3
                                   ? GestureDetector(
                                       onTap: () {
