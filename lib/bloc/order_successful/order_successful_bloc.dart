@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +23,8 @@ class OrderSuccessfulBloc
     extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+ /*     SharedPreferencesHelper preferencesHelper =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());*/
 
       if (event is _getWalletRecordEvent) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
@@ -81,12 +79,13 @@ class OrderSuccessfulBloc
         final res =
             await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
                 data: reqMap,
-                options: Options(
+           /*     options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
                         'Bearer ${preferencesHelper.getAuthToken()}',
                   },
-                ));
+                )*/
+            );
 
         debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
         GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);

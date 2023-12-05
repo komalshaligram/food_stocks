@@ -211,452 +211,509 @@ class ProfileScreenWidget extends StatelessWidget {
                                                           title: AppLocalizations
                                                                   .of(context1)!
                                                               .gallery,
-                                                          icon: Icons.photo,
-                                                          lastItem: state
-                                                                  .UserImageUrl
-                                                                  .isEmpty
-                                                              ? true
-                                                              : false,
-                                                          onTap: () async {
-                                                            Map<Permission,
-                                                                    PermissionStatus>
-                                                                statuses =
-                                                                await [
-                                                              Permission
-                                                                  .storage,
-                                                            ].request();
-                                                            if (Platform
-                                                                .isAndroid) {
-                                                              DeviceInfoPlugin
-                                                                  deviceInfo =
-                                                                  DeviceInfoPlugin();
-                                                              AndroidDeviceInfo
-                                                                  androidInfo =
-                                                                  await deviceInfo
-                                                                      .androidInfo;
-                                                              if (androidInfo
-                                                                      .version
-                                                                      .sdkInt <
-                                                                  33) {
-                                                                if (!statuses[
-                                                                        Permission
-                                                                            .storage]!
-                                                                    .isGranted) {
-                                                                  showSnackBar(
-                                                                      context:
-                                                                          context,
-                                                                      title: AppStrings
-                                                                          .storageAllowPermissionString,
-                                                                      bgColor:
-                                                                          AppColors
-                                                                              .redColor);
-                                                                  Navigator.pop(
-                                                                      context1);
-                                                                  return;
-                                                                }
-                                                              }
-                                                            } else if (Platform
-                                                                .isIOS) {
-                                                              // Navigator.pop(context);
-                                                            }
-                                                            bloc.add(ProfileEvent
-                                                                .pickProfileImageEvent(
-                                                                    context:
-                                                                        context,
-                                                                    isFromCamera:
-                                                                        false));
-                                                            Navigator.pop(
-                                                                context1);
-                                                          }),
-                                                      state.UserImageUrl.isEmpty
-                                                          ? 0.width
-                                                          : FileSelectionOptionWidget(
-                                                              title: AppLocalizations.of(
-                                                                      context1)!
-                                                                  .remove,
-                                                              icon:
-                                                                  Icons.delete,
-                                                              lastItem: true,
-                                                              onTap: () {
-                                                                Navigator.pop(
-                                                                    context1);
-                                                                showDialog(
+                                                      icon: Icons.photo,
+                                                      onTap: () async {
+                                                        Map<Permission,
+                                                                PermissionStatus>
+                                                            statuses = await [
+                                                          Permission.storage,
+                                                        ].request();
+                                                        if (Platform
+                                                            .isAndroid) {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt <
+                                                              33) {
+                                                            if (!statuses[
+                                                                    Permission
+                                                                        .storage]!
+                                                                .isGranted) {
+                                                              showSnackBar(
                                                                   context:
                                                                       context,
-                                                                  builder:
-                                                                      (context2) =>
-                                                                          CommonAlertDialog(
-                                                                    title:
-                                                                        "Remove",
-                                                                    subTitle:
-                                                                        'Are you sure?',
-                                                                    positiveTitle:
-                                                                        'Yes',
-                                                                    negativeTitle:
-                                                                        'No',
-                                                                    negativeOnTap:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context2);
-                                                                    },
-                                                                    positiveOnTap:
-                                                                        () async {
-                                                                      bloc.add(ProfileEvent.deleteFileEvent(
-                                                                          context:
-                                                                              context));
-                                                                      Navigator.pop(
-                                                                          context2);
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              })
-                                                    ],
-                                                  ),
-                                                ),
-                                            backgroundColor:
-                                                Colors.transparent);
-                                        // showDialog(
-                                        //   context: context,
-                                        //   builder: (context1) {
-                                        //     return AlertDialog(
-                                        //       actionsPadding: EdgeInsets.only(
-                                        //           left: AppConstants.padding_15,
-                                        //           right: AppConstants.padding_15,
-                                        //           top: AppConstants.padding_15,
-                                        //           bottom: AppConstants.padding_30),
-                                        //       title: Align(
-                                        //           alignment: Alignment.center,
-                                        //           child: Text(
-                                        //               AppLocalizations.of(context)!
-                                        //                   .upload_photo)),
-                                        //       actions: [
-                                        //         Row(
-                                        //           mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceAround,
-                                        //           children: [
-                                        //             GestureDetector(
-                                        //                 onTap: () {
-                                        //                   bloc.add(ProfileEvent
-                                        //                       .pickProfileImageEvent(
-                                        //                           context: c,
-                                        //                           isFromCamera: true));
-                                        //                   Navigator.pop(context1);
-                                        //                 },
-                                        //                 child: Icon(
-                                        //                   Icons.camera_alt_rounded,
-                                        //                   color: AppColors.blackColor,
-                                        //                 )),
-                                        //             GestureDetector(
-                                        //                 onTap: () {
-                                        //                   bloc.add(ProfileEvent
-                                        //                       .pickProfileImageEvent(
-                                        //                           context: c,
-                                        //                           isFromCamera: false));
-                                        //                   Navigator.pop(context1);
-                                        //                 },
-                                        //                 child: Icon(
-                                        //                   Icons.photo,
-                                        //                   color: AppColors.blackColor,
-                                        //                 )),
-                                        //           ],
-                                        //         ),
-                                        //         Row(
-                                        //           mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceAround,
-                                        //           children: [
-                                        //             Text(AppLocalizations.of(context)!
-                                        //                 .camera),
-                                        //             Text(AppLocalizations.of(context)!
-                                        //                 .gallery),
-                                        //           ],
-                                        //         ),
-                                        //       ],
-                                        //     );
-                                        //   },
-                                        // );
-                                      },
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                              height: AppConstants
-                                                  .containerHeight_80,
-                                              width: AppConstants
-                                                  .containerHeight_80,
-                                              margin: EdgeInsets.only(
-                                                  bottom:
-                                                      AppConstants.padding_3,
-                                                  right: AppConstants.padding_3,
-                                                  left: AppConstants.padding_3),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 0.5,
-                                                    color: state.UserImageUrl
-                                                            .isNotEmpty
-                                                        ? AppColors
-                                                            .lightBorderColor
-                                                        : Colors.transparent),
-                                                borderRadius:
-                                                    BorderRadius.circular(200),
+                                                                  title: AppStrings
+                                                                      .storageAllowPermissionString,
+                                                                  bgColor: AppColors
+                                                                      .redColor);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              return;
+                                                            }
+                                                          }
+                                                        } else if (Platform
+                                                            .isIOS) {
+                                                          // Navigator.pop(context);
+                                                        }
+                                                        bloc.add(ProfileEvent
+                                                            .pickProfileImageEvent(
+                                                                context:
+                                                                    context,
+                                                                isFromCamera:
+                                                                    false));
+                                                        Navigator.pop(context);
+                                                      }),
+                                                  // Column(
+                                                  //   children: [
+                                                  //     Container(
+                                                  //       height: 1,
+                                                  //       width: getScreenWidth(context),
+                                                  //       color: AppColors.borderColor
+                                                  //           .withOpacity(0.5),
+                                                  //     ),
+                                                  //     FileSelectionOptionWidget(
+                                                  //         title: AppLocalizations.of(
+                                                  //             context)!
+                                                  //             .remove,
+                                                  //         icon: Icons.delete,
+                                                  //         onTap: () {
+                                                  //           // context
+                                                  //           //     .read<ProfileBloc>()
+                                                  //           //     .add(ProfileEvent
+                                                  //           //     .deleteFileEvent(
+                                                  //           //     context: context,
+                                                  //           //     index:
+                                                  //           //     fileIndex));
+                                                  //           Navigator.pop(context);
+                                                  //         }),
+                                                  //   ],
+                                                  // )
+                                                ],
+                                              ),
+                                            ),
+                                        backgroundColor: Colors.transparent);
+                                    // showDialog(
+                                    //   context: context,
+                                    //   builder: (context1) {
+                                    //     return AlertDialog(
+                                    //       actionsPadding: EdgeInsets.only(
+                                    //           left: AppConstants.padding_15,
+                                    //           right: AppConstants.padding_15,
+                                    //           top: AppConstants.padding_15,
+                                    //           bottom: AppConstants.padding_30),
+                                    //       title: Align(
+                                    //           alignment: Alignment.center,
+                                    //           child: Text(
+                                    //               AppLocalizations.of(context)!
+                                    //                   .upload_photo)),
+                                    //       actions: [
+                                    //         Row(
+                                    //           mainAxisAlignment:
+                                    //               MainAxisAlignment.spaceAround,
+                                    //           children: [
+                                    //             GestureDetector(
+                                    //                 onTap: () {
+                                    //                   bloc.add(ProfileEvent
+                                    //                       .pickProfileImageEvent(
+                                    //                           context: c,
+                                    //                           isFromCamera: true));
+                                    //                   Navigator.pop(context1);
+                                    //                 },
+                                    //                 child: Icon(
+                                    //                   Icons.camera_alt_rounded,
+                                    //                   color: AppColors.blackColor,
+                                    //                 )),
+                                    //             GestureDetector(
+                                    //                 onTap: () {
+                                    //                   bloc.add(ProfileEvent
+                                    //                       .pickProfileImageEvent(
+                                    //                           context: c,
+                                    //                           isFromCamera: false));
+                                    //                   Navigator.pop(context1);
+                                    //                 },
+                                    //                 child: Icon(
+                                    //                   Icons.photo,
+                                    //                   color: AppColors.blackColor,
+                                    //                 )),
+                                    //           ],
+                                    //         ),
+                                    //         Row(
+                                    //           mainAxisAlignment:
+                                    //               MainAxisAlignment.spaceAround,
+                                    //           children: [
+                                    //             Text(AppLocalizations.of(context)!
+                                    //                 .camera),
+                                    //             Text(AppLocalizations.of(context)!
+                                    //                 .gallery),
+                                    //           ],
+                                    //         ),
+                                    //       ],
+                                    //     );
+                                    //   },
+                                    // );
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                          height:
+                                              AppConstants.containerHeight_80,
+                                          width:
+                                              AppConstants.containerHeight_80,
+                                          margin: EdgeInsets.only(
+                                              bottom: AppConstants.padding_3,
+                                              right: AppConstants.padding_3,
+                                              left: AppConstants.padding_3),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.5,
                                                 color: state
                                                         .UserImageUrl.isNotEmpty
-                                                    ? AppColors.whiteColor
-                                                    : AppColors.mainColor
-                                                        .withOpacity(0.1),
+                                                    ? AppColors.lightBorderColor
+                                                    : Colors.transparent),
+                                            borderRadius:
+                                                BorderRadius.circular(200),
+                                            color: state.UserImageUrl.isNotEmpty
+                                                ? AppColors.whiteColor
+                                                : AppColors.mainColor
+                                                    .withOpacity(0.1),
+                                          ),
+                                          child: state.isUpdate
+                                              ? state.UserImageUrl.isNotEmpty
+                                              ? state.image.path != ''
+                                              ? SizedBox(
+                                            height:
+                                            getScreenHeight(
+                                                context) *
+                                                0.18,
+                                            width:
+                                            getScreenWidth(
+                                                context),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  40),
+                                              child: Image.file(
+                                                state.image,
+                                                fit: BoxFit
+                                                    .cover,
                                               ),
-                                              child: state.isUpdate
-                                                  ? state.isFileUploading
-                                                      ? Center(
-                                                          child:
-                                                              CupertinoActivityIndicator(
+                                            )
+                                          )
+                                              : ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(
+                                                40),
+                                                child: Image.network(
+                                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                  fit: BoxFit
+                                                      .contain,
+                                                  loadingBuilder:
+                                                      (context,
+                                                      child,
+                                                      loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return Center(
+                                                        child:
+                                                        CupertinoActivityIndicator(
+                                                          color: AppColors
+                                                              .blackColor,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  errorBuilder:
+                                                      (context,
+                                                      error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: AppColors
+                                                          .whiteColor,
+                                                      alignment:
+                                                      Alignment
+                                                          .center,
+                                                      child: Text(
+                                                        AppStrings
+                                                            .failedToLoadString,
+                                                        style: AppStyles.rkRegularTextStyle(
+                                                            size: AppConstants
+                                                                .font_14,
                                                             color: AppColors
-                                                                .blackColor,
-                                                          ),
-                                                        )
-                                                      : state.UserImageUrl
-                                                              .isEmpty
-                                                          ? Icon(
-                                                              Icons.person,
-                                                              size: 60,
-                                                              color: AppColors
-                                                                  .textColor,
-                                                            )
-                                                          : state.UserImageUrl
-                                                                  .contains(
-                                                                      AppStrings
-                                                                          .tempString)
-                                                              ? ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              40),
-                                                                  child: Image
-                                                                      .file(
-                                                                    state.image,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                )
-                                                              : ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              40),
-                                                                  child: Image
-                                                                      .network(
-                                                                    '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                    loadingBuilder:
-                                                                        (context,
-                                                                            child,
-                                                                            loadingProgress) {
-                                                                      if (loadingProgress ==
-                                                                          null) {
-                                                                        return child;
-                                                                      } else {
-                                                                        return Center(
-                                                                          child:
-                                                                              CupertinoActivityIndicator(
-                                                                            color:
-                                                                                AppColors.blackColor,
-                                                                          ),
-                                                                        );
-                                                                      }
-                                                                    },
-                                                                    errorBuilder:
-                                                                        (context,
-                                                                            error,
-                                                                            stackTrace) {
-                                                                      return Icon(
-                                                                        Icons
-                                                                            .person,
-                                                                        size:
-                                                                            60,
-                                                                        color: AppColors
-                                                                            .textColor,
-                                                                      )
-                                                                          /*Container(
-                                                        decoration: BoxDecoration(
-                                                            shape: BoxShape.circle,
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            border: Border.all(
-                                                                color: AppColors
-                                                                    .borderColor
-                                                                    .withOpacity(
-                                                                        0.5),
-                                                                width: 1)),
-                                                      )*/
-                                                                          ;
-                                                                    },
-                                                                  ))
-                                                  : state.image.path.isEmpty
+                                                                .textColor),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                              :Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )
+                                              : state.image.path != ''
+                                              ? ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(
+                                                40),
+                                                child: Image.file(
+                                                  File(
+                                                      state.image.path),
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )
+                                              : Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )),/*state.isUpdate
+                                              ? state.isFileUploading
+                                                  ? Center(
+                                                      child:
+                                                          CupertinoActivityIndicator(
+                                                        color: AppColors
+                                                            .blackColor,
+                                                      ),
+                                                    )
+                                                  : state.UserImageUrl.isEmpty
                                                       ? Icon(
                                                           Icons.person,
                                                           size: 60,
                                                           color: AppColors
                                                               .textColor,
                                                         )
-                                                      : ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(40),
-                                                          child: Image.file(
-                                                            state.image,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        )),
-                                          Positioned(
-                                            right: context.rtl ? null : 1,
-                                            left: context.rtl ? 1 : null,
-                                            bottom: 1,
-                                            child: Container(
-                                                width: 29,
-                                                height: 29,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    border: Border.all(
+                                                      : state.UserImageUrl
+                                                              .contains(AppStrings
+                                                                  .tempString)
+                                                          ? ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child: Image.file(
+                                                                state.image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child:
+                                                                  Image.network(
+                                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                loadingBuilder:
+                                                                    (context,
+                                                                        child,
+                                                                        loadingProgress) {
+                                                                  if (loadingProgress ==
+                                                                      null) {
+                                                                    return child;
+                                                                  } else {
+                                                                    return Center(
+                                                                      child:
+                                                                          CupertinoActivityIndicator(
+                                                                        color: AppColors
+                                                                            .blackColor,
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    size: 60,
+                                                                    color: AppColors
+                                                                        .textColor,
+                                                                  )
+                                                                      *//*Container(
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
                                                         color: AppColors
-                                                            .borderColor)),
-                                                child: SvgPicture.asset(
-                                                    AppImagePath.camera,
-                                                    fit: BoxFit
-                                                        .scaleDown) /*Icon(
-                                          Icons.camera_alt_rounded,
-                                          color: AppColors.blueColor,
-                                          size: 18,
-                                        ),*/
-                                                ),
-                                          ),
-                                        ],
+                                                            .whiteColor,
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .borderColor
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            width: 1)),
+                                                  )*//*
+                                                                      ;
+                                                                },
+                                                              ))
+                                              : state.image.path == ''
+                                                  ? Icon(
+                                                      Icons.person,
+                                                      size: 60,
+                                                      color:
+                                                          AppColors.textColor,
+                                                    )
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40),
+                                                      child: Image.file(
+                                                        state.image,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )),*/
+                                      Positioned(
+                                        right: context.rtl ? null : 1,
+                                        left: context.rtl ? 1 : null,
+                                        bottom: 1,
+                                        child: Container(
+                                            width: 29,
+                                            height: 29,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                    color:
+                                                        AppColors.borderColor)),
+                                            child: SvgPicture.asset(
+                                                AppImagePath.camera,
+                                                fit: BoxFit
+                                                    .scaleDown) /*Icon(
+                                      Icons.camera_alt_rounded,
+                                      color: AppColors.blueColor,
+                                      size: 18,
+                                    ),*/
+                                            ),
                                       ),
-                                    ),
-                                  ),
-                                  3.height,
-                                  Container(
-                                    width: getScreenWidth(context1),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .profile_picture,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.textColor),
-                                    ),
-                                  ),
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .type_of_business,
-                                  ),
-                                  SizedBox(
-                                    // height: AppConstants.textFormFieldHeight,
-                                    child: DropdownButtonFormField<String>(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(
-                                            left: AppConstants.padding_10,
-                                            right: AppConstants.padding_10),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                      ),
-                                      isExpanded: true,
-                                      elevation: 0,
-                                      style: TextStyle(
-                                        fontSize: AppConstants.smallFont,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      value: state.selectedBusinessType,
-                                      items: state
-                                          .businessTypeList.data?.clientTypes
-                                          ?.map((businessType) {
-                                        return DropdownMenuItem<String>(
-                                          value: businessType.businessType,
-                                          child: Text(
-                                              "${businessType.businessType}"),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newBusinessType) {
-                                        bloc.add(ProfileEvent
-                                            .changeBusinessTypeEvent(
-                                                newBusinessType:
-                                                    newBusinessType!));
-                                      },
-                                    ),
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_name,
-                                  ),
-                                  CustomFormField(
-                                    controller: state.businessNameController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                    RegExp(r'\s')),*/
-                                      LengthLimitingTextInputFormatter(20)
                                     ],
-                                    keyboardType: TextInputType.text,
-                                    hint:
-                                        "" /*AppLocalizations.of(context)!.life_grocery_store*/,
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.businessNameValString,
                                   ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_id,
+                                ),
+                              ),
+                              3.height,
+                              Container(
+                                width: getScreenWidth(context1),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalizations.of(context)!.profile_picture,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.textColor),
+                                ),
+                              ),
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!
+                                    .type_of_business,
+                              ),
+                              SizedBox(
+                                // height: AppConstants.textFormFieldHeight,
+                                child: DropdownButtonFormField<String>(
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.blackColor,
                                   ),
-                                  CustomFormField(
-                                    controller: state.hpController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(9)
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.hpValString,
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                        left: AppConstants.padding_10,
+                                        right: AppConstants.padding_10),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
+                                      ),
+                                    ),
                                   ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .name_of_owner,
+                                  isExpanded: true,
+                                  elevation: 0,
+                                  style: TextStyle(
+                                    fontSize: AppConstants.smallFont,
+                                    color: AppColors.blackColor,
                                   ),
-                                  CustomFormField(
-                                    controller: state.ownerNameController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
+                                  value: state.selectedBusinessType,
+                                  items: state
+                                      .businessTypeList.data?.clientTypes
+                                      ?.map((businessType) {
+                                    return DropdownMenuItem<String>(
+                                      value: businessType.businessType,
+                                      child:
+                                          Text("${businessType.businessType}"),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newBusinessType) {
+                                    bloc.add(
+                                        ProfileEvent.changeBusinessTypeEvent(
+                                            newBusinessType: newBusinessType!));
+                                  },
+                                ),
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name:
+                                    AppLocalizations.of(context)!.business_name,
+                              ),
+                              CustomFormField(
+                                controller: state.businessNameController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                                RegExp(r'\s')),*/
+                                  LengthLimitingTextInputFormatter(20)
+                                ],
+                                keyboardType: TextInputType.text,
+                                hint:
+                                    "" /*AppLocalizations.of(context)!.life_grocery_store*/,
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.businessNameValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.business_id,
+                              ),
+                              CustomFormField(
+                                controller: state.hpController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(9)
+                                ],
+                                keyboardType: TextInputType.number,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.hpValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name:
+                                    AppLocalizations.of(context)!.name_of_owner,
+                              ),
+                              CustomFormField(
+                                controller: state.ownerNameController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
+                              RegExp(r'\s')),*/
 
                                       LengthLimitingTextInputFormatter(20)
                                     ],

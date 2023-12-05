@@ -519,12 +519,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final res =
               await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
                   data: reqMap,
-                  options: Options(
+              /*    options: Options(
                     headers: {
                       HttpHeaders.authorizationHeader:
                           'Bearer ${preferences.getAuthToken()}',
                     },
-                  ));
+                  )*/);
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);

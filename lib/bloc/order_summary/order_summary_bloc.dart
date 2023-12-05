@@ -1,6 +1,5 @@
-import 'dart:io';
+
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,10 +71,10 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           final res = await DioClient(event.context).post(
             AppUrls.createOrderUrl,
             data: reqMap,
-            options:Options(
+       /*     options:Options(
                 headers: {
               HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
-            })
+            })*/
           );
 
           debugPrint('Order create url  = ${AppUrls.baseUrl}${AppUrls.createOrderUrl}');
@@ -86,27 +85,25 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             try {
               final res = await DioClient(event.context).post(
                   '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
-                  options:Options(
-                      headers: {
-                        HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
-                      })
+                  // options:Options(
+                  //     headers: {
+                  //       HttpHeaders.authorizationHeader : 'Bearer ${preferencesHelper.getAuthToken()}'
+                  //     })
               );
               debugPrint('clear cart response_______${res}');
               if (res["status"] == 201) {
-                emit(state.copyWith(isLoading: false));
                 preferencesHelper.setCartCount(count: 0);
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
-              else{
-              //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-              }
+
 
             }  on ServerException {}
 
           }
+
           else if(response.status == 403){
-            emit(state.copyWith(isLoading: false));
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+            emit(state.copyWith(isLoading: false));
           }
           else {
             showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
