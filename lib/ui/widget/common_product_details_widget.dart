@@ -249,7 +249,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  false /*productStock == 0*/ ? 0.width : supplierWidget,
+                  /*false */ /*productStock == 0*/ /* ? 0.width : */
+                  supplierWidget,
                   // : AnimatedCrossFade(
                   //     firstChild: Container(
                   //       width: getScreenWidth(context),

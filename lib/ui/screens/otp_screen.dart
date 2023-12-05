@@ -88,36 +88,39 @@ class OTPScreenWidget extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: getScreenWidth(context) * 0.09,
                           right: getScreenWidth(context) * 0.09),
-                      child: OtpTextField(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        autoFocus: true,
-                        fieldWidth: (getScreenWidth(context) -
-                                (getScreenWidth(context) * 0.21)) /
-                            5.55,
-                        numberOfFields: 4,
-                        borderWidth: 1,
-                        disabledBorderColor: AppColors.borderColor,
-                        enabledBorderColor: AppColors.borderColor,
-                        fillColor: AppColors.whiteColor,
-                        cursorColor: AppColors.mainColor,
-                        borderColor: AppColors.greyColor,
-                        focusedBorderColor: AppColors.mainColor,
-                        showCursor: false,
-                        keyboardType: TextInputType.number,
-                        showFieldAsBox: true,
-                        borderRadius:
-                            BorderRadius.circular(AppConstants.radius_5),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_11),
-                        textStyle: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                        onCodeChanged: (String code) {
-                          bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                        },
-                        onSubmit: (verificationCode) {
-                          bloc.add(
-                              OtpEvent.changeOtpEvent(otp: verificationCode));
-                        }, // end onSubmit
+                      child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: OtpTextField(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          autoFocus: true,
+                          fieldWidth: (getScreenWidth(context) -
+                                  (getScreenWidth(context) * 0.21)) /
+                              5.55,
+                          numberOfFields: 4,
+                          borderWidth: 1,
+                          disabledBorderColor: AppColors.borderColor,
+                          enabledBorderColor: AppColors.borderColor,
+                          fillColor: AppColors.whiteColor,
+                          cursorColor: AppColors.mainColor,
+                          borderColor: AppColors.greyColor,
+                          focusedBorderColor: AppColors.mainColor,
+                          showCursor: false,
+                          keyboardType: TextInputType.number,
+                          showFieldAsBox: true,
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radius_5),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_5),
+                          textStyle: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                          onCodeChanged: (String code) {
+                            bloc.add(OtpEvent.changeOtpEvent(otp: code));
+                          },
+                          onSubmit: (verificationCode) {
+                            bloc.add(
+                                OtpEvent.changeOtpEvent(otp: verificationCode));
+                          }, // end onSubmit
+                        ),
                       ),
                     ),
                     15.height,

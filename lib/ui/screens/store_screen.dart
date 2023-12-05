@@ -872,7 +872,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     RouteDefine.productCategoryScreen.name,
                                     arguments: {
                                       AppStrings.searchString: state
-                                          .previousSearch
+                                          .previousSearch,
                                     })
                                     : state.searchList[index].searchType ==
                                     SearchTypes.company ?

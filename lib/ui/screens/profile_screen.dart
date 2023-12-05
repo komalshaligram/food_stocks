@@ -18,7 +18,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
-import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -427,20 +426,26 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       error,
                                                       stackTrace) {
                                                     return Container(
-                                                      color: AppColors
-                                                          .whiteColor,
-                                                      alignment:
-                                                      Alignment
-                                                          .center,
-                                                      child: Text(
-                                                        AppStrings
-                                                            .failedToLoadString,
-                                                        style: AppStyles.rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .textColor),
-                                                      ),
+                                                      decoration: BoxDecoration(
+                                                                        color: AppColors
+                                                                            .whiteColor,
+                                                                        shape: BoxShape
+                                                                            .circle),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child: Text(
+                                                                      AppStrings
+                                                                          .failedToLoadString,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: AppStyles.rkRegularTextStyle(
+                                                                          size: AppConstants
+                                                                              .font_14,
+                                                                          color:
+                                                                              AppColors.textColor),
+                                                                    ),
                                                     );
                                                   },
                                                 ),
