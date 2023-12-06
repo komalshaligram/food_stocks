@@ -84,16 +84,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         SharedPreferencesHelper(
                             prefs: await SharedPreferences.getInstance());
                     final res = await DioClient(event.context)
-                        .post(AppUrls.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: preferencesHelper.getUserId(),
-                    },
-                        options: Options(
-                          headers: {
-                            HttpHeaders.authorizationHeader:
-                            'Bearer ${preferencesHelper.getAuthToken()}',
-                          },
-                        )
-                    );
+                        .post(AppUrls.getProfileDetailsUrl,
+                            data: {
+                              AppStrings.idParamString:
+                                  preferencesHelper.getUserId(),
+                            },
+                            options: Options(
+                              headers: {
+                                HttpHeaders.authorizationHeader:
+                                    'Bearer ${preferencesHelper.getAuthToken()}',
+                              },
+                            ));
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
                     Map<String, dynamic> newModel =
@@ -232,7 +233,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           CroppedFile? croppedImage;
           if (fileType.contains('pdf') ||
               fileType.contains('doc') ||
-              fileType.contains('docx')) {} else if (fileType.contains('jpg') ||
+              fileType.contains('docx')) {
+          } else if (fileType.contains('jpg') ||
               fileType.contains('png') ||
               fileType.contains('jpeg') ||
               fileType.contains('heic')) {
@@ -259,12 +261,12 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             return;
           }
           if (int.parse(fileSize.split(' ').first) <=
-              AppConstants.fileSizeCap &&
+                  AppConstants.fileSizeCap &&
               fileSize.split(' ').last == 'KB') {
             debugPrint(
                 'file upload = ${pickedFile.path}\n${croppedImage?.path}');
             List<FormAndFileModel> formAndFileList =
-            state.formsAndFilesList.toList(growable: true);
+                state.formsAndFilesList.toList(growable: true);
             FormData formData = FormData.fromMap({
               formAndFileList[event.fileIndex].isForm ?? false
                   ? AppStrings.formString
@@ -488,49 +490,64 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           String filePath = '';
           debugPrint(
               'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
-          try {
-            var request = await httpClient.getUrl(Uri.parse(
-                "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
-            var response = await request.close();
-            if (response.statusCode == 200) {
-              Uint8List fileBytes =
-                  await consolidateHttpClientResponseBytes(response);
-              // debugPrint('File bytes = $fileBytes');
-              filePath =
-                  '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}';
-              file = File(filePath);
-              if (file.existsSync()) {
-                debugPrint('File exist');
-                file.deleteSync(recursive: true);
-                // file = File(filePath);
-              }
-              await file
-                  .writeAsBytes(fileBytes, mode: FileMode.write, flush: true)
-                  .then((value) {
-                showSnackBar(
-                    context: event.context,
-                    title: AppStrings.downloadString,
-                    bgColor: AppColors.mainColor);
-              });
-              emit(state.copyWith(isDownloading: false));
-            } else {
-              emit(state.copyWith(isDownloading: false));
-              filePath = 'Error code: ' + response.statusCode.toString();
-              debugPrint('download ${filePath}');
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.downloadFailedString,
-                  bgColor: AppColors.redColor);
-            }
-          } catch (e) {
-            emit(state.copyWith(isDownloading: false));
-            filePath = 'Can not fetch url';
-            debugPrint('file error = ${e}');
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.downloadFailedString,
-                bgColor: AppColors.redColor);
-          }
+          //'https://filesamples.com/samples/document/pdf/sample3.pdf'
+          await Dio().download(
+              "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}",
+              '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}',
+              onReceiveProgress: (received, total) {
+            debugPrint('rec:${received},total:$total');
+            int progress = (received * 100) ~/ total;
+            emit(state.copyWith(downloadProgress: progress));
+            debugPrint('download progress = ${state.downloadProgress}');
+          });
+          showSnackBar(
+              context: event.context,
+              title: AppStrings.downloadString,
+              bgColor: AppColors.mainColor);
+          emit(state.copyWith(downloadProgress: 0, isDownloading: false));
+          // try {
+          //   var request = await httpClient.getUrl(Uri.parse(
+          //       "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
+          //   var response = await request.close();
+          //   if (response.statusCode == 200) {
+          //     Uint8List fileBytes =
+          //         await consolidateHttpClientResponseBytes(response);
+          //     debugPrint('File bytes = $fileBytes');
+          //     filePath =
+          //         '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}';
+          //     file = File(filePath);
+          //     if (file.existsSync()) {
+          //       debugPrint('File exist');
+          //       file.deleteSync();
+          //       // file = File(filePath);
+          //     }
+          //     await file
+          //         .writeAsBytes(fileBytes, mode: FileMode.writeOnly)
+          //         .then((value) {
+          //       showSnackBar(
+          //           context: event.context,
+          //           title: AppStrings.downloadString,
+          //           bgColor: AppColors.mainColor);
+          //     });
+          //     emit(state.copyWith(isDownloading: false));
+          //   } else {
+          //     emit(state.copyWith(isDownloading: false));
+          //     filePath = 'Error code: ' + response.statusCode.toString();
+          //     debugPrint('download ${filePath}');
+          //     showSnackBar(
+          //         context: event.context,
+          //         title: AppStrings.downloadFailedString,
+          //         bgColor: AppColors.redColor);
+          //   }
+          // } catch (e) {
+          //   emit(state.copyWith(isDownloading: false));
+          //   filePath = 'Can not fetch url';
+          //   debugPrint('file error = ${e}');
+          //   showSnackBar(
+          //       context: event.context,
+          //       title: AppStrings.downloadFailedString,
+          //       bgColor: AppColors.redColor);
+          // }
           // } else {
           //   emit(state.copyWith(isDownloading: false));
           //   showSnackBar(

@@ -40,119 +40,134 @@ class MessageScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MessageBloc, MessageState>(
         builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
-                title: AppLocalizations.of(context)!.messages,
-                iconData: Icons.arrow_back_ios_sharp,
-                onTap: () {
-                  // Navigator.pushNamed(
-                  //     context, RouteDefine.bottomNavScreen.name);
-                  Navigator.pop(context);
-                },
-                // trailingWidget: Center(
-                //   child: GestureDetector(
-                //     onTap: () {},
-                //     child: Text(
-                //       AppLocalizations.of(context)!.editing,
-                //       style: AppStyles.rkRegularTextStyle(
-                //         size: AppConstants.smallFont,
-                //         color: AppColors.mainColor,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+          return WillPopScope(
+            onWillPop: () {
+              Navigator.pop(context, {
+                AppStrings.messageIdListString: state.deletedMessageList,
+              });
+              return Future.value(false);
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.pageColor,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+                child: CommonAppBar(
+                  title: AppLocalizations.of(context)!.messages,
+                  iconData: Icons.arrow_back_ios_sharp,
+                  onTap: () {
+                    // Navigator.pushNamed(
+                    //     context, RouteDefine.bottomNavScreen.name);
+                    Navigator.pop(context, {
+                      AppStrings.messageIdListString: state.deletedMessageList,
+                    });
+                  },
+                  // trailingWidget: Center(
+                  //   child: GestureDetector(
+                  //     onTap: () {},
+                  //     child: Text(
+                  //       AppLocalizations.of(context)!.editing,
+                  //       style: AppStyles.rkRegularTextStyle(
+                  //         size: AppConstants.smallFont,
+                  //         color: AppColors.mainColor,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                ),
               ),
-            ),
-            body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        state.isShimmering
-                            ? QuestionAndAnswerScreenShimmerWidget()
-                            : state.messageList.isEmpty
-                                ? Container(
-                                    height: getScreenHeight(context) - 80,
-                                    width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Messages not found',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.textColor),
+              body: SafeArea(
+                child: NotificationListener<ScrollNotification>(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          state.isShimmering
+                              ? QuestionAndAnswerScreenShimmerWidget()
+                              : state.messageList.isEmpty
+                                  ? Container(
+                                      height: getScreenHeight(context) - 80,
+                                      width: getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Messages not found',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.textColor),
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: state.messageList.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_10),
+                                      itemBuilder: (context, index) =>
+                                          messageListItem(
+                                        index: index,
+                                        context: context,
+                                        title: state.messageList[index].message
+                                                ?.title ??
+                                            '',
+                                        content: parse(state.messageList[index]
+                                                        .message?.body ??
+                                                    '')
+                                                .body
+                                                ?.text ??
+                                            '',
+                                        dateTime: state
+                                                .messageList[index].updatedAt
+                                                ?.replaceRange(16, 19, '') ??
+                                            '',
+                                        onTap: () async {
+                                          dynamic messageNewData =
+                                              await Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .messageContentScreen
+                                                      .name,
+                                                  arguments: {
+                                                AppStrings.messageDataString:
+                                                    state.messageList[index],
+                                                AppStrings.messageIdString:
+                                                    state.messageList[index].id
+                                              });
+                                          debugPrint(
+                                              'message = $messageNewData');
+                                          context.read<MessageBloc>().add(
+                                              MessageEvent.removeOrUpdateMessageEvent(
+                                                  messageId: messageNewData[
+                                                      AppStrings
+                                                          .messageIdString],
+                                                  isRead: messageNewData[
+                                                      AppStrings
+                                                          .messageReadString],
+                                                  isDelete: messageNewData[
+                                                      AppStrings
+                                                          .messageDeleteString]));
+                                        },
+                                        isRead:
+                                            state.messageList[index].isRead ??
+                                                false,
+                                      ),
                                     ),
-                                  )
-                                : ListView.builder(
-                                    itemCount: state.messageList.length,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_10),
-                                    itemBuilder: (context, index) =>
-                                        messageListItem(
-                                          index: index,
-                                      context: context,
-                                      title: state.messageList[index].message
-                                              ?.title ??
-                                          '',
-                                      content: parse(state.messageList[index]
-                                                      .message?.body ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      dateTime: state
-                                              .messageList[index].updatedAt
-                                              ?.replaceRange(16, 19, '') ??
-                                          '',
-                                      onTap: () async {
-                                        dynamic messageNewData =
-                                            await Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .messageContentScreen.name,
-                                                arguments: {
-                                              AppStrings.messageDataString:
-                                                  state.messageList[index],
-                                              AppStrings.messageIdString:
-                                                  state.messageList[index].id
-                                            });
-                                        debugPrint('message = $messageNewData');
-                                        context.read<MessageBloc>().add(
-                                            MessageEvent.removeOrUpdateMessageEvent(
-                                                messageId: messageNewData[
-                                                    AppStrings.messageIdString],
-                                                isRead: messageNewData[
-                                                    AppStrings
-                                                        .messageReadString],
-                                                isDelete: messageNewData[
-                                                    AppStrings
-                                                        .messageDeleteString]));
-                                      },
-                                      isRead: state.messageList[index].isRead ??
-                                          false,
-                                    ),
-                                  ),
-                        state.isLoadMore
-                            ? QuestionAndAnswerScreenShimmerWidget()
-                            : 0.width,
-                      ],
+                          state.isLoadMore
+                              ? QuestionAndAnswerScreenShimmerWidget()
+                              : 0.width,
+                        ],
+                      ),
                     ),
-                  ),
-                  onNotification: (notification) {
-                    if (notification.metrics.pixels ==
-                        notification.metrics.maxScrollExtent) {
-                      if (!state.isBottomOfMessage) {
-                        context.read<MessageBloc>().add(
-                            MessageEvent.getMessageListEvent(context: context));
+                    onNotification: (notification) {
+                      if (notification.metrics.pixels ==
+                          notification.metrics.maxScrollExtent) {
+                        if (!state.isBottomOfMessage) {
+                          context.read<MessageBloc>().add(
+                              MessageEvent.getMessageListEvent(
+                                  context: context));
+                        }
                       }
-                    }
-                    return true;
-                  }),
+                      return true;
+                    }),
+              ),
             ),
           );
         },
