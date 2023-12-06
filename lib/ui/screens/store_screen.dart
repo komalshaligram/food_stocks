@@ -108,12 +108,28 @@ class StoreScreenWidget extends StatelessWidget {
                                       subTitle:
                                       AppLocalizations.of(context)!
                                           .all_categories,
-                                      onTap: () {
-                                        Navigator.pushNamed(
+                                      onTap: () async {
+                                        dynamic searchResult = await Navigator
+                                            .pushNamed(
                                             context,
                                             RouteDefine
                                                 .productCategoryScreen
-                                                .name);
+                                                .name, arguments: {
+                                          AppStrings
+                                              .searchString: state
+                                              .previousSearch,
+                                          AppStrings
+                                              .searchResultString: state
+                                              .searchList
+                                        });
+                                        if (searchResult != null) {
+                                          bloc.add(StoreEvent
+                                              .updateGlobalSearchEvent(
+                                              search: searchResult[AppStrings
+                                                  .searchString],
+                                              searchList: searchResult[AppStrings
+                                                  .searchResultString]));
+                                        }
                                       }),
                                   SizedBox(
                                     width: getScreenWidth(context),
@@ -146,7 +162,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 false
                                             ,
                                             onTap: () async {
-                                              /*dynamic searchResult = */ await Navigator
+                                              dynamic searchResult = await Navigator
                                                   .pushNamed(
                                                   context,
                                                   RouteDefine
@@ -164,11 +180,22 @@ class StoreScreenWidget extends StatelessWidget {
                                                     state
                                                         .productCategoryList[
                                                     index]
-                                                        .categoryName
+                                                        .categoryName,
+                                                    AppStrings
+                                                        .searchString: state
+                                                        .previousSearch,
+                                                    AppStrings
+                                                        .searchResultString: state
+                                                        .searchList
                                                   });
-                                              // if(searchResult != null) {
-                                              //
-                                              // }
+                                              if (searchResult != null) {
+                                                bloc.add(StoreEvent
+                                                    .updateGlobalSearchEvent(
+                                                    search: searchResult[AppStrings
+                                                        .searchString],
+                                                    searchList: searchResult[AppStrings
+                                                        .searchResultString]));
+                                              }
                                             });
                                       },
                                     ),
@@ -180,79 +207,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          // state.productCategoryList.isEmpty
-                          //     ? 0.width
-                          //     : Column(
-                          //         children: [
-                          //           buildListTitles(
-                          //               context: context,
-                          //               title:
-                          //                   AppLocalizations.of(context)!
-                          //                       .categories,
-                          //               subTitle:
-                          //                   AppLocalizations.of(context)!
-                          //                       .all_categories,
-                          //               onTap: () {
-                          //                 Navigator.pushNamed(
-                          //                     context,
-                          //                     RouteDefine
-                          //                         .productCategoryScreen
-                          //                         .name);
-                          //               }),
-                          //           SizedBox(
-                          //             width: getScreenWidth(context),
-                          //             height: 110,
-                          //             child: ListView.builder(
-                          //               itemCount: state
-                          //                   .productCategoryList.length,
-                          //               shrinkWrap: true,
-                          //               scrollDirection: Axis.horizontal,
-                          //               padding: EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       AppConstants.padding_5),
-                          //               itemBuilder: (context, index) {
-                          //                 return buildCategoryListItem(
-                          //                     categoryImage: state
-                          //                             .productCategoryList[
-                          //                                 index]
-                          //                             .categoryImage ??
-                          //                         '',
-                          //                     categoryName: state
-                          //                             .productCategoryList[
-                          //                                 index]
-                          //                             .categoryName ??
-                          //                         '',
-                          //                     isHomePreference: state
-                          //                             .productCategoryList[
-                          //                                 index]
-                          //                             .isHomePreference ??
-                          //                         false,
-                          //                     onTap: () {
-                          //                       Navigator.pushNamed(
-                          //                           context,
-                          //                           RouteDefine
-                          //                               .storeCategoryScreen
-                          //                               .name,
-                          //                           arguments: {
-                          //                             AppStrings
-                          //                                     .categoryIdString:
-                          //                                 state
-                          //                                     .productCategoryList[
-                          //                                         index]
-                          //                                     .id,
-                          //                             AppStrings
-                          //                                     .categoryNameString:
-                          //                                 state
-                          //                                     .productCategoryList[
-                          //                                         index]
-                          //                                     .categoryName
-                          //                           });
-                          //                     });
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
                           AnimatedCrossFade(
                               firstChild: 0.width,
                               secondChild: Column(
@@ -319,72 +273,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          // state.companiesList.isEmpty
-                          //     ? 0.width
-                          //     : Column(
-                          //         children: [
-                          //           buildListTitles(
-                          //               context: context,
-                          //               title:
-                          //                   AppLocalizations.of(context)!
-                          //                       .companies,
-                          //               subTitle:
-                          //                   AppLocalizations.of(context)!
-                          //                       .all_companies,
-                          //               onTap: () {
-                          //                 Navigator.pushNamed(
-                          //                     context,
-                          //                     RouteDefine
-                          //                         .companyScreen.name);
-                          //               }),
-                          //           SizedBox(
-                          //             width: getScreenWidth(context),
-                          //             height: 110,
-                          //             child: ListView.builder(
-                          //               itemCount:
-                          //                   state.companiesList.length,
-                          //               shrinkWrap: true,
-                          //               scrollDirection: Axis.horizontal,
-                          //               padding: EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       AppConstants.padding_5),
-                          //               itemBuilder: (context, index) {
-                          //                 return buildCompanyListItem(
-                          //                     companyLogo: state
-                          //                             .companiesList[
-                          //                                 index]
-                          //                             .brandLogo ??
-                          //                         '',
-                          //                     companyName: state
-                          //                             .companiesList[
-                          //                                 index]
-                          //                             .brandName ??
-                          //                         '',
-                          //                     isHomePreference: state
-                          //                             .companiesList[
-                          //                                 index]
-                          //                             .isHomePreference ??
-                          //                         false,
-                          //                     onTap: () {
-                          //                       Navigator.pushNamed(
-                          //                           context,
-                          //                           RouteDefine
-                          //                               .companyProductsScreen
-                          //                               .name,
-                          //                           arguments: {
-                          //                             AppStrings
-                          //                                 .companyIdString: state
-                          //                                     .companiesList[
-                          //                                         index]
-                          //                                     .id ??
-                          //                                 ''
-                          //                           });
-                          //                     });
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
                           AnimatedCrossFade(
                               firstChild: 0.width,
                               secondChild: Column(
@@ -452,69 +340,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          // state.suppliersList.data?.isEmpty ?? true
-                          //     ? 0.width
-                          //     : Column(
-                          //         children: [
-                          //           buildListTitles(
-                          //               context: context,
-                          //               title:
-                          //                   AppLocalizations.of(context)!
-                          //                       .suppliers,
-                          //               subTitle:
-                          //                   AppLocalizations.of(context)!
-                          //                       .all_suppliers,
-                          //               onTap: () {
-                          //                 Navigator.pushNamed(
-                          //                     context,
-                          //                     RouteDefine
-                          //                         .supplierScreen.name);
-                          //               }),
-                          //           SizedBox(
-                          //             width: getScreenWidth(context),
-                          //             height: 110,
-                          //             child: ListView.builder(
-                          //               itemCount: state
-                          //                   .suppliersList.data?.length,
-                          //               shrinkWrap: true,
-                          //               scrollDirection: Axis.horizontal,
-                          //               padding: EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       AppConstants.padding_5),
-                          //               itemBuilder: (context, index) {
-                          //                 return buildCompanyListItem(
-                          //                     companyLogo: state
-                          //                             .suppliersList
-                          //                             .data?[index]
-                          //                             .logo ??
-                          //                         '',
-                          //                     companyName: state
-                          //                             .suppliersList
-                          //                             .data?[index]
-                          //                             .supplierDetail
-                          //                             ?.companyName ??
-                          //                         '',
-                          //                     onTap: () {
-                          //                       Navigator.pushNamed(
-                          //                           context,
-                          //                           RouteDefine
-                          //                               .supplierProductsScreen
-                          //                               .name,
-                          //                           arguments: {
-                          //                             AppStrings
-                          //                                 .supplierIdString: state
-                          //                                     .suppliersList
-                          //                                     .data?[
-                          //                                         index]
-                          //                                     .id ??
-                          //                                 ''
-                          //                           });
-                          //                     });
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
                           AnimatedCrossFade(
                               firstChild: 0.width,
                               secondChild: Column(
@@ -586,77 +411,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          // state.productSalesList.data?.isEmpty ?? true
-                          //     ? 0.width
-                          //     : Column(
-                          //         children: [
-                          //           buildListTitles(
-                          //               context: context,
-                          //               title:
-                          //                   AppLocalizations.of(context)!
-                          //                       .sales,
-                          //               subTitle:
-                          //                   AppLocalizations.of(context)!
-                          //                       .all_sales,
-                          //               onTap: () {
-                          //                 Navigator.pushNamed(
-                          //                     context,
-                          //                     RouteDefine
-                          //                         .productSaleScreen
-                          //                         .name);
-                          //               }),
-                          //           SizedBox(
-                          //             width: getScreenWidth(context),
-                          //             height: 190,
-                          //             child: ListView.builder(
-                          //               itemCount: state.productSalesList
-                          //                   .data?.length,
-                          //               shrinkWrap: true,
-                          //               scrollDirection: Axis.horizontal,
-                          //               padding: EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       AppConstants.padding_5),
-                          //               itemBuilder: (context, index) {
-                          //                 return buildProductSaleListItem(
-                          //                   context: context,
-                          //                   saleImage: state
-                          //                           .productSalesList
-                          //                           .data?[index]
-                          //                           .mainImage ??
-                          //                       '',
-                          //                   title: state
-                          //                           .productSalesList
-                          //                           .data?[index]
-                          //                           .salesName ??
-                          //                       '',
-                          //                   description: parse(state
-                          //                                   .productSalesList
-                          //                                   .data?[index]
-                          //                                   .salesDescription ??
-                          //                               '')
-                          //                           .body
-                          //                           ?.text ??
-                          //                       '',
-                          //                   price: double.parse(state
-                          //                           .productSalesList
-                          //                           .data?[index]
-                          //                           .discountPercentage ??
-                          //                       '0.0'),
-                          //                   onButtonTap: () {
-                          //                     showProductDetails(
-                          //                         context: context,
-                          //                         productId: state
-                          //                                 .productSalesList
-                          //                                 .data?[index]
-                          //                                 .id ??
-                          //                             '');
-                          //                   },
-                          //                 );
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
                           AnimatedCrossFade(
                               firstChild: 0.width,
                               secondChild: Column(
@@ -730,76 +484,6 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          // state.recommendedProductsList.isEmpty
-                          //     ? 0.width
-                          //     : Column(
-                          //         children: [
-                          //           buildListTitles(
-                          //               context: context,
-                          //               title:
-                          //                   AppLocalizations.of(context)!
-                          //                       .recommended_for_you,
-                          //               subTitle:
-                          //                   AppLocalizations.of(context)!
-                          //                       .more,
-                          //               onTap: () {
-                          //                 Navigator.pushNamed(
-                          //                     context,
-                          //                     RouteDefine
-                          //                         .recommendationProductsScreen
-                          //                         .name);
-                          //               }),
-                          //           SizedBox(
-                          //             width: getScreenWidth(context),
-                          //             height: 170,
-                          //             child: ListView.builder(
-                          //               itemCount: state
-                          //                   .recommendedProductsList
-                          //                   .length,
-                          //               shrinkWrap: true,
-                          //               scrollDirection: Axis.horizontal,
-                          //               padding: EdgeInsets.symmetric(
-                          //                   horizontal:
-                          //                       AppConstants.padding_5),
-                          //               itemBuilder: (context, index) {
-                          //                 return buildRecommendationProductsListItem(
-                          //                   context: context,
-                          //                   productImage: state
-                          //                           .recommendedProductsList[
-                          //                               index]
-                          //                           .mainImage ??
-                          //                       '',
-                          //                   productName: state
-                          //                           .recommendedProductsList[
-                          //                               index]
-                          //                           .productName ??
-                          //                       '',
-                          //                   totalSale: state
-                          //                           .recommendedProductsList[
-                          //                               index]
-                          //                           .totalSale ??
-                          //                       0,
-                          //                   price: state
-                          //                           .recommendedProductsList[
-                          //                               index]
-                          //                           .productPrice
-                          //                           ?.toDouble() ??
-                          //                       0.0,
-                          //                   onButtonTap: () {
-                          //                     showProductDetails(
-                          //                         context: context,
-                          //                         productId: state
-                          //                                 .recommendedProductsList[
-                          //                                     index]
-                          //                                 .id ??
-                          //                             '');
-                          //                   },
-                          //                 );
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
                           90.height,
                         ],
                       ),
@@ -862,6 +546,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   .toList()
                                   .length ==
                                   10,
+                              isLastItem: state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
                                   ? true
                                   : state.searchList[index].searchType !=
@@ -869,91 +554,120 @@ class StoreScreenWidget extends StatelessWidget {
                                       .searchType
                                   ? true
                                   : false,
-                              onSeeAllTap: () {
-                                state.searchList[index].searchType ==
-                                    SearchTypes.category
-                                    ? Navigator.pushNamed(context,
-                                    RouteDefine.productCategoryScreen.name,
-                                    arguments: {
-                                      AppStrings.searchString: state
-                                          .previousSearch,
-                                    })
-                                    : state.searchList[index].searchType ==
-                                    SearchTypes.company ?
-                                Navigator.pushNamed(
-                                    context,
-                                    RouteDefine.companyScreen.name, arguments: {
-                                  AppStrings.searchString: state.previousSearch
-                                }) :
-                                state.searchList[index].searchType ==
-                                    SearchTypes.supplier ?
-                                Navigator.pushNamed(
-                                    context,
-                                    RouteDefine.supplierScreen.name,
-                                    arguments: {
-                                      AppStrings.searchString: state
-                                          .previousSearch
-                                    }) :
-                                state.searchList[index].searchType ==
-                                    SearchTypes.sale
-                                    ? Navigator.pushNamed(
-                                    context,
-                                    RouteDefine.productSaleScreen.name,
-                                    arguments: {
-                                      AppStrings.searchString: state
-                                          .previousSearch
-                                    })
-                                    : Navigator
-                                    .pushNamed(context,
-                                    RouteDefine.supplierProductsScreen.name,
-                                    arguments: {
-                                      AppStrings.searchString: state
-                                          .previousSearch
-                                    });
-                                debugPrint('see all');
+                              onSeeAllTap: () async {
+                                if (state.searchList[index].searchType ==
+                                    SearchTypes.category) {
+                                  dynamic searchResult = await Navigator
+                                      .pushNamed(context,
+                                      RouteDefine.productCategoryScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch,
+                                        AppStrings.reqSearchString: state
+                                            .previousSearch,
+                                        AppStrings.searchResultString: state
+                                            .searchList
+                                      });
+                                  if (searchResult != null) {
+                                    bloc.add(StoreEvent.updateGlobalSearchEvent(
+                                        search: searchResult[AppStrings
+                                            .searchString],
+                                        searchList: searchResult[AppStrings
+                                            .searchResultString]));
+                                  }
+                                } else {
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.company ?
+                                  Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.companyScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      }) :
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.supplier ?
+                                  Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.supplierScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      }) :
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.sale
+                                      ? Navigator.pushNamed(
+                                      context,
+                                      RouteDefine.productSaleScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      })
+                                      : Navigator
+                                      .pushNamed(context,
+                                      RouteDefine.supplierProductsScreen.name,
+                                      arguments: {
+                                        AppStrings.searchString: state
+                                            .previousSearch
+                                      });
+                                }
                               },
-                              onTap: () {
-                                state.searchList[index].searchType ==
+                              onTap: () async {
+                                if (state.searchList[index].searchType ==
                                     SearchTypes.sale ||
                                     state.searchList[index].searchType ==
-                                        SearchTypes.product
-                                    ? showProductDetails(
-                                    context: context,
-                                    productId: state
-                                        .searchList[index].searchId,
-                                    isBarcode: true)
-                                    : state.searchList[index].searchType ==
-                                    SearchTypes.category
-                                    ? Navigator.pushNamed(context, RouteDefine
-                                    .storeCategoryScreen.name, arguments: {
-                                  AppStrings
-                                      .categoryIdString:
-                                  state
-                                      .searchList[index]
-                                      .searchId,
-                                  AppStrings
-                                      .categoryNameString:
-                                  state
-                                      .searchList[index]
-                                      .name,
-                                  AppStrings.searchString: state.search
-                                }) : state.searchList[index].searchType ==
-                                    SearchTypes.company
-                                    ? Navigator.pushNamed(context, RouteDefine
-                                    .companyProductsScreen
-                                    .name, arguments: {
-                                  AppStrings.companyIdString: state
-                                      .searchList[index].searchId
-                                }) : Navigator.pushNamed(
-                                    context,
-                                    RouteDefine
-                                        .supplierProductsScreen
+                                        SearchTypes.product) {
+                                  showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .searchList[index].searchId,
+                                      isBarcode: true);
+                                } else if (
+                                state.searchList[index].searchType ==
+                                    SearchTypes.category) {
+                                  dynamic searchResult = await Navigator
+                                      .pushNamed(context, RouteDefine
+                                      .storeCategoryScreen.name, arguments: {
+                                    AppStrings
+                                        .categoryIdString:
+                                    state
+                                        .searchList[index]
+                                        .searchId,
+                                    AppStrings
+                                        .categoryNameString:
+                                    state
+                                        .searchList[index]
                                         .name,
-                                    arguments:
-                                    {
-                                      AppStrings.supplierIdString: state
-                                          .searchList[index].searchId
-                                    });
+                                    AppStrings.searchString: state.search,
+                                    AppStrings.searchResultString: state
+                                        .searchList
+                                  });
+                                  if (searchResult != null) {
+                                    bloc.add(StoreEvent.updateGlobalSearchEvent(
+                                        search: searchResult[AppStrings
+                                            .searchString],
+                                        searchList: searchResult[AppStrings
+                                            .searchResultString]));
+                                  }
+                                } else {
+                                  state.searchList[index].searchType ==
+                                      SearchTypes.company
+                                      ? Navigator.pushNamed(context, RouteDefine
+                                      .companyProductsScreen
+                                      .name, arguments: {
+                                    AppStrings.companyIdString: state
+                                        .searchList[index].searchId
+                                  }) : Navigator.pushNamed(
+                                      context,
+                                      RouteDefine
+                                          .supplierProductsScreen
+                                          .name,
+                                      arguments:
+                                      {
+                                        AppStrings.supplierIdString: state
+                                            .searchList[index].searchId
+                                      });
+                                }
                                 bloc.add(
                                     StoreEvent.changeCategoryExpansion());
                               });
@@ -998,6 +712,7 @@ class StoreScreenWidget extends StatelessWidget {
     required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
+    bool? isLastItem,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1051,7 +766,9 @@ class StoreScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
-                    bottom: BorderSide(
+                    bottom: (isLastItem ?? false)
+                        ? BorderSide.none
+                        : BorderSide(
                         color: AppColors.borderColor.withOpacity(0.5),
                         width: 1))),
             padding: EdgeInsets.symmetric(

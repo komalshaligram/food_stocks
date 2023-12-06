@@ -23,11 +23,9 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
-import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
-import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -55,7 +53,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isSubCategory: true,
             categoryId: event.categoryId,
             categoryName: event.categoryName,
-            // search: event.search,
             subCategoryList: [],
             subCategoryPageNum: 0,
             isBottomOfSubCategory: false,
@@ -63,35 +60,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [ProductStockModel(productId: '')]
             ]));
         add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
-      } else if (event is _GetProductCategoriesListEvent) {
-        try {
-          final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
-              data: ProductCategoriesReqModel(
-                      pageNum: 1,
-                      pageLimit: AppConstants.productCategoryPageLimit)
-                  .toJson());
-          ProductCategoriesResModel response =
-              ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories}');
-          if (response.status == 200) {
-            List<SearchModel> searchList = [];
-            searchList.addAll(response.data?.categories?.map((category) =>
-                    SearchModel(
-                        searchId: category.id ?? '',
-                        name: category.categoryName ?? '',
-                        searchType: SearchTypes.category,
-                        image: category.categoryImage ?? '')) ??
-                []);
-            debugPrint('store search list = ${searchList.length}');
-            emit(state.copyWith(searchList: searchList));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
-                bgColor: AppColors.mainColor);
-          }
-        } on ServerException {}
       } else if (event is _ChangeSubCategoryDetailsEvent) {
         debugPrint(
             'sub category ${event.subCategoryId}(${event.subCategoryName})');
@@ -689,6 +657,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
+      } else if (event is _UpdateGlobalSearchEvent) {
+        emit(state.copyWith(
+            search: event.search,
+            previousSearch: event.search,
+            searchList: event.searchList));
       }
     });
   }

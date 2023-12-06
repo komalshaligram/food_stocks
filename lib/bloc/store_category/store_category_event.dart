@@ -8,7 +8,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryDetailsEvent(
       {required String categoryId,
       required String categoryName,
-      required String search,
       required BuildContext context}) = _ChangeCategoryDetailsEvent;
 
   const factory StoreCategoryEvent.changeSubCategoryDetailsEvent(
@@ -52,9 +51,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
 
-  const factory StoreCategoryEvent.getProductCategoriesListEvent(
-      {required BuildContext context}) = _GetProductCategoriesListEvent;
-
   const factory StoreCategoryEvent.setCartCountEvent() = _SetCartCountEvent;
 
   const factory StoreCategoryEvent.globalSearchEvent(
@@ -64,4 +60,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory StoreCategoryEvent.updateGlobalSearchEvent(
+      {required String search,
+      required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 }

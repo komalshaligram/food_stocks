@@ -503,6 +503,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           title: AppLocalizations.of(context)!
                                               .remove,
                                           icon: Icons.delete,
+                                          iconColor: AppColors.redColor,
                                           lastItem: true,
                                           onTap: () {
                                             Navigator.pop(context);

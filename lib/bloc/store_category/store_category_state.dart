@@ -1,4 +1,4 @@
-part of 'store_category_bloc.dart';
+ part of 'store_category_bloc.dart';
 
 @freezed
 class StoreCategoryState with _$StoreCategoryState {

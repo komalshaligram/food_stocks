@@ -276,6 +276,9 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   .remove,
                                                               icon:
                                                                   Icons.delete,
+                                                              iconColor:
+                                                                  AppColors
+                                                                      .redColor,
                                                               lastItem: true,
                                                               onTap: () {
                                                                 Navigator.pop(
@@ -621,6 +624,10 @@ class ProfileScreenWidget extends StatelessWidget {
                                                             .borderColor)),
                                                 child: SvgPicture.asset(
                                                     AppImagePath.camera,
+                                                    colorFilter:
+                                                        ColorFilter.mode(
+                                                            AppColors.blueColor,
+                                                            BlendMode.srcIn),
                                                     fit: BoxFit
                                                         .scaleDown) /*Icon(
                                       Icons.camera_alt_rounded,

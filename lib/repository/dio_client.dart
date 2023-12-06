@@ -10,9 +10,11 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:provider/provider.dart';
 
 import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
 
 class DioClient {
@@ -45,7 +47,6 @@ class DioClient {
             return handler.next(options);
           }, onResponse: (response, handler) async {
             if (kDebugMode) {
-              debugPrint("app url ${AppUrls.baseUrl}");
               debugPrint("app response data ${response.data}");
             }
             return handler.next(response);
@@ -64,15 +65,19 @@ class DioClient {
       Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    debugPrint('URL = ${AppUrls.baseUrl}$path');
+    debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
       try {
         Options requestOptions = options ??
-            Options(headers: {
+            Options(
+                /*headers: {
               HttpHeaders.authorizationHeader:
                   'Bearer ${preferencesHelper.getAuthToken()}'
-            });
+            }*/
+                );
         requestOptions.headers = requestOptions.headers ?? {};
 
         var response = await _dio.post(path,
@@ -96,19 +101,19 @@ class DioClient {
             isLogOut = true;
 
             print('islogout____${isLogOut}');
-             await preferencesHelper.setUserLoggedIn(isLoggedIn: false);
+            await preferencesHelper.setUserLoggedIn();
             debugPrint('Token Expired = ${response1.data}');
+            await Provider.of<LocaleProvider>(_context, listen: false)
+                .setAppLocale(locale: Locale(AppStrings.hebrewString));
             showSnackBar(
                 context: _context,
                 title: AppStrings.logOutSuccessString,
                 bgColor: AppColors.mainColor);
 
             Navigator.popUntil(_context,
-                    (route) => route.name == RouteDefine.bottomNavScreen.name);
-            Navigator.pushNamed(
-                _context, RouteDefine.connectScreen.name);
-             ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-
+                (route) => route.name == RouteDefine.bottomNavScreen.name);
+            Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
+            ScaffoldMessenger.of(_context).hideCurrentSnackBar();
           }
         } else {
         throw _createErrorEntity(e, context: _context);
@@ -133,6 +138,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -162,6 +168,7 @@ class DioClient {
   Future<Map<String, dynamic>> uploadFileProgressWithFormData(
       {required String path, required FormData formData}) async {
     try {
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.post(
         path,
         data: formData,
@@ -184,6 +191,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.put(path,
           data: data,
           queryParameters: query,
@@ -210,6 +218,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.patch(path,
           data: data,
           queryParameters: query,
@@ -237,6 +246,7 @@ class DioClient {
     try {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.delete(path,
           data: data,
           queryParameters: query,

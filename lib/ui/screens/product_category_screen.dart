@@ -32,8 +32,11 @@ class ProductCategoryScreen extends StatelessWidget {
     debugPrint('category args = $args');
     return BlocProvider(
       create: (context) => ProductCategoryBloc()
-        ..add(ProductCategoryEvent.setSearchEvent(
+        ..add(ProductCategoryEvent.updateGlobalSearchEvent(
             search: args?[AppStrings.searchString] ?? '',
+            searchList: args?[AppStrings.searchResultString] ?? []))
+        ..add(ProductCategoryEvent.setSearchNavEvent(
+            reqSearch: args?[AppStrings.reqSearchString] ?? '',
             isFromStoreCategory:
                 args?[AppStrings.fromStoreCategoryString] ?? false))
         ..add(ProductCategoryEvent.getProductCategoriesListEvent(
@@ -50,114 +53,147 @@ class ProductCategoryScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              title: AppLocalizations.of(context)!.categories,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-            child: SingleChildScrollView(
-              physics: state.productCategoryList.isEmpty
-                  ? const NeverScrollableScrollPhysics()
-                  : const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  state.isShimmering
-                      ? ProductCategoryScreenShimmerWidget()
-                      : state.productCategoryList.isEmpty
-                          ? Container(
-                              height: getScreenHeight(context) - 80,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Categories not available',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor),
-                              ),
-                            )
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.productCategoryList.length,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                              itemBuilder: (context, index) =>
-                                  buildProductCategoryListItem(
-                                      index: index,
-                                      context: context,
-                                      categoryImage: state
-                                              .productCategoryList[index]
-                                              .categoryImage ??
-                                          '',
-                                      categoryName: state
-                                              .productCategoryList[index]
-                                              .categoryName ??
-                                          '',
-                                      onTap: () {
-                                        state.isFromStoreCategory
-                                            ? Navigator.pop(context, {
-                                                AppStrings.categoryIdString:
-                                                    state
-                                                        .productCategoryList[
-                                                            index]
-                                                        .id,
-                                                AppStrings.categoryNameString:
-                                                    state
-                                                        .productCategoryList[
-                                                            index]
-                                                        .categoryName
-                                              })
-                                            : Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .storeCategoryScreen.name,
-                                                arguments: {
-                                                    AppStrings.categoryIdString:
-                                                        state
-                                                            .productCategoryList[
-                                                                index]
-                                                            .id,
-                                                    AppStrings
-                                                            .categoryNameString:
-                                                        state
-                                                            .productCategoryList[
-                                                                index]
-                                                            .categoryName
-                                                  });
-                                      }),
-                            ),
-                  state.isLoadMore
-                      ? ProductCategoryScreenShimmerWidget()
-                      : 0.width,
-                  // state.isBottomOfCategories
-                  //     ? CommonPaginationEndWidget(
-                  //         pageEndText: 'No more Categories')
-                  //     : 0.width,
-                ],
+        return WillPopScope(
+          onWillPop: () {
+            Navigator.pop(context, {
+              AppStrings.searchString: state.search,
+              AppStrings.searchResultString: state.searchList
+            });
+            return Future.value(false);
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                title: AppLocalizations.of(context)!.categories,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  Navigator.pop(context, {
+                    AppStrings.searchString: state.search,
+                    AppStrings.searchResultString: state.searchList
+                  });
+                },
               ),
             ),
-            onNotification: (notification) {
-              if (notification.metrics.pixels ==
-                  notification.metrics.maxScrollExtent) {
-                context.read<ProductCategoryBloc>().add(
-                    ProductCategoryEvent.getProductCategoriesListEvent(
-                        context: context));
-              }
-              return true;
-            },
-          )),
+            body: SafeArea(
+                child: NotificationListener<ScrollNotification>(
+              child: SingleChildScrollView(
+                physics: state.productCategoryList.isEmpty
+                    ? const NeverScrollableScrollPhysics()
+                    : const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    state.isShimmering
+                        ? ProductCategoryScreenShimmerWidget()
+                        : state.productCategoryList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Categories not available',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                            : GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.productCategoryList.length,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_10),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3),
+                                itemBuilder: (context, index) =>
+                                    buildProductCategoryListItem(
+                                        index: index,
+                                        context: context,
+                                        categoryImage: state
+                                                .productCategoryList[index]
+                                                .categoryImage ??
+                                            '',
+                                        categoryName: state
+                                                .productCategoryList[index]
+                                                .categoryName ??
+                                            '',
+                                        onTap: () async {
+                                          if (state.isFromStoreCategory) {
+                                            Navigator.pop(context, {
+                                              AppStrings.categoryIdString: state
+                                                  .productCategoryList[index]
+                                                  .id,
+                                              AppStrings.categoryNameString:
+                                                  state
+                                                      .productCategoryList[
+                                                          index]
+                                                      .categoryName,
+                                              AppStrings.searchString:
+                                                  state.search,
+                                              AppStrings.searchResultString:
+                                                  state.searchList
+                                            });
+                                          } else {
+                                            dynamic searchResult =
+                                                await Navigator.pushNamed(
+                                                    context,
+                                                    RouteDefine
+                                                        .storeCategoryScreen
+                                                        .name,
+                                                    arguments: {
+                                                  AppStrings.categoryIdString:
+                                                      state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .id,
+                                                  AppStrings.categoryNameString:
+                                                      state
+                                                          .productCategoryList[
+                                                              index]
+                                                          .categoryName,
+                                                  AppStrings.searchString:
+                                                      state.search,
+                                                  AppStrings.searchResultString:
+                                                      state.searchList
+                                                });
+                                            if (searchResult != null) {
+                                              context
+                                                  .read<ProductCategoryBloc>()
+                                                  .add(ProductCategoryEvent
+                                                      .updateGlobalSearchEvent(
+                                                          search: searchResult[
+                                                              AppStrings
+                                                                  .searchString],
+                                                          searchList: searchResult[
+                                                              AppStrings
+                                                                  .searchResultString]));
+                                            }
+                                          }
+                                        }),
+                              ),
+                    state.isLoadMore
+                        ? ProductCategoryScreenShimmerWidget()
+                        : 0.width,
+                    // state.isBottomOfCategories
+                    //     ? CommonPaginationEndWidget(
+                    //         pageEndText: 'No more Categories')
+                    //     : 0.width,
+                  ],
+                ),
+              ),
+              onNotification: (notification) {
+                if (notification.metrics.pixels ==
+                    notification.metrics.maxScrollExtent) {
+                  context.read<ProductCategoryBloc>().add(
+                      ProductCategoryEvent.getProductCategoriesListEvent(
+                          context: context));
+                }
+                return true;
+              },
+            )),
+          ),
         );
       },
     );

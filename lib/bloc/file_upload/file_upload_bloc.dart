@@ -486,8 +486,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } else {
             dir = await getApplicationDocumentsDirectory();
           }
-          HttpClient httpClient = new HttpClient();
-          String filePath = '';
           debugPrint(
               'download url = ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}');
           //'https://filesamples.com/samples/document/pdf/sample3.pdf'
@@ -505,6 +503,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               title: AppStrings.downloadString,
               bgColor: AppColors.mainColor);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
+          // HttpClient httpClient = new HttpClient();
+          // String filePath = '';
           // try {
           //   var request = await httpClient.getUrl(Uri.parse(
           //       "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));

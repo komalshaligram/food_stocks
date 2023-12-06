@@ -74,6 +74,7 @@ class AppStrings {
   static const appContentNameString = 'appContentNameParam';
   static const messageReadString = 'messageReadSParam';
   static const messageDeleteString = 'messageDeleteParam';
+  static const reqSearchString = 'reqSearchParam';
   static const searchString = 'searchParam';
   static const searchResultString = 'searchResultParam';
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
