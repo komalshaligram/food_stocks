@@ -21,8 +21,8 @@ class BasketState with _$BasketState {
      productWeight: 0,
        basketProductList : [],
      totalPayment: 0,
-     isLoading: false,productImageIndex: 0
-
+     isLoading: false,
+       productImageIndex: 0,
 
 );
 }

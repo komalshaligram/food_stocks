@@ -13,6 +13,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required OrdersBySupplier orderBySupplierProduct,
     required bool isShimmering,
     required bool isLoading,
+    required int quantity,
 
   }) = _ProductDetailsState;
 
@@ -26,7 +27,8 @@ class ProductDetailsState with _$ProductDetailsState {
     phoneNumber: '',
     orderBySupplierProduct: OrdersBySupplier(),
      isShimmering: false,
-    isLoading: false
+    isLoading: false,
+      quantity: 0,
 
   );
 }

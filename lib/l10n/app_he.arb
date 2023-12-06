@@ -156,5 +156,8 @@
   "november": "נוֹבֶמבֶּר",
   "december": "דֵצֶמבֶּר",
   "no_data" : "אין מידע",
-  "cart_empty" : "Your cart is empty"
+  "cart_empty" : "Your cart is empty",
+  "please_enter_email" : "אנא הזן כתובת מייל",
+  "please_enter_valid_email" : "אנא הזן כתובת מייל חוקית"
+
 }

@@ -112,7 +112,7 @@
   "add_text": "Add text",
   "submit": "Submit",
   "contact": "Contact",
-  "empty": "All Empty",
+  "empty": "Empty",
   "order_summary": "Order summary",
   "supplier_name": "Supplier name",
   "send_order": "Send order",
@@ -154,5 +154,8 @@
   "november": "February",
   "december": "January",
   "no_data" : "No data found",
-  "cart_empty" : "Your cart is empty"
+  "cart_empty" : "Your cart is empty",
+  "please_enter_email" : "Please enter email",
+  "please_enter_valid_email" : "Please enter valid email"
+
 }
