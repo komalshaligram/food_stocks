@@ -11,6 +11,7 @@ class FileUploadState with _$FileUploadState {
     required bool isUpdate,
     required bool isShimmering,
     required bool isDownloading,
+    required int downloadProgress,
     required bool isFileSizeExceeds,
   }) = _FileUploadState;
 
@@ -24,5 +25,6 @@ class FileUploadState with _$FileUploadState {
         isFileSizeExceeds: false,
         isShimmering: false,
         isDownloading: false,
+        downloadProgress: 0,
       );
 }
