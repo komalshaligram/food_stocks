@@ -13,6 +13,9 @@ class ShipmentVerificationEvent with _$ShipmentVerificationEvent {
     required String driverNumber,
 
 }) = _deliveryConfirmEvent;
+  factory ShipmentVerificationEvent.signDeleteEvent(
+      ) = _signDeleteEvent;
+
 }
 
 
