@@ -27,7 +27,7 @@ class BalanceIndicator extends StatelessWidget {
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-            // radiusFactor: 0.8,
+             radiusFactor: 1.1,
             axisLineStyle: AxisLineStyle(
                 thicknessUnit: GaugeSizeUnit.factor,
                 thickness: 0.2,

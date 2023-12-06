@@ -28,8 +28,6 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.clearCartEvent({required BuildContext context}) =
       _clearCartEvent;
 
-  const factory BasketEvent.refreshListEvent({required BuildContext context}) =
-      _refreshListEvent;
 
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) =_SetCartCountEvent;
   const factory BasketEvent.updateImageIndexEvent({required int index}) =_updateImageIndexEvent;

@@ -297,7 +297,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                   bloc.add(ShipmentVerificationEvent.signDeleteEvent());
                                 },
                                 child: SvgPicture.asset(
-                                  AppImagePath.deleteRed,
+                                  AppImagePath.delete,
+                                  color: Colors.red,
                                 ),
                               ),
                             ],

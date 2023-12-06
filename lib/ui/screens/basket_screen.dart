@@ -38,7 +38,7 @@ class BasketScreen extends StatelessWidget {
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  const BasketScreenWidget({Key? key}) : super(key: key);
+  const   BasketScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +170,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                             ? AppConstants
                                                             .smallFont
                                                             : AppConstants
-                                                            .smallFont,
+                                                            .mediumFont,
                                                         color: AppColors
                                                             .whiteColor,
                                                         fontWeight:
@@ -223,7 +223,9 @@ class BasketScreenWidget extends StatelessWidget {
                                                   .submit,
                                               style:
                                                   AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.mediumFont,
+                                                size: getScreenWidth(context) <= 380
+                                                    ? AppConstants.smallFont
+                                                    : AppConstants.mediumFont,
                                                 color: AppColors.whiteColor,
                                               ),
                                             ),
@@ -232,7 +234,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  GestureDetector(
+                                  InkWell(
                                     onTap: () {
                                       deleteDialog(
                                           context: context,
@@ -249,7 +251,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           SvgPicture.asset(
                                             AppImagePath.delete,
                                           ),
-                                          5.width,
+                                         5.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
@@ -342,10 +344,18 @@ class BasketScreenWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-             state.basketProductList[index].mainImage == ''? Image.asset(AppImagePath.imageNotAvailable5,
-               width: 80,
-               height: 80,
-               fit: BoxFit.cover,
+             state.basketProductList[index].mainImage == ''? GestureDetector(
+               onTap: (){
+                 showProductDetails(
+                     context: context,
+                     index: index
+                 );
+               },
+               child: Image.asset(AppImagePath.imageNotAvailable5,
+                 width: 80,
+                 height: 80,
+                 fit: BoxFit.cover,
+               ),
              ) : GestureDetector(
                onTap: (){
                  showProductDetails(
@@ -357,12 +367,49 @@ class BasketScreenWidget extends StatelessWidget {
                   '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
                   width: 80,
                   height: 80,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 80,
-                      height: 80,
-                    );
-                  },
+                 loadingBuilder:
+                     (context,
+                     child,
+                     loadingProgress) {
+                   if (loadingProgress ==
+                       null) {
+                     return child;
+                   } else {
+                     return Center(
+                       child: Container(
+                         width: 80,
+                         height: 80,
+                         child: CupertinoActivityIndicator(
+                           color: AppColors
+                               .blackColor,
+                         ),
+                       ),
+                     );
+                   }
+                 },
+                 errorBuilder:
+                     (context,
+                     error,
+                     stackTrace) {
+                   return Container(
+                     width: 80,
+                     height: 80,
+                     color: AppColors
+                         .whiteColor,
+                     alignment:
+                     Alignment
+                         .center,
+                     child: Text(
+                       AppStrings
+                           .failedToLoadString,
+                       style: AppStyles.rkRegularTextStyle(
+                           size: AppConstants
+                               .font_14,
+                           color:
+                           AppColors.textColor),
+                     ),
+                   );
+                 },
                 ),
              ),
 
@@ -604,6 +651,7 @@ class BasketScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
+
         return BlocProvider.value(
           value: context.read<BasketBloc>(),
           child: DraggableScrollableSheet(

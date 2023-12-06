@@ -587,7 +587,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
+                    '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}',
                     style: AppStyles.rkRegularTextStyle(
                       color: AppColors.blackColor,
                       size: AppConstants.font_12,
@@ -700,6 +700,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     isIssue: isIssue,
                                     issue: issue,
                                     missingQuantity: missingQuantity,
+                              quantity : state.orderBySupplierProduct
+                                  .products?[index].quantity ?? 0,
                                   )
                                 : SizedBox();
                           },
@@ -757,7 +759,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       bool? isIssue,
       String? issue,
       required int radioValue,
-      int? missingQuantity}) {
+      int? missingQuantity, required int quantity}) {
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -852,7 +854,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                   //10.width,
                                   Text(
-                                    '${weight.toString()}${' '}${scale}',
+                                    '${quantity.toString()}',
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
                                       size: AppConstants.font_12,
@@ -903,11 +905,11 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                               problem: AppLocalizations.of(context)!
                                   .the_product_arrived_missing,
                               value: 3,
-                              weight: weight,
                               listIndex: listIndex,
                               scale: scale,
                               groupValue: radioValue,
                               missingQuantity: missingQuantity,
+                              totalQuantity :quantity,
                             ),
                             10.height,
                             RadioButtonWidget(
@@ -948,7 +950,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                           : '',
                                           missingQuantity:
                                               state.selectedRadioTile == 3
-                                                  ? state.productWeight
+                                                  ? state.quantity
                                                   : 0,
                                           orderId: orderId));
                                 }
@@ -987,12 +989,14 @@ class ProductDetailsScreenWidget extends StatelessWidget {
     required BuildContext context,
     required String problem,
     required int value,
-    double weight = 0,
     required int listIndex,
     required String scale,
     required int groupValue,
     int? missingQuantity,
     String? note,
+    int? totalQuantity,
+    int quantity = 0,
+
   }) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
     if (groupValue == 4) {
@@ -1003,13 +1007,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
       value: context.read<ProductDetailsBloc>(),
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
-          if (state.productWeight == 0) {
-            weight = weight;
-          } else {
-            weight = state.productWeight.toDouble();
-          }
+     quantity = state.quantity;
           return Container(
-            height: value == 4 ? 160 : 50,
+            height: value == 4 ? 160 : 60,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -1042,92 +1042,105 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 selectRadioTile: val!));
                           },
                         ),
-                        Text(
-                          problem,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.font_14,
-                            color: AppColors.blackColor,
-                          ),
-                        ),
+                       value == 3 ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              problem,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor,
+                              ),
+                            ),
+                            12.height,
+                            Row(
+                              children: [
+                                value == 3
+                                    ? GestureDetector(
+                                  onTap: () {
+                                    if (state.selectedRadioTile == 3) {
+                                      bloc.add(ProductDetailsEvent
+                                          .productIncrementEvent(
+                                          productQuantity: totalQuantity!,
+                                          listIndex: listIndex,
+                                          context: context,
+                                        messingQuantity: quantity
+                                      ));
+                                    }
+                                  },
+                                  child: Container(
+                                    width: AppConstants.containerSize_25,
+                                    height: AppConstants.containerSize_25,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(2),
+                                        border: Border.all(
+                                            color: AppColors.greyColor),
+                                        color: AppColors.pageColor),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 15,
+                                    ),
+                                  ),
+                                )
+                                    : SizedBox(),
+                                10.width,
+                                value == 3
+                                    ? Text(
+                                  groupValue == 3
+                                      ? '${missingQuantity.toString()}'
+                                      : '${quantity.toString()}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                    color: AppColors.blackColor,
+                                    size: AppConstants.font_12,
+                                  ),
+                                )
+                                    : SizedBox(),
+                                10.width,
+                                value == 3
+                                    ? GestureDetector(
+                                  onTap: () {
+                                    if (state.selectedRadioTile == 3) {
+                                      bloc.add(ProductDetailsEvent
+                                          .productDecrementEvent(
+                                          productQuantity: totalQuantity!,
+                                          listIndex: listIndex,
+                                      messingQuantity:quantity,
+                                        context: context
+                                      ));
+                                    }
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 25,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(3),
+                                        border: Border.all(
+                                            color: AppColors.greyColor),
+                                        color: AppColors.pageColor),
+                                    child: Text('-',
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.mediumFont)),
+                                  ),
+                                )
+                                    : 0.width,
+                              ],
+                            ),
+                          ],
+                        ) :    Text(
+                         problem,
+                         style: AppStyles.rkRegularTextStyle(
+                           size: AppConstants.font_14,
+                           color: AppColors.blackColor,
+                         ),
+                       ),
                       ],
                     ),
+
                     5.width,
-                    Row(
-                      children: [
-                        Container(
-                          child: Row(
-                            children: [
-                              value == 3
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        if (state.selectedRadioTile == 3) {
-                                          bloc.add(ProductDetailsEvent
-                                              .productIncrementEvent(
-                                                  productWeight: weight,
-                                                  listIndex: listIndex,
-                                                  context: context));
-                                        }
-                                      },
-                                      child: Container(
-                                        width: AppConstants.containerSize_25,
-                                        height: AppConstants.containerSize_25,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            border: Border.all(
-                                                color: AppColors.greyColor),
-                                            color: AppColors.pageColor),
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox(),
-                              5.width,
-                              value == 3
-                                  ? Text(
-                                      groupValue == 3
-                                          ? '${missingQuantity.toString()}${' '}${scale}'
-                                          : '${weight.toString()}${scale}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                        color: AppColors.blackColor,
-                                        size: AppConstants.font_12,
-                                      ),
-                                    )
-                                  : SizedBox(),
-                              3.width,
-                              value == 3
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        if (state.selectedRadioTile == 3) {
-                                          bloc.add(ProductDetailsEvent
-                                              .productDecrementEvent(
-                                                  productWeight: weight,
-                                                  listIndex: listIndex));
-                                        }
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: 25,
-                                        height: 25,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(3),
-                                            border: Border.all(
-                                                color: AppColors.greyColor),
-                                            color: AppColors.pageColor),
-                                        child: Text('-',
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.mediumFont)),
-                                      ),
-                                    )
-                                  : SizedBox(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+
                   ],
                 ),
                 (value == 4)

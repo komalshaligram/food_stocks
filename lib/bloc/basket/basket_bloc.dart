@@ -51,7 +51,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   mainImage: element.productDetails!.mainImage!,
                   totalPayment: double.parse(element.totalAmount!.toString()),
                   cartProductId: element.cartProductId!,
-                  scales: element.productDetails!.scales!));
+                  scales: element.productDetails!.scales!,
+                weight: element.productDetails!.itemsWeight!,
+              ));
             });
 
             SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
@@ -200,12 +202,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             Navigator.pop(event.context);
           }
         } on ServerException {}
-      } else if (event is _refreshListEvent) {
-        List<ProductDetailsModel> list = [];
-        list = [...state.basketProductList];
-        emit(state.copyWith(
-            basketProductList: list, isRefresh: !state.isRefresh));
-      } else if (event is _SetCartCountEvent) {
+      }  else if (event is _SetCartCountEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(

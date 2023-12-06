@@ -73,8 +73,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           margin: EdgeInsets.only(
-                              left: AppConstants.padding_30,
-                              right: AppConstants.padding_30,
+                              left: AppConstants.padding_20,
+                              right: AppConstants.padding_20,
                               top: AppConstants.padding_10,
                               bottom: AppConstants.padding_30),
                           decoration: BoxDecoration(
@@ -137,7 +137,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                       .total,
                                   style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.whiteColor,
-                                    size: AppConstants.normalFont,
+                                    size: getScreenWidth(context) <= 380
+                                        ? AppConstants.mediumFont
+                                        : AppConstants.normalFont,
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(
@@ -145,7 +147,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                         '${' : '}${bloc.splitNumber(state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
                                         style: AppStyles.rkRegularTextStyle(
                                             color: AppColors.whiteColor,
-                                            size: AppConstants.normalFont,
+                                            size: getScreenWidth(context) <= 380
+                                                ? AppConstants.smallFont
+                                                : AppConstants.mediumFont,
                                             fontWeight: FontWeight.w700)),
                                   ],
                                 ),
@@ -199,7 +203,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   style: AppStyles.rkRegularTextStyle(
                                     size: getScreenWidth(context) <= 380
                                         ? AppConstants.mediumFont
-                                        : AppConstants.normalFont,
+                                        : AppConstants.smallFont,
                                     color: AppColors.whiteColor,
                                   ),
                                 ),
