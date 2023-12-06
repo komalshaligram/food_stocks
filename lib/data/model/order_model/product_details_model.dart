@@ -9,6 +9,7 @@ class ProductDetailsModel{
    bool isDelete;
   String cartProductId;
   String scales;
+  double weight;
 
 
   ProductDetailsModel({
@@ -20,6 +21,7 @@ class ProductDetailsModel{
     this.isDelete = false,
      this.cartProductId = '',
     required this.scales,
+    required this.weight
 
   });
 

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -47,6 +46,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
   ShipmentVerificationScreenWidget({required this.args, super.key});
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
+
+  bool isSign = false;
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +268,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                     backgroundColor: Colors.white,
                                     strokeColor: Colors.black,
                                     minimumStrokeWidth: 1.0,
-                                    maximumStrokeWidth: 4.0),
+                                    maximumStrokeWidth: 4.0,
+
+                                  onDrawStart: () {
+                                      isSign = true;
+                                    return false;
+                                  },
+                                ),
                               )
                             : 0.height,
                         Align(
@@ -285,11 +292,13 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   signatureGlobalKey.currentState!.clear();
+                                  bloc.add(ShipmentVerificationEvent.signDeleteEvent());
                                 },
                                 child: SvgPicture.asset(
-                                  AppImagePath.deleteRed,
+                                  AppImagePath.delete,
+                                  color: Colors.red,
                                 ),
                               ),
                             ],
@@ -301,7 +310,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (state.isSignaturePadActive) {
+                    if (state.isSignaturePadActive && !state.isDelete && isSign) {
                       ui.Image tempImage =
                           await signatureGlobalKey.currentState!.toImage();
                       var data = await tempImage.toByteData(
@@ -311,7 +320,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           (await getApplicationDocumentsDirectory()).path; // to get path of the file
                       var path = '$directory/fileName.png';
                       File image = await File(path).writeAsBytes(imageInUnit8List);
-                      bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
+                     bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
                           context: context,
                           supplierId: args?[AppStrings.supplierIdString],
                           signPath: image.path,

@@ -61,7 +61,8 @@ class ProductDetailsBloc
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
-      } else if (event is _productProblemEvent) {
+      }
+      else if (event is _productProblemEvent) {
         List<int> index = [];
         if (state.productListIndex.contains(event.index)) {
           index.remove(event.index);
@@ -69,25 +70,32 @@ class ProductDetailsBloc
           index.add(event.index);
         }
         emit(state.copyWith(
-            /*isRefresh: !state.isRefresh,*/
             productListIndex: index));
-      } else if (event is _radioButtonEvent) {
+      }
+      else if (event is _radioButtonEvent) {
 
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
             isRefresh: !state.isRefresh));
 
-      } else if (event is _productIncrementEvent) {
-        emit(state.copyWith(
-            productWeight: event.productWeight.round() + 1,
-            isRefresh: !state.isRefresh));
-      } else if (event is _productDecrementEvent) {
-        if (event.productWeight >= 1) {
+      }
+      else if (event is _productIncrementEvent) {
+       if(event.productQuantity >= event.messingQuantity){
+         emit(state.copyWith(
+             quantity: event.messingQuantity.round() + 1,
+             isRefresh: !state.isRefresh));
+       }
+      }
+      else if (event is _productDecrementEvent) {
+        if (event.messingQuantity >= 1) {
           emit(state.copyWith(
-              productWeight: event.productWeight.round() - 1,
+              quantity: event.messingQuantity.round() - 1,
               isRefresh: !state.isRefresh));
-        } else {}
-      } else if (event is _createIssueEvent) {
+        } else {
+          showSnackBar(context: event.context, title: "missing quantity can't be more then original quantity", bgColor:Colors.red);
+        }
+      }
+      else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));
         if (event.issue != '') {
           create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(

@@ -14,14 +14,18 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   }) = _radioButtonEvent;
 
   const factory ProductDetailsEvent.productIncrementEvent({
-    required double productWeight,
+    required int productQuantity,
     required int listIndex,
-    required BuildContext context
+    required BuildContext context,
+    required int messingQuantity,
+
   }) = _productIncrementEvent;
 
   const factory ProductDetailsEvent.productDecrementEvent({
-    required double productWeight,
+    required int productQuantity,
     required int listIndex,
+    required int messingQuantity,
+    required BuildContext context,
   }) = _productDecrementEvent;
 
   const factory ProductDetailsEvent.getProductDataEvent({

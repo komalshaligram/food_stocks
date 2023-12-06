@@ -613,6 +613,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(messageList: messageList));
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
+      } else if (event is _UpdateMessageListEvent) {
+        if (event.messageIdList.isNotEmpty) {
+          List<MessageData> messageList =
+              state.messageList.toList(growable: true);
+          messageList.removeWhere(
+              (message) => event.messageIdList.contains(message.id));
+          debugPrint('message len = ${messageList.length}');
+          emit(state.copyWith(messageList: messageList));
+        }
       }
     });
   }

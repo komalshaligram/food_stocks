@@ -75,11 +75,11 @@ class FileUploadScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
-              if (state.isDownloading) {
-                return Future.value(false);
-              } else {
-                return Future.value(true);
-              }
+              // if (state.isDownloading) {
+              //   return Future.value(false);
+              // } else {
+              return Future.value(true);
+              // }
             },
             child: Scaffold(
               backgroundColor: AppColors.whiteColor,
@@ -238,20 +238,33 @@ class FileUploadScreenWidget extends StatelessWidget {
                         ),
                   state.isDownloading
                       ? Container(
-                          height: getScreenHeight(context),
+                    height: getScreenHeight(context),
                           width: getScreenWidth(context),
-                          color: Colors.transparent,
+                          color: Color.fromARGB(20, 0, 0, 0),
                           alignment: Alignment.center,
                           child: Container(
-                            height: 100,
-                            width: 100,
+                            height: 80,
+                            width: 80,
                             decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.all(
                                     Radius.circular(AppConstants.radius_10))),
                             alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(
-                              color: AppColors.blackColor,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                  radius: AppConstants.radius_10,
+                                ),
+                                10.height,
+                                Text(
+                                  '${state.downloadProgress}%',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.blackColor),
+                                )
+                              ],
                             ),
                           ),
                         )
@@ -382,11 +395,11 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   30.height,
                                   FileSelectionOptionWidget(
                                       title:
-                                      AppLocalizations.of(context)!.camera,
+                                          AppLocalizations.of(context)!.camera,
                                       icon: Icons.camera_alt_rounded,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                        statuses = await [
+                                            statuses = await [
                                           Permission.camera,
                                         ].request();
                                         if (Platform.isAndroid) {
@@ -413,18 +426,18 @@ class FileUploadScreenWidget extends StatelessWidget {
                                       }),
                                   FileSelectionOptionWidget(
                                       title:
-                                      AppLocalizations.of(context)!.gallery,
+                                          AppLocalizations.of(context)!.gallery,
                                       icon: Icons.photo,
                                       onTap: () async {
                                         Map<Permission, PermissionStatus>
-                                        statuses = await [
+                                            statuses = await [
                                           Permission.storage,
                                         ].request();
                                         if (Platform.isAndroid) {
                                           DeviceInfoPlugin deviceInfo =
-                                          DeviceInfoPlugin();
+                                              DeviceInfoPlugin();
                                           AndroidDeviceInfo androidInfo =
-                                          await deviceInfo.androidInfo;
+                                              await deviceInfo.androidInfo;
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {

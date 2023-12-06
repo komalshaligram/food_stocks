@@ -119,6 +119,7 @@ class WalletScreenWidget extends StatelessWidget {
                 bloc.add(WalletEvent.getDropDownElementEvent(
                     year: state.yearList.first));
                 minDate = DateTime(state.yearList.last, 1, 1);
+
               },
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(

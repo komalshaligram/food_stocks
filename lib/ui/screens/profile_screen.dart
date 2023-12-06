@@ -211,8 +211,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                                           title: AppLocalizations
                                                                   .of(context1)!
                                                               .gallery,
-                                                          lastItem: state.UserImageUrl.isEmpty? true: false,
                                                           icon: Icons.photo,
+                                                          lastItem: state
+                                                                  .UserImageUrl
+                                                                  .isEmpty
+                                                              ? true
+                                                              : false,
                                                           onTap: () async {
                                                             Map<Permission,
                                                                     PermissionStatus>
@@ -306,31 +310,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   ),
                                                                 );
                                                               }),
-                                                      // Column(
-                                                      //   children: [
-                                                      //     Container(
-                                                      //       height: 1,
-                                                      //       width: getScreenWidth(context),
-                                                      //       color: AppColors.borderColor
-                                                      //           .withOpacity(0.5),
-                                                      //     ),
-                                                      //     FileSelectionOptionWidget(
-                                                      //         title: AppLocalizations.of(
-                                                      //             context)!
-                                                      //             .remove,
-                                                      //         icon: Icons.delete,
-                                                      //         onTap: () {
-                                                      //           // context
-                                                      //           //     .read<ProfileBloc>()
-                                                      //           //     .add(ProfileEvent
-                                                      //           //     .deleteFileEvent(
-                                                      //           //     context: context,
-                                                      //           //     index:
-                                                      //           //     fileIndex));
-                                                      //           Navigator.pop(context);
-                                                      //         }),
-                                                      //   ],
-                                                      // )
                                                     ],
                                                   ),
                                                 ),

@@ -57,4 +57,8 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory StoreEvent.updateGlobalSearchEvent(
+      {required String search,
+      required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 }

@@ -123,7 +123,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           }
         }
         if (event.isDelete) {
+          String deletedMessageId = messageList
+                  .firstWhere((message) => message.id == event.messageId)
+                  .id ??
+              '';
           messageList.removeWhere((message) => message.id == event.messageId);
+          if (deletedMessageId != '') {
+            List<String> deletedMessageList =
+                state.deletedMessageList.toList(growable: true);
+            deletedMessageList.add(deletedMessageId);
+            debugPrint('message delete list = ${deletedMessageList}');
+            emit(state.copyWith(deletedMessageList: deletedMessageList));
+          }
           debugPrint('message list len after delete = ${messageList.length}');
         }
         emit(state.copyWith(messageList: messageList));

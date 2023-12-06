@@ -75,9 +75,9 @@ class HomeScreenWidget extends StatelessWidget {
                       HomeEvent.getProductSalesListEvent(context: context));
                 }
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
-                // if (state.messageList.isEmpty) {
-                //   bloc.add(HomeEvent.getMessageListEvent(context: context));
-                // }
+                if (state.messageList.isEmpty) {
+                  bloc.add(HomeEvent.getMessageListEvent(context: context));
+                }
               },
               child: SafeArea(
                 child: Column(
@@ -240,9 +240,20 @@ class HomeScreenWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(
                                             AppConstants.radius_100)),
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.messageScreen.name);
+                                    onTap: () async {
+                                      dynamic messageResult =
+                                          await Navigator.pushNamed(context,
+                                              RouteDefine.messageScreen.name);
+                                      debugPrint('delete = ${messageResult}');
+                                      if (messageResult != null) {
+                                        debugPrint(
+                                            'delete = ${messageResult[AppStrings.messageIdListString]}');
+                                        bloc.add(HomeEvent.updateMessageListEvent(
+                                            messageIdList: messageResult[
+                                                    AppStrings
+                                                        .messageIdListString] ??
+                                                ''));
+                                      }
                                     },
                                     child: Stack(
                                       fit: StackFit.expand,
@@ -362,9 +373,9 @@ class HomeScreenWidget extends StatelessWidget {
                                             6.height,
                                             BalanceIndicator(
                                                 pendingBalance: state.balance,
-                                                expense: 100 -state.expensePercentage,
-                                                totalBalance: 100
-                                            ),
+                                                expense: 100 -
+                                                    state.expensePercentage,
+                                                totalBalance: 100),
                                           ],
                                         )),
                                     5.width,
@@ -629,24 +640,41 @@ class HomeScreenWidget extends StatelessWidget {
                               ],
                             ),
                             30.height,
-                            state.messageList.isEmpty
+                            /*state.messageList.isEmpty
                                 ? 0.width
-                                : Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      titleRowWidget(
-                                          context: context,
-                                          title: AppLocalizations.of(context)!
-                                              .messages,
-                                          allContentTitle:
-                                              AppLocalizations.of(context)!
-                                                  .all_messages,
-                                          onTap: () {
-                                            Navigator.pushNamed(context,
-                                                RouteDefine.messageScreen.name);
-                                          }),
-                                      10.height,
-                                      ListView.builder(
+                                : */
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                titleRowWidget(
+                                    context: context,
+                                    title:
+                                        AppLocalizations.of(context)!.messages,
+                                    allContentTitle:
+                                        state.messageList.length < 2
+                                            ? ''
+                                            : AppLocalizations.of(context)!
+                                                .all_messages,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.messageScreen.name);
+                                    }),
+                                10.height,
+                                state.messageList.isEmpty
+                                    ? Container(
+                                        margin: const EdgeInsets.only(
+                                            bottom: AppConstants.padding_15),
+                                        height: 50,
+                                        width: getScreenWidth(context),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Messages not found',
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.textColor),
+                                        ),
+                                      )
+                                    : ListView.builder(
                                         itemCount: state.messageList.length,
                                         physics: NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
@@ -708,8 +736,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                                   .messageDeleteString]));
                                                 }),
                                       ),
-                                    ],
-                                  ),
+                              ],
+                            ),
                             90.height,
                           ],
                         ),
