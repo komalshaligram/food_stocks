@@ -184,8 +184,8 @@ class CommonSearchWidget extends StatelessWidget {
                                   ? LinearProgressIndicator(
                                 color: AppColors.mainColor,
                                 minHeight: 3,
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    AppConstants.radius_5)),
+                              /*  borderRadius: BorderRadius.all(Radius.circular(
+                                    AppConstants.radius_5)),*/
                                 backgroundColor:
                                 AppColors.mainColor.withOpacity(0.5),
                               )

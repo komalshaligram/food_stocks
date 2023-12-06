@@ -439,7 +439,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         color: AppColors.whiteColor,
                                       ),
                                       child: Container(
-                                        width:  getScreenWidth(context) * 0.60,
+                                        width: getScreenWidth(context) >= 400?getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.55,
                                         height: 30,
                                         child: DateRangeField(
                                           decoration: InputDecoration(

@@ -37,6 +37,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -60,6 +61,9 @@
 	<false/>
 	<key>flavor</key>
 	<string>$(flavor)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+    <string>NO</string>
+
 	<key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key><true/>

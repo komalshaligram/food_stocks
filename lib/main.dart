@@ -19,6 +19,8 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
    // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     runApp(
@@ -54,8 +56,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {

@@ -62,7 +62,7 @@ class FormFieldValidation {
 
   String? businessNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return 'Please enter your business name';
     } else if (regex.hasMatch(value)) {
@@ -85,7 +85,7 @@ class FormFieldValidation {
 
   String? ownerNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return 'Please enter owner name';
     } else if (regex.hasMatch(value)) {
@@ -108,7 +108,7 @@ class FormFieldValidation {
 
   String? contactNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return "Please enter contact name";
     } else if (regex.hasMatch(value)) {
@@ -121,7 +121,7 @@ class FormFieldValidation {
 
   String? addressNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[!#$%&'*@<>:)(;₹+=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return "Please enter address";
     } else if (regex.hasMatch(value)) {
@@ -145,7 +145,7 @@ class FormFieldValidation {
 
   String? driverNameField(String value) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return 'Please enter driver name';
     } else if (regex.hasMatch(value)) {

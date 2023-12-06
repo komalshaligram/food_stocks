@@ -14,6 +14,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PushNotificationService {
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print('User granted permission: ${settings.authorizationStatus}');
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
@@ -39,9 +50,9 @@ class PushNotificationService {
         AndroidInitializationSettings('@drawable/ic_launcher');
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
     );
     String? fcmToken='';
    /* if (Platform.isIOS) {
@@ -68,6 +79,7 @@ class PushNotificationService {
       //  consoleLog(message, key: 'firebase_message');
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
+      //const iOSDetails = IOSNotificationDetails();
 // If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
       if (notification != null && android != null) {
@@ -76,6 +88,7 @@ class PushNotificationService {
           parse(notification.title ?? '').body?.text ?? '',
           parse(notification.body ?? '').body?.text ?? '',
           flutter_local_notifications.NotificationDetails(
+          //  iOS: iOSSettings,
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
