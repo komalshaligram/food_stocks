@@ -75,9 +75,9 @@ class HomeScreenWidget extends StatelessWidget {
                       HomeEvent.getProductSalesListEvent(context: context));
                 }
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
-                // if (state.messageList.isEmpty) {
-                //   bloc.add(HomeEvent.getMessageListEvent(context: context));
-                // }
+                if (state.messageList.isEmpty) {
+                  bloc.add(HomeEvent.getMessageListEvent(context: context));
+                }
               },
               child: SafeArea(
                 child: Column(
@@ -240,9 +240,20 @@ class HomeScreenWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(
                                             AppConstants.radius_100)),
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.messageScreen.name);
+                                    onTap: () async {
+                                      dynamic messageResult =
+                                          await Navigator.pushNamed(context,
+                                              RouteDefine.messageScreen.name);
+                                      debugPrint('delete = ${messageResult}');
+                                      if (messageResult != null) {
+                                        debugPrint(
+                                            'delete = ${messageResult[AppStrings.messageIdListString]}');
+                                        bloc.add(HomeEvent.updateMessageListEvent(
+                                            messageIdList: messageResult[
+                                                    AppStrings
+                                                        .messageIdListString] ??
+                                                ''));
+                                      }
                                     },
                                     child: Stack(
                                       fit: StackFit.expand,
@@ -647,7 +658,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${AppLocalizations.of(context)!.messages_not_found}',
+                                      'Messages not found',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.textColor),
@@ -1236,7 +1247,7 @@ class HomeScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                  '${AppLocalizations.of(context)!.select_supplier}',
+                                'Select supplier',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -1377,7 +1388,7 @@ class HomeScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                       ' ${AppLocalizations.of(context)!.suppliers_not_available}',
+                        'Suppliers not available',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),

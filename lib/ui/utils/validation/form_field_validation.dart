@@ -49,7 +49,7 @@ class FormFieldValidation {
 
   String? businessNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_your_business_name}';
     } else if (regex.hasMatch(value)) {
@@ -72,7 +72,7 @@ class FormFieldValidation {
 
   String? ownerNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_owner_name}';
     } else if (regex.hasMatch(value)) {
@@ -95,7 +95,7 @@ class FormFieldValidation {
 
   String? contactNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return "${AppLocalizations.of(context)!.please_enter_contact_name}";
     } else if (regex.hasMatch(value)) {
@@ -108,7 +108,7 @@ class FormFieldValidation {
 
   String? addressNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[!#$%&'*@<>:)(;₹+=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return "${AppLocalizations.of(context)!.please_enter_address}";
     } else if (regex.hasMatch(value)) {
@@ -132,7 +132,7 @@ class FormFieldValidation {
 
   String? driverNameField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
-    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-z]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
     if (value.isEmpty) {
       return 'Please enter driver name';
     } else if (regex.hasMatch(value)) {

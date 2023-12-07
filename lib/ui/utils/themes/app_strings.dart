@@ -137,5 +137,6 @@ class AppStrings {
   static const driverNameString = 'driverName';
   static const driverNumberString = 'driverNumber';
   static const messageIdString = 'messageId';
+  static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
 }

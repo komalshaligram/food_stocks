@@ -59,4 +59,8 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory HomeEvent.updateMessageListEvent({
+    required List<String> messageIdList,
+  }) = _UpdateMessageListEvent;
 }

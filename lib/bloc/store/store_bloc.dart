@@ -422,7 +422,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         try {
           emit(state.copyWith(isLoading: true));
           InsertCartModel.InsertCartReqModel insertCartReqModel =
-          InsertCartModel.InsertCartReqModel(products: [
+              InsertCartModel.InsertCartReqModel(products: [
             InsertCartModel.Product(
                 productId: state
                     .productStockList[state.productStockUpdateIndex].productId,
@@ -643,6 +643,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         }
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
+      } else if (event is _UpdateGlobalSearchEvent) {
+        emit(state.copyWith(
+            search: event.search,
+            previousSearch: event.search,
+            searchList: event.searchList));
       }
     });
   }

@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -184,7 +185,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 showSnackBar(
                                                                     context:
                                                                         context,
-                                                                    title: '${AppLocalizations.of(context)!.camera_permission}',
+                                                                    title: AppStrings
+                                                                        .cameraAllowPermissionString,
                                                                     bgColor:
                                                                         AppColors
                                                                             .redColor);
@@ -236,7 +238,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                                               showSnackBar(
                                                                   context:
                                                                       context,
-                                                                  title: '${AppLocalizations.of(context)!.storage_permission}',
+                                                                  title: AppStrings
+                                                                      .storageAllowPermissionString,
                                                                   bgColor: AppColors
                                                                       .redColor);
                                                               Navigator.pop(
@@ -676,7 +679,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.business_name,
                               ),
                               CustomFormField(
-                                context: context,
                                 controller: state.businessNameController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -695,7 +697,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                 name: AppLocalizations.of(context)!.business_id,
                               ),
                               CustomFormField(
-                                context: context,
                                 controller: state.hpController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -715,7 +716,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.name_of_owner,
                               ),
                               CustomFormField(
-                                context: context,
                                 controller: state.ownerNameController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -735,7 +735,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.israel_id,
                                   ),
                                   CustomFormField(
-                                    context: context,
                                     controller: state.idController,
                                     inputformet: [
                                       /*TextInputFormatter.withFunction((oldValue, newValue) {
@@ -766,7 +765,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   7.height,
                                   CustomFormField(
-                                    context: context,
                                     controller: state.contactController,
                                     inputformet: [
                                       LengthLimitingTextInputFormatter(20)
@@ -812,7 +810,8 @@ class ProfileScreenWidget extends StatelessWidget {
                                             } else {
                                               showSnackBar(
                                                   context: context,
-                                                  title: '${AppLocalizations.of(context)!.select_business_type}',
+                                                  title: AppStrings
+                                                      .selectBusinessTypeString,
                                                   bgColor: AppColors.redColor);
                                             }
                                             // } else {
