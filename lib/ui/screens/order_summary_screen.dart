@@ -22,10 +22,8 @@ class OrderSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(
-            context: context
-          )),
+      create: (context) => OrderSummaryBloc()
+        ..add(OrderSummaryEvent.getDataEvent(context: context)),
       child: OrderSummaryScreenWidget(),
     );
   }
@@ -54,7 +52,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  (state.orderSummaryList.data?.data?.length ?? 0) == 0
+                (state.orderSummaryList.data?.data?.length ?? 0) == 0
                     ? Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
                         child: ListView.builder(
@@ -73,68 +71,99 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           margin: EdgeInsets.only(
-                              left: AppConstants.padding_20,
-                              right: AppConstants.padding_20,
+                              left: AppConstants.padding_40,
+                              right: AppConstants.padding_40,
                               top: AppConstants.padding_10,
-                              bottom: AppConstants.padding_30),
+                              bottom: AppConstants.padding_40),
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor.withOpacity(0.95),
                             boxShadow: [
                               BoxShadow(
-                            color: AppColors.shadowColor.withOpacity(0.20),
-                            blurRadius: AppConstants.blur_10),
-                      ],
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_40)),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_5,
-                          horizontal: AppConstants.padding_5),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(AppConstants.radius_40),
-                        color: AppColors.whiteColor,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Container(
-                              height: AppConstants.containerHeight_60,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,
-                                  horizontal: AppConstants.padding_5),
-                              decoration: BoxDecoration(
-                                  color: AppColors.mainColor,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: context.rtl
-                                                ? Radius.circular(
-                                                    AppConstants.radius_6)
-                                                : Radius.circular(
-                                                    AppConstants.radius_30),
-                                      bottomLeft: context.rtl
-                                                ? Radius.circular(
-                                                    AppConstants.radius_6)
-                                                : Radius.circular(
-                                                    AppConstants.radius_30),
-                                      bottomRight:
-                                      context.rtl
-                                                ? Radius.circular(
-                                                  AppConstants.radius_30)
-                                              : Radius.circular(
-                                                  AppConstants.radius_6),
-                                      topRight: context.rtl
-                                          ? Radius.circular(
-                                              AppConstants.radius_30)
-                                          : Radius.circular(AppConstants.radius_6))),
-                              child:
-                              RichText(
+                                  color:
+                                      AppColors.shadowColor.withOpacity(0.20),
+                                  blurRadius: AppConstants.blur_10),
+                            ],
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_40)),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_5,
+                                horizontal: AppConstants.padding_5),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(AppConstants.radius_40),
+                              color: AppColors.whiteColor,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                      height: AppConstants.containerHeight_60,
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5,
+                                          horizontal: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.mainColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_6)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_30),
+                                              bottomLeft: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_6)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_30),
+                                              bottomRight: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_30)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_6),
+                                              topRight: context.rtl
+                                                  ? Radius.circular(
+                                                      AppConstants.radius_30)
+                                                  : Radius.circular(AppConstants.radius_6))),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${AppLocalizations.of(context)!.total}${' : '}',
+                                            style: AppStyles.rkRegularTextStyle(
+                                              color: AppColors.whiteColor,
+                                              size:
+                                                  getScreenWidth(context) <= 380
+                                                      ? AppConstants.mediumFont
+                                                      : AppConstants.normalFont,
+                                            ),
+                                          ),
+                                          Directionality(
+                                            textDirection: TextDirection.ltr,
+                                            child: Text(
+                                                '${formatter(state.orderSummaryList.data?.cart?.first.totalAmount?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
+                                                style:
+                                                    AppStyles.rkRegularTextStyle(
+                                                        color:
+                                                            AppColors.whiteColor,
+                                                        size: getScreenWidth(
+                                                                    context) <=
+                                                                380
+                                                            ? AppConstants
+                                                                .smallFont
+                                                            : AppConstants
+                                                                .mediumFont,
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                          ),
+                                        ],
+                                      )
+                                      /* RichText(
                                 text: TextSpan(
-                                  text: AppLocalizations.of(context)!
-                                      .total,
+                                  text: '${AppLocalizations.of(context)!.total}${' : '}',
                                   style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.whiteColor,
                                     size: getScreenWidth(context) <= 380
@@ -144,7 +173,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   children: <TextSpan>[
                                     TextSpan(
                                         text:
-                                        '${' : '}${bloc.splitNumber(state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                        '${formatter(state.orderSummaryList.data?.cart?.first.totalAmount?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
                                         style: AppStyles.rkRegularTextStyle(
                                             color: AppColors.whiteColor,
                                             size: getScreenWidth(context) <= 380
@@ -153,68 +182,72 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                             fontWeight: FontWeight.w700)),
                                   ],
                                 ),
-                              ),
-                            ),
-                          ),
-                          6.width,
-                          Expanded(
-                            flex: 3,
-                            child: GestureDetector(
-                              onTap: () {
-                              if(!state.isLoading){
-                                bloc.add(OrderSummaryEvent.orderSendEvent(
-                                  context: context,
-                                ));
-                              }
-                              },
-                              child: Container(
-                                height: AppConstants.containerHeight_60,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5,
-                                    horizontal: AppConstants.padding_5),
-                                decoration: BoxDecoration(
-                                    color: AppColors.navSelectedColor,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: context.rtl
+                              ),*/
+                                      ),
+                                ),
+                                6.width,
+                                Expanded(
+                                  flex: 2,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (!state.isLoading) {
+                                        bloc.add(
+                                            OrderSummaryEvent.orderSendEvent(
+                                          context: context,
+                                        ));
+                                      }
+                                    },
+                                    child: Container(
+                                      height: AppConstants.containerHeight_60,
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5,
+                                          horizontal: AppConstants.padding_5),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.navSelectedColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: context.rtl
                                                   ? Radius.circular(
                                                       AppConstants.radius_30)
                                                   : Radius.circular(
                                                       AppConstants.radius_6),
-                                        bottomLeft:
-                                        context.rtl
+                                              bottomLeft: context.rtl
                                                   ? Radius.circular(
-                                                    AppConstants.radius_30)
-                                                : Radius.circular(
-                                                    AppConstants.radius_6),
-                                        bottomRight:
-                                        context.rtl
+                                                      AppConstants.radius_30)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_6),
+                                              bottomRight: context.rtl
                                                   ? Radius.circular(
-                                                    AppConstants.radius_6)
-                                                : Radius.circular(
-                                                    AppConstants.radius_30),
-                                        topRight: context.rtl
+                                                      AppConstants.radius_6)
+                                                  : Radius.circular(
+                                                      AppConstants.radius_30),
+                                              topRight: context.rtl
                                                   ? Radius.circular(
                                                       AppConstants.radius_6)
                                                   : Radius.circular(
                                                       AppConstants.radius_30))),
-                                child: state.isLoading ? CupertinoActivityIndicator() : Text(
-                                  AppLocalizations.of(context)!.send_order,
-                                  style: AppStyles.rkRegularTextStyle(
-                                    size: getScreenWidth(context) <= 380
-                                        ? AppConstants.mediumFont
-                                        : AppConstants.smallFont,
-                                    color: AppColors.whiteColor,
+                                      child: state.isLoading
+                                          ? CupertinoActivityIndicator()
+                                          : Text(
+                                              AppLocalizations.of(context)!
+                                                  .send_order,
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                size: getScreenWidth(context) <=
+                                                        380
+                                                    ? AppConstants.normalFont
+                                                    : AppConstants.mediumFont,
+                                                color: AppColors.whiteColor,
+                                              ),
+                                            ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -247,11 +280,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                state.orderSummaryList.data?.data?[index].suppliers?.contactName! ?? '',
+                state.orderSummaryList.data?.data?[index].suppliers
+                        ?.contactName! ??
+                    '',
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14,
-                    color: AppColors.blackColor,
-                   ),
+                  size: AppConstants.font_14,
+                  color: AppColors.blackColor,
+                ),
               ),
               10.height,
               Row(
@@ -259,7 +294,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 1,
                     title: AppLocalizations.of(context)!.products,
-                    value: state.orderSummaryList.data?.data?[index].totalQuantity?.toString() ?? '',
+                    value: state
+                            .orderSummaryList.data?.data?[index].totalQuantity
+                            ?.toString() ??
+                        '',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w700,
@@ -280,7 +318,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   CommonOrderContentWidget(
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
-                    value:'${bloc.splitNumber(state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                    value:
+                        '${formatter(state.orderSummaryList.data?.data?[index].totalAmount?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

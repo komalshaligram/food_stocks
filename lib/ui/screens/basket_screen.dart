@@ -145,8 +145,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(
-                                                AppLocalizations.of(context)!
-                                                    .total,
+                                               '${AppLocalizations.of(context)!.total}${' : '}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                   size: getScreenWidth(
@@ -163,7 +162,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               Directionality(
                                                 textDirection: TextDirection.ltr,
                                                 child: Text(
-                                                  ': ${(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+                                                  '${formatter(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
@@ -475,15 +474,17 @@ class BasketScreenWidget extends StatelessWidget {
                     ),
                   ),
                   5.height,
-                  Text(
-                    '${bloc.splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0.00")}${AppLocalizations.of(context)!.currency}',
-                    style: TextStyle(
-                        color: AppColors.blackColor,
-                        fontSize: AppConstants.smallFont,
-                        fontWeight: FontWeight.w700),
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      '${formatter(state.basketProductList[index].totalPayment?.toString() ??"0")}${AppLocalizations.of(context)!.currency}',
+                      style: TextStyle(
+                          color: AppColors.blackColor,
+                          fontSize: AppConstants.smallFont,
+                          fontWeight: FontWeight.w700),
+                    ),
                   ),
                   5.height,
-
                 ],
               ),
               Row(

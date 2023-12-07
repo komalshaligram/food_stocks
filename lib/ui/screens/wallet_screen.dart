@@ -672,8 +672,8 @@ class WalletScreenWidget extends StatelessWidget {
                 child: Text(
                   state.walletTransactionsList[listIndex].type.toString() ==
                           'Order'
-                      ? '${'-'}${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'
-                      : '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].amount!).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+                      ? '${'-'}${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}${AppLocalizations.of(context)!.currency}'
+                      : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}${AppLocalizations.of(context)!.currency}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: state.walletTransactionsList[listIndex].type
@@ -688,7 +688,7 @@ class WalletScreenWidget extends StatelessWidget {
               CircularButtonWidget(
                 buttonName: AppLocalizations.of(context)!.balance_status,
                 buttonValue:
-                    '${bloc.splitNumber(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+                    '${formatter(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}${AppLocalizations.of(context)!.currency}',
               ),
             ],
           );

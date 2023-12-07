@@ -142,8 +142,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     ),
                                     Text(
                                       state.orderBySupplierProduct.deliverStatus
-                                              ?.statusName!
-                                              .toTitleCase()??
+                                              ?.statusName?.toTitleCase() ??
                                           '',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
@@ -153,8 +152,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                   AppLocalizations.of(context)!
                                                       .pending_delivery?*/
                                               state.orderBySupplierProduct
-                                                          .orderDeliveryDate ==
-                                                      ''
+                                                          .orderDeliveryDate == ''
                                                   ? AppColors.orangeColor
                                                   : AppColors.mainColor,
                                           fontWeight: FontWeight.w700),
@@ -246,8 +244,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     state.orderBySupplierProduct.deliverStatus
-                                                ?.statusName
-                                                .toString() !=
+                                                ?.statusName?.toTitleCase()
+                                                !=
                                             AppLocalizations.of(context)!
                                                 .pending_delivery
                                         /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
@@ -282,8 +280,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                           )),
                                     15.width,
                                     (state.orderBySupplierProduct.deliverStatus
-                                                    ?.statusName
-                                                    .toString() ??
+                                                    ?.statusName?.toTitleCase()
+                                                     ??
                                                 '') !=
                                             AppLocalizations.of(context)!
                                                 .pending_delivery
@@ -388,8 +386,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 index: index,
                                 context: context,
                                 status: state.orderBySupplierProduct
-                                        .deliverStatus?.statusName
-                                        .toString() ??
+                                        .deliverStatus?.statusName?.toTitleCase() ??
+
                                     '',
                                 issue: state.orderBySupplierProduct
                                         .products?[index].issue ??
@@ -419,8 +417,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                 color: AppColors.pageColor,
                 child: CustomButtonWidget(
                   onPressed: () {
-                    state.orderBySupplierProduct.deliverStatus?.statusName
-                                .toString() !=
+                    state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+                                !=
                             AppLocalizations.of(context)!.pending_delivery
                         ?
                         /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''?*/
@@ -542,10 +540,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   .toString() !=
                   AppLocalizations.of(context)!
                       .pending_delivery ?*/
-              (state.orderBySupplierProduct.deliverStatus?.statusName
-                              .toString() ??
+              (state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+                               ??
                           '') !=
-                      AppLocalizations.of(context)!.pending_delivery
+                      AppLocalizations.of(context)!.pending_delivery.toTitleCase()
                   ? Checkbox(
                       value: ((isIssue ?? false) ||
                               state.productListIndex.contains(index))
@@ -595,6 +593,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.font_12,
                     ),
                   ),
+                  5.width,
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
@@ -618,7 +617,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                           size: AppConstants.font_14, color: AppColors.blackColor),
                     ),
                   ),
-                  10.width,
+                  5.width,
                   Text(
                     '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                     style: AppStyles.rkRegularTextStyle(
@@ -626,7 +625,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.font_12,
                     ),
                   ),
-                  10.width,
+                  5.width,
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
@@ -642,8 +641,6 @@ class ProductDetailsScreenWidget extends StatelessWidget {
 
 
 
-
-
 /*        state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate!= ''?*/
               /*        state
                   .orderList
@@ -654,8 +651,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   .toString() !=
                   AppLocalizations.of(context)!
                       .pending_delivery ?*/
-              state.orderBySupplierProduct.deliverStatus?.statusName
-                          .toString() !=
+              state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase() !=
                       AppLocalizations.of(context)!.pending_delivery
                   ? Column(
                       children: [
