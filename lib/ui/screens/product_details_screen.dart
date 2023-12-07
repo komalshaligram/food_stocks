@@ -63,8 +63,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
   });
 
   TextEditingController addProblemController = TextEditingController();
-  TextEditingController driverController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
+ // TextEditingController driverController = TextEditingController();
+ // TextEditingController phoneNumberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -142,8 +142,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     ),
                                     Text(
                                       state.orderBySupplierProduct.deliverStatus
-                                              ?.statusName!
-                                              .toTitleCase()??
+                                              ?.statusName?.toTitleCase() ??
                                           '',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
@@ -153,8 +152,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                   AppLocalizations.of(context)!
                                                       .pending_delivery?*/
                                               state.orderBySupplierProduct
-                                                          .orderDeliveryDate ==
-                                                      ''
+                                                          .orderDeliveryDate == ''
                                                   ? AppColors.orangeColor
                                                   : AppColors.mainColor,
                                           fontWeight: FontWeight.w700),
@@ -233,24 +231,24 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                                 7.height,
-                                Text(
+                              /*  Text(
                                   '${AppLocalizations.of(context)!.driver_name}${' : '}',
                                   style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.font_14,
                                     color: AppColors.blackColor,
                                   ),
                                 ),
-                                5.height,
-                                Row(
+                                5.height,*/
+                               /* Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     state.orderBySupplierProduct.deliverStatus
-                                                ?.statusName
-                                                .toString() !=
+                                                ?.statusName?.toTitleCase()
+                                                !=
                                             AppLocalizations.of(context)!
                                                 .pending_delivery
-                                        /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
+                                        *//*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*//*
                                         ? Text(
                                             state.orderBySupplierProduct
                                                     .driverName
@@ -282,13 +280,13 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                           )),
                                     15.width,
                                     (state.orderBySupplierProduct.deliverStatus
-                                                    ?.statusName
-                                                    .toString() ??
+                                                    ?.statusName?.toTitleCase()
+                                                     ??
                                                 '') !=
                                             AppLocalizations.of(context)!
                                                 .pending_delivery
                                         ?
-                                        /*         state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*/
+                                        *//*         state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''*//*
                                         Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
@@ -358,7 +356,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             ),
                                           ),
                                   ],
-                                ),
+                                ),*/
                               ],
                             ),
                           ),
@@ -366,12 +364,36 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 vertical: AppConstants.padding_5,
                                 horizontal: AppConstants.padding_15),
-                            child: Text(
-                              AppLocalizations.of(context)!.order_products_list,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.blackColor,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.order_products_list,
+                                  style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.blackColor,
+                                  ),
+                                ),
+                                (state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+                                    ??
+                                    '') !=
+                                    AppLocalizations.of(context)!.pending_delivery.toTitleCase() ? GestureDetector(
+                                  onTap: (){
+
+                                  },
+                                      child: Container(
+                                  padding: EdgeInsets.all(AppConstants.padding_5),
+                                  decoration: BoxDecoration(
+                                      borderRadius:  BorderRadius.all(Radius.circular(AppConstants.padding_3)),
+                                      color: AppColors.mainColor,
+                                  ),
+                                      child: Text('Check All',
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont,
+                                      color: AppColors.whiteColor
+                                      ),
+                                      )),
+                                    ) : 0.width
+                              ],
                             ),
                           ),
                           Expanded(
@@ -388,8 +410,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                 index: index,
                                 context: context,
                                 status: state.orderBySupplierProduct
-                                        .deliverStatus?.statusName
-                                        .toString() ??
+                                        .deliverStatus?.statusName?.toTitleCase() ??
                                     '',
                                 issue: state.orderBySupplierProduct
                                         .products?[index].issue ??
@@ -419,10 +440,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                 color: AppColors.pageColor,
                 child: CustomButtonWidget(
                   onPressed: () {
-                    state.orderBySupplierProduct.deliverStatus?.statusName
-                                .toString() !=
-                            AppLocalizations.of(context)!.pending_delivery
-                        ?
+                    state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+                                !=
+                            AppLocalizations.of(context)!.pending_delivery ?
                         /*state.orderList.data!.ordersBySupplier![productIndex].orderDeliveryDate != ''?*/
                         /*   Navigator.pushNamed(
                             context, RouteDefine.bottomNavScreen.name)*/
@@ -432,9 +452,9 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                             (Route route) =>
                                 route.settings.name ==
                                 RouteDefine.menuScreen.name)
-                        : _formKey.currentState?.validate() ?? false
+                        : /*_formKey.currentState?.validate() ?? false
                             ? state.phoneNumber != phoneNumberController.text
-                                ? Navigator.pushNamed(context,
+                                ? */Navigator.pushNamed(context,
                                     RouteDefine.shipmentVerificationScreen.name,
                                     arguments: {
                                         AppStrings.supplierNameString: state
@@ -475,21 +495,21 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         AppStrings.orderIdString: orderId,
                                         AppStrings.supplierIdString:
                                             state.orderBySupplierProduct.id,
-                                        AppStrings.driverNameString:
+                                        /*AppStrings.driverNameString:
                                             driverController.text.toTitleCase(),
                                         AppStrings.driverNumberString:
-                                            phoneNumberController.text,
+                                            phoneNumberController.text,*/
                                         AppStrings.supplierOrderNumberString:
                                             state.orderBySupplierProduct
                                                     .supplierOrderNumber ??
                                                 0
-                                      })
-                                : showSnackBar(
+                                      });
+                            /*    : showSnackBar(
                                     context: context,
                                     title:
                                         'User Number & driver Number are same',
                                     bgColor: AppColors.redColor)
-                            : SizedBox();
+                            :*/
                   },
                   buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
@@ -542,10 +562,10 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   .toString() !=
                   AppLocalizations.of(context)!
                       .pending_delivery ?*/
-              (state.orderBySupplierProduct.deliverStatus?.statusName
-                              .toString() ??
+              (state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+                               ??
                           '') !=
-                      AppLocalizations.of(context)!.pending_delivery
+                      AppLocalizations.of(context)!.pending_delivery.toTitleCase()
                   ? Checkbox(
                       value: ((isIssue ?? false) ||
                               state.productListIndex.contains(index))
@@ -568,12 +588,15 @@ class ProductDetailsScreenWidget extends StatelessWidget {
               /* state.orderList.data?.ordersBySupplier![productIndex]
                           .products![index].mainImage !=*/
               state.orderBySupplierProduct.products?.first.mainImage != null
-                  ? CachedNetworkImage(
-                      imageUrl:
-                          '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                      width: AppConstants.containerSize_50,
-                      height: AppConstants.containerSize_50,
-                    )
+                  ? Expanded(
+                  flex: 2,
+                    child: CachedNetworkImage(
+                        imageUrl:
+                            '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
+                        width: AppConstants.containerSize_50,
+                        height: AppConstants.containerSize_50,
+                      ),
+                  )
                   : SizedBox(),
               getScreenHeight(context) >= 730 ? 7.width : 2.width,
               state.orderBySupplierProduct.orderDeliveryDate != '' ?  Column(
@@ -595,6 +618,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.font_12,
                     ),
                   ),
+                  5.width,
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: Text(
@@ -606,41 +630,40 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ],
-              ) : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 100,
-                    child: Text(
-                      state.orderBySupplierProduct.products![index].productName
-                          .toString(),
+              ) : Expanded(
+                flex: 5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 100,
+                      child: Text(
+                        state.orderBySupplierProduct.products![index].productName.toString(),
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_14, color: AppColors.blackColor),
+                      ),
+                    ),
+                    Text(
+                      '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                       style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_14, color: AppColors.blackColor),
+                        color: AppColors.blackColor,
+                        size: AppConstants.font_12,
+                      ),
                     ),
-                  ),
-                  10.width,
-                  Text(
-                    '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
-                    style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.blackColor,
-                      size: AppConstants.font_12,
+                    1.width,
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        '${formatter(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_14,
+                            fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  ),
-                  10.width,
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      '${formatter(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.blackColor,
-                          size: AppConstants.font_14,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-
-
 
 
 
@@ -654,8 +677,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   .toString() !=
                   AppLocalizations.of(context)!
                       .pending_delivery ?*/
-              state.orderBySupplierProduct.deliverStatus?.statusName
-                          .toString() !=
+              state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase() !=
                       AppLocalizations.of(context)!.pending_delivery
                   ? Column(
                       children: [

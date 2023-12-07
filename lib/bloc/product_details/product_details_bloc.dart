@@ -148,14 +148,14 @@ class ProductDetailsBloc
               bgColor: AppColors.redColor);
         }
       }
+
+      else if(event is _checkAllEvent){
+
+        emit(state.copyWith(productListIndex: []));
+
+      }
     });
   }
-  String splitNumber(String price){
-    var splitPrice = price.split(".");
-    if(splitPrice[1] == "00"){
-      return splitPrice[0];
-    }else {
-      return price.toString();
-    }
-  }
+
+
 }

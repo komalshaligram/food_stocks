@@ -145,8 +145,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           Row(
                                             children: [
                                               Text(
-                                                AppLocalizations.of(context)!
-                                                    .total,
+                                               '${AppLocalizations.of(context)!.total}${' : '}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                   size: getScreenWidth(
@@ -163,7 +162,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               Directionality(
                                                 textDirection: TextDirection.ltr,
                                                 child: Text(
-                                                  '${(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}${' : '}',
+                                                  '${formatter(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
@@ -363,234 +362,285 @@ class BasketScreenWidget extends StatelessWidget {
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
 
-        return Container(
-          margin: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_5,
-              horizontal: AppConstants.padding_10),
-          padding: EdgeInsets.symmetric(
-              vertical: AppConstants.padding_10,
-              horizontal: AppConstants.padding_10),
+        return Dismissible(
+          key: Key(state.basketProductList.toString()),
+          direction: DismissDirection.startToEnd,
+          background: Container(
+            alignment: state.language == 'en' ? Alignment.centerLeft : Alignment.centerRight,
+            margin: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_5,
+                horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.shadowColor.withOpacity(0.15),
-                  blurRadius: AppConstants.blur_10),
-            ],
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            color: AppColors.redColor,
+            borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-             state.basketProductList[index].mainImage == ''? GestureDetector(
-               onTap: (){
-                 showProductDetails(
-                     context: context,
-                     index: index
-                 );
-               },
-               child: Image.asset(AppImagePath.imageNotAvailable5,
-                 width: 80,
-                 height: 80,
-                 fit: BoxFit.cover,
-               ),
-             ) : GestureDetector(
-               onTap: (){
-                 showProductDetails(
-                     context: context,
-                     index: index
-                 );
-               },
-               child: Image.network(
-                  '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-                  width: 80,
-                  height: 80,
-                 loadingBuilder:
-                     (context,
-                     child,
-                     loadingProgress) {
-                   if (loadingProgress ==
-                       null) {
-                     return child;
-                   } else {
-                     return Center(
-                       child: Container(
-                         width: 80,
-                         height: 80,
-                         child: CupertinoActivityIndicator(
-                           color: AppColors
-                               .blackColor,
-                         ),
-                       ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: SvgPicture.asset(
+                AppImagePath.delete,
+                color: AppColors.whiteColor,
+                height: 30,
+                width: 30,
+              ),
+            ),
+          ),
+          onDismissed: (direction){
+            bloc.add(BasketEvent.removeCartProductEvent(
+                context: context,
+                cartProductId: state.basketProductList[index].cartProductId,
+                listIndex: index,
+                dialogContext: context,
+                totalAmount: state.basketProductList[index].totalPayment!
+            ));
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_5,
+                horizontal: AppConstants.padding_10),
+            padding: EdgeInsets.symmetric(
+                vertical: AppConstants.padding_10,
+                horizontal: AppConstants.padding_10),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.shadowColor.withOpacity(0.15),
+                    blurRadius: AppConstants.blur_10),
+              ],
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+               state.basketProductList[index].mainImage == ''? Expanded(
+                 flex: 2,
+                 child: GestureDetector(
+                   onTap: (){
+                     showProductDetails(
+                         context: context,
+                         index: index
                      );
-                   }
-                 },
-                 errorBuilder:
-                     (context,
-                     error,
-                     stackTrace) {
-                   return Container(
+                   },
+                   child: Image.asset(AppImagePath.imageNotAvailable5,
                      width: 80,
                      height: 80,
-                     color: AppColors
-                         .whiteColor,
-                     alignment:
-                     Alignment
-                         .center,
-                     child: Text(
-                       AppStrings
-                           .failedToLoadString,
-                       style: AppStyles.rkRegularTextStyle(
-                           size: AppConstants
-                               .font_14,
-                           color:
-                           AppColors.textColor),
-                     ),
+                     fit: BoxFit.cover,
+                   ),
+                 ),
+               ) : GestureDetector(
+                 onTap: (){
+                   showProductDetails(
+                       context: context,
+                       index: index
                    );
                  },
-                ),
-             ),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      showProductDetails(
-                          context: context,
-                          index: index
-                      );
-                    },
-                    child: Container(
-                      width: 120,
-                      child: Text(
-                        state.basketProductList[index].productName!,
-                        style: TextStyle(
-                          color: AppColors.blackColor,
-                          fontSize: AppConstants.smallFont,
-                          fontWeight: FontWeight.bold
+                 child: Image.network(
+                    '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
+                    width: 80,
+                    height: 80,
+                   loadingBuilder:
+                       (context,
+                       child,
+                       loadingProgress) {
+                     if (loadingProgress ==
+                         null) {
+                       return child;
+                     } else {
+                       return Center(
+                         child: Container(
+                           width: 80,
+                           height: 80,
+                           child: CupertinoActivityIndicator(
+                             color: AppColors
+                                 .blackColor,
+                           ),
+                         ),
+                       );
+                     }
+                   },
+                   errorBuilder:
+                       (context,
+                       error,
+                       stackTrace) {
+                     return Container(
+                       width: 80,
+                       height: 80,
+                       color: AppColors
+                           .whiteColor,
+                       alignment:
+                       Alignment
+                           .center,
+                       child: Text(
+                         AppStrings
+                             .failedToLoadString,
+                         style: AppStyles.rkRegularTextStyle(
+                             size: AppConstants
+                                 .font_14,
+                             color:
+                             AppColors.textColor),
+                       ),
+                     );
+                   },
+                  ),
+               ),
+                10.width,
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            showProductDetails(
+                                context: context,
+                                index: index
+                            );
+                          },
+                          child: Container(
+                            child: Text(
+                              state.basketProductList[index].productName!,
+                              style: TextStyle(
+                                  color: AppColors.blackColor,
+                                  fontSize: AppConstants.smallFont,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  5.height,
-                  Text(
-                    '${bloc.splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0.00")}${AppLocalizations.of(context)!.currency}',
-                    style: TextStyle(
-                        color: AppColors.blackColor,
-                        fontSize: AppConstants.smallFont,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  5.height,
+                        10.height,
 
-                ],
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if(!state.isLoading){
-                        if ((state.CartItemList.data?.data?[index].productStock ?? 0 )>=
-                            state.basketProductList[index].totalQuantity! + 1) {
-                          bloc.add(BasketEvent.productUpdateEvent(
-                            listIndex: index,
-                            productWeight:
-                            state.basketProductList[index].totalQuantity! + 1,
-                            context: context,
-                            productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
-                            supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
-                            cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
-                            totalPayment:state.totalPayment,
-                            saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
-                          ));
-                        } else {
-                          showSnackBar(
-                              context: context,
-                              title: '${AppLocalizations.of(context)!.out_of_stock}',
-                              bgColor: AppColors.redColor);
-                        }
-                      }
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Directionality(
+                              textDirection: TextDirection.ltr,
+                              child: Text(
+                                '${formatter(state.basketProductList[index].totalPayment?.toString() ??"0")}${AppLocalizations.of(context)!.currency}',
+                                style: TextStyle(
+                                    color: AppColors.blackColor,
+                                    fontSize: AppConstants.smallFont,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            30.width,
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if(!state.isLoading){
+                                      if ((state.CartItemList.data?.data?[index].productStock ?? 0 )>=
+                                          state.basketProductList[index].totalQuantity! + 1) {
+                                        bloc.add(BasketEvent.productUpdateEvent(
+                                          listIndex: index,
+                                          productWeight:
+                                          state.basketProductList[index].totalQuantity! + 1,
+                                          context: context,
+                                          productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
+                                          supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                                          cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
+                                          totalPayment:state.totalPayment,
+                                          saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
+                                        ));
+                                      } else {
+                                        showSnackBar(
+                                            context: context,
+                                            title: '${AppLocalizations.of(context)!.out_of_stock}',
+                                            bgColor: AppColors.redColor);
+                                      }
+                                    }
 
-                    },
-                    child: Container(
-                      width: AppConstants.containerSize_25,
-                      height: AppConstants.containerSize_25,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.circular(AppConstants.radius_4),
-                          border: Border.all(color: AppColors.navSelectedColor),
-                          color: AppColors.pageColor),
-                      child: Icon(
-                        Icons.add,
-                        size: 15,
-                        color: AppColors.blackColor,
-                      ),
-                    ),
-                  ),
-                  10.width,
-                  Text(
-                    '${state.basketProductList[index].totalQuantity}',
-                    style: TextStyle(
-                      color: AppColors.blackColor,
-                      fontSize: AppConstants.font_12,
-                    ),
-                  ),
-                  10.width,
-                  GestureDetector(
-                    onTap: () {
-                      if(!state.isLoading) {
-                        if (state.basketProductList[index].totalQuantity! > 1) {
-                          bloc.add(BasketEvent.productUpdateEvent(
-                            listIndex: index,
-                            productWeight:
-                            state.basketProductList[index].totalQuantity! - 1,
-                            context: context,
-                            productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
-                            supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
-                            cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
-                            totalPayment: state
-                                .totalPayment,
-                            saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
-                                0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
-                                .id ?? '')),
-                          ));
-                        }
-                      }
+                                  },
+                                  child: Container(
+                                    width: AppConstants.containerSize_35,
+                                    height: AppConstants.containerSize_35,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(AppConstants.radius_4),
+                                        border: Border.all(color: AppColors.navSelectedColor),
+                                        color: AppColors.pageColor),
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 20,
+                                      color: AppColors.blackColor,
+                                    ),
+                                  ),
+                                ),
+                                10.width,
+                                Text(
+                                  '${state.basketProductList[index].totalQuantity}',
+                                  style: TextStyle(
+                                    color: AppColors.blackColor,
+                                    fontSize: AppConstants.smallFont,
+                                  ),
+                                ),
+                                10.width,
+                                GestureDetector(
+                                  onTap: () {
+                                    if(!state.isLoading) {
+                                      if (state.basketProductList[index].totalQuantity! > 1) {
+                                        bloc.add(BasketEvent.productUpdateEvent(
+                                          listIndex: index,
+                                          productWeight:
+                                          state.basketProductList[index].totalQuantity! - 1,
+                                          context: context,
+                                          productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
+                                          supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                                          cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
+                                          totalPayment: state
+                                              .totalPayment,
+                                          saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
+                                              0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
+                                              .id ?? '')),
+                                        ));
+                                      }
+                                    }
 
-                    },
-                    child: Container(
-                      width: AppConstants.containerSize_25,
-                      height: AppConstants.containerSize_25,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.circular(AppConstants.radius_4),
-                          border: Border.all(color: AppColors.navSelectedColor),
-                          color: AppColors.pageColor),
-                      child: Text('-',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.mediumFont,
-                              color: AppColors.blackColor)),
+                                  },
+                                  child: Container(
+                                    width: AppConstants.containerSize_35,
+                                    height: AppConstants.containerSize_35,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(AppConstants.radius_4),
+                                        border: Border.all(color: AppColors.navSelectedColor),
+                                        color: AppColors.pageColor),
+                                    child: Icon(
+                                      Icons.remove,
+                                      size: 20,
+                                      color: AppColors.blackColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  deleteDialog(
-                    context: context,
-                    updateClearString: AppStrings.deleteString,
-                    cartProductId: state.basketProductList[index].cartProductId,
-                    listIndex: index,
-                    totalAmount : state.basketProductList[index].totalPayment!,
-                  );
-                },
-                child: SvgPicture.asset(
-                  AppImagePath.delete,
                 ),
-              ),
-            ],
+
+
+            /*    GestureDetector(
+                  onTap: () {
+                    deleteDialog(
+                      context: context,
+                      updateClearString: AppStrings.deleteString,
+                      cartProductId: state.basketProductList[index].cartProductId,
+                      listIndex: index,
+                      totalAmount : state.basketProductList[index].totalPayment!,
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    AppImagePath.delete,
+                  ),
+                ),*/
+              ],
+            ),
           ),
         );
       },

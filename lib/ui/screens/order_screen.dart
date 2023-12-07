@@ -196,8 +196,7 @@ class OrderScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.products,
-                      value:
-                          state.orderDetailsList[index].products.toString(),
+                      value: state.orderDetailsList[index].products.toString(),
                       titleColor: AppColors.blackColor,
                       valueColor: AppColors.blackColor,
                       valueTextSize: AppConstants.smallFont,
@@ -231,8 +230,8 @@ class OrderScreenWidget extends StatelessWidget {
                           '',
                       titleColor: AppColors.blackColor,
                       valueColor:
-                          state.orderDetailsList[index].status?.statusName ==
-                                  AppLocalizations.of(context)!.pending_delivery
+                          state.orderDetailsList[index].status?.statusName?.toTitleCase() ==
+                                  AppLocalizations.of(context)!.pending_delivery.toTitleCase()
                               ? AppColors.orangeColor
                               : AppColors.mainColor,
                       valueTextSize: AppConstants.smallFont,
