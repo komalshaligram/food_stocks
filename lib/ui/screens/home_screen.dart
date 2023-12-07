@@ -1023,12 +1023,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {
-                                    // context.read<HomeBloc>().add(
-                                    //     HomeEvent.updateQuantityOfProduct(
-                                    //       quantity: quantity,
-                                    //         context: context1));
-                                  },
+                                  onQuantityChanged: (quantity) {},
                                   onQuantityIncreaseTap: () {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.increaseQuantityOfProduct(
