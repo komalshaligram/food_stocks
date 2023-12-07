@@ -327,11 +327,12 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       File image = await File(path).writeAsBytes(imageInUnit8List);
                      bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
                           context: context,
-                          supplierId: args?[AppStrings.supplierIdString],
-                          signPath: image.path,
-                          orderId: args?[AppStrings.orderIdString],
-                          driverName: args?[AppStrings.driverNameString],
-                        driverNumber: args?[AppStrings.driverNumberString]
+                         supplierId: args?[AppStrings.supplierIdString],
+                         signPath: image.path,
+                         orderId: args?[AppStrings.orderIdString],
+                         driverName: args?[AppStrings.driverNameString] ?? '',
+                         driverNumber: args?[AppStrings.driverNumberString] ??
+                             ''
                       ),
                       );
                     } else {
