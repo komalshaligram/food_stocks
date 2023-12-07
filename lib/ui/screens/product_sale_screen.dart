@@ -192,7 +192,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: 70,
                 maxHeightDiskCache: (70-45).round(),
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.fill,
                 alignment: Alignment.center,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(

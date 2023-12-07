@@ -163,7 +163,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               Directionality(
                                                 textDirection: TextDirection.ltr,
                                                 child: Text(
-                                                  '${(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}${' : '}',
+                                                  ': ${(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
