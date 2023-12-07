@@ -11,8 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import '../../ui/utils/themes/app_strings.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -82,7 +81,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setWalletId(UserWalletId: response.data?.wallet ?? '');
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? AppStrings.loginSuccessString,
+                  title: response.message ?? '${AppLocalizations.of(event.context)!.login_successful}',
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
                       (route) => route.name == RouteDefine.connectScreen.name);
@@ -93,7 +92,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
+                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
@@ -102,7 +101,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         } else {
           showSnackBar(
               context: event.context,
-              title: AppStrings.enterOtpString,
+              title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
               bgColor: AppColors.mainColor);
         }
       } else if (event is _ChangeOtpEvent) {

@@ -361,8 +361,8 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: state.balance,
-                                                expense: 100 -state.expensePercentage,
+                                                pendingBalance: formatter(state.balance.toString()),
+                                                expense: 100 - state.expensePercentage,
                                                 totalBalance: 100
                                             ),
                                           ],
@@ -383,7 +383,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${bloc.splitNumber(state.totalCredit.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -394,7 +394,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${bloc.splitNumber(state.thisMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -409,7 +409,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${bloc.splitNumber(state.lastMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -647,7 +647,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      'Messages not found',
+                                      '${AppLocalizations.of(context)!.messages_not_found}',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.textColor),
@@ -1236,7 +1236,7 @@ class HomeScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Select supplier',
+                                  '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -1377,7 +1377,7 @@ class HomeScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        'Suppliers not available',
+                       ' ${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),

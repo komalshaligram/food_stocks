@@ -517,7 +517,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.outOfStockString,
+                          '${AppLocalizations.of(context)!.out_of_stock}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),

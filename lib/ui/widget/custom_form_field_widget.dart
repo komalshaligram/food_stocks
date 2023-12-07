@@ -7,6 +7,7 @@ import '../utils/themes/app_styles.dart';
 class CustomFormField extends StatelessWidget {
   CustomFormField({
     Key? key,
+    required BuildContext context,
     required TextEditingController controller,
     required TextInputType keyboardType,
     //   required TextInputAction inputAction,
@@ -121,7 +122,7 @@ class CustomFormField extends StatelessWidget {
           textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
       // maxLength: maxLimits,
       validator: (value) =>
-          AuthFormValidation().formValidation(value!, _validator),
+          AuthFormValidation().formValidation(value!, _validator ,context),
       decoration: InputDecoration(
           labelStyle: TextStyle(color: AppColors.textColor),
           suffixIcon: postIconBtn,

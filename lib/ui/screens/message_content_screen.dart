@@ -81,10 +81,10 @@ class MessageContentScreenWidget extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context1) => CommonAlertDialog(
-                            title: "Delete",
-                            subTitle: 'Are you sure?',
-                            positiveTitle: 'Yes',
-                            negativeTitle: 'No',
+                            title: '${AppLocalizations.of(context)!.delete}',
+                            subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+                            positiveTitle: '${AppLocalizations.of(context)!.yes}',
+                            negativeTitle: '${AppLocalizations.of(context)!.no}',
                             negativeOnTap: () {
                               Navigator.pop(context1);
                             },

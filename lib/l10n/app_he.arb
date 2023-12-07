@@ -76,7 +76,7 @@
   "enter_the_code_sent_to_phone_num": "הזן את הקוד שנשלח למספר הטלפון שהזנת",
   "not_receive_verification_code": "לא קיבלת קוד אימות ?",
   "send_again": "שלח שוב",
-  "logout": "להתנתק",
+  "logout": "התנתק",
   "save": "שמור",
   "companies": "חברות",
   "all_companies": "כל החברות",
@@ -156,8 +156,130 @@
   "november": "נוֹבֶמבֶּר",
   "december": "דֵצֶמבֶּר",
   "no_data" : "אין מידע",
-  "cart_empty" : "Your cart is empty",
+  "cart_empty" : "העגלה שלך ריקה",
   "please_enter_email" : "אנא הזן כתובת מייל",
-  "please_enter_valid_email" : "אנא הזן כתובת מייל חוקית"
+  "please_enter_valid_email" : "אנא הזן כתובת מייל חוקית",
+  "phone_number_cant_be_empty" : "מספר טלפון לא יכול להיות ריק",
+  "please_enter_valid_phone_number" : "אנא הזן מספר טלפון תקין",
+  "phone_number_must_be_10digit" : "מספר טלפון צריך להיות בן 10 ספרות",
+  "please_enter_your_business_name" : "אנא הזן את שם העסק",
+  "please_enter_valid_business_name" : "אנא הזן את שם העסק תקין",
+  "please_enter_alphabets_only" : "אנא הזן אותיות בלבד",
+  "please_enter_valid_business_id" : "אנא הזן מספר ח.פ. תקין",
+  "please_enter_business_id" : "אנא הזן מספר ח.פ.ן",
+  "please_enter_owner_name" : "אנא הזן שם בעל העסק",
+  "please_enter_israel_id" : "אנא הזן מספר ת.ז.",
+  "please_enter_valid_israel_id" : "אנא הזן מספר ת.ז. תקין",
+  "please_enter_contact_name" : "אנא הזם שם איש קשר",
+  "please_enter_address" : "אנא הזן כתובת",
+  "please_enter_fax_number" : "אנא הזן מספר פקס",
+  "please_enter_valid_fax_number" : "אנא הזן מספר פקס תקין",
+  "logged_out_successfully" : "התנתקת בהצלחה",
+  "are_you_sure" : "האם אתה בטוח?",
+  "document" : "קובץ",
+  "registered_successfully": "נרשמת בהצלחה",
+  "updated_successfully": "עודכן בהצלחה",
+  "removed_successfully": "!הוסר בהצלחה",
+  "something_is_wrong_try_again": "!משהו השתבש, אנא נסה שנית",
+  "image_not_set": "לא הוזנה תמונה",
+  "file_size_must_be_less_then": "KB 1024 משקל הקובץ צריך להיות קטן מ",
+  "please_select_opening_time_after_previous_closing_time" : "אנא בחר שעת פתיחה שונה מהקודמת",
+  "please_select_opening_time_before_closing_time" : "אנא בחר שעת פתיחה מוקדמת יותר משעת סגירה",
+  "please_select_closing_time_after_opening_time" : "אנא בחר שעת סגירה מאוחרת יותר משעת פתיחה",
+  "please_select_opening_time" : "אנא בחר שעת פתיחה",
+  "please_select_previous_shift_time" : "אנא מלא את השעות הקודמות",
+  "please_select_first_shift_time" : "אנא מלא את השעות הראשונות",
+  "please_enter_otp" : "אנא הזן את הקוד",
+  "please_select_time_grater_then_0" : "אנא בחר שעה גדולה יותר מ 00:00",
+  "please_fill_up_closing_time" : "אנא הזן שעת סגירה",
+  "no_internet_connection" : "אין חיבור לאינטרנט",
+  "cities_not_available" : "אין את רשימת הערים",
+  "select_supplier" : "בחר ספק",
+  "please_select_supplier" : "אנא בחר ספק",
+  "suppliers_not_available" : "הספר לא קיים",
+  "search_result_not_found" : "לא נמצאו תוצאות חיפוש",
+  "products_not_available" : "לא נמצאו מוצרים",
+  "sub_categories_not_available" : "תת קטגוריה לא קיימת",
+  "sub_categories_not_available" : "תת קטגוריה לא קיימת",
+  "messages_not_found" : "הודעה לא נמצאה",
+  "currently_this_Supplier_has_no_products" : "כרגע אין מוצרים עבור ספק זה",
+  "currently_products_are_not_on_sale" : "כרגע אין מוצרים במבצע",
+  "recommendation_products_are_not_available" : "מוצרים מומלצים לא קיימים",
+  "companies_not_available" : "חברות לא קיימות",
+  "categories_not_available" : "קטגוריות לא קיימות",
+  "forms_Files_not_available" : "קבצים וטפסים לא קיימים",
+  "yes" : "כן",
+  "no" : "לא",
+  "qa_not_available" : "לא נמצאו שאלות ותשובות",
+  "product_added_to_cart" : "המוצר הוסף לסל הקניות",
+  "you_have_reached_maximum_quantity" : "הגעת לכמות המקסימלית",
+  "downloaded_successfully" : " !הורד בהצלחה",
+  "failed_download":"ההורדה נכשלה",
+  "camera_permission":"אנא אפשר הרשאות מצלמה",
+  "storage_permission":"אנא אפשר הרשאות אכסון",
+  "enter_4digit_otp":"אנא הזן קוד בין 4 ספרות",
+  "you_want_clear_cart":"האם אתה בטוח שאתה רוצה לאפס את סל הקניות?",
+  "you_want_delete_product":"האם אתה בטוח שאתה רוצה למחוק את המוצר?",
+  "select_issue":"אנא בחר סוג בעיה",
+  "signature_missing":"חסרה חתימה",
+  "connection_timed_out":"בעיית  חיבור לשרת",
+  "send_timed_out":"בעיית שליחה לשרת",
+  "receive_timed_out":"בעיית קבלה מהשרת",
+  "bad_request":"בעיה בבקשה",
+  "permission_denied":"אין הרשאה",
+  "server_internal_error":"בעייה פנימית בשרת",
+  "server_bad_response":"שגיאה בבקשה לשרת",
+  "server_canceled":"השרת דחה את הפנייה",
+  "unknown_error":"בעיה לא ידועה",
+  "login_successful":"התחברת בהצלחה",
+  "add_1_quantity":"בחר לפחות כמות אחת",
+  "out_of_stock":"אזל במלאי",
+  "select_business_type":"אנא בחר את סוג העסק"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

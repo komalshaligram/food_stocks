@@ -32,7 +32,7 @@ import '../../data/model/res_model/product_details_res_model/product_details_res
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'store_category_event.dart';
 
 part 'store_category_state.dart';
@@ -88,7 +88,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -153,7 +153,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -226,7 +226,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -348,7 +348,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           }
@@ -374,7 +374,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.selectSupplierMsgString,
+                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -394,7 +394,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.maxQuantityMsgString,
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -490,7 +490,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             .isEmpty) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.selectSupplierMsgString,
+              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -501,7 +501,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             0) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.minQuantityMsgString,
+              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -586,20 +586,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.addCartSuccessString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -679,7 +679,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(isSearching: false));
             // showSnackBar(
             //     context: event.context,
-            //     title: response.message ?? AppStrings.somethingWrongString,
+            //     title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
             //     bgColor: AppColors.mainColor);
           }
         } on ServerException {
