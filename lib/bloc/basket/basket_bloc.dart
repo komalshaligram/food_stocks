@@ -29,7 +29,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
       if (event is _getAllCartEvent) {
         debugPrint('cartId____${preferencesHelper.getCartId()}');
-        emit(state.copyWith(isShimmering: true));
+        emit(state.copyWith(isShimmering: true ,language: preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
@@ -161,7 +161,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
-            Navigator.pop(event.dialogContext);
+            //Navigator.pop(event.dialogContext);
             emit(state.copyWith(
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
