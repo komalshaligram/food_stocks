@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:html/parser.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PushNotificationService {
@@ -75,11 +76,17 @@ class PushNotificationService {
     );
 
 // onMessage is called when the app is in foreground and a notification is received
-    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
       //  consoleLog(message, key: 'firebase_message');
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
-      //const iOSDetails = IOSNotificationDetails();
+      // final http.Response response = await http.get(Uri.parse(URL))
+      final Directory directory = await getApplicationDocumentsDirectory();
+     /* final String filePath = '${directory.path}/food_stock.png';
+      final BigPictureStyleInformation bigPictureStyleInformation =
+      BigPictureStyleInformation(FilePathAndroidBitmap(filePath),
+          largeIcon: FilePathAndroidBitmap(filePath));*/
+
 // If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
       if (notification != null && android != null) {
@@ -94,6 +101,7 @@ class PushNotificationService {
               channel.name,
               channelDescription: channel.description,
               icon: android.smallIcon,
+               // styleInformation: bigPictureStyleInformation
             ),
           ),
           payload: message.data.toString(),

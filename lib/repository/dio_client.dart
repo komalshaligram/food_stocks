@@ -280,24 +280,24 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
     //   showSnackBar(context: context, title: title, bgColor: bgColor);
-      showSnackBar(
+    /*  showSnackBar(
           context: context!,
           title: "Connection timed out",
-          bgColor: AppColors.redColor);
+          bgColor: AppColors.redColor);*/
       return ErrorEntity(code: -1, message: "Connection timed out");
 
     case DioExceptionType.sendTimeout:
-      showSnackBar(
+      /*showSnackBar(
           context: context!,
           title: "Send timed out",
-          bgColor: AppColors.redColor);
+          bgColor: AppColors.redColor);*/
       return ErrorEntity(code: -1, message: "Send timed out");
 
     case DioExceptionType.receiveTimeout:
-      showSnackBar(
+      /*showSnackBar(
           context: context!,
           title: "Receive timed out",
-          bgColor: AppColors.redColor);
+          bgColor: AppColors.redColor);*/
       return ErrorEntity(code: -1, message: "Receive timed out");
 
     case DioExceptionType.badCertificate:
