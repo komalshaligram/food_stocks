@@ -43,6 +43,9 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required String orderId,
   }) = _createIssueEvent;
 
+  const factory ProductDetailsEvent.checkAllEvent(
+  ) = _checkAllEvent;
+
 
 
 }

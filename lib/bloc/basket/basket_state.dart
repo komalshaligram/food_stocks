@@ -12,6 +12,7 @@ class BasketState with _$BasketState {
     required double totalPayment,
     required bool isLoading,
     required int productImageIndex,
+    required String language,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -23,6 +24,7 @@ class BasketState with _$BasketState {
      totalPayment: 0,
      isLoading: false,
        productImageIndex: 0,
+     language: 'he'
 
 );
 }
