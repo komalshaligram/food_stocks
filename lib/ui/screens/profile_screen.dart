@@ -679,6 +679,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.business_name,
                               ),
                               CustomFormField(
+                                context: context,
                                 controller: state.businessNameController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -697,6 +698,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                 name: AppLocalizations.of(context)!.business_id,
                               ),
                               CustomFormField(
+                                context: context,
                                 controller: state.hpController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -716,6 +718,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     AppLocalizations.of(context)!.name_of_owner,
                               ),
                               CustomFormField(
+                                context: context,
                                 controller: state.ownerNameController,
                                 inputformet: [
                                   /*FilteringTextInputFormatter.deny(
@@ -735,6 +738,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.israel_id,
                                   ),
                                   CustomFormField(
+                                    context: context,
                                     controller: state.idController,
                                     inputformet: [
                                       /*TextInputFormatter.withFunction((oldValue, newValue) {
@@ -773,7 +777,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.done,
-                                    validator: AppStrings.contactNameValString,
+                                    validator: AppStrings.contactNameValString, context: context,
                                   ),
                                   40.height,
                                   CustomButtonWidget(
