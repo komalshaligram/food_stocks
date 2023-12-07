@@ -39,14 +39,14 @@ class FileSelectionOptionWidget extends StatelessWidget {
                   title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.mediumFont,
-                      color: AppColors.blackColor),
+                      color: title =='Remove'?AppColors.redColor:AppColors.blackColor),
                 ),
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(context.rtl ? pi : 0),
                   child: Icon(
                     icon,
-                    color: AppColors.blueColor,
+                    color: title =='Remove'?AppColors.redColor:AppColors.blueColor,
                   ),
                 ),
               ],
