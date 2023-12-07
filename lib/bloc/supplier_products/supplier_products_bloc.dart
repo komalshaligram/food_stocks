@@ -25,7 +25,7 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'supplier_products_event.dart';
 
 part 'supplier_products_state.dart';
@@ -103,7 +103,7 @@ class SupplierProductsBloc
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -254,7 +254,7 @@ class SupplierProductsBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -271,7 +271,7 @@ class SupplierProductsBloc
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.selectSupplierMsgString,
+                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -293,7 +293,7 @@ class SupplierProductsBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.maxQuantityMsgString,
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -370,7 +370,7 @@ class SupplierProductsBloc
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.selectSupplierMsgString,
+              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -378,7 +378,7 @@ class SupplierProductsBloc
             0) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.minQuantityMsgString,
+              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -445,20 +445,20 @@ class SupplierProductsBloc
                 isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.addCartSuccessString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

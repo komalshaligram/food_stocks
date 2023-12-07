@@ -35,7 +35,7 @@ import '../../data/model/res_model/recommendation_products_res_model/recommendat
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'store_event.dart';
 
 part 'store_state.dart';
@@ -85,7 +85,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -128,7 +128,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -172,7 +172,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -196,7 +196,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -222,7 +222,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -337,7 +337,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           }
@@ -358,7 +358,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.selectSupplierMsgString,
+                  title:'${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -373,7 +373,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.maxQuantityMsgString,
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -407,7 +407,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.selectSupplierMsgString,
+              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -415,7 +415,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             0) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.minQuantityMsgString,
+              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -487,7 +487,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.addCartSuccessString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
             // } else {
@@ -501,13 +501,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

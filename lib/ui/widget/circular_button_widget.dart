@@ -35,7 +35,7 @@ class CircularButtonWidget extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: RichText(
+        child: /*RichText(
           text: TextSpan(
             text: buttonName,
             style: TextStyle(
@@ -47,7 +47,22 @@ class CircularButtonWidget extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        ),*/
+        Row(
+          children: [
+            Text(buttonName,
+              style: TextStyle(
+                  color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
+            ),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text('${buttonValue} : ',
+                  style: TextStyle(
+                      color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
+              ),
+            )
+          ],
+        )
       ),
     );
   }

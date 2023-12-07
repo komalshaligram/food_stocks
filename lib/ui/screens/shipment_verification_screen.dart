@@ -35,6 +35,8 @@ class ShipmentVerificationScreen extends StatelessWidget {
       create: (context) => ShipmentVerificationBloc(),
       child: ShipmentVerificationScreenWidget(
         args: args,
+        status: args?[AppStrings.deliveryStatusString],
+
       ),
     );
   }
@@ -42,12 +44,15 @@ class ShipmentVerificationScreen extends StatelessWidget {
 
 class ShipmentVerificationScreenWidget extends StatelessWidget {
   final Map? args;
+  String? status ;
 
-  ShipmentVerificationScreenWidget({required this.args, super.key});
+
+
+  ShipmentVerificationScreenWidget({required this.args, super.key, required this.status});
 
   final GlobalKey<SfSignaturePadState> signatureGlobalKey = GlobalKey();
-
   bool isSign = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                   child: CircularButtonWidget(
                     buttonName: AppLocalizations.of(context)!.total,
                     buttonValue:
-                        '${args?[AppStrings.totalAmountString]}${AppLocalizations.of(context)!.currency}',
+                        '${formatter(args?[AppStrings.totalAmountString])}${AppLocalizations.of(context)!.currency}',
                   ),
                 ),
                 onTap: () {
@@ -113,7 +118,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            args?[AppStrings.deliveryStatusString] ?? '',
+                            status?.toTitleCase()?? '',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.orangeColor,
@@ -149,7 +154,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
                             value:
-                                ' ${args?[AppStrings.totalOrderString] ?? ''}${AppLocalizations.of(context)!.currency}',
+                                ' ${formatter(args?[AppStrings.totalOrderString]) ?? '0'}${AppLocalizations.of(context)!.currency}',
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,
@@ -332,7 +337,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                     } else {
                       showSnackBar(
                           context: context,
-                          title: 'Signature is missing',
+                          title: '${AppLocalizations.of(context)!.signature_missing}',
                           bgColor: AppColors.redColor);
                     }
                   },

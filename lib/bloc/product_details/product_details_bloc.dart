@@ -15,7 +15,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'product_details_event.dart';
 
 part 'product_details_state.dart';
@@ -144,7 +144,7 @@ class ProductDetailsBloc
           Navigator.pop(event.context);
           showSnackBar(
               context: event.context,
-              title: 'Please select issue',
+              title: '${AppLocalizations.of(event.context)!.select_issue}',
               bgColor: AppColors.redColor);
         }
       }

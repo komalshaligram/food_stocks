@@ -6,7 +6,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
 
 class BalanceIndicator extends StatelessWidget {
-  final double pendingBalance;
+  final String pendingBalance;
   final double expense;
   final double totalBalance;
 
@@ -27,7 +27,7 @@ class BalanceIndicator extends StatelessWidget {
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-             radiusFactor: 1.1,
+            // radiusFactor: 1.1,
             axisLineStyle: AxisLineStyle(
                 thicknessUnit: GaugeSizeUnit.factor,
                 thickness: 0.2,

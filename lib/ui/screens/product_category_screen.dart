@@ -78,7 +78,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Categories not available',
+                                '${AppLocalizations.of(context)!.categories_not_available}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor),

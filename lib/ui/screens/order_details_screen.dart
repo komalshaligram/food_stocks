@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/order_details/order_details_bloc.dart';
@@ -72,7 +73,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${bloc.splitNumber(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                    '${formatter(state.orderByIdList.data!.orderData!.first.totalAmount?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
                               ),
                   ),
                   onTap: () {
@@ -154,8 +155,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     Text(
                       state.orderByIdList.data!.ordersBySupplier![index]
-                          .deliverStatus!.statusName
-                          .toString(),
+                          .deliverStatus!.statusName!
+                          .toTitleCase(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: /*state.orderByIdList.data!.ordersBySupplier![index]
@@ -202,8 +203,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.total_order,
-                      value:
-                          '${bloc.splitNumber(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                      value: '${formatter(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,

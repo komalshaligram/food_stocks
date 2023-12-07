@@ -8,7 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/model/res_model/get_app_content_details_res_model/get_app_content_details_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'app_content_event.dart';
 
@@ -34,7 +34,7 @@ class AppContentBloc extends Bloc<AppContentEvent, AppContentState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}

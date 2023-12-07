@@ -91,6 +91,7 @@ class LogInScreenWidget extends StatelessWidget {
                             /*FilteringTextInputFormatter.deny(
                                 RegExp(r'\s')),*/
                           ],
+                          context: context,
                           controller: phoneController,
                           keyboardType: TextInputType.phone,
                           hint: AppStrings.hintNumberString,
