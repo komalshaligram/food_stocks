@@ -299,7 +299,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  fileName,
+                  fileName.toTitleCase(),
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.textColor,

@@ -12,6 +12,7 @@ class ProductStockModel with _$ProductStockModel {
     @Default('') String productSaleId,
     @Default(0) int quantity,
     @Default('') String note,
+    @Default(false) bool isNoteOpen,
     @Default(0) int stock,
     @Default(0.0) double totalPrice,
     // @Default(false) bool isBarcodeProduct,

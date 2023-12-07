@@ -537,24 +537,26 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            List<List<ProductStockModel>> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.planoGramUpdateIndex]
-                    [state.productStockUpdateIndex] =
-                productStockList[state.planoGramUpdateIndex]
-                        [state.productStockUpdateIndex]
-                    .copyWith(
-                        note: '',
-                        quantity: 0,
-                        productSupplierIds: '',
-                        totalPrice: 0.0,
-                        productSaleId: '');
+            // List<List<ProductStockModel>> productStockList =
+            //     state.productStockList.toList(growable: true);
+            // productStockList[state.planoGramUpdateIndex]
+            //         [state.productStockUpdateIndex] =
+            //     productStockList[state.planoGramUpdateIndex]
+            //             [state.productStockUpdateIndex]
+            //         .copyWith(
+            //             note: '',
+            //             quantity: 0,
+            //             productSupplierIds: '',
+            //             totalPrice: 0.0,
+            //             productSaleId: '');
             add(StoreCategoryEvent.setCartCountEvent());
             emit(state.copyWith(
-                isLoading: false, productStockList: productStockList));
+              isLoading: false, /*productStockList: productStockList*/
+            ));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
@@ -662,6 +664,16 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             search: event.search,
             previousSearch: event.search,
             searchList: event.searchList));
+      } else if (event is _ToggleNoteEvent) {
+        List<List<ProductStockModel>> productStockList =
+            state.productStockList.toList(growable: true);
+        productStockList[productStockList.indexOf(productStockList.last)][0] =
+            productStockList[productStockList.indexOf(productStockList.last)][0]
+                .copyWith(
+                    isNoteOpen: !productStockList[
+                            productStockList.indexOf(productStockList.last)][0]
+                        .isNoteOpen);
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }

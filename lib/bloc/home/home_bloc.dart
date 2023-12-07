@@ -449,24 +449,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
-                    quantity: 0,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '');
+            // List<ProductStockModel> productStockList =
+            // state.productStockList.toList(growable: true);
+            // productStockList[state.productStockUpdateIndex] =
+            //     productStockList[state.productStockUpdateIndex].copyWith(
+            //         note: '',
+            //         quantity: 0,
+            //         productSupplierIds: '',
+            //         totalPrice: 0.0,
+            //         productSaleId: '');
             emit(state.copyWith(
                 isLoading: false,
-                productStockList: productStockList,
+                // productStockList: productStockList,
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.setCartCountEvent());
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
@@ -639,12 +640,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _UpdateMessageListEvent) {
         if (event.messageIdList.isNotEmpty) {
           List<MessageData> messageList =
-          state.messageList.toList(growable: true);
+              state.messageList.toList(growable: true);
           messageList.removeWhere(
-                  (message) => event.messageIdList.contains(message.id));
+              (message) => event.messageIdList.contains(message.id));
           debugPrint('message len = ${messageList.length}');
           emit(state.copyWith(messageList: messageList));
         }
+      } else if (event is _ToggleNoteEvent) {
+        List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+        productStockList[state.productStockUpdateIndex] =
+            productStockList[state.productStockUpdateIndex].copyWith(
+                isNoteOpen: !productStockList[state.productStockUpdateIndex]
+                    .isNoteOpen);
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }

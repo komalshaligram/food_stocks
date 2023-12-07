@@ -67,4 +67,6 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.updateMessageListEvent({
     required List<String> messageIdList,
   }) = _UpdateMessageListEvent;
+
+  const factory HomeEvent.toggleNoteEvent() = _ToggleNoteEvent;
 }

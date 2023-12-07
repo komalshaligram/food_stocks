@@ -35,4 +35,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory RecommendationProductsEvent.toggleNoteEvent() =
+      _ToggleNoteEvent;
 }

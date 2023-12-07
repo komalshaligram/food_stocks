@@ -431,21 +431,22 @@ class SupplierProductsBloc
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
-                    quantity: 0,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '');
+            // List<ProductStockModel> productStockList =
+            //     state.productStockList.toList(growable: true);
+            // productStockList[state.productStockUpdateIndex] =
+            //     productStockList[state.productStockUpdateIndex].copyWith(
+            //         note: '',
+            //         quantity: 0,
+            //         productSupplierIds: '',
+            //         totalPrice: 0.0,
+            //         productSaleId: '');
             add(SupplierProductsEvent.setCartCountEvent());
             emit(state.copyWith(
-                isLoading: false, productStockList: productStockList));
+                isLoading: false /*, productStockList: productStockList*/));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
@@ -472,6 +473,14 @@ class SupplierProductsBloc
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
+      } else if (event is _ToggleNoteEvent) {
+        List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+        productStockList[state.productStockUpdateIndex] =
+            productStockList[state.productStockUpdateIndex].copyWith(
+                isNoteOpen: !productStockList[state.productStockUpdateIndex]
+                    .isNoteOpen);
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }

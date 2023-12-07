@@ -468,19 +468,19 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
-                    quantity: 0,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '');
+            // List<ProductStockModel> productStockList =
+            //     state.productStockList.toList(growable: true);
+            // productStockList[state.productStockUpdateIndex] =
+            //     productStockList[state.productStockUpdateIndex].copyWith(
+            //         note: '',
+            //         quantity: 0,
+            //         productSupplierIds: '',
+            //         totalPrice: 0.0,
+            //         productSaleId: '');
             add(StoreEvent.setCartCountEvent());
             emit(state.copyWith(
                 isLoading: false,
-                productStockList: productStockList,
+                // productStockList: productStockList,
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
@@ -648,6 +648,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             search: event.search,
             previousSearch: event.search,
             searchList: event.searchList));
+      } else if (event is _ToggleNoteEvent) {
+        List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+        productStockList[state.productStockUpdateIndex] =
+            productStockList[state.productStockUpdateIndex].copyWith(
+                isNoteOpen: !productStockList[state.productStockUpdateIndex]
+                    .isNoteOpen);
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }
