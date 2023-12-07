@@ -414,26 +414,35 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       '',
                                   productPrice: state
                                           .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity,
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  supplierWidget: buildSupplierSelection(context: context),
-                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: context.rtl,
-                                  scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityIncreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .decreaseQuantityOfProduct(
+                                  state.productStockUpdateIndex]
+                                      .totalPrice *
+                                      state.productStockList[state
+                                          .productStockUpdateIndex].quantity,
+                              productScaleType: state.productDetails.first
+                                  .scales?.scaleType ?? '',
+                              productWeight: state.productDetails.first
+                                  .itemsWeight?.toDouble() ?? 0.0,
+                              supplierWidget: buildSupplierSelection(
+                                  context: context),
+                              productStock: state.productStockList[state
+                                  .productStockUpdateIndex].stock,
+                              isRTL: context.rtl,
+                              scrollController: scrollController,
+                              productQuantity: state.productStockList[state
+                                  .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {
+
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
                                   noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),

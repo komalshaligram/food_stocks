@@ -276,8 +276,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                 right: context.rtl ? null : 7,
                                                 left: context.rtl ? 7 : null,
                                                 child: Container(
-                                                  height: 16,
-                                                  width: 16,
+                                                  height: 18,
+                                                  width: 18,
                                                   decoration: BoxDecoration(
                                                       color: AppColors
                                                           .notificationColor,
@@ -1023,6 +1023,12 @@ class HomeScreenWidget extends StatelessWidget {
                                   isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  onQuantityChanged: (quantity) {
+                                    // context.read<HomeBloc>().add(
+                                    //     HomeEvent.updateQuantityOfProduct(
+                                    //       quantity: quantity,
+                                    //         context: context1));
+                                  },
                                   onQuantityIncreaseTap: () {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.increaseQuantityOfProduct(

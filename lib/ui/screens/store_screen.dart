@@ -1483,6 +1483,9 @@ class StoreScreenWidget extends StatelessWidget {
                               scrollController: scrollController,
                               productQuantity: state.productStockList[state
                                   .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {
+
+                              },
                               onQuantityIncreaseTap: () {
                                 context.read<StoreBloc>().add(
                                     StoreEvent.increaseQuantityOfProduct(

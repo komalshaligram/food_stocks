@@ -91,6 +91,8 @@ class AppStrings {
   static const minQuantityMsgString = 'Add at least 1 quantity';
   static const selectSupplierMsgString = 'Please select supplier';
   static const maxQuantityMsgString = 'You have reached maximum quantity';
+  static const maxQuantityMsg1String = 'This supplier have ';
+  static const maxQuantityMsg2String = ' quantity in stock';
   static const imageNotSetString = 'Image not set';
   static const fileSizeLimitString =
       'File size must be less then ${AppConstants.fileSizeCap}KB';

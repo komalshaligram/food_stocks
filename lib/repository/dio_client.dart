@@ -73,11 +73,10 @@ class DioClient {
       try {
         Options requestOptions = options ??
             Options(
-                /*headers: {
+                headers: {
               HttpHeaders.authorizationHeader:
                   'Bearer ${preferencesHelper.getAuthToken()}'
-            }*/
-                );
+            });
         requestOptions.headers = requestOptions.headers ?? {};
 
         var response = await _dio.post(path,

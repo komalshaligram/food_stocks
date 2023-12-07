@@ -155,7 +155,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                                 topRight: Radius.circular(
                                     context.rtl
                                     ? AppConstants.radius_5
-                                        : AppConstants.radius_50),
+                                    : AppConstants.radius_50),
                               ),
                             ),
                           ),
@@ -165,19 +165,19 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: AppColors.borderColor.withOpacity(0.5),
-                            width: 1))),
-                padding: const EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
-                    horizontal: AppConstants.padding_20),
-                child: Row(
-                  children: [],
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //       border: Border(
+              //           bottom: BorderSide(
+              //               color: AppColors.borderColor.withOpacity(0.5),
+              //               width: 1))),
+              //   padding: const EdgeInsets.symmetric(
+              //       vertical: AppConstants.padding_10,
+              //       horizontal: AppConstants.padding_20),
+              //   child: Row(
+              //     children: [],
+              //   ),
+              // ),
               Container(
                 padding: EdgeInsets.symmetric(
                     vertical: AppConstants.padding_20,
