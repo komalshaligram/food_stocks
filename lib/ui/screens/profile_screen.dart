@@ -290,13 +290,13 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                       (context2) =>
                                                                           CommonAlertDialog(
                                                                     title:
-                                                                        "Remove",
+                                                                        '${AppLocalizations.of(context)!.remove}',
                                                                     subTitle:
-                                                                        'Are you sure?',
+                                                                        '${AppLocalizations.of(context)!.are_you_sure}',
                                                                     positiveTitle:
-                                                                        'Yes',
+                                                                        '${AppLocalizations.of(context)!.yes}',
                                                                     negativeTitle:
-                                                                        'No',
+                                                                        '${AppLocalizations.of(context)!.no}',
                                                                     negativeOnTap:
                                                                         () {
                                                                       Navigator.pop(

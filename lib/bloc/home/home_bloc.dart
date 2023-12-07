@@ -305,7 +305,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             showSnackBar(
                 context: event.context,
                 title:
-                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    '' /*"${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}"*/,
                 bgColor: AppColors.redColor);
           }
         }
