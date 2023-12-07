@@ -75,7 +75,7 @@ class SupplierScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Suppliers not Available',
+                                '${AppLocalizations.of(context)!.suppliers_not_available}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor),

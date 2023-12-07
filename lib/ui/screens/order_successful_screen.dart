@@ -112,7 +112,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                   ),
                                   6.height,
                                   BalanceIndicator(
-                                    pendingBalance: state.balance,
+                                    pendingBalance: formatter(state.balance.toString()),
                                       expense: 100 - state.expensePercentage,
                                       totalBalance: 100
                                   ),
@@ -133,7 +133,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                           title: AppLocalizations.of(context)!
                                               .total_credit,
                                           value:
-                                              '${state.totalCredit.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                              '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
                                     ),
                                     10.width,
                                     Flexible(
@@ -143,7 +143,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                           title: AppLocalizations.of(context)!
                                               .this_months_expenses,
                                           value:
-                                              '${state.thisMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                              '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                     ),
                                   ],
                                 ),
@@ -157,7 +157,7 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                                           title: AppLocalizations.of(context)!
                                               .last_months_expenses,
                                           value:
-                                              '${state.lastMonthExpense.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}'),
+                                              '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                     ),
                                     10.width,
                                     Flexible(

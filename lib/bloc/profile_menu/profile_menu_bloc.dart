@@ -13,7 +13,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/widget/common_alert_dialog.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'profile_menu_event.dart';
 
 part 'profile_menu_state.dart';
@@ -48,10 +48,10 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         showDialog(
           context: event.context,
           builder: (context) => CommonAlertDialog(
-            title: "Log Out",
-            subTitle: 'Are you sure?',
-            positiveTitle: 'Yes',
-            negativeTitle: 'No',
+            title: '${AppLocalizations.of(event.context)!.logout}',
+            subTitle: '${AppLocalizations.of(event.context)!.are_you_sure}',
+            positiveTitle: '${AppLocalizations.of(event.context)!.yes}',
+            negativeTitle: '${AppLocalizations.of(event.context)!.no}',
             negativeOnTap: () {
               Navigator.pop(context);
             },
@@ -79,7 +79,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                       .setAppLocale(locale: Locale(AppStrings.hebrewString));
                   showSnackBar(
                       context: event.context,
-                      title: AppStrings.logOutSuccessString,
+                      title:' ${AppLocalizations.of(event.context)!.logged_out_successfully}',
                       bgColor: AppColors.mainColor);
                   Navigator.pop(context);
                   Navigator.popUntil(event.context,

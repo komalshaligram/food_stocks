@@ -140,12 +140,12 @@ class OTPScreenWidget extends StatelessWidget {
                                 if (state.otp.isEmpty) {
                                   showSnackBar(
                                       context: context,
-                                      title: AppStrings.enterOtpString,
+                                      title:  '${AppLocalizations.of(context)!.please_enter_otp}',
                                       bgColor: AppColors.redColor);
                                 } else if (state.otp.length != 4) {
                                   showSnackBar(
                                       context: context,
-                                      title: AppStrings.enter4DigitOtpCode,
+                                      title: '${AppLocalizations.of(context)!.enter_4digit_otp}',
                                       bgColor: AppColors.redColor);
                                 } else {
                                   if (isRegister == true) {

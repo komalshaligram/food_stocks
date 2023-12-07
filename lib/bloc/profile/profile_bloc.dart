@@ -30,6 +30,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'profile_bloc.freezed.dart';
 
@@ -110,7 +111,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isFileUploading: false));
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.imageNotSetString,
+                  title: '${AppLocalizations.of(event.context)!.please_enter_email}',
                   bgColor: AppColors.redColor);
             } catch (e) {
               emit(state.copyWith(isFileUploading: false));
@@ -144,7 +145,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         } on ServerException {
           showSnackBar(
               context: event.context,
-              title: AppStrings.somethingWrongString,
+              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
               bgColor: AppColors.mainColor);
         } catch (e) {}
       } else if (event is _ChangeBusinessTypeEventEvent) {
@@ -226,14 +227,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
+                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
             // showSnackBar(
             //     context: event.context,
-            //     title: AppStrings.somethingWrongString,
+            //     title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
             //     bgColor: AppColors.redColor);
           } catch (e) {
             emit(state.copyWith(isUpdating: false));
@@ -260,20 +261,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             } else {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.somethingWrongString,
+                  title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
               return;
             }
           } on ServerException {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title:'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             return;
           } catch (e) {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             return;
           }
@@ -329,21 +330,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.updateSuccessString,
+                title: '${AppLocalizations.of(event.context)!.please_enter_valid_email}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
           showSnackBar(
               context: event.context,
-              title: AppStrings.somethingWrongString,
+              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
               bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
@@ -354,7 +355,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(UserImageUrl: '', image: File('')));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.removeSuccessString,
+                title:'${AppLocalizations.of(event.context)!.removed_successfully}',
                 bgColor: AppColors.mainColor);
             return;
           }
@@ -373,20 +374,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(UserImageUrl: '', image: File('')));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.removeSuccessString,
+                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
                 bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isFileUploading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
           showSnackBar(
               context: event.context,
-              title: AppStrings.somethingWrongString,
+              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
               bgColor: AppColors.redColor);
         }
       }

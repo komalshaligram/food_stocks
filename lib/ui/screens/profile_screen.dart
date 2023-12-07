@@ -73,7 +73,7 @@ class ProfileScreenWidget extends StatelessWidget {
         if (state.isFileSizeExceeds) {
           showSnackBar(
               context: context,
-              title: AppStrings.fileSizeLimitString,
+              title: '${AppLocalizations.of(context)!.please_enter_email}',
               bgColor: AppColors.redColor);
         }
       },
@@ -481,34 +481,34 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                           color:
                                                                               AppColors.textColor),
                                                                     ),
-                                                                  );
-                                                                },
-                                                              ),
-                                                            )
-                                                      : Icon(
-                                                          Icons.person,
-                                                          size: 60,
-                                                          color: AppColors
-                                                              .textColor,
-                                                        )
-                                                  : state.image.path != ''
-                                                      ? ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(40),
-                                                          child: Image.file(
-                                                            File(state
-                                                                .image.path),
-                                                            fit: BoxFit.contain,
-                                                          ),
-                                                        )
-                                                      : Icon(
-                                                          Icons.person,
-                                                          size: 60,
-                                                          color: AppColors
-                                                              .textColor,
-                                                        )),
-                                          /*state.isUpdate
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                              :Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )
+                                              : state.image.path != ''
+                                              ? ClipRRect(
+                                            borderRadius:
+                                            BorderRadius
+                                                .circular(
+                                                40),
+                                                child: Image.file(
+                                                  File(
+                                                      state.image.path),
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )
+                                              : Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color:
+                                            AppColors.textColor,
+                                          )),/*state.isUpdate
                                               ? state.isFileUploading
                                                   ? Center(
                                                       child:
@@ -576,7 +576,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                     color: AppColors
                                                                         .textColor,
                                                                   )
-                                                                      */ /*Container(
+                                                                      *//*Container(
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color: AppColors
@@ -587,7 +587,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 .withOpacity(
                                                                     0.5),
                                                             width: 1)),
-                                                  )*/ /*
+                                                  )*//*
                                                                       ;
                                                                 },
                                                               ))
@@ -634,133 +634,133 @@ class ProfileScreenWidget extends StatelessWidget {
                                       color: AppColors.blueColor,
                                       size: 18,
                                     ),*/
-                                                ),
-                                          ),
-                                        ],
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              3.height,
+                              Container(
+                                width: getScreenWidth(context1),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalizations.of(context)!.profile_picture,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.textColor),
+                                ),
+                              ),
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!
+                                    .type_of_business,
+                              ),
+                              SizedBox(
+                                // height: AppConstants.textFormFieldHeight,
+                                child: DropdownButtonFormField<String>(
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.blackColor,
+                                  ),
+                                  alignment: Alignment.bottomCenter,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                        left: AppConstants.padding_10,
+                                        right: AppConstants.padding_10),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_3),
+                                      borderSide: BorderSide(
+                                        color: AppColors.borderColor,
                                       ),
                                     ),
                                   ),
-                                  3.height,
-                                  Container(
-                                    width: getScreenWidth(context1),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .profile_picture,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.textColor),
-                                    ),
+                                  isExpanded: true,
+                                  elevation: 0,
+                                  style: TextStyle(
+                                    fontSize: AppConstants.smallFont,
+                                    color: AppColors.blackColor,
                                   ),
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .type_of_business,
-                                  ),
-                                  SizedBox(
-                                    // height: AppConstants.textFormFieldHeight,
-                                    child: DropdownButtonFormField<String>(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.only(
-                                            left: AppConstants.padding_10,
-                                            right: AppConstants.padding_10),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3),
-                                          borderSide: BorderSide(
-                                            color: AppColors.borderColor,
-                                          ),
-                                        ),
-                                      ),
-                                      isExpanded: true,
-                                      elevation: 0,
-                                      style: TextStyle(
-                                        fontSize: AppConstants.smallFont,
-                                        color: AppColors.blackColor,
-                                      ),
-                                      value: state.selectedBusinessType,
-                                      items: state
-                                          .businessTypeList.data?.clientTypes
-                                          ?.map((businessType) {
-                                        return DropdownMenuItem<String>(
-                                          value: businessType.businessType,
-                                          child: Text(
-                                              "${businessType.businessType}"),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newBusinessType) {
-                                        bloc.add(ProfileEvent
-                                            .changeBusinessTypeEvent(
-                                                newBusinessType:
-                                                    newBusinessType!));
-                                      },
-                                    ),
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_name,
-                                  ),
-                                  CustomFormField(
-                                    controller: state.businessNameController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
+                                  value: state.selectedBusinessType,
+                                  items: state
+                                      .businessTypeList.data?.clientTypes
+                                      ?.map((businessType) {
+                                    return DropdownMenuItem<String>(
+                                      value: businessType.businessType,
+                                      child:
+                                          Text("${businessType.businessType}"),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newBusinessType) {
+                                    bloc.add(
+                                        ProfileEvent.changeBusinessTypeEvent(
+                                            newBusinessType: newBusinessType!));
+                                  },
+                                ),
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name:
+                                    AppLocalizations.of(context)!.business_name,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.businessNameController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
                                 RegExp(r'\s')),*/
-                                      LengthLimitingTextInputFormatter(20)
-                                    ],
-                                    keyboardType: TextInputType.text,
-                                    hint:
-                                        "" /*AppLocalizations.of(context)!.life_grocery_store*/,
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.businessNameValString,
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_id,
-                                  ),
-                                  CustomFormField(
-                                    controller: state.hpController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
+                                  LengthLimitingTextInputFormatter(20)
+                                ],
+                                keyboardType: TextInputType.text,
+                                hint:
+                                    "" /*AppLocalizations.of(context)!.life_grocery_store*/,
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.businessNameValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: AppLocalizations.of(context)!.business_id,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.hpController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(9)
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.hpValString,
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .name_of_owner,
-                                  ),
-                                  CustomFormField(
-                                    controller: state.ownerNameController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(9)
+                                ],
+                                keyboardType: TextInputType.number,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.hpValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name:
+                                    AppLocalizations.of(context)!.name_of_owner,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.ownerNameController,
+                                inputformet: [
+                                  /*FilteringTextInputFormatter.deny(
                               RegExp(r'\s')),*/
 
                                       LengthLimitingTextInputFormatter(20)
@@ -777,6 +777,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.israel_id,
                                   ),
                                   CustomFormField(
+                                    context: context,
                                     controller: state.idController,
                                     inputformet: [
                                       /*TextInputFormatter.withFunction((oldValue, newValue) {
@@ -815,7 +816,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.done,
-                                    validator: AppStrings.contactNameValString,
+                                    validator: AppStrings.contactNameValString, context: context,
                                   ),
                                   40.height,
                                   CustomButtonWidget(

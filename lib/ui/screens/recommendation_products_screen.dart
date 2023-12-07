@@ -75,7 +75,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'Recommendation products are not available',
+                                  '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
@@ -439,7 +439,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Select supplier',
+                                '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -580,7 +580,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        'Suppliers not available',
+                        '${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),

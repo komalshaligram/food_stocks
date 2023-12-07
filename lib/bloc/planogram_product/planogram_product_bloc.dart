@@ -23,7 +23,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'planogram_product_event.dart';
 
 part 'planogram_product_state.dart';
@@ -132,7 +132,7 @@ class PlanogramProductBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -149,7 +149,7 @@ class PlanogramProductBloc
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.selectSupplierMsgString,
+                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -164,7 +164,7 @@ class PlanogramProductBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.maxQuantityMsgString,
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -268,7 +268,7 @@ class PlanogramProductBloc
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.selectSupplierMsgString,
+              title:'${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -276,7 +276,7 @@ class PlanogramProductBloc
             0) {
           showSnackBar(
               context: event.context,
-              title: AppStrings.minQuantityMsgString,
+              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -336,20 +336,20 @@ class PlanogramProductBloc
                 isLoading: false, productStockList: productStockList));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.addCartSuccessString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

@@ -33,7 +33,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'more_details_bloc.freezed.dart';
 
 part 'more_details_event.dart';
@@ -128,7 +128,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             } on ServerException {
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.imageNotSetString,
+                  title:'${AppLocalizations.of(event.context)!.image_not_set}',
                   bgColor: AppColors.redColor);
             }
           } else {
@@ -160,14 +160,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               } else {
                 showSnackBar(
                     context: event.context,
-                    title: AppStrings.somethingWrongString,
+                    title:'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                     bgColor: AppColors.redColor);
               }
             } on ServerException {
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.somethingWrongString,
-                  bgColor: AppColors.redColor);
+
             }
           }
 
@@ -220,21 +217,21 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: AppStrings.updateSuccessString,
+                  title:'${AppLocalizations.of(event.context)!.updated_successfully}',
                   bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
             } else {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
+                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } else {
@@ -311,7 +308,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               showSnackBar(
                   context: event.context,
                   title: profileResModel.message ??
-                      AppStrings.somethingWrongString,
+                      '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
@@ -319,7 +316,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -370,14 +367,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? AppStrings.somethingWrongString,
+                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.somethingWrongString,
+                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } catch (e) {
             emit(state.copyWith(isUpdating: false));
@@ -413,7 +410,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(companyLogo: '', image: File('')));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.removeSuccessString,
+                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
                 bgColor: AppColors.mainColor);
             return;
           }
@@ -432,20 +429,20 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(companyLogo: '', image: File('')));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.removeSuccessString,
+                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
                 bgColor: AppColors.mainColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } catch (e) {
           emit(state.copyWith(isLoading: false));
           showSnackBar(
               context: event.context,
-              title: AppStrings.somethingWrongString,
+              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
               bgColor: AppColors.redColor);
         }
       }

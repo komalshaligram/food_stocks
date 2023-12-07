@@ -522,7 +522,7 @@ class StoreScreenWidget extends StatelessWidget {
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          'Search result not found',
+                          '${AppLocalizations.of(context)!.search_result_not_found}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -1589,7 +1589,7 @@ class StoreScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context),
                           alignment: Alignment.center,
                           child: Text(
-                            'Select supplier',
+                            '${AppLocalizations.of(context)!.select_supplier}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.blackColor),
@@ -1745,7 +1745,7 @@ class StoreScreenWidget extends StatelessWidget {
               secondChild: state.productSupplierList.isEmpty
                   ? Center(
                 child: Text(
-                  'Suppliers not available',
+                  '${AppLocalizations.of(context)!.suppliers_not_available}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.textColor),

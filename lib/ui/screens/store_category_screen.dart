@@ -127,7 +127,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         getScreenWidth(context),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          'Sub Categories not available',
+                                          '${AppLocalizations.of(context)!.sub_categories_not_available}',
                                           textAlign:
                                           TextAlign.center,
                                           style: AppStyles
@@ -229,7 +229,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Products not available',
+                                        '${AppLocalizations.of(context)!.products_not_available}',
                                         textAlign: TextAlign.center,
                                         style: AppStyles
                                             .rkRegularTextStyle(
@@ -411,7 +411,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          'Search result not found',
+                          '${AppLocalizations.of(context)!.search_result_not_found}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -1488,7 +1488,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       false
                       ? Center(
                     child: Text(
-                      AppStrings.outOfStockString,
+                      '${AppLocalizations.of(context)!.out_of_stock}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.textColor),
@@ -1630,7 +1630,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context),
                           alignment: Alignment.center,
                           child: Text(
-                            'Select supplier',
+                            '${AppLocalizations.of(context)!.select_supplier}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.blackColor),
@@ -1802,7 +1802,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     vertical: AppConstants.padding_30),
                 alignment: Alignment.center,
                 child: Text(
-                  'Suppliers not available',
+                  '${AppLocalizations.of(context)!.suppliers_not_available}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.textColor),

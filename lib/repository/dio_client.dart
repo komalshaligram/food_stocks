@@ -16,7 +16,7 @@ import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
@@ -86,7 +86,7 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
-        print('islogout1____${isLogOut}');
+
         isLoggedIn =  await preferencesHelper.getUserLoggedIn();
         if(e.response?.statusCode == 401 && isLoggedIn) {
 
@@ -106,7 +106,7 @@ class DioClient {
                 .setAppLocale(locale: Locale(AppStrings.hebrewString));
             showSnackBar(
                 context: _context,
-                title: AppStrings.logOutSuccessString,
+                title: '${AppLocalizations.of(_context)!.logged_out_successfully}',
                 bgColor: AppColors.mainColor);
 
             Navigator.popUntil(_context,
@@ -260,7 +260,7 @@ class DioClient {
         debugPrint("Errorr!!!! ${response.data}");
         return showSnackBar(
             context: context,
-            title: response.statusMessage ?? AppStrings.somethingWrongString,
+            title: response.statusMessage ?? '${AppLocalizations.of(context)!.something_is_wrong_try_again}',
             bgColor: AppColors.redColor);
       } else {
         return response.data as Map<String, dynamic>;
@@ -291,65 +291,65 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
     //   showSnackBar(context: context, title: title, bgColor: bgColor);
       showSnackBar(
           context: context!,
-          title: "Connection timed out",
+          title: '${AppLocalizations.of(context)!.connection_timed_out}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Connection timed out");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.connection_timed_out}');
 
     case DioExceptionType.sendTimeout:
       showSnackBar(
           context: context!,
-          title: "Send timed out",
+          title: '${AppLocalizations.of(context)!.send_timed_out}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Send timed out");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.send_timed_out}',);
 
     case DioExceptionType.receiveTimeout:
       showSnackBar(
           context: context!,
-          title: "Receive timed out",
+          title: '${AppLocalizations.of(context)!.receive_timed_out}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Receive timed out");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.receive_timed_out}');
 
     case DioExceptionType.badCertificate:
       showSnackBar(
           context: context!,
-          title: "Bad SSL certificates",
+          title: '${AppLocalizations.of(context)!.bad_ssl_certificates}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Bad SSL certificates");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.bad_ssl_certificates}');
 
     case DioExceptionType.badResponse:
       switch (error.response!.statusCode) {
         case 400:
           showSnackBar(
               context: context!,
-              title: "Bad request",
+              title: '${AppLocalizations.of(context)!.bad_request}',
               bgColor: AppColors.redColor);
-          return ErrorEntity(code: 400, message: "Bad request");
+          return ErrorEntity(code: 400, message: '${AppLocalizations.of(context)!.bad_request}');
         case 401:
           showSnackBar(
               context: context!,
-              title: "Permission denied",
+              title: '${AppLocalizations.of(context)!.permission_denied}',
               bgColor: AppColors.redColor);
-          return ErrorEntity(code: 401, message: "Permission denied");
+          return ErrorEntity(code: 401, message: '${AppLocalizations.of(context)!.permission_denied}');
         case 500:
           showSnackBar(
               context: context!,
-              title: "Server internal error",
+              title: '${AppLocalizations.of(context)!.server_internal_error}',
               bgColor: AppColors.redColor);
-          return ErrorEntity(code: 500, message: "Server internal error");
+          return ErrorEntity(code: 500, message: '${AppLocalizations.of(context)!.server_internal_error}');
       }
       showSnackBar(
           context: context!,
-          title: "Server bad response",
+          title: '${AppLocalizations.of(context)!.server_bad_response}',
           bgColor: AppColors.redColor);
       return ErrorEntity(
-          code: error.response!.statusCode!, message: "Server bad response");
+          code: error.response!.statusCode!, message: '${AppLocalizations.of(context)!.server_bad_response}');
 
     case DioExceptionType.cancel:
       showSnackBar(
           context: context!,
-          title: "Server canceled it",
+          title:'${AppLocalizations.of(context)!.server_canceled}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Server canceled it");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.server_canceled}');
 
     case DioExceptionType.connectionError:
 /*      showSnackBar(
@@ -361,9 +361,9 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
     case DioExceptionType.unknown:
       showSnackBar(
           context: context!,
-          title: "Unknown error",
+          title: '${AppLocalizations.of(context)!.unknown_error}',
           bgColor: AppColors.redColor);
-      return ErrorEntity(code: -1, message: "Unknown error");
+      return ErrorEntity(code: -1, message: '${AppLocalizations.of(context)!.unknown_error}');
   }
 }
 
