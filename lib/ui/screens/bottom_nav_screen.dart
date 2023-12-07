@@ -70,7 +70,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                           screenWidth: getScreenWidth(context),
                           state: state),
                       Positioned(
-                        bottom: 25,
+                        bottom: 12,
                         left: 24,
                         right: 24,
                         child: Container(

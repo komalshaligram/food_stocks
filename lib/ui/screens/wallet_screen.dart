@@ -169,7 +169,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                          pendingBalance: state.balance,
+                                          pendingBalance: formatter(state.balance.toString()),
                                           expense: 100 - state.expensePercentage,
                                           totalBalance: 100
                                         ),
@@ -191,7 +191,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .total_credit,
                                                 value:
-                                                    '${bloc.splitNumber(state.totalCredit.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                    '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -202,7 +202,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .this_months_expenses,
                                                 value:
-                                                    '${bloc.splitNumber(state.thisMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                    '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                         ],
                                       ),
@@ -217,7 +217,7 @@ class WalletScreenWidget extends StatelessWidget {
                                                         context)!
                                                     .last_months_expenses,
                                                 value:
-                                                    '${bloc.splitNumber(state.lastMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                    '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -392,8 +392,7 @@ class WalletScreenWidget extends StatelessWidget {
                                               .isGranted) {
                                             showSnackBar(
                                                 context: context,
-                                                title: AppStrings
-                                                    .storageAllowPermissionString,
+                                                title: '${AppLocalizations.of(context)!.storage_permission}',
                                                 bgColor: AppColors.redColor);
                                             return;
                                           }

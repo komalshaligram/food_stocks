@@ -44,12 +44,13 @@ class StoreCategoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
       StoreCategoryBloc()
-        ..add(StoreCategoryEvent.changeCategoryDetailsEvent(
-            categoryId: args?[AppStrings.categoryIdString] ?? '',
-            categoryName: args?[AppStrings.categoryNameString] ?? '',
+        ..add(StoreCategoryEvent.updateGlobalSearchEvent(
             search: args?[AppStrings.searchString] ?? '',
-            context: context))..add(
-          StoreCategoryEvent.getProductCategoriesListEvent(context: context)),
+            searchList: args?[AppStrings.searchResultString] ?? []))..add(
+          StoreCategoryEvent.changeCategoryDetailsEvent(
+              categoryId: args?[AppStrings.categoryIdString] ?? '',
+              categoryName: args?[AppStrings.categoryNameString] ?? '',
+              context: context)),
       child: StoreCategoryScreenWidget(),
     );
   }
@@ -66,7 +67,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           WillPopScope(
             onWillPop: () {
               if (state.isSubCategory) {
-                return Future.value(true);
+                Navigator.pop(context, {
+                  AppStrings
+                      .searchString: state
+                      .previousSearch,
+                  AppStrings
+                      .searchResultString: state
+                      .searchList
+                });
+                return Future.value(false);
               } else {
                 bloc.add(StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
                     isSubCategory: true, context: context));
@@ -104,7 +113,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       80.height,
                                       buildTopNavigation(
                                           context: context,
-                                          categoryName: state.categoryName),
+                                          categoryName: state.categoryName,
+                                          search: state.previousSearch,
+                                          searchList: state.searchList),
                                       state.isSubCategoryShimmering
                                           ? StoreCategoryScreenSubcategoryShimmerWidget()
                                           : state.subCategoryList.isEmpty
@@ -116,7 +127,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         getScreenWidth(context),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          'Sub Categories not available',
+                                          '${AppLocalizations.of(context)!.sub_categories_not_available}',
                                           textAlign:
                                           TextAlign.center,
                                           style: AppStyles
@@ -203,7 +214,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         context: context,
                                         categoryName: state.categoryName,
                                         subCategoryName:
-                                        state.subCategoryName),
+                                        state.subCategoryName,
+                                        search: state.previousSearch,
+                                        searchList: state.searchList),
                                     16.height,
                                     state.isPlanogramShimmering
                                         ? StoreCategoryScreenPlanoGramShimmerWidget()
@@ -216,7 +229,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Products not available',
+                                        '${AppLocalizations.of(context)!.products_not_available}',
                                         textAlign: TextAlign.center,
                                         style: AppStyles
                                             .rkRegularTextStyle(
@@ -358,137 +371,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 return true;
                               },
                             ),
-                            // Align(
-                            //   alignment: Alignment.bottomCenter,
-                            //   child: Container(
-                            //     height: 60,
-                            //     margin: EdgeInsets.only(bottom: 20),
-                            //     padding: EdgeInsets.symmetric(
-                            //       horizontal: AppConstants.padding_5,
-                            //       vertical: AppConstants.padding_5,
-                            //     ),
-                            //     decoration: BoxDecoration(
-                            //         color: AppColors.whiteColor,
-                            //         borderRadius: BorderRadius.all(
-                            //             Radius.circular(AppConstants.radius_100)),
-                            //         boxShadow: [
-                            //           BoxShadow(
-                            //             color:
-                            //                 AppColors.shadowColor.withOpacity(0.3),
-                            //             blurRadius: AppConstants.blur_10,
-                            //           )
-                            //         ]),
-                            //     child: Row(
-                            //       mainAxisSize: MainAxisSize.min,
-                            //       children: [
-                            //         GestureDetector(
-                            //           onTap: () {
-                            //             Navigator.pop(context);
-                            //           },
-                            //           child: Container(
-                            //             height: 50,
-                            //             width: 50,
-                            //             alignment: Alignment.center,
-                            //             child: SvgPicture.asset(
-                            //               AppImagePath.store,
-                            //               height: 26,
-                            //               width: 26,
-                            //               fit: BoxFit.cover,
-                            //               colorFilter: ColorFilter.mode(
-                            //                   AppColors.navSelectedColor,
-                            //                   BlendMode.srcIn),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //         Container(
-                            //           height: 50,
-                            //           decoration: BoxDecoration(
-                            //             color: AppColors.mainColor,
-                            //             borderRadius: BorderRadius.only(
-                            //               topLeft: Radius.circular(
-                            //                   context.rtl
-                            //                       ? AppConstants.radius_5
-                            //                       : AppConstants.radius_100),
-                            //               bottomLeft: Radius.circular(
-                            //                   context.rtl
-                            //                       ? AppConstants.radius_5
-                            //                       : AppConstants.radius_100),
-                            //               topRight: Radius.circular(
-                            //                   context.rtl
-                            //                       ? AppConstants.radius_100
-                            //                       : AppConstants.radius_5),
-                            //               bottomRight: Radius.circular(
-                            //                   context.rtl
-                            //                       ? AppConstants.radius_100
-                            //                       : AppConstants.radius_5),
-                            //             ),
-                            //           ),
-                            //           padding: EdgeInsets.symmetric(
-                            //               horizontal: AppConstants.padding_10),
-                            //           child: Row(
-                            //             mainAxisSize: MainAxisSize.min,
-                            //             children: [
-                            //               Text(
-                            //                 "${AppLocalizations.of(context)!.total}: ",
-                            //                 style: AppStyles.rkRegularTextStyle(
-                            //                   size: AppConstants.normalFont,
-                            //                   color: AppColors.whiteColor,
-                            //                 ),
-                            //               ),
-                            //               Text(
-                            //                 "11.90${AppLocalizations.of(context)!.currency}",
-                            //                 style: AppStyles.rkBoldTextStyle(
-                            //                     size: AppConstants.normalFont,
-                            //                     color: AppColors.whiteColor,
-                            //                     fontWeight: FontWeight.w700),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //         5.width,
-                            //         GestureDetector(
-                            //           onTap: () {
-                            //             debugPrint('finish');
-                            //           },
-                            //           child: Container(
-                            //             height: 50,
-                            //             decoration: BoxDecoration(
-                            //               color: AppColors.navSelectedColor,
-                            //               borderRadius: BorderRadius.only(
-                            //                 topLeft: Radius.circular(
-                            //                     context.rtl
-                            //                         ? AppConstants.radius_100
-                            //                         : AppConstants.radius_5),
-                            //                 bottomLeft: Radius.circular(
-                            //                     context.rtl
-                            //                         ? AppConstants.radius_100
-                            //                         : AppConstants.radius_5),
-                            //                 topRight: Radius.circular(
-                            //                     context.rtl
-                            //                         ? AppConstants.radius_5
-                            //                         : AppConstants.radius_100),
-                            //                 bottomRight: Radius.circular(
-                            //                     context.rtl
-                            //                         ? AppConstants.radius_5
-                            //                         : AppConstants.radius_100),
-                            //               ),
-                            //             ),
-                            //             padding: EdgeInsets.symmetric(
-                            //                 horizontal: AppConstants.padding_10),
-                            //             alignment: Alignment.center,
-                            //             child: Text(
-                            //               AppLocalizations.of(context)!.finish,
-                            //               style: AppStyles.rkRegularTextStyle(
-                            //                 size: AppConstants.normalFont,
-                            //                 color: AppColors.whiteColor,
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         )),
                     CommonSearchWidget(
@@ -529,7 +411,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          'Search result not found',
+                          '${AppLocalizations.of(context)!.search_result_not_found}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -552,6 +434,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .toList()
                                   .length ==
                                   10,
+                              isLastItem: state.searchList.length - 1 == index,
                               isShowSearchLabel: index == 0
                                   ? true
                                   : state.searchList[index].searchType !=
@@ -569,6 +452,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       arguments: {
                                         AppStrings.searchString: state
                                             .previousSearch,
+                                        AppStrings.reqSearchString: state
+                                            .previousSearch,
                                         AppStrings.fromStoreCategoryString: true
                                       });
                                   if (result != null) {
@@ -578,7 +463,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         result[AppStrings.categoryIdString],
                                         categoryName:
                                         result[AppStrings.categoryNameString],
-                                        search: state.search,
                                         context: context));
                                   }
                                 } else {
@@ -639,7 +523,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     state.searchList[index].searchId,
                                     categoryName:
                                     state.searchList[index].name,
-                                    search: state.search,
                                     context: context))
                                     : state.searchList[index].searchType ==
                                     SearchTypes.company
@@ -704,6 +587,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required bool isShowSearchLabel,
     required void Function() onTap,
     required void Function() onSeeAllTap,
+    bool? isLastItem,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -727,7 +611,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ? AppLocalizations.of(context)!.companies
                     : searchType == SearchTypes.sale
                     ? AppLocalizations.of(context)!.sales
-                    : AppLocalizations.of(context)!.suppliers,
+                    : searchType == SearchTypes.supplier
+                    ? AppLocalizations.of(context)!.suppliers
+                    : AppLocalizations.of(context)!.products,
                 style: AppStyles.rkBoldTextStyle(
                     size: AppConstants.smallFont,
                     color: AppColors.blackColor,
@@ -755,7 +641,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
-                    bottom: BorderSide(
+                    bottom: (isLastItem ?? false)
+                        ? BorderSide.none
+                        : BorderSide(
                         color: AppColors.borderColor.withOpacity(0.5),
                         width: 1))),
             padding: EdgeInsets.symmetric(
@@ -1273,6 +1161,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               productQuantity: state.productStockList[state
                                   .planoGramUpdateIndex][state
                                   .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {
+
+                              },
                               onQuantityIncreaseTap: () {
                                 context.read<StoreCategoryBloc>().add(
                                     StoreCategoryEvent
@@ -1463,9 +1354,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   //   );
   // }
 
-  Container buildTopNavigation({required BuildContext context,
+  Widget buildTopNavigation({required BuildContext context,
     required String categoryName,
-    String? subCategoryName}) {
+    String? subCategoryName, required String search, required List<
+        SearchModel> searchList}) {
     return Container(
       width: getScreenWidth(context),
       margin: EdgeInsets.only(top: AppConstants.padding_10,
@@ -1479,7 +1371,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context, {
+                AppStrings
+                    .searchString: search,
+                AppStrings
+                    .searchResultString: searchList
+              });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1591,7 +1488,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       false
                       ? Center(
                     child: Text(
-                      AppStrings.outOfStockString,
+                      '${AppLocalizations.of(context)!.out_of_stock}',
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.textColor),
@@ -1733,7 +1630,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context),
                           alignment: Alignment.center,
                           child: Text(
-                            'Select supplier',
+                            '${AppLocalizations.of(context)!.select_supplier}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
                                 color: AppColors.blackColor),
@@ -1905,7 +1802,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     vertical: AppConstants.padding_30),
                 alignment: Alignment.center,
                 child: Text(
-                  'Suppliers not available',
+                  '${AppLocalizations.of(context)!.suppliers_not_available}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: AppColors.textColor),

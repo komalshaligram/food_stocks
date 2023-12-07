@@ -90,7 +90,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                         : CircularButtonWidget(
                             buttonName: AppLocalizations.of(context)!.total,
                             buttonValue:
-                                '${(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                '${formatter(state.orderBySupplierProduct.totalPayment?.toString() ?? "0")}${AppLocalizations.of(context)!.currency}',
                           ),
                   ),
                   onTap: () {
@@ -142,8 +142,8 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     ),
                                     Text(
                                       state.orderBySupplierProduct.deliverStatus
-                                              ?.statusName
-                                              .toString() ??
+                                              ?.statusName!
+                                              .toTitleCase()??
                                           '',
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
@@ -203,7 +203,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                       title: AppLocalizations.of(context)!
                                           .total_order,
                                       value:
-                                          '${(state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
+                                          '${formatter(state.orderBySupplierProduct.totalPayment?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
                                       titleColor: AppColors.mainColor,
                                       valueColor: AppColors.blackColor,
                                       valueTextWeight: FontWeight.w500,
@@ -267,6 +267,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             child: Expanded(
                                             flex: 4,
                                             child: CustomFormField(
+                                              context: context,
                                               controller: driverController,
                                               inputformet: [
                                                 LengthLimitingTextInputFormatter(
@@ -338,6 +339,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                             child: Expanded(
                                               flex: 5,
                                               child: CustomFormField(
+                                                context: context,
                                                 inputformet: [
                                                   FilteringTextInputFormatter
                                                       .deny(RegExp(r'\s')),
@@ -450,7 +452,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                                 .orderBySupplierProduct
                                                 .totalPayment
                                                 ?.toStringAsFixed(2) ??
-                                            '',
+                                            '0',
                                         AppStrings
                                                 .deliveryDateString: /*state
                                         .orderList
@@ -474,7 +476,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                         AppStrings.supplierIdString:
                                             state.orderBySupplierProduct.id,
                                         AppStrings.driverNameString:
-                                            driverController.text,
+                                            driverController.text.toTitleCase(),
                                         AppStrings.driverNumberString:
                                             phoneNumberController.text,
                                         AppStrings.supplierOrderNumberString:
@@ -593,12 +595,15 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.font_12,
                     ),
                   ),
-                  Text(
-                    '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.blackColor,
-                        size: AppConstants.font_14,
-                        fontWeight: FontWeight.w700),
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      '${formatter(state.orderBySupplierProduct.products?[index].totalPayment?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
+                      style: AppStyles.rkRegularTextStyle(
+                          color: AppColors.blackColor,
+                          size: AppConstants.font_14,
+                          fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ],
               ) : Row(
@@ -613,7 +618,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                           size: AppConstants.font_14, color: AppColors.blackColor),
                     ),
                   ),
-
+                  10.width,
                   Text(
                     '${(state.orderBySupplierProduct.products?[index].itemWeight.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString() ?? ''}',
                     style: AppStyles.rkRegularTextStyle(
@@ -622,12 +627,15 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                     ),
                   ),
                   10.width,
-                  Text(
-                    '${(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '')}${AppLocalizations.of(context)!.currency}',
-                    style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.blackColor,
-                        size: AppConstants.font_14,
-                        fontWeight: FontWeight.w700),
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      '${formatter(state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',
+                      style: AppStyles.rkRegularTextStyle(
+                          color: AppColors.blackColor,
+                          size: AppConstants.font_14,
+                          fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ],
               ),
@@ -861,12 +869,15 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                                     ),
                                   ),
                                   //  10.width,
-                                  Text(
-                                    '${price.toString() + AppLocalizations.of(context)!.currency}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        color: AppColors.blackColor,
-                                        size: AppConstants.font_14,
-                                        fontWeight: FontWeight.w700),
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                      '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          color: AppColors.blackColor,
+                                          size: AppConstants.font_14,
+                                          fontWeight: FontWeight.w700),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1145,6 +1156,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                 ),
                 (value == 4)
                     ? CustomFormField(
+                  context: context,
                         fillColor: AppColors.pageColor,
                         validator: '',
                         controller: addProblemController,

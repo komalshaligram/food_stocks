@@ -67,7 +67,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
         if (state.isFileSizeExceeds) {
           showSnackBar(
               context: context,
-              title: AppStrings.fileSizeLimitString,
+              title: '${AppLocalizations.of(context)!.please_enter_email}',
               bgColor: AppColors.redColor);
         }
         ;
@@ -175,6 +175,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                         ),
                                                         15.height,
                                                         CustomFormField(
+                                                          context: context,
                                                           prefixIcon: Icon(
                                                             Icons.search,
                                                             color: AppColors
@@ -222,7 +223,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                             ? Expanded(
                                                                 child: Center(
                                                                   child: Text(
-                                                                    'Cities not available',
+                                                                      '${AppLocalizations.of(context)!.cities_not_available}',
                                                                     style: AppStyles.rkRegularTextStyle(
                                                                         size: AppConstants
                                                                             .smallFont,
@@ -309,6 +310,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         .full_address,
                                   ),
                                   CustomFormField(
+                                    context: context,
                                     controller: state.addressController,
                                     inputformet: [
                                       /*FilteringTextInputFormatter.deny(
@@ -326,6 +328,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     name: AppLocalizations.of(context)!.email,
                                   ),
                                   CustomFormField(
+                                    context: context,
                                     controller: state.emailController,
                                     inputformet: [
                                       /*FilteringTextInputFormatter.deny(
@@ -343,6 +346,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     name: AppLocalizations.of(context)!.fax,
                                   ),
                                   CustomFormField(
+                                    context: context,
                                     controller: state.faxController,
                                     inputformet: [
                                       /*FilteringTextInputFormatter.deny(
@@ -451,8 +455,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                   showSnackBar(
                                                                       context:
                                                                           context,
-                                                                      title: AppStrings
-                                                                          .cameraAllowPermissionString,
+                                                                      title: '${AppLocalizations.of(context)!.camera_permission}',
                                                                       bgColor:
                                                                           AppColors
                                                                               .redColor);
@@ -512,8 +515,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                     showSnackBar(
                                                                         context:
                                                                             context,
-                                                                        title: AppStrings
-                                                                            .storageAllowPermissionString,
+                                                                        title: '${AppLocalizations.of(context)!.storage_permission}',
                                                                         bgColor:
                                                                             AppColors.redColor);
                                                                     Navigator.pop(
@@ -538,11 +540,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                 .isEmpty
                                                             ? 0.width
                                                             : FileSelectionOptionWidget(
-                                                                title: AppLocalizations.of(
-                                                                        context1)!
+                                                                title: AppLocalizations
+                                                                        .of(
+                                                                            context1)!
                                                                     .remove,
                                                                 icon: Icons
                                                                     .delete,
+                                                                iconColor:
+                                                                    AppColors
+                                                                        .redColor,
                                                                 lastItem: true,
                                                                 onTap: () {
                                                                   Navigator.pop(
@@ -554,13 +560,13 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                         (context2) =>
                                                                             CommonAlertDialog(
                                                                       title:
-                                                                          "Remove",
+                                                                      '${AppLocalizations.of(context)!.remove}',
                                                                       subTitle:
-                                                                          'Are you sure?',
+                                                                          '${AppLocalizations.of(context)!.are_you_sure}',
                                                                       positiveTitle:
-                                                                          'Yes',
+                                                                      '${AppLocalizations.of(context)!.yes}',
                                                                       negativeTitle:
-                                                                          'No',
+                                                                      '${AppLocalizations.of(context)!.no}',
                                                                       negativeOnTap:
                                                                           () {
                                                                         Navigator.pop(

@@ -75,6 +75,7 @@ class AppStrings {
   static const messageReadString = 'messageReadSParam';
   static const messageDeleteString = 'messageDeleteParam';
   static const searchString = 'searchParam';
+  static const reqSearchString = 'reqSearchParam';
   static const searchResultString = 'searchResultParam';
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
 
@@ -121,7 +122,8 @@ class AppStrings {
   static const noInternetConnection = 'No Internet Connection';
   static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
   static const clearCartPopUpString = 'Are you sure you want to clear cart?';
-  static const deleteProductPopUpString = 'Are you sure you want to delete product?';
+  static const deleteProductPopUpString =
+      'Are you sure you want to delete product?';
   static const selectNextDayShiftString = 'please select next day shift';
 
   //hint strings

@@ -142,7 +142,46 @@ class BasketScreenWidget extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w700),
                                                 ),*/
-                                          RichText(
+                                          Row(
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .total,
+                                                style: AppStyles
+                                                    .rkRegularTextStyle(
+                                                  size: getScreenWidth(
+                                                      context) <=
+                                                      380
+                                                      ? AppConstants
+                                                      .font_14
+                                                      : AppConstants
+                                                      .mediumFont,
+                                                  color: AppColors
+                                                      .whiteColor,
+                                                ),
+                                              ),
+                                              Directionality(
+                                                textDirection: TextDirection.ltr,
+                                                child: Text(
+                                                  '${(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}${' : '}',
+                                                    style: AppStyles
+                                                        .rkRegularTextStyle(
+                                                        size: getScreenWidth(
+                                                            context) <=
+                                                            380
+                                                            ? AppConstants
+                                                            .smallFont
+                                                            : AppConstants
+                                                            .mediumFont,
+                                                        color: AppColors
+                                                            .whiteColor,
+                                                        fontWeight:
+                                                        FontWeight.w700),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          /*RichText(
                                             text: TextSpan(
                                               text: AppLocalizations.of(context)!
                                                   .total,
@@ -161,7 +200,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                    '${' : '}${bloc.splitNumber(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+                                                    '${' : '}${formatter(state.totalPayment.toString())}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                         size: getScreenWidth(
@@ -177,7 +216,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                         FontWeight.w700)),
                                               ],
                                             ),
-                                          ),
+                                          ),*/
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -468,7 +507,7 @@ class BasketScreenWidget extends StatelessWidget {
                         } else {
                           showSnackBar(
                               context: context,
-                              title: AppStrings.outOfStockString,
+                              title: '${AppLocalizations.of(context)!.out_of_stock}',
                               bgColor: AppColors.redColor);
                         }
                       }
@@ -573,8 +612,8 @@ class BasketScreenWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0)),
               title: Text(
                   updateClearString == AppStrings.clearString
-                      ? AppStrings.clearCartPopUpString
-                      : AppStrings.deleteProductPopUpString,
+                      ?  '${AppLocalizations.of(context)!.you_want_clear_cart}'
+                      :  '${AppLocalizations.of(context)!.you_want_delete_product}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.mediumFont,
                       color: AppColors.blackColor,
@@ -876,7 +915,7 @@ class BasketScreenWidget extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                           ),
                                           Text(
-                                            '${(double.parse(state.CartItemList.data?.data?[index].totalAmount ?? '')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                            '${(double.parse(state.CartItemList.data?.data?[index].totalAmount ?? '0')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                             style: AppStyles.rkBoldTextStyle(
                                               size: AppConstants.smallFont,
                                               color: AppColors.blackColor,

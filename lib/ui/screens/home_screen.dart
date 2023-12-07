@@ -276,8 +276,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                 right: context.rtl ? null : 7,
                                                 left: context.rtl ? 7 : null,
                                                 child: Container(
-                                                  height: 16,
-                                                  width: 16,
+                                                  height: 18,
+                                                  width: 18,
                                                   decoration: BoxDecoration(
                                                       color: AppColors
                                                           .notificationColor,
@@ -372,10 +372,10 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: state.balance,
-                                                expense: 100 -
-                                                    state.expensePercentage,
-                                                totalBalance: 100),
+                                                pendingBalance: formatter(state.balance.toString()),
+                                                expense: 100 - state.expensePercentage,
+                                                totalBalance: 100
+                                            ),
                                           ],
                                         )),
                                     5.width,
@@ -394,7 +394,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${bloc.splitNumber(state.totalCredit.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -405,7 +405,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${bloc.splitNumber(state.thisMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -420,7 +420,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${bloc.splitNumber(state.lastMonthExpense.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}'),
+                                                        '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -640,41 +640,49 @@ class HomeScreenWidget extends StatelessWidget {
                               ],
                             ),
                             30.height,
-                            /*state.messageList.isEmpty
-                                ? 0.width
-                                : */
-                            Column(
+                            state.messageList.isEmpty
+                                ? Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                  child: Column(
                               mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                titleRowWidget(
-                                    context: context,
-                                    title:
-                                        AppLocalizations.of(context)!.messages,
-                                    allContentTitle:
-                                        state.messageList.length < 2
-                                            ? ''
-                                            : AppLocalizations.of(context)!
-                                                .all_messages,
-                                    onTap: () {
-                                      Navigator.pushNamed(context,
-                                          RouteDefine.messageScreen.name);
-                                    }),
-                                10.height,
-                                state.messageList.isEmpty
-                                    ? Container(
-                                        margin: const EdgeInsets.only(
-                                            bottom: AppConstants.padding_15),
-                                        height: 50,
-                                        width: getScreenWidth(context),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'Messages not found',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.smallFont,
-                                              color: AppColors.textColor),
-                                        ),
-                                      )
-                                    : ListView.builder(
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .messages,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont, color: AppColors.blackColor),
+                                  ),
+                                  Container(
+                                    height: getScreenHeight(context)/6,
+                                    width: getScreenWidth(context),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Messages not found',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.textColor),
+                                    ),
+                                  )
+                              ],
+                            ),
+                                )
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      titleRowWidget(
+                                          context: context,
+                                          title: AppLocalizations.of(context)!
+                                              .messages,
+                                          allContentTitle:
+                                              AppLocalizations.of(context)!
+                                                  .all_messages,
+                                          onTap: () {
+                                            Navigator.pushNamed(context,
+                                                RouteDefine.messageScreen.name);
+                                          }),
+                                      10.height,
+                                      ListView.builder(
                                         itemCount: state.messageList.length,
                                         physics: NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
@@ -736,8 +744,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                                   .messageDeleteString]));
                                                 }),
                                       ),
-                              ],
-                            ),
+                                    ],
+                                  ),
                             90.height,
                           ],
                         ),
@@ -1023,6 +1031,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  onQuantityChanged: (quantity) {},
                                   onQuantityIncreaseTap: () {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.increaseQuantityOfProduct(

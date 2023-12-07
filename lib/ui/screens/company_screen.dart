@@ -75,7 +75,7 @@ class CompanyScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Companies not available',
+                                '${AppLocalizations.of(context)!.companies_not_available}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.textColor),

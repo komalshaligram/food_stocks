@@ -10,6 +10,7 @@ import 'package:food_stock/ui/utils/push_notification_service.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
@@ -23,6 +24,11 @@ void main() async {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
    // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    await Permission.notification.isDenied.then((isPermissionDenied) async {
+      if (isPermissionDenied) {
+        await Permission.notification.request();
+      }
+    });
     runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,

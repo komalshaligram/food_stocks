@@ -5,13 +5,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'product_category_event.dart';
 
 part 'product_category_state.dart';
@@ -38,7 +38,7 @@ class ProductCategoryBloc
               data: ProductCategoriesReqModel(
                       pageNum: state.pageNum + 1,
                       pageLimit: AppConstants.productCategoryPageLimit,
-                      search: state.search)
+                      search: state.reqSearch)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
@@ -62,16 +62,19 @@ class ProductCategoryBloc
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? AppStrings.somethingWrongString,
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
-      } else if (event is _SetSearchEvent) {
+      } else if (event is _SetSearchNavEvent) {
         emit(state.copyWith(
-            search: event.search,
+            reqSearch: event.reqSearch,
             isFromStoreCategory: event.isFromStoreCategory));
+      } else if (event is _UpdateGlobalSearchEvent) {
+        emit(
+            state.copyWith(search: event.search, searchList: event.searchList));
       }
     });
   }

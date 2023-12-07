@@ -323,17 +323,21 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           .first.productDescription ??
                                       '',
                                   productPrice: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity,
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
+                                          .productStockList[state.productStockUpdateIndex].totalPrice *
+                                          state
+                                              .productStockList[
+                                                  state.productStockUpdateIndex]
+                                              .quantity,
+                                  productScaleType:
+                                      state.productDetails.first.scales?.scaleType ??
+                                          '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   supplierWidget: buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: context.rtl,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                                  onQuantityChanged: (quantity) {},
                                   onQuantityIncreaseTap: () {
                                     context.read<CompanyProductsBloc>().add(
                                         CompanyProductsEvent
@@ -437,7 +441,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Select supplier',
+                                '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -578,7 +582,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        'Suppliers not available',
+                        '${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),

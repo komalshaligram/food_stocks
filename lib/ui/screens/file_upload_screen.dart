@@ -66,7 +66,7 @@ class FileUploadScreenWidget extends StatelessWidget {
         if (state.isFileSizeExceeds) {
           showSnackBar(
               context: context,
-              title: AppStrings.fileSizeLimitString,
+              title: '${AppLocalizations.of(context)!.please_enter_email}',
               bgColor: AppColors.redColor);
         }
         ;
@@ -131,7 +131,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 child: Center(
                                                   child: Text(
-                                                    'Forms and Files not available',
+                                                    '${AppLocalizations.of(context)!.forms_Files_not_available}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -211,8 +211,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 onPressed: () async {
                                                   showSnackBar(
                                                       context: context,
-                                                      title: AppStrings
-                                                          .registerSuccessString,
+                                                      title: '${AppLocalizations.of(context)!.registered_successfully}',
                                                       bgColor:
                                                           AppColors.mainColor);
                                                   Navigator.popUntil(
@@ -329,7 +328,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                 showSnackBar(
                                     context: context,
                                     title:
-                                        AppStrings.storageAllowPermissionString,
+                                        '${AppLocalizations.of(context)!.storage_permission}',
                                     bgColor: AppColors.redColor);
                                 return;
                               }
@@ -407,8 +406,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               .isGranted) {
                                             showSnackBar(
                                                 context: context,
-                                                title: AppStrings
-                                                    .cameraAllowPermissionString,
+                                                title: '${AppLocalizations.of(context)!.camera_permission}',
                                                 bgColor: AppColors.redColor);
                                             Navigator.pop(context);
                                             return;
@@ -443,8 +441,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 .isGranted) {
                                               showSnackBar(
                                                   context: context,
-                                                  title: AppStrings
-                                                      .storageAllowPermissionString,
+                                                  title: '${AppLocalizations.of(context)!.storage_permission}',
                                                   bgColor: AppColors.redColor);
                                               Navigator.pop(context);
                                               return;
@@ -462,7 +459,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         Navigator.pop(context1);
                                       }),
                                   FileSelectionOptionWidget(
-                                      title: "Document",
+                                      title: '${AppLocalizations.of(context)!.document}',
                                       icon: Icons.file_open_rounded,
                                       lastItem: url.isEmpty ? true : false,
                                       onTap: () async {
@@ -480,8 +477,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 .isGranted) {
                                               showSnackBar(
                                                   context: context,
-                                                  title: AppStrings
-                                                      .storageAllowPermissionString,
+                                                  title: '${AppLocalizations.of(context)!.storage_permission}',
                                                   bgColor: AppColors.redColor);
                                               Navigator.pop(context);
                                               return;
@@ -504,6 +500,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           title: AppLocalizations.of(context)!
                                               .remove,
                                           icon: Icons.delete,
+                                          iconColor: AppColors.redColor,
                                           lastItem: true,
                                           onTap: () {
                                             Navigator.pop(context);
@@ -511,10 +508,10 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               context: context,
                                               builder: (context2) =>
                                                   CommonAlertDialog(
-                                                title: "Remove",
-                                                subTitle: 'Are you sure?',
-                                                positiveTitle: 'Yes',
-                                                negativeTitle: 'No',
+                                                title: '${AppLocalizations.of(context)!.remove}',
+                                                subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+                                                positiveTitle: '${AppLocalizations.of(context)!.yes}',
+                                                negativeTitle: '${AppLocalizations.of(context)!.no}',
                                                 negativeOnTap: () {
                                                   Navigator.pop(context2);
                                                 },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
 class NoInternetDialog extends StatelessWidget {
@@ -21,7 +21,7 @@ class NoInternetDialog extends StatelessWidget {
       content: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Text(
-          AppStrings.noInternetConnection,
+          '${AppLocalizations.of(context)!.no_internet_connection}',
           textAlign: TextAlign.center,
           style: AppStyles.rkRegularTextStyle(
               color: AppColors.blackColor, size: AppConstants.smallFont,fontWeight: FontWeight.w500),

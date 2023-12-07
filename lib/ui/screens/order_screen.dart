@@ -176,12 +176,15 @@ class OrderScreenWidget extends StatelessWidget {
                             width: 1,
                           ),
                         ),
-                        child: Text(
-                          '${bloc.splitNumber(double.parse(state.orderDetailsList[index].totalAmount.toString()).toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_14,
-                              color: AppColors.whiteColor,
-                              fontWeight: FontWeight.bold),
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Text(
+                            '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.whiteColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     )
@@ -224,7 +227,7 @@ class OrderScreenWidget extends StatelessWidget {
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.order_status,
                       value: state.orderDetailsList[index].status?.statusName
-                              ?.toString() ??
+                              ?.toTitleCase() ??
                           '',
                       titleColor: AppColors.blackColor,
                       valueColor:

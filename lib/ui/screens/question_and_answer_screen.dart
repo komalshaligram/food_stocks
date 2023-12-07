@@ -67,7 +67,7 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
                                       width: getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Q&A not available',
+                                        '${AppLocalizations.of(context)!.qa_not_available}',
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
                                             color: AppColors.textColor),

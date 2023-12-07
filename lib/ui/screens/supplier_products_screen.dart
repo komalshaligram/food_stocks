@@ -166,7 +166,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   width: getScreenWidth(context),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'Currently this Supplier has no products',
+                                    '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants.smallFont,
                                         color: AppColors.textColor),
@@ -414,26 +414,35 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                       '',
                                   productPrice: state
                                           .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity,
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  supplierWidget: buildSupplierSelection(context: context),
-                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: context.rtl,
-                                  scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityIncreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .decreaseQuantityOfProduct(
+                                  state.productStockUpdateIndex]
+                                      .totalPrice *
+                                      state.productStockList[state
+                                          .productStockUpdateIndex].quantity,
+                              productScaleType: state.productDetails.first
+                                  .scales?.scaleType ?? '',
+                              productWeight: state.productDetails.first
+                                  .itemsWeight?.toDouble() ?? 0.0,
+                              supplierWidget: buildSupplierSelection(
+                                  context: context),
+                              productStock: state.productStockList[state
+                                  .productStockUpdateIndex].stock,
+                              isRTL: context.rtl,
+                              scrollController: scrollController,
+                              productQuantity: state.productStockList[state
+                                  .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {
+
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
                                   noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
@@ -527,7 +536,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                'Select supplier',
+                                '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -697,7 +706,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        'Suppliers not available',
+                        '${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),

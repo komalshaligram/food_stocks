@@ -12,14 +12,15 @@ class FileSelectionOptionWidget extends StatelessWidget {
   final String title;
   final IconData icon;
   final bool lastItem;
+  final Color iconColor;
   final void Function() onTap;
 
-  const FileSelectionOptionWidget(
-      {super.key,
-      required this.title,
-      required this.icon,
-      this.lastItem = false,
-      required this.onTap});
+  const FileSelectionOptionWidget({super.key,
+    required this.title,
+    required this.icon,
+    this.lastItem = false,
+    this.iconColor = const Color(0xff000000),
+    required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +40,15 @@ class FileSelectionOptionWidget extends StatelessWidget {
                   title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.mediumFont,
-                      color: title =='Remove'?AppColors.redColor:AppColors.blackColor),
+                      color: iconColor == AppColors.redColor ? AppColors
+                          .redColor : AppColors.blackColor),
                 ),
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(context.rtl ? pi : 0),
                   child: Icon(
                     icon,
-                    color: title =='Remove'?AppColors.redColor:AppColors.blueColor,
+                    color: iconColor,
                   ),
                 ),
               ],

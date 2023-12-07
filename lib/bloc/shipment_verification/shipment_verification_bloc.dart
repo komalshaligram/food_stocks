@@ -16,7 +16,7 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'shipment_verification_event.dart';
 
 part 'shipment_verification_state.dart';
@@ -105,7 +105,7 @@ class ShipmentVerificationBloc
            emit(state.copyWith(isLoading: true));
             showSnackBar(
                 context: event.context,
-                title: 'Signature is missing',
+                title: '${AppLocalizations.of(event.context)!.signature_missing}',
                 bgColor: AppColors.redColor);
           }
         }
