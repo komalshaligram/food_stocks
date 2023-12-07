@@ -211,223 +211,257 @@ class ProfileScreenWidget extends StatelessWidget {
                                                           title: AppLocalizations
                                                                   .of(context1)!
                                                               .gallery,
-                                                      icon: Icons.photo,
-                                                      onTap: () async {
-                                                        Map<Permission,
-                                                                PermissionStatus>
-                                                            statuses = await [
-                                                          Permission.storage,
-                                                        ].request();
-                                                        if (Platform
-                                                            .isAndroid) {
-                                                          DeviceInfoPlugin
-                                                              deviceInfo =
-                                                              DeviceInfoPlugin();
-                                                          AndroidDeviceInfo
-                                                              androidInfo =
-                                                              await deviceInfo
-                                                                  .androidInfo;
-                                                          if (androidInfo
-                                                                  .version
-                                                                  .sdkInt <
-                                                              33) {
-                                                            if (!statuses[
-                                                                    Permission
-                                                                        .storage]!
-                                                                .isGranted) {
-                                                              showSnackBar(
+                                                          icon: Icons.photo,
+                                                          lastItem: state
+                                                                  .UserImageUrl
+                                                                  .isEmpty
+                                                              ? true
+                                                              : false,
+                                                          onTap: () async {
+                                                            Map<Permission,
+                                                                    PermissionStatus>
+                                                                statuses =
+                                                                await [
+                                                              Permission
+                                                                  .storage,
+                                                            ].request();
+                                                            if (Platform
+                                                                .isAndroid) {
+                                                              DeviceInfoPlugin
+                                                                  deviceInfo =
+                                                                  DeviceInfoPlugin();
+                                                              AndroidDeviceInfo
+                                                                  androidInfo =
+                                                                  await deviceInfo
+                                                                      .androidInfo;
+                                                              if (androidInfo
+                                                                      .version
+                                                                      .sdkInt <
+                                                                  33) {
+                                                                if (!statuses[
+                                                                        Permission
+                                                                            .storage]!
+                                                                    .isGranted) {
+                                                                  showSnackBar(
+                                                                      context:
+                                                                          context,
+                                                                      title: AppStrings
+                                                                          .storageAllowPermissionString,
+                                                                      bgColor:
+                                                                          AppColors
+                                                                              .redColor);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  return;
+                                                                }
+                                                              }
+                                                            } else if (Platform
+                                                                .isIOS) {
+                                                              // Navigator.pop(context);
+                                                            }
+                                                            bloc.add(ProfileEvent
+                                                                .pickProfileImageEvent(
+                                                                    context:
+                                                                        context,
+                                                                    isFromCamera:
+                                                                        false));
+                                                            Navigator.pop(
+                                                                context);
+                                                          }),
+                                                      state.UserImageUrl.isEmpty
+                                                          ? 0.width
+                                                          : FileSelectionOptionWidget(
+                                                              title: AppLocalizations.of(
+                                                                      context1)!
+                                                                  .remove,
+                                                              icon:
+                                                                  Icons.delete,
+                                                              iconColor:
+                                                                  AppColors
+                                                                      .redColor,
+                                                              lastItem: true,
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context1);
+                                                                showDialog(
                                                                   context:
                                                                       context,
-                                                                  title: AppStrings
-                                                                      .storageAllowPermissionString,
-                                                                  bgColor: AppColors
-                                                                      .redColor);
-                                                              Navigator.pop(
-                                                                  context);
-                                                              return;
-                                                            }
-                                                          }
-                                                        } else if (Platform
-                                                            .isIOS) {
-                                                          // Navigator.pop(context);
-                                                        }
-                                                        bloc.add(ProfileEvent
-                                                            .pickProfileImageEvent(
-                                                                context:
-                                                                    context,
-                                                                isFromCamera:
-                                                                    false));
-                                                        Navigator.pop(context);
-                                                      }),
-                                                  // Column(
-                                                  //   children: [
-                                                  //     Container(
-                                                  //       height: 1,
-                                                  //       width: getScreenWidth(context),
-                                                  //       color: AppColors.borderColor
-                                                  //           .withOpacity(0.5),
-                                                  //     ),
-                                                  //     FileSelectionOptionWidget(
-                                                  //         title: AppLocalizations.of(
-                                                  //             context)!
-                                                  //             .remove,
-                                                  //         icon: Icons.delete,
-                                                  //         onTap: () {
-                                                  //           // context
-                                                  //           //     .read<ProfileBloc>()
-                                                  //           //     .add(ProfileEvent
-                                                  //           //     .deleteFileEvent(
-                                                  //           //     context: context,
-                                                  //           //     index:
-                                                  //           //     fileIndex));
-                                                  //           Navigator.pop(context);
-                                                  //         }),
-                                                  //   ],
-                                                  // )
-                                                ],
-                                              ),
-                                            ),
-                                        backgroundColor: Colors.transparent);
-                                    // showDialog(
-                                    //   context: context,
-                                    //   builder: (context1) {
-                                    //     return AlertDialog(
-                                    //       actionsPadding: EdgeInsets.only(
-                                    //           left: AppConstants.padding_15,
-                                    //           right: AppConstants.padding_15,
-                                    //           top: AppConstants.padding_15,
-                                    //           bottom: AppConstants.padding_30),
-                                    //       title: Align(
-                                    //           alignment: Alignment.center,
-                                    //           child: Text(
-                                    //               AppLocalizations.of(context)!
-                                    //                   .upload_photo)),
-                                    //       actions: [
-                                    //         Row(
-                                    //           mainAxisAlignment:
-                                    //               MainAxisAlignment.spaceAround,
-                                    //           children: [
-                                    //             GestureDetector(
-                                    //                 onTap: () {
-                                    //                   bloc.add(ProfileEvent
-                                    //                       .pickProfileImageEvent(
-                                    //                           context: c,
-                                    //                           isFromCamera: true));
-                                    //                   Navigator.pop(context1);
-                                    //                 },
-                                    //                 child: Icon(
-                                    //                   Icons.camera_alt_rounded,
-                                    //                   color: AppColors.blackColor,
-                                    //                 )),
-                                    //             GestureDetector(
-                                    //                 onTap: () {
-                                    //                   bloc.add(ProfileEvent
-                                    //                       .pickProfileImageEvent(
-                                    //                           context: c,
-                                    //                           isFromCamera: false));
-                                    //                   Navigator.pop(context1);
-                                    //                 },
-                                    //                 child: Icon(
-                                    //                   Icons.photo,
-                                    //                   color: AppColors.blackColor,
-                                    //                 )),
-                                    //           ],
-                                    //         ),
-                                    //         Row(
-                                    //           mainAxisAlignment:
-                                    //               MainAxisAlignment.spaceAround,
-                                    //           children: [
-                                    //             Text(AppLocalizations.of(context)!
-                                    //                 .camera),
-                                    //             Text(AppLocalizations.of(context)!
-                                    //                 .gallery),
-                                    //           ],
-                                    //         ),
-                                    //       ],
-                                    //     );
-                                    //   },
-                                    // );
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                          height:
-                                              AppConstants.containerHeight_80,
-                                          width:
-                                              AppConstants.containerHeight_80,
-                                          margin: EdgeInsets.only(
-                                              bottom: AppConstants.padding_3,
-                                              right: AppConstants.padding_3,
-                                              left: AppConstants.padding_3),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 0.5,
+                                                                  builder:
+                                                                      (context2) =>
+                                                                          CommonAlertDialog(
+                                                                    title:
+                                                                        '${AppLocalizations.of(context)!.remove}',
+                                                                    subTitle:
+                                                                        '${AppLocalizations.of(context)!.are_you_sure}',
+                                                                    positiveTitle:
+                                                                        '${AppLocalizations.of(context)!.yes}',
+                                                                    negativeTitle:
+                                                                        '${AppLocalizations.of(context)!.no}',
+                                                                    negativeOnTap:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context2);
+                                                                    },
+                                                                    positiveOnTap:
+                                                                        () async {
+                                                                      bloc.add(ProfileEvent.deleteFileEvent(
+                                                                          context:
+                                                                              context));
+                                                                      Navigator.pop(
+                                                                          context2);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              }),
+                                                    ],
+                                                  ),
+                                                ),
+                                            backgroundColor:
+                                                Colors.transparent);
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (context1) {
+                                        //     return AlertDialog(
+                                        //       actionsPadding: EdgeInsets.only(
+                                        //           left: AppConstants.padding_15,
+                                        //           right: AppConstants.padding_15,
+                                        //           top: AppConstants.padding_15,
+                                        //           bottom: AppConstants.padding_30),
+                                        //       title: Align(
+                                        //           alignment: Alignment.center,
+                                        //           child: Text(
+                                        //               AppLocalizations.of(context)!
+                                        //                   .upload_photo)),
+                                        //       actions: [
+                                        //         Row(
+                                        //           mainAxisAlignment:
+                                        //               MainAxisAlignment.spaceAround,
+                                        //           children: [
+                                        //             GestureDetector(
+                                        //                 onTap: () {
+                                        //                   bloc.add(ProfileEvent
+                                        //                       .pickProfileImageEvent(
+                                        //                           context: c,
+                                        //                           isFromCamera: true));
+                                        //                   Navigator.pop(context1);
+                                        //                 },
+                                        //                 child: Icon(
+                                        //                   Icons.camera_alt_rounded,
+                                        //                   color: AppColors.blackColor,
+                                        //                 )),
+                                        //             GestureDetector(
+                                        //                 onTap: () {
+                                        //                   bloc.add(ProfileEvent
+                                        //                       .pickProfileImageEvent(
+                                        //                           context: c,
+                                        //                           isFromCamera: false));
+                                        //                   Navigator.pop(context1);
+                                        //                 },
+                                        //                 child: Icon(
+                                        //                   Icons.photo,
+                                        //                   color: AppColors.blackColor,
+                                        //                 )),
+                                        //           ],
+                                        //         ),
+                                        //         Row(
+                                        //           mainAxisAlignment:
+                                        //               MainAxisAlignment.spaceAround,
+                                        //           children: [
+                                        //             Text(AppLocalizations.of(context)!
+                                        //                 .camera),
+                                        //             Text(AppLocalizations.of(context)!
+                                        //                 .gallery),
+                                        //           ],
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                              height: AppConstants
+                                                  .containerHeight_80,
+                                              width: AppConstants
+                                                  .containerHeight_80,
+                                              margin: EdgeInsets.only(
+                                                  bottom:
+                                                      AppConstants.padding_3,
+                                                  right: AppConstants.padding_3,
+                                                  left: AppConstants.padding_3),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.5,
+                                                    color: state.UserImageUrl
+                                                            .isNotEmpty
+                                                        ? AppColors
+                                                            .lightBorderColor
+                                                        : Colors.transparent),
+                                                borderRadius:
+                                                    BorderRadius.circular(200),
                                                 color: state
                                                         .UserImageUrl.isNotEmpty
-                                                    ? AppColors.lightBorderColor
-                                                    : Colors.transparent),
-                                            borderRadius:
-                                                BorderRadius.circular(200),
-                                            color: state.UserImageUrl.isNotEmpty
-                                                ? AppColors.whiteColor
-                                                : AppColors.mainColor
-                                                    .withOpacity(0.1),
-                                          ),
-                                          child: state.isUpdate
-                                              ? state.UserImageUrl.isNotEmpty
-                                              ? state.image.path != ''
-                                              ? SizedBox(
-                                            height:
-                                            getScreenHeight(
-                                                context) *
-                                                0.18,
-                                            width:
-                                            getScreenWidth(
-                                                context),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                                  40),
-                                              child: Image.file(
-                                                state.image,
-                                                fit: BoxFit
-                                                    .cover,
+                                                    ? AppColors.whiteColor
+                                                    : AppColors.mainColor
+                                                        .withOpacity(0.1),
                                               ),
-                                            )
-                                          )
-                                              : ClipRRect(
-                                            borderRadius:
-                                            BorderRadius
-                                                .circular(
-                                                40),
-                                                child: Image.network(
-                                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                                  fit: BoxFit
-                                                      .contain,
-                                                  loadingBuilder:
-                                                      (context,
-                                                      child,
-                                                      loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    } else {
-                                                      return Center(
-                                                        child:
-                                                        CupertinoActivityIndicator(
-                                                          color: AppColors
-                                                              .blackColor,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                  errorBuilder:
-                                                      (context,
-                                                      error,
-                                                      stackTrace) {
-                                                    return Container(
-                                                      decoration: BoxDecoration(
+                                              child: state.isUpdate
+                                                  ? state.UserImageUrl
+                                                          .isNotEmpty
+                                                      ? state.image.path != ''
+                                                          ? SizedBox(
+                                                              height: getScreenHeight(
+                                                                      context) *
+                                                                  0.18,
+                                                              width:
+                                                                  getScreenWidth(
+                                                                      context),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            40),
+                                                                child:
+                                                                    Image.file(
+                                                                  state.image,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ))
+                                                          : ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child:
+                                                                  Image.network(
+                                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                                loadingBuilder:
+                                                                    (context,
+                                                                        child,
+                                                                        loadingProgress) {
+                                                                  if (loadingProgress ==
+                                                                      null) {
+                                                                    return child;
+                                                                  } else {
+                                                                    return Center(
+                                                                      child:
+                                                                          CupertinoActivityIndicator(
+                                                                        color: AppColors
+                                                                            .blackColor,
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  return Container(
+                                                                    decoration: BoxDecoration(
                                                                         color: AppColors
                                                                             .whiteColor,
                                                                         shape: BoxShape
@@ -573,24 +607,29 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         fit: BoxFit.cover,
                                                       ),
                                                     )),*/
-                                      Positioned(
-                                        right: context.rtl ? null : 1,
-                                        left: context.rtl ? 1 : null,
-                                        bottom: 1,
-                                        child: Container(
-                                            width: 29,
-                                            height: 29,
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
-                                                    color:
-                                                        AppColors.borderColor)),
-                                            child: SvgPicture.asset(
-                                                AppImagePath.camera,
-                                                fit: BoxFit
-                                                    .scaleDown) /*Icon(
+                                          Positioned(
+                                            right: context.rtl ? null : 1,
+                                            left: context.rtl ? 1 : null,
+                                            bottom: 1,
+                                            child: Container(
+                                                width: 29,
+                                                height: 29,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border.all(
+                                                        color: AppColors
+                                                            .borderColor)),
+                                                child: SvgPicture.asset(
+                                                    AppImagePath.camera,
+                                                    colorFilter:
+                                                        ColorFilter.mode(
+                                                            AppColors.blueColor,
+                                                            BlendMode.srcIn),
+                                                    fit: BoxFit
+                                                        .scaleDown) /*Icon(
                                       Icons.camera_alt_rounded,
                                       color: AppColors.blueColor,
                                       size: 18,

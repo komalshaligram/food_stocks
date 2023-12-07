@@ -354,7 +354,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   'update city : ${response.data?.clients?.first.city?.cityName}');
               emit(state.copyWith(
                 isUpdating: false,
-                selectCity: response.data?.clients?.first.city!.cityName ?? '',
+                selectCity: response.data?.clients?.first.city?.cityName ?? '',
                 addressController: TextEditingController(
                     text: response.data?.clients?.first.address),
                 emailController: TextEditingController(

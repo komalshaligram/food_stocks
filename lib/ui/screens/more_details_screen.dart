@@ -540,11 +540,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                 .isEmpty
                                                             ? 0.width
                                                             : FileSelectionOptionWidget(
-                                                                title: AppLocalizations.of(
-                                                                        context1)!
+                                                                title: AppLocalizations
+                                                                        .of(
+                                                                            context1)!
                                                                     .remove,
                                                                 icon: Icons
                                                                     .delete,
+                                                                iconColor:
+                                                                    AppColors
+                                                                        .redColor,
                                                                 lastItem: true,
                                                                 onTap: () {
                                                                   Navigator.pop(
