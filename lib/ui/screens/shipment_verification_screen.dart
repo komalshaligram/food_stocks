@@ -182,7 +182,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         ),
                       ),
                       7.height,
-                      Text(
+                  /*    Text(
                         '${AppLocalizations.of(context)!.driver_name}${' : '}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
@@ -231,7 +231,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                                 )),
                           ),
                         ],
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
