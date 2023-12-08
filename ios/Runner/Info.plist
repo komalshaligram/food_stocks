@@ -62,15 +62,19 @@
 	<key>flavor</key>
 	<string>$(flavor)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-    <string>NO</string>
-
+	<false/>
 	<key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key><true/>
-    </dict>
-    <key>FDAllFilesDownloadedMessage</key>
-    <string>All files have been downloaded</string>
-    <key>FirebaseAppDelegateProxyEnabled</key>
-    <false/>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>FDAllFilesDownloadedMessage</key>
+	<string>All files have been downloaded</string>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

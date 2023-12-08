@@ -5,6 +5,7 @@ class BottomNavState with _$BottomNavState {
   const factory BottomNavState({
     required int index,
     required int cartCount,
+    //late ConfettiController _controllerCenter;
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => const BottomNavState(
