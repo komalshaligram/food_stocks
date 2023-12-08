@@ -175,6 +175,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                         ))
                     .toList() ??
                 []);
+            supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
                 'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList.length}');

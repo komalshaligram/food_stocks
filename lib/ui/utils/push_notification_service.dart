@@ -23,15 +23,15 @@ class PushNotificationService {
   Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/ic_launcher');
+    AndroidInitializationSettings('@drawable/ic_launcher1');
     const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
@@ -39,7 +39,7 @@ class PushNotificationService {
     String? fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken!);
     const InitializationSettings initSettings =
         InitializationSettings(android: androidSettings, iOS: iOSSettings);

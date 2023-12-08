@@ -187,6 +187,7 @@ class SupplierProductsBloc
                 return;
               }
             });
+            supplierList.removeWhere((supplier) => supplier.stock == 0);
             // supplierList.addAll(response.product?.first.supplierSales
             //     ?.map((supplier) => ProductSupplierModel(
             // supplierId: supplier.supplierId ?? '',

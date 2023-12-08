@@ -98,7 +98,7 @@ class StoreScreenWidget extends StatelessWidget {
                         children: [
                           80.height,
                           AnimatedCrossFade(
-                              firstChild: 0.width,
+                              firstChild: getScreenWidth(context).width,
                               secondChild: Column(
                                 children: [
                                   buildListTitles(
@@ -117,7 +117,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 .name, arguments: {
                                           AppStrings
                                               .searchString: state
-                                              .previousSearch,
+                                              .search,
                                           AppStrings
                                               .searchResultString: state
                                               .searchList
@@ -183,7 +183,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         .categoryName,
                                                     AppStrings
                                                         .searchString: state
-                                                        .previousSearch,
+                                                        .search,
                                                     AppStrings
                                                         .searchResultString: state
                                                         .searchList
@@ -208,7 +208,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
                           AnimatedCrossFade(
-                              firstChild: 0.width,
+                              firstChild: getScreenWidth(context).width,
                               secondChild: Column(
                                 children: [
                                   buildListTitles(
@@ -274,7 +274,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
                           AnimatedCrossFade(
-                              firstChild: 0.width,
+                              firstChild: getScreenWidth(context).width,
                               secondChild: Column(
                                 children: [
                                   buildListTitles(
@@ -341,7 +341,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
                           AnimatedCrossFade(
-                              firstChild: 0.width,
+                              firstChild: getScreenWidth(context).width,
                               secondChild: Column(
                                 children: [
                                   buildListTitles(
@@ -412,7 +412,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
                           AnimatedCrossFade(
-                              firstChild: 0.width,
+                              firstChild: getScreenWidth(context).width,
                               secondChild: Column(
                                 children: [
                                   buildListTitles(
@@ -501,12 +501,12 @@ class StoreScreenWidget extends StatelessWidget {
                       onSearch: (String search) {
                         if (search.length > 2) {
                           bloc.add(StoreEvent.globalSearchEvent(
-                              context: context, search: search));
+                              context: context));
                         }
                       },
                       onSearchSubmit: (String search) {
                         bloc.add(StoreEvent.globalSearchEvent(
-                            context: context, search: search));
+                            context: context));
                       },
                       onOutSideTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion(
@@ -515,14 +515,13 @@ class StoreScreenWidget extends StatelessWidget {
                       onSearchItemTap: () {
                         bloc.add(StoreEvent.changeCategoryExpansion());
                       },
-                      controller: TextEditingController(text: state.search)
-                        ..selection = TextSelection.fromPosition(
-                            TextPosition(offset: state.search.length)),
+                      controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          '${AppLocalizations.of(context)!.search_result_not_found}',
+                          '${AppLocalizations.of(context)!
+                              .search_result_not_found}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -562,9 +561,9 @@ class StoreScreenWidget extends StatelessWidget {
                                       RouteDefine.productCategoryScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch,
+                                            .search,
                                         AppStrings.reqSearchString: state
-                                            .previousSearch,
+                                            .search,
                                         AppStrings.searchResultString: state
                                             .searchList
                                       });
@@ -583,7 +582,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       RouteDefine.companyScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .search
                                       }) :
                                   state.searchList[index].searchType ==
                                       SearchTypes.supplier ?
@@ -592,7 +591,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       RouteDefine.supplierScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .search
                                       }) :
                                   state.searchList[index].searchType ==
                                       SearchTypes.sale
@@ -601,14 +600,14 @@ class StoreScreenWidget extends StatelessWidget {
                                       RouteDefine.productSaleScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .search
                                       })
                                       : Navigator
                                       .pushNamed(context,
                                       RouteDefine.supplierProductsScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .search
                                       });
                                 }
                               },
@@ -638,7 +637,8 @@ class StoreScreenWidget extends StatelessWidget {
                                     state
                                         .searchList[index]
                                         .name,
-                                    AppStrings.searchString: state.search,
+                                    AppStrings.searchString: state
+                                        .searchController.text,
                                     AppStrings.searchResultString: state
                                         .searchList
                                   });
@@ -880,10 +880,11 @@ class StoreScreenWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: AppConstants.padding_5,
-                  left: AppConstants.padding_5,
-                  right: AppConstants.padding_5,
-                  bottom: AppConstants.padding_20),
+                top: AppConstants.padding_5,
+                left: AppConstants.padding_5,
+                right: AppConstants.padding_5,
+                bottom: AppConstants.padding_20,
+              ),
               child: CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
                 fit: BoxFit.contain,
@@ -1479,7 +1480,8 @@ class StoreScreenWidget extends StatelessWidget {
                                   .productStockUpdateIndex].isNoteOpen,
                               onNoteToggleChanged: () {
                                 context.read<StoreBloc>().add(
-                                    StoreEvent.toggleNoteEvent());
+                                    StoreEvent.toggleNoteEvent(
+                                        isBarcode: isBarcode ?? false));
                               },
                               supplierWidget: state.productSupplierList.isEmpty
                                   ? Container(

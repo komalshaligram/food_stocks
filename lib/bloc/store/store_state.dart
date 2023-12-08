@@ -22,12 +22,12 @@ class StoreState with _$StoreState {
     required bool isCartCountChange,
     required String search,
     required bool isSearching,
-    required String previousSearch,
     required int imageIndex,
+    required TextEditingController searchController,
   }) = _StoreState;
 
-  factory StoreState.initial() => const StoreState(
-    isCategoryExpand: false,
+  factory StoreState.initial() => StoreState(
+        isCategoryExpand: false,
         productCategoryList: [],
         productSalesList: [],
         recommendedProductsList: [],
@@ -46,7 +46,7 @@ class StoreState with _$StoreState {
         isCartCountChange: false,
         search: '',
         isSearching: false,
-        previousSearch: '',
         imageIndex: 0,
+        searchController: TextEditingController(),
       );
 }

@@ -5,6 +5,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryExpansionEvent(
       {bool? isOpened}) = _ChangeCategoryExpansionEvent;
 
+  const factory StoreCategoryEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
+
   const factory StoreCategoryEvent.changeCategoryDetailsEvent(
       {required String categoryId,
       required String categoryName,
@@ -53,8 +56,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.setCartCountEvent() = _SetCartCountEvent;
 
-  const factory StoreCategoryEvent.globalSearchEvent({required String search,
-    required BuildContext context}) = _GlobalSearchEvent;
+  const factory StoreCategoryEvent.globalSearchEvent(
+      {required BuildContext context}) = _GlobalSearchEvent;
 
   const factory StoreCategoryEvent.updateImageIndexEvent({
     required int index,
@@ -62,7 +65,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.updateGlobalSearchEvent(
       {required String search,
-        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+      required BuildContext context,
+      required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 
-  const factory StoreCategoryEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory StoreCategoryEvent.toggleNoteEvent({required bool isBarcode}) =
+      _ToggleNoteEvent;
 }

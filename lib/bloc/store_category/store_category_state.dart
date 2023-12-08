@@ -1,4 +1,4 @@
- part of 'store_category_bloc.dart';
+part of 'store_category_bloc.dart';
 
 @freezed
 class StoreCategoryState with _$StoreCategoryState {
@@ -11,6 +11,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required String subCategoryName,
     required List<SubCategory> subCategoryList,
     required List<Datum> planoGramsList,
+    required List<Category> productCategoryList,
     required List<List<ProductStockModel>> productStockList,
     required bool isPlanogramShimmering,
     required bool isSubCategoryShimmering,
@@ -29,18 +30,19 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<SearchModel> searchList,
     required String search,
     required bool isSearching,
-    required String previousSearch,
     required int imageIndex,
+    required TextEditingController searchController,
   }) = _StoreCategoryState;
 
-  factory StoreCategoryState.initial() => const StoreCategoryState(
-    isCategoryExpand: false,
+  factory StoreCategoryState.initial() => StoreCategoryState(
+        isCategoryExpand: false,
         isSubCategory: true,
         categoryId: '',
         subCategoryId: '',
         categoryName: '',
         subCategoryName: '',
         subCategoryList: [],
+        productCategoryList: [],
         planoGramsList: [],
         productStockList: [],
         isPlanogramShimmering: false,
@@ -60,7 +62,7 @@ class StoreCategoryState with _$StoreCategoryState {
         searchList: [],
         search: '',
         isSearching: false,
-        previousSearch: '',
         imageIndex: 0,
+        searchController: TextEditingController(),
       );
 }

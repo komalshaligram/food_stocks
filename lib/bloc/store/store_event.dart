@@ -50,15 +50,19 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.setCartCountEvent() = _SetCartCountEvent;
 
-  const factory StoreEvent.globalSearchEvent({required String search,
-    required BuildContext context}) = _GlobalSearchEvent;
+  const factory StoreEvent.globalSearchEvent({required BuildContext context}) =
+      _GlobalSearchEvent;
+
+  const factory StoreEvent.resetGlobalSearchEvent() = _ResetGlobalSearchEvent;
 
   const factory StoreEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
 
-  const factory StoreEvent.updateGlobalSearchEvent({required String search,
-    required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+  const factory StoreEvent.updateGlobalSearchEvent(
+      {required String search,
+      required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
 
-  const factory StoreEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory StoreEvent.toggleNoteEvent({required bool isBarcode}) =
+      _ToggleNoteEvent;
 }
