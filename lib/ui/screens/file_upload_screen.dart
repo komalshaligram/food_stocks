@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -582,7 +583,29 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           fit: BoxFit.cover,
                                           width: double.maxFinite,
                                         )
-                                      : Image.network(
+                                      :CachedNetworkImage(
+                                imageUrl: "${AppUrls.baseFileUrl}$url",
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.center,
+                                placeholder: (context, url) =>Center(
+                                  child:
+                                  CupertinoActivityIndicator(
+                                    color: AppColors.blackColor,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Center(
+                                  child: Text(
+                                    AppStrings.failedToLoadString,
+                                    style: AppStyles
+                                        .rkRegularTextStyle(
+                                        size: AppConstants
+                                            .smallFont,
+                                        color: AppColors
+                                            .textColor),
+                                  ),
+                                ),
+                              ),
+                             /* Image.network(
                                           "${AppUrls.baseFileUrl}$url",
                                           fit: BoxFit.cover,
                                           width: double.maxFinite,
@@ -613,7 +636,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               ),
                                             );
                                           },
-                                        ),
+                                        ),*/
                             )
                           : Container(
                               height: 150,

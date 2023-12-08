@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -11,6 +12,8 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
+
 
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -449,6 +452,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            Vibration.vibrate(amplitude: 128);
             List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: true);
             productStockList[state.productStockUpdateIndex] =
@@ -464,6 +468,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.setCartCountEvent());
+
+            /*if (await Vibration.hasVibrator()) {
+              Vibration.vibrate();
+            }*/
             showSnackBar(
                 context: event.context,
                 title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',

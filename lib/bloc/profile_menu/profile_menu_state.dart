@@ -7,6 +7,7 @@ class ProfileMenuState with _$ProfileMenuState {
     required String UserCompanyLogoUrl,
     required String userName,
     required bool isHebrewLanguage,
+    required bool isLogOut,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => ProfileMenuState(
@@ -14,5 +15,6 @@ class ProfileMenuState with _$ProfileMenuState {
         UserCompanyLogoUrl: '',
         userName: '',
         isHebrewLanguage: false,
+    isLogOut: false
       );
 }
