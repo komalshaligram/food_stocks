@@ -76,6 +76,8 @@ dependencies:
   html: ^0.15.4
   device_info_plus: ^9.1.1
   carousel_slider: ^4.2.1
+  vibration: ^1.8.4
+  liquid_pull_to_refresh: ^3.0.1
   lottie: ^2.7.0
   animations: ^2.0.8
 

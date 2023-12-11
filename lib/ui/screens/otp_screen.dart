@@ -56,8 +56,8 @@ class OTPScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 title: isRegister
-                    ? AppLocalizations.of(context)!.register
-                    : AppLocalizations.of(context)!.login,
+                    ? AppLocalizations.of(context).register
+                    : AppLocalizations.of(context).login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   debugPrint('register ${isRegister}');
@@ -77,7 +77,7 @@ class OTPScreenWidget extends StatelessWidget {
                           left: getScreenWidth(context) * 0.12,
                           right: getScreenWidth(context) * 0.12),
                       child: Text(
-                          AppLocalizations.of(context)!
+                          AppLocalizations.of(context)
                               .enter_the_code_sent_to_phone_num,
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
@@ -129,7 +129,7 @@ class OTPScreenWidget extends StatelessWidget {
                           left: getScreenWidth(context) * 0.11,
                           right: getScreenWidth(context) * 0.11),
                       child: CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.next,
+                        buttonText: AppLocalizations.of(context).next,
                         bGColor: AppColors.mainColor,
                         isLoading: state.isLoading,
                         onPressed: state.isLoading
@@ -202,7 +202,7 @@ class OTPScreenWidget extends StatelessWidget {
                     20.height,
                     Center(
                       child: Text(
-                        AppLocalizations.of(context)!
+                        AppLocalizations.of(context)
                             .not_receive_verification_code,
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont, color: Colors.black),
@@ -259,7 +259,7 @@ class OTPScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context)!
+                                AppLocalizations.of(context)
                                     .send_again
                                     .toUpperCase(),
                                 style: AppStyles.rkRegularTextStyle(
