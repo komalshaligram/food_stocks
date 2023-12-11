@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:confetti/confetti.dart';
+
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
