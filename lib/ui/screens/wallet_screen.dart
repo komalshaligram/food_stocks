@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,12 +43,23 @@ class WalletScreen extends StatelessWidget {
   }
 }
 
-class WalletScreenWidget extends StatelessWidget {
+class WalletScreenWidget extends StatefulWidget {
   WalletScreenWidget({Key? key}) : super(key: key);
+
+  @override
+  State<WalletScreenWidget> createState() => _WalletScreenWidgetState();
+}
+
+class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTickerProviderStateMixin{
   DateRange? selectedDateRange;
+
   DateTime? minDate;
+
   DateTime? startDate;
+
   DateTime? endDate;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +262,7 @@ class WalletScreenWidget extends StatelessWidget {
                                 AppLocalizations.of(context)!
                                     .monthly_expense_graph,
                                 style: AppStyles.rkRegularTextStyle(
-                                    size: /*  state.language == 'en'
+                                    size: /*  state.language == AppStrings.englishString
                                         ? AppConstants.font_14
                                         : */
                                         AppConstants.smallFont,
@@ -413,7 +425,7 @@ class WalletScreenWidget extends StatelessWidget {
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
-                                          horizontal: state.language == "en" ? AppConstants.padding_5 : AppConstants.padding_8),
+                                          horizontal: state.language == AppStrings.englishString? AppConstants.padding_5 : AppConstants.padding_8),
                                       decoration: BoxDecoration(
                                           color: AppColors.mainColor,
                                           borderRadius: BorderRadius.circular(
@@ -429,7 +441,7 @@ class WalletScreenWidget extends StatelessWidget {
                                   5.width,
                                   Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: state.language == "en" ? 0 :AppConstants.padding_5,
+                                          horizontal: state.language == AppStrings.englishString ? 0 :AppConstants.padding_5,
                                           vertical: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
@@ -452,14 +464,18 @@ class WalletScreenWidget extends StatelessWidget {
                                           ),
                                           showDateRangePicker: (
                                               {required pickerBuilder,
-                                              required widgetContext}) {
+                                              required widgetContext,
+
+                                              }) {
                                             return showDateRangePickerDialog(
                                                 context: context,
                                                 offset: Offset(65, 200),
                                                 barrierColor: AppColors
                                                     .whiteColor
                                                     .withOpacity(0.6),
-                                                builder: datePickerBuilder);
+                                                builder: datePickerBuilder,
+                                            );
+
                                           },
                                           onDateRangeSelected:
                                               (DateRange? value) {
@@ -558,7 +574,7 @@ class WalletScreenWidget extends StatelessWidget {
                                         ),
                             ),
                             state.isLoadMore
-                                ? OrderSummaryScreenShimmerWidget()
+                                ? OrderSummaryScreenShimmerWidget(itemCount: 2)
                                 : 0.width,
                           ],
                         ),
@@ -643,7 +659,7 @@ class WalletScreenWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
-          WalletBloc bloc = context.read<WalletBloc>();
+         /* WalletBloc bloc = context.read<WalletBloc>();*/
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -672,8 +688,8 @@ class WalletScreenWidget extends StatelessWidget {
                 child: Text(
                   state.walletTransactionsList[listIndex].type.toString() ==
                           'Order'
-                      ? '${'-'}${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}${AppLocalizations.of(context)!.currency}'
-                      : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}${AppLocalizations.of(context)!.currency}',
+                      ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(),local: AppStrings.hebrewLocal)}':'${'-'}${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString()),local: AppStrings.hebrewLocal)}',
+                    //  : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: state.walletTransactionsList[listIndex].type
@@ -688,7 +704,8 @@ class WalletScreenWidget extends StatelessWidget {
               CircularButtonWidget(
                 buttonName: AppLocalizations.of(context)!.balance_status,
                 buttonValue:
-                    '${formatter(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}${AppLocalizations.of(context)!.currency}',
+                   // '${formatter(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}${AppLocalizations.of(context)!.currency}',
+                '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(),local: AppStrings.hebrewLocal)}'
               ),
             ],
           );
@@ -701,17 +718,18 @@ class WalletScreenWidget extends StatelessWidget {
       BuildContext context, dynamic Function(DateRange?) onDateRangeChanged,
       [bool doubleMonth = false]) {
     DateTime now = new DateTime.now();
+
     return Container(
-     height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2,
-      child: DateRangePickerWidget(
-        doubleMonth: doubleMonth,
-        initialDateRange: selectedDateRange,
-        initialDisplayedDate: selectedDateRange?.end ?? DateTime.now(),
-        onDateRangeChanged: onDateRangeChanged,
-        minDate: minDate,
-        maxDate: DateTime(now.year, now.month, now.day),
-      ),
-    );
+       height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2,
+        child: DateRangePickerWidget(
+          doubleMonth: doubleMonth,
+          initialDateRange: selectedDateRange,
+          initialDisplayedDate: selectedDateRange?.end ?? DateTime.now(),
+          onDateRangeChanged: onDateRangeChanged,
+          minDate: minDate,
+          maxDate: DateTime(now.year, now.month, now.day),
+        ),
+      );
   }
 }
 

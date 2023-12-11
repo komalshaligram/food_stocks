@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
+import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
@@ -21,9 +24,11 @@ class OrderSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => OrderSummaryBloc()
-        ..add(OrderSummaryEvent.getDataEvent(context: context)),
+        ..add(OrderSummaryEvent.getDataEvent(context: context,CartItemList: args?[AppStrings.getCartListString] ?? GetAllCartResModel())),
       child: OrderSummaryScreenWidget(),
     );
   }
@@ -34,7 +39,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
+   /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Scaffold(
@@ -144,7 +149,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                           Directionality(
                                             textDirection: TextDirection.ltr,
                                             child: Text(
-                                                '${formatter(state.orderSummaryList.data?.cart?.first.totalAmount?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
+                                               /* '${splitNumber(state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',*/
+                                                '${formatNumber(value: state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
                                                         color:
@@ -191,10 +197,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       if (!state.isLoading) {
-                                        bloc.add(
+                                   /*     bloc.add(
                                             OrderSummaryEvent.orderSendEvent(
                                           context: context,
-                                        ));
+                                        ));*/
+                                        Navigator.pushNamed(context, RouteDefine.orderSuccessfulScreen.name);
                                       }
                                     },
                                     child: Container(
@@ -257,7 +264,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
   }
 
   Widget orderListItem({required int index, required BuildContext context}) {
-    OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
+   /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Container(
@@ -319,7 +326,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
                     value:
-                        '${formatter(state.orderSummaryList.data?.data?[index].totalAmount?.toString() ?? '0')}${AppLocalizations.of(context)!.currency}',
+                       /* '${splitNumber(state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',*/
+                    '${formatNumber(value: state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

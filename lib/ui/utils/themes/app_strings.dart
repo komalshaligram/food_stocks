@@ -22,6 +22,8 @@ class AppStrings {
   //language Strings
   static const englishString = 'en';
   static const hebrewString = 'he';
+  static const englishLocal = 'en-US';
+  static const hebrewLocal = 'he-IL';
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -51,6 +53,7 @@ class AppStrings {
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
   static const orderBySupplierId = 'orderSupplierId';
+  static const getCartListString = 'getCartListString';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -63,6 +66,7 @@ class AppStrings {
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
+  static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings
   static const mobileParamString = 'mobileParam';

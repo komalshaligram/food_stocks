@@ -7,6 +7,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:intl/intl.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -23,17 +24,23 @@ void showSnackBar(
     required String title,
     required Color bgColor}) {
   final snackBar = SnackBar(
-    content: Text(
-      title,
-      style: AppStyles.rkRegularTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.whiteColor,
-          fontWeight: FontWeight.w400),
+
+    content: Align(
+      alignment: Alignment.topCenter,
+      child: Text(
+        title,
+        style: AppStyles.rkRegularTextStyle(
+            size: AppConstants.smallFont,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w400),
+
+      ),
     ),
     backgroundColor: bgColor,
     behavior: SnackBarBehavior.floating,
+
   );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar,);
 }
 
 Future<CroppedFile?> cropImage(
@@ -166,3 +173,12 @@ extension StringCasingExtension on String {
   String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
   String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }
+
+
+String formatNumber({required String value, required String local}){
+
+  String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
+ String result1 =  splitNumber(result);
+  return result1;
+}
+

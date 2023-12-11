@@ -12,6 +12,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/dashboard_stats_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class OrderSuccessfulRoute {
   static Widget get route => const OrderSuccessfulScreen();
@@ -30,8 +31,31 @@ class OrderSuccessfulScreen extends StatelessWidget {
   }
 }
 
-class OrderSuccessfulScreenWidget extends StatelessWidget {
+class OrderSuccessfulScreenWidget extends StatefulWidget {
   const OrderSuccessfulScreenWidget({super.key});
+
+  @override
+  State<OrderSuccessfulScreenWidget> createState() => _OrderSuccessfulScreenWidgetState();
+}
+
+class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidget> with TickerProviderStateMixin{
+  late final AnimationController _controller;
+/*  late final Future<LottieComposition> _composition;*/
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this);
+    _composition = AssetLottie(AppImagePath.successIcon).load();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +88,24 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Image.asset(
+                          Lottie.asset(
                             AppImagePath.successIcon,
+                            width: 200,
+                            height: 200,
+                            repeat: true,
+                            reverse: true,
+                            animate: true,
+                            fit: BoxFit.fill,
+                            controller: _controller,
+                            onLoaded: (_composition) {
+                              // Configure the AnimationController with the duration of the
+                              // Lottie file and start the animation.
+                              _controller
+                                ..duration = _composition.duration
+                                ..forward();
+                            },
                           ),
-                          Text(
+                        Text(
                             AppLocalizations.of(context)!.order_sent_successfully,
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_22,
@@ -230,48 +268,4 @@ class OrderSuccessfulScreenWidget extends StatelessWidget {
       },
     );
   }
-
-/* Widget dashboardStatsWidget(
-      {required BuildContext context,
-      required String image,
-      required String title,
-      required String value}) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          color: AppColors.iconBGColor),
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_10),
-      child: Row(
-        children: [
-          SvgPicture.asset(image),
-          10.width,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.mainColor),
-                  maxLines: 2,
-                  overflow: TextOverflow.clip,
-                ),
-                Text(
-                  value,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.blackColor),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }*/
 }

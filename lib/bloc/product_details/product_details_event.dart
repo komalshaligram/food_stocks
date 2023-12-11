@@ -46,7 +46,9 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   const factory ProductDetailsEvent.checkAllEvent(
   ) = _checkAllEvent;
 
-
-
+  const factory ProductDetailsEvent.getOrderByIdEvent({
+    required BuildContext context,
+    required String orderId,
+  }) = _getOrderByIdEvent;
 }
 
