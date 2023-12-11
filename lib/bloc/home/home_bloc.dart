@@ -32,9 +32,9 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 part 'home_event.dart';
 
 part 'home_state.dart';
@@ -126,7 +126,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -226,15 +227,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
+                noteController: TextEditingController(
+                    text: state.productStockList[productStockUpdateIndex].note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -251,7 +256,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -266,7 +272,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title:
+                    '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -316,31 +323,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: event.newNote);
+                  .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
-            event.isSelectSupplier ?? !state.isSelectSupplier));
+                event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
       } else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
-          state.productSupplierList.toList(growable: true);
+              state.productSupplierList.toList(growable: true);
           List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: true);
+              state.productStockList.toList(growable: true);
 
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
-                  /*supplierList[event.supplierIndex].selectedIndex ==
+                      /*supplierList[event.supplierIndex].selectedIndex ==
                               event.supplierSaleIndex
                           ? ''
                           : */
-                  supplierList[event.supplierIndex].supplierId,
+                      supplierList[event.supplierIndex].supplierId,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : /*supplierList[event.supplierIndex].selectedIndex ==
@@ -349,9 +356,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               .supplierSales[event.supplierSaleIndex]
                               .salePrice
                           :*/
-                  supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .salePrice,
+                      supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
                   quantity: 0,
                   productSaleId: event.supplierSaleIndex == -2
@@ -360,9 +367,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               event.supplierSaleIndex
                           ? ''
                           :*/
-                  supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .saleId);
+                      supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .saleId);
           debugPrint(
               'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
           supplierList = supplierList
@@ -377,7 +384,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               event.supplierSaleIndex
                           ? -1
                           : */
-                  event.supplierSaleIndex);
+                      event.supplierSaleIndex);
           debugPrint(
               'selected supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex]}');
           emit(state.copyWith(
@@ -389,7 +396,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
+              title:
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -397,7 +405,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             0) {
           showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
+              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -414,15 +422,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .productStockList[state.productStockUpdateIndex]
                     .productSupplierIds,
                 note: state.productStockList[state.productStockUpdateIndex].note
-                    .isEmpty
+                        .isEmpty
                     ? null
                     : state
-                    .productStockList[state.productStockUpdateIndex].note,
+                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId.isEmpty
+                        .productSaleId.isEmpty
                     ? null
                     : state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId)
+                        .productSaleId)
           ]);
           Map<String, dynamic> req = insertCartReqModel.toJson();
           req.removeWhere((key, value) {
@@ -445,7 +453,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
+                      'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -475,13 +483,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -495,7 +505,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _getWalletRecordEvent) {
         try {
           WalletRecordReqModel reqMap =
-          WalletRecordReqModel(userId: preferences.getUserId());
+              WalletRecordReqModel(userId: preferences.getUserId());
           debugPrint('WalletRecordReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
             AppUrls.walletRecordUrl,
@@ -523,12 +533,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {} catch (e) {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
-              start: DateTime(date.year, date.month, 1),
-              end: DateTime(date.year, date.month + 1))
+                  start: DateTime(date.year, date.month, 1),
+                  end: DateTime(date.year, date.month + 1))
               .duration
               .inDays;
 
@@ -559,7 +570,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
-        } on ServerException {} catch (e) {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _GetMessageListEvent) {
         try {
           emit(state.copyWith(isMessageShimmering: true));
@@ -570,26 +582,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}',
+                      'Bearer ${preferences.getAuthToken()}',
                 },
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
           if (response.status == 200) {
             List<MessageData> messageList = [];
             messageList.addAll(response.data
-                ?.map((message) => MessageData(
-              id: message.id,
-              isRead: message.isRead,
-              message: Message(
-                id: message.message?.id ?? '',
-                title: message.message?.title ?? '',
-                summary: message.message?.summary ?? '',
-                body: message.message?.body ?? '',
-              ),
-              createdAt: message.createdAt,
-              updatedAt: message.updatedAt,
-            ))
-                .toList() ??
+                    ?.map((message) => MessageData(
+                          id: message.id,
+                          isRead: message.isRead,
+                          message: Message(
+                            id: message.message?.id ?? '',
+                            title: message.message?.title ?? '',
+                            summary: message.message?.summary ?? '',
+                            body: message.message?.body ?? '',
+                          ),
+                          createdAt: message.createdAt,
+                          updatedAt: message.updatedAt,
+                        ))
+                    .toList() ??
                 []);
             /* messageList.removeWhere(
                 (message) => (message.isPushNotification ?? false) == false);*/
@@ -599,7 +611,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -608,7 +621,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             messageCount: state.messageCount + event.messageCount));
       } else if (event is _RemoveOrUpdateMessageEvent) {
         List<MessageData> messageList =
-        state.messageList.toList(growable: true);
+            state.messageList.toList(growable: true);
         debugPrint('message list len before delete = ${messageList.length}');
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
@@ -617,13 +630,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList
-              .firstWhere((message) => message.id == event.messageId))]
-              .isRead ==
+                      .firstWhere((message) => message.id == event.messageId))]
+                  .isRead ==
               false) {
             await preferencesHelper.setMessageCount(
                 count: preferencesHelper.getMessageCount() - 1);
             messageList[messageList.indexOf(messageList
-                .firstWhere((message) => message.id == event.messageId))] =
+                    .firstWhere((message) => message.id == event.messageId))] =
                 messageList[messageList.indexOf(messageList.firstWhere(
                         (message) => message.id == event.messageId))]
                     .copyWith(isRead: true);

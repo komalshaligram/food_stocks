@@ -32,6 +32,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isSearching,
     required int imageIndex,
     required TextEditingController searchController,
+    required TextEditingController noteController,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -64,5 +65,6 @@ class StoreCategoryState with _$StoreCategoryState {
         isSearching: false,
         imageIndex: 0,
         searchController: TextEditingController(),
+        noteController: TextEditingController(),
       );
 }

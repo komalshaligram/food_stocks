@@ -14,6 +14,9 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.getRecommendationProductsListEvent(
       {required BuildContext context}) = _GetRecommendationProductsListEvent;
 
+  const factory StoreEvent.getPreviousOrderProductsListEvent(
+      {required BuildContext context}) = _GetPreviousOrderProductsListEvent;
+
   const factory StoreEvent.changeSearchListEvent(
       {required List<SearchModel> newSearchList}) = _ChangeSearchListEvent;
 

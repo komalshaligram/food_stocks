@@ -222,23 +222,17 @@
   "connection_timed_out":"Connection timed out",
   "send_timed_out":"Send timed out",
   "receive_timed_out":"Receive timed out",
-  "bad_ssl_certificates":"Bad SSL certificates",
-  "bad_request":"Bad request",
-  "permission_denied":"Permission denied",
-  "server_internal_error":"Server internal error",
-  "server_bad_response":"Server bad response",
-  "server_canceled":"Server canceled it",
-  "unknown_error":"Unknown error",
-  "login_successful":"Login successfully",
-  "add_1_quantity":"Add at least 1 quantity",
-  "out_of_stock":"Out of Stock",
-  "select_business_type":"Please select your business type"
-
-
-
-
-
-
-
-
+  "bad_ssl_certificates": "Bad SSL certificates",
+  "bad_request": "Bad request",
+  "permission_denied": "Permission denied",
+  "server_internal_error": "Server internal error",
+  "server_bad_response": "Server bad response",
+  "server_canceled": "Server canceled it",
+  "unknown_error": "Unknown error",
+  "login_successful": "Login successfully",
+  "add_1_quantity": "Add at least 1 quantity",
+  "out_of_stock": "Out of Stock",
+  "select_business_type": "Please select your business type",
+  "reorder": "Reorder",
+  "previous_order_products": "Products from Previous Order"
 }

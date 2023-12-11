@@ -39,4 +39,7 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   }) = _UpdateImageIndexEvent;
 
   const factory CompanyProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory CompanyProductsEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

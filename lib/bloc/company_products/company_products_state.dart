@@ -17,6 +17,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required int imageIndex,
+    required TextEditingController noteController,
+    required RefreshController refreshController,
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -34,5 +36,7 @@ class CompanyProductsState with _$CompanyProductsState {
         isSelectSupplier: false,
         productSupplierList: [],
         imageIndex: 0,
+        noteController: TextEditingController(),
+        refreshController: RefreshController(),
       );
 }

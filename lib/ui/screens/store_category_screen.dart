@@ -1217,15 +1217,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                         context: context1));
                               },
-                              noteController: TextEditingController(text: state
-                                  .productStockList[planoGramIndex][state
-                                  .productStockUpdateIndex].note)
-                                ..selection = TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset: state.productStockList[state
-                                            .planoGramUpdateIndex][state
-                                            .productStockUpdateIndex].note
-                                            .length)),
+                              noteController: state.noteController,
+                              // TextEditingController(text: state
+                              //     .productStockList[planoGramIndex][state
+                              //     .productStockUpdateIndex].note)
+                              //   ..selection = TextSelection.fromPosition(
+                              //       TextPosition(
+                              //           offset: state.productStockList[state
+                              //               .planoGramUpdateIndex][state
+                              //               .productStockUpdateIndex].note
+                              //               .length)),
                               onNoteChanged: (newNote) {
                                 context.read<StoreCategoryBloc>().add(
                                     StoreCategoryEvent.changeNoteOfProduct(

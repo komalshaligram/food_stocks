@@ -76,6 +76,7 @@ dependencies:
   html: ^0.15.4
   device_info_plus: ^9.1.1
   carousel_slider: ^4.2.1
+  pull_to_refresh: ^2.0.0
 
 
 

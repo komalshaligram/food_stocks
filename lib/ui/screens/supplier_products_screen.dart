@@ -460,14 +460,15 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         SupplierProductsEvent
                                             .increaseQuantityOfProduct(
                                                 context: context1));
-                              },
-                              onQuantityDecreaseTap: () {
-                                context.read<SupplierProductsBloc>().add(
-                                    SupplierProductsEvent
-                                        .decreaseQuantityOfProduct(
+                                  },
+                                  onQuantityDecreaseTap: () {
+                                    context.read<SupplierProductsBloc>().add(
+                                        SupplierProductsEvent
+                                            .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
                                     context.read<SupplierProductsBloc>().add(
                                         SupplierProductsEvent

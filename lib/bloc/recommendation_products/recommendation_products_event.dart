@@ -38,4 +38,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.toggleNoteEvent() =
       _ToggleNoteEvent;
+
+  const factory RecommendationProductsEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

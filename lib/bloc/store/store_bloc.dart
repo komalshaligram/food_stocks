@@ -9,6 +9,7 @@ import 'package:food_stock/data/model/req_model/company_req_model/company_req_mo
 import 'package:food_stock/data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
+import 'package:food_stock/data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
@@ -30,11 +31,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
+import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'store_event.dart';
@@ -336,9 +337,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+            String note =
+                state.productStockList.indexOf(state.productStockList.last) ==
+                        productStockUpdateIndex
+                    ? ''
+                    : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
+                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
           } else {
@@ -409,7 +416,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: event.newNote);
+                  .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _AddToCartProductEvent) {
@@ -699,6 +706,48 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 image: category.categoryImage ?? '')));
         emit(state.copyWith(
             searchList: searchList, searchController: TextEditingController()));
+      } else if (event is _GetPreviousOrderProductsListEvent) {
+        try {
+          emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).post(
+            AppUrls.getPreviousOrderProductsUrl,
+            data: PreviousOrderProductsReqModel(
+                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                .toJson(),
+          );
+          PreviousOrderProductsResModel response =
+              PreviousOrderProductsResModel.fromJson(res);
+          if (response.status == 200) {
+            debugPrint(
+                'previous order products len = ${response.previousProductData?.length}');
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            ProductStockModel barcodeStock = productStockList.removeLast();
+            productStockList.addAll(response.previousProductData?.map(
+                    (previousOrderProduct) => ProductStockModel(
+                        productId: previousOrderProduct.id ?? '',
+                        stock: previousOrderProduct.productStock ?? 0)) ??
+                []);
+            productStockList.add(barcodeStock);
+            emit(state.copyWith(
+                previousOrderProductsList: response.previousProductData ?? [],
+                productStockList: productStockList,
+                isShimmering: false));
+            debugPrint(
+                'previous order products len = ${state.previousOrderProductsList.length}');
+          } else {
+            emit(state.copyWith(isShimmering: false));
+            showSnackBar(
+                context: event.context,
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
       }
     });
   }

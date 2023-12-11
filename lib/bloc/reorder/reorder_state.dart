@@ -1,11 +1,9 @@
-part of 'supplier_products_bloc.dart';
+part of 'reorder_bloc.dart';
 
 @freezed
-class SupplierProductsState with _$SupplierProductsState {
-  const factory SupplierProductsState({
-    required String supplierId,
-    required String search,
-    required List<Datum> productList,
+class ReorderState with _$ReorderState {
+  const factory ReorderState({
+    required List<PreviousOrderProductData> previousOrderProductsList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
@@ -18,13 +16,12 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required int imageIndex,
+    required RefreshController refreshController,
     required TextEditingController noteController,
-  }) = _SupplierProductsState;
+  }) = _ReorderState;
 
-  factory SupplierProductsState.initial() => SupplierProductsState(
-    supplierId: '',
-        search: '',
-        productList: [],
+  factory ReorderState.initial() => ReorderState(
+        previousOrderProductsList: [],
         isShimmering: false,
         isLoading: false,
         isProductLoading: false,
@@ -37,6 +34,7 @@ class SupplierProductsState with _$SupplierProductsState {
         isSelectSupplier: false,
         productSupplierList: [],
         imageIndex: 0,
+        refreshController: RefreshController(),
         noteController: TextEditingController(),
       );
 }

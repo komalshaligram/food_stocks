@@ -342,10 +342,17 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
             emit(state.copyWith(productStockList: []));
+            String note =
+                state.productStockList.indexOf(state.productStockList.last) ==
+                            planoGramIndex &&
+                        productStockUpdateIndex == 0
+                    ? ''
+                    : state.productStockList[productStockUpdateIndex][0].note;
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
                 productStockUpdateIndex: productStockUpdateIndex,
+                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 planoGramUpdateIndex: planoGramIndex,
                 isProductLoading: false));
@@ -428,12 +435,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel>> productStockList =
-          state.productStockList.toList(growable: false);
+              state.productStockList.toList(growable: false);
           productStockList[state.planoGramUpdateIndex]
-          [state.productStockUpdateIndex] =
+                  [state.productStockUpdateIndex] =
               productStockList[state.planoGramUpdateIndex]
-              [state.productStockUpdateIndex]
-                  .copyWith(note: event.newNote);
+                      [state.productStockUpdateIndex]
+                  .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _ChangeSupplierSelectionExpansionEvent) {

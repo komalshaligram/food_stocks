@@ -147,7 +147,6 @@
   "february": "פברואר",
   "march": "מרץ",
   "april": "אַפּרִיל",
-  "may": "מאי",
   "june": "יוני",
   "july": "יולי",
   "august": "אוגוסט",
@@ -200,7 +199,6 @@
   "search_result_not_found" : "לא נמצאו תוצאות חיפוש",
   "products_not_available" : "לא נמצאו מוצרים",
   "sub_categories_not_available" : "תת קטגוריה לא קיימת",
-  "sub_categories_not_available" : "תת קטגוריה לא קיימת",
   "messages_not_found" : "הודעה לא נמצאה",
   "currently_this_Supplier_has_no_products" : "כרגע אין מוצרים עבור ספק זה",
   "currently_products_are_not_on_sale" : "כרגע אין מוצרים במבצע",
@@ -224,62 +222,17 @@
   "signature_missing":"חסרה חתימה",
   "connection_timed_out":"בעיית  חיבור לשרת",
   "send_timed_out":"בעיית שליחה לשרת",
-  "receive_timed_out":"בעיית קבלה מהשרת",
-  "bad_request":"בעיה בבקשה",
-  "permission_denied":"אין הרשאה",
-  "server_internal_error":"בעייה פנימית בשרת",
-  "server_bad_response":"שגיאה בבקשה לשרת",
-  "server_canceled":"השרת דחה את הפנייה",
-  "unknown_error":"בעיה לא ידועה",
-  "login_successful":"התחברת בהצלחה",
-  "add_1_quantity":"בחר לפחות כמות אחת",
-  "out_of_stock":"אזל במלאי",
-  "select_business_type":"אנא בחר את סוג העסק"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  "receive_timed_out": "בעיית קבלה מהשרת",
+  "bad_request": "בעיה בבקשה",
+  "permission_denied": "אין הרשאה",
+  "server_internal_error": "בעייה פנימית בשרת",
+  "server_bad_response": "שגיאה בבקשה לשרת",
+  "server_canceled": "השרת דחה את הפנייה",
+  "unknown_error": "בעיה לא ידועה",
+  "login_successful": "התחברת בהצלחה",
+  "add_1_quantity": "בחר לפחות כמות אחת",
+  "out_of_stock": "אזל במלאי",
+  "select_business_type": "אנא בחר את סוג העסק",
+  "reorder": "Reorder",
+  "previous_order_products": "Products from Previous Order"
 }

@@ -465,8 +465,13 @@ class HomeScreenWidget extends StatelessWidget {
                                               title:
                                                   AppLocalizations.of(context)!
                                                       .sales,
-                                              allContentTitle:
-                                                  AppLocalizations.of(context)!
+                                              allContentTitle: state
+                                                          .productSalesList
+                                                          .length <
+                                                      6
+                                                  ? ''
+                                                  : AppLocalizations.of(
+                                                          context)!
                                                       .all_sales,
                                               onTap: () {
                                                 Navigator.pushNamed(
@@ -983,7 +988,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         HomeEvent.decreaseQuantityOfProduct(
                                             context: context1));
                                   },
-                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.changeNoteOfProduct(

@@ -494,7 +494,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           // String buildNumber = packageInfo.buildNumber;
           // debugPrint('build number $buildNumber');
           // if(statuses[Permission.storage]!.isGranted) {
-          File file;
+          // File file;
           Directory? dir;
           if (defaultTargetPlatform == TargetPlatform.android) {
             // dir = await getApplicationDocumentsDirectory();
