@@ -43,7 +43,6 @@ class SplashScreenWidget extends StatelessWidget {
     debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
   }
 
-
    getDeviceId() async {
     try {
        deviceId = await PlatformDeviceId.getDeviceId;
