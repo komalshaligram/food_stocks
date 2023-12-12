@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../app_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AppStrings {
   static const appName = 'Food Stock';
@@ -59,6 +57,7 @@ class AppStrings {
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
   static const orderBySupplierId = 'orderSupplierId';
+  static const getCartListString = 'getCartListString';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -71,6 +70,7 @@ class AppStrings {
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
+  static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings
   static const mobileParamString = 'mobileParam';
@@ -151,7 +151,131 @@ class AppStrings {
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){
       case 'errmessage':
-        return AppLocalizations.of(context).errmessage;
+        return AppLocalizations.of(context)!.errmessage;
+      case 'successmessage':
+        return AppLocalizations.of(context)!.successmessage;
+      case 'invalidoperation':
+        return AppLocalizations.of(context)!.invalidoperation;
+      case 'documentcreatedmessage':
+        return AppLocalizations.of(context)!.documentcreatedmessage;
+      case 'loginsuccessmessage':
+        return AppLocalizations.of(context)!.loginsuccessmessage;
+      case 'usercreatedmessage':
+        return AppLocalizations.of(context)!.usercreatedmessage;
+      case 'validationerror':
+        return AppLocalizations.of(context)!.validationerror;
+      case 'servererrormessage':
+        return AppLocalizations.of(context)!.servererrormessage;
+      case 'invalidcredentials':
+        return AppLocalizations.of(context)!.invalidcredentials;
+      case 'verificationemailsent':
+        return AppLocalizations.of(context)!.verificationemailsent;
+      case 'invalidcode':
+        return AppLocalizations.of(context)!.invalidcode;
+      case 'alreadyverified':
+        return AppLocalizations.of(context)!.alreadyverified;
+      case 'expiredcode':
+        return AppLocalizations.of(context)!.expiredcode;
+      case 'verificationsuccess':
+        return AppLocalizations.of(context)!.verificationsuccess;
+      case 'invalidverificationcode':
+        return AppLocalizations.of(context)!.invalidverificationcode;
+      case 'expiredverificationcode':
+        return AppLocalizations.of(context)!.expiredverificationcode;
+      case 'unverifiedverificationcode':
+        return AppLocalizations.of(context)!.unverifiedverificationcode;
+      case 'usernotfound':
+        return AppLocalizations.of(context)!.usernotfound;
+      case 'newpasswordsameasold':
+        return AppLocalizations.of(context)!.newpasswordsameasold;
+      case 'resetsuccessful':
+        return AppLocalizations.of(context)!.resetsuccessful;
+      case 'setsuccessful':
+        return AppLocalizations.of(context)!.setsuccessful;
+      case 'currentpasswordwrong':
+        return AppLocalizations.of(context)!.currentpasswordwrong;
+      case 'changesuccessful':
+        return AppLocalizations.of(context)!.changesuccessful;
+      case 'formcreatesuccessful':
+        return AppLocalizations.of(context)!.formcreatesuccessful;
+      case 'formnotfound':
+        return AppLocalizations.of(context)!.formnotfound;
+      case 'formexistswiththisname':
+        return AppLocalizations.of(context)!.formexistswiththisname;
+      case 'badrequest':
+        return AppLocalizations.of(context)!.badrequest;
+      case 'internalservererror':
+        return AppLocalizations.of(context)!.internalservererror;
+      case 'recordalreadyexist':
+        return AppLocalizations.of(context)!.recordalreadyexist;
+      case 'phonenumberalreadyexist':
+        return AppLocalizations.of(context)!.phonenumberalreadyexist;
+      case 'emailalreadyexist':
+        return AppLocalizations.of(context)!.emailalreadyexist;
+      case 'recordnotcreated':
+        return AppLocalizations.of(context)!.recordnotcreated;
+      case 'tokenerror':
+        return AppLocalizations.of(context)!.tokenerror;
+      case 'datanotfound':
+        return AppLocalizations.of(context)!.datanotfound;
+      case 'invalidcontact':
+        return AppLocalizations.of(context)!.invalidcontact;
+      case 'foundcontact':
+        return AppLocalizations.of(context)!.foundcontact;
+      case 'invalidemail':
+        return AppLocalizations.of(context)!.invalidemail;
+      case 'recorddoesnotexist':
+        return AppLocalizations.of(context)!.recorddoesnotexist;
+      case 'skuarerequired':
+        return AppLocalizations.of(context)!.skuarerequired;
+      case 'productidarerequired':
+        return AppLocalizations.of(context)!.productidarerequired;
+      case 'skusarenotregistered':
+        return AppLocalizations.of(context)!.skusarenotregistered;
+      case 'productarenoregistered':
+        return AppLocalizations.of(context)!.productarenoregistered;
+      case 'supplierproductisnotregistered':
+        return AppLocalizations.of(context)!.supplierproductisnotregistered;
+      case 'productssuppliermismatch':
+        return AppLocalizations.of(context)!.productssuppliermismatch;
+      case 'productremovalsalesuccess':
+        return AppLocalizations.of(context)!.productremovalsalesuccess;
+      case 'productremovalsalefailure':
+        return AppLocalizations.of(context)!.productremovalsalefailure;
+      case 'insufficientdataforproductremovalfromsale':
+        return AppLocalizations.of(context)!.insufficientdataforproductremovalfromsale;
+      case 'productnotfound':
+        return AppLocalizations.of(context)!.productnotfound;
+      case 'failedtoauthenticate':
+        return AppLocalizations.of(context)!.failedtoauthenticate;
+      case 'recordupdatedsuccessfully':
+        return AppLocalizations.of(context)!.recordupdatedsuccessfully;
+      case 'recorddeletedsuccessfully':
+        return AppLocalizations.of(context)!.recorddeletedsuccessfully;
+      case 'recordcreatedsuccessfully':
+        return AppLocalizations.of(context)!.recordcreatedsuccessfully;
+      case 'invalidids':
+        return AppLocalizations.of(context)!.invalidids;
+      case 'importedsuccessfully':
+        return AppLocalizations.of(context)!.importedsuccessfully;
+      case 'cartproductsbadrequest':
+        return AppLocalizations.of(context)!.cartproductsbadrequest;
+      case 'cartdoesnotexist':
+        return AppLocalizations.of(context)!.cartdoesnotexist;
+      case 'cartproductdoesnotexist':
+        return AppLocalizations.of(context)!.cartproductdoesnotexist;
+      case 'productdoesnotexistincart':
+        return AppLocalizations.of(context)!.productdoesnotexistincart;
+      case 'supplierdoesnothavequantity':
+        return AppLocalizations.of(context)!.supplierdoesnothavequantity;
+      case 'orderproductsbadrequest':
+        return AppLocalizations.of(context)!.orderproductsbadrequest;
+      case 'ordercreatedsuccessfully':
+        return AppLocalizations.of(context)!.ordercreatedsuccessfully;
+      case 'orderupdatedsuccessfully':
+        return AppLocalizations.of(context)!.orderupdatedsuccessfully;
+
+
     }
     return '';
   }

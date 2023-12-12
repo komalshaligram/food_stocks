@@ -27,8 +27,7 @@ class OrderSummaryScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
     ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => OrderSummaryBloc()
-        ..add(OrderSummaryEvent.getDataEvent(context: context,CartItemList: args?[AppStrings.getCartListString] ?? GetAllCartResModel())),
+      create: (context) => OrderSummaryBloc()..add(OrderSummaryEvent.getDataEvent(context: context,CartItemList: args?[AppStrings.getCartListString] ?? GetAllCartResModel())),
       child: OrderSummaryScreenWidget(),
     );
   }
