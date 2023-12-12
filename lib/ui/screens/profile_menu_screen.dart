@@ -230,7 +230,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       });
                                 }),
                             profileMenuTiles(
-                                title: AppLocalizations.of(context)!.logout,
+                                title: AppLocalizations.of(context)!.log_out,
                                 onTap: () {
                                   bloc.add(ProfileMenuEvent.logOutEvent(
                                       context: context));
