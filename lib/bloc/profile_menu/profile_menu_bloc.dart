@@ -48,7 +48,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         showDialog(
           context: event.context,
           builder: (context) => CommonAlertDialog(
-            title: '${AppLocalizations.of(event.context)!.logout}',
+            title: '${AppLocalizations.of(event.context)!.log_out}',
             subTitle: '${AppLocalizations.of(event.context)!.are_you_sure}',
             positiveTitle: '${AppLocalizations.of(event.context)!.yes}',
             negativeTitle: '${AppLocalizations.of(event.context)!.no}',
