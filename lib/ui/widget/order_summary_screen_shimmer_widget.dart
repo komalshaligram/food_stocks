@@ -5,12 +5,13 @@ import '../utils/themes/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class OrderSummaryScreenShimmerWidget extends StatelessWidget {
-  const OrderSummaryScreenShimmerWidget({super.key});
+  int itemCount;
+   OrderSummaryScreenShimmerWidget({super.key , this.itemCount = 5});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 5,
+      itemCount: itemCount,
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       padding:

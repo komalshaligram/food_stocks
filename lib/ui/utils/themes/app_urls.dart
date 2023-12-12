@@ -1,8 +1,8 @@
 class AppUrls {
-  static const String baseUrl = 'http://182.70.118.201:3000/api'; //Live
-//  static const String baseUrl = 'http://192.168.1.46:8080/api'; //debug
- static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
- // static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
+// static const String baseUrl = 'http://182.70.118.201:3000/api';
+ static const String baseUrl = 'http://192.168.1.46:8080/api';
+// static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
+  static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
@@ -74,4 +74,5 @@ class AppUrls {
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
   static const String getUnreadMessageCountUrl =
       '/v1/notifications/getNotificationsCount';
+  static const String refreshTokenUrl = '/v1/auth/refreshToken';
 }

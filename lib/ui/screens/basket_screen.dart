@@ -91,6 +91,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         border: Border.all(
                                             color: AppColors.borderColor)),
                                     child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
                                           //width: getScreenWidth(context) * 0.36,
@@ -142,10 +143,11 @@ class BasketScreenWidget extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w700),
                                                 ),*/
-                                          Row(
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                               '${AppLocalizations.of(context)!.total}${' : '}',
+                                               '${AppLocalizations.of(context)!.total}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                   size: getScreenWidth(
@@ -161,21 +163,23 @@ class BasketScreenWidget extends StatelessWidget {
                                               ),
                                               Directionality(
                                                 textDirection: TextDirection.ltr,
-                                                child: Text(
-                                                  '${formatter(state.totalPayment.toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                        size: getScreenWidth(
-                                                            context) <=
-                                                            380
-                                                            ? AppConstants
-                                                            .smallFont
-                                                            : AppConstants
-                                                            .mediumFont,
-                                                        color: AppColors
-                                                            .whiteColor,
-                                                        fontWeight:
-                                                        FontWeight.w700),
+                                                child: Expanded(
+                                                  child: Text(
+                                                    '${(formatNumber(value:(state.totalPayment.toStringAsFixed(2)),local:AppStrings.hebrewLocal))}',
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                          size: getScreenWidth(
+                                                              context) <=
+                                                              380
+                                                              ? AppConstants
+                                                              .smallFont
+                                                              : AppConstants
+                                                              .mediumFont,
+                                                          color: AppColors
+                                                              .whiteColor,
+                                                          fontWeight:
+                                                          FontWeight.w700),
+                                                  ),
                                                 ),
                                               )
                                             ],
@@ -220,10 +224,9 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .orderSummaryScreen.name);
+                                            Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name,arguments: {
+                                              AppStrings.getCartListString : state.CartItemList
+                                                });
                                           },
                                           child: Container(
                                            // width: getScreenWidth(context) * 0.22,
@@ -272,6 +275,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  10.width,
                                   InkWell(
                                     onTap: () {
                                       deleteDialog(
@@ -301,7 +305,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  3.width,
+                                  2.width,
                                 ],
                               ),
                             )
@@ -366,7 +370,7 @@ class BasketScreenWidget extends StatelessWidget {
           key: Key(state.basketProductList.toString()),
           direction: DismissDirection.startToEnd,
           background: Container(
-            alignment: state.language == 'en' ? Alignment.centerLeft : Alignment.centerRight,
+            alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
             margin: EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
                 horizontal: AppConstants.padding_10),
@@ -518,7 +522,8 @@ class BasketScreenWidget extends StatelessWidget {
                             Directionality(
                               textDirection: TextDirection.ltr,
                               child: Text(
-                                '${formatter(state.basketProductList[index].totalPayment?.toString() ??"0")}${AppLocalizations.of(context)!.currency}',
+                               /* '${splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0")}${AppLocalizations.of(context)!.currency}',*/
+                                '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0",local:AppStrings.hebrewLocal)}',
                                 style: TextStyle(
                                     color: AppColors.blackColor,
                                     fontSize: AppConstants.smallFont,

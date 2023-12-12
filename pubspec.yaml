@@ -79,6 +79,11 @@ dependencies:
   pull_to_refresh: ^2.0.0
   vibration: ^1.8.4
   liquid_pull_to_refresh: ^3.0.1
+  lottie: ^2.7.0
+  animations: ^2.0.8
+
+
+
 
 
 dev_dependencies:

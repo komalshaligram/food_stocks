@@ -75,7 +75,7 @@ class DioClient {
             Options(
                 headers: {
               HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}'
+                 'Bearer ${preferencesHelper.getAuthToken()}'
             });
         requestOptions.headers = requestOptions.headers ?? {};
 
@@ -87,12 +87,31 @@ class DioClient {
         return response.data;
       } on DioException catch (e) {
 
-        isLoggedIn =  await preferencesHelper.getUserLoggedIn();
-        if(e.response?.statusCode == 401 && isLoggedIn) {
+       // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
+        if(e.response?.statusCode == 401) {
 
-          debugPrint('Token Expired = ${e.response?.statusCode}\nLogged Out...');
+          debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
 
-          var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+           final res = await _dio.post(AppUrls.refreshTokenUrl, data: {
+            "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
+          });
+
+           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+
+          // RefreshTokenModel response = RefreshTokenModel.fromJson(res as dynamic);
+
+          if(res.statusCode == 200) {
+            print('[refresh Api response]  ${res.data['data']}');
+
+             preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+             preferencesHelper.setAuthToken(accToken: res.data?['data']['accessToken'] ?? '');
+             preferencesHelper.setRefreshToken(refToken: res.data?['data']['refreshToken'] ?? '');
+             print('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
+
+          }
+
+          if(res.statusCode == 401){
+             var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
 
@@ -114,6 +133,8 @@ class DioClient {
             Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
             ScaffoldMessenger.of(_context).hideCurrentSnackBar();
           }
+          }
+
         } else {
         throw _createErrorEntity(e, context: _context);
         }
