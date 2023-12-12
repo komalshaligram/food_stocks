@@ -52,7 +52,7 @@ class CompanyScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context).companies,
+              title: AppLocalizations.of(context)!.companies,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);

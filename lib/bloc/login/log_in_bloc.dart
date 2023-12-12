@@ -11,6 +11,8 @@ import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../ui/utils/themes/app_strings.dart';
 part 'log_in_event.dart';
 
 part 'log_in_state.dart';
@@ -38,24 +40,27 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             AppUrls.existingUserLoginUrl,
             data: reqMap,
           );
-          debugPrint('login res = $res');
+
           LoginResModel response = LoginResModel.fromJson(res);
           debugPrint('token_____${preferencesHelper.getFCMToken()}');
-          debugPrint('LoginReqModel --- ${response}');
-          debugPrint('login response --- ${response}');
+
+      //    debugPrint('login response --- ${response}');
 
           if (response.status == 200) {
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
+
+
           } else {
-            showSnackBar(
+        /*    getLocalizedString(key :response.message!.toLocalization().toString(),context :event.context);
+         showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:  getLocalizedString(key :response.message!.toLocalization().toString(),context :event.context) ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             emit(state.copyWith(
               isLoading: false,
-            ));
+            ));*/
           }
         } on ServerException {
           emit(state.copyWith(

@@ -185,8 +185,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                 showSnackBar(
                                                                     context:
                                                                         context,
-                                                                    title: AppStrings
-                                                                        .cameraAllowPermissionString,
+                                                                    title:  AppLocalizations.of(context)!.camera_permission,
                                                                     bgColor:
                                                                         AppColors
                                                                             .redColor);
@@ -245,8 +244,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   showSnackBar(
                                                                       context:
                                                                           context,
-                                                                      title: AppStrings
-                                                                          .storageAllowPermissionString,
+                                                                      title:  AppLocalizations.of(context)!.storage_permission,
                                                                       bgColor:
                                                                           AppColors
                                                                               .redColor);
@@ -853,8 +851,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                             } else {
                                               showSnackBar(
                                                   context: context,
-                                                  title: AppStrings
-                                                      .selectBusinessTypeString,
+                                                  title:  AppLocalizations.of(context)!.select_business_type,
                                                   bgColor: AppColors.redColor);
                                             }
                                             // } else {

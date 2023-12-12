@@ -40,7 +40,7 @@ class OrderSuccessfulScreenWidget extends StatefulWidget {
 
 class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidget> with TickerProviderStateMixin{
   late final AnimationController _controller;
-/*  late final Future<LottieComposition> _composition;*/
+  late final Future<LottieComposition> _composition;
 
   @override
   void initState() {

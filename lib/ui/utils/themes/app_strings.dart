@@ -1,4 +1,7 @@
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../app_utils.dart';
 
 class AppStrings {
   static const appName = 'Food Stock';
@@ -84,50 +87,41 @@ class AppStrings {
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
 
   //toast strings
-  static const registerSuccessString = 'Registered Successfully!';
+  //static const registerSuccessString = 'Registered Successfully!';
   static const otpResendSuccessString = 'OTP resend Successfully!';
-  static const loginSuccessString = 'Logged in Successfully!';
-  static const updateSuccessString = 'Updated Successfully!';
-  static const addCartSuccessString = 'Product added to Cart';
-  static const removeSuccessString = 'Removed Successfully!';
-  static const logOutSuccessString = 'Logged out Successfully!';
-  static const somethingWrongString = 'Something is wrong, try again!';
-  static const minQuantityMsgString = 'Add at least 1 quantity';
-  static const selectSupplierMsgString = 'Please select supplier';
-  static const maxQuantityMsgString = 'You have reached maximum quantity';
-  static const imageNotSetString = 'Image not set';
-  static const fileSizeLimitString =
-      'File size must be less then ${AppConstants.fileSizeCap}KB';
-  static const selectBusinessTypeString = 'Please select your business type';
+//  static const loginSuccessString = 'Logged in Successfully!';
+  //static const updateSuccessString = 'Updated Successfully!';
+ // static const addCartSuccessString = 'Product added to Cart';
+//  static const removeSuccessString = 'Removed Successfully!';
+ // static const logOutSuccessString = 'Logged out Successfully!';
+//  static const somethingWrongString = 'Something is wrong, try again!';
+//  static const minQuantityMsgString = 'Add at least 1 quantity';
+//  static const selectSupplierMsgString = 'Please select supplier';
+ // static const maxQuantityMsgString = 'You have reached maximum quantity';
+//  static const imageNotSetString = 'Image not set';
+//  static const fileSizeLimitString = 'File size must be less then ${AppConstants.fileSizeCap}KB';
+//  static const selectBusinessTypeString = 'Please select your business type';
   static const uploadingMsgString = 'Please wait while uploading';
-  static const selectValidDocumentFormatString =
-      'Please select only jpg, jpeg, png, heic, pdf and document files';
-  static const downloadString = 'Downloaded successfully!';
-  static const downloadFailedString = 'Failed to download';
-  static const storageAllowPermissionString =
-      'Please allow storage permission from settings';
-  static const cameraAllowPermissionString =
-      'Please allow camera permission from settings';
-  static const uploadDocumentFirstString = 'Please upload document first';
-  static const openingTimeAfterPreviousClosingString =
-      'Please select opening time after previous closing time';
-  static const openingTimeAfterClosingString =
-      'Please select opening time before closing time';
-  static const closingTimeAfterOpeningString =
-      'Please select closing time after opening time';
-  static const selectOpeningString = 'Please select opening Time';
-  static const selectPreviousShiftString = 'Please select previous shift time';
-  static const selectFirstShiftString = 'Please select first shift time';
-  static const selectShiftTimeString = 'Please select shift time';
-  static const enterOtpString = 'Please enter otp';
-  static const selectTimeMoreThen0String =
-      'Please select time grater then 00:00';
-  static const fillUpClosingTimeString = 'Please fill up closing time';
-  static const noInternetConnection = 'No Internet Connection';
-  static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
-  static const clearCartPopUpString = 'Are you sure you want to clear cart?';
-  static const deleteProductPopUpString =
-      'Are you sure you want to delete product?';
+  static const selectValidDocumentFormatString = 'Please select only jpg, jpeg, png, heic, pdf and document files';
+  //static const downloadString = 'Downloaded successfully!';
+ // static const downloadFailedString = 'Failed to download';
+ // static const storageAllowPermissionString = 'Please allow storage permission from settings';
+ // static const cameraAllowPermissionString = 'Please allow camera permission from settings';
+ // static const uploadDocumentFirstString = 'Please upload document first';
+  //static const openingTimeAfterPreviousClosingString = 'Please select opening time after previous closing time';
+ // static const openingTimeAfterClosingString = 'Please select opening time before closing time';
+  //static const closingTimeAfterOpeningString = 'Please select closing time after opening time';
+ // static const selectOpeningString = 'Please select opening Time';
+//  static const selectPreviousShiftString = 'Please select previous shift time';
+//  static const selectFirstShiftString = 'Please select first shift time';
+  //static const selectShiftTimeString = 'Please select shift time';
+//  static const enterOtpString = 'Please enter otp';
+//  static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
+ // static const fillUpClosingTimeString = 'Please fill up closing time';
+ // static const noInternetConnection = 'No Internet Connection';
+ // static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
+  //static const clearCartPopUpString = 'Are you sure you want to clear cart?';
+  //static const deleteProductPopUpString = 'Are you sure you want to delete product?';
   static const selectNextDayShiftString = 'please select next day shift';
 
   //hint strings
@@ -153,3 +147,17 @@ class AppStrings {
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
 }
+
+
+
+/*
+String? getLocalizedString( {required String key, required BuildContext context}) {
+  switch (key) {
+  case "usernotfound":
+  return AppLocalizations.of(context)!.usernotfound;
+  //case "possible_api_value_2":
+ // return AppLocalizations.of(context)!.usernotfound;
+
+  }
+return '';
+}*/
