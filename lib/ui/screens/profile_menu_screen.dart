@@ -183,7 +183,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           children: [
                             15.height,
                             profileMenuTiles(
-                                title: AppLocalizations.of(context)!
+                                title: AppLocalizations.of(context)
                                     .business_details,
                                 onTap: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -195,7 +195,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.more_details,
+                                    AppLocalizations.of(context).more_details,
                                 onTap: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
@@ -206,7 +206,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.activity_time,
+                                    AppLocalizations.of(context).activity_time,
                                 onTap: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
@@ -217,7 +217,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 }),
                             profileMenuTiles(
                                 title:
-                                    AppLocalizations.of(context)!.forms_files,
+                                    AppLocalizations.of(context).forms_files,
                                 onTap: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   Navigator.pushNamed(context,
@@ -227,15 +227,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       });
                                 }),
                             profileMenuTiles(
-                                title: AppLocalizations.of(context)!.logout,
+                                title: AppLocalizations.of(context).logout,
                                 onTap: () {
-                                  context.read<ProfileMenuBloc>().add(
+                                  bloc.add(ProfileMenuEvent.logOutEvent(context: context));
+                               /*   context.read<ProfileMenuBloc>().add(
                                       ProfileMenuEvent.logOutEvent(
-                                          context: context));
+                                          context: context));*/
                                 }),
                             menuSwitchTile(
                                 title:
-                                    AppLocalizations.of(context)!.app_language,
+                                    AppLocalizations.of(context).app_language,
                                 isHebrewLang: state.isHebrewLanguage,
                                 onChanged: (bool value) {
                                   context.read<ProfileMenuBloc>().add(

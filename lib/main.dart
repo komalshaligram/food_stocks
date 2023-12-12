@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -21,6 +22,9 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+   // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -53,6 +57,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -63,8 +68,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return ChangeNotifierProvider(
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {

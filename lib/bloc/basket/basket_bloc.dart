@@ -100,7 +100,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             data: reqMap,
           );
 
-          debugPrint('[update cart reqMap]  = $reqMap');
+         // debugPrint('[update cart reqMap]  = $reqMap');
         //  debugPrint('[url]  = ${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}');
 
           UpdateCartResModel response = UpdateCartResModel.fromJson(res);

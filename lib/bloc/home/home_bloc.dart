@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -11,7 +12,9 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -33,7 +36,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'home_event.dart';
 
@@ -227,7 +229,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
@@ -238,8 +239,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message.toString().toLocalization(),event.context),
+                //response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -256,8 +257,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -272,8 +272,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -458,6 +457,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
+            Vibration.vibrate(amplitude: 128);
             // List<ProductStockModel> productStockList =
             // state.productStockList.toList(growable: true);
             // productStockList[state.productStockUpdateIndex] =
@@ -473,25 +473,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.setCartCountEvent());
+
+            /*if (await Vibration.hasVibrator()) {
+              Vibration.vibrate();
+            }*/
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -505,7 +506,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _getWalletRecordEvent) {
         try {
           WalletRecordReqModel reqMap =
-              WalletRecordReqModel(userId: preferences.getUserId());
+          WalletRecordReqModel(userId: preferences.getUserId());
           debugPrint('WalletRecordReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
             AppUrls.walletRecordUrl,
@@ -533,13 +534,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 title: response.message!,
                 bgColor: AppColors.mainColor);
           }
-        } on ServerException {
-        } catch (e) {}
+        } on ServerException {} catch (e) {}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
-                  start: DateTime(date.year, date.month, 1),
-                  end: DateTime(date.year, date.month + 1))
+              start: DateTime(date.year, date.month, 1),
+              end: DateTime(date.year, date.month + 1))
               .duration
               .inDays;
 
@@ -570,8 +570,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
-        } on ServerException {
-        } catch (e) {}
+        } on ServerException {} catch (e) {}
       } else if (event is _GetMessageListEvent) {
         try {
           emit(state.copyWith(isMessageShimmering: true));
@@ -582,7 +581,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}',
+                  'Bearer ${preferences.getAuthToken()}',
                 },
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
@@ -611,8 +610,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -621,7 +619,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             messageCount: state.messageCount + event.messageCount));
       } else if (event is _RemoveOrUpdateMessageEvent) {
         List<MessageData> messageList =
-            state.messageList.toList(growable: true);
+        state.messageList.toList(growable: true);
         debugPrint('message list len before delete = ${messageList.length}');
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
@@ -630,13 +628,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList
-                      .firstWhere((message) => message.id == event.messageId))]
-                  .isRead ==
+              .firstWhere((message) => message.id == event.messageId))]
+              .isRead ==
               false) {
             await preferencesHelper.setMessageCount(
                 count: preferencesHelper.getMessageCount() - 1);
             messageList[messageList.indexOf(messageList
-                    .firstWhere((message) => message.id == event.messageId))] =
+                .firstWhere((message) => message.id == event.messageId))] =
                 messageList[messageList.indexOf(messageList.firstWhere(
                         (message) => message.id == event.messageId))]
                     .copyWith(isRead: true);
@@ -654,9 +652,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _UpdateMessageListEvent) {
         if (event.messageIdList.isNotEmpty) {
           List<MessageData> messageList =
-              state.messageList.toList(growable: true);
+          state.messageList.toList(growable: true);
           messageList.removeWhere(
-              (message) => event.messageIdList.contains(message.id));
+                  (message) => event.messageIdList.contains(message.id));
           debugPrint('message len = ${messageList.length}');
           emit(state.copyWith(messageList: messageList));
         }

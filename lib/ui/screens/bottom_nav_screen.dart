@@ -205,24 +205,28 @@ class BottomNavScreenWidget extends StatelessWidget {
                       top: 5,
                       right: isRTL ? null : 0,
                       left: isRTL ? 0 : null,
-                      child: Container(
-                        height: 16,
-                        width: 24,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppColors.notificationColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
-                          border:
-                              Border.all(color: AppColors.whiteColor, width: 1),
-                        ),
-                        child: Text(
-                          '${state.cartCount}',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: 10, color: AppColors.whiteColor),
-                        ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 16,
+                            width: 24,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                               color: AppColors.notificationColor,
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(AppConstants.radius_100)),
+                              border:
+                                  Border.all(color: AppColors.whiteColor, width: 1),
+                            ),
+                            child: Text(
+                              '${state.cartCount}',
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: 10, color: AppColors.whiteColor),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
+                    ),
         ],
       ),
     );

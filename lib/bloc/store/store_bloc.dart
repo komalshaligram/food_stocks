@@ -28,6 +28,7 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
@@ -496,6 +497,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //         totalPrice: 0.0,
             //         productSaleId: '');
             add(StoreEvent.setCartCountEvent());
+            Vibration.vibrate(amplitude: 128);
             emit(state.copyWith(
                 isLoading: false,
                 // productStockList: productStockList,

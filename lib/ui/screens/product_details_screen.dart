@@ -814,7 +814,7 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   getScreenHeight(context)),
           minChildSize: 0.4,
           initialChildSize: 0.7,
-          shouldCloseOnMinExtent: true,
+          //shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc(),
