@@ -14,9 +14,11 @@ import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/refresh_widget.dart';
 
 class SupplierRoute {
   static Widget get route => SupplierScreen();
@@ -64,73 +66,96 @@ class SupplierScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  state.isShimmering
-                      ? SupplierScreenShimmerWidget()
-                      : state.suppliersList.isEmpty
-                          ? Container(
-                              height: getScreenHeight(context) - 80,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.suppliers_not_available}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor),
-                              ),
-                            )
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.suppliersList.length,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                              itemBuilder: (context, index) =>
-                                  buildSupplierListItem(
-                                      index: index,
-                                      context: context,
-                                      supplierLogo:
-                                          state.suppliersList[index].logo ?? '',
-                                      supplierName: state.suppliersList[index]
-                                              .supplierDetail?.companyName ??
-                                          '',
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine
-                                                .supplierProductsScreen.name,
-                                            arguments: {
-                                              AppStrings.supplierIdString: state
-                                                  .suppliersList[index]
-                                                  .id ??
-                                                  ''
-                                            });
-                                      }),
-                            ),
-                  state.isLoadMore ? SupplierScreenShimmerWidget() : 0.width,
-                  // state.isBottomOfSuppliers
-                  //     ? CommonPaginationEndWidget(
-                  //         pageEndText: 'No more Suppliers')
-                  //     : 0.width,
-                ],
+            child:
+                //   NotificationListener<ScrollNotification>(
+                // child:
+                SmartRefresher(
+              enablePullDown: true,
+              controller: state.refreshController,
+              header: RefreshWidget(),
+              footer: CustomFooter(
+                builder: (context, mode) => SupplierScreenShimmerWidget(),
               ),
-            ),
-            onNotification: (notification) {
-              if (notification.metrics.pixels ==
-                  notification.metrics.maxScrollExtent) {
+              enablePullUp: !state.isBottomOfSuppliers,
+              onRefresh: () {
+                context
+                    .read<SupplierBloc>()
+                    .add(SupplierEvent.refreshListEvent(context: context));
+              },
+              onLoading: () {
                 context
                     .read<SupplierBloc>()
                     .add(SupplierEvent.getSuppliersListEvent(context: context));
-              }
-              return true;
-            },
-          )),
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    state.isShimmering
+                        ? SupplierScreenShimmerWidget()
+                        : state.suppliersList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                            : GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.suppliersList.length,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_10),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3),
+                                itemBuilder: (context, index) =>
+                                    buildSupplierListItem(
+                                        index: index,
+                                        context: context,
+                                        supplierLogo:
+                                            state.suppliersList[index].logo ??
+                                                '',
+                                        supplierName: state.suppliersList[index]
+                                                .supplierDetail?.companyName ??
+                                            '',
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context,
+                                              RouteDefine
+                                                  .supplierProductsScreen.name,
+                                              arguments: {
+                                                AppStrings.supplierIdString:
+                                                    state.suppliersList[index]
+                                                            .id ??
+                                                        ''
+                                              });
+                                        }),
+                              ),
+                    // state.isLoadMore ? SupplierScreenShimmerWidget() : 0.width,
+                    // state.isBottomOfSuppliers
+                    //     ? CommonPaginationEndWidget(
+                    //         pageEndText: 'No more Suppliers')
+                    //     : 0.width,
+                  ],
+                ),
+              ),
+            ),
+            //   onNotification: (notification) {
+            //     if (notification.metrics.pixels ==
+            //         notification.metrics.maxScrollExtent) {
+            //       context
+            //           .read<SupplierBloc>()
+            //           .add(SupplierEvent.getSuppliersListEvent(context: context));
+            //     }
+            //     return true;
+            //   },
+            // ),
+          ),
         );
       },
     );

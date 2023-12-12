@@ -5,6 +5,7 @@ import 'package:food_stock/bloc/company/company_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
@@ -17,6 +18,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/company_screen_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class CompanyRoute {
   static Widget get route => CompanyScreen();
@@ -60,73 +62,95 @@ class CompanyScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-            child: SingleChildScrollView(
-              physics: state.companiesList.isEmpty
-                  ? const NeverScrollableScrollPhysics()
-                  : const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  state.isShimmering
-                      ? CompanyScreenShimmerWidget()
-                      : state.companiesList.isEmpty
-                          ? Container(
-                              height: getScreenHeight(context) - 80,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.companies_not_available}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor),
-                              ),
-                            )
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.companiesList.length,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_10),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                              itemBuilder: (context, index) =>
-                                  buildCompanyListItem(
-                                      index: index,
-                                      context: context,
-                                      companyLogo: state
-                                              .companiesList[index].brandLogo ??
-                                          '',
-                                      companyName: state
-                                              .companiesList[index].brandName ??
-                                          '',
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine
-                                                .companyProductsScreen.name,
-                                            arguments: {
-                                              AppStrings.companyIdString: state
-                                                  .companiesList[index]
-                                                  .id ??
-                                                  ''
-                                            });
-                                      }),
-                            ),
-                  state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
-                ],
+            child:
+                // NotificationListener<ScrollNotification>(
+                // child:
+                SmartRefresher(
+              enablePullDown: true,
+              controller: state.refreshController,
+              header: RefreshWidget(),
+              footer: CustomFooter(
+                builder: (context, mode) => CompanyScreenShimmerWidget(),
               ),
-            ),
-            onNotification: (notification) {
-              if (notification.metrics.pixels ==
-                  notification.metrics.maxScrollExtent) {
+              enablePullUp: !state.isBottomOfCompanies,
+              onRefresh: () {
+                context
+                    .read<CompanyBloc>()
+                    .add(CompanyEvent.refreshListEvent(context: context));
+              },
+              onLoading: () {
                 context
                     .read<CompanyBloc>()
                     .add(CompanyEvent.getCompaniesListEvent(context: context));
-              }
-              return true;
-            },
-          )),
+              },
+              child: SingleChildScrollView(
+                physics: state.companiesList.isEmpty
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
+                child: Column(
+                  children: [
+                    state.isShimmering
+                        ? CompanyScreenShimmerWidget()
+                        : state.companiesList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${AppLocalizations.of(context)!.companies_not_available}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                            : GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.companiesList.length,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConstants.padding_10),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3),
+                                itemBuilder: (context, index) =>
+                                    buildCompanyListItem(
+                                        index: index,
+                                        context: context,
+                                        companyLogo: state.companiesList[index]
+                                                .brandLogo ??
+                                            '',
+                                        companyName: state.companiesList[index]
+                                                .brandName ??
+                                            '',
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context,
+                                              RouteDefine
+                                                  .companyProductsScreen.name,
+                                              arguments: {
+                                                AppStrings.companyIdString:
+                                                    state.companiesList[index]
+                                                            .id ??
+                                                        ''
+                                              });
+                                        }),
+                              ),
+                    // state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
+                  ],
+                ),
+              ),
+            ),
+            // onNotification: (notification) {
+            //   if (notification.metrics.pixels ==
+            //       notification.metrics.maxScrollExtent) {
+            //     context
+            //         .read<CompanyBloc>()
+            //         .add(CompanyEvent.getCompaniesListEvent(context: context));
+            //   }
+            //   return true;
+            // },
+            // ),
+          ),
         );
       },
     );

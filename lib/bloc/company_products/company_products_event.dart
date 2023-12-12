@@ -37,4 +37,9 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory CompanyProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory CompanyProductsEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

@@ -257,6 +257,7 @@ class OTPScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               Text(
+
                                 AppLocalizations.of(context)!.send_again
                                     .toUpperCase(),
                                 style: AppStyles.rkRegularTextStyle(

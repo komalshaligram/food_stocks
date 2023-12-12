@@ -44,9 +44,11 @@ class StoreCategoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
       StoreCategoryBloc()
-        ..add(StoreCategoryEvent.updateGlobalSearchEvent(
-            search: args?[AppStrings.searchString] ?? '',
-            searchList: args?[AppStrings.searchResultString] ?? []))..add(
+        ..add(
+            StoreCategoryEvent.updateGlobalSearchEvent(
+                search: args?[AppStrings.searchString] ?? '',
+                context: context,
+                searchList: args?[AppStrings.searchResultString] ?? []))..add(
           StoreCategoryEvent.changeCategoryDetailsEvent(
               categoryId: args?[AppStrings.categoryIdString] ?? '',
               categoryName: args?[AppStrings.categoryNameString] ?? '',
@@ -70,7 +72,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pop(context, {
                   AppStrings
                       .searchString: state
-                      .previousSearch,
+                      .searchController.text,
                   AppStrings
                       .searchResultString: state
                       .searchList
@@ -114,7 +116,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       buildTopNavigation(
                                           context: context,
                                           categoryName: state.categoryName,
-                                          search: state.previousSearch,
+                                          search: state.searchController.text,
                                           searchList: state.searchList),
                                       state.isSubCategoryShimmering
                                           ? StoreCategoryScreenSubcategoryShimmerWidget()
@@ -127,7 +129,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         getScreenWidth(context),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${AppLocalizations.of(context)!.sub_categories_not_available}',
+                                          '${AppLocalizations.of(context)!
+                                              .sub_categories_not_available}',
                                           textAlign:
                                           TextAlign.center,
                                           style: AppStyles
@@ -215,7 +218,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         categoryName: state.categoryName,
                                         subCategoryName:
                                         state.subCategoryName,
-                                        search: state.previousSearch,
+                                        search: state.searchController.text,
                                         searchList: state.searchList),
                                     16.height,
                                     state.isPlanogramShimmering
@@ -229,7 +232,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        '${AppLocalizations.of(context)!.products_not_available}',
+                                        '${AppLocalizations.of(context)!
+                                            .products_not_available}',
                                         textAlign: TextAlign.center,
                                         style: AppStyles
                                             .rkRegularTextStyle(
@@ -376,19 +380,28 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     CommonSearchWidget(
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
+                      isBackButton: true,
                       onFilterTap: () {
-                        bloc.add(
-                            StoreCategoryEvent.changeCategoryExpansionEvent());
+                        Navigator.pop(context, {
+                          AppStrings
+                              .searchString: state
+                              .searchController.text,
+                          AppStrings
+                              .searchResultString: state
+                              .searchList
+                        });
+                        // bloc.add(
+                        //     StoreCategoryEvent.changeCategoryExpansionEvent());
                       },
                       onSearch: (String search) {
                         if (search.length > 2) {
                           bloc.add(StoreCategoryEvent.globalSearchEvent(
-                              context: context, search: search));
+                              context: context));
                         }
                       },
                       onSearchSubmit: (String search) {
                         bloc.add(StoreCategoryEvent.globalSearchEvent(
-                            context: context, search: search));
+                            context: context));
                       },
                       onSearchTap: () {
                         bloc.add(
@@ -404,14 +417,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         bloc.add(
                             StoreCategoryEvent.changeCategoryExpansionEvent());
                       },
-                      controller: TextEditingController(text: state.search)
-                        ..selection = TextSelection.fromPosition(
-                            TextPosition(offset: state.search.length)),
+                      controller: state.searchController,
                       searchList: state.searchList,
                       searchResultWidget: state.searchList.isEmpty
                           ? Center(
                         child: Text(
-                          '${AppLocalizations.of(context)!.search_result_not_found}',
+                          '${AppLocalizations.of(context)!
+                              .search_result_not_found}',
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -451,9 +463,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       RouteDefine.productCategoryScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch,
+                                            .searchController.text,
                                         AppStrings.reqSearchString: state
-                                            .previousSearch,
+                                            .searchController.text,
                                         AppStrings.fromStoreCategoryString: true
                                       });
                                   if (result != null) {
@@ -473,7 +485,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       RouteDefine.companyScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .searchController.text
                                       }) :
                                   state.searchList[index].searchType ==
                                       SearchTypes.supplier ?
@@ -482,7 +494,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       RouteDefine.supplierScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .searchController.text
                                       }) :
                                   state.searchList[index].searchType ==
                                       SearchTypes.sale
@@ -491,14 +503,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       RouteDefine.productSaleScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .searchController.text
                                       })
                                       : Navigator
                                       .pushNamed(context,
                                       RouteDefine.supplierProductsScreen.name,
                                       arguments: {
                                         AppStrings.searchString: state
-                                            .previousSearch
+                                            .searchController.text
                                       });
                                 }
                                 bloc.add(StoreCategoryEvent
@@ -560,14 +572,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               productId: result,
                               planoGramIndex: 0,
                               isBarcode: true);
-                        } /*else {
-                      showProductDetails(
-                          context: context,
-                          productId: '156470',
-                          planoGramIndex: state.productStockList
-                              .indexOf(state.productStockList.last),
-                          isBarcode: true);
-                    }*/
+                        } else {
+                          showProductDetails(
+                              context: context,
+                              productId: '156470',
+                              planoGramIndex: state.productStockList
+                                  .indexOf(state.productStockList.last),
+                              isBarcode: true);
+                        }
                       },
                     ),
                   ],
@@ -1151,12 +1163,41 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .scales?.scaleType ?? '',
                               productWeight: state.productDetails.first
                                   .itemsWeight?.toDouble() ?? 0.0,
-                              supplierWidget: buildSupplierSelection(
+                              isNoteOpen: state.productStockList[state
+                                  .planoGramUpdateIndex][state
+                                  .productStockUpdateIndex].isNoteOpen,
+                              onNoteToggleChanged: () {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent.toggleNoteEvent(
+                                        isBarcode: isBarcode ?? false));
+                              },
+                              supplierWidget: state.productSupplierList.isEmpty
+                                  ? Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        top: BorderSide(
+                                            color: AppColors.borderColor
+                                                .withOpacity(0.5),
+                                            width: 1))),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_30),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${AppLocalizations.of(context)!
+                                      .suppliers_not_available}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                                  : buildSupplierSelection(
                                   context: context),
                               productStock: state.productStockList[state
                                   .planoGramUpdateIndex][state
                                   .productStockUpdateIndex].stock,
                               isRTL: context.rtl,
+                              isSupplierAvailable: state.productSupplierList
+                                  .isEmpty ? false : true,
                               scrollController: scrollController,
                               productQuantity: state.productStockList[state
                                   .planoGramUpdateIndex][state
@@ -1176,15 +1217,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                         context: context1));
                               },
-                              noteController: TextEditingController(text: state
-                                  .productStockList[planoGramIndex][state
-                                  .productStockUpdateIndex].note)
-                                ..selection = TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset: state.productStockList[state
-                                            .planoGramUpdateIndex][state
-                                            .productStockUpdateIndex].note
-                                            .length)),
+                              noteController: state.noteController,
+                              // TextEditingController(text: state
+                              //     .productStockList[planoGramIndex][state
+                              //     .productStockUpdateIndex].note)
+                              //   ..selection = TextSelection.fromPosition(
+                              //       TextPosition(
+                              //           offset: state.productStockList[state
+                              //               .planoGramUpdateIndex][state
+                              //               .productStockUpdateIndex].note
+                              //               .length)),
                               onNoteChanged: (newNote) {
                                 context.read<StoreCategoryBloc>().add(
                                     StoreCategoryEvent.changeNoteOfProduct(

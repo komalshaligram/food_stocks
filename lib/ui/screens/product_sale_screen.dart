@@ -10,6 +10,7 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
@@ -21,6 +22,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class ProductSaleRoute {
   static Widget get route => ProductSaleScreen();
@@ -67,85 +69,108 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
+              ),
             ),
-          ),
-          body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-            child: SingleChildScrollView(
-                child: Column(
-              children: [
-                state.isShimmering
-                    ? ProductSaleScreenShimmerWidget()
-                    : state.productSalesList.length == 0
-                        ? Container(
-                  height: getScreenHeight(context) - 80,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.currently_products_are_not_on_sale}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.textColor),
-                              ),
-                            )
-                        : GridView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.productSalesList.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_10),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    childAspectRatio: 9 / 13),
-                            itemBuilder: (context, index) {
-                              return buildProductSaleListItem(
-                                index: index,
-                                  context: context,
-                                  saleImage:
-                                      state.productSalesList[index].mainImage ??
-                                          '',
-                                  title:
-                                      state.productSalesList[index].salesName ??
-                                          '',
-                                  description: parse(state
-                                                  .productSalesList[index]
-                                                  .salesDescription ??
-                                              '')
-                                    .body
-                                    ?.text ??
-                                    '',
-                                salePercentage: double.parse(state
-                                          .productSalesList[index]
-                                          .discountPercentage ??
-                                      '0.0'),
-                                onButtonTap: () {
-                                  showProductDetails(
-                                    context: context,
-                                    productId:
-                                    state.productSalesList[index].id ??
-                                        '',
-                                  );
-                                },
-                                );
-                              },
-                          ),
-                state.isLoadMore ? ProductSaleScreenShimmerWidget() : 0.width,
-                // state.isBottomOfProducts
-                //     ? CommonPaginationEndWidget(pageEndText: 'No more Products')
-                //     : 0.width,
-              ],
-            )),
-            onNotification: (notification) {
-              if (notification.metrics.pixels ==
-                    notification.metrics.maxScrollExtent) {
+            body: SafeArea(
+              child:
+                  //   NotificationListener<ScrollNotification>(
+                  // child:
+                  SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: RefreshWidget(),
+                footer: CustomFooter(
+                  builder: (context, mode) => ProductSaleScreenShimmerWidget(),
+                ),
+                enablePullUp: !state.isBottomOfProducts,
+                onRefresh: () {
+                  context
+                      .read<ProductSaleBloc>()
+                      .add(ProductSaleEvent.refreshListEvent(context: context));
+                },
+                onLoading: () {
                   context.read<ProductSaleBloc>().add(
                       ProductSaleEvent.getProductSalesListEvent(
                           context: context));
-                }
-                return true;
-              },
-            )),
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      state.isShimmering
+                          ? ProductSaleScreenShimmerWidget()
+                          : state.productSalesList.length == 0
+                              ? Container(
+                                  height: getScreenHeight(context) - 80,
+                                  width: getScreenWidth(context),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.currently_products_are_not_on_sale}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                )
+                              : GridView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: state.productSalesList.length,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConstants.padding_10),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 3,
+                                          childAspectRatio: 9 / 13),
+                                  itemBuilder: (context, index) {
+                                    return buildProductSaleListItem(
+                                      index: index,
+                                      context: context,
+                                      saleImage: state.productSalesList[index]
+                                              .mainImage ??
+                                          '',
+                                      title: state.productSalesList[index]
+                                              .salesName ??
+                                          '',
+                                      description: parse(state
+                                                      .productSalesList[index]
+                                                      .salesDescription ??
+                                                  '')
+                                              .body
+                                              ?.text ??
+                                          '',
+                                      salePercentage: double.parse(state
+                                              .productSalesList[index]
+                                              .discountPercentage ??
+                                          '0.0'),
+                                      onButtonTap: () {
+                                        showProductDetails(
+                                          context: context,
+                                          productId: state
+                                                  .productSalesList[index].id ??
+                                              '',
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                      // state.isLoadMore ? ProductSaleScreenShimmerWidget() : 0.width,
+                      // state.isBottomOfProducts
+                      //     ? CommonPaginationEndWidget(pageEndText: 'No more Products')
+                      //     : 0.width,
+                    ],
+                  ),
+                ),
+              ),
+              // onNotification: (notification) {
+              //   if (notification.metrics.pixels ==
+              //         notification.metrics.maxScrollExtent) {
+              //       context.read<ProductSaleBloc>().add(
+              //           ProductSaleEvent.getProductSalesListEvent(
+              //               context: context));
+              //     }
+              //     return true;
+              //   },
+              // ),
+            ),
           );
         },
       ),
@@ -330,8 +355,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .first.productDescription ??
                                       '',
-                                  productPrice: state
-                                          .productStockList[state.productStockUpdateIndex].totalPrice *
+                                  productPrice:
+                                      state.productStockList[state.productStockUpdateIndex].totalPrice *
                                           state
                                               .productStockList[
                                                   state.productStockUpdateIndex]
@@ -340,9 +365,35 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       state.productDetails.first.scales?.scaleType ??
                                           '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  supplierWidget: buildSupplierSelection(context: context),
+                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context.read<ProductSaleBloc>().add(
+                                        ProductSaleEvent.toggleNoteEvent());
+                                  },
+                                  supplierWidget: state.productSupplierList.isEmpty
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: AppColors
+                                                          .borderColor
+                                                          .withOpacity(0.5),
+                                                      width: 1))),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical:
+                                                  AppConstants.padding_30),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor),
+                                          ),
+                                        )
+                                      : buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: context.rtl,
+                                  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityChanged: (quantity) {},
@@ -358,7 +409,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
                                     context.read<ProductSaleBloc>().add(
                                         ProductSaleEvent.changeNoteOfProduct(

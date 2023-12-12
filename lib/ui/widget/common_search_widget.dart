@@ -17,6 +17,7 @@ class CommonSearchWidget extends StatelessWidget {
   final bool isCategoryExpand;
   final bool isSearching;
   final Widget searchResultWidget;
+  final bool isBackButton;
   final void Function() onScanTap;
   final void Function() onFilterTap;
   final void Function() onSearchTap;
@@ -31,6 +32,7 @@ class CommonSearchWidget extends StatelessWidget {
     required this.isCategoryExpand,
     required this.isSearching,
     required this.searchResultWidget,
+    this.isBackButton = false,
     required this.controller,
     required this.onScanTap,
     required this.onFilterTap,
@@ -103,11 +105,18 @@ class CommonSearchWidget extends StatelessWidget {
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: onFilterTap,
-                        child: Padding(
+                        child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: AppConstants.padding_10,
                               horizontal: AppConstants.padding_10),
-                          child: Transform(
+                          width: 40,
+                          child: isBackButton
+                              ? Icon(
+                            Icons.arrow_back_ios,
+                            color: AppColors.greyColor,
+                            size: 26,
+                          )
+                              : Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(context.rtl ? 0 : pi),
                             child: SvgPicture.asset(
@@ -145,8 +154,7 @@ class CommonSearchWidget extends StatelessWidget {
                             ),
                           ),
                           onTapOutside: (event) =>
-                              FocusScope.of(context)
-                                  .unfocus(),
+                              FocusScope.of(context).unfocus(),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,
@@ -184,8 +192,9 @@ class CommonSearchWidget extends StatelessWidget {
                                   ? LinearProgressIndicator(
                                 color: AppColors.mainColor,
                                 minHeight: 3,
-                              /*  borderRadius: BorderRadius.all(Radius.circular(
-                                    AppConstants.radius_5)),*/
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                        AppConstants.radius_5)),
                                 backgroundColor:
                                 AppColors.mainColor.withOpacity(0.5),
                               )

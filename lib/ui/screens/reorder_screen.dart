@@ -1,17 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
-import 'package:food_stock/ui/widget/delayed_widget.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
@@ -19,45 +18,40 @@ import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
+import '../widget/delayed_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
-import '../widget/refresh_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
 
-class CompanyProductsRoute {
-  static Widget get route => CompanyProductsScreen();
+class ReorderRoute {
+  static Widget get route => ReorderScreen();
 }
 
-class CompanyProductsScreen extends StatelessWidget {
-  const CompanyProductsScreen({super.key});
+class ReorderScreen extends StatelessWidget {
+  const ReorderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CompanyProductsBloc()
-        ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
-            companyId: args?[AppStrings.companyIdString]))
-        ..add(
-            CompanyProductsEvent.getCompanyProductsListEvent(context: context)),
-      child: CompanyProductsScreenWidget(),
+      create: (context) => ReorderBloc()
+        ..add(ReorderEvent.getPreviousOrderProductsEvent(context: context)),
+      child: ReorderScreenWidget(),
     );
   }
 }
 
-class CompanyProductsScreenWidget extends StatelessWidget {
-  const CompanyProductsScreenWidget({super.key});
+class ReorderScreenWidget extends StatelessWidget {
+  const ReorderScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+    return BlocBuilder<ReorderBloc, ReorderState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
-              title: AppLocalizations.of(context)!.products,
+              title: AppLocalizations.of(context)!.previous_order_products,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -65,11 +59,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             ),
           ),
           body: SafeArea(
-            child:
-                // NotificationListener<ScrollNotification>(
-                //   child:
-                SmartRefresher(
-              enablePullDown: true,
+            child: SmartRefresher(
+              enablePullDown: /*state.isShimmering || state.isLoading ? false : */
+                  true,
               controller: state.refreshController,
               header: RefreshWidget(),
               footer: CustomFooter(
@@ -78,16 +70,32 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               ),
               enablePullUp: !state.isBottomOfProducts,
               onRefresh: () {
-                context.read<CompanyProductsBloc>().add(
-                    CompanyProductsEvent.refreshListEvent(context: context));
+                context
+                    .read<ReorderBloc>()
+                    .add(ReorderEvent.refreshListEvent(context: context));
               },
               onLoading: () {
-                context.read<CompanyProductsBloc>().add(
-                    CompanyProductsEvent.getCompanyProductsListEvent(
+                context.read<ReorderBloc>().add(
+                    ReorderEvent.getPreviousOrderProductsEvent(
                         context: context));
               },
-              child: SingleChildScrollView(
-                physics: state.productList.isEmpty
+              child:
+                  // NotificationListener<ScrollNotification>(
+                  // onNotification: (notification) {
+                  //   if (notification.metrics.pixels ==
+                  //       notification.metrics.maxScrollExtent) {
+                  //     if (!state.isLoadMore) {
+                  //       context.read<ReorderBloc>().add(
+                  //           ReorderEvent
+                  //               .getRecommendationProductsEvent(
+                  //                   context: context));
+                  //     }
+                  //   }
+                  //   return true;
+                  // },
+                  // child:
+                  SingleChildScrollView(
+                physics: state.previousOrderProductsList.isEmpty
                     ? const NeverScrollableScrollPhysics()
                     : null,
                 child: Column(
@@ -96,20 +104,21 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   children: [
                     state.isShimmering
                         ? SupplierProductsScreenShimmerWidget()
-                        : state.productList.isEmpty
+                        : state.previousOrderProductsList.isEmpty
                             ? Container(
                                 height: getScreenHeight(context) - 80,
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'Currently this company has no products',
+                                  '${AppLocalizations.of(context)!.recommendation_products_are_not_available}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
                                 ),
                               )
                             : GridView.builder(
-                                itemCount: state.productList.length,
+                                itemCount:
+                                    state.previousOrderProductsList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.symmetric(
@@ -118,30 +127,41 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 9 / 12),
-                                itemBuilder: (context, index) =>
-                                    buildCompanyProducts(
-                                        context: context,
-                                        index: index,
-                                        productImage: state
-                                                .productList[index].mainImage ??
-                                            '',
-                                        productName: state.productList[index]
-                                                .productName ??
-                                            '',
-                                        productPrice: state.productList[index]
-                                                .productPrice ??
-                                            0.0,
-                                        totalSale: state
-                                                .productList[index].totalSale ??
-                                            0,
-                                        onPressed: () {
-                                          showProductDetails(
-                                              context: context,
-                                              productId:
-                                                  state.productList[index].id ??
+                                itemBuilder:
+                                    (context, index) =>
+                                        buildPreviousOrderProductItem(
+                                            context: context,
+                                            index: index,
+                                            totalSale: state
+                                                    .previousOrderProductsList[
+                                                        index]
+                                                    .totalSale ??
+                                                0,
+                                            productImage: state
+                                                    .previousOrderProductsList[
+                                                        index]
+                                                    .mainImage ??
+                                                '',
+                                            productName: state
+                                                    .previousOrderProductsList[
+                                                        index]
+                                                    .productName ??
+                                                '',
+                                            productPrice: state
+                                                    .previousOrderProductsList[
+                                                        index]
+                                                    .productPrice ??
+                                                0.0,
+                                            onPressed: () {
+                                              showProductDetails(
+                                                  context: context,
+                                                  productId: state
+                                                          .previousOrderProductsList[
+                                                              index]
+                                                          .id ??
                                                       '');
-                                        },
-                                        isRTL: context.rtl),
+                                            },
+                                            isRTL: context.rtl),
                               ),
                     // state.isLoadMore
                     //     ? SupplierProductsScreenShimmerWidget()
@@ -149,34 +169,24 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              // ),
             ),
-            // onNotification: (notification) {
-            //   if (notification.metrics.pixels ==
-            //       notification.metrics.maxScrollExtent) {
-            //     if (!state.isLoadMore) {
-            //       context.read<CompanyProductsBloc>().add(
-            //           CompanyProductsEvent.getCompanyProductsListEvent(
-            //               context: context));
-            //     }
-            //   }
-            //   return true;
-            // },
-            // ),
           ),
         );
       },
     );
   }
 
-  Widget buildCompanyProducts(
-      {required BuildContext context,
-      required int index,
-      required String productImage,
-      required String productName,
-      required double productPrice,
-      required int totalSale,
-      required void Function() onPressed,
-      required bool isRTL}) {
+  Widget buildPreviousOrderProductItem({
+    required BuildContext context,
+    required int index,
+    required int totalSale,
+    required String productImage,
+    required String productName,
+    required double productPrice,
+    required void Function() onPressed,
+    required bool isRTL,
+  }) {
     return DelayedWidget(
       child: Container(
         // height: 150,
@@ -248,7 +258,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               child: totalSale == 0
                   ? 0.width
                   : Text(
-                      "$totalSale ${AppLocalizations.of(context)!.discount}",
+                      "${totalSale} ${AppLocalizations.of(context)!.discount}",
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_10,
                           color: AppColors.saleRedColor,
@@ -277,9 +287,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
   void showProductDetails(
       {required BuildContext context, required String productId}) async {
-    context.read<CompanyProductsBloc>().add(
-        CompanyProductsEvent.getProductDetailsEvent(
-            context: context, productId: productId));
+    context.read<ReorderBloc>().add(ReorderEvent.getProductDetailsEvent(
+        context: context, productId: productId));
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -291,7 +300,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         return BlocProvider.value(
-          value: context.read<CompanyProductsBloc>(),
+          value: context.read<ReorderBloc>(),
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
@@ -299,12 +308,12 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-        //    shouldCloseOnMinExtent: true,
+            shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
-                  value: context.read<CompanyProductsBloc>(),
-                  child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+                  value: context.read<ReorderBloc>(),
+                  child: BlocBuilder<ReorderBloc, ReorderState>(
                     builder: (context, state) {
                       return Container(
                         decoration: BoxDecoration(
@@ -322,10 +331,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent
-                                            .updateImageIndexEvent(
-                                                index: index));
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.updateImageIndexEvent(
+                                            index: index));
                                   },
                                   productImages: [
                                     state.productDetails.first.mainImage ?? '',
@@ -357,8 +365,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
                                   isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
                                   onNoteToggleChanged: () {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent.toggleNoteEvent());
+                                    context
+                                        .read<ReorderBloc>()
+                                        .add(ReorderEvent.toggleNoteEvent());
                                   },
                                   supplierWidget: state.productSupplierList.isEmpty
                                       ? Container(
@@ -388,32 +397,28 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityChanged: (quantity) {},
                                   onQuantityIncreaseTap: () {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.increaseQuantityOfProduct(
+                                            context: context1));
                                   },
                                   onQuantityDecreaseTap: () {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent
-                                            .decreaseQuantityOfProduct(
-                                                context: context1));
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.decreaseQuantityOfProduct(
+                                            context: context1));
                                   },
                                   noteController: state.noteController,
                                   // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
-                                    context.read<CompanyProductsBloc>().add(
-                                        CompanyProductsEvent
-                                            .changeNoteOfProduct(
-                                                newNote: newNote));
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.changeNoteOfProduct(
+                                            newNote: newNote));
                                   },
                                   isLoading: state.isLoading,
                                   onAddToOrderPressed: state.isLoading
                                       ? null
                                       : () {
-                                          context
-                                              .read<CompanyProductsBloc>()
-                                              .add(CompanyProductsEvent
+                                          context.read<ReorderBloc>().add(
+                                              ReorderEvent
                                                   .addToCartProductEvent(
                                                       context: context1));
                                         }),
@@ -430,8 +435,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
   Widget buildSupplierSelection({required BuildContext context}) {
     return BlocProvider.value(
-      value: context.read<CompanyProductsBloc>(),
-      child: BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
+      value: context.read<ReorderBloc>(),
+      child: BlocBuilder<ReorderBloc, ReorderState>(
         builder: (context, state) {
           return AnimatedCrossFade(
               firstChild: Container(
@@ -452,9 +457,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           const EdgeInsets.only(bottom: AppConstants.padding_5),
                       child: InkWell(
                         onTap: () {
-                          context.read<CompanyProductsBloc>().add(
-                              CompanyProductsEvent
-                                  .changeSupplierSelectionExpansionEvent());
+                          context.read<ReorderBloc>().add(ReorderEvent
+                              .changeSupplierSelectionExpansionEvent());
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -480,9 +484,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             .isEmpty
                         ? InkWell(
                             onTap: () {
-                              context.read<CompanyProductsBloc>().add(
-                                  CompanyProductsEvent
-                                      .changeSupplierSelectionExpansionEvent());
+                              context.read<ReorderBloc>().add(ReorderEvent
+                                  .changeSupplierSelectionExpansionEvent());
                             },
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
@@ -661,9 +664,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   bottom: AppConstants.padding_5),
                               child: InkWell(
                                 onTap: () {
-                                  context.read<CompanyProductsBloc>().add(
-                                      CompanyProductsEvent
-                                          .changeSupplierSelectionExpansionEvent());
+                                  context.read<ReorderBloc>().add(ReorderEvent
+                                      .changeSupplierSelectionExpansionEvent());
                                 },
                                 child: Row(
                                   mainAxisAlignment:
@@ -747,9 +749,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       onTap: () {
                                                         //for base price selection /without sale pass -2
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
-                                                            .add(CompanyProductsEvent
+                                                            .read<ReorderBloc>()
+                                                            .add(ReorderEvent
                                                                 .supplierSelectionEvent(
                                                                     supplierIndex:
                                                                         index,
@@ -758,9 +759,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                                     supplierSaleIndex:
                                                                         -2));
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
-                                                            .add(CompanyProductsEvent
+                                                            .read<ReorderBloc>()
+                                                            .add(ReorderEvent
                                                                 .changeSupplierSelectionExpansionEvent());
                                                       },
                                                       splashColor:
@@ -826,20 +826,18 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   : InkWell(
                                                       onTap: () {
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
-                                                            .add(CompanyProductsEvent
+                                                            .read<ReorderBloc>()
+                                                            .add(ReorderEvent
                                                                 .supplierSelectionEvent(
-                                                            supplierIndex:
+                                                                    supplierIndex:
                                                                         index,
                                                                     context:
                                                                         context,
                                                                     supplierSaleIndex:
                                                                         subIndex));
                                                         context
-                                                            .read<
-                                                                CompanyProductsBloc>()
-                                                            .add(CompanyProductsEvent
+                                                            .read<ReorderBloc>()
+                                                            .add(ReorderEvent
                                                                 .changeSupplierSelectionExpansionEvent());
                                                       },
                                                       splashColor:

@@ -38,4 +38,9 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory SupplierProductsEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory SupplierProductsEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

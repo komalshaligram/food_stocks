@@ -26,6 +26,7 @@ class HomeState with _$HomeState {
     required List<MessageData> messageList,
     required bool isMessageShimmering,
     required double expensePercentage,
+    required TextEditingController noteController,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -51,6 +52,7 @@ class HomeState with _$HomeState {
         imageIndex: 0,
         messageList: [],
         isMessageShimmering: false,
-    expensePercentage: 0
+        expensePercentage: 0,
+        noteController: TextEditingController(),
       );
 }

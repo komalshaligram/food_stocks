@@ -9,6 +9,7 @@ class CompanyState with _$CompanyState {
     required int pageNum,
     required bool isLoadMore,
     required bool isBottomOfCompanies,
+    required RefreshController refreshController,
   }) = _CompanyState;
 
   factory CompanyState.initial() => CompanyState(
@@ -18,5 +19,6 @@ class CompanyState with _$CompanyState {
         pageNum: 0,
         isLoadMore: false,
         isBottomOfCompanies: false,
+        refreshController: RefreshController(),
       );
 }
