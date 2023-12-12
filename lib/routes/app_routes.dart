@@ -14,6 +14,7 @@ import 'package:food_stock/ui/screens/profile_menu_screen.dart';
 import 'package:food_stock/ui/screens/question_and_answer_screen.dart';
 import 'package:food_stock/ui/screens/otp_screen.dart';
 import 'package:food_stock/ui/screens/recommendation_products_screen.dart';
+import 'package:food_stock/ui/screens/reorder_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
@@ -73,6 +74,7 @@ enum RouteDefine {
   companyScreen,
   companyProductsScreen,
   recommendationProductsScreen,
+  reorderScreen,
 }
 
 class AppRouting {
@@ -81,14 +83,11 @@ class AppRouting {
       ///ADD ROUTE
       RouteDefine.splashScreen.name: (_) => SplashRoute.route,
       RouteDefine.connectScreen.name: (_) => ConnectRoute.route,
-
       RouteDefine.profileScreen.name: (_) => ProfileRoute.route,
       RouteDefine.moreDetailsScreen.name: (_) => MoreDetailsRoute.route,
       RouteDefine.activityTimeScreen.name: (_) => ActivityTimeScreenRoute.route,
       RouteDefine.fileUploadScreen.name: (_) => FileUploadScreenRoute.route,
-
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
-      //  RouteDefine.registerScreen.name: (_) => RegisterRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
       RouteDefine.menuScreen.name: (_) => MenuRoute.route,
@@ -121,6 +120,7 @@ class AppRouting {
       RouteDefine.companyProductsScreen.name: (_) => CompanyProductsRoute.route,
       RouteDefine.recommendationProductsScreen.name: (_) =>
           RecommendationProductsRoute.route,
+      RouteDefine.reorderScreen.name: (_) => ReorderRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

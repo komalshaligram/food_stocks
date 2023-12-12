@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
@@ -62,12 +63,20 @@ class ProductCategoryBloc
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(
+            pageNum: 0, productCategoryList: [], isBottomOfCategories: false));
+        add(ProductCategoryEvent.getProductCategoriesListEvent(
+            context: event.context));
       } else if (event is _SetSearchNavEvent) {
         emit(state.copyWith(
             reqSearch: event.reqSearch,

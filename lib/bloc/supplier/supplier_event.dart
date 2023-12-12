@@ -7,4 +7,7 @@ class SupplierEvent with _$SupplierEvent {
 
   const factory SupplierEvent.setSearchEvent({required String search}) =
       _SetSearchEvent;
+
+  const factory SupplierEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

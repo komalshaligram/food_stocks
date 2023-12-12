@@ -154,7 +154,7 @@ class AppStrings {
   static String getLocalizedStrings(String key,BuildContext context){
     switch(key){
       case 'errmessage':
-        return AppLocalizations.of(context).errmessage;
+        return AppLocalizations.of(context)!.errmessage;
     }
     return '';
   }

@@ -34,4 +34,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.updateImageIndexEvent({
     required int index,
   }) = _UpdateImageIndexEvent;
+
+  const factory PlanogramProductEvent.toggleNoteEvent() = _ToggleNoteEvent;
 }

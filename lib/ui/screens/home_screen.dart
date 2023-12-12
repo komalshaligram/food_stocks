@@ -443,92 +443,6 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            // AnimatedCrossFade(
-                            //     firstChild: Column(
-                            //         mainAxisSize: MainAxisSize.min,
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           buildListTitles(),
-                            //           buildListItems(context, height: 140),
-                            //           15.height,
-                            //         ]),
-                            //     secondChild: (state.productSalesList.isEmpty)
-                            //         ? 0.width
-                            //         : Column(
-                            //             crossAxisAlignment:
-                            //                 CrossAxisAlignment.start,
-                            //             mainAxisSize: MainAxisSize.min,
-                            //             children: [
-                            //               titleRowWidget(
-                            //                   context: context,
-                            //                   title:
-                            //                       AppLocalizations.of(context)!
-                            //                           .sales,
-                            //                   allContentTitle:
-                            //                       AppLocalizations.of(context)!
-                            //                           .all_sales,
-                            //                   onTap: () {
-                            //                     Navigator.pushNamed(
-                            //                         context,
-                            //                         RouteDefine
-                            //                             .productSaleScreen
-                            //                             .name);
-                            //                   }),
-                            //               SizedBox(
-                            //                 height: 190,
-                            //                 child: ListView.builder(
-                            //                     itemCount: state
-                            //                                 .productSalesList
-                            //                                 .length <
-                            //                             6
-                            //                         ? state
-                            //                             .productSalesList.length
-                            //                         : 6,
-                            //                     scrollDirection:
-                            //                         Axis.horizontal,
-                            //                     shrinkWrap: true,
-                            //                     itemBuilder: (context, index) =>
-                            //                         buildProductSaleListItem(
-                            //                           context: context,
-                            //                           saleImage: state
-                            //                                   .productSalesList[
-                            //                                       index]
-                            //                                   .mainImage ??
-                            //                               '',
-                            //                           title: state
-                            //                                   .productSalesList[
-                            //                                       index]
-                            //                                   .salesName ??
-                            //                               '',
-                            //                           description: state
-                            //                                   .productSalesList[
-                            //                                       index]
-                            //                                   .salesDescription ??
-                            //                               '',
-                            //                           salePercentage: double.parse(state
-                            //                                   .productSalesList[
-                            //                                       index]
-                            //                                   .discountPercentage ??
-                            //                               '0.0'),
-                            //                           onButtonTap: () {
-                            //                             showProductDetails(
-                            //                                 context: context,
-                            //                                 productId: state
-                            //                                         .productSalesList[
-                            //                                             index]
-                            //                                         .id ??
-                            //                                     '');
-                            //                           },
-                            //                         )),
-                            //               ),
-                            //               10.height,
-                            //             ],
-                            //           ),
-                            //     crossFadeState: state.isProductSaleShimmering
-                            //         ? CrossFadeState.showFirst
-                            //         : CrossFadeState.showSecond,
-                            //     duration: Duration(milliseconds: 450)),
                             state.isProductSaleShimmering
                                 ? Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -551,8 +465,13 @@ class HomeScreenWidget extends StatelessWidget {
                                               title:
                                                   AppLocalizations.of(context)!
                                                       .sales,
-                                              allContentTitle:
-                                                  AppLocalizations.of(context)!
+                                              allContentTitle: state
+                                                          .productSalesList
+                                                          .length <
+                                                      6
+                                                  ? ''
+                                                  : AppLocalizations.of(
+                                                          context)!
                                                       .all_sales,
                                               onTap: () {
                                                 Navigator.pushNamed(
@@ -1026,9 +945,36 @@ class HomeScreenWidget extends StatelessWidget {
                                       state.productDetails.first.scales?.scaleType ??
                                           '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  supplierWidget: buildSupplierSelection(context: context),
+                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context
+                                        .read<HomeBloc>()
+                                        .add(HomeEvent.toggleNoteEvent());
+                                  },
+                                  supplierWidget: state.productSupplierList.isEmpty
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: AppColors
+                                                          .borderColor
+                                                          .withOpacity(0.5),
+                                                      width: 1))),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical:
+                                                  AppConstants.padding_30),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor),
+                                          ),
+                                        )
+                                      : buildSupplierSelection(context: context),
                                   productStock: state.productStockList[state.productStockUpdateIndex].stock,
                                   isRTL: context.rtl,
+                                  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
                                   onQuantityChanged: (quantity) {},
@@ -1042,7 +988,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         HomeEvent.decreaseQuantityOfProduct(
                                             context: context1));
                                   },
-                                  noteController: TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                                   onNoteChanged: (newNote) {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.changeNoteOfProduct(

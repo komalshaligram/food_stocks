@@ -16,6 +16,8 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required int imageIndex,
+    required RefreshController refreshController,
+    required TextEditingController noteController,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -32,5 +34,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isSelectSupplier: false,
         productSupplierList: [],
         imageIndex: 0,
+        refreshController: RefreshController(),
+        noteController: TextEditingController(),
       );
 }

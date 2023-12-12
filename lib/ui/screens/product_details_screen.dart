@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/product_details/product_details_bloc.dart';
@@ -591,10 +593,16 @@ class ProductDetailsScreenWidget extends StatelessWidget {
                   ? Expanded(
                   flex: 2,
                     child: CachedNetworkImage(
-                        imageUrl:
+                      imageUrl:
                             '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
                         width: AppConstants.containerSize_50,
                         height: AppConstants.containerSize_50,
+                        errorWidget: (context, url, error) {
+                          return Container(
+                            width: AppConstants.containerSize_50,
+                            height: AppConstants.containerSize_50,
+                          );
+                        },
                       ),
                   )
                   : SizedBox(),

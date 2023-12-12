@@ -129,7 +129,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -223,6 +224,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         ))
                     .toList() ??
                 []);
+            supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
                 'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList.length}');
@@ -231,6 +233,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
+                noteController: TextEditingController(
+                    text: state.productStockList[productStockUpdateIndex].note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
           } else {
@@ -319,31 +323,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: event.newNote);
+                  .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
-            event.isSelectSupplier ?? !state.isSelectSupplier));
+                event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
       } else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
-          state.productSupplierList.toList(growable: true);
+              state.productSupplierList.toList(growable: true);
           List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: true);
+              state.productStockList.toList(growable: true);
 
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
-                  /*supplierList[event.supplierIndex].selectedIndex ==
+                      /*supplierList[event.supplierIndex].selectedIndex ==
                               event.supplierSaleIndex
                           ? ''
                           : */
-                  supplierList[event.supplierIndex].supplierId,
+                      supplierList[event.supplierIndex].supplierId,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : /*supplierList[event.supplierIndex].selectedIndex ==
@@ -352,9 +356,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               .supplierSales[event.supplierSaleIndex]
                               .salePrice
                           :*/
-                  supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .salePrice,
+                      supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
                   quantity: 0,
                   productSaleId: event.supplierSaleIndex == -2
@@ -363,9 +367,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               event.supplierSaleIndex
                           ? ''
                           :*/
-                  supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .saleId);
+                      supplierList[event.supplierIndex]
+                          .supplierSales[event.supplierSaleIndex]
+                          .saleId);
           debugPrint(
               'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
           supplierList = supplierList
@@ -380,7 +384,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                               event.supplierSaleIndex
                           ? -1
                           : */
-                  event.supplierSaleIndex);
+                      event.supplierSaleIndex);
           debugPrint(
               'selected supplier[${event.supplierIndex}] = ${supplierList[event.supplierIndex]}');
           emit(state.copyWith(
@@ -392,7 +396,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
+              title:
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -400,7 +405,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             0) {
           showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
+              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -417,15 +422,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     .productStockList[state.productStockUpdateIndex]
                     .productSupplierIds,
                 note: state.productStockList[state.productStockUpdateIndex].note
-                    .isEmpty
+                        .isEmpty
                     ? null
                     : state
-                    .productStockList[state.productStockUpdateIndex].note,
+                        .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId.isEmpty
+                        .productSaleId.isEmpty
                     ? null
                     : state.productStockList[state.productStockUpdateIndex]
-                    .productSaleId)
+                        .productSaleId)
           ]);
           Map<String, dynamic> req = insertCartReqModel.toJson();
           req.removeWhere((key, value) {
@@ -448,24 +453,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
+                      'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
             Vibration.vibrate(amplitude: 128);
-            List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
-                    quantity: 0,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '');
+            // List<ProductStockModel> productStockList =
+            // state.productStockList.toList(growable: true);
+            // productStockList[state.productStockUpdateIndex] =
+            //     productStockList[state.productStockUpdateIndex].copyWith(
+            //         note: '',
+            //         quantity: 0,
+            //         productSupplierIds: '',
+            //         totalPrice: 0.0,
+            //         productSaleId: '');
             emit(state.copyWith(
                 isLoading: false,
-                productStockList: productStockList,
+                // productStockList: productStockList,
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             add(HomeEvent.setCartCountEvent());
@@ -584,19 +589,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             List<MessageData> messageList = [];
             messageList.addAll(response.data
-                ?.map((message) => MessageData(
-              id: message.id,
-              isRead: message.isRead,
-              message: Message(
-                id: message.message?.id ?? '',
-                title: message.message?.title ?? '',
-                summary: message.message?.summary ?? '',
-                body: message.message?.body ?? '',
-              ),
-              createdAt: message.createdAt,
-              updatedAt: message.updatedAt,
-            ))
-                .toList() ??
+                    ?.map((message) => MessageData(
+                          id: message.id,
+                          isRead: message.isRead,
+                          message: Message(
+                            id: message.message?.id ?? '',
+                            title: message.message?.title ?? '',
+                            summary: message.message?.summary ?? '',
+                            body: message.message?.body ?? '',
+                          ),
+                          createdAt: message.createdAt,
+                          updatedAt: message.updatedAt,
+                        ))
+                    .toList() ??
                 []);
             /* messageList.removeWhere(
                 (message) => (message.isPushNotification ?? false) == false);*/
@@ -654,6 +659,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           debugPrint('message len = ${messageList.length}');
           emit(state.copyWith(messageList: messageList));
         }
+      } else if (event is _ToggleNoteEvent) {
+        List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+        productStockList[state.productStockUpdateIndex] =
+            productStockList[state.productStockUpdateIndex].copyWith(
+                isNoteOpen: !productStockList[state.productStockUpdateIndex]
+                    .isNoteOpen);
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }

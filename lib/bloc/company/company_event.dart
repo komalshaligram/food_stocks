@@ -7,4 +7,7 @@ class CompanyEvent with _$CompanyEvent {
 
   const factory CompanyEvent.setSearchEvent({required String search}) =
       _SetSearchEvent;
+
+  const factory CompanyEvent.refreshListEvent({required BuildContext context}) =
+      _RefreshListEvent;
 }
