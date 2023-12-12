@@ -17,7 +17,7 @@ class AppConfig {
     return AppConfig(
         flavor: 'dev',
         appName: 'Food Stock Dev',
-        appBaseUrl: 'http://192.168.1.46:3000/api',
+        appBaseUrl: 'http://192.168.1.46:8080/api',
         primaryColor: Colors.blue);
   }
 
