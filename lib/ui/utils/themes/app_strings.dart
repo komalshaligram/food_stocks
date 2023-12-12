@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../app_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppStrings {
   static const appName = 'Food Stock';
@@ -56,7 +59,6 @@ class AppStrings {
   static const pdfString = 'PDF';
   static const jsonString = 'JSON';
   static const orderBySupplierId = 'orderSupplierId';
-  static const getCartListString = 'getCartListString';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -69,7 +71,6 @@ class AppStrings {
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
-  static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings
   static const mobileParamString = 'mobileParam';
@@ -146,18 +147,12 @@ class AppStrings {
   static const messageIdString = 'messageId';
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
-}
 
-
-
-/*
-String? getLocalizedString( {required String key, required BuildContext context}) {
-  switch (key) {
-  case "usernotfound":
-  return AppLocalizations.of(context)!.usernotfound;
-  //case "possible_api_value_2":
- // return AppLocalizations.of(context)!.usernotfound;
-
+  static String getLocalizedStrings(String key,BuildContext context){
+    switch(key){
+      case 'errmessage':
+        return AppLocalizations.of(context).errmessage;
+    }
+    return '';
   }
-return '';
-}*/
+}
