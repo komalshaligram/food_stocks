@@ -57,7 +57,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             },
             positiveOnTap: () async {
               try {
-
                 final response = await DioClient(event.context).put(
                     path: AppUrls.logOutUrl,
                   data: {
