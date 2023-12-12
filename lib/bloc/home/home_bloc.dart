@@ -14,7 +14,7 @@ import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -37,7 +37,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 part 'home_event.dart';
 
 part 'home_state.dart';
@@ -236,7 +236,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message.toString().toLocalization(),event.context),
+                //response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
