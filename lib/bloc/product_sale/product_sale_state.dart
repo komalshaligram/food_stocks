@@ -17,10 +17,12 @@ class ProductSaleState with _$ProductSaleState {
     required bool isSelectSupplier,
     required List<ProductSupplierModel> productSupplierList,
     required int imageIndex,
+    required TextEditingController noteController,
+    required RefreshController refreshController,
   }) = _ProductSaleState;
 
-  factory ProductSaleState.initial() => const ProductSaleState(
-    productSalesList: [],
+  factory ProductSaleState.initial() => ProductSaleState(
+        productSalesList: [],
         search: '',
         productDetails: [],
         isShimmering: false,
@@ -34,5 +36,7 @@ class ProductSaleState with _$ProductSaleState {
         isSelectSupplier: false,
         productSupplierList: [],
         imageIndex: 0,
+        noteController: TextEditingController(),
+        refreshController: RefreshController(),
       );
 }

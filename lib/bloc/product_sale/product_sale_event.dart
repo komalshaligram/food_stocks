@@ -37,4 +37,9 @@ class ProductSaleEvent with _$ProductSaleEvent {
 
   const factory ProductSaleEvent.setSearchEvent({required String search}) =
       _SetSearchEvent;
+
+  const factory ProductSaleEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory ProductSaleEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

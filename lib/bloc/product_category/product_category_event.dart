@@ -15,4 +15,7 @@ class ProductCategoryEvent with _$ProductCategoryEvent {
   const factory ProductCategoryEvent.updateGlobalSearchEvent(
       {required String search,
       required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory ProductCategoryEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

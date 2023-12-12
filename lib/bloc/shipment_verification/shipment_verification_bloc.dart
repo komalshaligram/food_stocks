@@ -70,8 +70,6 @@ class ShipmentVerificationBloc
               DeliveryConfirmReqModel reqMap = DeliveryConfirmReqModel(
                 supplierId: event.supplierId,
                 signature: signUrl,
-                driverNumber: event.driverNumber,
-                 driverName: event.driverName
               );
               debugPrint('delivery Confirm ReqModel = $reqMap}');
              final response = await DioClient(event.context).post(

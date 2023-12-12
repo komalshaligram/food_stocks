@@ -12,6 +12,7 @@ class ProductCategoryState with _$ProductCategoryState {
     required List<SearchModel> searchList,
     required String search,
     required String reqSearch,
+    required RefreshController refreshController,
   }) = _ProductCategoryState;
 
   factory ProductCategoryState.initial() => ProductCategoryState(
@@ -24,5 +25,6 @@ class ProductCategoryState with _$ProductCategoryState {
         searchList: [],
         search: '',
         reqSearch: '',
+        refreshController: RefreshController(),
       );
 }

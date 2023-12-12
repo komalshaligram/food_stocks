@@ -75,7 +75,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                   child: CircularButtonWidget(
                     buttonName: AppLocalizations.of(context)!.total,
                     buttonValue:
-                        '${formatter(args?[AppStrings.totalAmountString])}${AppLocalizations.of(context)!.currency}',
+                        /*'${formatter(args?[AppStrings.totalAmountString])}${AppLocalizations.of(context)!.currency}',*/
+                    '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0',local: AppStrings.hebrewLocal)}',
                   ),
                 ),
                 onTap: () {
@@ -154,7 +155,9 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
                             value:
-                                ' ${formatter(args?[AppStrings.totalOrderString]) ?? '0'}${AppLocalizations.of(context)!.currency}',
+                             /*   ' ${formatter(args?[AppStrings.totalOrderString]) ?? '0'}${AppLocalizations.of(context)!.currency}',*/
+                            '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0',local: AppStrings.hebrewLocal)}',
+
                             titleColor: AppColors.mainColor,
                             valueColor: AppColors.blackColor,
                             valueTextWeight: FontWeight.w500,
@@ -162,7 +165,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      7.height,
+                      15.height,
                       RichText(
                         text: TextSpan(
                           text: AppLocalizations.of(context)!
@@ -181,7 +184,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                      7.height,
+
                   /*    Text(
                         '${AppLocalizations.of(context)!.driver_name}${' : '}',
                         style: AppStyles.rkRegularTextStyle(
@@ -330,8 +333,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           supplierId: args?[AppStrings.supplierIdString],
                           signPath: image.path,
                           orderId: args?[AppStrings.orderIdString],
-                          driverName: args?[AppStrings.driverNameString],
-                        driverNumber: args?[AppStrings.driverNumberString]
+                          /*driverName: args?[AppStrings.driverNameString] ,
+                        driverNumber: args?[AppStrings.driverNumberString]*/
                       ),
                       );
                     } else {

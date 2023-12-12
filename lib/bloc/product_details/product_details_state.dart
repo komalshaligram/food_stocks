@@ -14,7 +14,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required bool isShimmering,
     required bool isLoading,
     required int quantity,
-
+    required bool isAllCheck,
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -29,6 +29,7 @@ class ProductDetailsState with _$ProductDetailsState {
      isShimmering: false,
     isLoading: false,
       quantity: 0,
+    isAllCheck: false
 
   );
 }

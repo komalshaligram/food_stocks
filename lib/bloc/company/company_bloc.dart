@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/company_req_model/company_req_model.dart';
 import '../../repository/dio_client.dart';
@@ -61,14 +62,21 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
       } else if (event is _SetSearchEvent) {
         emit(state.copyWith(search: event.search));
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(
+            pageNum: 0, companiesList: [], isBottomOfCompanies: false));
+        add(CompanyEvent.getCompaniesListEvent(context: event.context));
       }
     });
   }

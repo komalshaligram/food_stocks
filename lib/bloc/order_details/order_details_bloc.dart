@@ -55,12 +55,4 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
     });
   }
 
-  String splitNumber(String price) {
-    var splitPrice = price.split(".");
-    if (splitPrice[1] == "00") {
-      return splitPrice[0];
-    } else {
-      return price.toString();
-    }
-  }
 }

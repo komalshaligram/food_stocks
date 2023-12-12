@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order/order_bloc.dart';
+import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/common_order_content_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -30,9 +32,20 @@ class OrderScreen extends StatelessWidget {
   }
 }
 
-class OrderScreenWidget extends StatelessWidget {
+class OrderScreenWidget extends StatefulWidget {
   const OrderScreenWidget({super.key});
 
+  @override
+  State<OrderScreenWidget> createState() => _OrderScreenWidgetState();
+}
+
+class _OrderScreenWidgetState extends State<OrderScreenWidget> {
+
+@override
+  void initState() {
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocListener<OrderBloc, OrderState>(
@@ -85,7 +98,7 @@ class OrderScreenWidget extends StatelessWidget {
                                 )),
                               ),
                     state.isLoadMore
-                        ? OrderSummaryScreenShimmerWidget()
+                        ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
                         : 0.width,
                   ],
                 ),
@@ -114,17 +127,70 @@ class OrderScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        OrderBloc bloc = context.read<OrderBloc>();
         return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(
-                  context, RouteDefine.orderDetailsScreen.name,
-                  arguments: {
-                    AppStrings.orderIdString:
-                    state.orderDetailsList[index].id,
-                    AppStrings.orderNumberString:
-                    state.orderDetailsList[index].orderNumber,
-                  });
+              if((state.orderDetailsList[index].suppliers ?? 0)  > 1){
+                Navigator.pushNamed(
+                    context, RouteDefine.orderDetailsScreen.name,
+                    arguments: {
+                      AppStrings.orderIdString:
+                      state.orderDetailsList[index].id,
+                      AppStrings.orderNumberString:
+                      state.orderDetailsList[index].orderNumber,
+                    });
+              }
+              else{
+                Navigator.push(context,   PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber:  state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
+
+                  ),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.bounceIn;
+                    var tween = Tween(begin: begin, end: end,).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ));
+   /*             Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      return ScaleTransition(
+                        alignment: Alignment.center,
+                        scale: Tween<double>(begin: 0.6, end: 1).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.bounceIn,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 800),
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation) {
+                      return ProductDetailsScreen(orderNumber: state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
+
+                      );
+                    },
+                  ),
+                );*/
+
+          /*      Navigator.pushNamed(
+                    context, RouteDefine.productDetailsScreen.name,
+                    arguments: {
+                      AppStrings.orderIdString: state.orderDetailsList[index].id,
+                      AppStrings.orderNumberString: state.orderDetailsList[index].orderNumber,
+                      AppStrings.isNavigateToProductDetailString: true,
+                    });*/
+              }
+
           },
           child: Container(
             margin: EdgeInsets.all(AppConstants.padding_10),
@@ -179,7 +245,9 @@ class OrderScreenWidget extends StatelessWidget {
                         child: Directionality(
                           textDirection: TextDirection.ltr,
                           child: Text(
-                            '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',
+        /*                    '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',*/
+                            '${(formatNumber(value:state.orderDetailsList[index].totalAmount.toString(),local: AppStrings.hebrewLocal))}',
+
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.font_14,
                                 color: AppColors.whiteColor,
@@ -211,6 +279,8 @@ class OrderScreenWidget extends StatelessWidget {
                       valueTextSize: AppConstants.smallFont,
                     ),
                     5.width,
+
+
                     CommonOrderContentWidget(
                       flexValue: 4,
                       title: AppLocalizations.of(context)!.order_date,

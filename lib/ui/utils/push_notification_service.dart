@@ -49,7 +49,7 @@ class PushNotificationService {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/ic_launcher');
+    AndroidInitializationSettings('@drawable/ic_launcher1');
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: true,
@@ -75,7 +75,6 @@ class PushNotificationService {
         print("details:$details");
       },
     );
-
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
       debugPrint("message: $message");

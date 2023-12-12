@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/order_details/order_details_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
@@ -48,7 +48,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();
+  /*  OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();*/
     return BlocListener<OrderDetailsBloc, OrderDetailsState>(
       listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
@@ -73,7 +73,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                             : CircularButtonWidget(
                                 buttonName: AppLocalizations.of(context)!.total,
                                 buttonValue:
-                                    '${formatter(state.orderByIdList.data!.orderData!.first.totalAmount?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
+                                /*    '${formatter(state.orderByIdList.data!.orderData!.first.totalAmount?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',*/
+                                '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+
                               ),
                   ),
                   onTap: () {
@@ -112,16 +114,62 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
       builder: (context, state) {
-        OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();
+       /* OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();*/
         return GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name,
+  /*        Navigator.push(
+            context,
+            PageRouteBuilder(
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return ScaleTransition(
+                  alignment: Alignment.center,
+                  scale: Tween<double>(begin: 0.6, end: 1).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.bounceIn,
+                    ),
+                  ),
+                  child: child,
+                );
+              },
+              transitionDuration: Duration(milliseconds: 800),
+              pageBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
+                return ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
+                  productData: state.orderByIdList.data!.ordersBySupplier![index],
+                );
+              },
+            ),
+          );*/
+            Navigator.push(context,   PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
+              productData: state.orderByIdList.data!.ordersBySupplier![index],
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.bounceIn;
+            var tween = Tween(begin: begin, end: end,).chain(CurveTween(curve: curve));
+            return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+            );
+            },
+            ));
+
+
+
+          /*Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name,
                 arguments: {
                   AppStrings.productDataString:
                       state.orderByIdList.data!.ordersBySupplier![index],
                   AppStrings.orderIdString: orderId,
                   AppStrings.orderNumberString: orderNumber,
-                });
+                  AppStrings.isNavigateToProductDetailString: false,
+                });*/
+
           },
           child: Container(
             margin: EdgeInsets.all(AppConstants.padding_10),
@@ -201,9 +249,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
-                      flexValue: 2,
+                      flexValue: 3,
                       title: AppLocalizations.of(context)!.total_order,
-                      value: '${formatter(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
+                   /*   value: '${formatter(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toString() ?? '')}${AppLocalizations.of(context)!.currency}'*/
+                      value: '${formatNumber(value: state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,
@@ -219,6 +269,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
     );
   }
 }
+
 
 /*Container(
                         decoration: BoxDecoration(

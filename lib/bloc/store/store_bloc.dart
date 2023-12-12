@@ -9,6 +9,7 @@ import 'package:food_stock/data/model/req_model/company_req_model/company_req_mo
 import 'package:food_stock/data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import 'package:food_stock/data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
+import 'package:food_stock/data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
@@ -31,12 +32,13 @@ import 'package:vibration/vibration.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
+import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 part 'store_event.dart';
 
 part 'store_state.dart';
@@ -86,7 +88,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -129,7 +132,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -173,7 +177,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -197,7 +202,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -223,7 +229,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -325,20 +332,28 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         ))
                     .toList() ??
                 []);
+            supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
                 'response list = ${response.product?.first.supplierSales?.length}');
             debugPrint('supplier list = ${supplierList.length}');
             debugPrint(
                 'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+            String note =
+                state.productStockList.indexOf(state.productStockList.last) ==
+                        productStockUpdateIndex
+                    ? ''
+                    : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
+                noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           }
@@ -359,7 +374,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title:'${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -374,7 +390,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title:
+                    '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -400,7 +417,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
-                  .copyWith(note: event.newNote);
+                  .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _AddToCartProductEvent) {
@@ -408,7 +425,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
+              title:
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -416,7 +434,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             0) {
           showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
+              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -469,27 +487,28 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            List<ProductStockModel> productStockList =
-                state.productStockList.toList(growable: true);
-            productStockList[state.productStockUpdateIndex] =
-                productStockList[state.productStockUpdateIndex].copyWith(
-                    note: '',
-                    quantity: 0,
-                    productSupplierIds: '',
-                    totalPrice: 0.0,
-                    productSaleId: '');
+            // List<ProductStockModel> productStockList =
+            //     state.productStockList.toList(growable: true);
+            // productStockList[state.productStockUpdateIndex] =
+            //     productStockList[state.productStockUpdateIndex].copyWith(
+            //         note: '',
+            //         quantity: 0,
+            //         productSupplierIds: '',
+            //         totalPrice: 0.0,
+            //         productSaleId: '');
             add(StoreEvent.setCartCountEvent());
             Vibration.vibrate(amplitude: 128);
             emit(state.copyWith(
                 isLoading: false,
-                productStockList: productStockList,
+                // productStockList: productStockList,
                 isCartCountChange: true));
             emit(state.copyWith(isCartCountChange: false));
             // if (state.productStockList[state.productStockUpdateIndex].quantity <
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
             // } else {
@@ -503,13 +522,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -561,11 +582,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               productStockList: productStockList));
         }
       } else if (event is _GlobalSearchEvent) {
-        emit(state.copyWith(search: event.search));
-        debugPrint('data1 = ${state.search}');
+        emit(state.copyWith(search: state.searchController.text));
+        debugPrint('data1 = ${state.searchController.text}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-              GlobalSearchReqModel(search: state.search);
+              GlobalSearchReqModel(search: state.searchController.text);
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -578,6 +599,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('sup len = ${response.data?.supplierData?.length}');
           debugPrint(
               'sup prod len = ${response.data?.supplierProductData?.length}');
+          if (state.searchController.text == '') {
+            List<SearchModel> searchList = [];
+            searchList.addAll(state.productCategoryList.map((category) =>
+                SearchModel(
+                    searchId: category.id ?? '',
+                    name: category.categoryName ?? '',
+                    searchType: SearchTypes.category,
+                    image: category.categoryImage ?? '')));
+            emit(state.copyWith(searchList: searchList, isSearching: false));
+            return;
+          }
           if (response.status == 200) {
             List<SearchModel> searchList = [];
             //category search result
@@ -628,7 +660,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             debugPrint('store search list = ${searchList.length}');
             emit(state.copyWith(
                 searchList: searchList,
-                previousSearch: state.search,
+                search: state.searchController.text,
                 isSearching: false));
           } else {
             // emit(state.copyWith(searchList: []));
@@ -647,9 +679,77 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _UpdateGlobalSearchEvent) {
         emit(state.copyWith(
-            search: event.search,
-            previousSearch: event.search,
+            searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
+      } else if (event is _ToggleNoteEvent) {
+        List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+        if (event.isBarcode) {
+          productStockList[productStockList.indexOf(productStockList.last)] =
+              productStockList[productStockList.indexOf(productStockList.last)]
+                  .copyWith(
+                      isNoteOpen: !productStockList[
+                              productStockList.indexOf(productStockList.last)]
+                          .isNoteOpen);
+        } else {
+          productStockList[state.productStockUpdateIndex] =
+              productStockList[state.productStockUpdateIndex].copyWith(
+                  isNoteOpen: !productStockList[state.productStockUpdateIndex]
+                      .isNoteOpen);
+        }
+        emit(state.copyWith(productStockList: productStockList));
+      } else if (event is _ResetGlobalSearchEvent) {
+        List<SearchModel> searchList = [];
+        searchList.addAll(state.productCategoryList.map((category) =>
+            SearchModel(
+                searchId: category.id ?? '',
+                name: category.categoryName ?? '',
+                searchType: SearchTypes.category,
+                image: category.categoryImage ?? '')));
+        emit(state.copyWith(
+            searchList: searchList, searchController: TextEditingController()));
+      } else if (event is _GetPreviousOrderProductsListEvent) {
+        try {
+          emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).post(
+            AppUrls.getPreviousOrderProductsUrl,
+            data: PreviousOrderProductsReqModel(
+                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                .toJson(),
+          );
+          PreviousOrderProductsResModel response =
+              PreviousOrderProductsResModel.fromJson(res);
+          if (response.status == 200) {
+            debugPrint(
+                'previous order products len = ${response.previousProductData?.length}');
+            List<ProductStockModel> productStockList =
+                state.productStockList.toList(growable: true);
+            ProductStockModel barcodeStock = productStockList.removeLast();
+            productStockList.addAll(response.previousProductData?.map(
+                    (previousOrderProduct) => ProductStockModel(
+                        productId: previousOrderProduct.id ?? '',
+                        stock: previousOrderProduct.productStock ?? 0)) ??
+                []);
+            productStockList.add(barcodeStock);
+            emit(state.copyWith(
+                previousOrderProductsList: response.previousProductData ?? [],
+                productStockList: productStockList,
+                isShimmering: false));
+            debugPrint(
+                'previous order products len = ${state.previousOrderProductsList.length}');
+          } else {
+            emit(state.copyWith(isShimmering: false));
+            showSnackBar(
+                context: event.context,
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                bgColor: AppColors.mainColor);
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
       }
     });
   }
