@@ -53,6 +53,12 @@ class SharedPreferencesHelper {
   Future<void> removeCompanyLogo() async {
     await prefs.remove(userCompanyLogo);
   }
+  Future<void> removeAuthToken() async {
+    await prefs.remove(accessToken);
+  }
+  Future<void> removeRefreshToken() async {
+    await prefs.remove(refreshToken);
+  }
 
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);

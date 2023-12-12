@@ -520,7 +520,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           });
           showSnackBar(
               context: event.context,
-              title: AppStrings.downloadString,
+              title: AppLocalizations.of(event.context)!.downloaded_successfully,
               bgColor: AppColors.mainColor);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
           // HttpClient httpClient = new HttpClient();

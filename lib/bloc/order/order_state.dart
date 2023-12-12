@@ -10,8 +10,6 @@ class OrderState with _$OrderState {
    required List<Datum> orderDetailsList,
    required bool isBottomOfProducts,
 
-
-
   }) = _OrderState;
 
    factory OrderState.initial() => OrderState(
@@ -20,7 +18,8 @@ class OrderState with _$OrderState {
      isLoadMore: false,
      pageNum: 0,
      orderDetailsList: [],
-     isBottomOfProducts: false
+     isBottomOfProducts: false,
+
 
   );
 
