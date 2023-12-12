@@ -46,6 +46,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
+
       } else if (event is _ChangeSubCategoryOrPlanogramEvent) {
         emit(state.copyWith(isSubCategory: event.isSubCategory));
       } else if (event is _ChangeCategoryDetailsEvent) {
