@@ -42,7 +42,7 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
-                title: AppLocalizations.of(context).questions_and_answers,
+                title: AppLocalizations.of(context)!.questions_and_answers,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context);
