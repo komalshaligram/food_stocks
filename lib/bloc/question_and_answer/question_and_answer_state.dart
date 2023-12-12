@@ -8,13 +8,15 @@ class QuestionAndAnswerState with _$QuestionAndAnswerState {
     required bool isBottomOfQNA,
     required bool isLoadMore,
     required bool isShimmering,
+    required RefreshController refreshController,
   }) = _QuestionAndAnswerState;
 
   factory QuestionAndAnswerState.initial() => QuestionAndAnswerState(
-        qnaList: [],
+    qnaList: [],
         pageNum: 0,
         isBottomOfQNA: false,
         isLoadMore: false,
         isShimmering: false,
+        refreshController: RefreshController(),
       );
 }

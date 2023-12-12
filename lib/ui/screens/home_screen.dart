@@ -794,75 +794,80 @@ class HomeScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: CachedNetworkImage(
-              imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              placeholder: (context, url) {
-                return CommonShimmerWidget(
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_10)),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onButtonTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
-                    // alignment: Alignment.center,
-                    // child: CupertinoActivityIndicator(
-                    //   color: AppColors.blackColor,
-                    // ),
-                  ),
-                );
-              },
-              errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-          ),
-          5.height,
-          Text(
-            title,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.saleRedColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: Text(
-              "${parse(description).body?.text}",
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_10, color: AppColors.blackColor),
-              maxLines: 3,
+            5.height,
+            Text(
+              title,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.saleRedColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-              onPressed: onButtonTap,
-              // height: 35,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
+            5.height,
+            Expanded(
+              child: Text(
+                "${parse(description).body?.text}",
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10, color: AppColors.blackColor),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                // onPressed: (){}/*onButtonTap*/,
+                // height: 35,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

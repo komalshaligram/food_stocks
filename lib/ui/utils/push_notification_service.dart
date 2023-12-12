@@ -33,7 +33,7 @@ class PushNotificationService {
       //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
     );
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     enableIOSNotifications();
     await registerNotificationListeners();

@@ -14,6 +14,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -39,13 +40,14 @@ class StoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StoreBloc()
-        ..add(StoreEvent.getProductCategoriesListEvent(context: context))
-        ..add(StoreEvent.getCompaniesListEvent(context: context))
-        ..add(StoreEvent.getSuppliersListEvent(context: context))
-        ..add(StoreEvent.getProductSalesListEvent(context: context))
-        ..add(StoreEvent.getRecommendationProductsListEvent(context: context))
-        ..add(StoreEvent.getPreviousOrderProductsListEvent(context: context)),
+      create: (context) =>
+      StoreBloc()
+        ..add(StoreEvent.getProductCategoriesListEvent(context: context))..add(
+          StoreEvent.getCompaniesListEvent(context: context))..add(
+          StoreEvent.getSuppliersListEvent(context: context))..add(
+          StoreEvent.getProductSalesListEvent(context: context))..add(
+          StoreEvent.getRecommendationProductsListEvent(context: context))..add(
+          StoreEvent.getPreviousOrderProductsListEvent(context: context)),
       child: StoreScreenWidget(),
     );
   }
@@ -459,48 +461,85 @@ class StoreScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     height: 170,
                                     child: ListView.builder(
-                                      itemCount: state
-                                          .recommendedProductsList.length,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                          AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildRecommendationAndPreviousOrderProductsListItem(
-                                          context: context,
-                                          productImage: state
-                                              .recommendedProductsList[
-                                          index]
-                                              .mainImage ??
-                                              '',
-                                          productName: state
-                                              .recommendedProductsList[
-                                          index]
-                                              .productName ??
-                                              '',
-                                          totalSale: state
-                                              .recommendedProductsList[
-                                          index]
-                                              .totalSale ??
-                                              0,
-                                          price: state
-                                              .recommendedProductsList[
-                                          index]
-                                              .productPrice
-                                              ?.toDouble() ??
-                                              0.0,
-                                          onButtonTap: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                    .recommendedProductsList[
-                                                index]
-                                                    .id ??
-                                                    '');
-                                          },
-                                        );
-                                      },
+                                        itemCount: state
+                                            .recommendedProductsList.length,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                            AppConstants.padding_5),
+                                        itemBuilder: (context, index) =>
+                                            CommonProductItemWidget(
+                                              height: 150,
+                                              width: 140,
+                                              productImage:
+                                              state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .mainImage ??
+                                                  '',
+                                              productName:
+                                              state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .productName ??
+                                                  '',
+                                              totalSaleCount:
+                                              state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .totalSale ??
+                                                  0,
+                                              price:
+                                              state
+                                                  .recommendedProductsList[
+                                              index]
+                                                  .productPrice
+                                                  ?.toDouble() ??
+                                                  0.0,
+                                              onButtonTap:
+                                                  () {
+                                                showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                        .recommendedProductsList[
+                                                    index]
+                                                        .id ??
+                                                        '');
+                                              },)
+                                      // buildRecommendationAndPreviousOrderProductsListItem(
+                                      //   context: context,
+                                      //   productImage: state
+                                      //       .recommendedProductsList[
+                                      //   index]
+                                      //       .mainImage ??
+                                      //       '',
+                                      //   productName: state
+                                      //       .recommendedProductsList[
+                                      //   index]
+                                      //       .productName ??
+                                      //       '',
+                                      //   totalSale: state
+                                      //       .recommendedProductsList[
+                                      //   index]
+                                      //       .totalSale ??
+                                      //       0,
+                                      //   price: state
+                                      //       .recommendedProductsList[
+                                      //   index]
+                                      //       .productPrice
+                                      //       ?.toDouble() ??
+                                      //       0.0,
+                                      //   onButtonTap: () {
+                                      //     showProductDetails(
+                                      //         context: context,
+                                      //         productId: state
+                                      //             .recommendedProductsList[
+                                      //         index]
+                                      //             .id ??
+                                      //             '');
+                                      //   },
+                                      // )
                                     ),
                                   ),
                                 ],
@@ -536,49 +575,86 @@ class StoreScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     height: 170,
                                     child: ListView.builder(
-                                      itemCount: state
-                                          .previousOrderProductsList
-                                          .length,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                          AppConstants.padding_5),
-                                      itemBuilder: (context, index) {
-                                        return buildRecommendationAndPreviousOrderProductsListItem(
-                                          context: context,
-                                          productImage: state
-                                              .previousOrderProductsList[
-                                          index]
-                                              .mainImage ??
-                                              '',
-                                          productName: state
-                                              .previousOrderProductsList[
-                                          index]
-                                              .productName ??
-                                              '',
-                                          totalSale: state
-                                              .previousOrderProductsList[
-                                          index]
-                                              .totalSale ??
-                                              0,
-                                          price: state
-                                              .previousOrderProductsList[
-                                          index]
-                                              .productPrice
-                                              ?.toDouble() ??
-                                              0.0,
-                                          onButtonTap: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                    .previousOrderProductsList[
-                                                index]
-                                                    .id ??
-                                                    '');
-                                          },
-                                        );
-                                      },
+                                        itemCount: state
+                                            .previousOrderProductsList
+                                            .length,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                            AppConstants.padding_5),
+                                        itemBuilder: (context, index) =>
+                                            CommonProductItemWidget(
+                                              height: 150,
+                                              width: 140,
+                                              productImage:
+                                              state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .mainImage ??
+                                                  '',
+                                              productName:
+                                              state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .productName ??
+                                                  '',
+                                              totalSaleCount:
+                                              state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .totalSale ??
+                                                  0,
+                                              price:
+                                              state
+                                                  .previousOrderProductsList[
+                                              index]
+                                                  .productPrice
+                                                  ?.toDouble() ??
+                                                  0.0,
+                                              onButtonTap:
+                                                  () {
+                                                showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                        .previousOrderProductsList[
+                                                    index]
+                                                        .id ??
+                                                        '');
+                                              },)
+                                      // buildRecommendationAndPreviousOrderProductsListItem(
+                                      //                                 context: context,
+                                      //                                 productImage: state
+                                      //                                     .previousOrderProductsList[
+                                      //                                 index]
+                                      //                                     .mainImage ??
+                                      //                                     '',
+                                      //                                 productName: state
+                                      //                                     .previousOrderProductsList[
+                                      //                                 index]
+                                      //                                     .productName ??
+                                      //                                     '',
+                                      //                                 totalSale: state
+                                      //                                     .previousOrderProductsList[
+                                      //                                 index]
+                                      //                                     .totalSale ??
+                                      //                                     0,
+                                      //                                 price: state
+                                      //                                     .previousOrderProductsList[
+                                      //                                 index]
+                                      //                                     .productPrice
+                                      //                                     ?.toDouble() ??
+                                      //                                     0.0,
+                                      //                                 onButtonTap: () {
+                                      //                                   showProductDetails(
+                                      //                                       context: context,
+                                      //                                       productId: state
+                                      //                                           .previousOrderProductsList[
+                                      //                                       index]
+                                      //                                           .id ??
+                                      //                                           '');
+                                      //                                 },
+                                      //                               )
                                     ),
                                   ),
                                 ],
@@ -588,7 +664,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          90.height,
+                          80.height,
                         ],
                       ),
                     ),
@@ -792,7 +868,7 @@ class StoreScreenWidget extends StatelessWidget {
                               context: context,
                               productId: scanResult,
                               isBarcode: true);
-                        } /* else {
+                        } /*else {
                           showProductDetails(
                               context: context,
                               productId: "653a337366a6f5add6e02727",
@@ -1098,76 +1174,81 @@ class StoreScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: CachedNetworkImage(
-              imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              placeholder: (context, url) {
-                return CommonShimmerWidget(
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_10)),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onButtonTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
-                    // alignment: Alignment.center,
-                    // child: CupertinoActivityIndicator(
-                    //   color: AppColors.blackColor,
-                    // ),
-                  ),
-                );
-              },
-              errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-          ),
-          5.height,
-          Text(
-            title,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.saleRedColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: Text(
-              description,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_10, color: AppColors.blackColor),
-              maxLines: 3,
+            5.height,
+            Text(
+              title,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.saleRedColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-              "${price.toStringAsFixed(
-                  0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-              onPressed: onButtonTap,
-              // height: 35,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
+            5.height,
+            Expanded(
+              child: Text(
+                description,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10, color: AppColors.blackColor),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                "${price.toStringAsFixed(
+                    0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                // onPressed: onButtonTap,
+                // height: 35,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -1199,106 +1280,20 @@ class StoreScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: CachedNetworkImage(
-              imageUrl: "${AppUrls.baseFileUrl}$productImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              placeholder: (context, url) {
-                return CommonShimmerWidget(
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_10)),
-                    ),
-                  ),
-                );
-              },
-              errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
-            ),
-          ),
-          5.height,
-          Text(
-            productName,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: totalSale == 0
-                ? 0.width
-                : Text(
-                    "${totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
-                        fontWeight: FontWeight.w600),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
-              onPressed: onButtonTap,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
-            ),
-          )
-        ],
-      ),
-    );
-    /*Container(
-      width: 140,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.15),
-              blurRadius: AppConstants.blur_10),
-        ],
-      ),
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_10,
-          horizontal: AppConstants.padding_5),
-      padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Image.network(
-              "${AppUrls.baseFileUrl}$productImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress?.cumulativeBytesLoaded !=
-                    loadingProgress?.expectedTotalBytes) {
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onButtonTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$productImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
                       height: 70,
@@ -1308,164 +1303,165 @@ class StoreScreenWidget extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(AppConstants.radius_10)),
                       ),
-                      // alignment: Alignment.center,
-                      // child: CupertinoActivityIndicator(
-                      //   color: AppColors.blackColor,
-                      // ),
                     ),
                   );
-                }
-                return child;
-              },
-              errorBuilder: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-          ),
-          5.height,
-          Text(
-            productName,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.saleRedColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: Text(
-              saleCount,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_10, color: AppColors.blackColor),
-              maxLines: 3,
+            5.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${price.toStringAsFixed(0)}${AppLocalizations.of(context)!.currency}",
-              onPressed: onButtonTap,
-              // height: 35,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
+            5.height,
+            Expanded(
+              child: totalSale == 0
+                  ? 0.width
+                  : Text(
+                "${totalSale} ${AppLocalizations.of(context)!.discount}",
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10,
+                    color: AppColors.saleRedColor,
+                    fontWeight: FontWeight.w600),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00"
+                    ? '0'
+                    : price.toStringAsFixed(
+                    AppConstants.amountFrLength)}${AppLocalizations.of(context)!
+                    .currency}",
+                // onPressed: onButtonTap,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
-    )*/
+    );
   }
 
-  Widget buildCompanyListItem(
-      {required String companyLogo,
-      required String companyName,
-      required void Function() onTap,
-      bool? isHomePreference}) {
+  Widget buildCompanyListItem({required String companyLogo,
+    required String companyName,
+    required void Function() onTap,
+    bool? isHomePreference}) {
     return !(isHomePreference ?? true)
         ? 0.width
         : Container(
-            height: 90,
-            width: 90,
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_5),
-            decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10)
-              ],
-            ),
-            child: InkWell(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              onTap: onTap,
-              child: Stack(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: AppConstants.padding_20),
-                    child: CachedNetworkImage(
-                      imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
-                      fit: BoxFit.scaleDown,
-                      height: 70,
-                      width: 90,
-                      placeholder: (context, url) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 90,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                            ),
-                          ),
-                        );
-                      },
-                      errorWidget: (context, error, stackTrace) {
-                        // debugPrint('product category list image error : $error');
-                        return Container(
-                          child: Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                            width: 90,
-                            height: 90,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+      height: 90,
+      width: 90,
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      decoration: BoxDecoration(
+        borderRadius:
+        BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        color: AppColors.whiteColor,
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withOpacity(0.15),
+              blurRadius: AppConstants.blur_10)
+        ],
+      ),
+      child: InkWell(
+        borderRadius:
+        BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        onTap: onTap,
+        child: Stack(
+          children: [
+            Padding(
+              padding:
+              const EdgeInsets.only(bottom: AppConstants.padding_20),
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
+                fit: BoxFit.scaleDown,
+                height: 70,
+                width: 90,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
                     child: Container(
-                      height: 20,
-                      // width: 90,
-                      alignment: Alignment.center,
-                      // margin:
-                      //     EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: AppConstants.padding_5,
-                          vertical: AppConstants.padding_2),
+                      height: 90,
+                      width: 90,
                       decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius: BorderRadius.only(
-                            bottomRight:
-                                Radius.circular(AppConstants.radius_10),
-                            bottomLeft:
-                                Radius.circular(AppConstants.radius_10)),
-                        // border: Border.all(color: AppColors.whiteColor, width: 1),
-                      ),
-                      child: CommonMarqueeWidget(
-                        direction: Axis.horizontal,
-                        child: Text(
-                          companyName,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.whiteColor),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
+                        color: AppColors.whiteColor,
                       ),
                     ),
-                  )
-                ],
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('product category list image error : $error');
+                  return Container(
+                    child: Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 90,
+                      height: 90,
+                    ),
+                  );
+                },
               ),
             ),
-          );
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 20,
+                // width: 90,
+                alignment: Alignment.center,
+                // margin:
+                //     EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_5,
+                    vertical: AppConstants.padding_2),
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor,
+                  borderRadius: BorderRadius.only(
+                      bottomRight:
+                      Radius.circular(AppConstants.radius_10),
+                      bottomLeft:
+                      Radius.circular(AppConstants.radius_10)),
+                  // border: Border.all(color: AppColors.whiteColor, width: 1),
+                ),
+                child: CommonMarqueeWidget(
+                  direction: Axis.horizontal,
+                  child: Text(
+                    companyName,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.whiteColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildCategoryFilterItem(
@@ -1492,10 +1488,9 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails(
-      {required BuildContext context,
-      required String productId,
-      bool? isBarcode}) async {
+  void showProductDetails({required BuildContext context,
+    required String productId,
+    bool? isBarcode}) async {
     context.read<StoreBloc>().add(StoreEvent.getProductDetailsEvent(
         context: context, productId: productId, isBarcode: isBarcode));
     showModalBottomSheet(
@@ -1512,7 +1507,10 @@ class StoreScreenWidget extends StatelessWidget {
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
+                (MediaQuery
+                    .of(context)
+                    .viewPadding
+                    .top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
@@ -1536,101 +1534,112 @@ class StoreScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                                  context: context,
-                                  productImageIndex: state.imageIndex,
-                                  onPageChanged: (index, p1) {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.updateImageIndexEvent(
-                                            index: index));
-                                  },
-                                  productImages: [
-                                    state.productDetails.first.mainImage ?? '',
-                                    ...state.productDetails.first.images?.map(
-                                            (image) => image.imageUrl ?? '') ??
-                                        []
-                                  ],
-                                  productName: state.productDetails.first.productName ??
-                                      '',
-                                  productCompanyName:
-                                      state.productDetails.first.brandName ??
-                                          '',
-                                  productDescription:
-                                      parse(state.productDetails.first.productDescription ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                  productSaleDescription:
-                                      parse(state.productDetails.first.productDescription ?? '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                  productPrice: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice *
-                                      state
-                                          .productStockList[state.productStockUpdateIndex]
-                                          .quantity,
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.toggleNoteEvent(
-                                            isBarcode: isBarcode ?? false));
-                                  },
-                                  supplierWidget: state.productSupplierList.isEmpty
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: AppColors
-                                                          .borderColor
-                                                          .withOpacity(0.5),
-                                                      width: 1))),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical:
-                                                  AppConstants.padding_30),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.suppliers_not_available}',
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.smallFont,
-                                                color: AppColors.textColor),
-                                          ),
-                                        )
-                                      : buildSupplierSelection(context: context),
-                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
-                                  scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
-                                  onQuantityIncreaseTap: () {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.increaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.decreaseQuantityOfProduct(
-                                            context: context1));
-                                  },
-                                  noteController: state.noteController,
-                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                  onNoteChanged: (newNote) {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.changeNoteOfProduct(
-                                            newNote: newNote));
-                                  },
-                                  isLoading: state.isLoading,
-                                  onAddToOrderPressed: state.isLoading
-                                      ? null
-                                      : () {
-                                          context.read<StoreBloc>().add(
-                                              StoreEvent.addToCartProductEvent(
-                                                  context: context1));
-                                        }),
+                              context: context,
+                              productImageIndex: state.imageIndex,
+                              onPageChanged: (index, p1) {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.updateImageIndexEvent(
+                                        index: index));
+                              },
+                              productImages: [
+                                state.productDetails.first.mainImage ?? '',
+                                ...state.productDetails.first.images?.map(
+                                        (image) => image.imageUrl ?? '') ??
+                                    []
+                              ],
+                              productName: state.productDetails.first
+                                  .productName ??
+                                  '',
+                              productCompanyName:
+                              state.productDetails.first.brandName ??
+                                  '',
+                              productDescription:
+                              parse(state.productDetails.first
+                                  .productDescription ?? '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productSaleDescription:
+                              parse(state.productDetails.first
+                                  .productDescription ?? '')
+                                  .body
+                                  ?.text ??
+                                  '',
+                              productPrice: state
+                                  .productStockList[
+                              state.productStockUpdateIndex]
+                                  .totalPrice *
+                                  state
+                                      .productStockList[state
+                                      .productStockUpdateIndex]
+                                      .quantity,
+                              productScaleType: state.productDetails.first
+                                  .scales?.scaleType ?? '',
+                              productWeight: state.productDetails.first
+                                  .itemsWeight?.toDouble() ?? 0.0,
+                              isNoteOpen: state.productStockList[state
+                                  .productStockUpdateIndex].isNoteOpen,
+                              onNoteToggleChanged: () {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.toggleNoteEvent(
+                                        isBarcode: isBarcode ?? false));
+                              },
+                              supplierWidget: state.productSupplierList.isEmpty
+                                  ? Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        top: BorderSide(
+                                            color: AppColors
+                                                .borderColor
+                                                .withOpacity(0.5),
+                                            width: 1))),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical:
+                                    AppConstants.padding_30),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '${AppLocalizations.of(context)!
+                                      .suppliers_not_available}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.textColor),
+                                ),
+                              )
+                                  : buildSupplierSelection(context: context),
+                              productStock: state.productStockList[state
+                                  .productStockUpdateIndex].stock,
+                              isRTL: context.rtl,
+                              isSupplierAvailable: state.productSupplierList
+                                  .isEmpty ? false : true,
+                              scrollController: scrollController,
+                              productQuantity: state.productStockList[state
+                                  .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {},
+                              onQuantityIncreaseTap: () {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.decreaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              noteController: state.noteController,
+                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                              onNoteChanged: (newNote) {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.changeNoteOfProduct(
+                                        newNote: newNote));
+                              },
+                              isLoading: state.isLoading,
+                              onAddToOrderPressed: state.isLoading
+                                  ? null
+                                  : () {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.addToCartProductEvent(
+                                        context: context1));
+                              }),
                         ),
                       );
                     },
@@ -1663,7 +1672,7 @@ class StoreScreenWidget extends StatelessWidget {
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(bottom: AppConstants.padding_5),
+                      const EdgeInsets.only(bottom: AppConstants.padding_5),
                       child: InkWell(
                         onTap: () {
                           context.read<StoreBloc>().add(StoreEvent
@@ -1689,454 +1698,508 @@ class StoreScreenWidget extends StatelessWidget {
                       ),
                     ),
                     state.productSupplierList
-                            .where((supplier) => supplier.selectedIndex != -1)
-                            .isEmpty
+                        .where((supplier) => supplier.selectedIndex != -1)
+                        .isEmpty
                         ? InkWell(
-                            onTap: () {
-                              context.read<StoreBloc>().add(StoreEvent
-                                  .changeSupplierSelectionExpansionEvent());
-                            },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Container(
-                              height: 60,
-                              width: getScreenWidth(context),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${AppLocalizations.of(context)!.select_supplier}',
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
-                                    color: AppColors.blackColor),
-                              ),
-                            ))
+                        onTap: () {
+                          context.read<StoreBloc>().add(StoreEvent
+                              .changeSupplierSelectionExpansionEvent());
+                        },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Container(
+                          height: 60,
+                          width: getScreenWidth(context),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.select_supplier}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor),
+                          ),
+                        ))
                         : ListView.builder(
-                            itemCount: state.productSupplierList
-                                    .where((supplier) =>
-                                        supplier.selectedIndex != -1)
-                                    .isNotEmpty
-                                ? 1
-                                : 0,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                height: 85,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5,
-                                    horizontal: AppConstants.padding_10),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iconBGColor,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppConstants.radius_5)),
-                                  border: Border.all(
-                                      color: AppColors.borderColor
-                                          .withOpacity(0.8),
-                                      width: 1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.blackColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        width: getScreenWidth(context),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 1),
-                                            color: AppColors.whiteColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    AppConstants.radius_5))),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_3,
-                                            horizontal: AppConstants.padding_5),
-                                        margin: EdgeInsets.only(
-                                          top: AppConstants.padding_5,
-                                        ),
-                                        child: state.productSupplierList
-                                                    .firstWhere(
-                                                      (supplier) =>
-                                                          supplier
-                                                              .selectedIndex ==
-                                                          -2,
-                                                      orElse: () =>
-                                                          ProductSupplierModel(
-                                                              supplierId: '',
-                                                              companyName: ''),
-                                                    )
-                                                    .selectedIndex ==
-                                                -2
-                                            ? Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              )
-                                            : Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    '${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_12,
-                                                            color: AppColors
-                                                                .saleRedColor),
-                                                  ),
-                                                  2.height,
-                                                  Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: AppColors
-                                                                .blackColor),
-                                                  ),
-                                                ],
-                                              ),
+                      itemCount: state.productSupplierList
+                          .where((supplier) =>
+                      supplier.selectedIndex != -1)
+                          .isNotEmpty
+                          ? 1
+                          : 0,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 85,
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5,
+                              horizontal: AppConstants.padding_10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.iconBGColor,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_5)),
+                            border: Border.all(
+                                color: AppColors.borderColor
+                                    .withOpacity(0.8),
+                                width: 1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${state.productSupplierList
+                                    .firstWhere((supplier) =>
+                                supplier.selectedIndex != -1)
+                                    .companyName}',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_14,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  width: getScreenWidth(context),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: AppColors.borderColor
+                                              .withOpacity(0.5),
+                                          width: 1),
+                                      color: AppColors.whiteColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppConstants.radius_5))),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_3,
+                                      horizontal: AppConstants.padding_5),
+                                  margin: EdgeInsets.only(
+                                    top: AppConstants.padding_5,
+                                  ),
+                                  child: state.productSupplierList
+                                      .firstWhere(
+                                        (supplier) =>
+                                    supplier
+                                        .selectedIndex ==
+                                        -2,
+                                    orElse: () =>
+                                        ProductSupplierModel(
+                                            supplierId: '',
+                                            companyName: ''),
+                                  )
+                                      .selectedIndex ==
+                                      -2
+                                      ? Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        'Price : ${state.productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex == -2)
+                                            .basePrice
+                                            .toStringAsFixed(AppConstants
+                                            .amountFrLength)}${AppLocalizations
+                                            .of(context)!.currency}',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_14,
+                                            color: AppColors
+                                                .blackColor),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  )
+                                      : Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        '${state.productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex >= 0)
+                                            .supplierSales[index].saleName}',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_12,
+                                            color: AppColors
+                                                .saleRedColor),
+                                      ),
+                                      2.height,
+                                      Text(
+                                        'Price : ${state.productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex >= 0)
+                                            .supplierSales[index].salePrice
+                                            .toStringAsFixed(AppConstants
+                                            .amountFrLength)}${AppLocalizations
+                                            .of(context)!.currency}(${state
+                                            .productSupplierList
+                                            .firstWhere((supplier) =>
+                                        supplier.selectedIndex >= 0)
+                                            .supplierSales[index].saleDiscount
+                                            .toStringAsFixed(0)}%)',
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .font_14,
+                                            color: AppColors
+                                                .blackColor),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
-                            },
-                          )
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
               secondChild: state.productSupplierList.isEmpty
                   ? Center(
-                      child: Text(
-                        '${AppLocalizations.of(context)!.suppliers_not_available}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            color: AppColors.textColor),
-                      ),
-                    )
+                child: Text(
+                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.textColor),
+                ),
+              )
                   : ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxHeight: getScreenHeight(context) * 0.5,
-                          maxWidth: getScreenWidth(context)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                top: BorderSide(
-                                    color:
-                                        AppColors.borderColor.withOpacity(0.5),
-                                    width: 1))),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_10,
-                            horizontal: AppConstants.padding_30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: AppConstants.padding_5),
-                              child: InkWell(
-                                onTap: () {
-                                  context.read<StoreBloc>().add(StoreEvent
-                                      .changeSupplierSelectionExpansionEvent());
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.suppliers,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.mainColor,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Icon(
-                                      Icons.remove,
-                                      size: 26,
-                                      color: AppColors.blackColor,
-                                    )
-                                  ],
-                                ),
+                constraints: BoxConstraints(
+                    maxHeight: getScreenHeight(context) * 0.5,
+                    maxWidth: getScreenWidth(context)),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color:
+                              AppColors.borderColor.withOpacity(0.5),
+                              width: 1))),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: AppConstants.padding_10,
+                      horizontal: AppConstants.padding_30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: AppConstants.padding_5),
+                        child: InkWell(
+                          onTap: () {
+                            context.read<StoreBloc>().add(StoreEvent
+                                .changeSupplierSelectionExpansionEvent());
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.suppliers,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.mainColor,
+                                    fontWeight: FontWeight.w500),
                               ),
-                            ),
-                            Flexible(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: state.productSupplierList.length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 95,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_10),
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_10),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.iconBGColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                AppConstants.radius_10)),
-                                        boxShadow: [
-                                          state.productSupplierList[index]
-                                                      .selectedIndex !=
-                                                  -1
-                                              ? BoxShadow(
-                                                  color: AppColors.shadowColor
-                                                      .withOpacity(0.15),
-                                                  blurRadius:
-                                                      AppConstants.blur_10)
-                                              : BoxShadow()
-                                        ],
-                                        border: Border.all(
-                                            color: AppColors.lightBorderColor,
-                                            width: 1)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          '${state.productSupplierList[index].companyName}',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.blackColor,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount: state
-                                                    .productSupplierList[index]
-                                                    .supplierSales
-                                                    .length +
-                                                1,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, subIndex) {
-                                              return subIndex ==
-                                                      state
-                                                          .productSupplierList[
-                                                              index]
-                                                          .supplierSales
-                                                          .length
-                                                  ? InkWell(
-                                                      onTap: () {
-                                                        //for base price selection /without sale pass -2
-                                                        context
-                                                            .read<StoreBloc>()
-                                                            .add(StoreEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        -2));
-                                                        context
-                                                            .read<StoreBloc>()
-                                                            .add(StoreEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state
-                                                                            .productSupplierList[
-                                                                                index]
-                                                                            .selectedIndex ==
-                                                                        -2
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : InkWell(
-                                                      onTap: () {
-                                                        context
-                                                            .read<StoreBloc>()
-                                                            .add(StoreEvent
-                                                                .supplierSelectionEvent(
-                                                                    supplierIndex:
-                                                                        index,
-                                                                    context:
-                                                                        context,
-                                                                    supplierSaleIndex:
-                                                                        subIndex));
-                                                        context
-                                                            .read<StoreBloc>()
-                                                            .add(StoreEvent
-                                                                .changeSupplierSelectionExpansionEvent());
-                                                      },
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      highlightColor:
-                                                          Colors.transparent,
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: AppColors
-                                                                .whiteColor,
-                                                            borderRadius: BorderRadius.all(
-                                                                Radius.circular(
-                                                                    AppConstants
-                                                                        .radius_10)),
-                                                            border: Border.all(
-                                                                color: state.productSupplierList[index].selectedIndex ==
-                                                                        subIndex
-                                                                    ? AppColors
-                                                                        .mainColor
-                                                                        .withOpacity(
-                                                                            0.8)
-                                                                    : Colors
-                                                                        .transparent,
-                                                                width: 1.5)),
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                AppConstants
-                                                                    .padding_3,
-                                                            horizontal:
-                                                                AppConstants
-                                                                    .padding_5),
-                                                        margin: EdgeInsets.only(
-                                                            top: AppConstants
-                                                                .padding_5,
-                                                            left: AppConstants
-                                                                .padding_5,
-                                                            right: AppConstants
-                                                                .padding_5),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Text(
-                                                              '${state.productSupplierList[index].supplierSales[subIndex].saleName}',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_12,
-                                                                  color: AppColors
-                                                                      .saleRedColor),
-                                                            ),
-                                                            2.height,
-                                                            Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
-                                                              style: AppStyles.rkRegularTextStyle(
-                                                                  size: AppConstants
-                                                                      .font_14,
-                                                                  color: AppColors
-                                                                      .blackColor),
-                                                            ),
-                                                            2.height,
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  showConditionDialog(
-                                                                      context:
-                                                                          context,
-                                                                      saleCondition:
-                                                                          '${state.productSupplierList[index].supplierSales[subIndex].saleDescription}');
-                                                                },
-                                                                child: Text(
-                                                                  'Read condition',
-                                                                  style: AppStyles.rkRegularTextStyle(
-                                                                      size: AppConstants
-                                                                          .font_10,
-                                                                      color: AppColors
-                                                                          .blueColor),
-                                                                )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
+                              Icon(
+                                Icons.remove,
+                                size: 26,
+                                color: AppColors.blackColor,
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: state.productSupplierList.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 95,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5,
+                                  horizontal: AppConstants.padding_10),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_10),
+                              decoration: BoxDecoration(
+                                  color: AppColors.iconBGColor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          AppConstants.radius_10)),
+                                  boxShadow: [
+                                    state.productSupplierList[index]
+                                        .selectedIndex !=
+                                        -1
+                                        ? BoxShadow(
+                                        color: AppColors.shadowColor
+                                            .withOpacity(0.15),
+                                        blurRadius:
+                                        AppConstants.blur_10)
+                                        : BoxShadow()
+                                  ],
+                                  border: Border.all(
+                                      color: AppColors.lightBorderColor,
+                                      width: 1)),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${state.productSupplierList[index]
+                                        .companyName}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_14,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: state
+                                          .productSupplierList[index]
+                                          .supplierSales
+                                          .length +
+                                          1,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, subIndex) {
+                                        return subIndex ==
+                                            state
+                                                .productSupplierList[
+                                            index]
+                                                .supplierSales
+                                                .length
+                                            ? InkWell(
+                                          onTap: () {
+                                            //for base price selection /without sale pass -2
+                                            context
+                                                .read<StoreBloc>()
+                                                .add(StoreEvent
+                                                .supplierSelectionEvent(
+                                                supplierIndex:
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                -2));
+                                            context
+                                                .read<StoreBloc>()
+                                                .add(StoreEvent
+                                                .changeSupplierSelectionExpansionEvent());
+                                          },
+                                          splashColor:
+                                          Colors.transparent,
+                                          highlightColor:
+                                          Colors.transparent,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                        AppConstants
+                                                            .radius_10)),
+                                                border: Border.all(
+                                                    color: state
+                                                        .productSupplierList[
+                                                    index]
+                                                        .selectedIndex ==
+                                                        -2
+                                                        ? AppColors
+                                                        .mainColor
+                                                        .withOpacity(
+                                                        0.8)
+                                                        : Colors
+                                                        .transparent,
+                                                    width: 1.5)),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical:
+                                                AppConstants
+                                                    .padding_3,
+                                                horizontal:
+                                                AppConstants
+                                                    .padding_5),
+                                            margin: EdgeInsets.only(
+                                                top: AppConstants
+                                                    .padding_5,
+                                                left: AppConstants
+                                                    .padding_5,
+                                                right: AppConstants
+                                                    .padding_5),
+                                            alignment:
+                                            Alignment.center,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Price : ${state
+                                                      .productSupplierList[index]
+                                                      .basePrice
+                                                      .toStringAsFixed(
+                                                      AppConstants
+                                                          .amountFrLength)}${AppLocalizations
+                                                      .of(context)!.currency}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_14,
+                                                      color: AppColors
+                                                          .blackColor),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                            : InkWell(
+                                          onTap: () {
+                                            context
+                                                .read<StoreBloc>()
+                                                .add(StoreEvent
+                                                .supplierSelectionEvent(
+                                                supplierIndex:
+                                                index,
+                                                context:
+                                                context,
+                                                supplierSaleIndex:
+                                                subIndex));
+                                            context
+                                                .read<StoreBloc>()
+                                                .add(StoreEvent
+                                                .changeSupplierSelectionExpansionEvent());
+                                          },
+                                          splashColor:
+                                          Colors.transparent,
+                                          highlightColor:
+                                          Colors.transparent,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(
+                                                        AppConstants
+                                                            .radius_10)),
+                                                border: Border.all(
+                                                    color: state
+                                                        .productSupplierList[index]
+                                                        .selectedIndex ==
+                                                        subIndex
+                                                        ? AppColors
+                                                        .mainColor
+                                                        .withOpacity(
+                                                        0.8)
+                                                        : Colors
+                                                        .transparent,
+                                                    width: 1.5)),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical:
+                                                AppConstants
+                                                    .padding_3,
+                                                horizontal:
+                                                AppConstants
+                                                    .padding_5),
+                                            margin: EdgeInsets.only(
+                                                top: AppConstants
+                                                    .padding_5,
+                                                left: AppConstants
+                                                    .padding_5,
+                                                right: AppConstants
+                                                    .padding_5),
+                                            alignment:
+                                            Alignment.center,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  '${state
+                                                      .productSupplierList[index]
+                                                      .supplierSales[subIndex]
+                                                      .saleName}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_12,
+                                                      color: AppColors
+                                                          .saleRedColor),
+                                                ),
+                                                2.height,
+                                                Text(
+                                                  'Price : ${state
+                                                      .productSupplierList[index]
+                                                      .supplierSales[subIndex]
+                                                      .salePrice
+                                                      .toStringAsFixed(
+                                                      AppConstants
+                                                          .amountFrLength)}${AppLocalizations
+                                                      .of(context)!
+                                                      .currency}(${state
+                                                      .productSupplierList[index]
+                                                      .supplierSales[subIndex]
+                                                      .saleDiscount
+                                                      .toStringAsFixed(0)}%)',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                      size: AppConstants
+                                                          .font_14,
+                                                      color: AppColors
+                                                          .blackColor),
+                                                ),
+                                                2.height,
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      showConditionDialog(
+                                                          context:
+                                                          context,
+                                                          saleCondition:
+                                                          '${state
+                                                              .productSupplierList[index]
+                                                              .supplierSales[subIndex]
+                                                              .saleDescription}');
+                                                    },
+                                                    child: Text(
+                                                      'Read condition',
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .font_10,
+                                                          color: AppColors
+                                                              .blueColor),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
               crossFadeState: state.isSelectSupplier
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,
@@ -2150,11 +2213,12 @@ class StoreScreenWidget extends StatelessWidget {
       {required BuildContext context, required String saleCondition}) {
     showDialog(
         context: context,
-        builder: (context) => CommonSaleDescriptionDialog(
-            title: saleCondition,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            buttonTitle: "OK"));
+        builder: (context) =>
+            CommonSaleDescriptionDialog(
+                title: saleCondition,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                buttonTitle: "OK"));
   }
 }

@@ -70,4 +70,10 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.toggleNoteEvent({required bool isBarcode}) =
       _ToggleNoteEvent;
+
+  const factory StoreCategoryEvent.subCategoryRefreshListEvent(
+      {required BuildContext context}) = _SubCategoryRefreshListEvent;
+
+  const factory StoreCategoryEvent.planogramRefreshListEvent(
+      {required BuildContext context}) = _PlanogramRefreshListEvent;
 }
