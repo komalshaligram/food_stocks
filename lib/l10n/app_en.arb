@@ -288,7 +288,6 @@
                  "recordcreatedsuccessfully":"Record created successfully",
                  "invalidids":"Please provide valid record ids",
                 "importedsuccessfully":"Items imported successfully",
-
                 "cartproductsbadrequest":"Cart product is not Implemented",
                 "cartdoesnotexist":"Cart does not exist",
                 "cartproductdoesnotexist":"Cart product does not exist",

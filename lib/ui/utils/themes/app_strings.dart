@@ -198,6 +198,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.changesuccessful;
       case 'formcreatesuccessful':
         return AppLocalizations.of(context)!.formcreatesuccessful;
+      case 'formupdatesuccessful':
+        return AppLocalizations.of(context)!.formupdatesuccessful;
       case 'formnotfound':
         return AppLocalizations.of(context)!.formnotfound;
       case 'formexistswiththisname':
@@ -274,8 +276,100 @@ class AppStrings {
         return AppLocalizations.of(context)!.ordercreatedsuccessfully;
       case 'orderupdatedsuccessfully':
         return AppLocalizations.of(context)!.orderupdatedsuccessfully;
-
-
+      case 'ordernotfound':
+        return AppLocalizations.of(context)!.ordernotfound;
+      case 'lowquantity':
+        return AppLocalizations.of(context)!.lowquantity;
+      case 'cartcleared':
+        return AppLocalizations.of(context)!.cartcleared;
+      case 'nullpassword':
+        return AppLocalizations.of(context)!.nullpassword;
+      case 'logout':
+        return AppLocalizations.of(context)!.logout;
+      case 'messagecreated':
+        return AppLocalizations.of(context)!.messagecreated;
+      case 'messageupdated':
+        return AppLocalizations.of(context)!.messageupdated;
+      case 'quantityfulfilled':
+        return AppLocalizations.of(context)!.quantityfulfilled;
+      case 'ordersaleexist':
+        return AppLocalizations.of(context)!.ordersaleexist;
+      case 'supplierproductexist':
+        return AppLocalizations.of(context)!.supplierproductexist;
+      case 'questioniddoesnotexist':
+        return AppLocalizations.of(context)!.questioniddoesnotexist;
+      case 'uniquequestionandanswer':
+        return AppLocalizations.of(context)!.uniquequestionandanswer;
+      case 'questioncreatedsuccessfully':
+        return AppLocalizations.of(context)!.questioncreatedsuccessfully;
+      case 'questionrecorddoesnotexist':
+        return AppLocalizations.of(context)!.questionrecorddoesnotexist;
+      case 'questiondeletedsuccessfully':
+        return AppLocalizations.of(context)!.questiondeletedsuccessfully;
+      case 'productalreadyincart':
+        return AppLocalizations.of(context)!.productalreadyincart;
+      case 'productorsuppliernotexits':
+        return AppLocalizations.of(context)!.productorsuppliernotexits;
+      case 'productaddedincart':
+        return AppLocalizations.of(context)!.productaddedincart;
+      case 'orderissuecreatednotificationtitle':
+        return AppLocalizations.of(context)!.orderissuecreatednotificationtitle;
+      case 'filenotfound':
+        return AppLocalizations.of(context)!.filenotfound;
+      case 'youcannotupdateorder':
+        return AppLocalizations.of(context)!.youcannotupdateorder;
+      case 'youcannotcreateissue':
+        return AppLocalizations.of(context)!.youcannotcreateissue;
+      case 'youcannotplaceorder':
+        return AppLocalizations.of(context)!.youcannotplaceorder;
+      case 'youcannotconfirmdelivery':
+        return AppLocalizations.of(context)!.youcannotconfirmdelivery;
+      case 'signaturerequired':
+        return AppLocalizations.of(context)!.signaturerequired;
+      case 'providevalidcsv':
+        return AppLocalizations.of(context)!.providevalidcsv;
+      case 'invalidsupplierid':
+        return AppLocalizations.of(context)!.invalidsupplierid;
+      case 'downlodedsuccessfully':
+        return AppLocalizations.of(context)!.downlodedsuccessfully;
+      case 'admintypealreadyexist':
+        return AppLocalizations.of(context)!.admintypealreadyexist;
+      case 'alredylinkedwithuser':
+        return AppLocalizations.of(context)!.alredylinkedwithuser;
+      case 'youcannotplaceorderqtymustabovezero':
+        return AppLocalizations.of(context)!.youcannotplaceorderqtymustabovezero;
+      case 'youcannotplaceordernotenoughqty':
+        return AppLocalizations.of(context)!.youcannotplaceordernotenoughqty;
+      case 'contentalreadyexist':
+        return AppLocalizations.of(context)!.contentalreadyexist;
+      case 'modulealreadyexist':
+        return AppLocalizations.of(context)!.modulealreadyexist;
+      case 'productorsuppliernotexist':
+        return AppLocalizations.of(context)!.productorsuppliernotexist;
+      case 'issuegenrated':
+        return AppLocalizations.of(context)!.issuegenrated;
+      case 'deliveryconfirmed':
+        return AppLocalizations.of(context)!.deliveryconfirmed;
+      case 'permissionalreadyexist':
+        return AppLocalizations.of(context)!.permissionalreadyexist;
+      case 'planogramalreadyexist':
+        return AppLocalizations.of(context)!.planogramalreadyexist;
+      case 'productalreadyexist':
+        return AppLocalizations.of(context)!.productalreadyexist;
+      case 'duplicateorinvalidsku':
+        return AppLocalizations.of(context)!.duplicateorinvalidsku;
+      case 'alredylinkedwithsale':
+        return AppLocalizations.of(context)!.alredylinkedwithsale;
+      case 'areadyexist':
+        return AppLocalizations.of(context)!.areadyexist;
+      case 'walletareadyexist':
+        return AppLocalizations.of(context)!.walletareadyexist;
+      case 'notenoughbalance':
+        return AppLocalizations.of(context)!.notenoughbalance;
+      case 'invalidamount':
+        return AppLocalizations.of(context)!.invalidamount;
+      case 'deductionisnegative':
+        return AppLocalizations.of(context)!.deductionisnegative;
     }
     return '';
   }
