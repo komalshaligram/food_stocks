@@ -39,4 +39,7 @@ class ProductSaleEvent with _$ProductSaleEvent {
       _SetSearchEvent;
 
   const factory ProductSaleEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory ProductSaleEvent.refreshListEvent(
+      {required BuildContext context}) = _RefreshListEvent;
 }

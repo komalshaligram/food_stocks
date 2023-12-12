@@ -18,6 +18,7 @@ class ProductSaleState with _$ProductSaleState {
     required List<ProductSupplierModel> productSupplierList,
     required int imageIndex,
     required TextEditingController noteController,
+    required RefreshController refreshController,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -36,5 +37,6 @@ class ProductSaleState with _$ProductSaleState {
         productSupplierList: [],
         imageIndex: 0,
         noteController: TextEditingController(),
+        refreshController: RefreshController(),
       );
 }

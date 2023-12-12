@@ -71,11 +71,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: WaterDropHeader(
-                waterDropColor: AppColors.mainColor,
-                refresh: RefreshWidget(),
-                complete: 0.width,
-              ),
+              header: RefreshWidget(),
               footer: CustomFooter(
                 builder: (context, mode) =>
                     SupplierProductsScreenShimmerWidget(),

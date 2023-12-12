@@ -9,14 +9,16 @@ class SupplierState with _$SupplierState {
     required int pageNum,
     required bool isLoadMore,
     required bool isBottomOfSuppliers,
+    required RefreshController refreshController,
   }) = _SupplierState;
 
-  factory SupplierState.initial() => const SupplierState(
-    suppliersList: [],
+  factory SupplierState.initial() => SupplierState(
+        suppliersList: [],
         search: '',
         isShimmering: false,
         pageNum: 0,
         isLoadMore: false,
         isBottomOfSuppliers: false,
+        refreshController: RefreshController(),
       );
 }

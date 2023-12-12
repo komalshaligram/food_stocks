@@ -10,6 +10,7 @@ import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -19,6 +20,7 @@ import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class SupplierProductsRoute {
   static Widget get route => SupplierProductsScreen();
@@ -70,11 +72,31 @@ class SupplierProductsScreenWidget extends StatelessWidget {
               ),
             ),
             body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
+              child:
+                  // NotificationListener<ScrollNotification>(
+                  //   child:
+                  SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: RefreshWidget(),
+                footer: CustomFooter(
+                  builder: (context, mode) =>
+                      SupplierProductsScreenShimmerWidget(),
+                ),
+                enablePullUp: !state.isBottomOfProducts,
+                onRefresh: () {
+                  context.read<SupplierProductsBloc>().add(
+                      SupplierProductsEvent.refreshListEvent(context: context));
+                },
+                onLoading: () {
+                  context.read<SupplierProductsBloc>().add(
+                      SupplierProductsEvent.getSupplierProductsListEvent(
+                          context: context));
+                },
                 child: SingleChildScrollView(
                   physics: state.productList.isEmpty
                       ? const NeverScrollableScrollPhysics()
-                      : const AlwaysScrollableScrollPhysics(),
+                      : null,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,24 +227,25 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                           },
                                           isRTL: context.rtl),
                                 ),
-                      state.isLoadMore
-                          ? SupplierProductsScreenShimmerWidget()
-                          : 0.width,
+                      // state.isLoadMore
+                      //     ? SupplierProductsScreenShimmerWidget()
+                      //     : 0.width,
                     ],
                   ),
                 ),
-                onNotification: (notification) {
-                  if (notification.metrics.pixels ==
-                      notification.metrics.maxScrollExtent) {
-                    if (!state.isLoadMore) {
-                      context.read<SupplierProductsBloc>().add(
-                          SupplierProductsEvent.getSupplierProductsListEvent(
-                              context: context));
-                    }
-                  }
-                  return true;
-                },
               ),
+              //   onNotification: (notification) {
+              //     if (notification.metrics.pixels ==
+              //         notification.metrics.maxScrollExtent) {
+              //       if (!state.isLoadMore) {
+              //         context.read<SupplierProductsBloc>().add(
+              //             SupplierProductsEvent.getSupplierProductsListEvent(
+              //                 context: context));
+              //       }
+              //     }
+              //     return true;
+              //   },
+              // ),
             ),
           );
         },

@@ -65,11 +65,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
               enablePullDown: /*state.isShimmering || state.isLoading ? false : */
                   true,
               controller: state.refreshController,
-              header: WaterDropHeader(
-                waterDropColor: AppColors.mainColor,
-                refresh: RefreshWidget(),
-                complete: 0.width,
-              ),
+              header: RefreshWidget(),
               footer: CustomFooter(
                 builder: (context, mode) =>
                     SupplierProductsScreenShimmerWidget(),

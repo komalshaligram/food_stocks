@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/widget/refresh_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -62,23 +63,7 @@ class ReorderScreenWidget extends StatelessWidget {
               enablePullDown: /*state.isShimmering || state.isLoading ? false : */
                   true,
               controller: state.refreshController,
-              header: WaterDropHeader(
-                waterDropColor: AppColors.mainColor,
-                refresh: Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: AppColors.shadowColor.withOpacity(0.1),
-                        blurRadius: AppConstants.blur_10)
-                  ], color: AppColors.whiteColor, shape: BoxShape.circle),
-                  child: CupertinoActivityIndicator(
-                    color: AppColors.mainColor,
-                    radius: 10,
-                  ),
-                ),
-                complete: 0.width,
-              ),
+              header: RefreshWidget(),
               footer: CustomFooter(
                 builder: (context, mode) =>
                     SupplierProductsScreenShimmerWidget(),
