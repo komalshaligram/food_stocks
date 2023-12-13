@@ -380,7 +380,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                               Text(
                                 AppLocalizations.of(context)!.history,
                                 style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.smallFont,
+                                    size: state.language == AppStrings.emailValString ? AppConstants.font_10 : AppConstants.smallFont,
                                     color: AppColors.blackColor),
                               ),
                               Row(
@@ -433,7 +433,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
                                         AppLocalizations.of(context)!.export,
                                         style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
+                                            size: state.lastMonthExpense == AppStrings.emailValString ?  AppConstants.font_12 : AppConstants.font_14,
                                             color: AppColors.whiteColor),
                                       ),
                                     ),
@@ -451,7 +451,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                         color: AppColors.whiteColor,
                                       ),
                                       child: Container(
-                                        width: getScreenWidth(context) >= 400?getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.55,
+                                        width: getScreenWidth(context) >= 400? getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.55,
                                         height: 30,
                                         child: DateRangeField(
                                           decoration: InputDecoration(
@@ -687,14 +687,14 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 textDirection: TextDirection.ltr,
                 child: Text(
                   state.walletTransactionsList[listIndex].type.toString() ==
-                          'Order'
+                          AppStrings.orderString
                       ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(),local: AppStrings.hebrewLocal)}':'${'-'}${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString()),local: AppStrings.hebrewLocal)}',
                     //  : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
                       color: state.walletTransactionsList[listIndex].type
                                   .toString() ==
-                              'Monthly Credits'
+                          AppStrings.monthlyCreditString
                           ? AppColors.mainColor
                           : AppColors.redColor,
                       fontWeight: FontWeight.w600),

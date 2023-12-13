@@ -23,9 +23,9 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 part 'product_sale_event.dart';
 
 part 'product_sale_state.dart';
@@ -241,8 +241,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -250,7 +249,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: false);
+        state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
@@ -259,15 +258,14 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                            .quantity +
+                        .quantity +
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -275,20 +273,19 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: false);
+        state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                            .quantity -
+                        .quantity -
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -298,7 +295,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<ProductStockModel> productStockList =
-              state.productStockList.toList(growable: false);
+          state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
                   .copyWith(note: /*event.newNote*/ state.noteController.text);
@@ -379,15 +376,15 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     .productStockList[state.productStockUpdateIndex]
                     .productSupplierIds,
                 note: state.productStockList[state.productStockUpdateIndex].note
-                        .isEmpty
+                    .isEmpty
                     ? null
                     : state
-                        .productStockList[state.productStockUpdateIndex].note,
+                    .productStockList[state.productStockUpdateIndex].note,
                 saleId: state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId.isEmpty
+                    .productSaleId.isEmpty
                     ? null
                     : state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId)
+                    .productSaleId)
           ]);
           Map<String, dynamic> req = insertCartReqModel.toJson();
           req.removeWhere((key, value) {
@@ -410,7 +407,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
+                  'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
@@ -437,15 +434,13 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -463,7 +458,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         emit(state.copyWith(search: event.search));
       } else if (event is _ToggleNoteEvent) {
         List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
+        state.productStockList.toList(growable: true);
         productStockList[state.productStockUpdateIndex] =
             productStockList[state.productStockUpdateIndex].copyWith(
                 isNoteOpen: !productStockList[state.productStockUpdateIndex]
