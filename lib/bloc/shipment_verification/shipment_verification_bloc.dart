@@ -87,15 +87,19 @@ class ShipmentVerificationBloc
                     event.context, RouteDefine.bottomNavScreen.name);*/
                emit(state.copyWith(isLoading: true));
                Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.orderScreen.name, (Route route) => route.settings.name == RouteDefine.menuScreen.name);
+
+
                 showSnackBar(
                     context: event.context,
-                    title: response['message'],
+                    title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
                     bgColor: AppColors.mainColor);
               } else {
+
+
                emit(state.copyWith(isLoading: true));
                 showSnackBar(
                     context: event.context,
-                    title: response['message'],
+                    title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
                     bgColor: AppColors.mainColor);
               }
             } on ServerException { emit(state.copyWith(isLoading: true));}

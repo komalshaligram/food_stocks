@@ -14,6 +14,7 @@ import '../utils/themes/app_img_path.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/dashboard_stats_widget.dart';
 
+
 class OrderSuccessfulRoute {
   static Widget get route => const OrderSuccessfulScreen();
 }
@@ -54,6 +55,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
     _controller.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

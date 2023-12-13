@@ -24,6 +24,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'company_products_event.dart';
@@ -96,8 +97,7 @@ class CompanyProductsBloc
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -203,10 +203,51 @@ class CompanyProductsBloc
                     text: state.productStockList[productStockUpdateIndex].note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
+            if (supplierList.isNotEmpty) {
+              bool isSupplierSelected = false;
+              supplierList.forEach((supplier) {
+                if (supplier.selectedIndex != -1) {
+                  isSupplierSelected = true;
+                  return;
+                }
+              });
+              debugPrint('isSupplierSelected = $isSupplierSelected');
+              if (!isSupplierSelected) {
+                int supplierIndex = 0;
+                int supplierSaleIndex = -1;
+                double cheapestPrice = supplierList.first.basePrice;
+                supplierList.forEach(
+                    (supplier) => supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
+                debugPrint('cheapest = $cheapestPrice');
+                supplierList.forEach((supplier) {
+                  if (supplier.basePrice < cheapestPrice) {
+                    cheapestPrice = supplier.basePrice;
+                    supplierIndex = supplierList.indexOf(supplier);
+                  }
+                });
+                if (supplierSaleIndex == -1) {
+                  supplierSaleIndex = -2;
+                }
+                debugPrint('cheapest = $cheapestPrice');
+                debugPrint('supplier index = $supplierIndex');
+                debugPrint('supplier sale index = $supplierSaleIndex');
+                add(CompanyProductsEvent.supplierSelectionEvent(
+                    supplierIndex: supplierIndex,
+                    context: event.context,
+                    supplierSaleIndex: supplierSaleIndex));
+              }
+            }
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -283,19 +324,19 @@ class CompanyProductsBloc
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
-                  supplierList[event.supplierIndex].supplierId,
+                      supplierList[event.supplierIndex].supplierId,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .salePrice,
+                          .supplierSales[event.supplierSaleIndex]
+                          .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
-                  quantity: 0,
+                  quantity: 1,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .saleId);
+                          .supplierSales[event.supplierSaleIndex]
+                          .saleId);
           debugPrint(
               'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
           supplierList = supplierList
@@ -391,21 +432,20 @@ class CompanyProductsBloc
                 isLoading: false /*, productStockList: productStockList*/));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title:  AppStrings.getLocalizedStrings(response.message!.toLocalization(), event.context),
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context) ,
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

@@ -39,6 +39,8 @@ import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart'
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../ui/utils/themes/app_strings.dart';
+
 part 'store_event.dart';
 
 part 'store_state.dart';
@@ -88,8 +90,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -202,8 +203,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -229,8 +229,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -349,11 +348,51 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
+            if (supplierList.isNotEmpty) {
+              bool isSupplierSelected = false;
+              supplierList.forEach((supplier) {
+                if (supplier.selectedIndex != -1) {
+                  isSupplierSelected = true;
+                  return;
+                }
+              });
+              debugPrint('isSupplierSelected = $isSupplierSelected');
+              if (!isSupplierSelected) {
+                int supplierIndex = 0;
+                int supplierSaleIndex = -1;
+                double cheapestPrice = supplierList.first.basePrice;
+                supplierList.forEach(
+                    (supplier) => supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
+                debugPrint('cheapest = $cheapestPrice');
+                supplierList.forEach((supplier) {
+                  if (supplier.basePrice < cheapestPrice) {
+                    cheapestPrice = supplier.basePrice;
+                    supplierIndex = supplierList.indexOf(supplier);
+                  }
+                });
+                if (supplierSaleIndex == -1) {
+                  supplierSaleIndex = -2;
+                }
+                debugPrint('cheapest = $cheapestPrice');
+                debugPrint('supplier index = $supplierIndex');
+                debugPrint('supplier sale index = $supplierSaleIndex');
+                add(StoreEvent.supplierSelectionEvent(
+                    supplierIndex: supplierIndex,
+                    context: event.context,
+                    supplierSaleIndex: supplierSaleIndex));
+              }
+            }
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           }
@@ -507,8 +546,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+               /* title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
+                title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
+
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
             // } else {
@@ -522,15 +563,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -556,7 +595,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   productSupplierIds:
                       supplierList[event.supplierIndex].supplierId,
                   stock: supplierList[event.supplierIndex].stock,
-                  quantity: 0,
+                  quantity: 1,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]

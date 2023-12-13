@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -71,7 +72,26 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: RefreshWidget(),
+              header: /*BezierHeader(
+                  bezierColor: AppColors.shadowColor.withOpacity(0.15),
+                  dismissType: BezierDismissType.ScaleToCenter,
+                  child: Center(
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                            color: AppColors.shadowColor.withOpacity(0.1),
+                            blurRadius: AppConstants.blur_10)
+                      ], color: AppColors.whiteColor, shape: BoxShape.circle),
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.mainColor,
+                        radius: 10,
+                      ),
+                    ),
+                  ),
+                )*/
+                  RefreshWidget(),
               footer: CustomFooter(
                 builder: (context, mode) =>
                     SupplierProductsScreenShimmerWidget(),
@@ -118,31 +138,54 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 9 / 12),
-                                itemBuilder: (context, index) =>
-                                    buildCompanyProducts(
-                                        context: context,
-                                        index: index,
-                                        productImage: state
-                                                .productList[index].mainImage ??
-                                            '',
-                                        productName: state.productList[index]
-                                                .productName ??
-                                            '',
-                                        productPrice: state.productList[index]
-                                                .productPrice ??
-                                            0.0,
-                                        totalSale: state
-                                                .productList[index].totalSale ??
-                                            0,
-                                        onPressed: () {
-                                          showProductDetails(
-                                              context: context,
-                                              productId:
-                                                  state.productList[index].id ??
-                                                      '');
-                                        },
-                                        isRTL: context.rtl),
-                              ),
+                                itemBuilder: (context, index) => DelayedWidget(
+                                      child: CommonProductItemWidget(
+                                          productImage: state.productList[index]
+                                                  .mainImage ??
+                                              '',
+                                          productName: state.productList[index]
+                                                  .productName ??
+                                              '',
+                                          totalSaleCount: state
+                                                  .productList[index]
+                                                  .totalSale ??
+                                              0,
+                                          price: state.productList[index]
+                                                  .productPrice ??
+                                              0.0,
+                                          onButtonTap: () {
+                                            showProductDetails(
+                                                context: context,
+                                                productId: state
+                                                        .productList[index]
+                                                        .id ??
+                                                    '');
+                                          }),
+                                    )
+                                // buildCompanyProducts(
+                                // context: context,
+                                // index: index,
+                                // productImage: state
+                                //     .productList[index].mainImage ??
+                                //     '',
+                                // productName: state.productList[index]
+                                //     .productName ??
+                                //     '',
+                                // productPrice: state.productList[index]
+                                //     .productPrice ??
+                                //     0.0,
+                                // totalSale: state
+                                //     .productList[index].totalSale ??
+                                //     0,
+                                // onPressed: () {
+                                //   showProductDetails(
+                                //       context: context,
+                                //       productId:
+                                //       state.productList[index].id ??
+                                //           '');
+                                // },
+                                // isRTL: context.rtl),
+                                ),
                     // state.isLoadMore
                     //     ? SupplierProductsScreenShimmerWidget()
                     //     : 0.width,
@@ -299,7 +342,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-        //    shouldCloseOnMinExtent: true,
+            //    shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
@@ -830,7 +873,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                                 CompanyProductsBloc>()
                                                             .add(CompanyProductsEvent
                                                                 .supplierSelectionEvent(
-                                                            supplierIndex:
+                                                                    supplierIndex:
                                                                         index,
                                                                     context:
                                                                         context,

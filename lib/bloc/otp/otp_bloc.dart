@@ -12,6 +12,8 @@ import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../ui/utils/themes/app_strings.dart';
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -79,9 +81,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   logoUrl: response.data?.user?.logo ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
               preferencesHelper.setWalletId(UserWalletId: response.data?.wallet ?? '');
+
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? '${AppLocalizations.of(event.context)!.login_successful}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'loginsuccessmessage' ,event.context) ,
                   bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
                       (route) => route.name == RouteDefine.connectScreen.name);
@@ -92,7 +95,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context) ,
                   bgColor: AppColors.redColor);
             }
           } catch (e) {

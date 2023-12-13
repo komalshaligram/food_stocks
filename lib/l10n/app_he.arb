@@ -327,7 +327,7 @@
                       "signaturerequired":"Signature is required",
                       "providevalidcsv":"Please Provide CSV",
                           "invalidsupplierid":"Invalid Supplier ID",
-                          "downlodedsuccessfully":"Download successfully",
+                          "downlodedsuccessfully":"הורד בהצלחה",
                           "admintypealreadyexist":"Admin Type already exists",
                           "alredylinkedwithuser":"You cannot delete this AdminType as it is associated with a user",
                          "youcannotplaceorderqtymustabovezero":"Cant place order for product . Quantity must be above 0",

@@ -143,10 +143,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             debugPrint('business types not found.\n${response.message}');
           }
         } on ServerException {
-          showSnackBar(
-              context: event.context,
-              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.mainColor);
         } catch (e) {}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
@@ -178,7 +174,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (state.isUpdate) {
           emit(state.copyWith(isUpdating: true));
           try {
-            debugPrint('mobile = ${preferences.getUserId()}');
+            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
@@ -189,6 +185,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                         'Bearer ${preferences.getAuthToken()}',
                   },
                 ));
+            debugPrint('res = ${res}');
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
@@ -227,15 +224,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
-            // showSnackBar(
-            //     context: event.context,
-            //     title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-            //     bgColor: AppColors.redColor);
+
           } catch (e) {
             emit(state.copyWith(isUpdating: false));
           }
@@ -260,8 +254,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               imgUrl = response.data!.client!.profileImage.toString();
             } else {
               showSnackBar(
-                  context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
               return;
             }
@@ -330,7 +323,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.please_enter_valid_email}',
+                title:
+                    '${AppLocalizations.of(event.context)!.updated_successfully}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else {

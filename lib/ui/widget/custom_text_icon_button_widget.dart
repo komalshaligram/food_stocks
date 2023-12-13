@@ -67,24 +67,29 @@ class CustomTextIconButtonWidget extends StatelessWidget {
             10.width,
             cartCount == null
                 ? 0.height
-                : cartCount == 0
-                ? 0.width
-                : Container(
-              height: 16,
-              width: 24,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_100)),
-              ),
-              child: Text(
-                '${cartCount == 0 ? '' : cartCount}',
-                style: AppStyles.rkRegularTextStyle(
-                    fontWeight: FontWeight.w100,
-                    size: AppConstants.padding_10, color: AppColors.mainColor),
-              ),
-            ),
+                : AnimatedCrossFade(
+                    firstChild: 16.height,
+                    secondChild: Container(
+                      height: 16,
+                      width: 24,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppConstants.radius_100)),
+                      ),
+                      child: Text(
+                        '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
+                        style: AppStyles.rkRegularTextStyle(
+                            fontWeight: FontWeight.w100,
+                            size: AppConstants.padding_10,
+                            color: AppColors.mainColor),
+                      ),
+                    ),
+                    crossFadeState: cartCount == 0
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    duration: Duration(milliseconds: 500)),
           ],
         ),
       ),

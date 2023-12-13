@@ -126,7 +126,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             } else {
               showSnackBar(
                   context: event.context,
-                  title: response.message ??'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
@@ -482,7 +482,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 } else {
                   showSnackBar(
                       context: event.context,
-                      title: response1['message'],
+                      title: AppStrings.getLocalizedStrings(response1.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                       bgColor: AppColors.redColor);
                 }
               } on ServerException {}
@@ -553,7 +553,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               } else {
                 showSnackBar(
                     context: event.context,
-                    title: res.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    title: AppStrings.getLocalizedStrings(res1.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                     bgColor: AppColors.redColor);
               }
             } on ServerException {

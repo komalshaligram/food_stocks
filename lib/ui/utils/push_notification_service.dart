@@ -86,7 +86,7 @@ class PushNotificationService {
       final AndroidNotification? android = message.notification?.android;
       final iosNotification = message.notification?.apple;
 
-      // If `onMessage` is triggered with a notification, construct our own
+// If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
       if(notification != null ){
         final http.Response response;
@@ -130,10 +130,8 @@ class PushNotificationService {
     });
   }
 
-
   @pragma('vm:entry-point')
   Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
     debugPrint("Handling a background message: ${message.messageId}");
     debugPrint("Handling a background message: ${message.data.toString()}");
   }

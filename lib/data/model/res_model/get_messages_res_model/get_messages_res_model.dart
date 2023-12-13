@@ -64,6 +64,8 @@ class Message with _$Message {
     String? subPageClient,
     @JsonKey(name: "title")
     String? title,
+    @JsonKey(name: "messageImage")
+    String? messageImage,
     @JsonKey(name: "summary")
     String? summary,
     @JsonKey(name: "body")

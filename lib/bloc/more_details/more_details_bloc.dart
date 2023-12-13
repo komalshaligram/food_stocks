@@ -224,7 +224,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
@@ -307,8 +307,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: profileResModel.message ??
-                      '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(profileResModel.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
@@ -367,7 +366,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
@@ -435,7 +434,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context) ,
                 bgColor: AppColors.redColor);
           }
         } catch (e) {
