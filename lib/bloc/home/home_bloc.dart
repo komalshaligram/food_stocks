@@ -96,7 +96,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } on ServerException {
-        } catch (e) {}
+        }
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isProductSaleShimmering: true));
@@ -236,6 +236,47 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     text: state.productStockList[productStockUpdateIndex].note),
                 productSupplierList: supplierList,
                 isProductLoading: false));
+            if (supplierList.isNotEmpty) {
+              bool isSupplierSelected = false;
+              supplierList.forEach((supplier) {
+                if (supplier.selectedIndex != -1) {
+                  isSupplierSelected = true;
+                  return;
+                }
+              });
+              debugPrint('isSupplierSelected = $isSupplierSelected');
+              if (!isSupplierSelected) {
+                int supplierIndex = 0;
+                int supplierSaleIndex = -1;
+                double cheapestPrice = supplierList.first.basePrice;
+                supplierList.forEach(
+                    (supplier) => supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
+                debugPrint('cheapest = $cheapestPrice');
+                supplierList.forEach((supplier) {
+                  if (supplier.basePrice < cheapestPrice) {
+                    cheapestPrice = supplier.basePrice;
+                    supplierIndex = supplierList.indexOf(supplier);
+                  }
+                });
+                if (supplierSaleIndex == -1) {
+                  supplierSaleIndex = -2;
+                }
+                debugPrint('cheapest = $cheapestPrice');
+                debugPrint('supplier index = $supplierIndex');
+                debugPrint('supplier sale index = $supplierSaleIndex');
+                add(HomeEvent.supplierSelectionEvent(
+                    supplierIndex: supplierIndex,
+                    context: event.context,
+                    supplierSaleIndex: supplierSaleIndex));
+              }
+            }
           } else {
             showSnackBar(
                 context: event.context,
@@ -358,7 +399,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           .supplierSales[event.supplierSaleIndex]
                           .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
-                  quantity: 0,
+                  quantity: 1,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : /*supplierList[event.supplierIndex].selectedIndex ==

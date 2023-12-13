@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:flutter/material.dart';
+
 
 class AppStrings {
   static const appName = 'Food Stock';
@@ -19,6 +21,7 @@ class AppStrings {
   static const deliverString = 'deliver';
   static const statusString = 'status';
   static const updateString = 'Updating';
+
 
   //language Strings
   static const englishString = 'en';
@@ -89,12 +92,11 @@ class AppStrings {
   //toast strings
   //static const registerSuccessString = 'Registered Successfully!';
   static const otpResendSuccessString = 'OTP resend Successfully!';
-
 //  static const loginSuccessString = 'Logged in Successfully!';
   //static const updateSuccessString = 'Updated Successfully!';
-  // static const addCartSuccessString = 'Product added to Cart';
+ // static const addCartSuccessString = 'Product added to Cart';
 //  static const removeSuccessString = 'Removed Successfully!';
-  // static const logOutSuccessString = 'Logged out Successfully!';
+ // static const logOutSuccessString = 'Logged out Successfully!';
 //  static const somethingWrongString = 'Something is wrong, try again!';
 //  static const minQuantityMsgString = 'Add at least 1 quantity';
 //  static const selectSupplierMsgString = 'Please select supplier';
@@ -107,22 +109,22 @@ class AppStrings {
       'Please select only jpg, jpeg, png, heic, pdf and document files';
 
   //static const downloadString = 'Downloaded successfully!';
-  // static const downloadFailedString = 'Failed to download';
-  // static const storageAllowPermissionString = 'Please allow storage permission from settings';
-  // static const cameraAllowPermissionString = 'Please allow camera permission from settings';
-  // static const uploadDocumentFirstString = 'Please upload document first';
+ // static const downloadFailedString = 'Failed to download';
+ // static const storageAllowPermissionString = 'Please allow storage permission from settings';
+ // static const cameraAllowPermissionString = 'Please allow camera permission from settings';
+ // static const uploadDocumentFirstString = 'Please upload document first';
   //static const openingTimeAfterPreviousClosingString = 'Please select opening time after previous closing time';
-  // static const openingTimeAfterClosingString = 'Please select opening time before closing time';
+ // static const openingTimeAfterClosingString = 'Please select opening time before closing time';
   //static const closingTimeAfterOpeningString = 'Please select closing time after opening time';
-  // static const selectOpeningString = 'Please select opening Time';
+ // static const selectOpeningString = 'Please select opening Time';
 //  static const selectPreviousShiftString = 'Please select previous shift time';
 //  static const selectFirstShiftString = 'Please select first shift time';
   //static const selectShiftTimeString = 'Please select shift time';
 //  static const enterOtpString = 'Please enter otp';
 //  static const selectTimeMoreThen0String = 'Please select time grater then 00:00';
-  // static const fillUpClosingTimeString = 'Please fill up closing time';
-  // static const noInternetConnection = 'No Internet Connection';
-  // static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
+ // static const fillUpClosingTimeString = 'Please fill up closing time';
+ // static const noInternetConnection = 'No Internet Connection';
+ // static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
   //static const clearCartPopUpString = 'Are you sure you want to clear cart?';
   //static const deleteProductPopUpString = 'Are you sure you want to delete product?';
   static const selectNextDayShiftString = 'please select next day shift';
@@ -150,8 +152,8 @@ class AppStrings {
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
 
-  static String getLocalizedStrings(String key, BuildContext context) {
-    switch (key) {
+  static String getLocalizedStrings(String key,BuildContext context){
+    switch(key){
       case 'errmessage':
         return AppLocalizations.of(context)!.errmessage;
       case 'successmessage':
@@ -340,8 +342,7 @@ class AppStrings {
       case 'alredylinkedwithuser':
         return AppLocalizations.of(context)!.alredylinkedwithuser;
       case 'youcannotplaceorderqtymustabovezero':
-        return AppLocalizations.of(context)!
-            .youcannotplaceorderqtymustabovezero;
+        return AppLocalizations.of(context)!.youcannotplaceorderqtymustabovezero;
       case 'youcannotplaceordernotenoughqty':
         return AppLocalizations.of(context)!.youcannotplaceordernotenoughqty;
       case 'contentalreadyexist':
@@ -380,4 +381,3 @@ class AppStrings {
     return '';
   }
 }
-

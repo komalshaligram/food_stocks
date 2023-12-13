@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/model/req_model/get_messages_req_model/get_messages_req_model.dart';
 import 'package:food_stock/data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
@@ -100,6 +101,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(
+            pageNum: 0, messageList: [], isBottomOfMessage: false));
+        add(MessageEvent.getMessageListEvent(context: event.context));
       } else if (event is _RemoveOrUpdateMessageEvent) {
         List<MessageData> messageList =
             state.messageList.toList(growable: true);
@@ -111,13 +118,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList
-                      .firstWhere((message) => message.id == event.messageId))]
-                  .isRead ==
+              .firstWhere((message) => message.id == event.messageId))]
+              .isRead ==
               false) {
             await preferencesHelper.setMessageCount(
                 count: preferencesHelper.getMessageCount() - 1);
             messageList[messageList.indexOf(messageList
-                    .firstWhere((message) => message.id == event.messageId))] =
+                .firstWhere((message) => message.id == event.messageId))] =
                 messageList[messageList.indexOf(messageList.firstWhere(
                         (message) => message.id == event.messageId))]
                     .copyWith(isRead: true);
@@ -125,13 +132,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         }
         if (event.isDelete) {
           String deletedMessageId = messageList
-                  .firstWhere((message) => message.id == event.messageId)
-                  .id ??
+              .firstWhere((message) => message.id == event.messageId)
+              .id ??
               '';
           messageList.removeWhere((message) => message.id == event.messageId);
           if (deletedMessageId != '') {
             List<String> deletedMessageList =
-                state.deletedMessageList.toList(growable: true);
+            state.deletedMessageList.toList(growable: true);
             deletedMessageList.add(deletedMessageId);
             debugPrint('message delete list = ${deletedMessageList}');
             emit(state.copyWith(deletedMessageList: deletedMessageList));

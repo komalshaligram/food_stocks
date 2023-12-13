@@ -5,7 +5,9 @@ import 'package:food_stock/bloc/order/order_bloc.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/common_order_content_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -14,6 +16,7 @@ import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class OrderRoute {
   static Widget get route => const OrderScreen();
@@ -65,58 +68,87 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               ),
             ),
             body: SafeArea(
-              child: NotificationListener<ScrollNotification>(
-                child: Column(
-                  children: [
-                    state.isShimmering
-                        ? OrderSummaryScreenShimmerWidget()
-                        : (state.orderDetailsList.length) != 0
-                            ? Expanded(
-                      /*height: getScreenHeight(context) * 0.85,*/
-                                child: ListView.builder(
+              child:
+                  // NotificationListener<ScrollNotification>(
+                  //   child:
+                  SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: RefreshWidget(),
+                footer: CustomFooter(
+                    builder: (context, mode) => OrderSummaryScreenShimmerWidget(
+                          itemCount: 2,
+                        )),
+                enablePullUp: !state.isBottomOfProducts,
+                onRefresh: () {
+                  context
+                      .read<OrderBloc>()
+                      .add(OrderEvent.refreshListEvent(context: context));
+                },
+                onLoading: () {
+                  context
+                      .read<OrderBloc>()
+                      .add(OrderEvent.getAllOrderEvent(context: context));
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      state.isShimmering
+                          ? OrderSummaryScreenShimmerWidget(
+                              itemCount: 10,
+                            )
+                          : (state.orderDetailsList.length) != 0
+                              ?
+                              // Expanded(
+                              /*height: getScreenHeight(context) * 0.85,*/
+                              // child:
+                              ListView.builder(
                                   //scrollDirection: Axis.vertical,
                                   itemCount: state.orderDetailsList.length,
                                   shrinkWrap: true,
-                                  physics: (state.orderDetailsList.length) == 0
-                                      ? const NeverScrollableScrollPhysics()
-                                      : const AlwaysScrollableScrollPhysics(),
-                                //  physics: NeverScrollableScrollPhysics(),
+                                  // physics: (state.orderDetailsList.length) == 0
+                                  //     ? const NeverScrollableScrollPhysics()
+                                  //     : const AlwaysScrollableScrollPhysics(),
+                                  physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
                                       orderListItem(
                                           index: index, context: context),
+                                  // ),
+                                )
+                              : SizedBox(
+                                  height: getScreenHeight(context) * 0.8,
+                                  child: Center(
+                                      child: Text(
+                                    AppLocalizations.of(context)!.no_data,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w400),
+                                  )),
                                 ),
-                              )
-                            : SizedBox(
-                      height: getScreenHeight(context) * 0.8,
-                                child: Center(
-                                    child: Text(
-                                      AppLocalizations.of(context)!.no_data,
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.normalFont,
-                                      color: AppColors.blackColor,
-                                      fontWeight: FontWeight.w400),
-                                )),
-                              ),
-                    state.isLoadMore
-                        ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
-                        : 0.width,
-                  ],
+                      // state.isLoadMore
+                      //     ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
+                      //     : 0.width,
+                    ],
+                  ),
                 ),
-                onNotification: (notification) {
-                  if (notification.metrics.pixels ==
-                      notification.metrics.maxScrollExtent) {
-                    if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
-                        state.orderDetailsList.length) {
-                      context
-                          .read<OrderBloc>()
-                          .add(OrderEvent.getAllOrderEvent(context: context));
-                    } else {
-                      return false;
-                    }
-                  }
-                  return true;
-                },
               ),
+              //   onNotification: (notification) {
+              //     if (notification.metrics.pixels ==
+              //         notification.metrics.maxScrollExtent) {
+              //       if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
+              //           state.orderDetailsList.length) {
+              //         context
+              //             .read<OrderBloc>()
+              //             .add(OrderEvent.getAllOrderEvent(context: context));
+              //       } else {
+              //         return false;
+              //       }
+              //     }
+              //     return true;
+              //   },
+              // ),
             ),
           );
         },
@@ -127,188 +159,202 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
   Widget orderListItem({required int index, required BuildContext context}) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        return GestureDetector(
+        return DelayedWidget(
+          child: GestureDetector(
             onTap: () {
-              if((state.orderDetailsList[index].suppliers ?? 0)  > 1){
+              if ((state.orderDetailsList[index].suppliers ?? 0) > 1) {
                 Navigator.pushNamed(
                     context, RouteDefine.orderDetailsScreen.name,
                     arguments: {
                       AppStrings.orderIdString:
-                      state.orderDetailsList[index].id,
+                          state.orderDetailsList[index].id,
                       AppStrings.orderNumberString:
-                      state.orderDetailsList[index].orderNumber,
+                          state.orderDetailsList[index].orderNumber,
                     });
-              }
-              else{
-                Navigator.push(context,   PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber:  state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
-
-                  ),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.bounceIn;
-                    var tween = Tween(begin: begin, end: end,).chain(CurveTween(curve: curve));
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-                ));
-   /*             Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      return ScaleTransition(
-                        alignment: Alignment.center,
-                        scale: Tween<double>(begin: 0.6, end: 1).animate(
-                          CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.bounceIn,
-                          ),
-                        ),
-                        child: child,
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 800),
-                    pageBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation) {
-                      return ProductDetailsScreen(orderNumber: state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
-
-                      );
-                    },
-                  ),
-                );*/
-
-          /*      Navigator.pushNamed(
-                    context, RouteDefine.productDetailsScreen.name,
-                    arguments: {
-                      AppStrings.orderIdString: state.orderDetailsList[index].id,
-                      AppStrings.orderNumberString: state.orderDetailsList[index].orderNumber,
-                      AppStrings.isNavigateToProductDetailString: true,
-                    });*/
-              }
-
-          },
-          child: Container(
-            margin: EdgeInsets.all(AppConstants.padding_10),
-            padding: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_15,
-                horizontal: AppConstants.padding_10),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
-              ],
-              borderRadius:
-                  BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      state.orderDetailsList[index].orderNumber.toString(),
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.normalFont,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_100)),
-                        border: Border.all(
-                          color: AppColors.borderColor,
-                          width: 1,
-                        ),
+              } else {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          ProductDetailsScreen(
+                        orderNumber:
+                            state.orderDetailsList[index].orderNumber ?? '',
+                        orderId: state.orderDetailsList[index].id ?? '',
+                        isNavigateToProductDetailString: true,
                       ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_10,
-                            vertical: AppConstants.padding_5),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        const curve = Curves.bounceIn;
+                        var tween = Tween(
+                          begin: begin,
+                          end: end,
+                        ).chain(CurveTween(curve: curve));
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                    ));
+                /*             Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return ScaleTransition(
+                          alignment: Alignment.center,
+                          scale: Tween<double>(begin: 0.6, end: 1).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.bounceIn,
+                            ),
+                          ),
+                          child: child,
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 800),
+                      pageBuilder: (BuildContext context,
+                          Animation<double> animation,
+                          Animation<double> secondaryAnimation) {
+                        return ProductDetailsScreen(orderNumber: state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
+
+                        );
+                      },
+                    ),
+                  );*/
+
+                /*      Navigator.pushNamed(
+                      context, RouteDefine.productDetailsScreen.name,
+                      arguments: {
+                        AppStrings.orderIdString: state.orderDetailsList[index].id,
+                        AppStrings.orderNumberString: state.orderDetailsList[index].orderNumber,
+                        AppStrings.isNavigateToProductDetailString: true,
+                      });*/
+              }
+            },
+            child: Container(
+              margin: EdgeInsets.all(AppConstants.padding_10),
+              padding: EdgeInsets.symmetric(
+                  vertical: AppConstants.padding_15,
+                  horizontal: AppConstants.padding_10),
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                boxShadow: [
+                  BoxShadow(
+                      color: AppColors.shadowColor.withOpacity(0.15),
+                      blurRadius: AppConstants.blur_10),
+                ],
+                borderRadius:
+                    BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        state.orderDetailsList[index].orderNumber.toString(),
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.normalFont,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Container(
                         decoration: BoxDecoration(
-                          color: AppColors.lightGreyColor,
                           borderRadius: BorderRadius.all(
                               Radius.circular(AppConstants.radius_100)),
                           border: Border.all(
-                            color: AppColors.whiteColor,
+                            color: AppColors.borderColor,
                             width: 1,
                           ),
                         ),
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Text(
-        /*                    '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',*/
-                            '${(formatNumber(value:state.orderDetailsList[index].totalAmount.toString(),local: AppStrings.hebrewLocal))}',
-
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.whiteColor,
-                                fontWeight: FontWeight.bold),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_10,
+                              vertical: AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.lightGreyColor,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppConstants.radius_100)),
+                            border: Border.all(
+                              color: AppColors.whiteColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Text(
+                              /*                    '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',*/
+                              '${(formatNumber(value: state.orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.font_14,
+                                  color: AppColors.whiteColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
+                      )
+                    ],
+                  ),
+                  7.height,
+                  Row(
+                    children: [
+                      CommonOrderContentWidget(
+                        flexValue: 2,
+                        title: AppLocalizations.of(context)!.products,
+                        value:
+                            state.orderDetailsList[index].products.toString(),
+                        titleColor: AppColors.blackColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextSize: AppConstants.smallFont,
                       ),
-                    )
-                  ],
-                ),
-                7.height,
-                Row(
-                  children: [
-                    CommonOrderContentWidget(
-                      flexValue: 2,
-                      title: AppLocalizations.of(context)!.products,
-                      value: state.orderDetailsList[index].products.toString(),
-                      titleColor: AppColors.blackColor,
-                      valueColor: AppColors.blackColor,
-                      valueTextSize: AppConstants.smallFont,
-                    ),
-                    5.width,
-                    CommonOrderContentWidget(
-                      flexValue: 2,
-                      title: AppLocalizations.of(context)!.suppliers,
-                      value: state.orderDetailsList[index].suppliers.toString(),
-                      titleColor: AppColors.blackColor,
-                      valueColor: AppColors.blackColor,
-                      valueTextSize: AppConstants.smallFont,
-                    ),
-                    5.width,
-
-
-                    CommonOrderContentWidget(
-                      flexValue: 4,
-                      title: AppLocalizations.of(context)!.order_date,
-                      value: state.orderDetailsList[index].createdAt
-                              ?.replaceRange(11, 16, '') ??
-                          '',
-                      titleColor: AppColors.blackColor,
-                      valueColor: AppColors.blackColor,
-                      valueTextSize: getScreenWidth(context) < 380 ? AppConstants.font_14 : AppConstants.smallFont,
-                    ),
-                    5.width,
-                    CommonOrderContentWidget(
-                      flexValue: 4,
-                      title: AppLocalizations.of(context)!.order_status,
-                      value: state.orderDetailsList[index].status?.statusName
-                              ?.toTitleCase() ??
-                          '',
-                      titleColor: AppColors.blackColor,
-                      valueColor:
-                          state.orderDetailsList[index].status?.statusName?.toTitleCase() ==
-                                  AppLocalizations.of(context)!.pending_delivery.toTitleCase()
-                              ? AppColors.orangeColor
-                              : AppColors.mainColor,
-                      valueTextSize: AppConstants.smallFont,
-                    ),
-                  ],
-                ),
-              ],
+                      5.width,
+                      CommonOrderContentWidget(
+                        flexValue: 2,
+                        title: AppLocalizations.of(context)!.suppliers,
+                        value:
+                            state.orderDetailsList[index].suppliers.toString(),
+                        titleColor: AppColors.blackColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextSize: AppConstants.smallFont,
+                      ),
+                      5.width,
+                      CommonOrderContentWidget(
+                        flexValue: 4,
+                        title: AppLocalizations.of(context)!.order_date,
+                        value: state.orderDetailsList[index].createdAt
+                                ?.replaceRange(11, 16, '') ??
+                            '',
+                        titleColor: AppColors.blackColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextSize: getScreenWidth(context) < 380
+                            ? AppConstants.font_14
+                            : AppConstants.smallFont,
+                      ),
+                      5.width,
+                      CommonOrderContentWidget(
+                        flexValue: 4,
+                        title: AppLocalizations.of(context)!.order_status,
+                        value: state.orderDetailsList[index].status?.statusName
+                                ?.toTitleCase() ??
+                            '',
+                        titleColor: AppColors.blackColor,
+                        valueColor: state
+                                    .orderDetailsList[index].status?.statusName
+                                    ?.toTitleCase() ==
+                                AppLocalizations.of(context)!
+                                    .pending_delivery
+                                    .toTitleCase()
+                            ? AppColors.orangeColor
+                            : AppColors.mainColor,
+                        valueTextSize: AppConstants.smallFont,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

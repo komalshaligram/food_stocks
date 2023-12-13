@@ -174,7 +174,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (state.isUpdate) {
           emit(state.copyWith(isUpdating: true));
           try {
-            debugPrint('mobile = ${preferences.getUserId()}');
+            debugPrint('req = ${preferences.getUserId()}');
             final res = await DioClient(event.context).post(
                 AppUrls.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
@@ -185,6 +185,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                         'Bearer ${preferences.getAuthToken()}',
                   },
                 ));
+            debugPrint('res = ${res}');
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
@@ -258,7 +259,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               return;
             }
           } on ServerException {
-
+            showSnackBar(
+                context: event.context,
+                title:'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                bgColor: AppColors.redColor);
             return;
           } catch (e) {
             showSnackBar(
@@ -319,7 +323,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.please_enter_valid_email}',
+                title:
+                    '${AppLocalizations.of(event.context)!.updated_successfully}',
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else {
@@ -331,8 +336,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
-
-
+          showSnackBar(
+              context: event.context,
+              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+              bgColor: AppColors.redColor);
         }
       } else if (event is _deleteFileEvent) {
         try {

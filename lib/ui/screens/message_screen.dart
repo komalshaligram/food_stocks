@@ -9,10 +9,12 @@ import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/question_and_answer_screen_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class MessageRoute {
   static Widget get route => MessageScreen();
@@ -76,97 +78,114 @@ class MessageScreenWidget extends StatelessWidget {
                 ),
               ),
               body: SafeArea(
-                child: NotificationListener<ScrollNotification>(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          state.isShimmering
-                              ? QuestionAndAnswerScreenShimmerWidget()
-                              : state.messageList.isEmpty
-                                  ? Container(
-                                      height: getScreenHeight(context) - 80,
-                                      width: getScreenWidth(context),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.messages_not_found}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.textColor),
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: state.messageList.length,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_10),
-                                      itemBuilder: (context, index) =>
-                                          messageListItem(
-                                        index: index,
-                                        context: context,
-                                        title: state.messageList[index].message
-                                                ?.title ??
-                                            '',
-                                        content: parse(state.messageList[index]
-                                                        .message?.body ??
-                                                    '')
-                                                .body
-                                                ?.text ??
-                                            '',
-                                        dateTime: state
-                                                .messageList[index].updatedAt
-                                                ?.replaceRange(16, 19, '') ??
-                                            '',
-                                        onTap: () async {
-                                          dynamic messageNewData =
-                                              await Navigator.pushNamed(
-                                                  context,
-                                                  RouteDefine
-                                                      .messageContentScreen
-                                                      .name,
-                                                  arguments: {
-                                                AppStrings.messageDataString:
-                                                    state.messageList[index],
-                                                AppStrings.messageIdString:
-                                                    state.messageList[index].id
-                                              });
-                                          debugPrint(
-                                              'message = $messageNewData');
-                                          context.read<MessageBloc>().add(
-                                              MessageEvent.removeOrUpdateMessageEvent(
-                                                  messageId: messageNewData[
-                                                      AppStrings
-                                                          .messageIdString],
-                                                  isRead: messageNewData[
-                                                      AppStrings
-                                                          .messageReadString],
-                                                  isDelete: messageNewData[
-                                                      AppStrings
-                                                          .messageDeleteString]));
-                                        },
-                                        isRead:
-                                            state.messageList[index].isRead ??
-                                                false,
-                                      ),
+                child:
+                    // NotificationListener<ScrollNotification>(
+                    //     child:
+                    SmartRefresher(
+                  enablePullDown: true,
+                  controller: state.refreshController,
+                  header: RefreshWidget(),
+                  footer: CustomFooter(
+                    builder: (context, mode) =>
+                        QuestionAndAnswerScreenShimmerWidget(),
+                  ),
+                  enablePullUp: !state.isBottomOfMessage,
+                  onRefresh: () {
+                    context
+                        .read<MessageBloc>()
+                        .add(MessageEvent.refreshListEvent(context: context));
+                  },
+                  onLoading: () {
+                    context.read<MessageBloc>().add(
+                        MessageEvent.getMessageListEvent(context: context));
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        state.isShimmering
+                            ? QuestionAndAnswerScreenShimmerWidget()
+                            : state.messageList.isEmpty
+                                ? Container(
+                                    height: getScreenHeight(context) - 80,
+                                    width: getScreenWidth(context),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${AppLocalizations.of(context)!.messages_not_found}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.textColor),
                                     ),
-                          state.isLoadMore
-                              ? QuestionAndAnswerScreenShimmerWidget()
-                              : 0.width,
-                        ],
-                      ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: state.messageList.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_10),
+                                    itemBuilder: (context, index) =>
+                                        messageListItem(
+                                      index: index,
+                                      context: context,
+                                      title: state.messageList[index].message
+                                              ?.title ??
+                                          '',
+                                      content: parse(state.messageList[index]
+                                                      .message?.body ??
+                                                  '')
+                                              .body
+                                              ?.text ??
+                                          '',
+                                      dateTime: state
+                                              .messageList[index].updatedAt
+                                              ?.replaceRange(16, 19, '') ??
+                                          '',
+                                      onTap: () async {
+                                        dynamic messageNewData =
+                                            await Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .messageContentScreen.name,
+                                                arguments: {
+                                              AppStrings.messageDataString:
+                                                  state.messageList[index],
+                                              AppStrings.messageIdString:
+                                                  state.messageList[index].id
+                                            });
+                                        debugPrint('message = $messageNewData');
+                                        context.read<MessageBloc>().add(
+                                            MessageEvent.removeOrUpdateMessageEvent(
+                                                messageId: messageNewData[
+                                                    AppStrings.messageIdString],
+                                                isRead: messageNewData[
+                                                    AppStrings
+                                                        .messageReadString],
+                                                isDelete: messageNewData[
+                                                    AppStrings
+                                                        .messageDeleteString]));
+                                      },
+                                      isRead: state.messageList[index].isRead ??
+                                          false,
+                                    ),
+                                  ),
+                        // state.isLoadMore
+                        //     ? QuestionAndAnswerScreenShimmerWidget()
+                        //     : 0.width,
+                      ],
                     ),
-                    onNotification: (notification) {
-                      if (notification.metrics.pixels ==
-                          notification.metrics.maxScrollExtent) {
-                        if (!state.isBottomOfMessage) {
-                          context.read<MessageBloc>().add(
-                              MessageEvent.getMessageListEvent(
-                                  context: context));
-                        }
-                      }
-                      return true;
-                    }),
+                  ),
+                ),
+                // onNotification: (notification) {
+                //   if (notification.metrics.pixels ==
+                //       notification.metrics.maxScrollExtent) {
+                //     if (!state.isBottomOfMessage) {
+                //       context.read<MessageBloc>().add(
+                //           MessageEvent.getMessageListEvent(
+                //               context: context));
+                //     }
+                //   }
+                //   return true;
+                // }),
               ),
             ),
           );

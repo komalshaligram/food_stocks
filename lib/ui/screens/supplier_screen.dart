@@ -12,7 +12,6 @@ import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_screen_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 

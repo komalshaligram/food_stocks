@@ -173,7 +173,7 @@ class Day with _$Day {
 class RoleDetails with _$RoleDetails {
   const factory RoleDetails({
     @JsonKey(name: "adminType") String? adminType,
-    @JsonKey(name: "status") String? status,
+    // @JsonKey(name: "status") String? status,
   }) = _RoleDetails;
 
   factory RoleDetails.fromJson(Map<String, dynamic> json) =>

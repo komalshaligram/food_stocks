@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/reorder/reorder_bloc.dart';
@@ -16,6 +15,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
+import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/delayed_widget.dart';
@@ -127,42 +127,73 @@ class ReorderScreenWidget extends StatelessWidget {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 9 / 12),
-                                itemBuilder:
-                                    (context, index) =>
-                                        buildPreviousOrderProductItem(
-                                            context: context,
-                                            index: index,
-                                            totalSale: state
-                                                    .previousOrderProductsList[
-                                                        index]
-                                                    .totalSale ??
-                                                0,
-                                            productImage: state
-                                                    .previousOrderProductsList[
-                                                        index]
-                                                    .mainImage ??
-                                                '',
-                                            productName: state
-                                                    .previousOrderProductsList[
-                                                        index]
-                                                    .productName ??
-                                                '',
-                                            productPrice: state
-                                                    .previousOrderProductsList[
-                                                        index]
-                                                    .productPrice ??
-                                                0.0,
-                                            onPressed: () {
-                                              showProductDetails(
-                                                  context: context,
-                                                  productId: state
-                                                          .previousOrderProductsList[
-                                                              index]
-                                                          .id ??
-                                                      '');
-                                            },
-                                            isRTL: context.rtl),
-                              ),
+                                itemBuilder: (context, index) => DelayedWidget(
+                                      child: CommonProductItemWidget(
+                                        productImage: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .mainImage ??
+                                            '',
+                                        productName: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productName ??
+                                            '',
+                                        totalSaleCount: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .totalSale ??
+                                            0,
+                                        price: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productPrice ??
+                                            0.0,
+                                        onButtonTap: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .id ??
+                                                  '');
+                                        },
+                                      ),
+                                    )
+                                // buildPreviousOrderProductItem(
+                                //     context: context,
+                                //     index: index,
+                                //     totalSale: state
+                                //             .previousOrderProductsList[
+                                //                 index]
+                                //             .totalSale ??
+                                //         0,
+                                //     productImage: state
+                                //             .previousOrderProductsList[
+                                //                 index]
+                                //             .mainImage ??
+                                //         '',
+                                //     productName: state
+                                //             .previousOrderProductsList[
+                                //                 index]
+                                //             .productName ??
+                                //         '',
+                                //     productPrice: state
+                                //             .previousOrderProductsList[
+                                //                 index]
+                                //             .productPrice ??
+                                //         0.0,
+                                //     onPressed: () {
+                                //       showProductDetails(
+                                //           context: context,
+                                //           productId: state
+                                //                   .previousOrderProductsList[
+                                //                       index]
+                                //                   .id ??
+                                //               '');
+                                //     },
+                                //     isRTL: context.rtl),
+                                ),
                     // state.isLoadMore
                     //     ? SupplierProductsScreenShimmerWidget()
                     //     : 0.width,
