@@ -12,7 +12,7 @@ import '../../routes/app_routes.dart';
 import '../utils/themes/app_img_path.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/dashboard_stats_widget.dart';
-import 'package:lottie/lottie.dart';
+
 
 class OrderSuccessfulRoute {
   static Widget get route => const OrderSuccessfulScreen();
@@ -40,14 +40,14 @@ class OrderSuccessfulScreenWidget extends StatefulWidget {
 
 class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidget> with TickerProviderStateMixin{
   late final AnimationController _controller;
-  late final Future<LottieComposition> _composition;
+
 
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(vsync: this);
-    _composition = AssetLottie(AppImagePath.successIcon).load();
+
   }
 
   @override
@@ -88,22 +88,9 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Lottie.asset(
+                          Image.asset(
                             AppImagePath.successIcon,
-                            width: 200,
-                            height: 200,
-                            repeat: true,
-                            reverse: true,
-                            animate: true,
-                            fit: BoxFit.fill,
-                            controller: _controller,
-                            onLoaded: (_composition) {
-                              // Configure the AnimationController with the duration of the
-                              // Lottie file and start the animation.
-                              _controller
-                                ..duration = _composition.duration
-                                ..forward();
-                            },
+
                           ),
                         Text(
                             AppLocalizations.of(context)!.order_sent_successfully,

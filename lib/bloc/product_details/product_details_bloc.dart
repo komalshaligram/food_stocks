@@ -12,6 +12,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -30,18 +31,17 @@ class ProductDetailsBloc
 
       if (event is _getOrderByIdEvent) {
         debugPrint('token___${preferencesHelper.getAuthToken()}');
-        debugPrint('id___${event.orderId}');
+        debugPrint('orderid___${event.orderId}');
         emit(state.copyWith(isShimmering: true));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${event.orderId}',
           );
 
-          debugPrint(
-              'GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
-          debugPrint('GetOrderByIdModel  = $res');
+          debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
+       //   debugPrint('GetOrderById res  = $res');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-          debugPrint('GetOrderByIdModel  = $response');
+        //  debugPrint('GetOrderByIdModel  = $response');
 
           if (response.status == 200) {
             emit(state.copyWith(
@@ -52,7 +52,7 @@ class ProductDetailsBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -80,24 +80,34 @@ class ProductDetailsBloc
       } else if (event is _radioButtonEvent) {
         emit(state.copyWith(
             selectedRadioTile: event.selectRadioTile,
-            isRefresh: !state.isRefresh));
+            isRefresh: !state.isRefresh
+        ));
       } else if (event is _productIncrementEvent) {
-        if (event.productQuantity >= event.messingQuantity) {
+        if (event.productQuantity > event.messingQuantity) {
           emit(state.copyWith(
               quantity: event.messingQuantity.round() + 1,
-              isRefresh: !state.isRefresh));
+              isRefresh: !state.isRefresh,
+
+          ));
         }
-      } else if (event is _productDecrementEvent) {
-        if (event.messingQuantity >= 1) {
-          emit(state.copyWith(
-              quantity: event.messingQuantity.round() - 1,
-              isRefresh: !state.isRefresh));
-        } else {
+        else {
           showSnackBar(
               context: event.context,
               title: "missing quantity can't be more then original quantity",
               bgColor: Colors.red);
         }
+      }
+
+      else if (event is _productDecrementEvent) {
+        if (event.messingQuantity >= 1) {
+          emit(state.copyWith(
+              quantity: event.messingQuantity.round() - 1,
+              isRefresh: !state.isRefresh,
+          missingQuantity: event.messingQuantity.round() - 1
+          ));
+        }
+
+
       } else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));
         if (event.issue != '') {
@@ -122,20 +132,20 @@ class ProductDetailsBloc
                 'createIssue url  = ${AppUrls.baseUrl}${AppUrls.createIssueUrl}${event.orderId}');
             debugPrint('createIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
-            debugPrint('createIssue response = $response');
+
 
             if (response['status'] == 201) {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response['message'],
+                  title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
                   bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
             } else {
               emit(state.copyWith(isLoading: false));
               showSnackBar(
                   context: event.context,
-                  title: response['message'],
+                  title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
                   bgColor: AppColors.mainColor);
             }
           } on ServerException {}
@@ -157,6 +167,12 @@ class ProductDetailsBloc
         }
         emit(state.copyWith(
             productListIndex: number, isAllCheck: !state.isAllCheck));
+      }
+
+      else if(event is _getBottomSheetDataEvent){
+        TextEditingController note = TextEditingController();
+        note.text = event.note;
+        emit(state.copyWith(addNoteController: note));
       }
     });
   }

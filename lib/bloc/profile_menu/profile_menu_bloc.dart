@@ -90,7 +90,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 } else {
                    showSnackBar(
                 context: event.context,
-                title: response[AppStrings.messageString],
+                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
                 bgColor: AppColors.mainColor);
                 }
               } on ServerException {}

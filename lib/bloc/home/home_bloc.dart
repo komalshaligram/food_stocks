@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -240,8 +239,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message.toString().toLocalization(),event.context),
-                //response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -480,20 +478,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }*/
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+                title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -532,7 +530,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {} catch (e) {}
@@ -597,6 +595,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                             title: message.message?.title ?? '',
                             summary: message.message?.summary ?? '',
                             body: message.message?.body ?? '',
+                            messageImage: message.message?.messageImage ?? ''
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
@@ -611,7 +610,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -671,12 +670,4 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
-  String splitNumber(String price) {
-    var splitPrice = price.split(".");
-    if (splitPrice[1] == "00") {
-      return splitPrice[0];
-    } else {
-      return price.toString();
-    }
-  }
 }

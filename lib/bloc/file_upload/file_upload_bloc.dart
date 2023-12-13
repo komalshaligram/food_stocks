@@ -140,8 +140,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     } else {
                       showSnackBar(
                           context: event.context,
-                          title: response.message ??
-                              '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                          title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                           bgColor: AppColors.redColor);
                     }
                   } on ServerException {
@@ -154,8 +153,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               } else {
                 showSnackBar(
                     context: event.context,
-                    title: response.message ??
-                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                     bgColor: AppColors.redColor);
                 emit(state.copyWith(isLoading: false));
               }
@@ -169,8 +167,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
             emit(state.copyWith(isLoading: false));
           }
@@ -205,8 +202,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
             emit(state.copyWith(isLoading: false));
           }
@@ -311,8 +307,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 emit(state.copyWith(isUploadLoading: false));
                 showSnackBar(
                     context: event.context,
-                    title: res[AppStrings.messageString] ??
-                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(),event.context),
                     bgColor: AppColors.redColor);
               }
             } catch (e) {
@@ -419,8 +414,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(isApiLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -474,8 +468,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(isUploadLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.redColor);
           }
         } catch (e) {
@@ -628,8 +621,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             } else {
               showSnackBar(
                   context: event.context,
-                  title: response.message ??
-                      '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {

@@ -50,5 +50,9 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required BuildContext context,
     required String orderId,
   }) = _getOrderByIdEvent;
+
+  const factory ProductDetailsEvent.getBottomSheetDataEvent({
+    required String note,
+  }) = _getBottomSheetDataEvent;
 }
 

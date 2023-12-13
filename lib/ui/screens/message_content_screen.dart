@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import '../../bloc/message_content/message_content_bloc.dart';
@@ -129,41 +131,98 @@ class MessageContentScreenWidget extends StatelessWidget {
                               color: AppColors.shadowColor.withOpacity(0.15),
                               blurRadius: AppConstants.blur_10)
                         ]),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.message.message?.title ?? '',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        5.height,
-                        Text(
-                          state.message.createdAt ?? '',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_10,
-                              color: AppColors.textColor),
-                        ),
-                        5.height,
-                        Text(
-                          parse(state.message.message?.body ?? '').body?.text ??
-                              '',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.blackColor),
-                        ),
-                        Text(
-                          parse(state.message.message?.summary ?? '')
-                                  .body
-                                  ?.text ??
-                              '',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_12,
-                              color: AppColors.blackColor),
-                        ),
-                      ],
+                    child: Container(
+                      color: AppColors.whiteColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                         Container(
+                              alignment: Alignment.center,
+                            child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
+                              '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                              fit: BoxFit
+                                  .contain,
+                              loadingBuilder:
+                                  (context,
+                                  child,
+                                  loadingProgress) {
+                                if (loadingProgress ==
+                                    null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child:
+                                    CupertinoActivityIndicator(
+                                      color: AppColors
+                                          .blackColor,
+                                    ),
+                                  );
+                                }
+                              },
+                              errorBuilder:
+                                  (context,
+                                  error,
+                                  stackTrace) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors
+                                          .whiteColor,
+                                      shape: BoxShape
+                                          .circle),
+                                  alignment:
+                                  Alignment
+                                      .center,
+                                  child: Text(
+                                    AppStrings
+                                        .failedToLoadString,
+                                    textAlign:
+                                    TextAlign
+                                        .center,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants
+                                            .font_14,
+                                        color:
+                                        AppColors.textColor),
+                                  ),
+                                );
+                              },
+                            ):SizedBox(),
+                          ),
+
+                          5.height,
+                          Text(
+                            state.message.message?.title ?? '',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          5.height,
+                          Text(
+                            state.message.createdAt ?? '',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_12,
+                                color: AppColors.textColor),
+                          ),
+                          5.height,
+                          Text(
+                            parse(state.message.message?.body ?? '').body?.text ??
+                                '',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor),
+                          ),
+                          Text(
+                            parse(state.message.message?.summary ?? '')
+                                    .body
+                                    ?.text ??
+                                '',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.blackColor),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
