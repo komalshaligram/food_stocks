@@ -38,7 +38,7 @@ class BasketScreen extends StatelessWidget {
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  const   BasketScreenWidget({Key? key}) : super(key: key);
+  const  BasketScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +224,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name,arguments: {
+                                            Navigator.pushNamed(context, RouteDefine.orderSuccessfulScreen.name,arguments: {
                                               AppStrings.getCartListString : state.CartItemList
                                                 });
                                           },
