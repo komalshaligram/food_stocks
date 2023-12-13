@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/order/order_bloc.dart';
+import 'package:food_stock/data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/common_order_content_widget.dart';
@@ -43,12 +43,11 @@ class OrderScreenWidget extends StatefulWidget {
 }
 
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
-
-@override
+  @override
   void initState() {
-
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<OrderBloc, OrderState>(
@@ -91,6 +90,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       .add(OrderEvent.getAllOrderEvent(context: context));
                 },
                 child: SingleChildScrollView(
+                  physics: state.orderDetailsList.isEmpty
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -100,21 +102,13 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             )
                           : (state.orderDetailsList.length) != 0
                               ?
-                              // Expanded(
-                              /*height: getScreenHeight(context) * 0.85,*/
-                              // child:
                               ListView.builder(
-                                  //scrollDirection: Axis.vertical,
                                   itemCount: state.orderDetailsList.length,
                                   shrinkWrap: true,
-                                  // physics: (state.orderDetailsList.length) == 0
-                                  //     ? const NeverScrollableScrollPhysics()
-                                  //     : const AlwaysScrollableScrollPhysics(),
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) =>
                                       orderListItem(
-                                          index: index, context: context),
-                                  // ),
+                                          index: index, context: context,orderDetailsList : state.orderDetailsList),
                                 )
                               : SizedBox(
                                   height: getScreenHeight(context) * 0.8,
@@ -156,20 +150,19 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
     );
   }
 
-  Widget orderListItem({required int index, required BuildContext context}) {
-    return BlocBuilder<OrderBloc, OrderState>(
-      builder: (context, state) {
+  Widget orderListItem({required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
+
         return DelayedWidget(
           child: GestureDetector(
             onTap: () {
-              if ((state.orderDetailsList[index].suppliers ?? 0) > 1) {
+              if ((orderDetailsList[index].suppliers ?? 0) > 1) {
                 Navigator.pushNamed(
                     context, RouteDefine.orderDetailsScreen.name,
                     arguments: {
                       AppStrings.orderIdString:
-                          state.orderDetailsList[index].id,
+                          orderDetailsList[index].id,
                       AppStrings.orderNumberString:
-                          state.orderDetailsList[index].orderNumber,
+                          orderDetailsList[index].orderNumber,
                     });
               } else {
                 Navigator.push(
@@ -178,8 +171,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           ProductDetailsScreen(
                         orderNumber:
-                            state.orderDetailsList[index].orderNumber ?? '',
-                        orderId: state.orderDetailsList[index].id ?? '',
+                            orderDetailsList[index].orderNumber ?? '',
+                        orderId: orderDetailsList[index].id ?? '',
                         isNavigateToProductDetailString: true,
                       ),
                       transitionsBuilder:
@@ -197,32 +190,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         );
                       },
                     ));
-                /*             Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return ScaleTransition(
-                          alignment: Alignment.center,
-                          scale: Tween<double>(begin: 0.6, end: 1).animate(
-                            CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.bounceIn,
-                            ),
-                          ),
-                          child: child,
-                        );
-                      },
-                      transitionDuration: Duration(milliseconds: 800),
-                      pageBuilder: (BuildContext context,
-                          Animation<double> animation,
-                          Animation<double> secondaryAnimation) {
-                        return ProductDetailsScreen(orderNumber: state.orderDetailsList[index].orderNumber ?? '',orderId: state.orderDetailsList[index].id ?? '',isNavigateToProductDetailString: true,
 
-                        );
-                      },
-                    ),
-                  );*/
 
                 /*      Navigator.pushNamed(
                       context, RouteDefine.productDetailsScreen.name,
@@ -255,7 +223,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        state.orderDetailsList[index].orderNumber.toString(),
+                        orderDetailsList[index].orderNumber.toString(),
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.normalFont,
                             color: AppColors.blackColor,
@@ -287,7 +255,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             textDirection: TextDirection.ltr,
                             child: Text(
                               /*                    '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',*/
-                              '${(formatNumber(value: state.orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                              '${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.font_14,
                                   color: AppColors.whiteColor,
@@ -305,7 +273,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         flexValue: 2,
                         title: AppLocalizations.of(context)!.products,
                         value:
-                            state.orderDetailsList[index].products.toString(),
+                            orderDetailsList[index].products.toString(),
                         titleColor: AppColors.blackColor,
                         valueColor: AppColors.blackColor,
                         valueTextSize: AppConstants.smallFont,
@@ -315,7 +283,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         flexValue: 2,
                         title: AppLocalizations.of(context)!.suppliers,
                         value:
-                            state.orderDetailsList[index].suppliers.toString(),
+                            orderDetailsList[index].suppliers.toString(),
                         titleColor: AppColors.blackColor,
                         valueColor: AppColors.blackColor,
                         valueTextSize: AppConstants.smallFont,
@@ -324,7 +292,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       CommonOrderContentWidget(
                         flexValue: 4,
                         title: AppLocalizations.of(context)!.order_date,
-                        value: state.orderDetailsList[index].createdAt
+                        value: orderDetailsList[index].createdAt
                                 ?.replaceRange(11, 16, '') ??
                             '',
                         titleColor: AppColors.blackColor,
@@ -337,12 +305,11 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       CommonOrderContentWidget(
                         flexValue: 4,
                         title: AppLocalizations.of(context)!.order_status,
-                        value: state.orderDetailsList[index].status?.statusName
+                        value: orderDetailsList[index].status?.statusName
                                 ?.toTitleCase() ??
                             '',
                         titleColor: AppColors.blackColor,
-                        valueColor: state
-                                    .orderDetailsList[index].status?.statusName
+                        valueColor: orderDetailsList[index].status?.statusName
                                     ?.toTitleCase() ==
                                 AppLocalizations.of(context)!
                                     .pending_delivery
@@ -358,7 +325,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             ),
           ),
         );
-      },
-    );
+
   }
 }

@@ -125,7 +125,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                     animationCurve: Curves.easeInOut,
                     animationDuration: Duration(milliseconds: 600),
                     onTap: (index) {
-                      print('index____$index');
                       bloc.add(
                           BottomNavEvent.changePage(index: index));
                     },

@@ -40,8 +40,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+/*    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;*/
 
 
     return BlocProvider(
@@ -1108,7 +1108,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         builder: (context, state) {
      quantity = (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
           return Container(
-            height: value == 4 ? getScreenWidth(context) <= 380 ? 151 : 160: 60,
+            height: value == 4 ? getScreenWidth(context) <= 380 ? 165 : 160: 60,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
