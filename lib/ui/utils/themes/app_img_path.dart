@@ -20,8 +20,7 @@ class AppImagePath {
   static const String deleteRed = 'assets/images/delete_red.svg';
 
   ///pngs
-  static const String profileImage = 'assets/images/profile_image.png';
-  static const String companyLogo = 'assets/images/company_logo.png';
+  static const String profileImage = 'assets/images/ic_default_profile_img.png';
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable =
       'assets/images/image_not_available.png';

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -40,14 +41,13 @@ class OrderSuccessfulScreenWidget extends StatefulWidget {
 
 class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidget> with TickerProviderStateMixin{
   late final AnimationController _controller;
-
-
+  final player = AudioPlayer();
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(vsync: this);
-
+    _controller = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
+    _controller.repeat(reverse: true);
+    player.play(AssetSource('audio/success_sound.mp3'));
   }
 
   @override
@@ -88,9 +88,21 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Image.asset(
-                            AppImagePath.successIcon,
-
+                          Align(
+                            child: ScaleTransition(
+                              scale: Tween(begin: 0.5, end: 0.8)
+                                  .animate(CurvedAnimation(
+                                  parent: _controller,
+                                  curve: Curves.easeIn,
+                                reverseCurve: Curves.easeOutCubic
+                              )
+                              ),
+                              child: SizedBox(
+                                height: 180,
+                                width: 180,
+                                child: CircleAvatar(backgroundImage: AssetImage(AppImagePath.successIcon)),
+                              ),
+                            ),
                           ),
                         Text(
                             AppLocalizations.of(context)!.order_sent_successfully,
@@ -207,6 +219,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
             ),
             bottomSheet: GestureDetector(
                 onTap: () {
+
                   Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
                 },
                 child: Container(
