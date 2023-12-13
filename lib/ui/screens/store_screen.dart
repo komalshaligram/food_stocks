@@ -15,6 +15,7 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
+import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -393,38 +394,70 @@ class StoreScreenWidget extends StatelessWidget {
                                           horizontal:
                                           AppConstants.padding_5),
                                       itemBuilder: (context, index) {
-                                        return buildProductSaleListItem(
-                                          context: context,
-                                          saleImage: state
-                                              .productSalesList[index]
-                                              .mainImage ??
-                                              '',
-                                          title: state
-                                              .productSalesList[index]
-                                              .salesName ??
-                                              '',
-                                          description: parse(state
-                                              .productSalesList[
-                                          index]
-                                              .salesDescription ??
-                                              '')
-                                              .body
-                                              ?.text ??
-                                              '',
-                                          price: double.parse(state
-                                              .productSalesList[index]
-                                              .discountPercentage ??
-                                              '0.0'),
-                                          onButtonTap: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                    .productSalesList[
-                                                index]
-                                                    .id ??
-                                                    '');
-                                          },
-                                        );
+                                        return CommonProductSaleItemWidget(
+                                            height: 170,
+                                            width: 140,
+                                            saleImage: state
+                                                .productSalesList[index]
+                                                .mainImage ??
+                                                '',
+                                            title: state
+                                                .productSalesList[index]
+                                                .salesName ??
+                                                '',
+                                            description: parse(state
+                                                .productSalesList[
+                                            index]
+                                                .salesDescription ??
+                                                '')
+                                                .body
+                                                ?.text ??
+                                                '',
+                                            salePercentage: double.parse(state
+                                                .productSalesList[index]
+                                                .discountPercentage ??
+                                                '0.0'),
+                                            onButtonTap: () {
+                                              showProductDetails(
+                                                  context: context,
+                                                  productId: state
+                                                      .productSalesList[
+                                                  index]
+                                                      .id ??
+                                                      '');
+                                            });
+                                        // return buildProductSaleListItem(
+                                        //   context: context,
+                                        //   saleImage: state
+                                        //       .productSalesList[index]
+                                        //       .mainImage ??
+                                        //       '',
+                                        //   title: state
+                                        //       .productSalesList[index]
+                                        //       .salesName ??
+                                        //       '',
+                                        //   description: parse(state
+                                        //       .productSalesList[
+                                        //   index]
+                                        //       .salesDescription ??
+                                        //       '')
+                                        //       .body
+                                        //       ?.text ??
+                                        //       '',
+                                        //   price: double.parse(state
+                                        //       .productSalesList[index]
+                                        //       .discountPercentage ??
+                                        //       '0.0'),
+                                        //   onButtonTap: () {
+                                        //     showProductDetails(
+                                        //         context: context,
+                                        //         productId: state
+                                        //             .productSalesList[
+                                        //         index]
+                                        //             .id ??
+                                        //             '');
+                                        //   },
+                                        // );
                                       },
                                     ),
                                   ),
@@ -660,7 +693,7 @@ class StoreScreenWidget extends StatelessWidget {
                                 ],
                               ),
                               crossFadeState:
-                              state.recommendedProductsList.isEmpty
+                              state.previousOrderProductsList.isEmpty
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
@@ -1239,7 +1272,7 @@ class StoreScreenWidget extends StatelessWidget {
                 title:
                 "${price.toStringAsFixed(
                     0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-                // onPressed: onButtonTap,
+                onPressed: onButtonTap,
                 // height: 35,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
@@ -1348,7 +1381,7 @@ class StoreScreenWidget extends StatelessWidget {
                     : price.toStringAsFixed(
                     AppConstants.amountFrLength)}${AppLocalizations.of(context)!
                     .currency}",
-                // onPressed: onButtonTap,
+                onPressed: onButtonTap,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,

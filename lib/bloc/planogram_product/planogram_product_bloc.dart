@@ -23,6 +23,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 part 'planogram_product_event.dart';
 
 part 'planogram_product_state.dart';
@@ -37,10 +38,10 @@ class PlanogramProductBloc
         debugPrint('Planogram details = ${event.planogram.planogramproducts}');
         List<ProductStockModel> productStockList = [];
         productStockList = event.planogram.planogramproducts
-            ?.map((product) => ProductStockModel(
-            productId: product.id ?? '',
-            stock: product.productStock ?? 0))
-            .toList() ??
+                ?.map((product) => ProductStockModel(
+                    productId: product.id ?? '',
+                    stock: product.productStock ?? 0))
+                .toList() ??
             [];
         emit(state.copyWith(
             planogramName: event.planogram.planogramName ?? '',
@@ -92,12 +93,15 @@ class PlanogramProductBloc
                                           .productSupplierIds
                                       : '')
                               ? supplier.saleProduct?.indexOf(
-                                      supplier.saleProduct?.firstWhere((sale) =>
-                                              sale.saleId ==
-                                              state
-                                                  .productStockList[
-                                                      productStockUpdateIndex]
-                                                  .productSaleId) ??
+                                      supplier.saleProduct?.firstWhere(
+                                            (sale) =>
+                                                sale.saleId ==
+                                                state
+                                                    .productStockList[
+                                                        productStockUpdateIndex]
+                                                    .productSaleId,
+                                            orElse: () => SaleProduct(),
+                                          ) ??
                                           SaleProduct()) ??
                                   -1
                               : -1,
@@ -175,7 +179,8 @@ class PlanogramProductBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
@@ -183,7 +188,7 @@ class PlanogramProductBloc
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
@@ -192,7 +197,8 @@ class PlanogramProductBloc
                 .isEmpty) {
               showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   bgColor: AppColors.redColor);
               return;
             }
@@ -207,19 +213,20 @@ class PlanogramProductBloc
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title:
+                    '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity -
+                            .quantity -
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -311,7 +318,8 @@ class PlanogramProductBloc
             .productSupplierIds.isEmpty) {
           showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.please_select_supplier}',
+              title:
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -319,7 +327,7 @@ class PlanogramProductBloc
             0) {
           showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
+              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
               bgColor: AppColors.redColor);
           return;
         }
@@ -387,13 +395,15 @@ class PlanogramProductBloc
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

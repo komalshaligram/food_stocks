@@ -127,33 +127,38 @@ class ReorderScreenWidget extends StatelessWidget {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 9 / 12),
-                                itemBuilder: (context, index) =>
-                                    CommonProductItemWidget(
-                                      productImage: state
-                                              .previousOrderProductsList[index]
-                                              .mainImage ??
-                                          '',
-                                      productName: state
-                                              .previousOrderProductsList[index]
-                                              .productName ??
-                                          '',
-                                      totalSaleCount: state
-                                              .previousOrderProductsList[index]
-                                              .totalSale ??
-                                          0,
-                                      price: state
-                                              .previousOrderProductsList[index]
-                                              .productPrice ??
-                                          0.0,
-                                      onButtonTap: () {
-                                        showProductDetails(
-                                            context: context,
-                                            productId: state
-                                                    .previousOrderProductsList[
-                                                        index]
-                                                    .id ??
-                                                '');
-                                      },
+                                itemBuilder: (context, index) => DelayedWidget(
+                                      child: CommonProductItemWidget(
+                                        productImage: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .mainImage ??
+                                            '',
+                                        productName: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productName ??
+                                            '',
+                                        totalSaleCount: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .totalSale ??
+                                            0,
+                                        price: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productPrice ??
+                                            0.0,
+                                        onButtonTap: () {
+                                          showProductDetails(
+                                              context: context,
+                                              productId: state
+                                                      .previousOrderProductsList[
+                                                          index]
+                                                      .id ??
+                                                  '');
+                                        },
+                                      ),
                                     )
                                 // buildPreviousOrderProductItem(
                                 //     context: context,

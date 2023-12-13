@@ -96,7 +96,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } on ServerException {
-        } catch (e) {}
+        }
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isProductSaleShimmering: true));

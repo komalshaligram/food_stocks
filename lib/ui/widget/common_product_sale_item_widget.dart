@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:html/parser.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -11,23 +11,23 @@ import '../utils/themes/app_urls.dart';
 import 'common_product_button_widget.dart';
 import 'common_shimmer_widget.dart';
 
-class CommonProductItemWidget extends StatelessWidget {
+class CommonProductSaleItemWidget extends StatelessWidget {
   final double? height;
   final double? width;
-  final String productImage;
-  final String productName;
-  final int totalSaleCount;
-  final double price;
+  final String saleImage;
+  final String title;
+  final String description;
+  final double salePercentage;
   final void Function() onButtonTap;
 
-  const CommonProductItemWidget(
+  const CommonProductSaleItemWidget(
       {super.key,
       this.height,
       this.width,
-      required this.productImage,
-      required this.productName,
-      required this.totalSaleCount,
-      required this.price,
+      required this.saleImage,
+      required this.title,
+      required this.description,
+      required this.salePercentage,
       required this.onButtonTap});
 
   @override
@@ -57,11 +57,11 @@ class CommonProductItemWidget extends StatelessWidget {
         onTap: onButtonTap,
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: CachedNetworkImage(
-                imageUrl: "${AppUrls.baseFileUrl}$productImage",
+                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: 70,
                 fit: BoxFit.fitHeight,
                 placeholder: (context, url) {
@@ -74,6 +74,10 @@ class CommonProductItemWidget extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(AppConstants.radius_10)),
                       ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
                   );
                 },
@@ -88,34 +92,31 @@ class CommonProductItemWidget extends StatelessWidget {
             ),
             5.height,
             Text(
-              productName,
+              title,
               style: AppStyles.rkBoldTextStyle(
                   size: AppConstants.font_12,
-                  color: AppColors.blackColor,
+                  color: AppColors.saleRedColor,
                   fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             5.height,
             Expanded(
-              child: totalSaleCount == 0
-                  ? 0.width
-                  : Text(
-                      "${totalSaleCount} ${AppLocalizations.of(context)!.discount}",
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.font_10,
-                          color: AppColors.saleRedColor,
-                          fontWeight: FontWeight.w600),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+              child: Text(
+                "${parse(description).body?.text}",
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10, color: AppColors.blackColor),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             5.height,
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
                 onPressed: onButtonTap,
+                // height: 35,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,

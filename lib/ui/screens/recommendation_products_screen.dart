@@ -129,37 +129,38 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         childAspectRatio: 9 / 12),
-                                itemBuilder: (context, index) =>
-                                    CommonProductItemWidget(
-                                        productImage: state
-                                                .recommendationProductsList[
-                                                    index]
-                                                .mainImage ??
-                                            '',
-                                        productName: state
-                                                .recommendationProductsList[
-                                                    index]
-                                                .productName ??
-                                            '',
-                                        totalSaleCount: state
-                                                .recommendationProductsList[
-                                                    index]
-                                                .totalSale ??
-                                            0,
-                                        price: state
-                                                .recommendationProductsList[
-                                                    index]
-                                                .productPrice ??
-                                            0.0,
-                                        onButtonTap: () {
-                                          showProductDetails(
-                                              context: context,
-                                              productId: state
-                                                      .recommendationProductsList[
-                                                          index]
-                                                      .id ??
-                                                  '');
-                                        })
+                                itemBuilder: (context, index) => DelayedWidget(
+                                      child: CommonProductItemWidget(
+                                          productImage: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .mainImage ??
+                                              '',
+                                          productName: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productName ??
+                                              '',
+                                          totalSaleCount: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .totalSale ??
+                                              0,
+                                          price: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productPrice ??
+                                              0.0,
+                                          onButtonTap: () {
+                                            showProductDetails(
+                                                context: context,
+                                                productId: state
+                                                        .recommendationProductsList[
+                                                            index]
+                                                        .id ??
+                                                    '');
+                                          }),
+                                    )
                                 // buildRecommendationProducts(
                                 // context: context,
                                 // totalSale: state

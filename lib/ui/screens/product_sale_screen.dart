@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
-import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_sale_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -14,12 +13,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_constants.dart';
-import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
-import '../utils/themes/app_urls.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
@@ -34,17 +30,13 @@ class ProductSaleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Map?;
+        ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('product sale args = $args');
     return BlocProvider(
-      create: (context) =>
-      ProductSaleBloc()
+      create: (context) => ProductSaleBloc()
         ..add(ProductSaleEvent.setSearchEvent(
-            search: args?[AppStrings.searchString] ?? ''))..add(
-          ProductSaleEvent.getProductSalesListEvent(context: context)),
+            search: args?[AppStrings.searchString] ?? ''))
+        ..add(ProductSaleEvent.getProductSalesListEvent(context: context)),
       child: ProductSaleScreenWidget(),
     );
   }
@@ -187,110 +179,116 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required void Function() onButtonTap,
   }) {
     return DelayedWidget(
-      // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
-      child: Container(
-        // height: 170,
-        // width: 140,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10),
-          ],
-        ),
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
-        padding: EdgeInsets.symmetric(
-            vertical: AppConstants.padding_5,
-            horizontal: AppConstants.padding_10),
-        child: InkWell(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: onButtonTap,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.network(
-                  "${AppUrls.baseFileUrl}$saleImage",
-                  height: 70,
-                  fit: BoxFit.fitHeight,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress?.cumulativeBytesLoaded !=
-                        loadingProgress?.expectedTotalBytes) {
-                      return CommonShimmerWidget(
-                        child: Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppConstants.radius_10)),
-                          ),
-                          // alignment: Alignment.center,
-                          // child: CupertinoActivityIndicator(
-                          //   color: AppColors.blackColor,
-                          // ),
-                        ),
-                      );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    // debugPrint('sale list image error : $error');
-                    return Container(
-                      child: Image.asset(AppImagePath.imageNotAvailable5,
-                          height: 70,
-                          width: double.maxFinite,
-                          fit: BoxFit.cover),
-                    );
-                  },
-                ),
-              ),
-              5.height,
-              Text(
-                title,
-                style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.saleRedColor,
-                    fontWeight: FontWeight.w600),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              5.height,
-              Expanded(
-                child: Text(
-                  description,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.blackColor),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              5.height,
-              Center(
-                child: CommonProductButtonWidget(
-                  title:
-                      "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-                  // onPressed: onButtonTap,
-                  // height: 35,
-                  textColor: AppColors.whiteColor,
-                  bgColor: AppColors.mainColor,
-                  borderRadius: AppConstants.radius_3,
-                  textSize: AppConstants.font_12,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+        // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
+        child: CommonProductSaleItemWidget(
+            saleImage: saleImage,
+            title: title,
+            description: description,
+            salePercentage: salePercentage,
+            onButtonTap: onButtonTap)
+        // Container(
+        //   // height: 170,
+        //   // width: 140,
+        //   decoration: BoxDecoration(
+        //     color: AppColors.whiteColor,
+        //     borderRadius:
+        //         BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        //     boxShadow: [
+        //       BoxShadow(
+        //           color: AppColors.shadowColor.withOpacity(0.15),
+        //           blurRadius: AppConstants.blur_10),
+        //     ],
+        //   ),
+        //   clipBehavior: Clip.hardEdge,
+        //   margin: EdgeInsets.symmetric(
+        //       vertical: AppConstants.padding_10,
+        //       horizontal: AppConstants.padding_5),
+        //   padding: EdgeInsets.symmetric(
+        //       vertical: AppConstants.padding_5,
+        //       horizontal: AppConstants.padding_10),
+        //   child: InkWell(
+        //     splashColor: Colors.transparent,
+        //     highlightColor: Colors.transparent,
+        //     onTap: onButtonTap,
+        //     child: Column(
+        //       mainAxisSize: MainAxisSize.max,
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Center(
+        //           child: Image.network(
+        //             "${AppUrls.baseFileUrl}$saleImage",
+        //             height: 70,
+        //             fit: BoxFit.fitHeight,
+        //             loadingBuilder: (context, child, loadingProgress) {
+        //               if (loadingProgress?.cumulativeBytesLoaded !=
+        //                   loadingProgress?.expectedTotalBytes) {
+        //                 return CommonShimmerWidget(
+        //                   child: Container(
+        //                     height: 70,
+        //                     width: 70,
+        //                     decoration: BoxDecoration(
+        //                       color: AppColors.whiteColor,
+        //                       borderRadius: BorderRadius.all(
+        //                           Radius.circular(AppConstants.radius_10)),
+        //                     ),
+        //                     // alignment: Alignment.center,
+        //                     // child: CupertinoActivityIndicator(
+        //                     //   color: AppColors.blackColor,
+        //                     // ),
+        //                   ),
+        //                 );
+        //               }
+        //               return child;
+        //             },
+        //             errorBuilder: (context, error, stackTrace) {
+        //               // debugPrint('sale list image error : $error');
+        //               return Container(
+        //                 child: Image.asset(AppImagePath.imageNotAvailable5,
+        //                     height: 70,
+        //                     width: double.maxFinite,
+        //                     fit: BoxFit.cover),
+        //               );
+        //             },
+        //           ),
+        //         ),
+        //         5.height,
+        //         Text(
+        //           title,
+        //           style: AppStyles.rkBoldTextStyle(
+        //               size: AppConstants.font_12,
+        //               color: AppColors.saleRedColor,
+        //               fontWeight: FontWeight.w600),
+        //           maxLines: 1,
+        //           overflow: TextOverflow.ellipsis,
+        //         ),
+        //         5.height,
+        //         Expanded(
+        //           child: Text(
+        //             description,
+        //             style: AppStyles.rkRegularTextStyle(
+        //                 size: AppConstants.font_10, color: AppColors.blackColor),
+        //             maxLines: 3,
+        //             overflow: TextOverflow.ellipsis,
+        //           ),
+        //         ),
+        //         5.height,
+        //         Center(
+        //           child: CommonProductButtonWidget(
+        //             title:
+        //                 "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+        //             onPressed: onButtonTap,
+        //             // height: 35,
+        //             textColor: AppColors.whiteColor,
+        //             bgColor: AppColors.mainColor,
+        //             borderRadius: AppConstants.radius_3,
+        //             textSize: AppConstants.font_12,
+        //           ),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
   void showProductDetails(

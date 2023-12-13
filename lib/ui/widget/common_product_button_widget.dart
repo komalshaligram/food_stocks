@@ -47,27 +47,25 @@ class CommonProductButtonWidget extends StatelessWidget {
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(borderRadius ?? AppConstants.radius_10))),
-      child:
-      // GestureDetector(
-      // onDoubleTap: onPressed,
-      // onTap: () {
-      //   if (!_isBool) {
-      //     onPressed?.call();
-      //     _isBool = true;
-      //   }
-      // },
-      // child:
-      MaterialButton(
-        elevation: 0,
-        height: height ?? AppConstants.buttonHeightSmall,
-        minWidth: width,
-        padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-        onPressed: null /*isLoading ? null : onPressed*/,
-        child: isLoading
-            ? CupertinoActivityIndicator(
-          color: Colors.white,
-        )
-            : Text(
+      child: GestureDetector(
+        onDoubleTap: onPressed,
+        onTap: () {
+          if (!_isBool) {
+            onPressed?.call();
+            _isBool = true;
+          }
+        },
+        child: MaterialButton(
+          elevation: 0,
+          height: height ?? AppConstants.buttonHeightSmall,
+          minWidth: width,
+          padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+          onPressed: null /*isLoading ? null : onPressed*/,
+          child: isLoading
+              ? CupertinoActivityIndicator(
+                  color: Colors.white,
+                )
+              : Text(
                   title,
                   style: AppStyles.rkRegularTextStyle(
                       size: textSize,
@@ -75,7 +73,7 @@ class CommonProductButtonWidget extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
         ),
-      // ),
+      ),
     );
   }
 }

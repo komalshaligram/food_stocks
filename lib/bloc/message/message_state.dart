@@ -10,6 +10,7 @@ class MessageState with _$MessageState {
     required bool isLoadMore,
     required bool isMessageRead,
     required List<String> deletedMessageList,
+    required RefreshController refreshController,
   }) = _MessageState;
 
   factory MessageState.initial() => MessageState(
@@ -20,5 +21,6 @@ class MessageState with _$MessageState {
         isLoadMore: false,
         isMessageRead: false,
         deletedMessageList: [],
+        refreshController: RefreshController(),
       );
 }
