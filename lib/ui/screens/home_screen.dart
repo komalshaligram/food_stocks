@@ -507,7 +507,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           slidingCurve:
                                                               Curves.decelerate,
                                                           slidingBeginOffset:
-                                                              Offset(20, 0),
+                                                              Offset(0, 20),
                                                           child:
                                                               CommonProductSaleItemWidget(
                                                                   width: 140,

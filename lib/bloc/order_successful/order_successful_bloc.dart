@@ -22,10 +22,15 @@ part 'order_successful_bloc.freezed.dart';
 
 class OrderSuccessfulBloc
     extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
+
+  init(){
+
+  }
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
  /*     SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());*/
+          SharedPreferencesHelp
+          er(prefs: await SharedPreferences.getInstance());*/
 
       if (event is _getWalletRecordEvent) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(

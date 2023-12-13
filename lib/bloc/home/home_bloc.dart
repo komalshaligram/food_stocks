@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -96,7 +97,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } on ServerException {
-        }
+        } catch (e) {}
       } else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isProductSaleShimmering: true));
@@ -497,7 +498,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            Vibration.vibrate(amplitude: 128);
+            HapticFeedback.heavyImpact();
+            //Vibration.vibrate(amplitude: 128);
             // List<ProductStockModel> productStockList =
             // state.productStockList.toList(growable: true);
             // productStockList[state.productStockUpdateIndex] =
