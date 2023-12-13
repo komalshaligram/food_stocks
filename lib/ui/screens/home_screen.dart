@@ -18,8 +18,10 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_product_details_widget.dart';
+import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/custom_text_icon_button_widget.dart';
+import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -288,7 +290,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       shape: BoxShape.circle),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                      '${state.messageCount <= 10 ? state.messageCount : '10+'}',
+                                                      '${state.messageCount <= 99 ? state.messageCount : '99+'}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                               size: AppConstants
@@ -372,10 +374,11 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: formatter(state.balance.toString()),
-                                                expense: 100 - state.expensePercentage,
-                                                totalBalance: 100
-                                            ),
+                                                pendingBalance: formatter(
+                                                    state.balance.toString()),
+                                                expense: 100 -
+                                                    state.expensePercentage,
+                                                totalBalance: 100),
                                           ],
                                         )),
                                     5.width,
@@ -493,39 +496,83 @@ class HomeScreenWidget extends StatelessWidget {
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 shrinkWrap: true,
-                                                itemBuilder: (context, index) =>
-                                                    buildProductSaleListItem(
-                                                      context: context,
-                                                      saleImage: state
-                                                              .productSalesList[
-                                                                  index]
-                                                              .mainImage ??
-                                                          '',
-                                                      title: state
-                                                              .productSalesList[
-                                                                  index]
-                                                              .salesName ??
-                                                          '',
-                                                      description: state
-                                                              .productSalesList[
-                                                                  index]
-                                                              .salesDescription ??
-                                                          '',
-                                                      salePercentage: double.parse(state
-                                                              .productSalesList[
-                                                                  index]
-                                                              .discountPercentage ??
-                                                          '0.0'),
-                                                      onButtonTap: () {
-                                                        showProductDetails(
-                                                            context: context,
-                                                            productId: state
-                                                                    .productSalesList[
-                                                                        index]
-                                                                    .id ??
-                                                                '');
-                                                      },
-                                                    )),
+                                                itemBuilder:
+                                                    (context, index) =>
+                                                        DelayedWidget(
+                                                          delay: Duration(
+                                                              milliseconds:
+                                                                  300 +
+                                                                      (index *
+                                                                          30)),
+                                                          slidingCurve:
+                                                              Curves.decelerate,
+                                                          slidingBeginOffset:
+                                                              Offset(20, 0),
+                                                          child:
+                                                              CommonProductSaleItemWidget(
+                                                                  width: 140,
+                                                                  height: 170,
+                                                                  saleImage: state
+                                                                          .productSalesList[
+                                                                              index]
+                                                                          .mainImage ??
+                                                                      '',
+                                                                  title: state
+                                                                          .productSalesList[
+                                                                              index]
+                                                                          .salesName ??
+                                                                      '',
+                                                                  description:
+                                                                      state.productSalesList[index].salesDescription ??
+                                                                          '',
+                                                                  salePercentage: double.parse(state
+                                                                          .productSalesList[
+                                                                              index]
+                                                                          .discountPercentage ??
+                                                                      '0.0'),
+                                                                  onButtonTap:
+                                                                      () {
+                                                                    showProductDetails(
+                                                                        context:
+                                                                            context,
+                                                                        productId:
+                                                                            state.productSalesList[index].id ??
+                                                                                '');
+                                                                  }),
+                                                        )
+                                                // buildProductSaleListItem(
+                                                // context: context,
+                                                // saleImage: state
+                                                //     .productSalesList[
+                                                // index]
+                                                //     .mainImage ??
+                                                //     '',
+                                                // title: state
+                                                //     .productSalesList[
+                                                // index]
+                                                //     .salesName ??
+                                                //     '',
+                                                // description: state
+                                                //     .productSalesList[
+                                                // index]
+                                                //     .salesDescription ??
+                                                //     '',
+                                                // salePercentage: double.parse(state
+                                                //     .productSalesList[
+                                                // index]
+                                                //     .discountPercentage ??
+                                                //     '0.0'),
+                                                // onButtonTap: () {
+                                                //   showProductDetails(
+                                                //       context: context,
+                                                //       productId: state
+                                                //           .productSalesList[
+                                                //       index]
+                                                //           .id ??
+                                                //           '');
+                                                // },
+                                                // )
+                                                ),
                                           ),
                                           10.height,
                                         ],
@@ -561,31 +608,34 @@ class HomeScreenWidget extends StatelessWidget {
                             30.height,
                             state.messageList.isEmpty
                                 ? Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                  child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .messages,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont, color: AppColors.blackColor),
-                                  ),
-                                  Container(
-                                    height: getScreenHeight(context)/6,
-                                    width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Messages not found',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.textColor),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: AppConstants.padding_10),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .messages,
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor),
+                                        ),
+                                        Container(
+                                          height: getScreenHeight(context) / 6,
+                                          width: getScreenWidth(context),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'Messages not found',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.smallFont,
+                                                color: AppColors.textColor),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   )
-                              ],
-                            ),
-                                )
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -650,17 +700,21 @@ class HomeScreenWidget extends StatelessWidget {
                                                       });
                                                   debugPrint(
                                                       'message = $messageNewData');
-                                                  context.read<HomeBloc>().add(HomeEvent
-                                                      .removeOrUpdateMessageEvent(
-                                                          messageId: messageNewData[
-                                                              AppStrings
-                                                                  .messageIdString],
-                                                          isRead: messageNewData[
-                                                              AppStrings
-                                                                  .messageReadString],
-                                                          isDelete: messageNewData[
-                                                              AppStrings
-                                                                  .messageDeleteString]));
+                                                  if (messageNewData != null) {
+                                                    context.read<HomeBloc>().add(
+                                                        HomeEvent.removeOrUpdateMessageEvent(
+                                                            messageId:
+                                                                messageNewData[
+                                                                    AppStrings
+                                                                        .messageIdString],
+                                                            isRead: messageNewData[
+                                                                AppStrings
+                                                                    .messageReadString],
+                                                            isDelete:
+                                                                messageNewData[
+                                                                    AppStrings
+                                                                        .messageDeleteString]));
+                                                  }
                                                 }),
                                       ),
                                     ],
@@ -794,75 +848,80 @@ class HomeScreenWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
           horizontal: AppConstants.padding_10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: CachedNetworkImage(
-              imageUrl: "${AppUrls.baseFileUrl}$saleImage",
-              height: 70,
-              fit: BoxFit.fitHeight,
-              placeholder: (context, url) {
-                return CommonShimmerWidget(
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppConstants.radius_10)),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: onButtonTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CachedNetworkImage(
+                imageUrl: "${AppUrls.baseFileUrl}$saleImage",
+                height: 70,
+                fit: BoxFit.fitHeight,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                      ),
+                      // alignment: Alignment.center,
+                      // child: CupertinoActivityIndicator(
+                      //   color: AppColors.blackColor,
+                      // ),
                     ),
-                    // alignment: Alignment.center,
-                    // child: CupertinoActivityIndicator(
-                    //   color: AppColors.blackColor,
-                    // ),
-                  ),
-                );
-              },
-              errorWidget: (context, error, stackTrace) {
-                // debugPrint('sale list image error : $error');
-                return Container(
-                  child: Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: double.maxFinite, fit: BoxFit.cover),
-                );
-              },
+                  );
+                },
+                errorWidget: (context, error, stackTrace) {
+                  // debugPrint('sale list image error : $error');
+                  return Container(
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        height: 70, width: double.maxFinite, fit: BoxFit.cover),
+                  );
+                },
+              ),
             ),
-          ),
-          5.height,
-          Text(
-            title,
-            style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.font_12,
-                color: AppColors.saleRedColor,
-                fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          5.height,
-          Expanded(
-            child: Text(
-              "${parse(description).body?.text}",
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_10, color: AppColors.blackColor),
-              maxLines: 3,
+            5.height,
+            Text(
+              title,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.saleRedColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          5.height,
-          Center(
-            child: CommonProductButtonWidget(
-              title:
-                  "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-              onPressed: onButtonTap,
-              // height: 35,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12,
+            5.height,
+            Expanded(
+              child: Text(
+                "${parse(description).body?.text}",
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_10, color: AppColors.blackColor),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            5.height,
+            Center(
+              child: CommonProductButtonWidget(
+                title:
+                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                onPressed: onButtonTap,
+                // height: 35,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor,
+                borderRadius: AppConstants.radius_3,
+                textSize: AppConstants.font_12,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

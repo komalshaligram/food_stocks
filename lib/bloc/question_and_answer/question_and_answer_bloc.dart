@@ -4,6 +4,7 @@ import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/req_model/get_qna_req_model/get_qna_req_model.dart';
 import 'package:food_stock/data/model/res_model/get_qna_res_model/get_qna_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -61,12 +62,18 @@ class QuestionAndAnswerBloc
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(pageNum: 0, qnaList: [], isBottomOfQNA: false));
+        add(QuestionAndAnswerEvent.getQNAListEvent(context: event.context));
       }
     });
   }

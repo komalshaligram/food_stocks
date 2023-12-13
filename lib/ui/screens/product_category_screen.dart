@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/common_marquee_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_category_screen_shimmer_widget.dart';
-import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
@@ -235,6 +234,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
       required BuildContext context,
       required void Function() onTap}) {
     return DelayedWidget(
+      slidingCurve: Curves.decelerate,
       child: Container(
         height: getScreenHeight(context),
         width: getScreenWidth(context),
@@ -254,7 +254,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           onTap: onTap,
           child: Column(
             children: [
@@ -274,9 +274,9 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                             color: AppColors.whiteColor,
                             borderRadius: BorderRadius.only(
                                 topLeft:
-                                    Radius.circular(AppConstants.radius_10),
+                                Radius.circular(AppConstants.radius_10),
                                 topRight:
-                                    Radius.circular(AppConstants.radius_10)),
+                                Radius.circular(AppConstants.radius_10)),
                           ),
                         ),
                       );

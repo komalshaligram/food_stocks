@@ -16,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -157,12 +158,21 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.subCategoryRefreshController.refreshCompleted();
+        state.subCategoryRefreshController.loadComplete();
+      } else if (event is _SubCategoryRefreshListEvent) {
+        emit(state.copyWith(
+            subCategoryPageNum: 0,
+            subCategoryList: [],
+            isBottomOfSubCategory: false));
+        add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
       } else if (event is _GetPlanoGramProductsEvent) {
         if (state.isLoadMore) {
           return;
@@ -230,12 +240,25 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 bgColor: AppColors.redColor);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+        state.planogramRefreshController.refreshCompleted();
+        state.planogramRefreshController.loadComplete();
+      } else if (event is _PlanogramRefreshListEvent) {
+        emit(state.copyWith(
+            planogramPageNum: 0,
+            planoGramsList: [],
+            productStockList: [
+              [ProductStockModel(productId: '')]
+            ],
+            isBottomOfPlanoGrams: false));
+        add(StoreCategoryEvent.getPlanoGramProductsEvent(
+            context: event.context));
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
@@ -244,7 +267,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response =
-          ProductDetailsResModel.fromJson(res);
+              ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
             List<List<ProductStockModel>> productStockList =
             state.productStockList.toList(growable: true);
@@ -327,7 +350,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   parse(sale.salesDescription ?? '')
                       .body
                       ?.text ??
-                                              '',
+                      '',
                                       salePrice: double.parse(
                                           sale.discountedPrice ?? '0.0'),
                                       saleDiscount: double.parse(
@@ -338,17 +361,18 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     .toList() ??
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
-            debugPrint('response list = ${response.product?.length}');
-            debugPrint('supplier list = ${supplierList}');
             debugPrint(
-                'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
-            emit(state.copyWith(productStockList: []));
-            String note =
-                state.productStockList.indexOf(state.productStockList.last) ==
-                            planoGramIndex &&
-                        productStockUpdateIndex == 0
+                'response list = ${response.product?.first.supplierSales?.length}');
+            debugPrint('supplier list = ${supplierList}');
+            // debugPrint(
+            //     'supplier select index = ${supplierList.map((e) => e.selectedIndex)}');
+            String note = productStockList.isEmpty
+                ? ''
+                : productStockList.indexOf(state.productStockList.last) ==
+                        planoGramIndex
                     ? ''
-                    : state.productStockList[productStockUpdateIndex][0].note;
+                    : productStockList[planoGramIndex][0].note;
+            emit(state.copyWith(productStockList: []));
             emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
@@ -357,6 +381,47 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSupplierList: supplierList,
                 planoGramUpdateIndex: planoGramIndex,
                 isProductLoading: false));
+            if (supplierList.isNotEmpty) {
+              bool isSupplierSelected = false;
+              supplierList.forEach((supplier) {
+                if (supplier.selectedIndex != -1) {
+                  isSupplierSelected = true;
+                  return;
+                }
+              });
+              debugPrint('isSupplierSelected = $isSupplierSelected');
+              if (!isSupplierSelected) {
+                int supplierIndex = 0;
+                int supplierSaleIndex = -1;
+                double cheapestPrice = supplierList.first.basePrice;
+                supplierList.forEach(
+                    (supplier) => supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
+                debugPrint('cheapest = $cheapestPrice');
+                supplierList.forEach((supplier) {
+                  if (supplier.basePrice < cheapestPrice) {
+                    cheapestPrice = supplier.basePrice;
+                    supplierIndex = supplierList.indexOf(supplier);
+                  }
+                });
+                if (supplierSaleIndex == -1) {
+                  supplierSaleIndex = -2;
+                }
+                debugPrint('cheapest = $cheapestPrice');
+                debugPrint('supplier index = $supplierIndex');
+                debugPrint('supplier sale index = $supplierSaleIndex');
+                add(StoreCategoryEvent.supplierSelectionEvent(
+                    supplierIndex: supplierIndex,
+                    context: event.context,
+                    supplierSaleIndex: supplierSaleIndex));
+              }
+            }
           } else {
             showSnackBar(
                 context: event.context,
@@ -368,7 +433,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           Navigator.pop(event.context);
           // emit(state.copyWith(isProductLoading: false));
         } catch (e) {
-          Navigator.pop(event.context);
+          debugPrint('bs error = $e');
+          // Navigator.pop(event.context);
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList =
@@ -436,11 +502,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel>> productStockList =
-              state.productStockList.toList(growable: false);
+          state.productStockList.toList(growable: false);
           productStockList[state.planoGramUpdateIndex]
-                  [state.productStockUpdateIndex] =
+          [state.productStockUpdateIndex] =
               productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex]
+              [state.productStockUpdateIndex]
                   .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
@@ -462,19 +528,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             [state.productStockUpdateIndex]
                 .copyWith(
                 productSupplierIds:
-                supplierList[event.supplierIndex].supplierId,
-                stock: supplierList[event.supplierIndex].stock,
-                quantity: 0,
-                totalPrice: event.supplierSaleIndex == -2
-                    ? supplierList[event.supplierIndex].basePrice
-                    : supplierList[event.supplierIndex]
-                    .supplierSales[event.supplierSaleIndex]
-                    .salePrice,
-                productSaleId: event.supplierSaleIndex == -2
-                    ? ''
-                    : supplierList[event.supplierIndex]
-                    .supplierSales[event.supplierSaleIndex]
-                    .saleId);
+                        supplierList[event.supplierIndex].supplierId,
+                    stock: supplierList[event.supplierIndex].stock,
+                    quantity: 1,
+                    totalPrice: event.supplierSaleIndex == -2
+                        ? supplierList[event.supplierIndex].basePrice
+                        : supplierList[event.supplierIndex]
+                            .supplierSales[event.supplierSaleIndex]
+                            .salePrice,
+                    productSaleId: event.supplierSaleIndex == -2
+                        ? ''
+                        : supplierList[event.supplierIndex]
+                            .supplierSales[event.supplierSaleIndex]
+                            .saleId);
         debugPrint(
             'stock supplier id = ${productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].productSupplierIds}');
         debugPrint(
@@ -630,7 +696,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         debugPrint('data1 = ${state.search}');
         try {
           GlobalSearchReqModel globalSearchReqModel =
-              GlobalSearchReqModel(search: state.search);
+          GlobalSearchReqModel(search: state.search);
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
               AppUrls.getGlobalSearchResultUrl,
@@ -651,12 +717,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             List<SearchModel> searchList = [];
             //category search result
             searchList.addAll(response.data?.categoryData
-                    ?.map((category) => SearchModel(
-                        searchId: category.id ?? '',
-                        name: category.categoryName ?? '',
-                        searchType: SearchTypes.category,
-                        image: category.categoryImage ?? ''))
-                    .toList() ??
+                ?.map((category) => SearchModel(
+                searchId: category.id ?? '',
+                name: category.categoryName ?? '',
+                searchType: SearchTypes.category,
+                image: category.categoryImage ?? ''))
+                .toList() ??
                 []);
             //company search result
             searchList.addAll(response.data?.companyData
@@ -724,28 +790,28 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
       } else if (event is _ToggleNoteEvent) {
         List<List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
+        state.productStockList.toList(growable: true);
         if (event.isBarcode) {
           debugPrint(
               'toggled,${productStockList.indexOf(productStockList.last)}');
           productStockList[productStockList.indexOf(productStockList.last)][0] =
               productStockList[productStockList.indexOf(productStockList.last)]
-                      [0]
+              [0]
                   .copyWith(
-                      isNoteOpen: !productStockList[productStockList
-                              .indexOf(productStockList.last)][0]
-                          .isNoteOpen);
+                  isNoteOpen: !productStockList[productStockList
+                      .indexOf(productStockList.last)][0]
+                      .isNoteOpen);
         } else {
           debugPrint(
               'toggled,${state.planoGramUpdateIndex},${state.productStockUpdateIndex}');
           productStockList[state.planoGramUpdateIndex]
-                  [state.productStockUpdateIndex] =
+          [state.productStockUpdateIndex] =
               productStockList[state.planoGramUpdateIndex]
-                      [state.productStockUpdateIndex]
+              [state.productStockUpdateIndex]
                   .copyWith(
-                      isNoteOpen: !productStockList[state.planoGramUpdateIndex]
-                              [state.productStockUpdateIndex]
-                          .isNoteOpen);
+                  isNoteOpen: !productStockList[state.planoGramUpdateIndex]
+                  [state.productStockUpdateIndex]
+                      .isNoteOpen);
         }
         emit(state.copyWith(productStockList: []));
         emit(state.copyWith(productStockList: productStockList));

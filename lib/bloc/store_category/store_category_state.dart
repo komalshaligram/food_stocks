@@ -33,6 +33,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required int imageIndex,
     required TextEditingController searchController,
     required TextEditingController noteController,
+    required RefreshController subCategoryRefreshController,
+    required RefreshController planogramRefreshController,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -66,5 +68,7 @@ class StoreCategoryState with _$StoreCategoryState {
         imageIndex: 0,
         searchController: TextEditingController(),
         noteController: TextEditingController(),
+        subCategoryRefreshController: RefreshController(),
+        planogramRefreshController: RefreshController(),
       );
 }

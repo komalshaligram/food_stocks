@@ -7,10 +7,12 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
+import '../widget/refresh_widget.dart';
 
 class QuestionAndAnswerRoute {
   static Widget get route => QuestionAndAnswerScreen();
@@ -54,61 +56,83 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: AppConstants.padding_5),
-                child: NotificationListener<ScrollNotification>(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          5.height,
-                          state.isShimmering
-                              ? QuestionAndAnswerScreenShimmerWidget()
-                              : state.qnaList.isEmpty
-                                  ? Container(
-                                      height: getScreenHeight(context) - 80,
-                                      width: getScreenWidth(context),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.qa_not_available}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.textColor),
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: state.qnaList.length,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return qnaItem(
-                                            index: index,
-                                            question:
-                                                state.qnaList[index].question ??
-                                                    '',
-                                            answer: parse(state.qnaList[index]
-                                                            .answer ??
-                                                        '')
-                                                    .documentElement
-                                                    ?.text ??
-                                                '');
-                                      },
+                child:
+                    // NotificationListener<ScrollNotification>(
+                    //     child:
+                    SmartRefresher(
+                  enablePullDown: true,
+                  controller: state.refreshController,
+                  header: RefreshWidget(),
+                  footer: CustomFooter(
+                    builder: (context, mode) =>
+                        QuestionAndAnswerScreenShimmerWidget(),
+                  ),
+                  enablePullUp: !state.isBottomOfQNA,
+                  onRefresh: () {
+                    context.read<QuestionAndAnswerBloc>().add(
+                        QuestionAndAnswerEvent.refreshListEvent(
+                            context: context));
+                  },
+                  onLoading: () {
+                    context.read<QuestionAndAnswerBloc>().add(
+                        QuestionAndAnswerEvent.getQNAListEvent(
+                            context: context));
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        5.height,
+                        state.isShimmering
+                            ? QuestionAndAnswerScreenShimmerWidget()
+                            : state.qnaList.isEmpty
+                                ? Container(
+                                    height: getScreenHeight(context) - 80,
+                                    width: getScreenWidth(context),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${AppLocalizations.of(context)!.qa_not_available}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.textColor),
                                     ),
-                          state.isLoadMore
-                              ? QuestionAndAnswerScreenShimmerWidget()
-                              : 0.width,
-                        ],
-                      ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: state.qnaList.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return qnaItem(
+                                          index: index,
+                                          question:
+                                              state.qnaList[index].question ??
+                                                  '',
+                                          answer: parse(state.qnaList[index]
+                                                          .answer ??
+                                                      '')
+                                                  .documentElement
+                                                  ?.text ??
+                                              '');
+                                    },
+                                  ),
+                        // state.isLoadMore
+                        //     ? QuestionAndAnswerScreenShimmerWidget()
+                        //     : 0.width,
+                      ],
                     ),
-                    onNotification: (notification) {
-                      if (notification.metrics.pixels ==
-                          notification.metrics.maxScrollExtent) {
-                        if (!state.isBottomOfQNA) {
-                          context.read<QuestionAndAnswerBloc>().add(
-                              QuestionAndAnswerEvent.getQNAListEvent(
-                                  context: context));
-                        }
-                      }
-                      return true;
-                    }),
+                  ),
+                ),
+                // onNotification: (notification) {
+                //   if (notification.metrics.pixels ==
+                //       notification.metrics.maxScrollExtent) {
+                //     if (!state.isBottomOfQNA) {
+                //       context.read<QuestionAndAnswerBloc>().add(
+                //           QuestionAndAnswerEvent.getQNAListEvent(
+                //               context: context));
+                //     }
+                //   }
+                //   return true;
+                // }),
               ),
             ),
           );

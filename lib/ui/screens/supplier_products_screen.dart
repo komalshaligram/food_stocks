@@ -6,6 +6,7 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -73,9 +74,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             ),
             body: SafeArea(
               child:
-                  // NotificationListener<ScrollNotification>(
-                  //   child:
-                  SmartRefresher(
+              // NotificationListener<ScrollNotification>(
+              //   child:
+              SmartRefresher(
                 enablePullDown: true,
                 controller: state.refreshController,
                 header: RefreshWidget(),
@@ -86,7 +87,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 enablePullUp: !state.isBottomOfProducts,
                 onRefresh: () {
                   context.read<SupplierProductsBloc>().add(
-                      SupplierProductsEvent.refreshListEvent(context: context));
+                      SupplierProductsEvent.refreshListEvent(
+                          context: context));
                 },
                 onLoading: () {
                   context.read<SupplierProductsBloc>().add(
@@ -183,50 +185,72 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       state.isShimmering
                           ? SupplierProductsScreenShimmerWidget()
                           : state.productList.isEmpty
-                              ? Container(
-                                  height: getScreenHeight(context) - 80,
-                                  width: getScreenWidth(context),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.textColor),
-                                  ),
-                                )
-                              : GridView.builder(
-                                  itemCount: state.productList.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: AppConstants.padding_5),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          childAspectRatio: 9 / 12),
-                                  itemBuilder: (context, index) =>
-                                      buildSupplierProducts(
+                          ? Container(
+                        height: getScreenHeight(context) - 80,
+                        width: getScreenWidth(context),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${AppLocalizations.of(context)!
+                              .currently_this_Supplier_has_no_products}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.textColor),
+                        ),
+                      )
+                          : GridView.builder(
+                          itemCount: state.productList.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_5),
+                          gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 9 / 12),
+                          itemBuilder: (context, index) =>
+                              DelayedWidget(
+                                child: CommonProductItemWidget(
+                                    productImage: state.productList[index]
+                                        .mainImage ??
+                                        '',
+                                    productName: state.productList[index]
+                                        .productName ??
+                                        '',
+                                    totalSaleCount: 0,
+                                    price: state.productList[index]
+                                        .productPrice ??
+                                        0.0,
+                                    onButtonTap: () {
+                                      showProductDetails(
                                           context: context,
-                                          index: index,
-                                          productImage: state.productList[index]
-                                                  .mainImage ??
-                                              '',
-                                          productName: state.productList[index]
-                                                  .productName ??
-                                              '',
-                                          productPrice: state.productList[index]
-                                                  .productPrice ??
-                                              0.0,
-                                          onPressed: () {
-                                            showProductDetails(
-                                                context: context,
-                                                productId: state
-                                                        .productList[index]
-                                                        .productId ??
-                                                    '');
-                                          },
-                                          isRTL: context.rtl),
-                                ),
+                                          productId: state
+                                              .productList[index]
+                                              .productId ??
+                                              '');
+                                    }),
+                              )
+                        // buildSupplierProducts(
+                        // context: context,
+                        // index: index,
+                        // productImage: state.productList[index]
+                        //     .mainImage ??
+                        //     '',
+                        // productName: state.productList[index]
+                        //     .productName ??
+                        //     '',
+                        // productPrice: state.productList[index]
+                        //     .productPrice ??
+                        //     0.0,
+                        // onPressed: () {
+                        //   showProductDetails(
+                        //       context: context,
+                        //       productId: state
+                        //           .productList[index]
+                        //           .productId ??
+                        //           '');
+                        // },
+                        // isRTL: context.rtl),
+                      ),
                       // state.isLoadMore
                       //     ? SupplierProductsScreenShimmerWidget()
                       //     : 0.width,
@@ -253,14 +277,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildSupplierProducts(
-      {required BuildContext context,
-      required int index,
-      required String productImage,
-      required String productName,
-      required double productPrice,
-      required void Function() onPressed,
-      required bool isRTL}) {
+  Widget buildSupplierProducts({required BuildContext context,
+    required int index,
+    required String productImage,
+    required String productName,
+    required double productPrice,
+    required void Function() onPressed,
+    required bool isRTL}) {
     return DelayedWidget(
       child: Container(
         // height: 150,
@@ -268,7 +291,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           boxShadow: [
             BoxShadow(
                 color: AppColors.shadowColor.withOpacity(0.15),
@@ -384,17 +407,20 @@ class SupplierProductsScreenWidget extends StatelessWidget {
           child: DraggableScrollableSheet(
             expand: true,
             maxChildSize: 1 -
-                (MediaQuery.of(context).viewPadding.top /
+                (MediaQuery
+                    .of(context)
+                    .viewPadding
+                    .top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: 0.7,
-          //  shouldCloseOnMinExtent: true,
+            //  shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
                   value: context.read<SupplierProductsBloc>(),
                   child:
-                      BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
+                  BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
                     builder: (context, state) {
                       return Container(
                         decoration: BoxDecoration(
@@ -664,24 +690,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Price : ${state
-                                                        .productSupplierList
-                                                        .firstWhere((
-                                                        supplier) =>
-                                                    supplier.selectedIndex ==
-                                                        -2)
-                                                        .basePrice
-                                                        .toStringAsFixed(
-                                                        AppConstants
-                                                            .amountFrLength)}${AppLocalizations
-                                                        .of(context)!
-                                                        .currency}',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .font_14,
-                                                        color: AppColors
-                                                            .blackColor),
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
                                                   ),
                                                 ],
                                               )
@@ -703,31 +718,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    'Price : ${state
-                                                        .productSupplierList
-                                                        .firstWhere((
-                                                        supplier) =>
-                                                    supplier.selectedIndex >= 0)
-                                                        .supplierSales[index]
-                                                        .salePrice
-                                                        .toStringAsFixed(
-                                                        AppConstants
-                                                            .amountFrLength)}${AppLocalizations
-                                                        .of(context)!
-                                                        .currency}(${state
-                                                        .productSupplierList
-                                                        .firstWhere((
-                                                        supplier) =>
-                                                    supplier.selectedIndex >= 0)
-                                                        .supplierSales[index]
-                                                        .saleDiscount
-                                                        .toStringAsFixed(0)}%)',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .font_14,
-                                                        color: AppColors
-                                                            .blackColor),
+                                                            size: AppConstants
+                                                                .font_14,
+                                                            color: AppColors
+                                                                .blackColor),
                                                   ),
                                                 ],
                                               ),
@@ -932,16 +929,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state
-                                                                  .productSupplierList[index]
-                                                                  .basePrice
-                                                                  .toStringAsFixed(
-                                                                  AppConstants
-                                                                      .amountFrLength)}${AppLocalizations
-                                                                  .of(context)!
-                                                                  .currency}',
-                                                              style: AppStyles
-                                                                  .rkRegularTextStyle(
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                              style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
                                                                   color: AppColors
@@ -958,7 +947,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                 SupplierProductsBloc>()
                                                             .add(SupplierProductsEvent
                                                                 .supplierSelectionEvent(
-                                                            supplierIndex:
+                                                                    supplierIndex:
                                                                         index,
                                                                     context:
                                                                         context,
@@ -1025,22 +1014,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state
-                                                                  .productSupplierList[index]
-                                                                  .supplierSales[subIndex]
-                                                                  .salePrice
-                                                                  .toStringAsFixed(
-                                                                  AppConstants
-                                                                      .amountFrLength)}${AppLocalizations
-                                                                  .of(context)!
-                                                                  .currency}(${state
-                                                                  .productSupplierList[index]
-                                                                  .supplierSales[subIndex]
-                                                                  .saleDiscount
-                                                                  .toStringAsFixed(
-                                                                  0)}%)',
-                                                              style: AppStyles
-                                                                  .rkRegularTextStyle(
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
+                                                              style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
                                                                   color: AppColors

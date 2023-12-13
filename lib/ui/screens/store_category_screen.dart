@@ -17,6 +17,7 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
@@ -25,6 +26,7 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/refresh_widget.dart';
 
 class StoreCategoryRoute {
   static Widget get route => const StoreCategoryScreen();
@@ -89,17 +91,57 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               body: SafeArea(
                 child: Stack(
                   children: [
-                    SizedBox(
-                        height: getScreenHeight(context),
-                        width: getScreenWidth(context),
-                        child: Stack(
-                          children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: Container(
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          child: Column(children: [
+                            80.height,
                             state.isSubCategory
-                                ? NotificationListener<ScrollNotification>(
+                                ? buildTopNavigation(
+                                context: context,
+                                categoryName: state.categoryName,
+                                search: state.searchController.text,
+                                searchList: state.searchList)
+                                : buildTopNavigation(
+                                context: context,
+                                categoryName: state.categoryName,
+                                subCategoryName:
+                                state.subCategoryName,
+                                search: state.searchController.text,
+                                searchList: state.searchList),
+                            Expanded(child: state.isSubCategory
+                                ?
+                            // NotificationListener<ScrollNotification>(
+                            //   child:
+                            SmartRefresher(
+                              enablePullDown: true,
+                              controller: state.subCategoryRefreshController,
+                              header: RefreshWidget(),
+                              footer: CustomFooter(
+                                builder: (context, mode) =>
+                                    StoreCategoryScreenSubcategoryShimmerWidget(),
+                              ),
+                              enablePullUp: !state.isBottomOfSubCategory,
+                              onRefresh: () {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent
+                                        .subCategoryRefreshListEvent(
+                                        context: context));
+                              },
+                              onLoading: () {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent.getSubCategoryListEvent(
+                                        context: context));
+                              },
                               child: SingleChildScrollView(
                                 physics: state.subCategoryList.isEmpty
                                     ? const NeverScrollableScrollPhysics()
-                                    : const AlwaysScrollableScrollPhysics(),
+                                    : null,
                                 child: GestureDetector(
                                   onTap: () {
                                     bloc.add(StoreCategoryEvent
@@ -112,12 +154,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                     children: [
-                                      80.height,
-                                      buildTopNavigation(
-                                          context: context,
-                                          categoryName: state.categoryName,
-                                          search: state.searchController.text,
-                                          searchList: state.searchList),
+                                      5.height,
                                       state.isSubCategoryShimmering
                                           ? StoreCategoryScreenSubcategoryShimmerWidget()
                                           : state.subCategoryList.isEmpty
@@ -178,9 +215,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           context));
                                                 }),
                                       ),
-                                      state.isLoadMore
-                                          ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                          : 0.width,
+                                      // state.isLoadMore
+                                      //     ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                      //     : 0.width,
                                       // state.subCategoryList.isEmpty
                                       //     ? 0.width
                                       //     : state.isBottomOfPlanoGrams
@@ -191,36 +228,51 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                // ),
+                                //   onNotification: (notification) {
+                                //     if (notification.metrics.pixels ==
+                                //         notification.metrics.maxScrollExtent) {
+                                //       context.read<StoreCategoryBloc>().add(
+                                //           StoreCategoryEvent
+                                //               .getSubCategoryListEvent(
+                                //               context: context));
+                                //     }
+                                //     return true;
+                                //   },
                               ),
-                              onNotification: (notification) {
-                                if (notification.metrics.pixels ==
-                                    notification.metrics.maxScrollExtent) {
-                                  context.read<StoreCategoryBloc>().add(
-                                      StoreCategoryEvent
-                                          .getSubCategoryListEvent(
-                                          context: context));
-                                }
-                                return true;
-                              },
                             )
-                                : NotificationListener<ScrollNotification>(
+                                :
+                            // NotificationListener<ScrollNotification>(
+                            //   child:
+                            SmartRefresher(
+                              enablePullDown: true,
+                              controller: state.planogramRefreshController,
+                              header: RefreshWidget(),
+                              footer: CustomFooter(
+                                builder: (context, mode) =>
+                                    StoreCategoryScreenPlanoGramShimmerWidget(),
+                              ),
+                              enablePullUp: !state.isBottomOfPlanoGrams,
+                              onRefresh: () {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent
+                                        .planogramRefreshListEvent(
+                                        context: context));
+                              },
+                              onLoading: () {
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent
+                                        .getPlanoGramProductsEvent(
+                                        context: context));
+                              },
                               child: SingleChildScrollView(
                                 physics: state.planoGramsList.isEmpty
                                     ? const NeverScrollableScrollPhysics()
-                                    : const AlwaysScrollableScrollPhysics(),
+                                    : null,
                                 child: Column(
                                   crossAxisAlignment:
                                   CrossAxisAlignment.start,
                                   children: [
-                                    80.height,
-                                    buildTopNavigation(
-                                        context: context,
-                                        categoryName: state.categoryName,
-                                        subCategoryName:
-                                        state.subCategoryName,
-                                        search: state.searchController.text,
-                                        searchList: state.searchList),
-                                    16.height,
                                     state.isPlanogramShimmering
                                         ? StoreCategoryScreenPlanoGramShimmerWidget()
                                         : state.planoGramsList.isEmpty
@@ -251,132 +303,46 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       const NeverScrollableScrollPhysics(),
                                       itemBuilder:
                                           (context, index) {
-                                        return (state
-                                            .planoGramsList[
+                                        return /*(state
+                                            .planoGramsList*/ /*[
                                         index]
                                             .planogramproducts
-                                            ?.isEmpty ??
-                                            true)
+                                            ?*/ /*.isEmpty */ /*??
+                                            true*/ /*)
                                             ? 0.width
-                                            : buildPlanoGramItem(
+                                            :*/ buildPlanoGramItem(
                                             context: context,
                                             index: index);
                                       },
                                     ),
-                                    state.isLoadMore
-                                        ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                        : 0.width,
+                                    // state.isLoadMore
+                                    //     ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                    //     : 0.width,
                                     // state.isBottomOfPlanoGrams
                                     //     ? CommonPaginationEndWidget(
                                     //         pageEndText: 'No more Products')
                                     //     : 0.width,
-                                    // 85.height,
-                                    // Container(
-                                    //   color: AppColors.whiteColor,
-                                    //   child: Column(
-                                    //     mainAxisSize: MainAxisSize.min,
-                                    //     children: [
-                                    //       // Row(
-                                    //       //   mainAxisAlignment:
-                                    //       //   MainAxisAlignment.start,
-                                    //       //   children: [
-                                    //       //     Padding(
-                                    //       //       padding: const EdgeInsets.symmetric(
-                                    //       //           horizontal:
-                                    //       //           AppConstants.padding_10,
-                                    //       //           vertical: AppConstants.padding_3),
-                                    //       //       child: Text(
-                                    //       //         AppLocalizations.of(context)!
-                                    //       //             .planogram,
-                                    //       //         style: AppStyles.rkBoldTextStyle(
-                                    //       //             size: AppConstants.mediumFont,
-                                    //       //             color: AppColors.blackColor,
-                                    //       //             fontWeight: FontWeight.w600),
-                                    //       //       ),
-                                    //       //     ),
-                                    //       //   ],
-                                    //       // ),
-                                    //       buildPlanogramTitles(
-                                    //           context: context,
-                                    //           title: 'planogram',
-                                    //           onTap: () {},
-                                    //           subTitle: 'all planogram'),
-                                    //       5.height,
-                                    //       SizedBox(
-                                    //         height: 200,
-                                    //         child: ListView.builder(
-                                    //           itemCount: 10,
-                                    //           padding: EdgeInsets.symmetric(
-                                    //               horizontal:
-                                    //               AppConstants.padding_5),
-                                    //           scrollDirection: Axis.horizontal,
-                                    //           shrinkWrap: true,
-                                    //           itemBuilder: (context, index) {
-                                    //             return buildPlanoGramListItem(
-                                    //                 context: context,
-                                    //                 isRTL: isRTLContent(
-                                    //                     context: context),
-                                    //                 width: getScreenWidth(
-                                    //                     context) /
-                                    //                     3.2);
-                                    //           },
-                                    //         ),
-                                    //       ),
-                                    //       10.height,
-                                    //     ],
-                                    //   ),
-                                    // ),
-                                    // Row(
-                                    //   children: [
-                                    //     Padding(
-                                    //       padding: const EdgeInsets.all(8.0),
-                                    //       child: Text(
-                                    //         AppLocalizations.of(context)!.planogram,
-                                    //         style: AppStyles.rkBoldTextStyle(
-                                    //             size: AppConstants.mediumFont,
-                                    //             color: AppColors.blackColor,
-                                    //             fontWeight: FontWeight.w600),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-                                    // GridView.builder(
-                                    //   physics: const NeverScrollableScrollPhysics(),
-                                    //   padding: EdgeInsets.symmetric(
-                                    //       vertical: AppConstants.padding_5),
-                                    //   gridDelegate:
-                                    //   SliverGridDelegateWithFixedCrossAxisCount(
-                                    //       crossAxisCount: 3,
-                                    //       childAspectRatio:
-                                    //       (getScreenWidth(context) + 70) /
-                                    //           getScreenHeight(context)),
-                                    //   shrinkWrap: true,
-                                    //   itemCount: 20,
-                                    //   itemBuilder: (context, index) {
-                                    //     return buildPlanoGramListItem(
-                                    //         context: context,
-                                    //         isRTL: context.rtl,
-                                    //         width: getScreenWidth(context) / 3.2);
-                                    //   },
-                                    // )
                                   ],
                                 ),
                               ),
-                              onNotification: (notification) {
-                                if (notification.metrics.pixels ==
-                                    notification.metrics.maxScrollExtent) {
-                                  if (notification.metrics.axis ==
-                                      Axis.vertical) {}
-                                  context.read<StoreCategoryBloc>().add(
-                                      StoreCategoryEvent
-                                          .getPlanoGramProductsEvent(
-                                          context: context));
-                                }
-                                return true;
-                              },
                             ),
-                          ],
-                        )),
+                              //   onNotification: (notification) {
+                              //     if (notification.metrics.pixels ==
+                              //         notification.metrics.maxScrollExtent) {
+                              //       if (notification.metrics.axis ==
+                              //           Axis.vertical) {}
+                              //       context.read<StoreCategoryBloc>().add(
+                              //           StoreCategoryEvent
+                              //               .getPlanoGramProductsEvent(
+                              //               context: context));
+                              //     }
+                              //     return true;
+                              //   },
+                              // ),
+                            )
+                          ],)
+                      ),
+                    ),
                     CommonSearchWidget(
                       isCategoryExpand: state.isCategoryExpand,
                       isSearching: state.isSearching,
@@ -572,14 +538,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               productId: result,
                               planoGramIndex: 0,
                               isBarcode: true);
-                        } else {
+                        } /*else {
                           showProductDetails(
                               context: context,
                               productId: '156470',
                               planoGramIndex: state.productStockList
                                   .indexOf(state.productStockList.last),
                               isBarcode: true);
-                        }
+                        }*/
                       },
                     ),
                   ],
@@ -770,98 +736,113 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
                 horizontal: AppConstants.padding_10),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.network(
-                    "${AppUrls.baseFileUrl}${state.planoGramsList[index]
-                        .planogramproducts?[subIndex].mainImage}",
-                    height: 70,
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress?.cumulativeBytesLoaded !=
-                          loadingProgress?.expectedTotalBytes) {
-                        return CommonShimmerWidget(
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_10)),
+            child: InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onTap: () {
+                showProductDetails(
+                    context: context,
+                    productId: state.planoGramsList[index]
+                        .planogramproducts?[subIndex].id ??
+                        '',
+                    planoGramIndex: index);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Image.network(
+                      "${AppUrls.baseFileUrl}${state.planoGramsList[index]
+                          .planogramproducts?[subIndex].mainImage}",
+                      height: 70,
+                      fit: BoxFit.fitHeight,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress?.cumulativeBytesLoaded !=
+                            loadingProgress?.expectedTotalBytes) {
+                          return CommonShimmerWidget(
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_10)),
+                              ),
                             ),
-                          ),
+                          );
+                        }
+                        return child;
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        // debugPrint('sale list image error : $error');
+                        return Container(
+                          child: Image.asset(AppImagePath.imageNotAvailable5,
+                              height: 70,
+                              width: double.maxFinite,
+                              fit: BoxFit.cover),
                         );
-                      }
-                      return child;
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      // debugPrint('sale list image error : $error');
-                      return Container(
-                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                            height: 70,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover),
-                      );
-                    },
+                      },
+                    ),
                   ),
-                ),
-                5.height,
-                Text(
-                  "${state.planoGramsList[index].planogramproducts?[subIndex]
-                      .productName}",
-                  style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_12,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w600),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.height,
-                Expanded(
-                  child: state.planoGramsList[index]
-                      .planogramproducts?[subIndex].totalSale ==
-                      0
-                      ? 0.width
-                      : Text(
+                  5.height,
+                  Text(
                     "${state.planoGramsList[index].planogramproducts?[subIndex]
-                        .totalSale} ${AppLocalizations.of(context)!.discount}",
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_10,
-                        color: AppColors.saleRedColor,
+                        .productName}",
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor,
                         fontWeight: FontWeight.w600),
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                5.height,
-                Center(
-                  child: CommonProductButtonWidget(
-                    title:
-                    "${state.planoGramsList[index].planogramproducts?[subIndex]
-                        .productPrice?.toStringAsFixed(
-                        AppConstants.amountFrLength) == "0.00" ? '0' : state
-                        .planoGramsList[index].planogramproducts?[subIndex]
-                        .productPrice?.toStringAsFixed(
-                        AppConstants.amountFrLength)}${AppLocalizations.of(
-                        context)!.currency}",
-                    onPressed: () {
-                      showProductDetails(
-                          context: context,
-                          productId: state.planoGramsList[index]
-                              .planogramproducts?[subIndex].id ??
-                              '',
-                          planoGramIndex: index);
-                    },
-                    textColor: AppColors.whiteColor,
-                    bgColor: AppColors.mainColor,
-                    borderRadius: AppConstants.radius_3,
-                    textSize: AppConstants.font_12,
+                  5.height,
+                  Expanded(
+                    child: state.planoGramsList[index]
+                        .planogramproducts?[subIndex].totalSale ==
+                        0
+                        ? 0.width
+                        : Text(
+                      "${state.planoGramsList[index]
+                          .planogramproducts?[subIndex]
+                          .totalSale} ${AppLocalizations.of(context)!
+                          .discount}",
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_10,
+                          color: AppColors.saleRedColor,
+                          fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                )
-              ],
+                  5.height,
+                  Center(
+                    child: CommonProductButtonWidget(
+                      title:
+                      "${state.planoGramsList[index]
+                          .planogramproducts?[subIndex]
+                          .productPrice?.toStringAsFixed(
+                          AppConstants.amountFrLength) == "0.00" ? '0' : state
+                          .planoGramsList[index].planogramproducts?[subIndex]
+                          .productPrice?.toStringAsFixed(
+                          AppConstants.amountFrLength)}${AppLocalizations.of(
+                          context)!.currency}",
+                      onPressed: () {
+                        showProductDetails(
+                            context: context,
+                            productId: state.planoGramsList[index]
+                                .planogramproducts?[subIndex].id ??
+                                '',
+                            planoGramIndex: index);
+                      },
+                      textColor: AppColors.whiteColor,
+                      bgColor: AppColors.mainColor,
+                      borderRadius: AppConstants.radius_3,
+                      textSize: AppConstants.font_12,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
           // return Container(
@@ -1498,68 +1479,70 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       value: context.read<StoreCategoryBloc>(),
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context, state) {
-          return Container(
-            color: AppColors.whiteColor,
-            margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildPlanoGramTitles(
-                    context: context,
-                    title: state.planoGramsList[index].planogramName ?? '',
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, RouteDefine.planogramProductScreen.name,
-                          arguments: {
-                            AppStrings.planogramProductsParamString:
-                            state.planoGramsList[index]
-                          });
-                    },
-                    subTitle: (state.planoGramsList[index].planogramproducts
-                        ?.length ??
-                        0) <
-                        6
-                        ? ''
-                        : AppLocalizations.of(context)!.see_all),
-                5.height,
-                SizedBox(
-                  height: 170,
-                  child:
-                  state.planoGramsList[index].planogramproducts?.isEmpty ??
-                      false
-                      ? Center(
-                    child: Text(
-                      '${AppLocalizations.of(context)!.out_of_stock}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.textColor),
+          return DelayedWidget(
+            child: Container(
+              color: AppColors.whiteColor,
+              margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildPlanoGramTitles(
+                      context: context,
+                      title: state.planoGramsList[index].planogramName ?? '',
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, RouteDefine.planogramProductScreen.name,
+                            arguments: {
+                              AppStrings.planogramProductsParamString:
+                              state.planoGramsList[index]
+                            });
+                      },
+                      subTitle: (state.planoGramsList[index].planogramproducts
+                          ?.length ??
+                          0) <
+                          6
+                          ? ''
+                          : AppLocalizations.of(context)!.see_all),
+                  5.height,
+                  SizedBox(
+                    height: 170,
+                    child:
+                    state.planoGramsList[index].planogramproducts?.isEmpty ??
+                        false
+                        ? Center(
+                      child: Text(
+                        '${AppLocalizations.of(context)!.out_of_stock}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.textColor),
+                      ),
+                    )
+                        : ListView.builder(
+                      itemCount: (state.planoGramsList[index]
+                          .planogramproducts?.length ??
+                          0) <
+                          6
+                          ? state.planoGramsList[index]
+                          .planogramproducts?.length
+                          : 6,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (context, subIndex) {
+                        return buildPlanoGramProductListItem(
+                            context: context,
+                            index: index,
+                            subIndex: subIndex,
+                            height: 150,
+                            width: getScreenWidth(context) / 3.2);
+                      },
                     ),
-                  )
-                      : ListView.builder(
-                    itemCount: (state.planoGramsList[index]
-                        .planogramproducts?.length ??
-                        0) <
-                        6
-                        ? state.planoGramsList[index]
-                        .planogramproducts?.length
-                        : 6,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_5),
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemBuilder: (context, subIndex) {
-                      return buildPlanoGramProductListItem(
-                          context: context,
-                          index: index,
-                          subIndex: subIndex,
-                          height: 150,
-                          width: getScreenWidth(context) / 3.2);
-                    },
                   ),
-                ),
-                10.height,
-              ],
+                  10.height,
+                ],
+              ),
             ),
           );
         },
