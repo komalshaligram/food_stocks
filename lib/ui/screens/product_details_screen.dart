@@ -74,7 +74,6 @@ class ProductDetailsScreenWidget extends StatefulWidget {
 
   ProductDetailsScreenWidget({
     super.key,
-  //  required this.productData,
     required this.orderId,
     required this.orderNumber,
   });
@@ -646,7 +645,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       ),
                     ),
                     Text(
-                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}',
+                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                       style: AppStyles.rkRegularTextStyle(
                         color: AppColors.blackColor,
                         size: AppConstants.font_12,
@@ -711,6 +710,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         children: [
                           GestureDetector(
                             onTap: () {
+
+
 
                               (isIssue! || state.productListIndex.contains(index))
                                   ? ProductProblemBottomSheet(
@@ -856,11 +857,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           //shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
-              create: (context) => ProductDetailsBloc()..add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue)),
+              create: (context) => ProductDetailsBloc()..add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue))..add(ProductDetailsEvent.getBottomSheetDataEvent(note: radioValue == 4 ?   issue ?? '' : '')),
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
                   return Container(
-                    color: AppColors.whiteColor,
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30),topRight: Radius.circular(AppConstants.radius_30))
+                    ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: AppConstants.padding_15,
@@ -876,20 +880,22 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 horizontal: AppConstants.padding_5,
                               ),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context1);
-                                      },
-                                      child: Icon(Icons.close)),
-                                  10.width,
+                                  0.width,
                                   Text(
                                     AppLocalizations.of(context)!.product_issue,
                                     style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.blackColor,
+                                      fontWeight: FontWeight.bold
                                     ),
                                   ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context1);
+                                      },
+                                      child: Icon(Icons.close)),
                                 ],
                               ),
                             ),
@@ -940,20 +946,23 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   ),
                                   //10.width,
                                   Text(
-                                    '${quantity.toString()}',
+                                    '${quantity.toString()}${' '}${scale}',
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
                                       size: AppConstants.font_12,
                                     ),
                                   ),
                                   //  10.width,
-                                  Text(
-                                  /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
-                                    '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        color: AppColors.blackColor,
-                                        size: AppConstants.font_14,
-                                        fontWeight: FontWeight.w700),
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                    /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
+                                      '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          color: AppColors.blackColor,
+                                          size: AppConstants.font_14,
+                                          fontWeight: FontWeight.w700),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -975,6 +984,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               listIndex: listIndex,
                               scale: scale,
                               groupValue: radioValue,
+                              bottomSheetContext: context1
                             ),
                             10.height,
                             RadioButtonWidget(
@@ -985,6 +995,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               listIndex: listIndex,
                               scale: scale,
                               groupValue: radioValue,
+                                bottomSheetContext: context1
                             ),
                             10.height,
                             RadioButtonWidget(
@@ -997,6 +1008,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               groupValue: radioValue,
                               missingQuantity: missingQuantity,
                               totalQuantity :quantity,
+                                bottomSheetContext: context1
                             ),
                             10.height,
                             RadioButtonWidget(
@@ -1007,7 +1019,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               listIndex: listIndex,
                               scale: scale,
                               groupValue: radioValue,
-                              note: issue,
+                              note: issue, bottomSheetContext: context1
                             ),
                             10.height,
                             GestureDetector(
@@ -1033,10 +1045,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                           .the_product_arrived_missing
                                                       : state.selectedRadioTile ==
                                                               4
-                                                          ? '${addProblemController.text.toString()}'
+                                                          ? '${state.addNoteController.text.toString()}'
                                                           : '',
-                                          missingQuantity:
-                                              state.selectedRadioTile == 3
+                                          missingQuantity: state.selectedRadioTile == 3
                                                   ? state.quantity
                                                   : 0,
                                           orderId: widget.orderId));
@@ -1074,6 +1085,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
 
   Widget RadioButtonWidget({
     required BuildContext context,
+    required BuildContext bottomSheetContext,
     required String problem,
     required int value,
     required int listIndex,
@@ -1094,9 +1106,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
       value: context.read<ProductDetailsBloc>(),
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
-     quantity = state.quantity;
+     quantity = (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
           return Container(
-            height: value == 4 ? 160 : 60,
+            height: value == 4 ? getScreenWidth(context) <= 380 ? 151 : 160: 60,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
@@ -1127,6 +1139,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               ? groupValue*/
                                state.selectedRadioTile,
                           onChanged: (val) {
+                                // addProblemController.text = '';
+                                 addProblemController.clear();
                             bloc.add(ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: val!));
                           },
@@ -1152,7 +1166,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           .productIncrementEvent(
                                           productQuantity: totalQuantity!,
                                           listIndex: listIndex,
-                                          context: context,
+                                          context: bottomSheetContext,
                                         messingQuantity: quantity
                                       ));
                                     }
@@ -1176,9 +1190,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 10.width,
                                 value == 3
                                     ? Text(
-                                  groupValue == 3
-                                      ? '${missingQuantity.toString()}'
-                                      : '${quantity.toString()}',
+                                  state.selectedRadioTile == 3 && state.quantity == 0
+                                      ? '${quantity.toString()}${' '}${scale}'
+                                      : '${state.quantity}${' '}${scale}',
                                   style: AppStyles.rkRegularTextStyle(
                                     color: AppColors.blackColor,
                                     size: AppConstants.font_12,
@@ -1238,7 +1252,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   context: context,
                         fillColor: AppColors.pageColor,
                         validator: '',
-                        controller: addProblemController,
+                        controller: state.addNoteController,
                         keyboardType: state.selectedRadioTile == 4
                             ? TextInputType.text
                             : TextInputType.none,

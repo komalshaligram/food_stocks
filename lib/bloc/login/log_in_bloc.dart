@@ -56,7 +56,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             debugPrint(response.message!.toLocalization());
          showSnackBar(
                 context: event.context,
-                title:  AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
+                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
             emit(state.copyWith(
               isLoading: false,

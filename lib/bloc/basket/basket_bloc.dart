@@ -14,7 +14,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'basket_event.dart';
 
 part 'basket_state.dart';
@@ -33,13 +33,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
-            /*  options: Options(headers: {
-                HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}'
-              })*/);
+          );
 
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
-          debugPrint('GetAllCartResModel  = $response');
+         // debugPrint('GetAllCartResModel  = $response');
 
           if (response.status == 200) {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
@@ -136,7 +133,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ??'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -154,7 +151,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             data: {AppStrings.cartProductIdString: event.cartProductId},
           );
 
-          debugPrint('remove cart res  = $response');
+        //  debugPrint('remove cart res  = $response');
 
           if (response['status'] == 200) {
             add(BasketEvent.setCartCountEvent(isClearCart: false));
@@ -174,7 +171,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             Navigator.pop(event.context);
             showSnackBar(
                 context: event.context,
-                title: response['message'],
+                title:   response.message != null ?AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context): AppLocalizations.of(event.context)!.something_is_wrong_try_again,
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -187,7 +184,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     'Bearer ${preferencesHelper.getAuthToken()}'
               })*/);
 
-          debugPrint('[clear cart response] =  ${res}');
+        //  debugPrint('[clear cart response] =  ${res}');
 
           if (res["status"] == 201) {
             add(BasketEvent.setCartCountEvent(isClearCart: true));
@@ -214,12 +211,4 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
     });
   }
 
-  String splitNumber(String price) {
-    var splitPrice = price.split(".");
-    if (splitPrice[1] == "00") {
-      return splitPrice[0];
-    } else {
-      return price.toString();
-    }
-  }
 }

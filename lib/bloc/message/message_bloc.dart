@@ -15,7 +15,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'message_event.dart';
@@ -71,6 +71,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                             title: message.message?.title ?? '',
                             summary: message.message?.summary ?? '',
                             body: message.message?.body ?? '',
+                            messageImage: message.message?.messageImage ?? ''
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
@@ -94,8 +95,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             emit(state.copyWith(isLoadMore: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {

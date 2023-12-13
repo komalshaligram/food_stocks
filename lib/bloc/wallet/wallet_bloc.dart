@@ -86,7 +86,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -130,7 +130,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {}
@@ -196,7 +196,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
             emit(state.copyWith(isLoadMore: false));
           }
@@ -272,14 +272,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
               showSnackBar(
                   context: event.context,
-                  title: response.message!,
+                  title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
                   bgColor: AppColors.mainColor);
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message!,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {emit(state.copyWith(isExportShimmering: false));}
@@ -302,12 +302,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           final res =
               await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
                   data: reqMap,
-             /*     options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                          'Bearer ${preferencesHelper.getAuthToken()}',
-                    },
-                  )*/);
+            );
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);

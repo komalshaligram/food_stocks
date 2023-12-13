@@ -39,6 +39,8 @@ import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart'
 import '../../ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../ui/utils/themes/app_strings.dart';
+
 part 'store_event.dart';
 
 part 'store_state.dart';
@@ -88,8 +90,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -202,8 +203,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -229,8 +229,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
@@ -393,8 +392,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
             Navigator.pop(event.context);
           }
@@ -548,8 +546,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //     (response.data?.stock?.first.data?.productStock ?? 0)) {
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',
+               /* title: response.message ??
+                    '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
+                title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
+
                 bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
             // } else {
@@ -563,15 +563,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
                 context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                 bgColor: AppColors.redColor);
           }
         } on ServerException {

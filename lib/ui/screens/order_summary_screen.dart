@@ -5,7 +5,6 @@ import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
-import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -38,7 +37,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   /* OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();*/
+    OrderSummaryBloc bloc = context.read<OrderSummaryBloc>();
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Scaffold(
@@ -196,11 +195,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () {
                                       if (!state.isLoading) {
-                                   /*     bloc.add(
+                                        bloc.add(
                                             OrderSummaryEvent.orderSendEvent(
                                           context: context,
-                                        ));*/
-                                        Navigator.pushNamed(context, RouteDefine.orderSuccessfulScreen.name);
+                                        ));
                                       }
                                     },
                                     child: Container(

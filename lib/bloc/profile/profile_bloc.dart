@@ -143,10 +143,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             debugPrint('business types not found.\n${response.message}');
           }
         } on ServerException {
-          showSnackBar(
-              context: event.context,
-              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.mainColor);
         } catch (e) {}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
@@ -228,20 +224,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               emit(state.copyWith(isUpdating: false));
               showSnackBar(
                   context: event.context,
-                  title: response.message ??
-                      '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
             }
           } on ServerException {
-            // emit(state.copyWith(isUpdating: false));
-            // showSnackBar(
-            //     context: event.context,
-            //     title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-            //     bgColor: AppColors.redColor);
-          } /*catch (e) {
-            debugPrint('res = $e');
-            // emit(state.copyWith(isUpdating: false));
-          }*/
+            emit(state.copyWith(isUpdating: false));
+
+          } catch (e) {
+            emit(state.copyWith(isUpdating: false));
+          }
         }
       } else if (event is _updateProfileDetailsEvent) {
         if (state.image.path != '') {
@@ -263,8 +254,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               imgUrl = response.data!.client!.profileImage.toString();
             } else {
               showSnackBar(
-                  context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                  context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
                   bgColor: AppColors.redColor);
               return;
             }

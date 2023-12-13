@@ -15,6 +15,9 @@ class ProductDetailsState with _$ProductDetailsState {
     required bool isLoading,
     required int quantity,
     required bool isAllCheck,
+    required int missingQuantity,
+    required String note,
+    required TextEditingController addNoteController
   }) = _ProductDetailsState;
 
   factory ProductDetailsState.initial()=>  ProductDetailsState(
@@ -29,7 +32,11 @@ class ProductDetailsState with _$ProductDetailsState {
      isShimmering: false,
     isLoading: false,
       quantity: 0,
-    isAllCheck: false
+    isAllCheck: false,
+     missingQuantity: 0,
+    note: '',
+    addNoteController: TextEditingController()
+
 
   );
 }

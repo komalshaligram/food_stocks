@@ -11,6 +11,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_event.dart';
@@ -18,13 +19,14 @@ part 'order_state.dart';
 part 'order_bloc.freezed.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
-  OrderBloc() : super(OrderState.initial()) {
+  OrderBloc() : super( OrderState.initial()) {
     on<OrderEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       debugPrint('[token]   ${preferencesHelper.getAuthToken()}');
       //  emit(state.copyWith(isShimmering: true));
-      if (event is _getAllOrderEvent) {
+      if(event is _getAllOrderEvent){
         if (state.isLoadMore) {
           return;
         }
@@ -72,11 +74,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             }
 
           } else {
-            emit(state.copyWith(isLoadMore: false, isShimmering: false));
-            showSnackBar(
-                context: event.context,
-                title: response.message!,
-                bgColor: AppColors.mainColor);
+            emit(state.copyWith(isLoadMore: false,isShimmering: false));
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.mainColor);
           }
         }  on ServerException {
           emit(state.copyWith(isLoadMore: false));

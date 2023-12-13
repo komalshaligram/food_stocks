@@ -117,8 +117,6 @@ class DioClient {
 
           if(response1. statusCode == 200 && !isLogOut) {
             isLogOut = true;
-
-            print('islogout____${isLogOut}');
             await preferencesHelper.setUserLoggedIn();
             debugPrint('Token Expired = ${response1.data}');
             await Provider.of<LocaleProvider>(_context, listen: false)

@@ -13,6 +13,7 @@ import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_colors.dart';
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'order_summary_event.dart';
@@ -43,7 +44,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
            emit(state.copyWith(orderSummaryList: response));
           } else {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.mainColor);
           }
         }  on ServerException {}
       }
@@ -77,8 +78,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               saleId:(element.sales?.length == 0) ? '' : (element.sales?.first.id ?? ''),
           ));
         });
-
-        print('ProductReqMap_____${ProductReqMap}');
 
       try {
           OrderSendReqModel reqMap = OrderSendReqModel(
@@ -115,11 +114,11 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           }
 
           else if(response.status == 403){
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.redColor);
             emit(state.copyWith(isLoading: false));
           }
           else {
-            showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.redColor);
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context), bgColor: AppColors.redColor);
             emit(state.copyWith(isLoading: false));
           }
         }  on ServerException { emit(state.copyWith(isLoading: false));}

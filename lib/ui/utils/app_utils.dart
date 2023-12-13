@@ -142,9 +142,21 @@ String formatter(String currentBalance) {
       String result1 = splitNumber(result.toStringAsFixed(2));
       return (result1.toString() + "M" + " ");
     }
-    else if (value >= 10000000) {
+    else if ( value < 100000000 &&  value >= 10000000) {
       // less than 100 million
-      double result = value / 100000;
+      double result = value / 1000000;
+      String result1 = splitNumber(result.toStringAsFixed(2));
+      return (result1.toString() + "M" + " ");
+    }
+    else if (value < 1000000000 &&  value >= 100000000) {
+      // less than 100 million
+      double result = value / 1000000;
+      String result1 = splitNumber(result.toStringAsFixed(2));
+      return (result1.toString() + "M" + " ");
+    }
+    else if (value >= 1000000000) {
+      // less than 100 million
+      double result = value / 1000000;
       String result1 = splitNumber(result.toStringAsFixed(2));
       return (result1.toString() + "M" + " ");
     }
