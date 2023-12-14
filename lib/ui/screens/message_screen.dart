@@ -113,8 +113,8 @@ class MessageScreenWidget extends StatelessWidget {
                                     child: Text(
                                       '${AppLocalizations.of(context)!.messages_not_found}',
                                       style: AppStyles.pVRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.textColor),
+                                          size: AppConstants.font_26,
+                                          color: AppColors.blackColor),
                                     ),
                                   )
                                 : ListView.builder(

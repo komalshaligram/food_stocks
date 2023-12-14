@@ -83,11 +83,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage : double.parse(response.data?.currentMonth?.expensePercentage ?? '')
             ));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
           }
         } on ServerException {
         } catch (e) {}
@@ -128,10 +123,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
             emit(state.copyWith(monthlyExpenseList: temp));
           } else {
-            showSnackBar(
+            /*showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.mainColor);*/
           }
         } on ServerException {}
       } else if (event is _getAllWalletTransactionEvent) {
@@ -277,10 +272,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
+
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         } on ServerException {emit(state.copyWith(isExportShimmering: false));}
       } else if (event is _getOrderCountEvent) {

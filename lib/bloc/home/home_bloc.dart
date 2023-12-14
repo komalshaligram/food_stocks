@@ -128,11 +128,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockList: productStockList,
                 isProductSaleShimmering: false));
           } else {
-            showSnackBar(
+            /*showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);*/
           }
         } on ServerException {}
       } else if (event is _GetProductDetailsEvent) {
@@ -541,10 +541,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -585,11 +581,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage: double.parse(
                     response.data?.currentMonth!.expensePercentage ?? '')));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
           }
         } on ServerException {} catch (e) {}
       } else if (event is _getOrderCountEvent) {
@@ -651,6 +642,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
+
                         ))
                     .toList() ??
                 []);
@@ -660,10 +652,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
-            showSnackBar(
+           /* showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);*/
           }
         } on ServerException {}
       } else if (event is _SetMessageCountEvent) {
