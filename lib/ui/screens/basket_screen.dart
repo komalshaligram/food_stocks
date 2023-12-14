@@ -223,7 +223,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context, RouteDefine.orderSuccessfulScreen.name,arguments: {
+                                            Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name,arguments: {
                                               AppStrings.getCartListString : state.CartItemList
                                                 });
                                           },
@@ -990,7 +990,7 @@ class BasketScreenWidget extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                           ),
                                           Text(
-                                            '${(double.parse(state.CartItemList.data?.data?[index].totalAmount ?? '0')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                            '${(double.parse(state.CartItemList.data?.data?[index].totalAmount.toString() ?? '0')/(state.CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                             style: AppStyles.rkBoldTextStyle(
                                               size: AppConstants.smallFont,
                                               color: AppColors.blackColor,
