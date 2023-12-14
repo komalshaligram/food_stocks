@@ -40,9 +40,8 @@ class MessageContentScreen extends StatelessWidget {
 }
 
 class MessageContentScreenWidget extends StatelessWidget {
-   MessageContentScreenWidget({super.key});
+  const MessageContentScreenWidget({super.key});
 
-   bool isPreview = false;
   @override
   Widget build(BuildContext context) {
     MessageContentBloc bloc = context.read<MessageContentBloc>();
@@ -61,246 +60,242 @@ class MessageContentScreenWidget extends StatelessWidget {
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
-              appBar:state.isPreview ?PreferredSize(preferredSize: Size.fromHeight(0), child: SizedBox()) : PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  title: AppLocalizations.of(context)!.message,
-                  iconData: Icons.arrow_back_ios_sharp,
-                  onTap: () {
-                    Navigator.pop(context, {
-                      AppStrings.messageIdString: state.message.id,
-                      AppStrings.messageReadString:
-                          !(state.message.isRead ?? true),
-                      AppStrings.messageDeleteString: false,
-                    });
-                  },
-                  trailingWidget: Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigator.pop(context, {
-                        //   AppStrings.messageIdString: state.message.id,
-                        //   AppStrings.messageReadString: !(state.message.isRead ?? true),
-                        //   AppStrings.messageDeleteString: true,
-                        // });
-                        showDialog(
-                          context: context,
-                          builder: (context1) => CommonAlertDialog(
-                            title: '${AppLocalizations.of(context)!.delete}',
-                            subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-                            positiveTitle: '${AppLocalizations.of(context)!.yes}',
-                            negativeTitle: '${AppLocalizations.of(context)!.no}',
-                            negativeOnTap: () {
-                              Navigator.pop(context1);
-                            },
-                            positiveOnTap: () async {
-                              bloc.add(MessageContentEvent.MessageDeleteEvent(
-                                messageId: state.message.id ?? '',
+              appBar: state.isPreview
+                  ? PreferredSize(
+                      preferredSize: Size.fromHeight(0), child: SizedBox())
+                  : PreferredSize(
+                      preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+                      child: CommonAppBar(
+                        title: AppLocalizations.of(context)!.message,
+                        iconData: Icons.arrow_back_ios_sharp,
+                        onTap: () {
+                          Navigator.pop(context, {
+                            AppStrings.messageIdString: state.message.id,
+                            AppStrings.messageReadString:
+                                !(state.message.isRead ?? true),
+                            AppStrings.messageDeleteString: false,
+                          });
+                        },
+                        trailingWidget: Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigator.pop(context, {
+                              //   AppStrings.messageIdString: state.message.id,
+                              //   AppStrings.messageReadString: !(state.message.isRead ?? true),
+                              //   AppStrings.messageDeleteString: true,
+                              // });
+                              showDialog(
                                 context: context,
-                                dialogContext: context1,
-                              ));
+                                builder: (context1) => CommonAlertDialog(
+                                  title:
+                                      '${AppLocalizations.of(context)!.delete}',
+                                  subTitle:
+                                      '${AppLocalizations.of(context)!.are_you_sure}',
+                                  positiveTitle:
+                                      '${AppLocalizations.of(context)!.yes}',
+                                  negativeTitle:
+                                      '${AppLocalizations.of(context)!.no}',
+                                  negativeOnTap: () {
+                                    Navigator.pop(context1);
+                                  },
+                                  positiveOnTap: () async {
+                                    bloc.add(
+                                        MessageContentEvent.MessageDeleteEvent(
+                                      messageId: state.message.id ?? '',
+                                      context: context,
+                                      dialogContext: context1,
+                                    ));
+                                  },
+                                ),
+                              );
                             },
+                            child: Text(
+                              AppLocalizations.of(context)!.delete,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.mainColor,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.delete,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.mainColor,
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              body:  state.isPreview ?  SafeArea(
-                child: Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
-                        '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
-                        height: getScreenHeight(context) ,
-                          width: double.maxFinite,
-                        fit: BoxFit
-                            .fill,
-                        loadingBuilder:
-                            (context,
-                            child,
-                            loadingProgress) {
-                          if (loadingProgress ==
-                              null) {
-                            return child;
-                          } else {
-                            return Center(
-                              child:
-                              CupertinoActivityIndicator(
-                                color: AppColors
-                                    .blackColor,
-                              ),
-                            );
-                          }
-                        },
-                        errorBuilder:
-                            (context,
-                            error,
-                            stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: AppColors
-                                    .whiteColor,
-                                shape: BoxShape
-                                    .circle),
-                            alignment:
-                            Alignment
-                                .center,
-                            child: Text(
-                              AppStrings
-                                  .failedToLoadString,
-                              textAlign:
-                              TextAlign
-                                  .center,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants
-                                      .font_14,
-                                  color:
-                                  AppColors.textColor),
-                            ),
-                          );
-                        },
-                      ):SizedBox(),
-                    ),
-                    GestureDetector(
-                        onTap: (){
-                          bloc.add(MessageContentEvent.ImagePreviewEvent());
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 30),
-                          child: Icon(Icons.close),
-                        )),
-                  ],
-                ),
-              ) :SafeArea(
-                child:SingleChildScrollView(
-                  child: Container(
-                    width: double.maxFinite,
-                    margin: EdgeInsets.only(
-                        left: AppConstants.padding_10,
-                        right: AppConstants.padding_10,
-                        top: AppConstants.padding_15),
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_15,
-                        horizontal: AppConstants.padding_30),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_5)),
-                        color: AppColors.whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                              color: AppColors.shadowColor.withOpacity(0.15),
-                              blurRadius: AppConstants.blur_10)
-                        ]),
-                    child: Container(
-                      color: AppColors.whiteColor,
-                      child:  Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              body: state.isPreview
+                  ? SafeArea(
+                      child: Stack(
                         children: [
-                         GestureDetector(
-                           onTap: (){
-                             bloc.add(MessageContentEvent.ImagePreviewEvent());
-
-                           },
-                           child: Container(
-                                alignment: Alignment.center,
-                              child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
-                                '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
-                                fit: BoxFit
-                                    .contain,
-                                loadingBuilder:
-                                    (context,
-                                    child,
-                                    loadingProgress) {
-                                  if (loadingProgress ==
-                                      null) {
-                                    return child;
-                                  } else {
-                                    return Center(
-                                      child:
-                                      CupertinoActivityIndicator(
-                                        color: AppColors
-                                            .blackColor,
-                                      ),
-                                    );
-                                  }
-                                },
-                                errorBuilder:
-                                    (context,
-                                    error,
-                                    stackTrace) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        color: AppColors
-                                            .whiteColor,
-                                        shape: BoxShape
-                                            .circle),
-                                    alignment:
-                                    Alignment
-                                        .center,
-                                    child: Text(
-                                      AppStrings
-                                          .failedToLoadString,
-                                      textAlign:
-                                      TextAlign
-                                          .center,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants
-                                              .font_14,
-                                          color:
-                                          AppColors.textColor),
-                                    ),
-                                  );
-                                },
-                              ):SizedBox(),
+                          Container(
+                            alignment: Alignment.center,
+                            child: state.message.message?.messageImage !=
+                                        null &&
+                                    state.message.message?.messageImage != ''
+                                ? Image.network(
+                                    '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                    height: getScreenHeight(context),
+                                    width: double.maxFinite,
+                                    fit: BoxFit.contain,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CupertinoActivityIndicator(
+                                            color: AppColors.blackColor,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.whiteColor,
+                                            shape: BoxShape.circle),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppStrings.failedToLoadString,
+                                          textAlign: TextAlign.center,
+                                          style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.font_14,
+                                              color: AppColors.textColor),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+                          ),
+                          Positioned(
+                            right: state.language == AppStrings.englishString ? 20 : getScreenWidth(context) - 50,
+                           top: 50,
+                            child: GestureDetector(
+                              onTap: () {
+                                bloc.add(
+                                    MessageContentEvent.ImagePreviewEvent());
+                              },
+                              child: Icon(Icons.close,color: AppColors.mainColor,),
                             ),
-                         ),
-                          5.height,
-                          Text(
-                            state.message.message?.title ?? '',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.blackColor,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          5.height,
-                          Text(
-                            state.message.createdAt ?? '',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.textColor),
-                          ),
-                          5.height,
-                          Text(
-                            parse(state.message.message?.body ?? '').body?.text ??
-                                '',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor),
-                          ),
-                          Text(
-                            parse(state.message.message?.summary ?? '')
-                                    .body
-                                    ?.text ??
-                                '',
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.font_14,
-                                color: AppColors.blackColor),
                           ),
                         ],
                       ),
+                    )
+                  : SafeArea(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(
+                              left: AppConstants.padding_10,
+                              right: AppConstants.padding_10,
+                              top: AppConstants.padding_15),
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_15,
+                              horizontal: AppConstants.padding_30),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(AppConstants.radius_5)),
+                              color: AppColors.whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                    color:
+                                        AppColors.shadowColor.withOpacity(0.15),
+                                    blurRadius: AppConstants.blur_10)
+                              ]),
+                          child: Container(
+                            color: AppColors.whiteColor,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    bloc.add(MessageContentEvent
+                                        .ImagePreviewEvent());
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: state.message.message
+                                                    ?.messageImage !=
+                                                null &&
+                                            state.message.message
+                                                    ?.messageImage !=
+                                                ''
+                                        ? Image.network(
+                                            '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                            fit: BoxFit.contain,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              } else {
+                                                return Center(
+                                                  child:
+                                                      CupertinoActivityIndicator(
+                                                    color: AppColors.blackColor,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.whiteColor,
+                                                    shape: BoxShape.circle),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  AppStrings.failedToLoadString,
+                                                  textAlign: TextAlign.center,
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
+                                                          size: AppConstants
+                                                              .font_14,
+                                                          color: AppColors
+                                                              .textColor),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : SizedBox(),
+                                  ),
+                                ),
+                                5.height,
+                                Text(
+                                  state.message.message?.title ?? '',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                5.height,
+                                Text(
+                                  state.message.createdAt ?? '',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_12,
+                                      color: AppColors.textColor),
+                                ),
+                                5.height,
+                                Text(
+                                  parse(state.message.message?.body ?? '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.blackColor),
+                                ),
+                                Text(
+                                  parse(state.message.message?.summary ?? '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.blackColor),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
           );
         },

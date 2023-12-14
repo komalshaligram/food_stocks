@@ -12,10 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
+
 import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
+
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'message_event.dart';
@@ -93,10 +92,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                     : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            showSnackBar(
-                context: event.context,
-                title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.mainColor);
+
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

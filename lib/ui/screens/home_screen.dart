@@ -635,9 +635,9 @@ class HomeScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           alignment: Alignment.center,
                                           child: Text(
-                                            'Messages not found',
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.smallFont,
+                                            '${AppLocalizations.of(context)!.messages_not_found}',
+                                            style: AppStyles.pVRegularTextStyle(
+                                                size: AppConstants.mediumFont,
                                                 color: AppColors.textColor),
                                           ),
                                         )

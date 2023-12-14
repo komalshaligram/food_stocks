@@ -19,6 +19,7 @@ import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 
+
 class BottomNavRoute {
   static Widget get route => const BottomNavScreen();
 }
@@ -132,6 +133,8 @@ class BottomNavScreenWidget extends StatelessWidget {
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent());
+                  bloc.add(BottomNavEvent.cartAnimationEvent(cartCount: state.cartCount));
+                  print('isAnimation_____${state.isAnimation}');
                 },
                 child: SafeArea(
                   child: Stack(
@@ -244,6 +247,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                                       : AppColors.whiteColor),
                             ),
                           ),
+
                         ],
                       ),
                     ),
