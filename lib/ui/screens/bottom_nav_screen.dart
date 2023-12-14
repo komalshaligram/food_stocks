@@ -52,10 +52,10 @@ class BottomNavScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
-              if (state.index == 4) {
+              if (state.index == 0) {
                 return Future.value(true);
               } else {
-                bloc.add(BottomNavEvent.changePage(index: 4));
+                bloc.add(BottomNavEvent.changePage(index: 0));
                 return Future.value(false);
               }
             },
@@ -111,7 +111,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                     animationCurve: Curves.easeInOut,
                     animationDuration: Duration(milliseconds: 200),
                     onTap: (index) {
-                      print('index____$index');
                       bloc.add(
                           BottomNavEvent.changePage(index: index));
                     },

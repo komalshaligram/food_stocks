@@ -6,8 +6,9 @@ part of 'business_type_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_BusinessTypeModel _$$_BusinessTypeModelFromJson(Map<String, dynamic> json) =>
-    _$_BusinessTypeModel(
+_$BusinessTypeModelImpl _$$BusinessTypeModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BusinessTypeModelImpl(
       status: json['status'] as int?,
       data: json['data'] == null
           ? null
@@ -15,26 +16,27 @@ _$_BusinessTypeModel _$$_BusinessTypeModelFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String?,
     );
 
-Map<String, dynamic> _$$_BusinessTypeModelToJson(
-        _$_BusinessTypeModel instance) =>
+Map<String, dynamic> _$$BusinessTypeModelImplToJson(
+        _$BusinessTypeModelImpl instance) =>
     <String, dynamic>{
       'status': instance.status,
       'data': instance.data,
       'message': instance.message,
     };
 
-_$_Data _$$_DataFromJson(Map<String, dynamic> json) => _$_Data(
+_$DataImpl _$$DataImplFromJson(Map<String, dynamic> json) => _$DataImpl(
       clientTypes: (json['ClientTypes'] as List<dynamic>?)
           ?.map((e) => ClientType.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_DataToJson(_$_Data instance) => <String, dynamic>{
+Map<String, dynamic> _$$DataImplToJson(_$DataImpl instance) =>
+    <String, dynamic>{
       'ClientTypes': instance.clientTypes,
     };
 
-_$_ClientType _$$_ClientTypeFromJson(Map<String, dynamic> json) =>
-    _$_ClientType(
+_$ClientTypeImpl _$$ClientTypeImplFromJson(Map<String, dynamic> json) =>
+    _$ClientTypeImpl(
       id: json['_id'] as String?,
       businessType: json['businessType'] as String?,
       createdBy: json['createdBy'] as String?,
@@ -48,7 +50,7 @@ _$_ClientType _$$_ClientTypeFromJson(Map<String, dynamic> json) =>
       v: json['__v'] as int?,
     );
 
-Map<String, dynamic> _$$_ClientTypeToJson(_$_ClientType instance) =>
+Map<String, dynamic> _$$ClientTypeImplToJson(_$ClientTypeImpl instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'businessType': instance.businessType,

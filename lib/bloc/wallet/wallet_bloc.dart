@@ -183,7 +183,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                   isLoadMore: false,
                   isShimmering: false,
                 ));
-             //   debugPrint('[list length]     ${state.walletTransactionsList.length}');
+
                 emit(state.copyWith(
                     isBottomOfProducts: temp.length ==
                             (response.metaData?.totalFilteredCount ?? 1)
@@ -194,14 +194,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               }
 
           } else {
-            showSnackBar(
+         /*   showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
-            emit(state.copyWith(isLoadMore: false));
+                bgColor: AppColors.mainColor);*/
+            emit(state.copyWith(isLoadMore: false,isShimmering: false));
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false,isShimmering: false));
         }
       } else if (event is _getDateRangeEvent) {
         if (event.range != state.selectedDateRange) {

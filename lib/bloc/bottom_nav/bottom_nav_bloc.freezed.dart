@@ -75,20 +75,20 @@ class _$BottomNavEventCopyWithImpl<$Res, $Val extends BottomNavEvent>
 }
 
 /// @nodoc
-abstract class _$$_ChangePageEventCopyWith<$Res> {
-  factory _$$_ChangePageEventCopyWith(
-          _$_ChangePageEvent value, $Res Function(_$_ChangePageEvent) then) =
-      __$$_ChangePageEventCopyWithImpl<$Res>;
+abstract class _$$ChangePageEventImplCopyWith<$Res> {
+  factory _$$ChangePageEventImplCopyWith(_$ChangePageEventImpl value,
+          $Res Function(_$ChangePageEventImpl) then) =
+      __$$ChangePageEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int index});
 }
 
 /// @nodoc
-class __$$_ChangePageEventCopyWithImpl<$Res>
-    extends _$BottomNavEventCopyWithImpl<$Res, _$_ChangePageEvent>
-    implements _$$_ChangePageEventCopyWith<$Res> {
-  __$$_ChangePageEventCopyWithImpl(
-      _$_ChangePageEvent _value, $Res Function(_$_ChangePageEvent) _then)
+class __$$ChangePageEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$ChangePageEventImpl>
+    implements _$$ChangePageEventImplCopyWith<$Res> {
+  __$$ChangePageEventImplCopyWithImpl(
+      _$ChangePageEventImpl _value, $Res Function(_$ChangePageEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -96,7 +96,7 @@ class __$$_ChangePageEventCopyWithImpl<$Res>
   $Res call({
     Object? index = null,
   }) {
-    return _then(_$_ChangePageEvent(
+    return _then(_$ChangePageEventImpl(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -107,8 +107,8 @@ class __$$_ChangePageEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ChangePageEvent implements _ChangePageEvent {
-  _$_ChangePageEvent({required this.index});
+class _$ChangePageEventImpl implements _ChangePageEvent {
+  _$ChangePageEventImpl({required this.index});
 
   @override
   final int index;
@@ -122,7 +122,7 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ChangePageEvent &&
+            other is _$ChangePageEventImpl &&
             (identical(other.index, index) || other.index == index));
   }
 
@@ -132,8 +132,9 @@ class _$_ChangePageEvent implements _ChangePageEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChangePageEventCopyWith<_$_ChangePageEvent> get copyWith =>
-      __$$_ChangePageEventCopyWithImpl<_$_ChangePageEvent>(this, _$identity);
+  _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
+      __$$ChangePageEventImplCopyWithImpl<_$ChangePageEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -199,34 +200,34 @@ class _$_ChangePageEvent implements _ChangePageEvent {
 }
 
 abstract class _ChangePageEvent implements BottomNavEvent {
-  factory _ChangePageEvent({required final int index}) = _$_ChangePageEvent;
+  factory _ChangePageEvent({required final int index}) = _$ChangePageEventImpl;
 
   int get index;
   @JsonKey(ignore: true)
-  _$$_ChangePageEventCopyWith<_$_ChangePageEvent> get copyWith =>
+  _$$ChangePageEventImplCopyWith<_$ChangePageEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UpdateCartCountEventCopyWith<$Res> {
-  factory _$$_UpdateCartCountEventCopyWith(_$_UpdateCartCountEvent value,
-          $Res Function(_$_UpdateCartCountEvent) then) =
-      __$$_UpdateCartCountEventCopyWithImpl<$Res>;
+abstract class _$$UpdateCartCountEventImplCopyWith<$Res> {
+  factory _$$UpdateCartCountEventImplCopyWith(_$UpdateCartCountEventImpl value,
+          $Res Function(_$UpdateCartCountEventImpl) then) =
+      __$$UpdateCartCountEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_UpdateCartCountEventCopyWithImpl<$Res>
-    extends _$BottomNavEventCopyWithImpl<$Res, _$_UpdateCartCountEvent>
-    implements _$$_UpdateCartCountEventCopyWith<$Res> {
-  __$$_UpdateCartCountEventCopyWithImpl(_$_UpdateCartCountEvent _value,
-      $Res Function(_$_UpdateCartCountEvent) _then)
+class __$$UpdateCartCountEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$UpdateCartCountEventImpl>
+    implements _$$UpdateCartCountEventImplCopyWith<$Res> {
+  __$$UpdateCartCountEventImplCopyWithImpl(_$UpdateCartCountEventImpl _value,
+      $Res Function(_$UpdateCartCountEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
-  const _$_UpdateCartCountEvent();
+class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
+  const _$UpdateCartCountEventImpl();
 
   @override
   String toString() {
@@ -236,7 +237,8 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_UpdateCartCountEvent);
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateCartCountEventImpl);
   }
 
   @override
@@ -306,7 +308,7 @@ class _$_UpdateCartCountEvent implements _UpdateCartCountEvent {
 }
 
 abstract class _UpdateCartCountEvent implements BottomNavEvent {
-  const factory _UpdateCartCountEvent() = _$_UpdateCartCountEvent;
+  const factory _UpdateCartCountEvent() = _$UpdateCartCountEventImpl;
 }
 
 /// @nodoc
@@ -358,22 +360,22 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
 }
 
 /// @nodoc
-abstract class _$$_BottomNavStateCopyWith<$Res>
+abstract class _$$BottomNavStateImplCopyWith<$Res>
     implements $BottomNavStateCopyWith<$Res> {
-  factory _$$_BottomNavStateCopyWith(
-          _$_BottomNavState value, $Res Function(_$_BottomNavState) then) =
-      __$$_BottomNavStateCopyWithImpl<$Res>;
+  factory _$$BottomNavStateImplCopyWith(_$BottomNavStateImpl value,
+          $Res Function(_$BottomNavStateImpl) then) =
+      __$$BottomNavStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int index, int cartCount});
 }
 
 /// @nodoc
-class __$$_BottomNavStateCopyWithImpl<$Res>
-    extends _$BottomNavStateCopyWithImpl<$Res, _$_BottomNavState>
-    implements _$$_BottomNavStateCopyWith<$Res> {
-  __$$_BottomNavStateCopyWithImpl(
-      _$_BottomNavState _value, $Res Function(_$_BottomNavState) _then)
+class __$$BottomNavStateImplCopyWithImpl<$Res>
+    extends _$BottomNavStateCopyWithImpl<$Res, _$BottomNavStateImpl>
+    implements _$$BottomNavStateImplCopyWith<$Res> {
+  __$$BottomNavStateImplCopyWithImpl(
+      _$BottomNavStateImpl _value, $Res Function(_$BottomNavStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -382,7 +384,7 @@ class __$$_BottomNavStateCopyWithImpl<$Res>
     Object? index = null,
     Object? cartCount = null,
   }) {
-    return _then(_$_BottomNavState(
+    return _then(_$BottomNavStateImpl(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -397,8 +399,8 @@ class __$$_BottomNavStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_BottomNavState implements _BottomNavState {
-  const _$_BottomNavState({required this.index, required this.cartCount});
+class _$BottomNavStateImpl implements _BottomNavState {
+  const _$BottomNavStateImpl({required this.index, required this.cartCount});
 
   @override
   final int index;
@@ -414,7 +416,7 @@ class _$_BottomNavState implements _BottomNavState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BottomNavState &&
+            other is _$BottomNavStateImpl &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.cartCount, cartCount) ||
                 other.cartCount == cartCount));
@@ -426,14 +428,15 @@ class _$_BottomNavState implements _BottomNavState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BottomNavStateCopyWith<_$_BottomNavState> get copyWith =>
-      __$$_BottomNavStateCopyWithImpl<_$_BottomNavState>(this, _$identity);
+  _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
+      __$$BottomNavStateImplCopyWithImpl<_$BottomNavStateImpl>(
+          this, _$identity);
 }
 
 abstract class _BottomNavState implements BottomNavState {
   const factory _BottomNavState(
       {required final int index,
-      required final int cartCount}) = _$_BottomNavState;
+      required final int cartCount}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -441,6 +444,6 @@ abstract class _BottomNavState implements BottomNavState {
   int get cartCount;
   @override
   @JsonKey(ignore: true)
-  _$$_BottomNavStateCopyWith<_$_BottomNavState> get copyWith =>
+  _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

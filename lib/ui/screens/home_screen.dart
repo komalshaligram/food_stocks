@@ -507,7 +507,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           slidingCurve:
                                                               Curves.decelerate,
                                                           slidingBeginOffset:
-                                                              Offset(20, 0),
+                                                              Offset(0, 20),
                                                           child:
                                                               CommonProductSaleItemWidget(
                                                                   width: 140,
@@ -586,7 +586,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.new_order,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
-                                          BottomNavEvent.changePage(index: 3));
+                                          BottomNavEvent.changePage(index: 1));
                                     },
                                     svgImage: AppImagePath.add,
                                   ),

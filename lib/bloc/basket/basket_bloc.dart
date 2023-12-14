@@ -71,7 +71,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       } else if (event is _productUpdateEvent) {
 
         //  if (event.productWeight != 0) {
-        emit(state.copyWith(isLoading: true));
+
+        List<ProductDetailsModel> list = [];
+        list = [...state.basketProductList];
+        list[event.listIndex].isProcess = true;
+
+        emit(state.copyWith(isLoading: true,basketProductList: list));
+
         try {
         //  debugPrint('[getCartId]  = ${preferencesHelper.getCartId()}');
         //  debugPrint('[getSaleId]  = ${event.saleId != ''}');
@@ -119,7 +125,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             } else {
               totalAmount = event.totalPayment - newAmount;
             }
-
+            list[event.listIndex].isProcess = false;
             emit(state.copyWith(
                 basketProductList: list,
                 totalPayment: totalAmount,
@@ -135,6 +141,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ??'something_is_wrong_try_again' ,event.context),
                 bgColor: AppColors.mainColor);
+
           }
         } on ServerException {}
         // }
