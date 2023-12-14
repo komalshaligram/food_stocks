@@ -133,10 +133,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 isLoading: false,
             ));
 
-            /* showSnackBar(
-                  context: event.context,
-                  title: response.message!,
-                  bgColor: AppColors.mainColor);*/
           } else {
             showSnackBar(
                 context: event.context,
@@ -145,13 +141,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
           }
         } on ServerException {}
-        // }
-        /* else {
-          showSnackBar(
-              context: event.context,
-              title: "Quantity can't decrease",
-              bgColor: AppColors.mainColor);
-        }*/
+
       } else if (event is _removeCartProductEvent) {
         try {
           final response = await DioClient(event.context).post(

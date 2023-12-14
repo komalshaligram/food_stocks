@@ -44,7 +44,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
            emit(state.copyWith(orderSummaryList: response));
           } else {
-            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.mainColor);
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.redColor);
           }
         }  on ServerException {}
       }

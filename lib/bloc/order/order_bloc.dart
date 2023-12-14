@@ -75,7 +75,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
           } else {
             emit(state.copyWith(isLoadMore: false,isShimmering: false));
-            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.mainColor);
+            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.redColor);
           }
         }  on ServerException {
           emit(state.copyWith(isLoadMore: false));

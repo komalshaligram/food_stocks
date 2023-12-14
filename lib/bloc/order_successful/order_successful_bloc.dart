@@ -60,7 +60,7 @@ class OrderSuccessfulBloc
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         } on ServerException {}
       }

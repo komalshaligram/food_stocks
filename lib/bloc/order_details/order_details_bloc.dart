@@ -44,12 +44,12 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
           if (response.status == 200) {
             emit(state.copyWith(orderByIdList: response));
-            //    showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+
           } else {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         } on ServerException {}
       }
