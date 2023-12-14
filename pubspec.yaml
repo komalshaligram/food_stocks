@@ -145,9 +145,7 @@ flutter:
       fonts:
          - asset: assets/fonts/Preahvihear-Regular.ttf
 
-    - family: Newretrostyle
-      fonts:
-        - asset: assets/fonts/Newretrostyle3d-ygjm.ttf
+
 
 
   #         style: italic
