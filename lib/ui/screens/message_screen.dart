@@ -112,7 +112,7 @@ class MessageScreenWidget extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: Text(
                                       '${AppLocalizations.of(context)!.messages_not_found}',
-                                      style: AppStyles.rkRegularTextStyle(
+                                      style: AppStyles.pVRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.textColor),
                                     ),

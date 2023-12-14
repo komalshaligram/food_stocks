@@ -377,144 +377,151 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                AppLocalizations.of(context)!.history,
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: state.language == AppStrings.emailValString ? AppConstants.font_10 : AppConstants.smallFont,
-                                    color: AppColors.blackColor),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  AppLocalizations.of(context)!.history,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.blackColor),
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Map<Permission, PermissionStatus>
-                                          statuses = await [
-                                        Permission.storage,
-                                      ].request();
+                              2.width,
+                              Expanded(
+                                flex: 2,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Map<Permission, PermissionStatus>
+                                    statuses = await [
+                                      Permission.storage,
+                                    ].request();
 
-                                      if (Platform.isAndroid) {
-                                        DeviceInfoPlugin deviceInfo =
-                                            DeviceInfoPlugin();
-                                        AndroidDeviceInfo androidInfo =
-                                            await deviceInfo.androidInfo;
-                                        print(
-                                            'Running on android version ${androidInfo.version.sdkInt}');
-                                        if (androidInfo.version.sdkInt < 33) {
-                                          if (!statuses[Permission.storage]!
-                                              .isGranted) {
-                                            showSnackBar(
-                                                context: context,
-                                                title: '${AppLocalizations.of(context)!.storage_permission}',
-                                                bgColor: AppColors.redColor);
-                                            return;
-                                          }
-                                        }
-                                      } else {
-                                        //for ios permission
-                                      }
-
-                                      state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
-                                          .exportWalletTransactionEvent(
+                                    if (Platform.isAndroid) {
+                                      DeviceInfoPlugin deviceInfo =
+                                      DeviceInfoPlugin();
+                                      AndroidDeviceInfo androidInfo =
+                                      await deviceInfo.androidInfo;
+                                      print(
+                                          'Running on android version ${androidInfo.version.sdkInt}');
+                                      if (androidInfo.version.sdkInt < 33) {
+                                        if (!statuses[Permission.storage]!
+                                            .isGranted) {
+                                          showSnackBar(
                                               context: context,
-                                        startDate: startDate ?? DateTime.now(),
-                                        endDate: endDate ?? DateTime.now(),
+                                              title: '${AppLocalizations.of(context)!.storage_permission}',
+                                              bgColor: AppColors.redColor);
+                                          return;
+                                        }
+                                      }
+                                    } else {
+                                      //for ios permission
+                                    }
+
+                                    state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
+                                        .exportWalletTransactionEvent(
+                                      context: context,
+                                      startDate: startDate ?? DateTime.now(),
+                                      endDate: endDate ?? DateTime.now(),
 
 
-                                      )) : SizedBox();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_5,
-                                          horizontal: state.language == AppStrings.englishString? AppConstants.padding_5 : AppConstants.padding_8),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.mainColor,
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.radius_3)),
-                                      child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
-                                        AppLocalizations.of(context)!.export,
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: state.lastMonthExpense == AppStrings.emailValString ?  AppConstants.font_12 : AppConstants.font_14,
-                                            color: AppColors.whiteColor),
-                                      ),
+                                    )) : SizedBox();
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_5,
+                                        horizontal: state.language == AppStrings.englishString? AppConstants.padding_5 : AppConstants.padding_8),
+                                    decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                        borderRadius: BorderRadius.circular(
+                                            AppConstants.radius_3)),
+                                    child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
+                                      AppLocalizations.of(context)!.export,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: state.lastMonthExpense == AppStrings.emailValString ?  AppConstants.font_12 : AppConstants.font_14,
+                                          color: AppColors.whiteColor),
                                     ),
                                   ),
-                                  5.width,
-                                  Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: state.language == AppStrings.englishString ? 0 :AppConstants.padding_5,
-                                          vertical: AppConstants.padding_5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            AppConstants.radius_7),
-                                        border: Border.all(
-                                            color: AppColors.borderColor),
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      child: Container(
-                                        width: getScreenWidth(context) >= 400? getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.55,
-                                        height: 30,
-                                        child: DateRangeField(
-                                          decoration: InputDecoration(
-                                              enabledBorder: InputBorder.none,
-                                              prefixIcon: Icon(
-                                                  Icons.keyboard_arrow_down),
-                                              contentPadding:
-                                                  EdgeInsets.all(0),
+                                ),
+                              ),
+                              8.width,
+                              Expanded(
+                                flex: 7,
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:AppConstants.padding_5,
+                                        vertical: AppConstants.padding_5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          AppConstants.radius_7),
+                                      border: Border.all(
+                                          color: AppColors.borderColor),
+                                      color: AppColors.whiteColor,
+                                    ),
+                                    child: Container(
+                                   //   width: getScreenWidth(context) >= 400 ? getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.6,
+                                      height: 30,
+                                      alignment: Alignment.center,
+                                      child: DateRangeField(
+                                        decoration: InputDecoration(
+                                          enabledBorder: InputBorder.none,
+                                          prefixIcon: Icon(
+                                              Icons.keyboard_arrow_down),
+                                          contentPadding: EdgeInsets.only(bottom: 5),
 
-                                          ),
-                                          showDateRangePicker: (
-                                              {required pickerBuilder,
+                                        ),
+                                        showDateRangePicker: (
+                                            {required pickerBuilder,
                                               required widgetContext,
 
-                                              }) {
-                                            return showDateRangePickerDialog(
-                                                context: context,
-                                                offset: Offset(65, 200),
-                                                barrierColor: AppColors
-                                                    .whiteColor
-                                                    .withOpacity(0.6),
-                                                builder: datePickerBuilder,
-                                            );
+                                            }) {
+                                          return showDateRangePickerDialog(
+                                            context: context,
+                                            offset: Offset(65, 200),
+                                            barrierColor: AppColors
+                                                .whiteColor
+                                                .withOpacity(0.6),
+                                            builder: datePickerBuilder,
+                                          );
 
-                                          },
-                                          onDateRangeSelected:
-                                              (DateRange? value) {
-                                            startDate = value?.start;
-                                            endDate = value?.end;
+                                        },
+                                        onDateRangeSelected:
+                                            (DateRange? value) {
+                                          startDate = value?.start;
+                                          endDate = value?.end;
 
-                                            if (value == null) {
-                                              selectedDateRange =
-                                                  state.selectedDateRange;
-                                              bloc.add(
-                                                  WalletEvent.getDateRangeEvent(
-                                                      context: context,
-                                                      range: state.selectedDateRange));
-                                            } else {
-                                              selectedDateRange = value;
-                                              bloc.add(
-                                                  WalletEvent.getDateRangeEvent(
-                                                      context: context,
-                                                      range: value));
+                                          if (value == null) {
+                                            selectedDateRange =
+                                                state.selectedDateRange;
+                                            bloc.add(
+                                                WalletEvent.getDateRangeEvent(
+                                                    context: context,
+                                                    range: state.selectedDateRange));
+                                          } else {
+                                            selectedDateRange = value;
+                                            bloc.add(
+                                                WalletEvent.getDateRangeEvent(
+                                                    context: context,
+                                                    range: value));
 
-                                              bloc.add(WalletEvent
-                                                  .getAllWalletTransactionEvent(
-                                                context: context,
-                                                endDate: value.end,
-                                                startDate: value.start,
-                                              ));
-                                            }
-                                            //  minDate = DateTime(state.yearList.last ,1,1);
-                                          },
-                                          selectedDateRange: state.selectedDateRange,
-                                          pickerBuilder: (BuildContext context,
-                                              dynamic Function(DateRange?)
-                                                  onDateRangeChanged) {
-                                            return Text('');
-                                          },
-                                          // pickerBuilder: datePickerBuilder,
-                                        ),
-                                      )),
-                                ],
+                                            bloc.add(WalletEvent
+                                                .getAllWalletTransactionEvent(
+                                              context: context,
+                                              endDate: value.end,
+                                              startDate: value.start,
+                                            ));
+                                          }
+                                          //  minDate = DateTime(state.yearList.last ,1,1);
+                                        },
+                                        selectedDateRange: state.selectedDateRange,
+                                        pickerBuilder: (BuildContext context,
+                                            dynamic Function(DateRange?)
+                                            onDateRangeChanged) {
+                                          return Text('');
+                                        },
+                                        // pickerBuilder: datePickerBuilder,
+                                      ),
+                                    )),
                               ),
                             ],
                           ),
@@ -566,7 +573,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                           child: Center(
                                               child: Text(
                                                 AppLocalizations.of(context)!.no_data,
-                                            style: AppStyles.rkRegularTextStyle(
+                                            style: AppStyles.pVRegularTextStyle(
                                                 size: AppConstants.normalFont,
                                                 color: AppColors.blackColor,
                                                 fontWeight: FontWeight.w400),
@@ -656,7 +663,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
 
   Widget listWidget({required BuildContext context, required int listIndex}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+      margin: EdgeInsets.symmetric(vertical: 0),
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
          /* WalletBloc bloc = context.read<WalletBloc>();*/
@@ -683,30 +690,37 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 ],
               ),
             //  10.width,
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  state.walletTransactionsList[listIndex].type.toString() ==
-                          AppStrings.orderString
-                      ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(),local: AppStrings.hebrewLocal)}':'${'-'}${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString()),local: AppStrings.hebrewLocal)}',
-                    //  : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.smallFont,
-                      color: state.walletTransactionsList[listIndex].type
-                                  .toString() ==
-                          AppStrings.monthlyCreditString
-                          ? AppColors.mainColor
-                          : AppColors.redColor,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
+
             //  10.width,
-              CircularButtonWidget(
-                buttonName: AppLocalizations.of(context)!.balance_status,
-                buttonValue:
-                   // '${formatter(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}${AppLocalizations.of(context)!.currency}',
-                '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(),local: AppStrings.hebrewLocal)}'
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      state.walletTransactionsList[listIndex].type.toString() ==
+                          AppStrings.orderString
+                          ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(),local: AppStrings.hebrewLocal)}':'${'-'}${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString()),local: AppStrings.hebrewLocal)}',
+                      //  : '${formatter(double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString())}',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          color: state.walletTransactionsList[listIndex].type
+                              .toString() ==
+                              AppStrings.monthlyCreditString
+                              ? AppColors.mainColor
+                              : AppColors.redColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  3.height,
+                  CircularButtonWidget(
+                      buttonName: AppLocalizations.of(context)!.balance_status,
+                      buttonValue:
+                      '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(),local: AppStrings.hebrewLocal)}'
+                  ),
+                ],
               ),
+
             ],
           );
         },

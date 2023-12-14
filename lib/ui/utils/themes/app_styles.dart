@@ -4,6 +4,7 @@ import 'app_constants.dart';
 
 class AppStyles {
   static const String _fontFamily = "Rubik";
+  static const String _pvFontFamily = "Newretrostyle3d-ygjm";
 
   static TextStyle rkRegularTextStyle(
       {Color color = Colors.black,
@@ -16,6 +17,19 @@ class AppStyles {
       fontWeight: fontWeight,
     );
   }
+
+  static TextStyle pVRegularTextStyle(
+      {Color color = Colors.black,
+        required double size,
+        FontWeight fontWeight = FontWeight.normal}) {
+    return TextStyle(
+      fontFamily: _pvFontFamily,
+      color: color,
+      fontSize: size,
+      fontWeight: fontWeight,
+    );
+  }
+
 
   static TextStyle rkBoldTextStyle(
       {Color color = Colors.black,

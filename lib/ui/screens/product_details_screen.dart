@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,27 +40,22 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+/*    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;*/
 
 
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(/*args?[AppStrings.isNavigateToProductDetailString]*/ isNavigateToProductDetailString ?  ProductDetailsEvent.getOrderByIdEvent(
             context: context,
-          //orderId: args?[AppStrings.orderIdString] ?? '',
           orderId: orderId
         ):
         ProductDetailsEvent.getProductDataEvent(
           context: context,
-       //   orderId: args?[AppStrings.orderIdString] ?? '',
           orderId: orderId,
-         // orderBySupplierProduct: args?[AppStrings.productDataString] ?? OrdersBySupplier(),
           orderBySupplierProduct: productData,
         ) ) ,
       child: ProductDetailsScreenWidget(
-        //orderId: args?[AppStrings.orderIdString] ?? '',
-       // orderNumber: args?[AppStrings.orderNumberString] ?? '',
         orderId: orderId,
         orderNumber: orderNumber,
       ),
@@ -414,7 +409,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   decoration: BoxDecoration(
                                       borderRadius:  BorderRadius.all(Radius.circular(AppConstants.padding_3)),
                                       color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
-                                    border: Border.all(color: AppColors.greyColor)
+                                    border: Border.all(color: AppColors.lightGreyColor)
                                   ),
                                       child: Text('Check All',
                                       style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14,
@@ -615,11 +610,56 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Expanded(
                     flex: 2,
-                      child: CachedNetworkImage(
-                          imageUrl: '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                          width: AppConstants.containerSize_50,
-                          height: AppConstants.containerSize_50,
-                        ),
+                      child:
+                      Image.network(
+                        '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
+                        width: AppConstants.containerSize_50,
+                        height: AppConstants.containerSize_50,
+                        fit: BoxFit.fill,
+                        loadingBuilder:
+                            (context,
+                            child,
+                            loadingProgress) {
+                          if (loadingProgress ==
+                              null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: Container(
+                                width: AppConstants.containerSize_50,
+                                height: AppConstants.containerSize_50,
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors
+                                      .blackColor,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        errorBuilder:
+                            (context,
+                            error,
+                            stackTrace) {
+                          return Container(
+                            width: AppConstants.containerSize_50,
+                            height: AppConstants.containerSize_50,
+                            color: AppColors
+                                .whiteColor,
+                            alignment:
+                            Alignment
+                                .center,
+                            child: Text(
+                              AppStrings
+                                  .failedToLoadString,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .font_14,
+                                  color:
+                                  AppColors.textColor),
+                            ),
+                          );
+                        },
+                      ),
                     )
                     : Image.asset(
                   AppImagePath.imageNotAvailable5,
@@ -631,7 +671,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
 
                 ),
                 15.width,
-                getScreenHeight(context) >= 730 ? 7.width : 2.width,
                 /*state.orderBySupplierProduct.orderDeliveryDate != '' ? */ Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -645,13 +684,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       ),
                     ),
                     Text(
-                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                      '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                       style: AppStyles.rkRegularTextStyle(
                         color: AppColors.blackColor,
                         size: AppConstants.font_12,
                       ),
                     ),
-                    5.width,
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
@@ -710,8 +748,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         children: [
                           GestureDetector(
                             onTap: () {
-
-
 
                               (isIssue! || state.productListIndex.contains(index))
                                   ? ProductProblemBottomSheet(
@@ -854,7 +890,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   getScreenHeight(context)),
           minChildSize: 0.4,
           initialChildSize: 0.7,
-          //shouldCloseOnMinExtent: true,
+          shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc()..add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue))..add(ProductDetailsEvent.getBottomSheetDataEvent(note: radioValue == 4 ?   issue ?? '' : '')),
@@ -919,13 +955,55 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  image != ''
-                                      ? CachedNetworkImage(
-                                          imageUrl:
-                                              '${AppUrls.baseFileUrl}${image}',
-                                          width: AppConstants.containerSize_50,
-                                          height: AppConstants.containerSize_50,
-                                        )
+                                  image != '' ?
+                              Image.network(
+                                '${AppUrls.baseFileUrl}${image}',
+                                width: AppConstants.containerSize_50,
+                                height: AppConstants.containerSize_50,
+                                fit: BoxFit.fill,
+                                loadingBuilder:
+                                    (context,
+                                    child,
+                                    loadingProgress) {
+                                  if (loadingProgress ==
+                                      null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: Container(
+                                        width: AppConstants.containerSize_50,
+                                        height: AppConstants.containerSize_50,
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors
+                                              .blackColor,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder:
+                                    (context,
+                                    error,
+                                    stackTrace) {
+                                  return Container(
+                                    width: AppConstants.containerSize_50,
+                                    height: AppConstants.containerSize_50,
+                                    color: AppColors
+                                        .whiteColor,
+                                    alignment:
+                                    Alignment
+                                        .center,
+                                    child: Text(
+                                      AppStrings.failedToLoadString,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants
+                                              .font_14,
+                                          color:
+                                          AppColors.textColor),
+                                    ),
+                                  );
+                                },
+                              )
                                       : Image.asset(
                               AppImagePath.imageNotAvailable5,
                               fit: BoxFit.cover,
@@ -1059,7 +1137,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   padding: EdgeInsets.symmetric(
                                       vertical: AppConstants.padding_20,
                                       horizontal: AppConstants.padding_30),
-                                  color: AppColors.pageColor,
                                   child: CustomButtonWidget(
                                     buttonText:
                                         AppLocalizations.of(context)!.save,
@@ -1108,9 +1185,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         builder: (context, state) {
      quantity = (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
           return Container(
-            height: value == 4 ? getScreenWidth(context) <= 380 ? 151 : 160: 60,
+            height: value == 4 ? 165: 60,
             alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10,vertical: value == 3 ? AppConstants.padding_3 : 0),
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               boxShadow: [
@@ -1155,7 +1232,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 color: AppColors.blackColor,
                               ),
                             ),
-                            12.height,
+                            8.height,
                             Row(
                               children: [
                                 value == 3
@@ -1257,7 +1334,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             ? TextInputType.text
                             : TextInputType.none,
                         hint: AppLocalizations.of(context)!.add_text,
-                        maxLines: 5,
+                        maxLines: 4,
                         isEnabled: state.selectedRadioTile == 4 ? true : false,
                         isBorderVisible: false,
                         textInputAction: TextInputAction.done,
