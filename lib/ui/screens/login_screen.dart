@@ -90,6 +90,7 @@ class LogInScreenWidget extends StatelessWidget {
                             FilteringTextInputFormatter.digitsOnly,
                             /*FilteringTextInputFormatter.deny(
                                 RegExp(r'\s')),*/
+                            LengthLimitingTextInputFormatter(10)
                           ],
                           context: context,
                           controller: phoneController,

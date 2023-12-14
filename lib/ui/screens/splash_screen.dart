@@ -8,6 +8,7 @@ import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,18 +25,17 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
-      child:  SplashScreenWidget(),
+      child: SplashScreenWidget(),
     );
   }
 }
 
 class SplashScreenWidget extends StatelessWidget {
+  SplashScreenWidget({Key? key}) : super(key: key);
 
-   SplashScreenWidget({Key? key}) : super(key: key);
+  String? deviceId;
 
-   String? deviceId;
-
-  getVersion(SharedPreferencesHelper preferencesHelper) async{
+  getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     debugPrint("package info : ${packageInfo.toString()}");
     String version = packageInfo.version;
@@ -43,9 +43,9 @@ class SplashScreenWidget extends StatelessWidget {
     debugPrint("splash pref = ${preferencesHelper.getUserLoggedIn()}");
   }
 
-   getDeviceId() async {
+  getDeviceId() async {
     try {
-       deviceId = await PlatformDeviceId.getDeviceId;
+      deviceId = await PlatformDeviceId.getDeviceId;
       debugPrint('deviceId:$deviceId');
     } on PlatformException {
       deviceId = 'Failed to get deviceId.';
@@ -53,14 +53,15 @@ class SplashScreenWidget extends StatelessWidget {
     return deviceId;
   }
 
-  void appFlyerSetup(){
+  void appFlyerSetup() {
     AppsflyerSdk? _appsflyerSdk;
     final AppsFlyerOptions options = AppsFlyerOptions(
-        afDevKey: dotenv.env["DEV_KEY"]??'',
+        afDevKey: dotenv.env["DEV_KEY"] ?? '',
         showDebug: true,
         timeToWaitForATTUserAuthorization: 15);
     _appsflyerSdk = AppsflyerSdk(options);
-    _appsflyerSdk.initSdk(registerConversionDataCallback: true,
+    _appsflyerSdk.initSdk(
+        registerConversionDataCallback: true,
         registerOnAppOpenAttributionCallback: true,
         registerOnDeepLinkingCallback: false);
     _appsflyerSdk.onAppOpenAttribution((res) {
@@ -99,11 +100,31 @@ class SplashScreenWidget extends StatelessWidget {
           return Scaffold(
             body: SafeArea(
               child: Center(
-                child: SvgPicture.asset(
-                  AppImagePath.splashLogo,
-                  height: getScreenHeight(context) * 0.12,
-                  width: getScreenWidth(context) * 0.47,
-                ),
+                child: AnimatedOpacity(
+                  curve: Curves.decelerate,
+                  opacity: state.isAnimate ? 1 : 0,
+                  duration: Duration(milliseconds: 1000),
+                  child: AnimatedScale(
+                    curve: Curves.decelerate,
+                    scale: state.isAnimate ? 1 : 1.2,
+                    duration: Duration(milliseconds: 600),
+                    child: SvgPicture.asset(
+                      AppImagePath.splashLogo,
+                      height: getScreenHeight(context) * 0.12,
+                      width: getScreenWidth(context) * 0.47,
+                    ),
+                  ),
+                ) /*AnimatedOpacity(
+                  curve: Curves.easeInOut,
+                  opacity: state.isAnimate ? 1 : 0,
+                  duration: Duration(milliseconds: 1000),
+                  child: SvgPicture.asset(
+                    AppImagePath.splashLogo,
+                    height: getScreenHeight(context) * 0.12,
+                    width: getScreenWidth(context) * 0.47,
+                  ),
+                )*/
+                ,
               ),
             ),
           );
@@ -112,6 +133,5 @@ class SplashScreenWidget extends StatelessWidget {
     );
   }
 }
-
 
 //eti3Gz3RRYuUgZVbNrqt5z:APA91bH29l6pxfxQtwh9l3xTQtoCcXhROpI1zX-1oSb3W2QOFW-RycCY63dMS1l41e-dUHG2J4Xmr2FRIL1TR6WvT6uu6vgd9xiyyIgaUuE8p81kOr9zySa5OwJUjeKdFBigKQVkiSq-
