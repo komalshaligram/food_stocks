@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -498,8 +499,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            HapticFeedback.heavyImpact();
-            //Vibration.vibrate(amplitude: 128);
+            //await HapticFeedback.heavyImpact();
+           //
+            Vibration.vibrate();
+
             // List<ProductStockModel> productStockList =
             // state.productStockList.toList(growable: true);
             // productStockList[state.productStockUpdateIndex] =
@@ -597,12 +600,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final res = await DioClient(event.context).post(
             AppUrls.getOrdersCountUrl,
             data: reqMap,
-            /*    options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                          'Bearer ${preferences.getAuthToken()}',
-                    },
-                  )*/
           );
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
