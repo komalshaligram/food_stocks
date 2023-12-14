@@ -29,7 +29,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
       if (event is _getAllCartEvent) {
         debugPrint('cartId____${preferencesHelper.getCartId()}');
-        emit(state.copyWith(isShimmering: true ,language: preferencesHelper.getAppLanguage()));
+
+        emit(state.copyWith(isShimmering: true ,language: preferencesHelper.getAppLanguage(),cartCount: preferencesHelper.getCartCount()));
         try {
           final res = await DioClient(event.context).post(
               '${AppUrls.getAllCartUrl}${preferencesHelper.getCartId()}',
@@ -65,7 +66,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 totalPayment: response.data!.cart!.first.totalAmount!));
           } else {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
-            //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
+
           }
         } on ServerException {}
       } else if (event is _productUpdateEvent) {
@@ -132,25 +133,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 isLoading: false,
             ));
 
-            /* showSnackBar(
-                  context: event.context,
-                  title: response.message!,
-                  bgColor: AppColors.mainColor);*/
           } else {
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ??'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
 
           }
         } on ServerException {}
-        // }
-        /* else {
-          showSnackBar(
-              context: event.context,
-              title: "Quantity can't decrease",
-              bgColor: AppColors.mainColor);
-        }*/
+
       } else if (event is _removeCartProductEvent) {
         try {
           final response = await DioClient(event.context).post(
@@ -179,7 +170,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             showSnackBar(
                 context: event.context,
                 title:   response.message != null ?AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context): AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {
@@ -214,6 +205,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       }
       else if(event is _updateImageIndexEvent){
         emit(state.copyWith(productImageIndex: event.index));
+      }
+      else if(event is _cartAnimationEvent){
+        if(event.cartCount < preferencesHelper.getCartCount()){
+          //emit(state.copyWith(isAnimation: true));
+        }
       }
     });
   }

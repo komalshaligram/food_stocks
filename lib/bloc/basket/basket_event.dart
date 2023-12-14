@@ -31,5 +31,8 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) =_SetCartCountEvent;
   const factory BasketEvent.updateImageIndexEvent({required int index}) =_updateImageIndexEvent;
+  const factory BasketEvent.cartAnimationEvent({
+    required int cartCount,
+  }) = _cartAnimationEvent;
 
 }

@@ -83,6 +83,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage : double.parse(response.data?.currentMonth?.expensePercentage ?? '')
             ));
+          } else {
+
           }
         } on ServerException {
         } catch (e) {}
@@ -123,10 +125,10 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
             emit(state.copyWith(monthlyExpenseList: temp));
           } else {
-            /*showSnackBar(
+            showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);*/
+                bgColor: AppColors.redColor);
           }
         } on ServerException {}
       } else if (event is _getAllWalletTransactionEvent) {
@@ -189,10 +191,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               }
 
           } else {
-         /*   showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);*/
+
             emit(state.copyWith(isLoadMore: false,isShimmering: false));
           }
         } on ServerException {
@@ -272,7 +271,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
-
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
@@ -311,13 +309,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       }
     });
   }
-  String splitNumber(String price) {
-    var splitPrice = price.split(".");
-    if (splitPrice[1] == "00") {
-      return splitPrice[0];
-    } else {
-      return price.toString();
-    }
-  }
+
 }
 
