@@ -88,19 +88,20 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
+
                           Align(
                             child: ScaleTransition(
-                              scale: Tween(begin: 0.5, end: 0.8)
+                              scale: Tween(begin: 0.5, end: 1.2)
                                   .animate(CurvedAnimation(
                                   parent: _controller,
                                   curve: Curves.easeIn,
                                 reverseCurve: Curves.easeOutCubic
                               )
                               ),
-                              child: SizedBox(
-                                height: 180,
-                                width: 180,
-                                child: CircleAvatar(backgroundImage: AssetImage(AppImagePath.successIcon)),
+                              child: Container(
+                                  height: 180,
+                                  width: 180,
+                                  child: Image.asset(AppImagePath.successIcon)
                               ),
                             ),
                           ),

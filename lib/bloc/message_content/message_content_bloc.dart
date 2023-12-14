@@ -29,7 +29,7 @@ class MessageContentBloc
 
       if (event is _GetMessageDataEvent) {
         emit(state.copyWith(
-            message: event.messageData, isReadMore: event.isReadMore));
+            message: event.messageData, isReadMore: event.isReadMore,language: preferences.getAppLanguage()));
       } else if (event is _MessageDeleteEvent) {
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(

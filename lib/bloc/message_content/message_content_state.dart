@@ -6,11 +6,13 @@ class MessageContentState with _$MessageContentState {
     required MessageData message,
     required bool isReadMore,
     required bool isPreview,
+    required String language,
   }) = _MessageContentState;
 
   factory MessageContentState.initial() => MessageContentState(
         message: MessageData(),
     isReadMore: false,
     isPreview: false,
+    language: AppStrings.hebrewString
       );
 }
