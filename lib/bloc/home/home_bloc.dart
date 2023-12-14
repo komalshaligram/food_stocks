@@ -642,6 +642,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
+
                         ))
                     .toList() ??
                 []);
