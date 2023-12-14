@@ -272,6 +272,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
+
             showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
