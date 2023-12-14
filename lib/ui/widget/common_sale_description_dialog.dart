@@ -19,6 +19,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: EdgeInsets.all(AppConstants.padding_15),
+      surfaceTintColor: AppColors.whiteColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.radius_10)),
       title: Text(

@@ -52,86 +52,81 @@ class BottomNavScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
-              if (state.index == 4) {
+              if (state.index == 0) {
                 return Future.value(true);
               } else {
-                bloc.add(BottomNavEvent.changePage(index: 4));
+                bloc.add(BottomNavEvent.changePage(index: 0));
                 return Future.value(false);
               }
             },
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.pageColor,
-              bottomNavigationBar: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Container(
-                  height: 95,
-                  color: AppColors.pageColor,
-                  child: CurvedNavigationBar(
-                    key: _bottomNavigationKey,
-                    index: state.index,
-                    height: 60.0,
-                    items:  [
-                      _navItem(
+              bottomNavigationBar: Container(
+                // height: 95,
+                // color: Colors.transparent,
+                child: CurvedNavigationBar(
+                  key: _bottomNavigationKey,
+                  index: state.index,
+                  height: 60.0,
+                  items: [
+                    _navItem(
                       pos: 0,
                       img: AppImagePath.home,
                       isRTL: context.rtl,
                       state: state,
-                   /*   onTap: () => bloc.add(
-                          BottomNavEvent.changePage(index: 4))*/
-                        //  onTap: (){}
-                      ),
-                  _navItem(
+                      /*   onTap: () => bloc.add(
+                        BottomNavEvent.changePage(index: 4))*/
+                      //  onTap: (){}
+                    ),
+                    _navItem(
                       pos: 1,
                       img: AppImagePath.store,
                       isRTL: context.rtl,
                       state: state,
-                    /*  onTap: () => bloc.add(
-                          BottomNavEvent.changePage(index: 3))*/
-                   //   onTap: (){}
-                  ),
-                  _navItem(
+                      /*  onTap: () => bloc.add(
+                        BottomNavEvent.changePage(index: 3))*/
+                      //   onTap: (){}
+                    ),
+                    _navItem(
                       pos: 2,
                       img: AppImagePath.cart,
                       isRTL: context.rtl,
                       state: state,
                       isCart: true,
                       /*onTap: () => bloc.add(
-                          BottomNavEvent.changePage(index: 2))*/
-                    //  onTap: (){}
-                  ),
-                  _navItem(
+                        BottomNavEvent.changePage(index: 2))*/
+                      //  onTap: (){}
+                    ),
+                    _navItem(
                       pos: 3,
                       img: AppImagePath.wallet,
                       isRTL: context.rtl,
                       state: state,
-                     /* onTap: () => bloc.add(
-                          BottomNavEvent.changePage(index: 1))*/
-                   //   onTap: (){}
-                  ),
-                  _navItem(
+                      /* onTap: () => bloc.add(
+                        BottomNavEvent.changePage(index: 1))*/
+                      //   onTap: (){}
+                    ),
+                    _navItem(
                       pos: 4,
                       img: AppImagePath.profile,
                       isRTL: context.rtl,
                       state: state,
-                    /*  onTap: () => bloc.add(
-                          BottomNavEvent.changePage(index: 0))*/
-             //   onTap: (){}
-                  ),
+                      /*  onTap: () => bloc.add(
+                        BottomNavEvent.changePage(index: 0))*/
+                      //   onTap: (){}
+                    ),
                   ],
-                    color: Colors.white,
-                    buttonBackgroundColor: Colors.white,
-                    backgroundColor: AppColors.pageColor,
-                    animationCurve: Curves.easeInOut,
-                    animationDuration: Duration(milliseconds: 600),
-                    onTap: (index) {
-                      print('index____$index');
-                      bloc.add(
-                          BottomNavEvent.changePage(index: index));
-                    },
-                    letIndexChange: (index) => true,
-
-                  ),
+                  color: Colors.white,
+                  buttonBackgroundColor: Colors.white,
+                  backgroundColor: AppColors.pageColor,
+                  animationCurve: Curves.easeInOut,
+                  animationDuration: Duration(milliseconds: 600),
+                  onTap: (index) {
+                    print('index____$index');
+                    bloc.add(BottomNavEvent.changePage(index: index));
+                  },
+                  letIndexChange: (index) => true,
                 ),
               ),
               body: FocusDetector(
@@ -229,16 +224,24 @@ class BottomNavScreenWidget extends StatelessWidget {
                             width: 24,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                               color: state.index == 2 ?  AppColors.navSelectedColor : AppColors.notificationColor,
+                              color: state.index == 2
+                                  ? AppColors.whiteColor
+                                  : AppColors.notificationColor,
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(AppConstants.radius_100)),
-                              border:
-                                  Border.all(color: AppColors.whiteColor, width: 1),
+                              border: Border.all(
+                                  color: state.index == 2
+                                      ? AppColors.mainColor
+                                      : AppColors.whiteColor,
+                                  width: 1),
                             ),
                             child: Text(
                               '${state.cartCount}',
                               style: AppStyles.rkRegularTextStyle(
-                                  size: 10, color: AppColors.whiteColor),
+                                  size: 10,
+                                  color: state.index == 2
+                                      ? AppColors.mainColor
+                                      : AppColors.whiteColor),
                             ),
                           ),
                         ],

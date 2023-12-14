@@ -128,7 +128,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        childAspectRatio: 9 / 12),
+                                        childAspectRatio: AppConstants
+                                            .productGridAspectRatio),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
                                           productImage: state
@@ -428,7 +429,14 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                   isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
+                                  onQuantityChanged: (quantity) {
+                                    context
+                                        .read<RecommendationProductsBloc>()
+                                        .add(RecommendationProductsEvent
+                                            .updateQuantityOfProduct(
+                                                context: context1,
+                                                quantity: quantity));
+                                  },
                                   onQuantityIncreaseTap: () {
                                     context
                                         .read<RecommendationProductsBloc>()
@@ -739,7 +747,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 itemCount: state.productSupplierList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    height: 95,
+                                    height: 105,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_10),

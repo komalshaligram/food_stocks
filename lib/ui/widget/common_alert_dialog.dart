@@ -25,6 +25,7 @@ class CommonAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: EdgeInsets.all(20.0),
+      surfaceTintColor: AppColors.whiteColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Text(title,
           style: AppStyles.rkRegularTextStyle(

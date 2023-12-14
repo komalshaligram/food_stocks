@@ -126,7 +126,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        childAspectRatio: 9 / 12),
+                                        childAspectRatio: AppConstants
+                                            .productGridAspectRatio),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
                                         productImage: state
@@ -426,7 +427,12 @@ class ReorderScreenWidget extends StatelessWidget {
                                   isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
+                                  onQuantityChanged: (quantity) {
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.updateQuantityOfProduct(
+                                            context: context1,
+                                            quantity: quantity));
+                                  },
                                   onQuantityIncreaseTap: () {
                                     context.read<ReorderBloc>().add(
                                         ReorderEvent.increaseQuantityOfProduct(
@@ -724,7 +730,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                 itemCount: state.productSupplierList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    height: 95,
+                                    height: 105,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_10),

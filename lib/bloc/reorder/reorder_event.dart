@@ -15,6 +15,10 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
+  const factory ReorderEvent.updateQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity}) = _UpdateQuantityOfProduct;
+
   const factory ReorderEvent.changeNoteOfProduct({required String newNote}) =
       _ChangeNoteOfProduct;
 

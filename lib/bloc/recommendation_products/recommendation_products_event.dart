@@ -15,6 +15,10 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
+  const factory RecommendationProductsEvent.updateQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity}) = _UpdateQuantityOfProduct;
+
   const factory RecommendationProductsEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
 
