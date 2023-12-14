@@ -1184,7 +1184,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .planoGramUpdateIndex][state
                                   .productStockUpdateIndex].quantity,
                               onQuantityChanged: (quantity) {
-
+                                context.read<StoreCategoryBloc>().add(
+                                    StoreCategoryEvent.updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
                               },
                               onQuantityIncreaseTap: () {
                                 context.read<StoreCategoryBloc>().add(
@@ -1886,7 +1889,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           itemCount: state.productSupplierList.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              height: 95,
+                              height: 105,
                               padding: EdgeInsets.symmetric(
                                   vertical: AppConstants.padding_5,
                                   horizontal: AppConstants.padding_10),

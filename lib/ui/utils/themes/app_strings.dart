@@ -92,15 +92,19 @@ class AppStrings {
   //toast strings
   //static const registerSuccessString = 'Registered Successfully!';
   static const otpResendSuccessString = 'OTP resend Successfully!';
+
 //  static const loginSuccessString = 'Logged in Successfully!';
   //static const updateSuccessString = 'Updated Successfully!';
- // static const addCartSuccessString = 'Product added to Cart';
+  // static const addCartSuccessString = 'Product added to Cart';
 //  static const removeSuccessString = 'Removed Successfully!';
- // static const logOutSuccessString = 'Logged out Successfully!';
+  // static const logOutSuccessString = 'Logged out Successfully!';
 //  static const somethingWrongString = 'Something is wrong, try again!';
 //  static const minQuantityMsgString = 'Add at least 1 quantity';
 //  static const selectSupplierMsgString = 'Please select supplier';
-   static const maxQuantityMsgString = 'You have reached maximum quantity';
+  static const maxQuantityMsgString = 'You have reached maximum quantity';
+  static const maxQuantityMsg1String = 'This supplier have ';
+  static const maxQuantityMsg2String = ' quantity in stock';
+
 //  static const imageNotSetString = 'Image not set';
 //  static const fileSizeLimitString = 'File size must be less then ${AppConstants.fileSizeCap}KB';
 //  static const selectBusinessTypeString = 'Please select your business type';
@@ -109,9 +113,9 @@ class AppStrings {
       'Please select only jpg, jpeg, png, heic, pdf and document files';
 
   //static const downloadString = 'Downloaded successfully!';
- // static const downloadFailedString = 'Failed to download';
- // static const storageAllowPermissionString = 'Please allow storage permission from settings';
- // static const cameraAllowPermissionString = 'Please allow camera permission from settings';
+  // static const downloadFailedString = 'Failed to download';
+  // static const storageAllowPermissionString = 'Please allow storage permission from settings';
+  // static const cameraAllowPermissionString = 'Please allow camera permission from settings';
  // static const uploadDocumentFirstString = 'Please upload document first';
   //static const openingTimeAfterPreviousClosingString = 'Please select opening time after previous closing time';
  // static const openingTimeAfterClosingString = 'Please select opening time before closing time';

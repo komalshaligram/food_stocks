@@ -21,6 +21,8 @@ class AppImagePath {
 
   ///pngs
   static const String profileImage = 'assets/images/ic_default_profile_img.png';
+  static const String defaultProfileImage =
+      'assets/images/default_profile_image.png';
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable =
       'assets/images/image_not_available.png';

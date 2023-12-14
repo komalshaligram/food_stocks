@@ -15,6 +15,10 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
+  const factory PlanogramProductEvent.updateQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity}) = _UpdateQuantityOfProduct;
+
   const factory PlanogramProductEvent.changeNoteOfProduct(
       {required String newNote}) = _ChangeNoteOfProduct;
 

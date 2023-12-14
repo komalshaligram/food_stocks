@@ -26,7 +26,7 @@ class AppConfig {
         flavor: 'stag',
         appName: 'Food Stock Stag',
         appBaseUrl: 'http://192.168.1.46:3000/api',
-        primaryColor: Colors.green);
+        primaryColor: Colors.red);
   }
 
   factory AppConfig.prod() {
@@ -34,7 +34,7 @@ class AppConfig {
         flavor: 'prod',
         appName: 'Food Stock',
         appBaseUrl: 'http://182.70.118.201:3000/api',
-        primaryColor: Colors.red);
+        primaryColor: Colors.green);
   }
 
   static Future<void> initializeAppConfig(BuildContext context) async {

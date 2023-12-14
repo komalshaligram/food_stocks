@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.green,
             snackBarTheme: SnackBarThemeData(
               backgroundColor: AppColors.mainColor,
               actionTextColor: AppColors.textColor,
