@@ -145,19 +145,14 @@ class BasketScreenWidget extends StatelessWidget {
                                                               FontWeight.w700),
                                                 ),*/
                                           Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                '${AppLocalizations.of(context)!.total}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
-                                                  size: getScreenWidth(
-                                                      context) <=
-                                                      380
-                                                      ? AppConstants
-                                                      .font_14
-                                                      : AppConstants
-                                                      .mediumFont,
+                                                  size:  AppConstants
+                                                      .font_14,
                                                   color: AppColors
                                                       .whiteColor,
                                                 ),
@@ -174,7 +169,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                               ? AppConstants
                                                               .font_14
                                                               : AppConstants
-                                                              .mediumFont,
+                                                              .smallFont,
                                                           color: AppColors
                                                               .whiteColor,
                                                           fontWeight:
@@ -224,7 +219,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context, RouteDefine.orderSuccessfulScreen.name,arguments: {
+                                            Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name,arguments: {
                                               AppStrings.getCartListString : state.CartItemList
                                                 });
                                           },
@@ -417,8 +412,7 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: Column(
               children: [
-                state.isLoading
-                    ? LinearProgressIndicator(
+              state.basketProductList[index].isProcess == true ? LinearProgressIndicator(
                       color: AppColors.mainColor,
                       minHeight: 3,
                       borderRadius: BorderRadius.all(
@@ -428,7 +422,6 @@ class BasketScreenWidget extends StatelessWidget {
                       AppColors.mainColor.withOpacity(0.5),
                     )
                     : 3.height,
-                5.height,
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: AppConstants.padding_10,
@@ -448,9 +441,9 @@ class BasketScreenWidget extends StatelessWidget {
                          );
                        },
                        child: Image.asset(AppImagePath.imageNotAvailable5,
-                         width: 80,
-                         height: 80,
-                         fit: BoxFit.cover,
+                         width: 100,
+                         height: 100,
+                         fit: BoxFit.fitWidth,
                        ),
                      ) : GestureDetector(
                        onTap: (){
@@ -461,8 +454,9 @@ class BasketScreenWidget extends StatelessWidget {
                        },
                        child: Image.network(
                           '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-                          width: 80,
-                          height: 80,
+                          width: 100,
+                          height: 100,
+                         fit: BoxFit.fill,
                          loadingBuilder:
                              (context,
                              child,
@@ -508,7 +502,7 @@ class BasketScreenWidget extends StatelessWidget {
                          },
                         ),
                      ),
-                      10.width,
+                      20.width,
                       Expanded(
                         flex: 3,
                         child: Container(
@@ -534,136 +528,119 @@ class BasketScreenWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              5.height,
+                              Directionality(
+                                textDirection: TextDirection.ltr,
+                                child: Text(
+                                  /* '${splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0")}${AppLocalizations.of(context)!.currency}',*/
+                                  '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0",local:AppStrings.hebrewLocal)}',
+                                  style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.smallFont,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
                               10.height,
-
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Text(
-                                     /* '${splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0")}${AppLocalizations.of(context)!.currency}',*/
-                                      '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0",local:AppStrings.hebrewLocal)}',
-                                      style: TextStyle(
-                                          color: AppColors.blackColor,
-                                          fontSize: AppConstants.smallFont,
-                                          fontWeight: FontWeight.w700),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if(!state.isLoading){
+                                        if ((state.CartItemList.data?.data?[index].productStock ?? 0 )>=
+                                            state.basketProductList[index].totalQuantity! + 1) {
+                                          bloc.add(BasketEvent.productUpdateEvent(
+                                            listIndex: index,
+                                            productWeight:
+                                            state.basketProductList[index].totalQuantity! + 1,
+                                            context: context,
+                                            productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
+                                            supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                                            cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
+                                            totalPayment:state.totalPayment,
+                                            saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
+                                          ));
+                                        } else {
+                                          showSnackBar(
+                                              context: context,
+                                              title: '${AppLocalizations.of(context)!.out_of_stock}',
+                                              bgColor: AppColors.redColor);
+                                        }
+                                      }
+
+                                    },
+                                    child: Container(
+                                      width: AppConstants.containerSize_35,
+                                      height: AppConstants.containerSize_35,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(AppConstants.radius_4),
+                                          border: Border.all(color: AppColors.navSelectedColor),
+                                          color: AppColors.pageColor),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 20,
+                                        color: AppColors.blackColor,
+                                      ),
                                     ),
                                   ),
-                                  30.width,
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          if(!state.isLoading){
-                                            if ((state.CartItemList.data?.data?[index].productStock ?? 0 )>=
-                                                state.basketProductList[index].totalQuantity! + 1) {
-                                              bloc.add(BasketEvent.productUpdateEvent(
-                                                listIndex: index,
-                                                productWeight:
-                                                state.basketProductList[index].totalQuantity! + 1,
-                                                context: context,
-                                                productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
-                                                supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
-                                                cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
-                                                totalPayment:state.totalPayment,
-                                                saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
-                                              ));
-                                            } else {
-                                              showSnackBar(
-                                                  context: context,
-                                                  title: '${AppLocalizations.of(context)!.out_of_stock}',
-                                                  bgColor: AppColors.redColor);
-                                            }
-                                          }
+                                  10.width,
+                                  Text(
+                                    '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
+                                    style: TextStyle(
+                                      color: AppColors.blackColor,
+                                      fontSize: AppConstants.smallFont,
+                                    ),
+                                  ),
+                                  10.width,
+                                  GestureDetector(
+                                    onTap: () {
+                                      if(!state.isLoading) {
+                                        if (state.basketProductList[index].totalQuantity! > 1) {
+                                          bloc.add(BasketEvent.productUpdateEvent(
+                                            listIndex: index,
+                                            productWeight:
+                                            state.basketProductList[index].totalQuantity! - 1,
+                                            context: context,
+                                            productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
+                                            supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                                            cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
+                                            totalPayment: state
+                                                .totalPayment,
+                                            saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
+                                                0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
+                                                .id ?? '')),
+                                          ));
+                                        }
+                                      }
 
-                                        },
-                                        child: Container(
-                                          width: AppConstants.containerSize_35,
-                                          height: AppConstants.containerSize_35,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(AppConstants.radius_4),
-                                              border: Border.all(color: AppColors.navSelectedColor),
-                                              color: AppColors.pageColor),
-                                          child: Icon(
-                                            Icons.add,
-                                            size: 20,
-                                            color: AppColors.blackColor,
-                                          ),
-                                        ),
+                                    },
+                                    child: Container(
+                                      width: AppConstants.containerSize_35,
+                                      height: AppConstants.containerSize_35,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(AppConstants.radius_4),
+                                          border: Border.all(color: AppColors.navSelectedColor),
+                                          color: AppColors.pageColor),
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 20,
+                                        color: AppColors.blackColor,
                                       ),
-                                      10.width,
-                                      Text(
-                                        '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
-                                        style: TextStyle(
-                                          color: AppColors.blackColor,
-                                          fontSize: AppConstants.smallFont,
-                                        ),
-                                      ),
-                                      10.width,
-                                      GestureDetector(
-                                        onTap: () {
-                                          if(!state.isLoading) {
-                                            if (state.basketProductList[index].totalQuantity! > 1) {
-                                              bloc.add(BasketEvent.productUpdateEvent(
-                                                listIndex: index,
-                                                productWeight:
-                                                state.basketProductList[index].totalQuantity! - 1,
-                                                context: context,
-                                                productId: state.CartItemList.data?.data?[index].productDetails?.id ?? '',
-                                                supplierId: state.CartItemList.data?.data?[index].suppliers?.first.id ?? '',
-                                                cartProductId: state.CartItemList.data?.data?[index].cartProductId ?? '',
-                                                totalPayment: state
-                                                    .totalPayment,
-                                                saleId: ((state.CartItemList.data?.data?[index].sales?.length ==
-                                                    0) ? '' : (state.CartItemList.data?.data?[index].sales?.first
-                                                    .id ?? '')),
-                                              ));
-                                            }
-                                          }
-
-                                        },
-                                        child: Container(
-                                          width: AppConstants.containerSize_35,
-                                          height: AppConstants.containerSize_35,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(AppConstants.radius_4),
-                                              border: Border.all(color: AppColors.navSelectedColor),
-                                              color: AppColors.pageColor),
-                                          child: Icon(
-                                            Icons.remove,
-                                            size: 20,
-                                            color: AppColors.blackColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ],
-                              )
+                              ),
+
+
+
                             ],
                           ),
                         ),
                       ),
 
 
-                  /*    GestureDetector(
-                        onTap: () {
-                          deleteDialog(
-                            context: context,
-                            updateClearString: AppStrings.deleteString,
-                            cartProductId: state.basketProductList[index].cartProductId,
-                            listIndex: index,
-                            totalAmount : state.basketProductList[index].totalPayment!,
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          AppImagePath.delete,
-                        ),
-                      ),*/
                     ],
                   ),
                 ),
@@ -689,9 +666,8 @@ class BasketScreenWidget extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               title: Text(
-                  updateClearString == AppStrings.clearString
-                      ?  '${AppLocalizations.of(context)!.you_want_clear_cart}'
-                      :  '${AppLocalizations.of(context)!.you_want_delete_product}',
+                   '${AppLocalizations.of(context)!.you_want_clear_cart}',
+
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.mediumFont,
                       color: AppColors.blackColor,
@@ -723,7 +699,7 @@ class BasketScreenWidget extends StatelessWidget {
                         BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
                     width: 80,
                     child: Text(
-                      'Yes',
+                        '${AppLocalizations.of(context)!.yes}',
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.mainColor.withOpacity(0.9),
                           size: AppConstants.smallFont),
@@ -745,7 +721,7 @@ class BasketScreenWidget extends StatelessWidget {
                         color: AppColors.mainColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(8.0)),
                     child: Text(
-                      'No',
+                        '${AppLocalizations.of(context)!.no}',
                       style: AppStyles.rkRegularTextStyle(
                           color: AppColors.whiteColor,
                           size: AppConstants.smallFont),
@@ -991,7 +967,7 @@ class BasketScreenWidget extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                           ),
                                           Text(
-                                            '${(double.parse(CartItemList.data?.data?[index].totalAmount ?? '0')/(CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                            '${(double.parse(CartItemList.data?.data?[index].totalAmount.toString() ?? '0')/(CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
                                             style: AppStyles.rkBoldTextStyle(
                                               size: AppConstants.smallFont,
                                               color: AppColors.blackColor,

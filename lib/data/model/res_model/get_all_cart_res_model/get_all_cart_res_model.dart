@@ -63,7 +63,7 @@ class Datum with _$Datum {
     @JsonKey(name: "totalQuantity")
     int? totalQuantity,
     @JsonKey(name: "totalAmount")
-    String? totalAmount,
+    double? totalAmount,
     @JsonKey(name: "note")
     String? note,
   }) = _Datum;

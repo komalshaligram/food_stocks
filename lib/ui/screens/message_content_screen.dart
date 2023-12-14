@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -39,8 +40,9 @@ class MessageContentScreen extends StatelessWidget {
 }
 
 class MessageContentScreenWidget extends StatelessWidget {
-  const MessageContentScreenWidget({super.key});
+   MessageContentScreenWidget({super.key});
 
+   bool isPreview = false;
   @override
   Widget build(BuildContext context) {
     MessageContentBloc bloc = context.read<MessageContentBloc>();
@@ -59,7 +61,7 @@ class MessageContentScreenWidget extends StatelessWidget {
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
+              appBar:state.isPreview ?PreferredSize(preferredSize: Size.fromHeight(0), child: SizedBox()) : PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
                   title: AppLocalizations.of(context)!.message,
@@ -111,8 +113,75 @@ class MessageContentScreenWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              body: SafeArea(
-                child: SingleChildScrollView(
+              body:  state.isPreview ?  SafeArea(
+                child: Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
+                        '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                        height: getScreenHeight(context) ,
+                          width: double.maxFinite,
+                        fit: BoxFit
+                            .fill,
+                        loadingBuilder:
+                            (context,
+                            child,
+                            loadingProgress) {
+                          if (loadingProgress ==
+                              null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child:
+                              CupertinoActivityIndicator(
+                                color: AppColors
+                                    .blackColor,
+                              ),
+                            );
+                          }
+                        },
+                        errorBuilder:
+                            (context,
+                            error,
+                            stackTrace) {
+                          return Container(
+                            decoration: BoxDecoration(
+                                color: AppColors
+                                    .whiteColor,
+                                shape: BoxShape
+                                    .circle),
+                            alignment:
+                            Alignment
+                                .center,
+                            child: Text(
+                              AppStrings
+                                  .failedToLoadString,
+                              textAlign:
+                              TextAlign
+                                  .center,
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants
+                                      .font_14,
+                                  color:
+                                  AppColors.textColor),
+                            ),
+                          );
+                        },
+                      ):SizedBox(),
+                    ),
+                    GestureDetector(
+                        onTap: (){
+                          bloc.add(MessageContentEvent.ImagePreviewEvent());
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 30),
+                          child: Icon(Icons.close),
+                        )),
+                  ],
+                ),
+              ) :SafeArea(
+                child:SingleChildScrollView(
                   child: Container(
                     width: double.maxFinite,
                     margin: EdgeInsets.only(
@@ -133,62 +202,67 @@ class MessageContentScreenWidget extends StatelessWidget {
                         ]),
                     child: Container(
                       color: AppColors.whiteColor,
-                      child: Column(
+                      child:  Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         Container(
-                              alignment: Alignment.center,
-                            child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
-                              '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
-                              fit: BoxFit
-                                  .contain,
-                              loadingBuilder:
-                                  (context,
-                                  child,
-                                  loadingProgress) {
-                                if (loadingProgress ==
-                                    null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child:
-                                    CupertinoActivityIndicator(
-                                      color: AppColors
-                                          .blackColor,
+                         GestureDetector(
+                           onTap: (){
+                             bloc.add(MessageContentEvent.ImagePreviewEvent());
+
+                           },
+                           child: Container(
+                                alignment: Alignment.center,
+                              child: state.message.message?.messageImage != null  &&  state.message.message?.messageImage != ''  ?Image.network(
+                                '${AppUrls.baseFileUrl}${state.message.message?.messageImage ?? ''}',
+                                fit: BoxFit
+                                    .contain,
+                                loadingBuilder:
+                                    (context,
+                                    child,
+                                    loadingProgress) {
+                                  if (loadingProgress ==
+                                      null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child:
+                                      CupertinoActivityIndicator(
+                                        color: AppColors
+                                            .blackColor,
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder:
+                                    (context,
+                                    error,
+                                    stackTrace) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors
+                                            .whiteColor,
+                                        shape: BoxShape
+                                            .circle),
+                                    alignment:
+                                    Alignment
+                                        .center,
+                                    child: Text(
+                                      AppStrings
+                                          .failedToLoadString,
+                                      textAlign:
+                                      TextAlign
+                                          .center,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants
+                                              .font_14,
+                                          color:
+                                          AppColors.textColor),
                                     ),
                                   );
-                                }
-                              },
-                              errorBuilder:
-                                  (context,
-                                  error,
-                                  stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: AppColors
-                                          .whiteColor,
-                                      shape: BoxShape
-                                          .circle),
-                                  alignment:
-                                  Alignment
-                                      .center,
-                                  child: Text(
-                                    AppStrings
-                                        .failedToLoadString,
-                                    textAlign:
-                                    TextAlign
-                                        .center,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants
-                                            .font_14,
-                                        color:
-                                        AppColors.textColor),
-                                  ),
-                                );
-                              },
-                            ):SizedBox(),
-                          ),
-
+                                },
+                              ):SizedBox(),
+                            ),
+                         ),
                           5.height,
                           Text(
                             state.message.message?.title ?? '',
