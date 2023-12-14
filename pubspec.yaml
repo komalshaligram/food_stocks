@@ -141,6 +141,15 @@ flutter:
          - asset: assets/fonts/Rubik-BoldItalic.ttf
          - asset: assets/fonts/Rubik-VariableFont_wght.ttf
 
+    - family: Preahvihear
+      fonts:
+         - asset: assets/fonts/Preahvihear-Regular.ttf
+
+    - family: Newretrostyle
+      fonts:
+        - asset: assets/fonts/Newretrostyle3d-ygjm.ttf
+
+
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
