@@ -92,7 +92,7 @@ class AppConstants{
   static const int planogramProductPageLimit = 4;
   static const int qnaPageLimit = 10;
   static const int messagePageLimit = 10;
-  static const int appContentPageLimit = 20;
+  static const int appContentPageLimit = 10;
   static const int oderPageLimit = 10;
   static const int walletLimit = 10;
 }
