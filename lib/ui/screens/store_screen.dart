@@ -697,7 +697,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? CrossFadeState.showFirst
                                   : CrossFadeState.showSecond,
                               duration: Duration(milliseconds: 300)),
-                          80.height,
+                          AppConstants.bottomNavSpace.height,
                         ],
                       ),
                     ),
@@ -1647,7 +1647,12 @@ class StoreScreenWidget extends StatelessWidget {
                               scrollController: scrollController,
                               productQuantity: state.productStockList[state
                                   .productStockUpdateIndex].quantity,
-                              onQuantityChanged: (quantity) {},
+                              onQuantityChanged: (quantity) {
+                                context.read<StoreBloc>().add(
+                                    StoreEvent.updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
+                              },
                               onQuantityIncreaseTap: () {
                                 context.read<StoreBloc>().add(
                                     StoreEvent.increaseQuantityOfProduct(
@@ -1959,7 +1964,7 @@ class StoreScreenWidget extends StatelessWidget {
                           itemCount: state.productSupplierList.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              height: 95,
+                              height: 105,
                               padding: EdgeInsets.symmetric(
                                   vertical: AppConstants.padding_5,
                                   horizontal: AppConstants.padding_10),

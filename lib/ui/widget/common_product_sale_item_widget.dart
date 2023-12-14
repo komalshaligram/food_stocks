@@ -106,7 +106,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                 "${parse(description).body?.text}",
                 style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_10, color: AppColors.blackColor),
-                maxLines: 3,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

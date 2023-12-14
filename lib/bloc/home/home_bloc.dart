@@ -314,7 +314,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title:
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -342,6 +344,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             quantityString = quantityString.substring(1);
           }
           int newQuantity = int.tryParse(quantityString) ?? 0;
+          debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
               productStockList[state.productStockUpdateIndex].stock) {
             productStockList[state.productStockUpdateIndex] =
@@ -351,11 +354,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 'product quantity update = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
           } else {
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    quantity: int.tryParse(quantityString.substring(
+                            0, quantityString.length - 1)) ??
+                        0);
+            debugPrint(
+                'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
             showSnackBar(
                 context: event.context,
                 title:
-                    '' /*"${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}"*/,
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 bgColor: AppColors.redColor);
+            emit(state.copyWith(productStockList: []));
+            emit(state.copyWith(productStockList: productStockList));
           }
         }
       } else if (event is _ChangeNoteOfProduct) {

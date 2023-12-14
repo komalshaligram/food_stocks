@@ -99,6 +99,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   bgColor: AppColors.redColor);
             }
           } catch (e) {
+            debugPrint('err = ${e}');
             emit(state.copyWith(isLoading: false));
           }
         } else {

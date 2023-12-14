@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -423,24 +424,24 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                         width: 1),
                                                   ),
                                                   alignment: Alignment.center,
-                                                  child: /*TextField(
-                                          readOnly: true,
-                                          controller: TextEditingController(
-                                              text: "${productQuantity}")
-                                            ..selection =
-                                                TextSelection.fromPosition(
-                                                    TextPosition(
-                                                        offset:
-                                                            "$productQuantity"
-                                                                .length)),
-                                          textAlign: TextAlign.center,
-                                          style: AppStyles.rkBoldTextStyle(
-                                              size: AppConstants.font_26,
+                                                  child: TextField(
+                                                    // readOnly: true,
+                                                    controller: TextEditingController(
+                                                        text:
+                                                            "${productQuantity}")
+                                                      ..selection = TextSelection
+                                                          .fromPosition(TextPosition(
+                                                              offset:
+                                                                  "$productQuantity"
+                                                                      .length)),
+                                                    textAlign: TextAlign.center,
+                                                    style: AppStyles
+                                                        .rkBoldTextStyle(
+                                                            size: AppConstants.font_26,
                                               color: AppColors.blackColor,
                                               fontWeight: FontWeight.w700),
                                           maxLength: 5,
                                           maxLines: 1,
-
                                           textInputAction: TextInputAction.done,
                                           keyboardType: TextInputType.number,
                                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -457,18 +458,26 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                 InputBorder.none,
                                             focusedBorder:
                                             InputBorder.none,
-                                            errorBorder:InputBorder.none,
-                                            focusedErrorBorder:InputBorder.none,
-                                            disabledBorder:InputBorder.none,
-                                            filled: true,
-                                            counterText: '',
-                                            constraints:
-                                                BoxConstraints(maxHeight: 50, minWidth: 50),
-                                            fillColor: Colors.transparent,
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0)
-                                          ),
-                                        )*/
-                                                      Text(
+                                                        errorBorder:
+                                                            InputBorder.none,
+                                                        focusedErrorBorder:
+                                                            InputBorder.none,
+                                                        disabledBorder:
+                                                            InputBorder.none,
+                                                        filled: true,
+                                                        counterText: '',
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight: 50,
+                                                                minWidth: 50),
+                                                        fillColor:
+                                                            Colors.transparent,
+                                                        contentPadding:
+                                                            EdgeInsets.symmetric(
+                                                                horizontal: 0,
+                                                                vertical: 0)),
+                                                  )
+                                                  /*Text(
                                                     '$productQuantity',
                                                     style: AppStyles
                                                         .rkBoldTextStyle(
@@ -480,7 +489,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                                 FontWeight
                                                                     .w700),
                                                     // maxLines: 1,
-                                                  ),
+                                                  )*/
+                                                  ,
                                                 ),
                                               ),
                                               5.width,
