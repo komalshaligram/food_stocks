@@ -18,4 +18,7 @@ class MessageContentEvent with _$MessageContentEvent {
         required String messageId,
         required BuildContext context
       }) = _MessageUpdateEvent;
+
+  const factory MessageContentEvent.ImagePreviewEvent(
+      ) = _ImagePreviewEvent;
 }

@@ -99,6 +99,10 @@ class MessageContentBloc
           }
         } on ServerException {}
       }
+
+      else if(event is _ImagePreviewEvent){
+        emit(state.copyWith(isPreview: !state.isPreview));
+      }
     });
   }
 }

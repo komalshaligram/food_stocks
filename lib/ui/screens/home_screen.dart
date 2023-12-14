@@ -586,7 +586,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.new_order,
                                     onPressed: () {
                                       context.read<BottomNavBloc>().add(
-                                          BottomNavEvent.changePage(index: 3));
+                                          BottomNavEvent.changePage(index: 1));
                                     },
                                     svgImage: AppImagePath.add,
                                   ),

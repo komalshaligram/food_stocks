@@ -45,7 +45,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           debugPrint('[getAllOrder req] = $reqMap}');
           final res = await DioClient(event.context).post(
               AppUrls.getAllOrderUrl,
-              data: reqMap,
+              data: reqMap.toJson(),
           );
 
           debugPrint('[getAllOrder url]  = ${AppUrls.getAllOrderUrl}');
@@ -90,12 +90,5 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
     });
   }
-  String splitNumber(String price) {
-    var splitPrice = price.split(".");
-    if (splitPrice[1] == "00") {
-      return splitPrice[0];
-    } else {
-      return price.toString();
-    }
-  }
+
 }
