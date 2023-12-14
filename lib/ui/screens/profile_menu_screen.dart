@@ -14,6 +14,7 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
+import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_urls.dart';
 
 class ProfileMenuRoute {
@@ -49,7 +50,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         }
       },
       listener: (context, state) {
-        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 4));
+        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0));
       },
       child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
         builder: (context, state) {
@@ -75,9 +76,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             height: 80,
                             width: 80,
                             decoration: BoxDecoration(
-                              color: state.UserImageUrl.isNotEmpty
-                                  ? AppColors.whiteColor
-                                  : AppColors.mainColor.withOpacity(0.1),
+                              color: /* state.UserImageUrl.isNotEmpty
+                                  ? */
+                                  AppColors
+                                      .whiteColor /*: AppColors.mainColor.withOpacity(0.1)*/,
                               boxShadow: [
                                 BoxShadow(
                                     color: state.UserImageUrl.isNotEmpty
@@ -104,11 +106,17 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                   )
-                                : Icon(
+                                : Image.asset(
+                                    AppImagePath.defaultProfileImage,
+                                    height: 80,
+                                    width: 80,
+                                    fit: BoxFit.scaleDown,
+                                  ) /*Icon(
                                     Icons.person,
                                     size: 60,
                                     color: AppColors.textColor,
-                                  ),
+                                  )*/
+                            ,
                           ),
                           20.width,
                           SizedBox(
@@ -117,25 +125,28 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              border: Border.all(
-                                                  color: AppColors.borderColor
-                                                      .withOpacity(0.5),
-                                                  width: 1)),
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                              height: 50,
-                                              width: getScreenWidth(context) *
-                                                  0.35,
-                                              alignment: Alignment.center,
-                                              child:
+                                  state.UserCompanyLogoUrl.isEmpty
+                                      ? 0.width
+                                      : Expanded(
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) => Container(
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.whiteColor,
+                                                    border: Border.all(
+                                                        color: AppColors
+                                                            .borderColor
+                                                            .withOpacity(0.5),
+                                                        width: 1)),
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  width: getScreenWidth(context) *
+                                                      0.35,
+                                                  alignment: Alignment.center,
+                                                  child:
                                                   const CupertinoActivityIndicator())),
                                       imageUrl:
-                                          "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                                      "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
                                       height: 34,
                                       width: getScreenWidth(context) * 0.35,
                                       fit: BoxFit.fitHeight,
@@ -144,21 +155,24 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                           : Alignment.centerLeft,
                                       errorWidget: (context, url, error) {
                                         return Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.mainColor
-                                                  .withOpacity(0.1),
-                                              /*  border: Border.all(
+                                          decoration: BoxDecoration(
+                                                  color: AppColors
+                                                      .whiteColor /*AppColors.mainColor
+                                                  .withOpacity(0.1)*/
+                                                  ,
+                                                  /*  border: Border.all(
                                                     color: AppColors.borderColor
                                                         .withOpacity(0.5),
                                                     width: 0)*/
-                                            ),
-                                            child: Icon(
+                                                ),
+                                                /*child: Icon(
                                               Icons
                                                   .image_not_supported_outlined,
                                               size: 25,
                                               color: AppColors.textColor,
-                                            ));
-                                      },
+                                            )*/
+                                              );
+                                            },
                                     ),
                                   ),
                                   10.height,
@@ -247,7 +261,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       ProfileMenuEvent.changeAppLanguageEvent(
                                           context: context));
                                 }),
-                            90.height,
+                            AppConstants.bottomNavSpace.height,
                           ],
                         ),
                       ),

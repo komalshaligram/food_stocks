@@ -23,9 +23,6 @@ part 'order_successful_bloc.freezed.dart';
 class OrderSuccessfulBloc
     extends Bloc<OrderSuccessfulEvent, OrderSuccessfulState> {
 
-  init(){
-
-  }
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
  /*     SharedPreferencesHelper preferencesHelper =

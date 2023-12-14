@@ -53,6 +53,7 @@ class AppConstants{
   static const double font_26 = 26;
   static const double font_22 = 22;
 
+  //blur
   static const double blur_10 = 10;
 
   //file size cap
@@ -70,6 +71,12 @@ class AppConstants{
   //list item animation delay
   static const int listAnimationDelay = 200;
   static const int listAnimationItemDelay = 50;
+
+  //product grid aspect ratio
+  static const double productGridAspectRatio = 9 / 13;
+
+  //bottom nav space
+  static const double bottomNavSpace = 30;
 
   //pagination
   static const int defaultPageLimit = 6;

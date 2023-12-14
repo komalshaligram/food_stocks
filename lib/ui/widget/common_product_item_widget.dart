@@ -108,6 +108,7 @@ class CommonProductItemWidget extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
             ),
             5.height,

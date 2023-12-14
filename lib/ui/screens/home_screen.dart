@@ -96,7 +96,7 @@ class HomeScreenWidget extends StatelessWidget {
                             onTap: () {
                               context
                                   .read<BottomNavBloc>()
-                                  .add(BottomNavEvent.changePage(index: 0));
+                                  .add(BottomNavEvent.changePage(index: 4));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -105,9 +105,10 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color: state.UserImageUrl.isNotEmpty
-                                        ? AppColors.whiteColor
-                                        : AppColors.mainColor.withOpacity(0.1),
+                                    color: /*state.UserImageUrl.isNotEmpty
+                                        ? */
+                                        AppColors
+                                            .whiteColor /*: AppColors.mainColor.withOpacity(0.9)*/,
                                     boxShadow: [
                                       BoxShadow(
                                           color: state.UserImageUrl.isNotEmpty
@@ -140,11 +141,18 @@ class HomeScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 40,
-                                          color: AppColors.textColor,
-                                        ),
+                                      : Image.asset(
+                                          AppImagePath.defaultProfileImage,
+                                          height: 60,
+                                          width: 60,
+                                          fit: BoxFit.scaleDown,
+                                        )
+                                  /*Icon(
+                                    Icons.person,
+                                          size: 45,
+                                          color: AppColors.whiteColor,
+                                        )*/
+                                  ,
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
@@ -333,7 +341,7 @@ class HomeScreenWidget extends StatelessWidget {
                               onTap: () {
                                 context
                                     .read<BottomNavBloc>()
-                                    .add(BottomNavEvent.changePage(index: 1));
+                                    .add(BottomNavEvent.changePage(index: 3));
                               },
                               child: Container(
                                 width: getScreenWidth(context),
@@ -503,7 +511,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               milliseconds:
                                                                   300 +
                                                                       (index *
-                                                                          30)),
+                                                                          50)),
                                                           slidingCurve:
                                                               Curves.decelerate,
                                                           slidingBeginOffset:
@@ -627,9 +635,9 @@ class HomeScreenWidget extends StatelessWidget {
                                           width: getScreenWidth(context),
                                           alignment: Alignment.center,
                                           child: Text(
-                                            'Messages not found',
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.smallFont,
+                                            '${AppLocalizations.of(context)!.messages_not_found}',
+                                            style: AppStyles.pVRegularTextStyle(
+                                                size: AppConstants.mediumFont,
                                                 color: AppColors.textColor),
                                           ),
                                         )
@@ -719,7 +727,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                            90.height,
+                            AppConstants.bottomNavSpace.height,
                           ],
                         ),
                       ),
@@ -1036,7 +1044,12 @@ class HomeScreenWidget extends StatelessWidget {
                                   isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
+                                  onQuantityChanged: (quantity) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.updateQuantityOfProduct(
+                                            context: context1,
+                                            quantity: quantity));
+                                  },
                                   onQuantityIncreaseTap: () {
                                     context.read<HomeBloc>().add(
                                         HomeEvent.increaseQuantityOfProduct(
@@ -1453,7 +1466,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 itemCount: state.productSupplierList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    height: 95,
+                                    height: 105,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_10),

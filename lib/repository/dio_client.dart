@@ -54,8 +54,6 @@ class DioClient {
             if (kDebugMode) {
               debugPrint("app error data $e");
             }
-            /*   ErrorEntity eInfo = _createErrorEntity(e,context: _context);
-    onError(eInfo);*/
             return handler.next(e);
           }));
 

@@ -334,7 +334,13 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                                   scrollController: scrollController,
                                   productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
+                                  onQuantityChanged: (quantity) {
+                                    context.read<PlanogramProductBloc>().add(
+                                        PlanogramProductEvent
+                                            .updateQuantityOfProduct(
+                                                context: context1,
+                                                quantity: quantity));
+                                  },
                                   onQuantityIncreaseTap: () {
                                     context.read<PlanogramProductBloc>().add(
                                         PlanogramProductEvent
@@ -639,7 +645,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 itemCount: state.productSupplierList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    height: 95,
+                                    height: 105,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_10),

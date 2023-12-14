@@ -37,6 +37,10 @@ class StoreEvent with _$StoreEvent {
   const factory StoreEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
+  const factory StoreEvent.updateQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity}) = _UpdateQuantityOfProduct;
+
   const factory StoreEvent.changeNoteOfProduct({required String newNote}) =
       _ChangeNoteOfProduct;
 

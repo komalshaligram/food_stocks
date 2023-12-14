@@ -206,7 +206,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           gridDelegate:
                           SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              childAspectRatio: 9 / 12),
+                              childAspectRatio: AppConstants
+                                  .productGridAspectRatio),
                           itemBuilder: (context, index) =>
                               DelayedWidget(
                                 child: CommonProductItemWidget(
@@ -496,24 +497,34 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 size: AppConstants.smallFont,
                                                 color: AppColors.textColor),
                                           ),
-                                        )
-                                      : buildSupplierSelection(context: context),
-                                  productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                                  isRTL: context.rtl,
-                                  isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
-                                  scrollController: scrollController,
-                                  productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                                  onQuantityChanged: (quantity) {},
-                                  onQuantityIncreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
-                                  },
-                                  onQuantityDecreaseTap: () {
-                                    context.read<SupplierProductsBloc>().add(
-                                        SupplierProductsEvent
-                                            .decreaseQuantityOfProduct(
+                                  )
+                                      : buildSupplierSelection(
+                                      context: context),
+                              productStock: state.productStockList[state
+                                  .productStockUpdateIndex].stock,
+                              isRTL: context.rtl,
+                              isSupplierAvailable: state.productSupplierList
+                                  .isEmpty ? false : true,
+                              scrollController: scrollController,
+                              productQuantity: state.productStockList[state
+                                  .productStockUpdateIndex].quantity,
+                              onQuantityChanged: (quantity) {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .updateQuantityOfProduct(
+                                        context: context1,
+                                        quantity: quantity));
+                              },
+                              onQuantityIncreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .increaseQuantityOfProduct(
+                                        context: context1));
+                              },
+                              onQuantityDecreaseTap: () {
+                                context.read<SupplierProductsBloc>().add(
+                                    SupplierProductsEvent
+                                        .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
                                   noteController: state.noteController,
@@ -808,7 +819,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                 itemCount: state.productSupplierList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    height: 95,
+                                    height: 105,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_10),

@@ -15,16 +15,23 @@ class NoInternetDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.pageColor,
+      surfaceTintColor: AppColors.whiteColor,
       contentPadding: EdgeInsets.all(20.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      title: Icon(Icons.wifi_off,size: 40,color: AppColors.mainColor,),
+      title: Icon(
+        Icons.wifi_off,
+        size: 40,
+        color: AppColors.mainColor,
+      ),
       content: Padding(
         padding: const EdgeInsets.only(bottom: 5.0),
         child: Text(
           '${AppLocalizations.of(context)!.no_internet_connection}',
           textAlign: TextAlign.center,
           style: AppStyles.rkRegularTextStyle(
-              color: AppColors.blackColor, size: AppConstants.smallFont,fontWeight: FontWeight.w500),
+              color: AppColors.blackColor,
+              size: AppConstants.smallFont,
+              fontWeight: FontWeight.w500),
         ),
       ),
       actionsPadding: EdgeInsets.only(

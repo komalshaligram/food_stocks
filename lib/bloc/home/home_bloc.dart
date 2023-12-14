@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -127,11 +128,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockList: productStockList,
                 isProductSaleShimmering: false));
           } else {
-            showSnackBar(
+            /*showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);*/
           }
         } on ServerException {}
       } else if (event is _GetProductDetailsEvent) {
@@ -313,7 +314,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
+                title:
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 bgColor: AppColors.redColor);
           }
         }
@@ -341,6 +344,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             quantityString = quantityString.substring(1);
           }
           int newQuantity = int.tryParse(quantityString) ?? 0;
+          debugPrint('new quantity = $newQuantity');
           if (newQuantity <=
               productStockList[state.productStockUpdateIndex].stock) {
             productStockList[state.productStockUpdateIndex] =
@@ -350,11 +354,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 'product quantity update = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
           } else {
+            productStockList[state.productStockUpdateIndex] =
+                productStockList[state.productStockUpdateIndex].copyWith(
+                    quantity: int.tryParse(quantityString.substring(
+                            0, quantityString.length - 1)) ??
+                        0);
+            debugPrint(
+                'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
             showSnackBar(
                 context: event.context,
                 title:
-                    '' /*"${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}"*/,
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 bgColor: AppColors.redColor);
+            emit(state.copyWith(productStockList: []));
+            emit(state.copyWith(productStockList: productStockList));
           }
         }
       } else if (event is _ChangeNoteOfProduct) {
@@ -498,8 +511,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               ));
           InsertCartResModel response = InsertCartResModel.fromJson(res);
           if (response.status == 201) {
-            HapticFeedback.heavyImpact();
-            //Vibration.vibrate(amplitude: 128);
+            //await HapticFeedback.heavyImpact();
+           //
+            Vibration.vibrate();
+
             // List<ProductStockModel> productStockList =
             // state.productStockList.toList(growable: true);
             // productStockList[state.productStockUpdateIndex] =
@@ -526,10 +541,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             Navigator.pop(event.context);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
           } else {
             emit(state.copyWith(isLoading: false));
             showSnackBar(
@@ -570,11 +581,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage: double.parse(
                     response.data?.currentMonth!.expensePercentage ?? '')));
-          } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
           }
         } on ServerException {} catch (e) {}
       } else if (event is _getOrderCountEvent) {
@@ -597,12 +603,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final res = await DioClient(event.context).post(
             AppUrls.getOrdersCountUrl,
             data: reqMap,
-            /*    options: Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader:
-                          'Bearer ${preferences.getAuthToken()}',
-                    },
-                  )*/
           );
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
@@ -642,6 +642,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                           ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
+
                         ))
                     .toList() ??
                 []);
@@ -651,10 +652,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
-            showSnackBar(
+           /* showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                bgColor: AppColors.redColor);*/
           }
         } on ServerException {}
       } else if (event is _SetMessageCountEvent) {

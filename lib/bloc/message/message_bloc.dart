@@ -91,11 +91,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                     ? true
                     : false));
           } else {
-            emit(state.copyWith(isLoadMore: false ,isShimmering: false));
+            emit(state.copyWith(isLoadMore: false));
 
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false,));
+          emit(state.copyWith(isLoadMore: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
