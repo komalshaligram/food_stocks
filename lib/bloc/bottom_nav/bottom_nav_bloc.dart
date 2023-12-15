@@ -1,3 +1,5 @@
+
+
 import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
@@ -19,11 +21,12 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       if (event is _ChangePageEvent) {
         emit(state.copyWith(index: event.index));
       } else if (event is _UpdateCartCountEvent) {
-
+        if( state.cartCount < preferencesHelper.getCartCount()){
+          emit(state.copyWith(isAnimation: true));
+        }
         emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         debugPrint('cart count = ${state.cartCount}');
       }
-
     });
   }
 }

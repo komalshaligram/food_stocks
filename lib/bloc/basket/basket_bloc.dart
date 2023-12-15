@@ -109,6 +109,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           UpdateCartResModel response = UpdateCartResModel.fromJson(res);
          // debugPrint('update response  = $response');
           if (response.status == 201) {
+            add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             int quantity = list[event.listIndex].totalQuantity!;
@@ -126,6 +127,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               totalAmount = event.totalPayment - newAmount;
             }
             list[event.listIndex].isProcess = false;
+
             emit(state.copyWith(
                 basketProductList: list,
                 totalPayment: totalAmount,
@@ -153,7 +155,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         //  debugPrint('remove cart res  = $response');
 
           if (response['status'] == 200) {
-            add(BasketEvent.setCartCountEvent(isClearCart: false));
+            SharedPreferencesHelper preferences = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+            await preferences.setCartCount(
+                count:  preferences.getCartCount() - 1);
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
@@ -201,7 +206,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             emit(state.copyWith(
                 basketProductList: list, isRefresh: !state.isRefresh));
           } else {
-            // CustomSnackBar.showSnackBar(context: event.context, title: res['message'], type: SnackBarType.SUCCESS);
+            // showSnackBar(context: event.context, title: res['message'], bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           }
         } on ServerException {}

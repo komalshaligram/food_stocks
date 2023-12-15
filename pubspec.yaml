@@ -83,6 +83,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   audioplayers: ^5.2.1
   liquid_pull_to_refresh: ^3.0.1
+  glitters: ^0.4.0
+
   another_flushbar: ^1.12.30
 
 

@@ -456,7 +456,7 @@ class BasketScreenWidget extends StatelessWidget {
                           '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
                           width: 100,
                           height: 100,
-                         fit: BoxFit.fill,
+                         fit: BoxFit.contain,
                          loadingBuilder:
                              (context,
                              child,
