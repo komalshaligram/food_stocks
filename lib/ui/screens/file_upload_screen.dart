@@ -363,7 +363,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                     if (isUploading) {
                       showSnackBar(
                           context: context,
-                          title: AppStrings.uploadingMsgString,
+                          title: '${AppLocalizations.of(context)!.wait_while_uploading}',
                           bgColor: AppColors.redColor);
                       return;
                     }

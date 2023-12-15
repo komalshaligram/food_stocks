@@ -725,14 +725,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.6.4"
-  glitters:
-    dependency: "direct main"
-    description:
-      name: glitters
-      sha256: dcd288906851542a10a43783ca0fb9fb6403576b3129287af43cb783f63196fa
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   glob:
     dependency: transitive
     description:
