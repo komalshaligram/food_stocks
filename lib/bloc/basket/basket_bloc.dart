@@ -164,7 +164,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 totalPayment: state.totalPayment - event.totalAmount));
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: 'Item deleted',
+                title: AppLocalizations.of(event.context)!.item_deleted,
                 type: SnackBarType.SUCCESS);
           } else {
             Navigator.pop(event.context);
@@ -214,11 +214,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       else if(event is _updateImageIndexEvent){
         emit(state.copyWith(productImageIndex: event.index));
       }
-      else if(event is _cartAnimationEvent){
-        if(event.cartCount < preferencesHelper.getCartCount()){
-          //emit(state.copyWith(isAnimation: true));
-        }
-      }
+
     });
   }
 

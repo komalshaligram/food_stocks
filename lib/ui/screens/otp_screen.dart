@@ -233,9 +233,9 @@ class OTPScreenWidget extends StatelessWidget {
                               : () {
                             CustomSnackBar.showSnackBar(
                                       context: context,
-                                      title: AppStrings.otpResendSuccessString,
-                                      type: SnackBarType.SUCCESS);
-                                  bloc.add(OtpEvent.setOtpTimer());
+                                     title: '${AppLocalizations.of(context)!.otp_resend_success}',
+                                type: SnackBarType.SUCCESS);
+                            bloc.add(OtpEvent.setOtpTimer());
                                 },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

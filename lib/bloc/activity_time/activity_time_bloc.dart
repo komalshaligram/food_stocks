@@ -385,7 +385,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         else{
           CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.selectNextDayShiftString,
+              title: '${AppLocalizations.of(event.context)!.select_next_day_shift}',
               type: SnackBarType.FAILURE);
         }
       }

@@ -141,7 +141,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        50.height,
+                        45.height,
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppConstants.padding_15),
@@ -302,7 +302,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             },
                                             tooltipBgColor: Colors.transparent,
                                             showOnTopOfTheChartBoxArea: false,
-                                            tooltipMargin: 0,
+                                            tooltipMargin: 3,
+                                            tooltipPadding: EdgeInsets.only(bottom: 6)
                                           ),
                                         ),
                                         lineBarsData: [
@@ -449,6 +450,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                               Expanded(
                                 flex: 7,
                                 child: Container(
+                                  height: 45,
                                     padding: EdgeInsets.symmetric(
                                         horizontal:AppConstants.padding_5,
                                         vertical: AppConstants.padding_5),
@@ -459,69 +461,63 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                           color: AppColors.borderColor),
                                       color: AppColors.whiteColor,
                                     ),
-                                    child: Container(
-                                   //   width: getScreenWidth(context) >= 400 ? getScreenWidth(context) * 0.60:getScreenWidth(context) * 0.6,
-                                      height: 30,
-                                      alignment: Alignment.center,
-                                      child: DateRangeField(
-                                        decoration: InputDecoration(
-                                          enabledBorder: InputBorder.none,
-                                          prefixIcon: Icon(
-                                              Icons.keyboard_arrow_down),
-                                          contentPadding: EdgeInsets.only(bottom: 5),
+                                    child: DateRangeField(
+                                      decoration: InputDecoration(
+                                        enabledBorder: InputBorder.none,
+                                        prefixIcon: Icon(
+                                            Icons.keyboard_arrow_down),
+                                        contentPadding: EdgeInsets.all(0),
 
-                                        ),
-                                        showDateRangePicker: (
-                                            {required pickerBuilder,
-                                              required widgetContext,
-
-                                            }) {
-                                          return showDateRangePickerDialog(
-                                            context: context,
-                                            offset: Offset(65, 200),
-                                            barrierColor: AppColors
-                                                .whiteColor
-                                                .withOpacity(0.6),
-                                            builder: datePickerBuilder,
-                                          );
-
-                                        },
-                                        onDateRangeSelected:
-                                            (DateRange? value) {
-                                          startDate = value?.start;
-                                          endDate = value?.end;
-
-                                          if (value == null) {
-                                            selectedDateRange =
-                                                state.selectedDateRange;
-                                            bloc.add(
-                                                WalletEvent.getDateRangeEvent(
-                                                    context: context,
-                                                    range: state.selectedDateRange));
-                                          } else {
-                                            selectedDateRange = value;
-                                            bloc.add(
-                                                WalletEvent.getDateRangeEvent(
-                                                    context: context,
-                                                    range: value));
-
-                                            bloc.add(WalletEvent
-                                                .getAllWalletTransactionEvent(
-                                              context: context,
-                                              endDate: value.end,
-                                              startDate: value.start,
-                                            ));
-                                          }
-                                          //  minDate = DateTime(state.yearList.last ,1,1);
-                                        },
-                                        selectedDateRange: state.selectedDateRange,
-                                        pickerBuilder: (BuildContext context,
-                                            dynamic Function(DateRange?)
-                                            onDateRangeChanged) {
-                                          return Text('');
-                                        },
-                                        // pickerBuilder: datePickerBuilder,
                                       ),
+                                      showDateRangePicker: (
+                                          {required pickerBuilder,
+                                            required widgetContext,
+                                          }) {
+                                        return showDateRangePickerDialog(
+                                          context: context,
+                                          offset: Offset(65, 200),
+                                          barrierColor: AppColors
+                                              .whiteColor
+                                              .withOpacity(0.6),
+                                          builder: datePickerBuilder,
+                                        );
+
+                                      },
+                                      onDateRangeSelected:
+                                          (DateRange? value) {
+                                        startDate = value?.start;
+                                        endDate = value?.end;
+
+                                        if (value == null) {
+                                          selectedDateRange =
+                                              state.selectedDateRange;
+                                          bloc.add(
+                                              WalletEvent.getDateRangeEvent(
+                                                  context: context,
+                                                  range: state.selectedDateRange));
+                                        } else {
+                                          selectedDateRange = value;
+                                          bloc.add(
+                                              WalletEvent.getDateRangeEvent(
+                                                  context: context,
+                                                  range: value));
+
+                                          bloc.add(WalletEvent
+                                              .getAllWalletTransactionEvent(
+                                            context: context,
+                                            endDate: value.end,
+                                            startDate: value.start,
+                                          ));
+                                        }
+                                        //  minDate = DateTime(state.yearList.last ,1,1);
+                                      },
+                                      selectedDateRange: state.selectedDateRange,
+                                      pickerBuilder: (BuildContext context,
+                                          dynamic Function(DateRange?)
+                                          onDateRangeChanged) {
+                                        return Text('');
+                                      },
+                                      // pickerBuilder: datePickerBuilder,
                                     )),
                               ),
                             ],

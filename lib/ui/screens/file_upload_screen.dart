@@ -364,7 +364,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                     if (isUploading) {
                       CustomSnackBar.showSnackBar(
                           context: context,
-                          title: AppStrings.uploadingMsgString,
+                          title: '${AppLocalizations.of(context)!.wait_while_uploading}',
                           type: SnackBarType.FAILURE);
                       return;
                     }

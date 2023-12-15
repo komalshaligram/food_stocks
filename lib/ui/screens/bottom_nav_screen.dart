@@ -114,7 +114,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) {
-                    print('index____$index');
                     bloc.add(BottomNavEvent.changePage(index: index));
                   },
                   letIndexChange: (index) => true,
@@ -123,8 +122,6 @@ class BottomNavScreenWidget extends StatelessWidget {
               body: FocusDetector(
                 onFocusGained: () {
                   bloc.add(BottomNavEvent.updateCartCountEvent());
-                  bloc.add(BottomNavEvent.cartAnimationEvent(cartCount: state.cartCount));
-                  print('isAnimation_____${state.isAnimation}');
                 },
                 child: SafeArea(
                   child: Stack(

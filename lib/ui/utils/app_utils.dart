@@ -212,10 +212,9 @@ extension StringCasingExtension on String {
   String toLocalization() => this.split('.')[1].toLowerCase();
 }
 
-String formatNumber({required String value, required String local}) {
-  String result = (NumberFormat.simpleCurrency(
-    locale: local,
-  ).format(double.parse(value)));
-  String result1 = splitNumber(result);
+
+String formatNumber({required String value, required String local}){
+  String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
+ String result1 =  splitNumber(result);
   return result1;
 }

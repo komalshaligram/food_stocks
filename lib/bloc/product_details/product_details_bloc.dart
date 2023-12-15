@@ -94,7 +94,7 @@ class ProductDetailsBloc
         else {
           CustomSnackBar.showSnackBar(
               context: event.context,
-              title: "missing quantity can't be more then original quantity",
+              title:  '${AppLocalizations.of(event.context)!.missing_quantity_notmore_than_original}',
               type: SnackBarType.FAILURE);
         }
       }

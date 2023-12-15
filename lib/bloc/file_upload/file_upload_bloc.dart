@@ -261,7 +261,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           } else {
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.selectValidDocumentFormatString,
+                title: '${AppLocalizations.of(event.context)!.select_valid_document_format}',
                 type: SnackBarType.FAILURE);
             return;
           }
