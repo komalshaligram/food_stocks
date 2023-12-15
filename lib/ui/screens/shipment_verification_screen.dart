@@ -338,10 +338,11 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       ),
                       );
                     } else {
-                      showSnackBar(
+                      CustomSnackBar.showSnackBar(
                           context: context,
-                          title: '${AppLocalizations.of(context)!.signature_missing}',
-                          bgColor: AppColors.redColor);
+                          title:
+                              '${AppLocalizations.of(context)!.signature_missing}',
+                          type: SnackBarType.FAILURE);
                     }
                   },
                   child: Container(

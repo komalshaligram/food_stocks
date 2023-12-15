@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/model/res_model/get_app_content_details_res_model/get_app_content_details_res_model.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 
 import '../../ui/utils/themes/app_strings.dart';
 
@@ -33,11 +32,13 @@ class AppContentBloc extends Bloc<AppContentEvent, AppContentState> {
                 appContentDetails: response.data?.first ?? Datum(),
                 isShimmering: false));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:   AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
-
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.SUCCESS);
           }
         } on ServerException {}
       }

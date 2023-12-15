@@ -14,6 +14,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
     return SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           10.height,
           Row(
@@ -102,19 +103,19 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_5
+                                        ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 bottomLeft: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_5
+                                        ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 bottomRight: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_50
+                                        ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 topRight: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_50
+                                        ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                               ),
                             ),
@@ -142,20 +143,20 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_50
+                                        ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 bottomLeft: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_50
+                                        ? AppConstants.radius_50
                                         : AppConstants.radius_5),
                                 bottomRight: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_5
+                                        ? AppConstants.radius_5
                                         : AppConstants.radius_50),
                                 topRight: Radius.circular(
                                     context.rtl
-                                    ? AppConstants.radius_5
-                                    : AppConstants.radius_50),
+                                        ? AppConstants.radius_5
+                                        : AppConstants.radius_50),
                               ),
                             ),
                           ),

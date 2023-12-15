@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/widget/common_alert_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -71,26 +70,33 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
 
                 if (response[AppStrings.statusString] == 200) {
                   SharedPreferencesHelper preferencesHelper =
-                  SharedPreferencesHelper(
-                      prefs: await SharedPreferences.getInstance());
+                      SharedPreferencesHelper(
+                          prefs: await SharedPreferences.getInstance());
                   await preferencesHelper.setUserLoggedIn();
-                  await Provider.of<LocaleProvider>(event.context, listen: false)
+                  await Provider.of<LocaleProvider>(event.context,
+                          listen: false)
                       .setAppLocale(locale: Locale(AppStrings.hebrewString));
-                  showSnackBar(
-                      context: event.context,
-                      title:' ${AppLocalizations.of(event.context)!.logged_out_successfully}',
-                      bgColor: AppColors.mainColor);
                   Navigator.pop(context);
-                  Navigator.popUntil(event.context,
-                          (route) => route.name == RouteDefine.bottomNavScreen.name);
+                  Navigator.popUntil(
+                      event.context,
+                      (route) =>
+                          route.name == RouteDefine.bottomNavScreen.name);
                   Navigator.pushNamed(
                       event.context, RouteDefine.connectScreen.name);
-
+                  CustomSnackBar.showSnackBar(
+                      context: event.context,
+                      title:
+                          ' ${AppLocalizations.of(event.context)!.logged_out_successfully}',
+                      type: SnackBarType.SUCCESS);
                 } else {
-                   showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
-                bgColor: AppColors.mainColor);
+                  CustomSnackBar.showSnackBar(
+                      context: event.context,
+                      title: AppStrings.getLocalizedStrings(
+                          response[AppStrings.messageString]
+                              .toString()
+                              .toLocalization(),
+                          event.context),
+                      type: SnackBarType.SUCCESS);
                 }
               } on ServerException {}
 

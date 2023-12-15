@@ -8,7 +8,6 @@ import 'package:food_stock/data/model/req_model/supplier_products_req_model/supp
 import 'package:food_stock/data/model/res_model/supplier_products_res_model/supplier_products_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -103,10 +102,13 @@ class SupplierProductsBloc
                     : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -308,10 +310,13 @@ class SupplierProductsBloc
               }
             }
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           // emit(state.copyWith(isProductLoading: false));
@@ -325,10 +330,11 @@ class SupplierProductsBloc
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  type: SnackBarType.FAILURE);
               return;
             }
             // if(productStockList[state.productStockUpdateIndex]
@@ -347,12 +353,12 @@ class SupplierProductsBloc
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -396,11 +402,11 @@ class SupplierProductsBloc
                         0);
             debugPrint(
                 'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
@@ -461,18 +467,19 @@ class SupplierProductsBloc
       } else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              bgColor: AppColors.redColor);
+              title:
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
+              type: SnackBarType.FAILURE);
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
             0) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title:'${AppLocalizations.of(event.context)!.add_1_quantity}',
-              bgColor: AppColors.redColor);
+              title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
+              type: SnackBarType.FAILURE);
           return;
         }
         try {
@@ -536,25 +543,32 @@ class SupplierProductsBloc
             add(SupplierProductsEvent.setCartCountEvent());
             emit(state.copyWith(
                 isLoading: false /*, productStockList: productStockList*/));
-            showSnackBar(
+            Navigator.pop(event.context);
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 /*title: response.message ??
                     '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
-                title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
-                bgColor: AppColors.mainColor);
-            Navigator.pop(event.context);
+                title: AppStrings.getLocalizedStrings(
+                    response.message!.toLocalization(), event.context),
+                type: SnackBarType.SUCCESS);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           } else {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           debugPrint('url1 = ');

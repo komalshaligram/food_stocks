@@ -65,10 +65,10 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     return BlocListener<MoreDetailsBloc, MoreDetailsState>(
       listener: (context, state) {
         if (state.isFileSizeExceeds) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: context,
               title: '${AppLocalizations.of(context)!.please_enter_email}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
         ;
       },
@@ -452,15 +452,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                         Permission
                                                                             .camera]!
                                                                     .isGranted) {
-                                                                  showSnackBar(
-                                                                      context:
-                                                                          context,
-                                                                      title: '${AppLocalizations.of(context)!.camera_permission}',
-                                                                      bgColor:
-                                                                          AppColors
-                                                                              .redColor);
                                                                   Navigator.pop(
                                                                       context1);
+                                                                  CustomSnackBar.showSnackBar(
+                                                                      context:
+                                                                          context,
+                                                                      title:
+                                                                          '${AppLocalizations.of(context)!.camera_permission}',
+                                                                      type: SnackBarType
+                                                                          .FAILURE);
                                                                   return;
                                                                 }
                                                               } else if (Platform
@@ -512,14 +512,15 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                           Permission
                                                                               .storage]!
                                                                       .isGranted) {
-                                                                    showSnackBar(
-                                                                        context:
-                                                                            context,
-                                                                        title: '${AppLocalizations.of(context)!.storage_permission}',
-                                                                        bgColor:
-                                                                            AppColors.redColor);
                                                                     Navigator.pop(
                                                                         context1);
+                                                                    CustomSnackBar.showSnackBar(
+                                                                        context:
+                                                                            context,
+                                                                        title:
+                                                                            '${AppLocalizations.of(context)!.storage_permission}',
+                                                                        type: SnackBarType
+                                                                            .FAILURE);
                                                                     return;
                                                                   }
                                                                 }
@@ -781,7 +782,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         .registrationApiEvent(
                                             context: context));
                                   } else {
-                                    showSnackBar(
+                                    CustomSnackBar.CustomSnackBar.showSnackBar(
                                         context: context,
                                         title: AppStrings.selectCompanyLogoString,
                                         bgColor: AppColors.redColor);

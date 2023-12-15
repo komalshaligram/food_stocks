@@ -531,13 +531,13 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                     .supplierOrderNumber ??
                                                 0
                                       });
-                            /*    : showSnackBar(
+                            /*    : CustomSnackBar.showSnackBar(
                                     context: context,
                                     title:
                                         'User Number & driver Number are same',
                                     bgColor: AppColors.redColor)
                             :*/
-                  },
+                        },
                   buttonText: AppLocalizations.of(context)!.next,
                   bGColor: AppColors.mainColor,
                 ),

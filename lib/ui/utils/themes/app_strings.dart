@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-
-
 class AppStrings {
   static const appName = 'Food Stock';
   static const cropImageString = 'Crop Image';

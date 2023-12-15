@@ -80,7 +80,7 @@ class PushNotificationService {
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
-      debugPrint("message: $message");
+      debugPrint("push message: ${message?.notification?.toMap().toString()}");
 
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -88,40 +88,51 @@ class PushNotificationService {
 
 // If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
-      if(notification != null ){
-        final http.Response response;
+      if (notification != null) {
         var fileName;
-        if(Platform.isAndroid && android!.imageUrl!=null){
-          response = await http.get(Uri.parse(android.imageUrl.toString()));
-        }else{
-          response = await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
-        }
-        final dir = await getTemporaryDirectory();
-        // Create an image name
-        fileName = '${dir.path}/image.png';
-        // Save to filesystem
-        final file = File(fileName);
-        await file.writeAsBytes(response.bodyBytes);
+        if (notification.android?.imageUrl != null ||
+            notification.apple?.imageUrl != null) {
+          final http.Response response;
+          if (Platform.isAndroid && android!.imageUrl != null) {
+            response = await http.get(Uri.parse(android.imageUrl.toString()));
+          } else {
+            response =
+                await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
+          }
+          final dir = await getTemporaryDirectory();
+          // Create an image name
+          fileName = '${dir.path}/image.png';
+          // Save to filesystem
+          final file = File(fileName);
+          await file.writeAsBytes(response.bodyBytes);
 
-        debugPrint("img res: ${response.toString()}");
-        BigPictureStyleInformation  bigPictureStyleInformation =
-        BigPictureStyleInformation(
-            ByteArrayAndroidBitmap.fromBase64String(base64Encode(response.bodyBytes),));
+          debugPrint("img res: ${response.toString()}");
+          BigPictureStyleInformation bigPictureStyleInformation =
+              BigPictureStyleInformation(
+                  ByteArrayAndroidBitmap.fromBase64String(
+            base64Encode(response.bodyBytes),
+          ));
+        }
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           parse(notification.title ?? '').body?.text ?? '',
           parse(notification.body ?? '').body?.text ?? '',
           flutter_local_notifications.NotificationDetails(
-              iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
-            android:AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: android!.smallIcon,
-              styleInformation: BigPictureStyleInformation(
-                FilePathAndroidBitmap(fileName),
-            hideExpandedLargeIcon: false,
-          ),
+            iOS: DarwinNotificationDetails(
+                attachments: fileName == null
+                    ? []
+                    : [DarwinNotificationAttachment(fileName)]),
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: android!.smallIcon,
+              styleInformation: fileName == null
+                  ? null
+                  : BigPictureStyleInformation(
+                      FilePathAndroidBitmap(fileName),
+                      hideExpandedLargeIcon: false,
+                    ),
             ),
           ),
           payload: message.data.toString(),
