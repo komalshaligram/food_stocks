@@ -30,7 +30,7 @@ class HomeState with _$HomeState {
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
-    UserImageUrl: '',
+        UserImageUrl: '',
         UserCompanyLogoUrl: '',
         cartCount: 0,
         messageCount: 0,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import 'package:food_stock/data/model/req_model/update_cart/update_cart_req_model.dart';
 import 'package:food_stock/data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -29,6 +30,7 @@ import '../../data/model/res_model/get_messages_res_model/get_messages_res_model
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -69,13 +71,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 HttpHeaders.authorizationHeader:
                     'Bearer ${preferences.getAuthToken()}'
               }));
-
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
           if (response.status == 200) {
+            debugPrint('cart1 = ${response.data}');
             debugPrint('main cart count = ${response.data?.data?.length}');
             await preferences.setCartCount(
                 count:
                     response.data?.data?.length ?? preferences.getCartCount());
+            List<String> cartProductList = [];
+            cartProductList.addAll(response.data?.data?.map(
+                    (cartProduct) => cartProduct.productDetails?.id ?? '') ??
+                []);
+            List<String> cartProductIdList = [];
+            cartProductIdList.addAll(response.data?.data
+                    ?.map((cartProduct) => cartProduct.cartProductId ?? '') ??
+                []);
+            debugPrint('cart product List = ${cartProductList}');
+            debugPrint('cart product id List = ${cartProductIdList}');
+            await preferences.setCartProductIdList(
+                cartProductIds: cartProductIdList);
+            await preferences.setCartProductList(cartProducts: cartProductList);
             emit(state.copyWith(cartCount: preferences.getCartCount()));
           }
         } on ServerException {}
@@ -466,99 +481,154 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               type: SnackBarType.FAILURE);
           return;
         }
-        try {
-          emit(state.copyWith(isLoading: true));
-          InsertCartModel.InsertCartReqModel insertCartReqModel =
-          InsertCartModel.InsertCartReqModel(products: [
-            InsertCartModel.Product(
-                productId: state
-                    .productStockList[state.productStockUpdateIndex].productId,
-                quantity: state
-                    .productStockList[state.productStockUpdateIndex].quantity,
-                supplierId: state
-                    .productStockList[state.productStockUpdateIndex]
-                    .productSupplierIds,
-                note: state.productStockList[state.productStockUpdateIndex].note
-                        .isEmpty
-                    ? null
-                    : state
-                        .productStockList[state.productStockUpdateIndex].note,
-                saleId: state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId.isEmpty
-                    ? null
-                    : state.productStockList[state.productStockUpdateIndex]
-                        .productSaleId)
-          ]);
-          Map<String, dynamic> req = insertCartReqModel.toJson();
-          req.removeWhere((key, value) {
-            if (value != null) {
-              debugPrint("[$key] = $value");
+        List<String> cartProductList = preferences.getCartProductList();
+        List<String> cartProductIdList = preferences.getCartProductIdList();
+        //update or insert cart API
+        if (cartProductList.contains(
+            state.productStockList[state.productStockUpdateIndex].productId)) {
+          debugPrint('update cart');
+          try {
+            emit(state.copyWith(isLoading: true));
+            UpdateCartReqModel request = UpdateCartReqModel(
+              productId: state
+                  .productStockList[state.productStockUpdateIndex].productId,
+              supplierId: state.productStockList[state.productStockUpdateIndex]
+                  .productSupplierIds,
+              saleId: state.productStockList[state.productStockUpdateIndex]
+                          .productSaleId ==
+                      ''
+                  ? null
+                  : state.productStockList[state.productStockUpdateIndex]
+                      .productSaleId,
+              quantity: state
+                  .productStockList[state.productStockUpdateIndex].quantity,
+              cartProductId: cartProductIdList[cartProductList.indexOf(state
+                  .productStockList[state.productStockUpdateIndex].productId)],
+            );
+            final res = await DioClient(event.context).post(
+              '${AppUrls.updateCartProductUrl}${preferences.getCartId()}',
+              data: request,
+            );
+            UpdateCartResModel response = UpdateCartResModel.fromJson(res);
+            if (response.status == 201) {
+              Vibration.vibrate();
+              emit(state.copyWith(isLoading: false));
+              Navigator.pop(event.context);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message!.toLocalization(), event.context),
+                  type: SnackBarType.SUCCESS);
+            } else {
+              emit(state.copyWith(isLoading: false));
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
-            return value == null;
-          });
-          debugPrint('insert cart req = $req');
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-              prefs: await SharedPreferences.getInstance());
+          } on ServerException {
+            emit(state.copyWith(isLoading: false));
+          }
+        } else {
+          debugPrint('insert cart');
+          try {
+            emit(state.copyWith(isLoading: true));
+            InsertCartModel.InsertCartReqModel insertCartReqModel =
+                InsertCartModel.InsertCartReqModel(products: [
+              InsertCartModel.Product(
+                  productId: state
+                      .productStockList[state.productStockUpdateIndex]
+                      .productId,
+                  quantity: state
+                      .productStockList[state.productStockUpdateIndex].quantity,
+                  supplierId: state
+                      .productStockList[state.productStockUpdateIndex]
+                      .productSupplierIds,
+                  note: state.productStockList[state.productStockUpdateIndex]
+                          .note.isEmpty
+                      ? null
+                      : state
+                          .productStockList[state.productStockUpdateIndex].note,
+                  saleId: state.productStockList[state.productStockUpdateIndex]
+                          .productSaleId.isEmpty
+                      ? null
+                      : state.productStockList[state.productStockUpdateIndex]
+                          .productSaleId)
+            ]);
+            Map<String, dynamic> req = insertCartReqModel.toJson();
+            req.removeWhere((key, value) {
+              if (value != null) {
+                debugPrint("[$key] = $value");
+              }
+              return value == null;
+            });
+            debugPrint('insert cart req = $req');
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
 
-          debugPrint(
-              'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
-          debugPrint(
-              'insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
-          final res = await DioClient(event.context).post(
-              '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
-              data: req,
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-          InsertCartResModel response = InsertCartResModel.fromJson(res);
-          if (response.status == 201) {
-            //await HapticFeedback.heavyImpact();
-           //
-            Vibration.vibrate();
+            debugPrint(
+                'insert cart url1 = ${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}');
+            debugPrint(
+                'insert cart url1 auth = ${preferencesHelper.getAuthToken()}');
+            final res = await DioClient(event.context).post(
+                '${AppUrls.insertProductInCartUrl}${preferencesHelper.getCartId()}',
+                data: req,
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                ));
+            InsertCartResModel response = InsertCartResModel.fromJson(res);
+            if (response.status == 201) {
+              //await HapticFeedback.heavyImpact();
+              //
+              Vibration.vibrate();
 
-            // List<ProductStockModel> productStockList =
-            // state.productStockList.toList(growable: true);
-            // productStockList[state.productStockUpdateIndex] =
-            //     productStockList[state.productStockUpdateIndex].copyWith(
-            //         note: '',
-            //         quantity: 0,
-            //         productSupplierIds: '',
-            //         totalPrice: 0.0,
-            //         productSaleId: '');
-            emit(state.copyWith(
-                isLoading: false,
-                // productStockList: productStockList,
-                isCartCountChange: true));
-            emit(state.copyWith(isCartCountChange: false));
-            add(HomeEvent.setCartCountEvent());
+              // List<ProductStockModel> productStockList =
+              // state.productStockList.toList(growable: true);
+              // productStockList[state.productStockUpdateIndex] =
+              //     productStockList[state.productStockUpdateIndex].copyWith(
+              //         note: '',
+              //         quantity: 0,
+              //         productSupplierIds: '',
+              //         totalPrice: 0.0,
+              //         productSaleId: '');
+              emit(state.copyWith(
+                  isLoading: false,
+                  // productStockList: productStockList,
+                  isCartCountChange: true));
+              emit(state.copyWith(isCartCountChange: false));
+              add(HomeEvent.setCartCountEvent());
 
-            /*if (await Vibration.hasVibrator()) {
+              /*if (await Vibration.hasVibrator()) {
               Vibration.vibrate();
             }*/
-            Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message!.toLocalization(), event.context),
-                type: SnackBarType.SUCCESS);
-          } else if (response.status == 403) {
+              Navigator.pop(event.context);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message!.toLocalization(), event.context),
+                  type: SnackBarType.SUCCESS);
+            } else if (response.status == 403) {
+              emit(state.copyWith(isLoading: false));
+            } else {
+              emit(state.copyWith(isLoading: false));
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
+            }
+          } on ServerException {
+            debugPrint('url1 = ');
             emit(state.copyWith(isLoading: false));
-          } else {
-            emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
-                type: SnackBarType.FAILURE);
           }
-        } on ServerException {
-          debugPrint('url1 = ');
-          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _SetCartCountEvent) {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
@@ -567,7 +637,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _getWalletRecordEvent) {
         try {
           WalletRecordReqModel reqMap =
-          WalletRecordReqModel(userId: preferences.getUserId());
+              WalletRecordReqModel(userId: preferences.getUserId());
           debugPrint('WalletRecordReqModel = $reqMap}');
           final res = await DioClient(event.context).post(
             AppUrls.walletRecordUrl,
@@ -590,12 +660,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 expensePercentage: double.parse(
                     response.data?.currentMonth!.expensePercentage ?? '')));
           }
-        } on ServerException {} catch (e) {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
-              start: DateTime(date.year, date.month, 1),
-              end: DateTime(date.year, date.month + 1))
+                  start: DateTime(date.year, date.month, 1),
+                  end: DateTime(date.year, date.month + 1))
               .duration
               .inDays;
 
@@ -620,7 +691,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
-        } on ServerException {} catch (e) {}
+        } on ServerException {
+        } catch (e) {}
       } else if (event is _GetMessageListEvent) {
         try {
           emit(state.copyWith(isMessageShimmering: true));
@@ -631,7 +703,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               options: Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                  'Bearer ${preferences.getAuthToken()}',
+                      'Bearer ${preferences.getAuthToken()}',
                 },
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
@@ -639,18 +711,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             List<MessageData> messageList = [];
             messageList.addAll(response.data
                     ?.map((message) => MessageData(
-                          id: message.id,
+              id: message.id,
                           isRead: message.isRead,
                           message: Message(
-                            id: message.message?.id ?? '',
-                            title: message.message?.title ?? '',
-                            summary: message.message?.summary ?? '',
-                            body: message.message?.body ?? '',
-                            messageImage: message.message?.messageImage ?? ''
-                          ),
+                              id: message.message?.id ?? '',
+                              title: message.message?.title ?? '',
+                              summary: message.message?.summary ?? '',
+                              body: message.message?.body ?? '',
+                              messageImage:
+                                  message.message?.messageImage ?? ''),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
-
                         ))
                     .toList() ??
                 []);
@@ -671,7 +742,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             messageCount: state.messageCount + event.messageCount));
       } else if (event is _RemoveOrUpdateMessageEvent) {
         List<MessageData> messageList =
-        state.messageList.toList(growable: true);
+            state.messageList.toList(growable: true);
         debugPrint('message list len before delete = ${messageList.length}');
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
@@ -680,13 +751,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             'message actual status = ${messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead}');
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList
-              .firstWhere((message) => message.id == event.messageId))]
-              .isRead ==
+                      .firstWhere((message) => message.id == event.messageId))]
+                  .isRead ==
               false) {
             await preferencesHelper.setMessageCount(
                 count: preferencesHelper.getMessageCount() - 1);
             messageList[messageList.indexOf(messageList
-                .firstWhere((message) => message.id == event.messageId))] =
+                    .firstWhere((message) => message.id == event.messageId))] =
                 messageList[messageList.indexOf(messageList.firstWhere(
                         (message) => message.id == event.messageId))]
                     .copyWith(isRead: true);
@@ -704,9 +775,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _UpdateMessageListEvent) {
         if (event.messageIdList.isNotEmpty) {
           List<MessageData> messageList =
-          state.messageList.toList(growable: true);
+              state.messageList.toList(growable: true);
           messageList.removeWhere(
-                  (message) => event.messageIdList.contains(message.id));
+              (message) => event.messageIdList.contains(message.id));
           debugPrint('message len = ${messageList.length}');
           emit(state.copyWith(messageList: messageList));
         }
@@ -721,5 +792,4 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     });
   }
-
 }
