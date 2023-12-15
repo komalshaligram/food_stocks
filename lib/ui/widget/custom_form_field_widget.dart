@@ -124,6 +124,7 @@ class CustomFormField extends StatelessWidget {
       validator: (value) =>
           AuthFormValidation().formValidation(value!, _validator ,context),
       decoration: InputDecoration(
+
           labelStyle: TextStyle(color: AppColors.textColor),
           suffixIcon: postIconBtn,
           prefixIcon: prefixIcon,

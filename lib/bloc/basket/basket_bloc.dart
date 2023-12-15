@@ -1,4 +1,5 @@
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -144,6 +145,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
       } else if (event is _removeCartProductEvent) {
         try {
+          final player = AudioPlayer();
           final response = await DioClient(event.context).post(
             AppUrls.removeCartProductUrl,
             data: {AppStrings.cartProductIdString: event.cartProductId},
@@ -152,11 +154,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         //  debugPrint('remove cart res  = $response');
 
           if (response['status'] == 200) {
+            player.play(AssetSource('audio/delete_sound.mp3'));
             add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
             //Navigator.pop(event.dialogContext);
+
             emit(state.copyWith(
                 basketProductList: list,
                 isRefresh: !state.isRefresh,

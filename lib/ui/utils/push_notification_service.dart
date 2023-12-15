@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -80,22 +81,23 @@ class PushNotificationService {
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
-      debugPrint("message: $message");
-
+      var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
       final iosNotification = message.notification?.apple;
-
+      debugPrint("message data1: ${message.toMap().toString()}");
+      debugPrint("message data2: ${data}");
+      debugPrint("Image Url : ${AppUrls.baseFileUrl+message.data['data']['message']['imageUrl']}");
 // If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
       if(notification != null ){
         final http.Response response;
         var fileName;
-        if(Platform.isAndroid && android!.imageUrl!=null){
-          response = await http.get(Uri.parse(android.imageUrl.toString()));
-        }else{
-          response = await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
-        }
+       // if(Platform.isAndroid){
+          response = await http.get(Uri.parse(AppUrls.baseFileUrl+message.data['message']['imageUrl'].toString()));
+      //  }/*else{
+        //  response = await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
+      //  }*/
         final dir = await getTemporaryDirectory();
         // Create an image name
         fileName = '${dir.path}/image.png';
@@ -109,8 +111,8 @@ class PushNotificationService {
             ByteArrayAndroidBitmap.fromBase64String(base64Encode(response.bodyBytes),));
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          parse(notification.title ?? '').body?.text ?? '',
-          parse(notification.body ?? '').body?.text ?? '',
+          parse(notification.title ?? '').text,
+          parse(notification.body ?? '').text ?? '',
           flutter_local_notifications.NotificationDetails(
               iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
             android:AndroidNotificationDetails(

@@ -339,7 +339,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   child: Center(
                                       child: Text(
                                         AppLocalizations.of(context)!.cart_empty,
-                                    style: AppStyles.rkRegularTextStyle(
+                                    style: AppStyles.pVRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w400),
