@@ -8,9 +8,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
-import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -61,10 +59,11 @@ class QuestionAndAnswerBloc
                         : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.mainColor);
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.SUCCESS);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

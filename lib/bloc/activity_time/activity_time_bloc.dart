@@ -17,7 +17,6 @@ import '../../data/model/res_model/activity_time_model/activity_time_res_model.d
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
@@ -124,10 +123,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 emit(state.copyWith(isShimmering: false));
               }
             } else {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {
           }
@@ -249,41 +251,43 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                         .monday
                         .add(Day(from: selectedTime, until: closingTime));
                   } else if (selectTimeZone.isBefore(preEnd)) {
-                    showSnackBar(
+                    CustomSnackBar.showSnackBar(
                         context: event.context,
-                        title: '${AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time}',
-                        bgColor: AppColors.redColor);
+                        title:
+                            '${AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time}',
+                        type: SnackBarType.FAILURE);
                   } else {
-                    showSnackBar(
+                    CustomSnackBar.showSnackBar(
                         context: event.context,
-                        title: '${AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time}',
-
-                        bgColor: AppColors.redColor);
+                        title:
+                            '${AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time}',
+                        type: SnackBarType.FAILURE);
                   }
                 } else {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time}',
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time}',
+                      type: SnackBarType.FAILURE);
                 }
               } else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_opening_time}',
-
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_opening_time}',
+                      type: SnackBarType.FAILURE);
                 } else if (selectTimeZone.isAfter(start)) {
                   temp[event.rowIndex].monday.removeAt(event.timeIndex);
                   temp[event.rowIndex]
                       .monday
                       .add(Day(from: openingTime, until: selectedTime));
                 } else {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time}',
-
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time}',
+                      type: SnackBarType.FAILURE);
                 }
               }
             } else {
@@ -300,37 +304,41 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       .monday
                       .add(Day(from: selectedTime, until: closingTime));
                 } else {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time}',
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time}',
+                      type: SnackBarType.FAILURE);
                 }
               } else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_opening_time}',
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_opening_time}',
+                      type: SnackBarType.FAILURE);
                 } else if (selectTimeZone.isAfter(start)) {
                   temp[event.rowIndex].monday.removeAt(event.timeIndex);
                   temp[event.rowIndex]
                       .monday
                       .add(Day(from: openingTime, until: selectedTime));
                 } else {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: '${AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time}',
-                      bgColor: AppColors.redColor);
+                      title:
+                          '${AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time}',
+                      type: SnackBarType.FAILURE);
                 }
               }
             }
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:'${AppLocalizations.of(event.context)!.please_select_time_grater_then_0}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.please_select_time_grater_then_0}',
+                type: SnackBarType.FAILURE);
           }
         }
       }
@@ -350,10 +358,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               emit(state.copyWith(
                   OperationTimeList: temp, isRefresh: !state.isRefresh));
             } else {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_previous_shift_time}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_previous_shift_time}',
+                  type: SnackBarType.FAILURE);
             }
           } else {
             if (state.OperationTimeList[event.rowIndex].monday[0].from !=
@@ -365,18 +374,19 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               emit(state.copyWith(
                   OperationTimeList: temp, isRefresh: !state.isRefresh));
             } else {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
+                  type: SnackBarType.FAILURE);
             }
           }
         }
         else{
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.selectNextDayShiftString,
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       }
 
@@ -396,10 +406,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   AppStrings.timeString &&
               state.OperationTimeList[i].monday[0].from !=
                   AppStrings.timeString) {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
+                type: SnackBarType.FAILURE);
             isSnackbarActive = true;
           }
           for (int j = 1; j < state.OperationTimeList[i].monday.length; j++) {
@@ -412,10 +423,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     AppStrings.timeString &&
                 state.OperationTimeList[i].monday[j].from !=
                     AppStrings.timeString) {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
+                  type: SnackBarType.FAILURE);
               isSnackbarActive = true;
             }
           }
@@ -480,18 +492,21 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   Navigator.pushNamed(
                       event.context, RouteDefine.fileUploadScreen.name);
                 } else {
-                  showSnackBar(
+                  CustomSnackBar.showSnackBar(
                       context: event.context,
-                      title: AppStrings.getLocalizedStrings(response1.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                      bgColor: AppColors.redColor);
+                      title: AppStrings.getLocalizedStrings(
+                          response1.message?.toLocalization() ??
+                              'something_is_wrong_try_again',
+                          event.context),
+                      type: SnackBarType.FAILURE);
                 }
               } on ServerException {}
             } else {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
-                  bgColor: AppColors.redColor);
-
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
+                  type: SnackBarType.FAILURE);
             }
           } else {
             update.ProfileDetailsUpdateReqModel reqMap =
@@ -545,16 +560,20 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               debugPrint('operation update res _____${res1}');
               if (res1.status == 200) {
-                showSnackBar(
-                    context: event.context,
-                    title: '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    bgColor: AppColors.mainColor);
                 Navigator.pop(event.context);
-              } else {
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: AppStrings.getLocalizedStrings(res1.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                    bgColor: AppColors.redColor);
+                    title:
+                        '${AppLocalizations.of(event.context)!.updated_successfully}',
+                    type: SnackBarType.SUCCESS);
+              } else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(
+                        res1.message?.toLocalization() ??
+                            'something_is_wrong_try_again',
+                        event.context),
+                    type: SnackBarType.FAILURE);
               }
             } on ServerException {
             }

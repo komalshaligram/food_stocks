@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,33 +79,40 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setUserCompanyLogoUrl(
                   logoUrl: response.data?.user?.logo ?? '');
               preferencesHelper.setUserLoggedIn(isLoggedIn: true);
-              preferencesHelper.setWalletId(UserWalletId: response.data?.wallet ?? '');
+              preferencesHelper.setWalletId(
+                  UserWalletId: response.data?.wallet ?? '');
 
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'loginsuccessmessage' ,event.context) ,
-                  bgColor: AppColors.mainColor);
+              emit(state.copyWith(isLoading: false));
               Navigator.popUntil(event.context,
-                      (route) => route.name == RouteDefine.connectScreen.name);
+                  (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
-              emit(state.copyWith(isLoading: false));
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'loginsuccessmessage',
+                      event.context),
+                  type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context) ,
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } catch (e) {
             debugPrint('err = ${e}');
             emit(state.copyWith(isLoading: false));
           }
         } else {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
-              bgColor: AppColors.mainColor);
+              type: SnackBarType.SUCCESS);
         }
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));

@@ -12,7 +12,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
@@ -41,10 +40,16 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           debugPrint('CartProductsSupplierRes  = $response');
 
           if (response.status == 200) {
-          //  showSnackBar(context: event.context, title: response.message!, bgColor: AppColors.mainColor);
-           emit(state.copyWith(orderSummaryList: response));
+          //  CustomSnackBar.showSnackBar(context: event.context, title: response.message!, type: SnackBarType.SUCCESS);
+            emit(state.copyWith(orderSummaryList: response));
           } else {
-            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.redColor);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         }  on ServerException {}
       }
@@ -114,11 +119,23 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           }
 
           else if(response.status == 403){
-            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context), bgColor: AppColors.redColor);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
           }
           else {
-            showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context), bgColor: AppColors.redColor);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
           }
         }  on ServerException { emit(state.copyWith(isLoading: false));}

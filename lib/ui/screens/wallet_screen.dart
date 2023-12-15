@@ -406,10 +406,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       if (androidInfo.version.sdkInt < 33) {
                                         if (!statuses[Permission.storage]!
                                             .isGranted) {
-                                          showSnackBar(
+                                          CustomSnackBar.showSnackBar(
                                               context: context,
-                                              title: '${AppLocalizations.of(context)!.storage_permission}',
-                                              bgColor: AppColors.redColor);
+                                              title:
+                                                  '${AppLocalizations.of(context)!.storage_permission}',
+                                              type: SnackBarType.FAILURE);
                                           return;
                                         }
                                       }

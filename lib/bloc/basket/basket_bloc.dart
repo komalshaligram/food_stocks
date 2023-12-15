@@ -2,7 +2,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -134,11 +133,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
 
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ??'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
-
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {}
 
@@ -161,16 +162,23 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: 'Item deleted',
-                bgColor: AppColors.mainColor);
+                type: SnackBarType.SUCCESS);
           } else {
             Navigator.pop(event.context);
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:   response.message != null ?AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context): AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-                bgColor: AppColors.redColor);
+                title: response.message != null
+                    ? AppStrings.getLocalizedStrings(
+                        response[AppStrings.messageString]
+                            .toString()
+                            .toLocalization(),
+                        event.context)
+                    : AppLocalizations.of(event.context)!
+                        .something_is_wrong_try_again,
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {
@@ -193,7 +201,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             emit(state.copyWith(
                 basketProductList: list, isRefresh: !state.isRefresh));
           } else {
-            // showSnackBar(context: event.context, title: res['message'], bgColor: AppColors.mainColor);
+            // CustomSnackBar.showSnackBar(context: event.context, title: res['message'], type: SnackBarType.SUCCESS);
             Navigator.pop(event.context);
           }
         } on ServerException {}

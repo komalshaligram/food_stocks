@@ -10,7 +10,6 @@ import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,10 +48,13 @@ class ProductDetailsBloc
                         OrdersBySupplier(),
                 isShimmering: false));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.SUCCESS);
           }
         } on ServerException {}
       }
@@ -90,10 +92,10 @@ class ProductDetailsBloc
           ));
         }
         else {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: "missing quantity can't be more then original quantity",
-              bgColor: Colors.red);
+              type: SnackBarType.FAILURE);
         }
       }
 
@@ -135,26 +137,34 @@ class ProductDetailsBloc
 
             if (response['status'] == 201) {
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
-                  bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response[AppStrings.messageString]
+                          .toString()
+                          .toLocalization(),
+                      event.context),
+                  type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
-                  bgColor: AppColors.mainColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response[AppStrings.messageString]
+                          .toString()
+                          .toLocalization(),
+                      event.context),
+                  type: SnackBarType.SUCCESS);
             }
           } on ServerException {}
         } else {
           emit(state.copyWith(isLoading: false));
           Navigator.pop(event.context);
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.select_issue}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       } else if (event is _checkAllEvent) {
         List<int> number = [];

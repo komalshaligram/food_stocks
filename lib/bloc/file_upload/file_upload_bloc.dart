@@ -24,7 +24,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -138,46 +137,55 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                         emit(state.copyWith(isShimmering: false));
                       }
                     } else {
-                      showSnackBar(
+                      CustomSnackBar.showSnackBar(
                           context: event.context,
-                          title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                          bgColor: AppColors.redColor);
+                          title: AppStrings.getLocalizedStrings(
+                              response.message?.toLocalization() ??
+                                  'something_is_wrong_try_again',
+                              event.context),
+                          type: SnackBarType.FAILURE);
                     }
                   } on ServerException {
-                    // showSnackBar(
+                    // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
                     //     context: event.context,
                     //     title: AppStrings.somethingWrongString,
-                    //     bgColor: AppColors.redColor);
+                    //     type: SnackBarType.FAILURE);
                   }
                 }
               } else {
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                    bgColor: AppColors.redColor);
+                    title: AppStrings.getLocalizedStrings(
+                        response.message?.toLocalization() ??
+                            'something_is_wrong_try_again',
+                        event.context),
+                    type: SnackBarType.FAILURE);
                 emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
-              // showSnackBar(
+              // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
               //     context: event.context,
               //     title: AppStrings.somethingWrongString,
-              //     bgColor: AppColors.redColor);
+              //     type: SnackBarType.FAILURE);
               emit(state.copyWith(isLoading: false));
             }
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
@@ -200,18 +208,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(
                 state.copyWith(formsAndFilesList: filesList, isLoading: false));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
           emit(state.copyWith(isLoading: false));
         }
       } else if (event is _pickDocumentEvent) {
@@ -248,10 +259,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               return;
             }
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.selectValidDocumentFormatString,
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
             return;
           }
           String fileSize = getFileSizeString(
@@ -305,26 +316,30 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 emit(state.copyWith(formsAndFilesList: formAndFileList));
               } else {
                 emit(state.copyWith(isUploadLoading: false));
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(),event.context),
-                    bgColor: AppColors.redColor);
+                    title: AppStrings.getLocalizedStrings(
+                        res[AppStrings.messageString]
+                            .toString()
+                            .toLocalization(),
+                        event.context),
+                    type: SnackBarType.FAILURE);
               }
             } catch (e) {
               emit(state.copyWith(isUploadLoading: false));
-              // showSnackBar(
+              // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
               //     context: event.context,
               //     title: AppStrings.somethingWrongString,
-              //     bgColor: AppColors.redColor);
+              //     type: SnackBarType.FAILURE);
             }
           } else {
             emit(state.copyWith(
                 isUploadLoading: false, isFileSizeExceeds: true));
             emit(state.copyWith(isFileSizeExceeds: false));
-            // showSnackBar(
+            // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: AppStrings.fileSizeLimitString,
-            //     bgColor: AppColors.redColor);
+            //     type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _uploadApiEvent) {
@@ -361,11 +376,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
                 (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.registered_successfully}',
-                  bgColor: AppColors.mainColor);
+                  type: SnackBarType.SUCCESS);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
@@ -386,36 +401,39 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(isApiLoading: false));
             if (state.isUpdate) {
               if (event.isFromDelete ?? false) {
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.removed_successfully}',
-                    bgColor: AppColors.mainColor);
+                    type: SnackBarType.SUCCESS);
               } else {
-                showSnackBar(
+                Navigator.pop(event.context);
+                CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    bgColor: AppColors.mainColor);
-                Navigator.pop(event.context);
+                    type: SnackBarType.SUCCESS);
               }
             } else {
-              showSnackBar(
-                  context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.registered_successfully}',
-                  bgColor: AppColors.mainColor);
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title:
+                      '${AppLocalizations.of(event.context)!.registered_successfully}',
+                  type: SnackBarType.SUCCESS);
             }
           } else {
             emit(state.copyWith(isApiLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
@@ -433,11 +451,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             formsAndFilesList[event.index] =
                 formsAndFilesList[event.index].copyWith(localUrl: '', url: '');
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
-                bgColor: AppColors.mainColor);
+                type: SnackBarType.SUCCESS);
             // add(FileUploadEvent.uploadApiEvent(
             //     context: event.context, isFromDelete: true));
             return;
@@ -458,26 +476,29 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             formsAndFilesList[event.index] =
                 formsAndFilesList[event.index].copyWith(url: '');
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
-            // showSnackBar(
+            // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: response.message ?? AppStrings.removeSuccessString,
-            //     bgColor: AppColors.mainColor);
+            //     type: SnackBarType.SUCCESS);
             add(FileUploadEvent.uploadApiEvent(
                 context: event.context, isFromDelete: true));
           } else {
             emit(state.copyWith(isUploadLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } catch (e) {
           emit(state.copyWith(isUploadLoading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       } else if (event is _downloadFileEvent) {
         try {
@@ -511,10 +532,11 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             emit(state.copyWith(downloadProgress: progress));
             debugPrint('download progress = ${state.downloadProgress}');
           });
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppLocalizations.of(event.context)!.downloaded_successfully,
-              bgColor: AppColors.mainColor);
+              title:
+                  AppLocalizations.of(event.context)!.downloaded_successfully,
+              type: SnackBarType.SUCCESS);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
           // HttpClient httpClient = new HttpClient();
           // String filePath = '';
@@ -537,43 +559,43 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           //     await file
           //         .writeAsBytes(fileBytes, mode: FileMode.writeOnly)
           //         .then((value) {
-          //       showSnackBar(
+          //       CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
           //           context: event.context,
           //           title: AppStrings.downloadString,
-          //           bgColor: AppColors.mainColor);
+          //           type: SnackBarType.SUCCESS);
           //     });
           //     emit(state.copyWith(isDownloading: false));
           //   } else {
           //     emit(state.copyWith(isDownloading: false));
           //     filePath = 'Error code: ' + response.statusCode.toString();
           //     debugPrint('download ${filePath}');
-          //     showSnackBar(
+          //     CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
           //         context: event.context,
           //         title: AppStrings.downloadFailedString,
-          //         bgColor: AppColors.redColor);
+          //         type: SnackBarType.FAILURE);
           //   }
           // } catch (e) {
           //   emit(state.copyWith(isDownloading: false));
           //   filePath = 'Can not fetch url';
           //   debugPrint('file error = ${e}');
-          //   showSnackBar(
+          //   CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
           //       context: event.context,
           //       title: AppStrings.downloadFailedString,
-          //       bgColor: AppColors.redColor);
+          //       type: SnackBarType.FAILURE);
           // }
           // } else {
           //   emit(state.copyWith(isDownloading: false));
-          //   showSnackBar(
+          //   CustomSnackBar.CustomSnackBar.showSnackBar(
           //       context: event.context,
           //       title: AppStrings.docDownloadAllowPermissionString,
-          //       bgColor: AppColors.redColor);
+          //       type: SnackBarType.FAILURE);
           // }
         } catch (e) {
           emit(state.copyWith(isDownloading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.failed_download}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       } else if (event is _getProfileFilesAndFormsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
@@ -619,17 +641,20 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               }
               emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             } else {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
           }
         }
       }

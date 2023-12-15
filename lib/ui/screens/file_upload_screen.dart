@@ -64,11 +64,11 @@ class FileUploadScreenWidget extends StatelessWidget {
     return BlocListener<FileUploadBloc, FileUploadState>(
       listener: (context, state) {
         if (state.isFileSizeExceeds) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: context,
               title:
                   '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
         ;
       },
@@ -210,11 +210,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                 borderColor:
                                                     AppColors.mainColor,
                                                 onPressed: () async {
-                                                  showSnackBar(
+                                                  CustomSnackBar.showSnackBar(
                                                       context: context,
-                                                      title: '${AppLocalizations.of(context)!.registered_successfully}',
-                                                      bgColor:
-                                                          AppColors.mainColor);
+                                                      title:
+                                                          '${AppLocalizations.of(context)!.registered_successfully}',
+                                                      type:
+                                                          SnackBarType.SUCCESS);
                                                   Navigator.popUntil(
                                                       context,
                                                       (route) =>
@@ -326,11 +327,11 @@ class FileUploadScreenWidget extends StatelessWidget {
                             if (androidInfo.version.sdkInt < 33) {
                               if (!statuses[Permission.storage]!.isGranted) {
                                 debugPrint('Dont go');
-                                showSnackBar(
+                                CustomSnackBar.showSnackBar(
                                     context: context,
                                     title:
                                         '${AppLocalizations.of(context)!.storage_permission}',
-                                    bgColor: AppColors.redColor);
+                                    type: SnackBarType.FAILURE);
                                 return;
                               }
                             }
@@ -361,10 +362,10 @@ class FileUploadScreenWidget extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (isUploading) {
-                      showSnackBar(
+                      CustomSnackBar.showSnackBar(
                           context: context,
                           title: AppStrings.uploadingMsgString,
-                          bgColor: AppColors.redColor);
+                          type: SnackBarType.FAILURE);
                       return;
                     }
                     showModalBottomSheet(
@@ -405,11 +406,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         if (Platform.isAndroid) {
                                           if (!statuses[Permission.camera]!
                                               .isGranted) {
-                                            showSnackBar(
-                                                context: context,
-                                                title: '${AppLocalizations.of(context)!.camera_permission}',
-                                                bgColor: AppColors.redColor);
                                             Navigator.pop(context);
+                                            CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title:
+                                                    '${AppLocalizations.of(context)!.camera_permission}',
+                                                type: SnackBarType.FAILURE);
                                             return;
                                           }
                                         } else if (Platform.isIOS) {
@@ -440,11 +442,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
-                                              showSnackBar(
-                                                  context: context,
-                                                  title: '${AppLocalizations.of(context)!.storage_permission}',
-                                                  bgColor: AppColors.redColor);
                                               Navigator.pop(context);
+                                              CustomSnackBar.showSnackBar(
+                                                  context: context,
+                                                  title:
+                                                      '${AppLocalizations.of(context)!.storage_permission}',
+                                                  type: SnackBarType.FAILURE);
                                               return;
                                             }
                                           }
@@ -476,11 +479,12 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
-                                              showSnackBar(
-                                                  context: context,
-                                                  title: '${AppLocalizations.of(context)!.storage_permission}',
-                                                  bgColor: AppColors.redColor);
                                               Navigator.pop(context);
+                                              CustomSnackBar.showSnackBar(
+                                                  context: context,
+                                                  title:
+                                                      '${AppLocalizations.of(context)!.storage_permission}',
+                                                  type: SnackBarType.FAILURE);
                                               return;
                                             }
                                           }

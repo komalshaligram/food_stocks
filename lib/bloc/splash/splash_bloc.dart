@@ -10,6 +10,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(SplashState.initial()) {
     on<SplashEvent>((event, emit) async {
       if(event is _SplashLoadedEvent) {
+        await Future.delayed(const Duration(seconds: 1));
         emit(state.copyWith(isAnimate: true));
         await Future.delayed(const Duration(seconds: 2));
         emit(state.copyWith(isRedirected: true));

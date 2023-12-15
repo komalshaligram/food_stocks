@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
@@ -80,11 +81,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   ? */
                                   AppColors
                                       .whiteColor /*: AppColors.mainColor.withOpacity(0.1)*/,
+                              border: Border.all(
+                                  color: AppColors.whiteColor, width: 0.5),
                               boxShadow: [
                                 BoxShadow(
-                                    color: state.UserImageUrl.isNotEmpty
-                                        ? AppColors.shadowColor.withOpacity(0.3)
-                                        : AppColors.whiteColor,
+                                    color: /* state.UserImageUrl.isNotEmpty
+                                        ? */
+                                        AppColors.shadowColor.withOpacity(
+                                            0.1) /*: AppColors.whiteColor*/,
                                     blurRadius: AppConstants.blur_10)
                               ],
                               shape: BoxShape.circle,
@@ -106,12 +110,19 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                       },
                                     ),
                                   )
-                                : Image.asset(
+                                : SvgPicture.asset(
+                                    AppImagePath.placeholderProfile,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.scaleDown,
+                                    // colorFilter: ColorFilter.mode(
+                                    //     AppColors.mainColor, BlendMode.dstIn),
+                                  ) /*Image.asset(
                                     AppImagePath.defaultProfileImage,
                                     height: 80,
                                     width: 80,
                                     fit: BoxFit.scaleDown,
-                                  ) /*Icon(
+                                  ) */ /*Icon(
                                     Icons.person,
                                     size: 60,
                                     color: AppColors.textColor,
@@ -139,23 +150,25 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                                         width: 1)),
                                                 alignment: Alignment.center,
                                                 child: Container(
-                                                  height: 50,
-                                                  width: getScreenWidth(context) *
-                                                      0.35,
-                                                  alignment: Alignment.center,
-                                                  child:
-                                                  const CupertinoActivityIndicator())),
-                                      imageUrl:
-                                      "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
-                                      height: 34,
-                                      width: getScreenWidth(context) * 0.35,
-                                      fit: BoxFit.fitHeight,
-                                      alignment: context.rtl
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      errorWidget: (context, url, error) {
-                                        return Container(
-                                          decoration: BoxDecoration(
+                                                    height: 50,
+                                                    width: getScreenWidth(
+                                                            context) *
+                                                        0.35,
+                                                    alignment: Alignment.center,
+                                                    child:
+                                                        const CupertinoActivityIndicator())),
+                                            imageUrl:
+                                                "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                                            height: 34,
+                                            width:
+                                                getScreenWidth(context) * 0.35,
+                                            fit: BoxFit.fitHeight,
+                                            alignment: context.rtl
+                                                ? Alignment.centerRight
+                                                : Alignment.centerLeft,
+                                            errorWidget: (context, url, error) {
+                                              return Container(
+                                                decoration: BoxDecoration(
                                                   color: AppColors
                                                       .whiteColor /*AppColors.mainColor
                                                   .withOpacity(0.1)*/
@@ -173,8 +186,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             )*/
                                               );
                                             },
-                                    ),
-                                  ),
+                                          ),
+                                        ),
                                   10.height,
                                   Text(
                                     state.userName,
@@ -200,7 +213,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 title: AppLocalizations.of(context)!
                                     .business_details,
                                 onTap: () {
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
                                   Navigator.pushNamed(
                                       context, RouteDefine.profileScreen.name,
                                       arguments: {

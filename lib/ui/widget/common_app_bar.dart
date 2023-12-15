@@ -18,11 +18,13 @@ class CommonAppBar extends StatelessWidget {
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.pageColor,
+      surfaceTintColor: AppColors.pageColor,
       leading: Container(
         padding: const EdgeInsets.all(AppConstants.padding_10),
         child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppConstants.radius_100)),
           onTap: onTap,
           child: Icon(
             iconData,
