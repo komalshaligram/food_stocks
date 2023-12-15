@@ -404,8 +404,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       print(
                                           'Running on android version ${androidInfo.version.sdkInt}');
                                       if (androidInfo.version.sdkInt < 33) {
-                                        if (!statuses[Permission.storage]!
-                                            .isGranted) {
+                                        if (!statuses[Permission.storage]!.isGranted) {
                                           showSnackBar(
                                               context: context,
                                               title: '${AppLocalizations.of(context)!.storage_permission}',
