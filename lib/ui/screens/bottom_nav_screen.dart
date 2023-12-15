@@ -242,7 +242,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       ),
                     ) : SizedBox(),
 
-          pos == 2 && state.isAnimation ? Container(
+         /* pos == 2 && state.isAnimation ? Container(
             height: 50,
             width: 50,
             child: GlitterStack(
@@ -279,7 +279,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ) : SizedBox(),
+          ) : SizedBox(),*/
         ],
       ),
     );

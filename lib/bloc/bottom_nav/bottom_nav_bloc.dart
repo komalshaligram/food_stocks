@@ -1,4 +1,4 @@
-import 'dart:async';
+
 
 import 'package:bloc/bloc.dart';
 
@@ -23,10 +23,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       } else if (event is _UpdateCartCountEvent) {
         if( state.cartCount < preferencesHelper.getCartCount()){
           emit(state.copyWith(isAnimation: true));
-          Future.delayed(Duration(seconds: 5), () {
-            emit(state.copyWith(isAnimation: false));
-          });
-
         }
         emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         debugPrint('cart count = ${state.cartCount}');
