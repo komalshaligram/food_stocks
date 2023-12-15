@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:flutter/material.dart';
+
 
 
 class AppStrings {
@@ -91,7 +91,7 @@ class AppStrings {
 
   //toast strings
   //static const registerSuccessString = 'Registered Successfully!';
-  static const otpResendSuccessString = 'OTP resend Successfully!';
+ // static const otpResendSuccessString = 'OTP resend Successfully!';
 
 //  static const loginSuccessString = 'Logged in Successfully!';
   //static const updateSuccessString = 'Updated Successfully!';
@@ -101,16 +101,15 @@ class AppStrings {
 //  static const somethingWrongString = 'Something is wrong, try again!';
 //  static const minQuantityMsgString = 'Add at least 1 quantity';
 //  static const selectSupplierMsgString = 'Please select supplier';
-  static const maxQuantityMsgString = 'You have reached maximum quantity';
+ // static const maxQuantityMsgString = 'You have reached maximum quantity';
   static const maxQuantityMsg1String = 'This supplier have ';
   static const maxQuantityMsg2String = ' quantity in stock';
 
 //  static const imageNotSetString = 'Image not set';
 //  static const fileSizeLimitString = 'File size must be less then ${AppConstants.fileSizeCap}KB';
 //  static const selectBusinessTypeString = 'Please select your business type';
-  static const uploadingMsgString = 'Please wait while uploading';
-  static const selectValidDocumentFormatString =
-      'Please select only jpg, jpeg, png, heic, pdf and document files';
+ // static const uploadingMsgString = 'Please wait while uploading';
+ // static const selectValidDocumentFormatString = 'Please select only jpg, jpeg, png, heic, pdf and document files';
 
   //static const downloadString = 'Downloaded successfully!';
   // static const downloadFailedString = 'Failed to download';
@@ -131,7 +130,10 @@ class AppStrings {
  // static const enter4DigitOtpCode = 'Please enter 4 digit otp code';
   //static const clearCartPopUpString = 'Are you sure you want to clear cart?';
   //static const deleteProductPopUpString = 'Are you sure you want to delete product?';
-  static const selectNextDayShiftString = 'please select next day shift';
+  //static const selectNextDayShiftString = 'please select next day shift';
+ // static const missingQuantitynotMoreThanOriginalString = "missing quantity can't be more then original quantity";
+
+
 
   //hint strings
   static const hintNumberString = '1234567890';

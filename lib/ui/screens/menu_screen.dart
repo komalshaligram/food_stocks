@@ -10,6 +10,10 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/question_and_answer_screen_shimmer_widget.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../widget/refresh_widget.dart';
 
 class MenuRoute {
   static Widget get route => const MenuScreen();
@@ -50,45 +54,82 @@ class MenuScreenWidget extends StatelessWidget {
               ),
             ),
             body: SafeArea(
-              child: state.isShimmering
-                  ? QuestionAndAnswerScreenShimmerWidget()
-                  : ListView.builder(
-                      itemCount: state.contentList.length + 2,
-                      itemBuilder: (context, index) {
-                        return AppContentTile(
-                            index: index,
-                            title: index == 0
-                                ? AppLocalizations.of(context)!.my_orders
-                                : index == 1
-                                    ? AppLocalizations.of(context)!
-                                        .questions_and_answers
-                                    : state.contentList[index - 2]
-                                            .contentName ??
-                                        '',
-                            onTap: () {
-                              index == 0
-                                  ? Navigator.pushNamed(
-                                  context, RouteDefine.orderScreen.name)
-                                  : index == 1
-                                  ? Navigator.pushNamed(
-                                  context,
-                                  RouteDefine
-                                      .questionAndAnswerScreen.name)
-                                  : Navigator.pushNamed(context,
-                                  RouteDefine.appContentScreen.name,
-                                  arguments: {
-                                              AppStrings.appContentIdString:
-                                                  state.contentList[index - 2]
-                                                          .id ??
-                                                      '',
-                                              AppStrings.appContentNameString:
-                                                  state.contentList[index - 2]
-                                                          .contentName ??
-                                                      ''
-                                            });
-                            });
-                      },
-                    ),
+              child: SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: RefreshWidget(),
+                footer: CustomFooter(
+                  builder: (context, mode) =>
+                      QuestionAndAnswerScreenShimmerWidget(),
+                ),
+                enablePullUp: !state.isBottomOfAppContents,
+                onRefresh: () {
+                  context
+                      .read<MenuBloc>()
+                      .add(MenuEvent.refreshListEvent(context: context));
+                },
+                onLoading: () {
+                  context
+                      .read<MenuBloc>()
+                      .add(MenuEvent.getAppContentListEvent(context: context));
+                },
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    5.height,
+                    state.isShimmering
+                        ? QuestionAndAnswerScreenShimmerWidget()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.contentList.length + 2,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return AppContentTile(
+                                  index: index,
+                                  title: index == 0
+                                      ? AppLocalizations.of(context)!.my_orders
+                                      : index == 1
+                                          ? AppLocalizations.of(context)!
+                                              .questions_and_answers
+                                          : state.contentList[index - 2]
+                                                  .contentName ??
+                                              '',
+                                  onTap: () {
+                                    index == 0
+                                        ? Navigator.pushNamed(context,
+                                            RouteDefine.orderScreen.name)
+                                        : index == 1
+                                            ? Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .questionAndAnswerScreen
+                                                    .name)
+                                            : Navigator.pushNamed(
+                                                context,
+                                                RouteDefine
+                                                    .appContentScreen.name,
+                                                arguments: {
+                                                    AppStrings
+                                                            .appContentIdString:
+                                                        state
+                                                                .contentList[
+                                                                    index - 2]
+                                                                .id ??
+                                                            '',
+                                                    AppStrings
+                                                            .appContentNameString:
+                                                        state
+                                                                .contentList[
+                                                                    index - 2]
+                                                                .contentName ??
+                                                            ''
+                                                  });
+                                  });
+                            },
+                          ),
+                  ],
+                )),
+              ),
             ),
           );
         },

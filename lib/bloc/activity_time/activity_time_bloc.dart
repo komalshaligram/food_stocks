@@ -375,7 +375,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         else{
           showSnackBar(
               context: event.context,
-              title: AppStrings.selectNextDayShiftString,
+              title: '${AppLocalizations.of(event.context)!.select_next_day_shift}',
               bgColor: AppColors.redColor);
         }
       }
