@@ -232,7 +232,7 @@ class OTPScreenWidget extends StatelessWidget {
                             bloc.add(OtpEvent.setOtpTimer());
                                   showSnackBar(
                                       context: context,
-                                     title: AppStrings.otpResendSuccessString,
+                                     title: '${AppLocalizations.of(context)!.otp_resend_success}',
                                       bgColor: AppColors.mainColor);
                                 },
                           child: Row(

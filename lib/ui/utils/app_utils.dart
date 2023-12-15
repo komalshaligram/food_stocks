@@ -23,6 +23,7 @@ void showSnackBar(
     required String title,
     required Color bgColor}) {
   final snackBar = SnackBar(
+    dismissDirection: DismissDirection.startToEnd,
     content: Text(
       title,
       style: AppStyles.rkRegularTextStyle(
@@ -32,6 +33,7 @@ void showSnackBar(
     ),
     backgroundColor: bgColor,
     behavior: SnackBarBehavior.floating,
+
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
@@ -182,7 +184,6 @@ extension StringCasingExtension on String {
 
 
 String formatNumber({required String value, required String local}){
-
   String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
  String result1 =  splitNumber(result);
   return result1;

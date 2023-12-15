@@ -8,7 +8,5 @@ class BottomNavEvent with _$BottomNavEvent {
 
 ) = _UpdateCartCountEvent;
 
-  const factory BottomNavEvent.cartAnimationEvent({
-    required int cartCount,
-}) = _cartAnimationEvent;
+
 }

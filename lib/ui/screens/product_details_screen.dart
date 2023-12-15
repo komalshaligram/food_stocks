@@ -411,7 +411,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
                                     border: Border.all(color: AppColors.lightGreyColor)
                                   ),
-                                      child: Text('Check All',
+                                      child: Text(AppLocalizations.of(context)!.check_all,
                                       style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14,
                                       color: state.isAllCheck ? AppColors.whiteColor : AppColors.blackColor
                                       ),
@@ -605,8 +605,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               isProductProblem: value!, index: index));
                         }),
                    // : 0.width,
-                /* state.orderList.data?.ordersBySupplier![productIndex]
-                            .products![index].mainImage !=*/
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Expanded(
                     flex: 2,
@@ -897,257 +895,254 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
                   return Container(
+                    padding:
+                    EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30),topRight: Radius.circular(AppConstants.radius_30))
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_15,
-                          horizontal: AppConstants.padding_15),
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppConstants.padding_5,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  0.width,
-                                  Text(
-                                    AppLocalizations.of(context)!.product_issue,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.blackColor,
-                                      fontWeight: FontWeight.bold
-                                    ),
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_15,
+                                horizontal: AppConstants.padding_15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                0.width,
+                                Text(
+                                  AppLocalizations.of(context)!.product_issue,
+                                  style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.bold
                                   ),
-                                  GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context1);
-                                      },
-                                      child: Icon(Icons.close)),
-                                ],
-                              ),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context1);
+                                    },
+                                    child: Icon(Icons.close)),
+                              ],
                             ),
-                            15.height,
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: AppConstants.padding_5,
-                                  horizontal: AppConstants.padding_10),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: AppColors.shadowColor
-                                          .withOpacity(0.15),
-                                      blurRadius: AppConstants.blur_10),
-                                ],
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppConstants.radius_5)),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  image != '' ?
-                              Image.network(
-                                '${AppUrls.baseFileUrl}${image}',
-                                width: AppConstants.containerSize_50,
-                                height: AppConstants.containerSize_50,
-                                fit: BoxFit.fill,
-                                loadingBuilder:
-                                    (context,
-                                    child,
-                                    loadingProgress) {
-                                  if (loadingProgress ==
-                                      null) {
-                                    return child;
-                                  } else {
-                                    return Center(
-                                      child: Container(
-                                        width: AppConstants.containerSize_50,
-                                        height: AppConstants.containerSize_50,
-                                        child: CupertinoActivityIndicator(
-                                          color: AppColors
-                                              .blackColor,
-                                        ),
+                          ),
+                          15.height,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_5,
+                                horizontal: AppConstants.padding_10),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: AppColors.shadowColor
+                                        .withOpacity(0.15),
+                                    blurRadius: AppConstants.blur_10),
+                              ],
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(AppConstants.radius_5)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                              children: [
+                                image != '' ?
+                            Image.network(
+                              '${AppUrls.baseFileUrl}${image}',
+                              width: AppConstants.containerSize_50,
+                              height: AppConstants.containerSize_50,
+                              fit: BoxFit.fill,
+                              loadingBuilder:
+                                  (context,
+                                  child,
+                                  loadingProgress) {
+                                if (loadingProgress ==
+                                    null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child: Container(
+                                      width: AppConstants.containerSize_50,
+                                      height: AppConstants.containerSize_50,
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors
+                                            .blackColor,
                                       ),
-                                    );
-                                  }
-                                },
-                                errorBuilder:
-                                    (context,
-                                    error,
-                                    stackTrace) {
-                                  return Container(
-                                    width: AppConstants.containerSize_50,
-                                    height: AppConstants.containerSize_50,
-                                    color: AppColors
-                                        .whiteColor,
-                                    alignment:
-                                    Alignment
-                                        .center,
-                                    child: Text(
-                                      AppStrings.failedToLoadString,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants
-                                              .font_14,
-                                          color:
-                                          AppColors.textColor),
                                     ),
                                   );
-                                },
-                              )
-                                      : Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              fit: BoxFit.cover,
-                                    width: AppConstants.containerSize_50,
-                                    height: AppConstants.containerSize_50,
-
-                            ),
-                                  //  5.width,
-                                  Container(
-                                    width: 100,
-                                    child: Text(
-                                      productName,
-                                      style: AppStyles.rkRegularTextStyle(
-                                        color: AppColors.blackColor,
-                                        size: AppConstants.font_14,
-                                      ),
-                                    ),
+                                }
+                              },
+                              errorBuilder:
+                                  (context,
+                                  error,
+                                  stackTrace) {
+                                return Container(
+                                  width: AppConstants.containerSize_50,
+                                  height: AppConstants.containerSize_50,
+                                  color: AppColors
+                                      .whiteColor,
+                                  alignment:
+                                  Alignment
+                                      .center,
+                                  child: Text(
+                                    AppStrings.failedToLoadString,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants
+                                            .font_14,
+                                        color:
+                                        AppColors.textColor),
                                   ),
-                                  //10.width,
-                                  Text(
-                                    '${quantity.toString()}${' '}${scale}',
+                                );
+                              },
+                            )
+                                    : Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            fit: BoxFit.cover,
+                                  width: AppConstants.containerSize_50,
+                                  height: AppConstants.containerSize_50,
+
+                          ),
+                                //  5.width,
+                                Container(
+                                  width: 100,
+                                  child: Text(
+                                    productName,
                                     style: AppStyles.rkRegularTextStyle(
                                       color: AppColors.blackColor,
-                                      size: AppConstants.font_12,
+                                      size: AppConstants.font_14,
                                     ),
                                   ),
-                                  //  10.width,
-                                  Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Text(
-                                    /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
-                                      '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
-                                      style: AppStyles.rkRegularTextStyle(
-                                          color: AppColors.blackColor,
-                                          size: AppConstants.font_14,
-                                          fontWeight: FontWeight.w700),
-                                    ),
+                                ),
+                                //10.width,
+                                Text(
+                                  '${quantity.toString()}${' '}${scale}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                    color: AppColors.blackColor,
+                                    size: AppConstants.font_12,
                                   ),
-                                ],
-                              ),
+                                ),
+                                //  10.width,
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Text(
+                                  /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
+                                    '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.blackColor,
+                                        size: AppConstants.font_14,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ],
                             ),
-                            20.height,
-                            Text(
-                              AppLocalizations.of(context)!.problem_detected,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.blackColor,
-                              ),
+                          ),
+                          20.height,
+                          Text(
+                            AppLocalizations.of(context)!.problem_detected,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.blackColor,
                             ),
-                            20.height,
-                            RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .the_product_did_not_arrive_at_all,
-                              value: 1,
-                              listIndex: listIndex,
-                              scale: scale,
-                              groupValue: radioValue,
+                          ),
+                          20.height,
+                          RadioButtonWidget(
+                            context: context,
+                            problem: AppLocalizations.of(context)!
+                                .the_product_did_not_arrive_at_all,
+                            value: 1,
+                            listIndex: listIndex,
+                            scale: scale,
+                            groupValue: radioValue,
+                            bottomSheetContext: context1
+                          ),
+                          10.height,
+                          RadioButtonWidget(
+                            context: context,
+                            problem: AppLocalizations.of(context)!
+                                .product_arrived_damaged,
+                            value: 2,
+                            listIndex: listIndex,
+                            scale: scale,
+                            groupValue: radioValue,
                               bottomSheetContext: context1
-                            ),
-                            10.height,
-                            RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .product_arrived_damaged,
-                              value: 2,
-                              listIndex: listIndex,
-                              scale: scale,
-                              groupValue: radioValue,
-                                bottomSheetContext: context1
-                            ),
-                            10.height,
-                            RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .the_product_arrived_missing,
-                              value: 3,
-                              listIndex: listIndex,
-                              scale: scale,
-                              groupValue: radioValue,
-                              missingQuantity: missingQuantity,
-                              totalQuantity :quantity,
-                                bottomSheetContext: context1
-                            ),
-                            10.height,
-                            RadioButtonWidget(
-                              context: context,
-                              problem: AppLocalizations.of(context)!
-                                  .another_product_problem,
-                              value: 4,
-                              listIndex: listIndex,
-                              scale: scale,
-                              groupValue: radioValue,
-                              note: issue, bottomSheetContext: context1
-                            ),
-                            10.height,
-                            GestureDetector(
-                              onTap: () async {
-                             /*   if (radioValue != 0) {
-                                  Navigator.pop(context1);
-                                } else {*/
-                                  context.read<ProductDetailsBloc>().add(
-                                      ProductDetailsEvent.createIssueEvent(
-                                          context: context1,
-                                          supplierId: supplierId,
-                                          productId: productId,
-                                          issue: state.selectedRadioTile == 1
-                                              ? AppLocalizations.of(context)!
-                                                  .the_product_did_not_arrive_at_all
-                                              : state.selectedRadioTile == 2
-                                                  ? AppLocalizations.of(
-                                                          context)!
-                                                      .product_arrived_damaged
-                                                  : state.selectedRadioTile == 3
-                                                      ? AppLocalizations.of(
-                                                              context)!
-                                                          .the_product_arrived_missing
-                                                      : state.selectedRadioTile ==
-                                                              4
-                                                          ? '${state.addNoteController.text.toString()}'
-                                                          : '',
-                                          missingQuantity: state.selectedRadioTile == 3
-                                                  ? state.quantity
-                                                  : 0,
-                                          orderId: widget.orderId));
-                             //   }
-                              },
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_20,
-                                      horizontal: AppConstants.padding_30),
-                                  child: CustomButtonWidget(
-                                    buttonText:
-                                        AppLocalizations.of(context)!.save,
-                                    bGColor: AppColors.mainColor,
-                                    isLoading: state.isLoading,
-                                  ),
+                          ),
+                          10.height,
+                          RadioButtonWidget(
+                            context: context,
+                            problem: AppLocalizations.of(context)!
+                                .the_product_arrived_missing,
+                            value: 3,
+                            listIndex: listIndex,
+                            scale: scale,
+                            groupValue: radioValue,
+                            missingQuantity: missingQuantity,
+                            totalQuantity :quantity,
+                              bottomSheetContext: context1
+                          ),
+                          10.height,
+                          RadioButtonWidget(
+                            context: context,
+                            problem: AppLocalizations.of(context)!
+                                .another_product_problem,
+                            value: 4,
+                            listIndex: listIndex,
+                            scale: scale,
+                            groupValue: radioValue,
+                            note: issue, bottomSheetContext: context1
+                          ),
+                          10.height,
+                          GestureDetector(
+                            onTap: () async {
+                           /*   if (radioValue != 0) {
+                                Navigator.pop(context1);
+                              } else {*/
+                                context.read<ProductDetailsBloc>().add(
+                                    ProductDetailsEvent.createIssueEvent(
+                                        context: context1,
+                                        supplierId: supplierId,
+                                        productId: productId,
+                                        issue: state.selectedRadioTile == 1
+                                            ? AppLocalizations.of(context)!
+                                                .the_product_did_not_arrive_at_all
+                                            : state.selectedRadioTile == 2
+                                                ? AppLocalizations.of(
+                                                        context)!
+                                                    .product_arrived_damaged
+                                                : state.selectedRadioTile == 3
+                                                    ? AppLocalizations.of(
+                                                            context)!
+                                                        .the_product_arrived_missing
+                                                    : state.selectedRadioTile ==
+                                                            4
+                                                        ? '${state.addNoteController.text.toString()}'
+                                                        : '',
+                                        missingQuantity: state.selectedRadioTile == 3
+                                                ? state.quantity
+                                                : 0,
+                                        orderId: widget.orderId));
+                           //   }
+                            },
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: AppConstants.padding_20,
+                                    horizontal: AppConstants.padding_30),
+                                child: CustomButtonWidget(
+                                  buttonText:
+                                      AppLocalizations.of(context)!.save,
+                                  bGColor: AppColors.mainColor,
+                                  isLoading: state.isLoading,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -1326,7 +1321,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 ),
                 (value == 4)
                     ? CustomFormField(
-                  context: context,
+                                      context: context,
                         fillColor: AppColors.pageColor,
                         validator: '',
                         controller: state.addNoteController,

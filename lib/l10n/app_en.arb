@@ -344,5 +344,16 @@
   "walletareadyexist": "Wallet already exists",
   "notenoughbalance": "Not sufficient balance",
   "invalidamount": "Invalid Amount",
-  "deductionisnegative": "Deduction would result in a negative balance"
+  "deductionisnegative": "Deduction would result in a negative balance",
+  "missing_quantity_notmore_than_original": "missing quantity can't be more then original quantity",
+  "check_all": "Check All",
+  "wait_while_uploading": "Please wait while uploading",
+  "otp_resend_success": "OTP resend Successfully!",
+  "select_valid_document_format": "Please select only jpg, jpeg, png, heic, pdf and document files",
+  "select_next_day_shift": "please select next day shift",
+  "item_deleted": "Item Deleted",
+  "this_supplier_have": "This supplier have ",
+  "quantity_in_stock": "quantity in stock "
+
+
 }

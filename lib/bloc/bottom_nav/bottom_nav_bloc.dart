@@ -23,11 +23,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         debugPrint('cart count = ${state.cartCount}');
       }
-      else if(event is _cartAnimationEvent){
-        if(event.cartCount < preferencesHelper.getCartCount()){
-          emit(state.copyWith(isAnimation: true));
-        }
-      }
+
     });
   }
 }

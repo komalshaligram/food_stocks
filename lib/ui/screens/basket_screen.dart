@@ -48,7 +48,6 @@ class BasketScreenWidget extends StatelessWidget {
       listener: (context, state) {
         BlocProvider.of<BottomNavBloc>(context)
             .add(BottomNavEvent.updateCartCountEvent());
-        BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.cartAnimationEvent(cartCount: state.cartCount));
       },
       child: BlocBuilder<BasketBloc, BasketState>(
         builder: (context, state) {
