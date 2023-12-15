@@ -162,6 +162,7 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: ExpansionTile(
+          backgroundColor: Colors.transparent,
           collapsedIconColor: AppColors.greyColor,
           iconColor: AppColors.mainColor,
           title: Padding(
@@ -180,8 +181,10 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
             Container(
               color: AppColors.lightBorderColor.withOpacity(0.5),
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.padding_5),
+                  horizontal: AppConstants.padding_5,
+                  vertical: AppConstants.padding_5),
               child: ListTile(
+                tileColor: AppColors.lightBorderColor.withOpacity(0.5),
                 title: Text(
                   answer,
                   style: AppStyles.rkRegularTextStyle(

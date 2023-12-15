@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/req_model/get_app_content_req_model/get_app_content_req_model.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/get_app_content_res_model/get_app_content_res_model.dart';
@@ -23,12 +24,21 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc() : super(MenuState.initial()) {
     on<MenuEvent>((event, emit) async {
       if (event is _GetAppContentListEvent) {
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfAppContents) {
+          return;
+        }
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(
+              isShimmering: state.pageNum == 0 ? true : false,
+              isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(
               AppUrls.getAllAppContentsUrl,
               data: GetAppContentReqModel(
-                      pageNum: 1, pageLimit: AppConstants.appContentPageLimit)
+                      pageNum: state.pageNum + 1,
+                      pageLimit: AppConstants.appContentPageLimit)
                   .toJson());
           GetAppContentResModel response = GetAppContentResModel.fromJson(res);
           if (response.status == 200) {
@@ -42,17 +52,35 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
                     .toList() ??
                 []);
             debugPrint('new app content list len = ${contentList.length}');
-            emit(state.copyWith(contentList: contentList, isShimmering: false));
+            emit(state.copyWith(
+                contentList: contentList,
+                pageNum: state.pageNum + 1,
+                isLoadMore: false,
+                isShimmering: false));
+            emit(state.copyWith(
+                isBottomOfAppContents:
+                    contentList.length == (response.metaData?.totalRecords ?? 0)
+                        ? true
+                        : false));
           } else {
             emit(state.copyWith(isShimmering: false));
             showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
                 bgColor: AppColors.mainColor);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(
+            pageNum: 0, contentList: [], isBottomOfAppContents: false));
+        add(MenuEvent.getAppContentListEvent(context: event.context));
       }
     });
   }
