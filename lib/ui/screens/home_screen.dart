@@ -109,16 +109,19 @@ class HomeScreenWidget extends StatelessWidget {
                                         ? */
                                         AppColors
                                             .whiteColor /*: AppColors.mainColor.withOpacity(0.9)*/,
+                                    border: Border.all(
+                                        color: AppColors.whiteColor,
+                                        width: 0.5),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: state.UserImageUrl.isNotEmpty
-                                              ? AppColors.shadowColor
-                                                  .withOpacity(0.3)
-                                              : AppColors.whiteColor,
+                                          color: /*state.UserImageUrl.isNotEmpty
+                                              ? */
+                                              AppColors.shadowColor.withOpacity(
+                                                  0.1) /*: AppColors.whiteColor*/,
                                           blurRadius:
-                                              state.UserImageUrl.isNotEmpty
-                                                  ? AppConstants.blur_10
-                                                  : 0)
+                                              /*state.UserImageUrl.isNotEmpty
+                                                  ?*/
+                                              AppConstants.blur_10 /*: 0*/)
                                     ],
                                     shape: BoxShape.circle,
                                   ),
@@ -141,12 +144,20 @@ class HomeScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         )
-                                      : Image.asset(
+                                      : SvgPicture.asset(
+                                          AppImagePath.placeholderProfile,
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.scaleDown,
+                                          // colorFilter: ColorFilter.mode(
+                                          //     AppColors.mainColor,
+                                          //     BlendMode.dstIn),
+                                        ) /*Image.asset(
                                           AppImagePath.defaultProfileImage,
                                           height: 60,
                                           width: 60,
                                           fit: BoxFit.scaleDown,
-                                        )
+                                        )*/
                                   /*Icon(
                                     Icons.person,
                                           size: 45,
@@ -461,8 +472,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                         buildListTitles(),
-                                        buildListItems(context, height: 160),
-                                        15.height,
+                                        buildListItems(context, height: 170),
+                                        13.height,
                                       ])
                                 : state.productSalesList.isEmpty
                                     ? 0.width
@@ -511,7 +522,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               milliseconds:
                                                                   300 +
                                                                       (index *
-                                                                          50)),
+                                                                          30)),
                                                           slidingCurve:
                                                               Curves.decelerate,
                                                           slidingBeginOffset:
@@ -951,7 +962,7 @@ class HomeScreenWidget extends StatelessWidget {
         return BlocProvider.value(
           value: context.read<HomeBloc>(),
           child: DraggableScrollableSheet(
-            expand: true,
+            expand: false,
             maxChildSize: 1 -
                 (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)),
@@ -974,10 +985,11 @@ class HomeScreenWidget extends StatelessWidget {
                         ),
                         clipBehavior: Clip.hardEdge,
                         child: Scaffold(
+                          backgroundColor: AppColors.whiteColor,
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                              context: context,
+                                  context: context,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
                                     context.read<HomeBloc>().add(

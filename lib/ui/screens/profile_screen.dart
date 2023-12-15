@@ -71,10 +71,10 @@ class ProfileScreenWidget extends StatelessWidget {
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.isFileSizeExceeds) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: context,
               title: '${AppLocalizations.of(context)!.please_enter_email}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
         }
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -182,15 +182,16 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                       Permission
                                                                           .camera]!
                                                                   .isGranted) {
-                                                                showSnackBar(
-                                                                    context:
-                                                                        context,
-                                                                    title:  AppLocalizations.of(context)!.camera_permission,
-                                                                    bgColor:
-                                                                        AppColors
-                                                                            .redColor);
                                                                 Navigator.pop(
                                                                     context1);
+                                                                CustomSnackBar.showSnackBar(
+                                                                    context:
+                                                                        context,
+                                                                    title: AppLocalizations.of(
+                                                                            context)!
+                                                                        .camera_permission,
+                                                                    type: SnackBarType
+                                                                        .FAILURE);
                                                                 return;
                                                               }
                                                             } else if (Platform
@@ -241,13 +242,14 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                         Permission
                                                                             .storage]!
                                                                     .isGranted) {
-                                                                  showSnackBar(
+                                                                  CustomSnackBar.showSnackBar(
                                                                       context:
                                                                           context,
-                                                                      title:  AppLocalizations.of(context)!.storage_permission,
-                                                                      bgColor:
-                                                                          AppColors
-                                                                              .redColor);
+                                                                      title: AppLocalizations.of(
+                                                                              context)!
+                                                                          .storage_permission,
+                                                                      type: SnackBarType
+                                                                          .FAILURE);
                                                                   Navigator.pop(
                                                                       context);
                                                                   return;
@@ -849,13 +851,15 @@ class ProfileScreenWidget extends StatelessWidget {
                                                 }
                                               }
                                             } else {
-                                              showSnackBar(
+                                              CustomSnackBar.showSnackBar(
                                                   context: context,
-                                                  title:  AppLocalizations.of(context)!.select_business_type,
-                                                  bgColor: AppColors.redColor);
+                                                  title: AppLocalizations.of(
+                                                          context)!
+                                                      .select_business_type,
+                                                  type: SnackBarType.FAILURE);
                                             }
-                                            // } else {
-                                            //   showSnackBar(
+                                      // } else {
+                                            //   CustomSnackBar.showSnackBar(
                                             //       context: context,
                                             //       title:
                                             //           AppStrings.selectProfileImageString,

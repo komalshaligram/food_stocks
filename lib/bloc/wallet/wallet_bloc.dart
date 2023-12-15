@@ -25,7 +25,6 @@ import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dar
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'wallet_event.dart';
@@ -125,10 +124,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             });
             emit(state.copyWith(monthlyExpenseList: temp));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {}
       } else if (event is _getAllWalletTransactionEvent) {
@@ -264,17 +266,21 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             file = File(filePath);
            // debugPrint('[path]   ${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
-                  bgColor: AppColors.mainColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message!.toLocalization(), event.context),
+                  type: SnackBarType.SUCCESS);
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {emit(state.copyWith(isExportShimmering: false));}
       } else if (event is _getOrderCountEvent) {

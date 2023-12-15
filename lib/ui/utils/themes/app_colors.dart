@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class AppColors {
   static Color mainColor = const Color(0xff20BF6B);
@@ -24,4 +24,9 @@ class AppColors {
   static Color shimmer1Color = const Color(0xCCE0E0E0);
   static Color shimmer2Color = const Color(0xffF5F5F5);
   static Color lightMainColor = const Color(0xffd2fcd2);
+
+  static Gradient appMainGradientColor = const LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [Color(0xff20BF6B), Color(0xff40C057)]);
 }

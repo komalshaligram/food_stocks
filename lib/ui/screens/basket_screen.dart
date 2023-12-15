@@ -560,10 +560,11 @@ class BasketScreenWidget extends StatelessWidget {
                                             saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
                                           ));
                                         } else {
-                                          showSnackBar(
+                                          CustomSnackBar.showSnackBar(
                                               context: context,
-                                              title: '${AppLocalizations.of(context)!.out_of_stock}',
-                                              bgColor: AppColors.redColor);
+                                              title:
+                                                  '${AppLocalizations.of(context)!.out_of_stock}',
+                                              type: SnackBarType.FAILURE);
                                         }
                                       }
 

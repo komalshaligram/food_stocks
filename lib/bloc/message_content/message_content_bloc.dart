@@ -61,10 +61,10 @@ class MessageContentBloc
               AppStrings.messageDeleteString: true,
             });
           } else {
-            /* showSnackBar(
+            /* CustomSnackBar.CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response[AppStrings.messageString],
-                bgColor: AppColors.mainColor);*/
+                type: SnackBarType.SUCCESS);*/
           }
         } on ServerException {}
       } else if (event is _MessageUpdateEvent) {
@@ -92,10 +92,10 @@ class MessageContentBloc
 
           if (response[AppStrings.statusString] == 200) {
           } else {
-            /* showSnackBar(
+            /* CustomSnackBar.CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response[AppStrings.messageString],
-                bgColor: AppColors.mainColor);*/
+                type: SnackBarType.SUCCESS);*/
           }
         } on ServerException {}
       }

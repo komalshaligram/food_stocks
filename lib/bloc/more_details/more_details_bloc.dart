@@ -30,7 +30,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -74,10 +73,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
-          // showSnackBar(
+          // CustomSnackBar.CustomSnackBar.showSnackBar(
           //     context: event.context,
           //     title: e.toString(),
-          //     bgColor: AppColors.redColor);
+          //     type: SnackBarType.FAILURE);
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
@@ -126,18 +125,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                     companyLogo: profileImageModel.filepath ?? ''));
               }
             } on ServerException {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:'${AppLocalizations.of(event.context)!.image_not_set}',
-                  bgColor: AppColors.redColor);
+                  title: '${AppLocalizations.of(event.context)!.image_not_set}',
+                  type: SnackBarType.FAILURE);
             }
           } else {
             emit(state.copyWith(isFileSizeExceeds: true));
             emit(state.copyWith(isFileSizeExceeds: false));
-            // showSnackBar(
+            // CustomSnackBar.CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: AppStrings.fileSizeLimitString,
-            //     bgColor: AppColors.redColor);
+            //     type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _registrationApiEvent) {
@@ -158,10 +157,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 debugPrint('update logo image req________${response}');
                 imgUrl = response.data!.client!.profileImage.toString();
               } else {
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title:'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                    bgColor: AppColors.redColor);
+                    title:
+                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    type: SnackBarType.FAILURE);
               }
             } on ServerException {
 
@@ -215,24 +215,29 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               preferencesHelper.setUserCompanyLogoUrl(
                   logoUrl: response.data!.client!.logo.toString());
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
-                  context: event.context,
-                  title:'${AppLocalizations.of(event.context)!.updated_successfully}',
-                  bgColor: AppColors.mainColor);
               Navigator.pop(event.context);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title:
+                      '${AppLocalizations.of(event.context)!.updated_successfully}',
+                  type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:  AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
           }
         } else {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -305,18 +310,22 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               );
             } else {
               emit(state.copyWith(isLoading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(profileResModel.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      profileResModel.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } catch (e) {
             debugPrint("data2 = ${e.toString()}");
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _citySearchEvent) {
@@ -364,17 +373,21 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               ));
             } else {
               emit(state.copyWith(isUpdating: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
           } catch (e) {
             emit(state.copyWith(isUpdating: false));
           }
@@ -407,10 +420,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             return;
           } else if (state.companyLogo.contains(AppStrings.tempString)) {
             emit(state.copyWith(companyLogo: '', image: File('')));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
-                bgColor: AppColors.mainColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.removed_successfully}',
+                type: SnackBarType.SUCCESS);
             return;
           }
           emit(state.copyWith(isLoading: true));
@@ -424,25 +438,30 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
             await preferencesHelper.removeCompanyLogo();
-            emit(state.copyWith(isLoading: false));
-            emit(state.copyWith(companyLogo: '', image: File('')));
-            showSnackBar(
+            emit(state.copyWith(
+                isLoading: false, companyLogo: '', image: File('')));
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
-                bgColor: AppColors.mainColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.removed_successfully}',
+                type: SnackBarType.SUCCESS);
           } else {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context) ,
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } catch (e) {
           emit(state.copyWith(isLoading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              title:
+                  '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+              type: SnackBarType.FAILURE);
         }
       }
     });
