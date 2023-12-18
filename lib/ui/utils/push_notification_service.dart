@@ -67,7 +67,7 @@ class PushNotificationService {
     String? fcmToken='';
 
 
-    fcmToken = await FirebaseMessaging.instance.getToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -100,14 +100,14 @@ class PushNotificationService {
           await file.writeAsBytes(response.bodyBytes);
         }
 
-        debugPrint('noti:${data['message']['body'].toString()}');
-        String body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+        String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+        String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
         debugPrint('noti:${data['message']['body'].toString()}');
         debugPrint("body: ${body}");
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          data['message']['title'].toString(),
-          parse(data['message']['body'].toString() ?? '').text ?? '',
+         title,
+          body,
           flutter_local_notifications.NotificationDetails(
               iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
             android:AndroidNotificationDetails(

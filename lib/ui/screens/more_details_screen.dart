@@ -117,6 +117,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () {
                                       showModalBottomSheet(
+                                        backgroundColor: Colors.white,
                                         context: context,
                                         isScrollControlled: true,
                                         shape: OutlineInputBorder(

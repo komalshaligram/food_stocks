@@ -27,7 +27,7 @@ class FormFieldValidation {
   String? mobileField(String value,BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
-      return '${AppLocalizations.of(context)!.please_enter_valid_email}';
+      return '${AppLocalizations.of(context)!.please_enter_valid_phone_number}';
     } else if (value.length <= 10) {
       if (regex.hasMatch(value)) {
         return "${AppLocalizations.of(context)!.please_enter_valid_phone_number}";

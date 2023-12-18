@@ -485,12 +485,15 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   },
                                                 ),
                                               )
-                                              :Icon(
-                                            Icons.person,
-                                            size: 60,
-                                            color:
-                                            AppColors.textColor,
-                                          )
+                                              :SvgPicture.asset(
+          AppImagePath.placeholderProfile,
+          width: 80,
+          height: 80,
+          fit: BoxFit.scaleDown,
+          // colorFilter: ColorFilter.mode(
+          //     AppColors.mainColor,
+          //     BlendMode.dstIn),
+          )
                                               : state.image.path != ''
                                               ? ClipRRect(
                                             borderRadius:
@@ -503,12 +506,15 @@ class ProfileScreenWidget extends StatelessWidget {
                                                   fit: BoxFit.contain,
                                                 ),
                                               )
-                                              : Icon(
-                                            Icons.person,
-                                            size: 60,
-                                            color:
-                                            AppColors.textColor,
-                                          )),/*state.isUpdate
+                                              : SvgPicture.asset(
+                                                AppImagePath.placeholderProfile,
+                                                width: 80,
+                                                height: 80,
+                                                fit: BoxFit.scaleDown,
+                                                // colorFilter: ColorFilter.mode(
+                                                //     AppColors.mainColor,
+                                                //     BlendMode.dstIn),
+                                              ),),/*state.isUpdate
                                               ? state.isFileUploading
                                                   ? Center(
                                                       child:
@@ -626,7 +632,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                     AppImagePath.camera,
                                                     colorFilter:
                                                         ColorFilter.mode(
-                                                            AppColors.blueColor,
+                                                            AppColors.mainColor,
                                                             BlendMode.srcIn),
                                                     fit: BoxFit
                                                         .scaleDown) /*Icon(

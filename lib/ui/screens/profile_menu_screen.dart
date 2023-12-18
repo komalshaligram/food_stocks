@@ -111,24 +111,22 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ),
                                   )
                                 : Container(
-
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: AppColors.whiteColor,width: 5),
-                                    borderRadius:
-                                    BorderRadius.circular(40)),
-                                                                child: SvgPicture.asset(
-                                  AppImagePath.placeholderProfile,
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.scaleDown,
-                                  // colorFilter: ColorFilter.mode(
-                                  //     AppColors.mainColor,
-                                  //     BlendMode.dstIn),
-                                                                ),
-                                                              ),
-                                ),/*Image.asset(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: AppColors.whiteColor,
+                                          width: 5),
+                                      borderRadius:
+                                          BorderRadius.circular(40)),
+                                  child: SvgPicture.asset(
+                                    AppImagePath.placeholderProfile,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.scaleDown,
+                                    // colorFilter: ColorFilter.mode(
+                                    //     AppColors.mainColor,
+                                    //     BlendMode.dstIn),
+                                  ),
+                                ), /*Image.asset(
                                     AppImagePath.defaultProfileImage,
                                     height: 80,
                                     width: 80,
@@ -138,7 +136,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     size: 60,
                                     color: AppColors.textColor,
                                   )*/
-
                           ),
                           20.width,
                           SizedBox(

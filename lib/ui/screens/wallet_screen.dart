@@ -182,7 +182,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                         6.height,
                                         BalanceIndicator(
                                           pendingBalance: formatter(state.balance.toString()),
-                                          expense: 100 - state.expensePercentage,
+                                          expense: state.expensePercentage,
                                           totalBalance: 100
                                         ),
                                       ],

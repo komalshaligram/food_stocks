@@ -380,6 +380,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.deductionisnegative;
       case 'something_is_wrong_try_again':
         return AppLocalizations.of(context)!.something_is_wrong_try_again;
+      case 'loginsuccessmessage':
+        return AppLocalizations.of(context)!.loginsuccessmessage;
     }
     return '';
   }

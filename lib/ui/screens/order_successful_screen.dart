@@ -151,7 +151,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                   6.height,
                                   BalanceIndicator(
                                     pendingBalance: formatter(state.balance.toString()),
-                                      expense: 100 - state.expensePercentage,
+                                      expense: state.expensePercentage,
                                       totalBalance: 100
                                   ),
                                 ],
