@@ -1,7 +1,9 @@
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -133,18 +135,14 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
 
           } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
-                type: SnackBarType.FAILURE);
+
+
           }
         } on ServerException {}
 
       } else if (event is _removeCartProductEvent) {
         try {
+          final player = AudioPlayer();
           final response = await DioClient(event.context).post(
             AppUrls.removeCartProductUrl,
             data: {AppStrings.cartProductIdString: event.cartProductId},
@@ -153,32 +151,21 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         //  debugPrint('remove cart res  = $response');
 
           if (response['status'] == 200) {
+            player.play(AssetSource('audio/delete_sound.mp3'));
             add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
             //Navigator.pop(event.dialogContext);
+
             emit(state.copyWith(
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.item_deleted,
-                type: SnackBarType.SUCCESS);
+
           } else {
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: response.message != null
-                    ? AppStrings.getLocalizedStrings(
-                        response[AppStrings.messageString]
-                            .toString()
-                            .toLocalization(),
-                        event.context)
-                    : AppLocalizations.of(event.context)!
-                        .something_is_wrong_try_again,
-                type: SnackBarType.FAILURE);
+
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {
@@ -201,7 +188,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             emit(state.copyWith(
                 basketProductList: list, isRefresh: !state.isRefresh));
           } else {
-            // CustomSnackBar.showSnackBar(context: event.context, title: res['message'], type: SnackBarType.SUCCESS);
+            // showSnackBar(context: event.context, title: res['message'], bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
           }
         } on ServerException {}

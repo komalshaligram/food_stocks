@@ -94,92 +94,102 @@ class CustomFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _controller,
-      // textDirection: textDirection,
-      inputFormatters: inputformet,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      style: AppStyles.rkRegularTextStyle(
-          color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
-      //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),
-      maxLines: maxLines,
-      enabled: isEnabled,
-      textInputAction: textInputAction,
-      keyboardType: _keyboardType,
-      obscureText: isObscure,
-      onChanged: onChangeValue,
-      // maxLength: maxLimits,
-      textCapitalization: TextCapitalization.sentences,
-      //   textInputAction: _inputAction,
-      onTap: onTap,
-      onTapOutside: (event) => FocusScope.of(context).unfocus(),
-      onFieldSubmitted: onFieldSubmitted,
-      onSaved: onSaved,
-      autofocus: autofocus,
-      cursorColor: cursorColor,
-      textDirection: textDirection,
-      textAlign:
-          textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
-      // maxLength: maxLimits,
-      validator: (value) =>
-          AuthFormValidation().formValidation(value!, _validator ,context),
-      decoration: InputDecoration(
-          labelStyle: TextStyle(color: AppColors.textColor),
-          suffixIcon: postIconBtn,
-          prefixIcon: prefixIcon,
-          suffix: suffixIcon,
-          hintText: _hint,
-          hintTextDirection:
-              textDirection == TextDirection.ltr ? TextDirection.ltr : null,
-          filled: true,
-          fillColor: _fillColor,
-          hintStyle: TextStyle(
-            color: AppColors.textColor,
-          ),
-          // counterText: '',
-          errorStyle: TextStyle(
-              color: AppColors.redColor,
-              height: height,
-              fontWeight: FontWeight.w400),
-          focusedBorder: OutlineInputBorder(
+    return Theme(
+      data: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.white,
+          selectionColor: Colors.white,
+          selectionHandleColor: Colors.white,
+        ),
+      ),
+      child: TextFormField(
+        controller: _controller,
+        // textDirection: textDirection,
+        inputFormatters: inputformet,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: AppStyles.rkRegularTextStyle(
+            color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
+        //  style:  TextStyle(color: AppColors.textHeaderColor , fontSize: 14),
+        maxLines: maxLines,
+        enabled: isEnabled,
+        textInputAction: textInputAction,
+        keyboardType: _keyboardType,
+        obscureText: isObscure,
+        onChanged: onChangeValue,
+        // maxLength: maxLimits,
+        textCapitalization: TextCapitalization.sentences,
+        //   textInputAction: _inputAction,
+        onTap: onTap,
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
+        onFieldSubmitted: onFieldSubmitted,
+        onSaved: onSaved,
+        autofocus: autofocus,
+        cursorColor: cursorColor,
+        textDirection: textDirection,
+        textAlign:
+            textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
+        // maxLength: maxLimits,
+        validator: (value) =>
+            AuthFormValidation().formValidation(value!, _validator ,context),
+        decoration: InputDecoration(
+
+            labelStyle: TextStyle(color: AppColors.textColor),
+            suffixIcon: postIconBtn,
+            prefixIcon: prefixIcon,
+            suffix: suffixIcon,
+            hintText: _hint,
+            hintTextDirection:
+                textDirection == TextDirection.ltr ? TextDirection.ltr : null,
+            filled: true,
+            fillColor: _fillColor,
+            hintStyle: TextStyle(
+              color: AppColors.textColor,
+            ),
+            // counterText: '',
+            errorStyle: TextStyle(
+                color: AppColors.redColor,
+                height: height,
+                fontWeight: FontWeight.w400),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(border),
+                borderSide: isBorderVisible
+                    ? BorderSide(
+                        color: AppColors.mainColor,
+                        width: 1,
+                      )
+                    : BorderSide.none),
+            contentPadding:  EdgeInsets.fromLTRB(10, contentPaddingTop, 10, contentPaddingBottom),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border),
+              borderSide: isBorderVisible
+                  ? BorderSide(color: AppColors.borderColor)
+                  : BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border),
+              borderSide: isBorderVisible
+                  ? BorderSide(color: AppColors.borderColor)
+                  : BorderSide.none,
+            ),
+            errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
               borderSide: isBorderVisible
                   ? BorderSide(
-                      color: AppColors.mainColor,
+                      color: AppColors.borderColor,
                       width: 1,
                     )
-                  : BorderSide.none),
-          contentPadding:  EdgeInsets.fromLTRB(10, contentPaddingTop, 10, contentPaddingBottom),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(border),
-            borderSide: isBorderVisible
-                ? BorderSide(color: AppColors.borderColor)
-                : BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(border),
-            borderSide: isBorderVisible
-                ? BorderSide(color: AppColors.borderColor)
-                : BorderSide.none,
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(border),
-            borderSide: isBorderVisible
-                ? BorderSide(
-                    color: AppColors.borderColor,
-                    width: 1,
-                  )
-                : BorderSide.none,
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(border),
-            borderSide: isBorderVisible
-                ? BorderSide(
-                    color: AppColors.redColor,
-                    width: 1,
-                  )
-                : BorderSide.none,
-          )),
+                  : BorderSide.none,
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border),
+              borderSide: isBorderVisible
+                  ? BorderSide(
+                      color: AppColors.redColor,
+                      width: 1,
+                    )
+                  : BorderSide.none,
+            )),
+      ),
     );
   }
 }

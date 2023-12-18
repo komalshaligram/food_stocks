@@ -1046,11 +1046,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             ),
                           ),
                           20.height,
-                          Text(
-                            AppLocalizations.of(context)!.problem_detected,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor,
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              AppLocalizations.of(context)!.problem_detected,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor,
+                              ),
                             ),
                           ),
                           20.height,

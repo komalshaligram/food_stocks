@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 
 import 'package:html/parser.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,7 +67,7 @@ class PushNotificationService {
     String? fcmToken='';
 
 
-    fcmToken = await FirebaseMessaging.instance.getToken();
+    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -80,59 +82,43 @@ class PushNotificationService {
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
-      debugPrint("push message: ${message?.notification?.toMap().toString()}");
-
-      final RemoteNotification? notification = message!.notification;
+      var data = json.decode(message!.data['data'].toString());
+      final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
-      final iosNotification = message.notification?.apple;
-
-// If `onMessage` is triggered with a notification, construct our own
-// local notification to show to users using the created channel.
-      if (notification != null) {
+      debugPrint('noti:${notification!.toMap().toString()}');
+      debugPrint('data:${data.toString()}');
+      if(data != null ){
+        final http.Response response;
         var fileName;
-        if (notification.android?.imageUrl != null ||
-            notification.apple?.imageUrl != null) {
-          final http.Response response;
-          if (Platform.isAndroid && android!.imageUrl != null) {
-            response = await http.get(Uri.parse(android.imageUrl.toString()));
-          } else {
-            response =
-                await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
-          }
+        if(data['message']['imageUrl']!=null){
+          response = await http.get(Uri.parse(AppUrls.baseFileUrl+data['message']['imageUrl'].toString()));
           final dir = await getTemporaryDirectory();
           // Create an image name
           fileName = '${dir.path}/image.png';
           // Save to filesystem
           final file = File(fileName);
           await file.writeAsBytes(response.bodyBytes);
-
-          debugPrint("img res: ${response.toString()}");
-          BigPictureStyleInformation bigPictureStyleInformation =
-              BigPictureStyleInformation(
-                  ByteArrayAndroidBitmap.fromBase64String(
-            base64Encode(response.bodyBytes),
-          ));
         }
+
+        String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+        String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+        debugPrint('noti:${data['message']['body'].toString()}');
+        debugPrint("body: ${body}");
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          parse(notification.title ?? '').body?.text ?? '',
-          parse(notification.body ?? '').body?.text ?? '',
+         title,
+          body,
           flutter_local_notifications.NotificationDetails(
-            iOS: DarwinNotificationDetails(
-                attachments: fileName == null
-                    ? []
-                    : [DarwinNotificationAttachment(fileName)]),
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              icon: android!.smallIcon,
-              styleInformation: fileName == null
-                  ? null
-                  : BigPictureStyleInformation(
-                      FilePathAndroidBitmap(fileName),
-                      hideExpandedLargeIcon: false,
-                    ),
+              iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
+            android:AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                icon: android!.smallIcon,
+              styleInformation: BigPictureStyleInformation(
+                FilePathAndroidBitmap(fileName),
+            hideExpandedLargeIcon: false,
+          ),
             ),
           ),
           payload: message.data.toString(),

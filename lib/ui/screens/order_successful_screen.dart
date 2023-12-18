@@ -42,6 +42,7 @@ class OrderSuccessfulScreenWidget extends StatefulWidget {
 class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidget> with TickerProviderStateMixin{
   late final AnimationController _controller;
   final player = AudioPlayer();
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,6 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
     _controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +151,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                   6.height,
                                   BalanceIndicator(
                                     pendingBalance: formatter(state.balance.toString()),
-                                      expense: 100 - state.expensePercentage,
+                                      expense: state.expensePercentage,
                                       totalBalance: 100
                                   ),
                                 ],

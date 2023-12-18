@@ -182,7 +182,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                         6.height,
                                         BalanceIndicator(
                                           pendingBalance: formatter(state.balance.toString()),
-                                          expense: 100 - state.expensePercentage,
+                                          expense: state.expensePercentage,
                                           totalBalance: 100
                                         ),
                                       ],
@@ -379,7 +379,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                flex: 2,
+                                flex: 3,
                                 child: Text(
                                   AppLocalizations.of(context)!.history,
                                   style: AppStyles.rkRegularTextStyle(
@@ -432,7 +432,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
-                                        horizontal: state.language == AppStrings.englishString? AppConstants.padding_5 : AppConstants.padding_8),
+                                        horizontal: AppConstants.padding_3),
                                     decoration: BoxDecoration(
                                         color: AppColors.mainColor,
                                         borderRadius: BorderRadius.circular(
@@ -446,9 +446,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                   ),
                                 ),
                               ),
-                              8.width,
+                              5.width,
                               Expanded(
-                                flex: 7,
+                                flex: 9,
                                 child: Container(
                                   height: 45,
                                     padding: EdgeInsets.symmetric(
