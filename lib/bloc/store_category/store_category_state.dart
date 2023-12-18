@@ -10,7 +10,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required String categoryName,
     required String subCategoryName,
     required List<SubCategory> subCategoryList,
-    required List<Datum> planoGramsList,
+    required List<PlanogramDatum> planoGramsList,
     required List<Category> productCategoryList,
     required List<List<ProductStockModel>> productStockList,
     required bool isPlanogramShimmering,

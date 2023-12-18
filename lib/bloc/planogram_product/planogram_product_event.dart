@@ -3,7 +3,7 @@ part of 'planogram_product_bloc.dart';
 @freezed
 class PlanogramProductEvent with _$PlanogramProductEvent {
   const factory PlanogramProductEvent.getPlanogramProductsEvent(
-      {required Datum planogram}) = _GetPlanogramProductsEvent;
+      {required PlanogramDatum planogram}) = _GetPlanogramProductsEvent;
 
   const factory PlanogramProductEvent.getProductDetailsEvent(
       {required BuildContext context,

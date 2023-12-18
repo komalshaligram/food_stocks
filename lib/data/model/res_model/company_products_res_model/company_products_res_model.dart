@@ -19,7 +19,7 @@ String companyProductsResModelToJson(CompanyProductsResModel data) =>
 class CompanyProductsResModel with _$CompanyProductsResModel {
   const factory CompanyProductsResModel({
     @JsonKey(name: "status") int? status,
-    @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "data") List<CompanyDatum>? data,
     @JsonKey(name: "metaData") MetaData? metaData,
     @JsonKey(name: "message") String? message,
   }) = _CompanyProductsResModel;
@@ -29,8 +29,8 @@ class CompanyProductsResModel with _$CompanyProductsResModel {
 }
 
 @freezed
-class Datum with _$Datum {
-  const factory Datum({
+class CompanyDatum with _$CompanyDatum {
+  const factory CompanyDatum({
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
     @JsonKey(name: "itemsWeight") String? itemsWeight,
     @JsonKey(name: "totalWeightCardboard") String? totalWeightCardboard,
@@ -61,9 +61,10 @@ class Datum with _$Datum {
     @JsonKey(name: "totalSale") int? totalSale,
     @JsonKey(name: "productStock") int? productStock,
     @JsonKey(name: "productPrice") double? productPrice,
-  }) = _Datum;
+  }) = _CompanyDatum;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  factory CompanyDatum.fromJson(Map<String, dynamic> json) =>
+      _$CompanyDatumFromJson(json);
 }
 
 @freezed

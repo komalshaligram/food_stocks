@@ -651,7 +651,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 size: AppConstants.mediumFont,
                                                 color: AppColors.textColor),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   )
