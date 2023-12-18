@@ -18,6 +18,7 @@ class AppImagePath {
   static const String signature = 'assets/images/signature.svg';
   static const String delete = 'assets/images/delete.svg';
   static const String deleteRed = 'assets/images/delete_red.svg';
+  static const String placeholderProfile = 'assets/images/user_icon.svg';
 
   ///pngs
   static const String profileImage = 'assets/images/ic_default_profile_img.png';

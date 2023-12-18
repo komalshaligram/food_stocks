@@ -9,7 +9,6 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/get_app_content_res_model/get_app_content_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -64,13 +63,13 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
                         : false));
           } else {
             emit(state.copyWith(isShimmering: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                bgColor: AppColors.mainColor);
+                type: SnackBarType.SUCCESS);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));

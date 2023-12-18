@@ -82,10 +82,11 @@ class _MyAppState extends State<MyApp> {
             textSelectionTheme: TextSelectionThemeData(
               cursorColor: AppColors.mainColor,
               selectionColor: AppColors.mainColor,
-              selectionHandleColor: AppColors.mainColor,
+              selectionHandleColor: Colors.transparent,
             ),
             primarySwatch: Colors.green,
-
+            canvasColor: Colors.white,
+             cardColor: AppColors.whiteColor,
             snackBarTheme: SnackBarThemeData(
               backgroundColor: AppColors.mainColor,
               actionTextColor: AppColors.textColor,

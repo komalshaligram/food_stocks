@@ -135,10 +135,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
 
           } else {
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ??'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
+
 
           }
         } on ServerException {}
@@ -165,16 +162,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount));
-            showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.item_deleted,
-                bgColor: AppColors.mainColor);
+
           } else {
             Navigator.pop(event.context);
-            showSnackBar(
-                context: event.context,
-                title:   response.message != null ?AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context): AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-                bgColor: AppColors.redColor);
+
           }
         } on ServerException {}
       } else if (event is _clearCartEvent) {

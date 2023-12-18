@@ -379,7 +379,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                flex: 2,
+                                flex: 3,
                                 child: Text(
                                   AppLocalizations.of(context)!.history,
                                   style: AppStyles.rkRegularTextStyle(
@@ -405,11 +405,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       print(
                                           'Running on android version ${androidInfo.version.sdkInt}');
                                       if (androidInfo.version.sdkInt < 33) {
-                                        if (!statuses[Permission.storage]!.isGranted) {
-                                          showSnackBar(
+                                        if (!statuses[Permission.storage]!
+                                            .isGranted) {
+                                          CustomSnackBar.showSnackBar(
                                               context: context,
-                                              title: '${AppLocalizations.of(context)!.storage_permission}',
-                                              bgColor: AppColors.redColor);
+                                              title:
+                                                  '${AppLocalizations.of(context)!.storage_permission}',
+                                              type: SnackBarType.FAILURE);
                                           return;
                                         }
                                       }
@@ -430,7 +432,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
-                                        horizontal: state.language == AppStrings.englishString? AppConstants.padding_5 : AppConstants.padding_8),
+                                        horizontal: AppConstants.padding_3),
                                     decoration: BoxDecoration(
                                         color: AppColors.mainColor,
                                         borderRadius: BorderRadius.circular(
@@ -444,9 +446,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                   ),
                                 ),
                               ),
-                              8.width,
+                              5.width,
                               Expanded(
-                                flex: 7,
+                                flex: 9,
                                 child: Container(
                                   height: 45,
                                     padding: EdgeInsets.symmetric(

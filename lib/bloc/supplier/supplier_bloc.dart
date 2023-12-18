@@ -8,7 +8,6 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_constants.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
@@ -58,10 +57,13 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
                     : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.mainColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.SUCCESS);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

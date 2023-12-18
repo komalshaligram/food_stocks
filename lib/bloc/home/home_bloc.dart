@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:food_stock/data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
@@ -35,7 +34,6 @@ import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
@@ -128,13 +126,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productStockList: productStockList,
                 isProductSaleShimmering: false));
           } else {
-            /*showSnackBar(
+            /*CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);*/
+                type: SnackBarType.FAILURE);*/
           }
-        } on ServerException {}
+        } on ServerException {
+          emit(state.copyWith(isProductSaleShimmering: false));
+        }
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         try {
@@ -280,10 +280,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again' ,event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           // emit(state.copyWith(isProductLoading: false));
@@ -297,10 +300,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  type: SnackBarType.FAILURE);
               return;
             }
             productStockList[state.productStockUpdateIndex] =
@@ -312,12 +316,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
             emit(state.copyWith(productStockList: productStockList));
           } else {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -361,11 +365,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         0);
             debugPrint(
                 'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
-                bgColor: AppColors.redColor);
+                type: SnackBarType.FAILURE);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
@@ -447,19 +451,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
             0) {
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-              bgColor: AppColors.redColor);
+              type: SnackBarType.FAILURE);
           return;
         }
         try {
@@ -534,19 +538,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             /*if (await Vibration.hasVibrator()) {
               Vibration.vibrate();
             }*/
-            showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message!.toLocalization(),event.context),
-                bgColor: AppColors.mainColor);
             Navigator.pop(event.context);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message!.toLocalization(), event.context),
+                type: SnackBarType.SUCCESS);
           } else if (response.status == 403) {
             emit(state.copyWith(isLoading: false));
           } else {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           debugPrint('url1 = ');
@@ -652,10 +660,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
-           /* showSnackBar(
+            /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                bgColor: AppColors.redColor);*/
+                type: SnackBarType.FAILURE);*/
           }
         } on ServerException {}
       } else if (event is _SetMessageCountEvent) {

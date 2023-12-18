@@ -456,7 +456,7 @@ class BasketScreenWidget extends StatelessWidget {
                           '${AppUrls.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
                           width: 100,
                           height: 100,
-                         fit: BoxFit.fill,
+                         fit: BoxFit.contain,
                          loadingBuilder:
                              (context,
                              child,
@@ -560,10 +560,11 @@ class BasketScreenWidget extends StatelessWidget {
                                             saleId: ((state.CartItemList.data?.data?[index].sales?.length == 0) ? '':(state.CartItemList.data?.data?[index].sales?.first.id ?? '') ),
                                           ));
                                         } else {
-                                          showSnackBar(
+                                          CustomSnackBar.showSnackBar(
                                               context: context,
-                                              title: '${AppLocalizations.of(context)!.out_of_stock}',
-                                              bgColor: AppColors.redColor);
+                                              title:
+                                                  '${AppLocalizations.of(context)!.out_of_stock}',
+                                              type: SnackBarType.FAILURE);
                                         }
                                       }
 

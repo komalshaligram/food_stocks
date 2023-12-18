@@ -137,15 +137,17 @@ class OTPScreenWidget extends StatelessWidget {
                                 debugPrint('otp1 = ${state.otp}');
                                 debugPrint('otp1 = ${isRegister}');
                                 if (state.otp.isEmpty) {
-                                  showSnackBar(
+                                  CustomSnackBar.showSnackBar(
                                       context: context,
-                                      title:  '${AppLocalizations.of(context)!.please_enter_otp}',
-                                      bgColor: AppColors.redColor);
+                                      title:
+                                          '${AppLocalizations.of(context)!.please_enter_otp}',
+                                      type: SnackBarType.FAILURE);
                                 } else if (state.otp.length != 4) {
-                                  showSnackBar(
+                                  CustomSnackBar.showSnackBar(
                                       context: context,
-                                      title: '${AppLocalizations.of(context)!.enter_4digit_otp}',
-                                      bgColor: AppColors.redColor);
+                                      title:
+                                          '${AppLocalizations.of(context)!.enter_4digit_otp}',
+                                      type: SnackBarType.FAILURE);
                                 } else {
                                   if (isRegister == true) {
                                     Navigator.pushNamed(
@@ -163,8 +165,8 @@ class OTPScreenWidget extends StatelessWidget {
                                 }
 
                                 // if (state.otp.length != 4 &&
-                                //     state.codeLength == 1) {
-                                //   showSnackBar(
+                          //     state.codeLength == 1) {
+                                //   CustomSnackBar.showSnackBar(
                                 //       context: context,
                                 //       title: AppStrings.enter4DigitOtpCode,
                                 //       bgColor: AppColors.redColor);
@@ -183,13 +185,13 @@ class OTPScreenWidget extends StatelessWidget {
                                 //         isRegister: isRegister,
                                 //         context: context));
                                 //   }
-                                // } else if (state.otp.length == 0) {
-                                //   showSnackBar(
+                          // } else if (state.otp.length == 0) {
+                                //   CustomSnackBar.showSnackBar(
                                 //       context: context,
                                 //       title: AppStrings.enterOtpString,
                                 //       bgColor: AppColors.redColor);
-                                // } else {
-                                //   showSnackBar(
+                          // } else {
+                                //   CustomSnackBar.showSnackBar(
                                 //       context: context,
                                 //       title: AppStrings.enter4DigitOtpCode,
                                 //       bgColor: AppColors.redColor);
@@ -229,11 +231,11 @@ class OTPScreenWidget extends StatelessWidget {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                            bloc.add(OtpEvent.setOtpTimer());
-                                  showSnackBar(
+                            CustomSnackBar.showSnackBar(
                                       context: context,
                                      title: '${AppLocalizations.of(context)!.otp_resend_success}',
-                                      bgColor: AppColors.mainColor);
+                                type: SnackBarType.SUCCESS);
+                            bloc.add(OtpEvent.setOtpTimer());
                                 },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

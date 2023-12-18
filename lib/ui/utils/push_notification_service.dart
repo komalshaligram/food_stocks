@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 
 import 'package:html/parser.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,37 +83,31 @@ class PushNotificationService {
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
       var data = json.decode(message!.data['data'].toString());
-      final RemoteNotification? notification = message!.notification;
+      final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
-      final iosNotification = message.notification?.apple;
-      debugPrint("message data1: ${message.toMap().toString()}");
-      debugPrint("message data2: ${data}");
-      debugPrint("Image Url : ${AppUrls.baseFileUrl+message.data['data']['message']['imageUrl']}");
-// If `onMessage` is triggered with a notification, construct our own
-// local notification to show to users using the created channel.
-      if(notification != null ){
+      debugPrint('noti:${notification!.toMap().toString()}');
+      debugPrint('data:${data.toString()}');
+      if(data != null ){
         final http.Response response;
         var fileName;
-       // if(Platform.isAndroid){
-          response = await http.get(Uri.parse(AppUrls.baseFileUrl+message.data['message']['imageUrl'].toString()));
-      //  }/*else{
-        //  response = await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
-      //  }*/
-        final dir = await getTemporaryDirectory();
-        // Create an image name
-        fileName = '${dir.path}/image.png';
-        // Save to filesystem
-        final file = File(fileName);
-        await file.writeAsBytes(response.bodyBytes);
+        if(data['message']['imageUrl']!=null){
+          response = await http.get(Uri.parse(AppUrls.baseFileUrl+data['message']['imageUrl'].toString()));
+          final dir = await getTemporaryDirectory();
+          // Create an image name
+          fileName = '${dir.path}/image.png';
+          // Save to filesystem
+          final file = File(fileName);
+          await file.writeAsBytes(response.bodyBytes);
+        }
 
-        debugPrint("img res: ${response.toString()}");
-        BigPictureStyleInformation  bigPictureStyleInformation =
-        BigPictureStyleInformation(
-            ByteArrayAndroidBitmap.fromBase64String(base64Encode(response.bodyBytes),));
+        debugPrint('noti:${data['message']['body'].toString()}');
+        String body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+        debugPrint('noti:${data['message']['body'].toString()}');
+        debugPrint("body: ${body}");
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          parse(notification.title ?? '').text,
-          parse(notification.body ?? '').text ?? '',
+          data['message']['title'].toString(),
+          parse(data['message']['body'].toString() ?? '').text ?? '',
           flutter_local_notifications.NotificationDetails(
               iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
             android:AndroidNotificationDetails(

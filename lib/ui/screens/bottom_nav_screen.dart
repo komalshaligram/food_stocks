@@ -16,6 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
+import 'package:glitters/glitters.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 
@@ -65,29 +66,30 @@ class BottomNavScreenWidget extends StatelessWidget {
               backgroundColor: AppColors.pageColor,
               bottomNavigationBar: Container(
                 // height: 95,
-                // color: Colors.transparent,
+                decoration:
+                    BoxDecoration(color: Colors.transparent, boxShadow: [
+                  BoxShadow(
+                      color: AppColors.shadowColor.withOpacity(0.1),
+                      blurRadius: AppConstants.blur_10)
+                ]),
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
                   index: state.index,
                   height: 60.0,
+                  cartCount: state.cartCount,
+                  isRTL: context.rtl,
                   items: [
                     _navItem(
                       pos: 0,
                       img: AppImagePath.home,
                       isRTL: context.rtl,
                       state: state,
-                      /*   onTap: () => bloc.add(
-                        BottomNavEvent.changePage(index: 4))*/
-                      //  onTap: (){}
                     ),
                     _navItem(
                       pos: 1,
                       img: AppImagePath.store,
                       isRTL: context.rtl,
                       state: state,
-                      /*  onTap: () => bloc.add(
-                        BottomNavEvent.changePage(index: 3))*/
-                      //   onTap: (){}
                     ),
                     _navItem(
                       pos: 2,
@@ -95,33 +97,24 @@ class BottomNavScreenWidget extends StatelessWidget {
                       isRTL: context.rtl,
                       state: state,
                       isCart: true,
-                      /*onTap: () => bloc.add(
-                        BottomNavEvent.changePage(index: 2))*/
-                      //  onTap: (){}
                     ),
                     _navItem(
                       pos: 3,
                       img: AppImagePath.wallet,
                       isRTL: context.rtl,
                       state: state,
-                      /* onTap: () => bloc.add(
-                        BottomNavEvent.changePage(index: 1))*/
-                      //   onTap: (){}
                     ),
                     _navItem(
                       pos: 4,
                       img: AppImagePath.profile,
                       isRTL: context.rtl,
                       state: state,
-                      /*  onTap: () => bloc.add(
-                        BottomNavEvent.changePage(index: 0))*/
-                      //   onTap: (){}
                     ),
                   ],
-                  color: Colors.white,
-                  buttonBackgroundColor: Colors.white,
-                  backgroundColor: AppColors.pageColor,
-                  animationCurve: Curves.easeInOut,
+                  color: AppColors.whiteColor,
+                  buttonBackgroundColor: AppColors.whiteColor,
+                  backgroundColor: Colors.transparent,
+                  animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) {
                     bloc.add(BottomNavEvent.changePage(index: index));
@@ -213,7 +206,7 @@ class BottomNavScreenWidget extends StatelessWidget {
               ? const SizedBox()
               : state.cartCount == 0
                   ? const SizedBox()
-                  : Positioned(
+                  :state.index != 2 ? Positioned(
                       top: 5,
                       right: isRTL ? null : 0,
                       left: isRTL ? 0 : null,
@@ -247,7 +240,46 @@ class BottomNavScreenWidget extends StatelessWidget {
 
                         ],
                       ),
-                    ),
+                    ) : SizedBox(),
+
+         /* pos == 2 && state.isAnimation ? Container(
+            height: 50,
+            width: 50,
+            child: GlitterStack(
+              //  backgroundColor: AppColors.mainColor,
+              minSize: 20.0,
+              maxSize: 20.0,
+              interval: Duration(milliseconds: 300),
+              duration: Duration(milliseconds: 300),
+              inDuration: Duration(milliseconds: 300),
+              outDuration: Duration(milliseconds: 300),
+              maxOpacity: 0.7,
+              children: [
+                Glitters(),
+                Glitters(
+                  color: Colors.lime,
+                  delay: Duration(milliseconds: 300),
+                ),
+                Glitters(
+                  color: Colors.white,
+                  delay: Duration(milliseconds: 400),
+                ),
+                Glitters(
+                  color: Colors.orange,
+                  delay: Duration(milliseconds: 800),
+                ),
+                Glitters(
+                  color: AppColors.mainColor,
+                  delay: Duration(milliseconds: 100),
+                ),
+
+                Glitters(
+                  color: AppColors.mainColor,
+                  delay: Duration(milliseconds: 800),
+                ),
+              ],
+            ),
+          ) : SizedBox(),*/
         ],
       ),
     );

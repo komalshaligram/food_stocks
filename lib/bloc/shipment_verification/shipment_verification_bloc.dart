@@ -14,7 +14,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/themes/app_colors.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 part 'shipment_verification_event.dart';
@@ -86,29 +85,39 @@ class ShipmentVerificationBloc
              /*   Navigator.pushNamed(
                     event.context, RouteDefine.bottomNavScreen.name);*/
                emit(state.copyWith(isLoading: true));
-               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.orderScreen.name, (Route route) => route.settings.name == RouteDefine.menuScreen.name);
+                Navigator.pushNamedAndRemoveUntil(
+                    event.context,
+                    RouteDefine.orderScreen.name,
+                    (Route route) =>
+                        route.settings.name == RouteDefine.menuScreen.name);
 
-
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
-                    bgColor: AppColors.mainColor);
+                    title: AppStrings.getLocalizedStrings(
+                        response[AppStrings.messageString]
+                            .toString()
+                            .toLocalization(),
+                        event.context),
+                    type: SnackBarType.SUCCESS);
               } else {
-
-
                emit(state.copyWith(isLoading: true));
-                showSnackBar(
+                CustomSnackBar.showSnackBar(
                     context: event.context,
-                    title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(),event.context),
-                    bgColor: AppColors.mainColor);
+                    title: AppStrings.getLocalizedStrings(
+                        response[AppStrings.messageString]
+                            .toString()
+                            .toLocalization(),
+                        event.context),
+                    type: SnackBarType.SUCCESS);
               }
             } on ServerException { emit(state.copyWith(isLoading: true));}
           } else {
            emit(state.copyWith(isLoading: true));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.signature_missing}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.signature_missing}',
+                type: SnackBarType.FAILURE);
           }
         }
       }

@@ -11,7 +11,6 @@ import 'package:food_stock/data/model/res_model/profile_details_res_model/profil
 import 'package:food_stock/data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
 import 'package:food_stock/ui/utils/app_utils.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -109,10 +108,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               }
             } on ServerException {
               emit(state.copyWith(isFileUploading: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: '${AppLocalizations.of(event.context)!.please_enter_email}',
-                  bgColor: AppColors.redColor);
+                  title:
+                      '${AppLocalizations.of(event.context)!.please_enter_email}',
+                  type: SnackBarType.FAILURE);
             } catch (e) {
               emit(state.copyWith(isFileUploading: false));
             }
@@ -120,10 +120,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             emit(state.copyWith(
                 isFileSizeExceeds: true, isFileUploading: false));
             emit(state.copyWith(isFileSizeExceeds: false));
-            // showSnackBar(
+            // CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: AppStrings.fileSizeLimit500KBString,
-            //     bgColor: AppColors.redColor);
+            //     type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _getBusinessTypeListEvent) {
@@ -222,10 +222,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               );
             } else {
               emit(state.copyWith(isUpdating: false));
-              showSnackBar(
+              CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                  bgColor: AppColors.redColor);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -253,22 +256,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               debugPrint('update profile image req________${response}');
               imgUrl = response.data!.client!.profileImage.toString();
             } else {
-              showSnackBar(
-                  context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                  bgColor: AppColors.redColor);
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
               return;
             }
           } on ServerException {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:'${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
             return;
           } catch (e) {
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
             return;
           }
         }
@@ -321,25 +330,27 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (response.status == 200) {
             await preferences.setUserName(name: state.ownerNameController.text);
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            Navigator.pop(event.context);
+            CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.updated_successfully}',
-                bgColor: AppColors.mainColor);
-            Navigator.pop(event.context);
+                type: SnackBarType.SUCCESS);
           } else {
             emit(state.copyWith(isLoading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              title:
+                  '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+              type: SnackBarType.FAILURE);
         }
       } else if (event is _deleteFileEvent) {
         try {
@@ -347,10 +358,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return;
           } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
             emit(state.copyWith(UserImageUrl: '', image: File('')));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:'${AppLocalizations.of(event.context)!.removed_successfully}',
-                bgColor: AppColors.mainColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.removed_successfully}',
+                type: SnackBarType.SUCCESS);
             return;
           }
           emit(state.copyWith(isFileUploading: true));
@@ -366,23 +378,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(UserImageUrl: '', image: File('')));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: '${AppLocalizations.of(event.context)!.removed_successfully}',
-                bgColor: AppColors.mainColor);
+                title:
+                    '${AppLocalizations.of(event.context)!.removed_successfully}',
+                type: SnackBarType.SUCCESS);
           } else {
             emit(state.copyWith(isFileUploading: false));
-            showSnackBar(
+            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: response.message ?? '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                bgColor: AppColors.redColor);
+                title: response.message ??
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.FAILURE);
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          showSnackBar(
+          CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              bgColor: AppColors.redColor);
+              title:
+                  '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+              type: SnackBarType.FAILURE);
         }
       }
     });
