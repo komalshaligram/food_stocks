@@ -19,7 +19,7 @@ String planogramResModelToJson(PlanogramResModel data) =>
 class PlanogramResModel with _$PlanogramResModel {
   const factory PlanogramResModel({
     @JsonKey(name: "status") int? status,
-    @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "data") List<PlanogramDatum>? data,
     @JsonKey(name: "metaData") MetaData? metaData,
     @JsonKey(name: "message") String? message,
   }) = _PlanogramResModel;
@@ -29,17 +29,18 @@ class PlanogramResModel with _$PlanogramResModel {
 }
 
 @freezed
-class Datum with _$Datum {
-  const factory Datum({
+class PlanogramDatum with _$PlanogramDatum {
+  const factory PlanogramDatum({
     @JsonKey(name: "planogramproducts")
     List<Planogramproduct>? planogramproducts,
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "planogramName") String? planogramName,
     @JsonKey(name: "fromDate") DateTime? fromDate,
     @JsonKey(name: "untilDate") DateTime? untilDate,
-  }) = _Datum;
+  }) = _PlanogramDatum;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+  factory PlanogramDatum.fromJson(Map<String, dynamic> json) =>
+      _$PlanogramDatumFromJson(json);
 }
 
 @freezed
