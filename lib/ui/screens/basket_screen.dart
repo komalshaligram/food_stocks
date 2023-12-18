@@ -339,7 +339,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   child: Center(
                                       child: Text(
                                         AppLocalizations.of(context)!.cart_empty,
-                                    style: AppStyles.rkRegularTextStyle(
+                                    style: AppStyles.pVRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w400),
@@ -467,8 +467,8 @@ class BasketScreenWidget extends StatelessWidget {
                            } else {
                              return Center(
                                child: Container(
-                                 width: 80,
-                                 height: 80,
+                                 width: 100,
+                                 height: 100,
                                  child: CupertinoActivityIndicator(
                                    color: AppColors
                                        .blackColor,

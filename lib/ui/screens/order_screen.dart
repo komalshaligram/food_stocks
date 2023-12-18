@@ -115,7 +115,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                   child: Center(
                                       child: Text(
                                     AppLocalizations.of(context)!.no_data,
-                                    style: AppStyles.rkRegularTextStyle(
+                                    style: AppStyles.pVRegularTextStyle(
                                         size: AppConstants.normalFont,
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w400),

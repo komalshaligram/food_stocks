@@ -144,15 +144,24 @@ class HomeScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         )
-                                      : SvgPicture.asset(
-                                          AppImagePath.placeholderProfile,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.scaleDown,
-                                          // colorFilter: ColorFilter.mode(
-                                          //     AppColors.mainColor,
-                                          //     BlendMode.dstIn),
-                                        ) /*Image.asset(
+                                      : Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.whiteColor,
+                                            width: 5),
+                                        borderRadius:
+                                        BorderRadius.circular(40)),
+                                    child: SvgPicture.asset(
+                                      AppImagePath.placeholderProfile,
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.scaleDown,
+                                      // colorFilter: ColorFilter.mode(
+                                      //     AppColors.mainColor,
+                                      //     BlendMode.dstIn),
+                                    ),
+                                  ),
+                                  /*Image.asset(
                                           AppImagePath.defaultProfileImage,
                                           height: 60,
                                           width: 60,
@@ -163,7 +172,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           size: 45,
                                           color: AppColors.whiteColor,
                                         )*/
-                                  ,
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
@@ -395,8 +403,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             BalanceIndicator(
                                                 pendingBalance: formatter(
                                                     state.balance.toString()),
-                                                expense: 100 -
-                                                    state.expensePercentage,
+                                                expense: state.expensePercentage,
                                                 totalBalance: 100),
                                           ],
                                         )),
@@ -1628,7 +1635,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             .read<HomeBloc>()
                                                             .add(HomeEvent
                                                                 .supplierSelectionEvent(
-                                                            supplierIndex:
+                                                                    supplierIndex:
                                                                         index,
                                                                     context:
                                                                         context,
