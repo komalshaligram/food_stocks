@@ -73,7 +73,7 @@ class ProfileScreenWidget extends StatelessWidget {
         if (state.isFileSizeExceeds) {
           CustomSnackBar.showSnackBar(
               context: context,
-              title: '${AppLocalizations.of(context)!.please_enter_email}',
+              title: '${AppLocalizations.of(context)!.file_size_must_be_less_then}',
               type: SnackBarType.FAILURE);
         }
       },
