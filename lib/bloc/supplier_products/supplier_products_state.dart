@@ -5,7 +5,7 @@ class SupplierProductsState with _$SupplierProductsState {
   const factory SupplierProductsState({
     required String supplierId,
     required String search,
-    required List<Datum> productList,
+    required List<SupplierDatum> productList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,

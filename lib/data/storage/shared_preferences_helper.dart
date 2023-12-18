@@ -17,6 +17,10 @@ class SharedPreferencesHelper {
   static const String phoneNumber = 'phoneNumber';
   static const String walletId = 'walletId';
 
+  // static const String userCartProducts = 'userCartProducts';
+  // static const String userCartProductIds = 'userCartProductIds';
+  // static const String userCartProductQuantity = 'userCartProductQuantity';
+
   final SharedPreferences prefs;
 
   SharedPreferencesHelper({required this.prefs});
@@ -41,6 +45,9 @@ class SharedPreferencesHelper {
       await prefs.remove(lang);
       await prefs.remove(userLoggedIn);
       await prefs.remove(appVersion);
+      // await prefs.remove(userCartProducts);
+      // await prefs.remove(userCartProductIds);
+      // await prefs.remove(userCartProductQuantity);
       await prefs.remove(fcmToken);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
@@ -112,6 +119,19 @@ class SharedPreferencesHelper {
     await prefs.setString(walletId, UserWalletId);
   }
 
+  // Future<void> setCartProductIdList(
+  //     {required List<String> cartProductIds}) async {
+  //   await prefs.setStringList(userCartProductIds, cartProductIds);
+  // }
+  //
+  // Future<void> setCartProductList({required List<String> cartProducts}) async {
+  //   await prefs.setStringList(userCartProducts, cartProducts);
+  // }
+  //
+  // Future<void> setCartProductQuantityList({required List<String> cartProductQuantityList}) async {
+  //   await prefs.setStringList(userCartProductQuantity, cartProductQuantityList);
+  // }
+
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
   }
@@ -171,4 +191,16 @@ class SharedPreferencesHelper {
   String getWalletId() {
     return prefs.getString(walletId) ?? '';
   }
+
+// List<String> getCartProductIdList() {
+//   return prefs.getStringList(userCartProductIds) ?? [];
+// }
+//
+// List<String> getCartProductList() {
+//   return prefs.getStringList(userCartProducts) ?? [];
+// }
+//
+// List<String> getCartProductQuantityList() {
+//   return prefs.getStringList(userCartProductQuantity) ?? [];
+// }
 }

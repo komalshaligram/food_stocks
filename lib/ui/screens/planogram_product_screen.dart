@@ -31,8 +31,8 @@ class PlanogramProductScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => PlanogramProductBloc()
         ..add(PlanogramProductEvent.getPlanogramProductsEvent(
-            planogram:
-                args?[AppStrings.planogramProductsParamString] ?? Datum())),
+            planogram: args?[AppStrings.planogramProductsParamString] ??
+                PlanogramDatum())),
       child: PlanogramProductScreenWidget(),
     );
   }

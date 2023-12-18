@@ -4,7 +4,7 @@ part of 'company_products_bloc.dart';
 class CompanyProductsState with _$CompanyProductsState {
   const factory CompanyProductsState({
     required String companyId,
-    required List<Datum> productList,
+    required List<CompanyDatum> productList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
