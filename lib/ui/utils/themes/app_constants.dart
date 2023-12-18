@@ -78,6 +78,9 @@ class AppConstants{
   //bottom nav space
   static const double bottomNavSpace = 30;
 
+  //product details bottom sheet height
+  static const double bottomSheetInitHeight = 0.8;
+
   //pagination
   static const int defaultPageLimit = 6;
   static const int supplierPageLimit = 18;

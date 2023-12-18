@@ -81,8 +81,9 @@ class ProfileScreenWidget extends StatelessWidget {
         builder: (context, state) {
           debugPrint('image   1   ${state.image}');
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
+              surfaceTintColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () {
                     if (!state.isUpdate) {

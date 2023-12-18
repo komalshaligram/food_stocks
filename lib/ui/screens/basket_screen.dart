@@ -490,14 +490,12 @@ class BasketScreenWidget extends StatelessWidget {
                              Alignment
                                  .center,
                              child: Text(
-                               AppStrings
-                                   .failedToLoadString,
-                               style: AppStyles.rkRegularTextStyle(
-                                   size: AppConstants
-                                       .font_14,
-                                   color:
-                                   AppColors.textColor),
-                             ),
+                               AppStrings.failedToLoadString,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_14,
+                                          color: AppColors.textColor),
+                                      textAlign: TextAlign.center,
+                                    ),
                            );
                          },
                         ),

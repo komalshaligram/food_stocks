@@ -59,6 +59,9 @@ class CustomSnackBar {
       ).show(context).whenComplete(() {
         isSnackBarOpen = false;
         debugPrint('isSnackBarOpen after = $isSnackBarOpen');
+      }).catchError((err) {
+        debugPrint('snackbar err = $err');
+        isSnackBarOpen = false;
       });
     }
     // final snackBar = SnackBar(
