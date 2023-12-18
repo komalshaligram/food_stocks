@@ -57,6 +57,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
+              surfaceTintColor: AppColors.whiteColor,
               backgroundColor: Colors.transparent,
               elevation: 0,
               titleSpacing: 0,

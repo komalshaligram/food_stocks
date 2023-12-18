@@ -887,18 +887,22 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               (MediaQuery.of(context).viewPadding.top /
                   getScreenHeight(context)),
           minChildSize: 0.4,
-          initialChildSize: 0.7,
+          initialChildSize: AppConstants.bottomSheetInitHeight,
           shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
-              create: (context) => ProductDetailsBloc()..add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue))..add(ProductDetailsEvent.getBottomSheetDataEvent(note: radioValue == 4 ?   issue ?? '' : '')),
+              create: (context) => ProductDetailsBloc()
+                ..add(ProductDetailsEvent.radioButtonEvent(
+                    selectRadioTile: radioValue))
+                ..add(ProductDetailsEvent.getBottomSheetDataEvent(
+                    note: radioValue == 4 ? issue ?? '' : '')),
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
                   return Container(
-                    padding:
-                    EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
+                        color: AppColors.whiteColor,
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30),topRight: Radius.circular(AppConstants.radius_30))
                     ),
                     child: SingleChildScrollView(

@@ -29,17 +29,13 @@ class SupplierScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Map?;
+        ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('supplier args = $args');
     return BlocProvider(
-      create: (context) =>
-      SupplierBloc()
+      create: (context) => SupplierBloc()
         ..add(SupplierEvent.setSearchEvent(
-            search: args?[AppStrings.searchString] ?? ''))..add(
-          SupplierEvent.getSuppliersListEvent(context: context)),
+            search: args?[AppStrings.searchString] ?? ''))
+        ..add(SupplierEvent.getSuppliersListEvent(context: context)),
       child: SupplierScreenWidget(),
     );
   }
@@ -192,7 +188,7 @@ class SupplierScreenWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: CachedNetworkImage(
-                  imageUrl:"${AppUrls.baseFileUrl}$supplierLogo",
+                  imageUrl: "${AppUrls.baseFileUrl}$supplierLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
                   placeholder: (context, url) => CommonShimmerWidget(
@@ -202,10 +198,8 @@ class SupplierScreenWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                         borderRadius: BorderRadius.only(
-                            topLeft:
-                            Radius.circular(AppConstants.radius_10),
-                            topRight:
-                            Radius.circular(AppConstants.radius_10)),
+                            topLeft: Radius.circular(AppConstants.radius_10),
+                            topRight: Radius.circular(AppConstants.radius_10)),
                       ),
                     ),
                   ),

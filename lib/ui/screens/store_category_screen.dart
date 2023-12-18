@@ -1084,7 +1084,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     .top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
-            initialChildSize: 0.7,
+            initialChildSize: AppConstants.bottomSheetInitHeight,
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
@@ -1092,6 +1092,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   value: context.read<StoreCategoryBloc>(),
                   child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
                     builder: (context, state) {
+                      final GlobalKey _contentKey = GlobalKey();
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -1106,6 +1107,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
+                              // contentKey: _contentKey,
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<StoreCategoryBloc>().add(
@@ -1116,8 +1118,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               [
                                 state.productDetails.first.mainImage ??
                                     '',
-                                ...state.productDetails.first.images?.map((
-                                    image) => image.imageUrl ?? '') ?? []
+                                ...state.productDetails.first.images?.map((image) => image.imageUrl ?? '') ?? []
                               ],
                               productName:
                               state.productDetails.first.productName ??

@@ -86,6 +86,7 @@ class FileUploadScreenWidget extends StatelessWidget {
               backgroundColor: AppColors.whiteColor,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
+                surfaceTintColor: AppColors.whiteColor,
                 elevation: 0,
                 titleSpacing: 0,
                 leadingWidth: 60,
