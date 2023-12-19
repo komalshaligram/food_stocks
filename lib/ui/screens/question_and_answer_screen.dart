@@ -104,6 +104,7 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return qnaItem(
+                                          context: context,
                                           index: index,
                                           question:
                                               state.qnaList[index].question ??
@@ -143,7 +144,10 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
   }
 
   Widget qnaItem(
-      {required int index, required String question, required String answer}) {
+      {required BuildContext context,
+      required int index,
+      required String question,
+      required String answer}) {
     return DelayedWidget(
       // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
       child: Container(
@@ -162,38 +166,42 @@ class QuestionAndAnswerScreenWidget extends StatelessWidget {
               BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
         clipBehavior: Clip.hardEdge,
-        child: ExpansionTile(
-          backgroundColor: Colors.transparent,
-          collapsedIconColor: AppColors.greyColor,
-          iconColor: AppColors.mainColor,
-          title: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-            child: Text(
-              question,
-              style: AppStyles.rkBoldTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          children: [
-            Container(
-              color: AppColors.lightBorderColor.withOpacity(0.5),
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            backgroundColor: Colors.transparent,
+            collapsedIconColor: AppColors.greyColor,
+            iconColor: AppColors.mainColor,
+            title: Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.padding_5,
-                  vertical: AppConstants.padding_5),
-              child: ListTile(
-                tileColor: AppColors.lightBorderColor.withOpacity(0.5),
-                title: Text(
-                  answer,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14, color: AppColors.blackColor),
+                  horizontal: AppConstants.padding_8),
+              child: Text(
+                question,
+                style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.smallFont,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-          ],
+            children: [
+              Container(
+                color: AppColors.lightBorderColor.withOpacity(0.5),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_5,
+                    vertical: AppConstants.padding_5),
+                child: ListTile(
+                  tileColor: AppColors.lightBorderColor.withOpacity(0.5),
+                  title: Text(
+                    answer,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.blackColor),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

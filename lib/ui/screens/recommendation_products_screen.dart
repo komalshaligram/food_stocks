@@ -338,7 +338,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                 (MediaQuery.of(context).viewPadding.top /
                     getScreenHeight(context)),
             minChildSize: 0.4,
-            initialChildSize: 0.7,
+            initialChildSize: AppConstants.bottomSheetInitHeight,
             //  shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
@@ -361,6 +361,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
+                              // contentKey: _contentKey,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
                                     context

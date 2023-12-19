@@ -62,28 +62,28 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           debugPrint('recommendation products req = ${request.toJson()}');
           final res = await DioClient(event.context)
               .post(AppUrls.getRecommendationProductsUrl,
-              data: request.toJson(),
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
+                  data: request.toJson(),
+                  options: Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                          'Bearer ${preferencesHelper.getAuthToken()}',
+                    },
+                  ));
           PreviousOrderProductsResModel response =
-          PreviousOrderProductsResModel.fromJson(res);
+              PreviousOrderProductsResModel.fromJson(res);
           debugPrint(
               'recommendation Products res = ${response.previousProductData}');
           if (response.status == 200) {
             List<PreviousOrderProductData> previousOrderProductsList =
-            state.previousOrderProductsList.toList(growable: true);
+                state.previousOrderProductsList.toList(growable: true);
             previousOrderProductsList
                 .addAll(response.previousProductData ?? []);
             List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
+                state.productStockList.toList(growable: true);
             productStockList.addAll(response.previousProductData?.map(
                     (recommendationProduct) => ProductStockModel(
-                    productId: recommendationProduct.id ?? '',
-                    stock: recommendationProduct.productStock ?? 0)) ??
+                        productId: recommendationProduct.id ?? '',
+                        stock: recommendationProduct.productStock ?? 0)) ??
                 []);
             debugPrint(
                 'new product list len = ${previousOrderProductsList.length}');
@@ -91,9 +91,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 'new product stock list len = ${productStockList.length}');
             debugPrint(
                 'new product stock list len = ${productStockList.where((element) {
-                  debugPrint('ids = ${element.productId}');
-                  return true;
-                })}}');
+              debugPrint('ids = ${element.productId}');
+              return true;
+            })}}');
             emit(state.copyWith(
                 previousOrderProductsList: previousOrderProductsList,
                 productStockList: productStockList,
@@ -102,7 +102,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 isLoadMore: false));
             emit(state.copyWith(
                 isBottomOfProducts: state.previousOrderProductsList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
+                        (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           } else {
@@ -143,7 +143,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             debugPrint(
                 'id = ${state.productStockList.firstWhere((productStock) => productStock.productId == event.productId).productId}\n id = ${event.productId}');
             int productStockUpdateIndex = state.productStockList.indexWhere(
-                    (productStock) => productStock.productId == event.productId);
+                (productStock) => productStock.productId == event.productId);
             debugPrint('product stock update index = $productStockUpdateIndex');
             debugPrint(
                 'product stock = ${state.productStockList[productStockUpdateIndex].stock}');
@@ -153,59 +153,59 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
             supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) => ProductSupplierModel(
-              supplierId: supplier.supplierId ?? '',
-              companyName: supplier.supplierCompanyName ?? '',
-              basePrice:
-              double.parse(supplier.productPrice ?? '0.0'),
-              stock: int.parse(supplier.productStock ?? '0'),
-              selectedIndex: (supplier.supplierId ?? '') ==
-                  state
-                      .productStockList[productStockUpdateIndex]
-                      .productSupplierIds
-                  ? supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
-                        (sale) =>
-                    sale.saleId ==
-                        state
-                            .productStockList[
-                        productStockUpdateIndex]
-                            .productSaleId,
-                    orElse: () => SaleProduct(),
-                  ) ??
-                      SaleProduct()) ==
-                  -1
-                  ? -2
-                  : supplier.saleProduct?.indexOf(
-                  supplier.saleProduct?.firstWhere(
-                        (sale) =>
-                    sale.saleId ==
-                        state
-                            .productStockList[
-                        productStockUpdateIndex]
-                            .productSaleId,
-                    orElse: () => SaleProduct(),
-                  ) ??
-                      SaleProduct()) ??
-                  -1
-                  : -1,
-              supplierSales: supplier.saleProduct
-                  ?.map((sale) => SupplierSaleModel(
-                  saleId: sale.saleId ?? '',
-                  saleName: sale.saleName ?? '',
-                  saleDescription:
-                  parse(sale.salesDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',
-                  salePrice: double.parse(
-                      sale.discountedPrice ?? '0.0'),
-                  saleDiscount: double.parse(
-                      sale.discountPercentage ?? '0.0')))
-                  .toList() ??
-                  [],
-            ))
-                .toList() ??
+                    ?.map((supplier) => ProductSupplierModel(
+                          supplierId: supplier.supplierId ?? '',
+                          companyName: supplier.supplierCompanyName ?? '',
+                          basePrice:
+                              double.parse(supplier.productPrice ?? '0.0'),
+                          stock: int.parse(supplier.productStock ?? '0'),
+                          selectedIndex: (supplier.supplierId ?? '') ==
+                                  state
+                                      .productStockList[productStockUpdateIndex]
+                                      .productSupplierIds
+                              ? supplier.saleProduct?.indexOf(
+                                          supplier.saleProduct?.firstWhere(
+                                                (sale) =>
+                                                    sale.saleId ==
+                                                    state
+                                                        .productStockList[
+                                                            productStockUpdateIndex]
+                                                        .productSaleId,
+                                                orElse: () => SaleProduct(),
+                                              ) ??
+                                              SaleProduct()) ==
+                                      -1
+                                  ? -2
+                                  : supplier.saleProduct?.indexOf(
+                                          supplier.saleProduct?.firstWhere(
+                                                (sale) =>
+                                                    sale.saleId ==
+                                                    state
+                                                        .productStockList[
+                                                            productStockUpdateIndex]
+                                                        .productSaleId,
+                                                orElse: () => SaleProduct(),
+                                              ) ??
+                                              SaleProduct()) ??
+                                      -1
+                              : -1,
+                          supplierSales: supplier.saleProduct
+                                  ?.map((sale) => SupplierSaleModel(
+                                      saleId: sale.saleId ?? '',
+                                      saleName: sale.saleName ?? '',
+                                      saleDescription:
+                                          parse(sale.salesDescription ?? '')
+                                                  .body
+                                                  ?.text ??
+                                              '',
+                                      salePrice: double.parse(
+                                          sale.discountedPrice ?? '0.0'),
+                                      saleDiscount: double.parse(
+                                          sale.discountPercentage ?? '0.0')))
+                                  .toList() ??
+                              [],
+                        ))
+                    .toList() ??
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             debugPrint(
@@ -234,14 +234,14 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 int supplierSaleIndex = -1;
                 double cheapestPrice = supplierList.first.basePrice;
                 supplierList.forEach(
-                        (supplier) => supplier.supplierSales.forEach((sale) {
-                      if (sale.salePrice < cheapestPrice) {
-                        cheapestPrice = sale.salePrice;
-                        supplierIndex = supplierList.indexOf(supplier);
-                        supplierSaleIndex =
-                            supplier.supplierSales.indexOf(sale);
-                      }
-                    }));
+                    (supplier) => supplier.supplierSales.forEach((sale) {
+                          if (sale.salePrice < cheapestPrice) {
+                            cheapestPrice = sale.salePrice;
+                            supplierIndex = supplierList.indexOf(supplier);
+                            supplierSaleIndex =
+                                supplier.supplierSales.indexOf(sale);
+                          }
+                        }));
                 debugPrint('cheapest = $cheapestPrice');
                 supplierList.forEach((supplier) {
                   if (supplier.basePrice < cheapestPrice) {
@@ -301,7 +301,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
       } else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
@@ -311,14 +311,14 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
-                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                      '${AppLocalizations.of(event.context)!.please_select_supplier}',
                   type: SnackBarType.FAILURE);
               return;
             }
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity +
+                            .quantity +
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -327,20 +327,20 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 type: SnackBarType.FAILURE);
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: productStockList[state.productStockUpdateIndex]
-                        .quantity -
+                            .quantity -
                         1);
             debugPrint(
                 'product quantity = ${productStockList[state.productStockUpdateIndex].quantity}');
@@ -349,7 +349,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
       } else if (event is _UpdateQuantityOfProduct) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: false);
+            state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           String quantityString = event.quantity;
           if (quantityString.length == 2 && quantityString.startsWith('0')) {
@@ -369,14 +369,14 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex].copyWith(
                     quantity: int.tryParse(quantityString.substring(
-                        0, quantityString.length - 1)) ??
+                            0, quantityString.length - 1)) ??
                         0);
             debugPrint(
                 'product max quantity update = ${int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0}');
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
@@ -385,7 +385,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       } else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: false);
+              state.productStockList.toList(growable: false);
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex]
                   .copyWith(note: /*event.newNote*/ state.noteController.text);
@@ -394,33 +394,33 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
       } else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
-            event.isSelectSupplier ?? !state.isSelectSupplier));
+                event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
       } else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList =
-          state.productSupplierList.toList(growable: true);
+              state.productSupplierList.toList(growable: true);
           List<ProductStockModel> productStockList =
-          state.productStockList.toList(growable: true);
+              state.productStockList.toList(growable: true);
 
           productStockList[state.productStockUpdateIndex] =
               productStockList[state.productStockUpdateIndex].copyWith(
                   productSupplierIds:
-                  supplierList[event.supplierIndex].supplierId,
+                      supplierList[event.supplierIndex].supplierId,
                   stock: supplierList[event.supplierIndex].stock,
                   quantity: 1,
                   totalPrice: event.supplierSaleIndex == -2
                       ? supplierList[event.supplierIndex].basePrice
                       : supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .salePrice,
+                          .supplierSales[event.supplierSaleIndex]
+                          .salePrice,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : supplierList[event.supplierIndex]
-                      .supplierSales[event.supplierSaleIndex]
-                      .saleId);
+                          .supplierSales[event.supplierSaleIndex]
+                          .saleId);
           debugPrint(
               'selected stock supplier = ${productStockList[state.productStockUpdateIndex]}');
           supplierList = supplierList
@@ -441,7 +441,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title:
-              '${AppLocalizations.of(event.context)!.please_select_supplier}',
+                  '${AppLocalizations.of(event.context)!.please_select_supplier}',
               type: SnackBarType.FAILURE);
           return;
         }
@@ -501,6 +501,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
+          } catch (e) {
+            debugPrint('err = $e');
+            emit(state.copyWith(isLoading: false));
           }
         } else {
           try {
@@ -553,18 +556,20 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
-              // List<ProductStockModel> productStockList =
-              //     state.productStockList.toList(growable: true);
-              // productStockList[state.productStockUpdateIndex] =
-              //     productStockList[state.productStockUpdateIndex].copyWith(
-              //         note: '',
-              //         quantity: 0,
-              //         productSupplierIds: '',
-              //         totalPrice: 0.0,
-              //         productSaleId: '');
+              List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+              productStockList[state.productStockUpdateIndex] =
+                  productStockList[state.productStockUpdateIndex].copyWith(
+                note: '',
+                isNoteOpen: false,
+                // quantity: 0,
+                // productSupplierIds: '',
+                // totalPrice: 0.0,
+                // productSaleId: '',
+              );
               add(ReorderEvent.setCartCountEvent());
               emit(state.copyWith(
-                  isLoading: false /*, productStockList: productStockList*/));
+                  isLoading: false, productStockList: productStockList));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -593,6 +598,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           } on ServerException {
             debugPrint('url1 = ');
             emit(state.copyWith(isLoading: false));
+          } catch (e) {
+            debugPrint('err = $e');
+            emit(state.copyWith(isLoading: false));
           }
         }
       } else if (event is _SetCartCountEvent) {
@@ -604,7 +612,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _ToggleNoteEvent) {
         List<ProductStockModel> productStockList =
-        state.productStockList.toList(growable: true);
+            state.productStockList.toList(growable: true);
         productStockList[state.productStockUpdateIndex] =
             productStockList[state.productStockUpdateIndex].copyWith(
                 isNoteOpen: !productStockList[state.productStockUpdateIndex]
