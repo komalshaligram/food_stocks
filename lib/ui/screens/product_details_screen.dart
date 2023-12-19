@@ -93,10 +93,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         builder: (context, state) {
           return SafeArea(
             child: Scaffold(
+              backgroundColor: AppColors.pageColor,
               resizeToAvoidBottomInset: false,
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                 child: CommonAppBar(
+                  bgColor: AppColors.pageColor,
                   title: widget.orderNumber.toString(),
                   iconData: Icons.arrow_back_ios_sharp,
                   trailingWidget: Padding(

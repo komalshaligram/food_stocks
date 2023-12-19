@@ -63,9 +63,11 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return SafeArea(
               child: Scaffold(
+                backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
+                bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.shipment_verification,
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Padding(

@@ -46,6 +46,7 @@ class MenuScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
+                bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.menu,
                 iconData: Icons.close,
                 onTap: () {

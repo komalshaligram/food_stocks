@@ -55,6 +55,7 @@ class OTPScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
+                bgColor: AppColors.whiteColor,
                 title: isRegister
                     ? AppLocalizations.of(context)!.register
                     : AppLocalizations.of(context)!.login,

@@ -50,6 +50,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
+              bgColor: AppColors.pageColor,
               title: state.planogramName,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {

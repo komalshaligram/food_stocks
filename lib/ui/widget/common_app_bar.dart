@@ -10,15 +10,16 @@ class CommonAppBar extends StatelessWidget {
   final Widget? trailingWidget;
   final double? width;
   final double? height;
+  final Color bgColor;
 
-  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget ,this.height,this.width});
+   const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget ,this.height,this.width,required this.bgColor});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
-      backgroundColor: AppColors.pageColor,
+      backgroundColor: bgColor,
       surfaceTintColor: AppColors.pageColor,
       leading: Container(
         padding: const EdgeInsets.all(AppConstants.padding_10),
