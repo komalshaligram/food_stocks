@@ -101,6 +101,7 @@ class ProfileScreenWidget extends StatelessWidget {
                 ),
               ),
               backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
               titleSpacing: 0,
               elevation: 0,
             ),

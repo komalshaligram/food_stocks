@@ -59,6 +59,7 @@ class LogInScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
+                bgColor: AppColors.whiteColor,
                 title: state.isRegister
                     ? AppLocalizations.of(context)!.register
                     : AppLocalizations.of(context)!.login,

@@ -65,6 +65,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
+                bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.products,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {

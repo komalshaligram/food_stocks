@@ -135,8 +135,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             ));
 
           } else {
-
-
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
         } on ServerException {}
 

@@ -53,6 +53,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
+              bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.recommended_for_you,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {

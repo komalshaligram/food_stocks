@@ -41,9 +41,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
+              bgColor: AppColors.pageColor,
               title: AppLocalizations.of(context)!.order_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {

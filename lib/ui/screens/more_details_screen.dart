@@ -90,7 +90,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                 style:
                     AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
               ),
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.whiteColor,
               titleSpacing: 0,
               elevation: 0,
             ),
