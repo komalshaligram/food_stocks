@@ -56,7 +56,7 @@ class CustomSnackBar {
               color: AppColors.whiteColor,
               fontWeight: FontWeight.w400),
         ),
-      ).show(context).whenComplete(() {
+      ).show(context).whenComplete(()  {
         isSnackBarOpen = false;
         debugPrint('isSnackBarOpen after = $isSnackBarOpen');
       });

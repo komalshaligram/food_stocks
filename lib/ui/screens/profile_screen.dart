@@ -83,6 +83,8 @@ class ProfileScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+
+              foregroundColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () {
                     if (!state.isUpdate) {
@@ -944,3 +946,57 @@ class ProfileScreenWidget extends StatelessWidget {
    }
 */
 }
+
+/*
+     {
+       senderId: null,
+category: null,
+collapseKey: com.foodstock.dev,
+contentAvailable: false,
+data: {
+         data: {
+           "_id":"657c56f28991f43ea806f844",
+           "messageId":"657c200b244c4ecdb8dd902d",
+"type":"messages",
+"userId":"6565c6845a62a2165f00b085",
+"isRead":false,
+"isSuccess":false,
+"message":{
+             "title":"Sale Sale Sale",
+             "body":"<p><strong>Sale Body</strong></p>",
+"imageUrl":"messageImage/657c200b244c4ecdb8dd902d/1702646632756-flowers19830_1280.webp",
+"link":"undefined/undefined"
+           }
+         }
+         },
+from: 229653257750,
+messageId: 0:1702647551830060%7dcf6cf27dcf6cf2,
+messageType: null,
+mutableContent: false,
+notification: {
+         title: Sale Sale Sale,
+         titleLocArgs: [],
+titleLocKey: null,
+body: <p><strong>Sale Body</strong></p>,
+bodyLocArgs: [],
+bodyLocKey: null,
+android: {
+           channelId: null,
+           clickAction: null,
+           color: null,
+count: null,
+imageUrl: null,
+link: null,
+priority: 0,
+smallIcon: null,
+sound: null,
+ticker: null,
+tag: null,
+visibility: 0
+},
+apple: null,
+web: null},
+sentTime: 1702647551819,
+threadId: null,
+ttl: 2419200
+     }*/

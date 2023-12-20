@@ -22,3 +22,8 @@ samples, guidance on mobile development, and a full API reference.
 
 - for generating localization run below command :
   flutter gen-l10n
+
+# changes in package
+ 
+- curved_navigation_bar
+- flutter_date_range_picker

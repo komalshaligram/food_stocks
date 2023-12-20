@@ -216,7 +216,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                           '${AppLocalizations.of(context)!.registered_successfully}',
                                                       type:
                                                           SnackBarType.SUCCESS);
-                                                  Navigator.popUntil(
+                                                 /* Navigator.popUntil(
                                                       context,
                                                       (route) =>
                                                           route.name ==
@@ -227,7 +227,13 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                       context,
                                                       RouteDefine
                                                           .bottomNavScreen
-                                                          .name);
+                                                          .name);*/
+                                                  Navigator.pushNamedAndRemoveUntil(
+                                                      context,
+                                                      RouteDefine.bottomNavScreen.name,
+                                                          (Route route) =>
+                                                      route.settings.name ==
+                                                          RouteDefine.connectScreen.name);
                                                 },
                                                 bGColor: AppColors.whiteColor,
                                               ),

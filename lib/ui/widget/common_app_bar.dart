@@ -18,7 +18,7 @@ class CommonAppBar extends StatelessWidget {
     return AppBar(
       elevation: 0,
       titleSpacing: 0,
-      backgroundColor: AppColors.pageColor,
+      backgroundColor: AppColors.whiteColor,
       surfaceTintColor: AppColors.pageColor,
       leading: Container(
         padding: const EdgeInsets.all(AppConstants.padding_10),

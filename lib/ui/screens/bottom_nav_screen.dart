@@ -16,7 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
-import 'package:glitters/glitters.dart';
+
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 
@@ -76,8 +76,8 @@ class BottomNavScreenWidget extends StatelessWidget {
                   key: _bottomNavigationKey,
                   index: state.index,
                   height: 60.0,
-                  cartCount: state.cartCount,
-                  isRTL: context.rtl,
+                //  cartCount: state.cartCount,
+                //  isRTL: context.rtl,
                   items: [
                     _navItem(
                       pos: 0,

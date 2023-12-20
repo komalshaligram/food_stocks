@@ -415,11 +415,11 @@ class BasketScreenWidget extends StatelessWidget {
               state.basketProductList[index].isProcess == true ? LinearProgressIndicator(
                       color: AppColors.mainColor,
                       minHeight: 3,
-                      borderRadius: BorderRadius.all(
+                   /*   borderRadius: BorderRadius.all(
                           Radius.circular(
-                              AppConstants.radius_5)),
-                      backgroundColor:
-                      AppColors.mainColor.withOpacity(0.5),
+                              AppConstants.radius_5)),*/
+                value: 1.0,
+                      backgroundColor: AppColors.mainColor.withOpacity(0.5),
                     )
                     : 3.height,
                 Padding(

@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as flutter_local_notifications;
+as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-
 import 'package:html/parser.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -34,44 +32,40 @@ class PushNotificationService {
     print('User granted permission: ${settings.authorizationStatus}');
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
+          (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: $message");
-      //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
+        //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
     );
     if(Platform.isIOS){
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-
     enableIOSNotifications();
     await registerNotificationListeners();
   }
-
   Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
-
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     const AndroidInitializationSettings androidSettings =
     AndroidInitializationSettings('@drawable/ic_launcher1');
     const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
     String? fcmToken='';
 
-
     fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     preferences.setFCMToken(fcmTokenId: fcmToken!);
     const InitializationSettings initSettings =
-        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
@@ -80,59 +74,54 @@ class PushNotificationService {
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
-      debugPrint("push message: ${message?.notification?.toMap().toString()}");
-
+      var data = json.encode(message!.data.toString());
+      debugPrint("message12 : ${message.toMap()}");
+      debugPrint("message123 : ${message.toMap()['data']['data'][0]['message']['imageUrl']}");
+  //     debugPrint("message123 : ${message.data['data']['message']['imageUrl'].toString()}");
+     // PushNotificationModel response = PushNotificationModel.fromJson(message as dynamic);
       final RemoteNotification? notification = message!.notification;
       final AndroidNotification? android = message.notification?.android;
       final iosNotification = message.notification?.apple;
+      debugPrint("message123 : ${data}");
 
+     // debugPrint("message123 : ${message.data['data'][0]['imageUrl'].toString()}");
+   //   debugPrint("message123 : ${response.data?.data?.message?.imageUrl.toString()}");
+    //  debugPrint("Image Url : ${AppUrls.baseFileUrl+message.data['message']['imageUrl']}");
 // If `onMessage` is triggered with a notification, construct our own
 // local notification to show to users using the created channel.
-      if (notification != null) {
+      if(notification != null ){
+        final http.Response response;
         var fileName;
-        if (notification.android?.imageUrl != null ||
-            notification.apple?.imageUrl != null) {
-          final http.Response response;
-          if (Platform.isAndroid && android!.imageUrl != null) {
-            response = await http.get(Uri.parse(android.imageUrl.toString()));
-          } else {
-            response =
-                await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
-          }
-          final dir = await getTemporaryDirectory();
-          // Create an image name
-          fileName = '${dir.path}/image.png';
-          // Save to filesystem
-          final file = File(fileName);
-          await file.writeAsBytes(response.bodyBytes);
-
-          debugPrint("img res: ${response.toString()}");
-          BigPictureStyleInformation bigPictureStyleInformation =
-              BigPictureStyleInformation(
-                  ByteArrayAndroidBitmap.fromBase64String(
-            base64Encode(response.bodyBytes),
-          ));
-        }
+        // if(Platform.isAndroid){
+        response = await http.get(Uri.parse(AppUrls.baseFileUrl+message.data['message']['imageUrl'].toString()));
+        //  }/*else{
+        //  response = await http.get(Uri.parse(iosNotification!.imageUrl.toString()));
+        //  }*/
+        final dir = await getTemporaryDirectory();
+        // Create an image name
+        fileName = '${dir.path}/image.png';
+        // Save to filesystem
+        final file = File(fileName);
+        await file.writeAsBytes(response.bodyBytes);
+        debugPrint("img res: ${response.toString()}");
+        BigPictureStyleInformation  bigPictureStyleInformation =
+        BigPictureStyleInformation(
+            ByteArrayAndroidBitmap.fromBase64String(base64Encode(response.bodyBytes),));
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          parse(notification.title ?? '').body?.text ?? '',
-          parse(notification.body ?? '').body?.text ?? '',
+          parse(notification.title ?? '').text,
+          parse(notification.body ?? '').text ?? '',
           flutter_local_notifications.NotificationDetails(
-            iOS: DarwinNotificationDetails(
-                attachments: fileName == null
-                    ? []
-                    : [DarwinNotificationAttachment(fileName)]),
-            android: AndroidNotificationDetails(
+            iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
+            android:AndroidNotificationDetails(
               channel.id,
               channel.name,
               channelDescription: channel.description,
               icon: android!.smallIcon,
-              styleInformation: fileName == null
-                  ? null
-                  : BigPictureStyleInformation(
-                      FilePathAndroidBitmap(fileName),
-                      hideExpandedLargeIcon: false,
-                    ),
+              styleInformation: BigPictureStyleInformation(
+                FilePathAndroidBitmap(fileName),
+                hideExpandedLargeIcon: false,
+              ),
             ),
           ),
           payload: message.data.toString(),
@@ -140,13 +129,11 @@ class PushNotificationService {
       }
     });
   }
-
   @pragma('vm:entry-point')
   Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message: ${message.messageId}");
     debugPrint("Handling a background message: ${message.data.toString()}");
   }
-
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -155,13 +142,12 @@ class PushNotificationService {
       sound: true,
     );
   }
-
   AndroidNotificationChannel androidNotificationChannel() =>
       const AndroidNotificationChannel(
         'high_importance_channel', // id
         'High Importance Notifications', // title
         description:
-            'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
         importance: Importance.max,
       );
 }

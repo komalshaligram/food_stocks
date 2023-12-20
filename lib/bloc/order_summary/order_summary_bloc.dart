@@ -58,21 +58,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if(event is _orderSendEvent){
         List<Product> ProductReqMap = [];
        emit(state.copyWith(isLoading: true));
-/*        state.orderSummaryList.data?.data?.forEach((element) {
-          debugPrint('supplierId_____${element.suppliers?.id}');
-          debugPrint('product id_____${element.productDetails?.first.id}');
-          debugPrint('sale id_____${element.sales?.id ?? ''}');
-
-
-          ProductReqMap.add(Product(
-            supplierId: element.suppliers?.id,
-            productId: element.productDetails?[0].id,
-             quantity: element.totalQuantity,
-            saleId: element.sales?.id ?? ''
-          ));
-        });*/
-
-
 
         state.CartItemList.data?.data?.forEach((element) {
 
@@ -99,7 +84,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           debugPrint('OrderSendResModel  = $response');
 
           if (response.status == 201) {
-            try {
+           try {
               final res = await DioClient(event.context).post(
                   '${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}',
                   // options:Options(
@@ -112,7 +97,9 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 preferencesHelper.setCartCount(count: 0);
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name);
               }
+              else{
 
+              }
 
             }  on ServerException {}
 

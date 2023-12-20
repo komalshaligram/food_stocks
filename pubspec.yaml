@@ -78,12 +78,12 @@ dependencies:
   carousel_slider: ^4.2.1
   pull_to_refresh: ^2.0.0
   vibration: ^1.8.4
-  animations: ^2.0.8
-  http: ^1.1.2
+
+  http: ^1.1.0
   curved_navigation_bar: ^1.0.3
   audioplayers: ^5.2.1
   liquid_pull_to_refresh: ^3.0.1
-  glitters: ^0.4.0
+
 
   another_flushbar: ^1.12.30
 

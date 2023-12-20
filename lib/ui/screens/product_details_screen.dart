@@ -888,15 +888,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   getScreenHeight(context)),
           minChildSize: 0.4,
           initialChildSize: 0.7,
-          shouldCloseOnMinExtent: true,
+
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc()..add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue))..add(ProductDetailsEvent.getBottomSheetDataEvent(note: radioValue == 4 ?   issue ?? '' : '')),
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
                   return Container(
-                    padding:
-                    EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30),topRight: Radius.circular(AppConstants.radius_30))
@@ -947,106 +946,112 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               borderRadius: BorderRadius.all(
                                   Radius.circular(AppConstants.radius_5)),
                             ),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                              children: [
-                                image != '' ?
-                            Image.network(
-                              '${AppUrls.baseFileUrl}${image}',
-                              width: AppConstants.containerSize_50,
-                              height: AppConstants.containerSize_50,
-                              fit: BoxFit.fill,
-                              loadingBuilder:
-                                  (context,
-                                  child,
-                                  loadingProgress) {
-                                if (loadingProgress ==
-                                    null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child: Container(
-                                      width: AppConstants.containerSize_50,
-                                      height: AppConstants.containerSize_50,
-                                      child: CupertinoActivityIndicator(
-                                        color: AppColors
-                                            .blackColor,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  image != '' ?
+                              Image.network(
+                                '${AppUrls.baseFileUrl}${image}',
+                                width: AppConstants.containerSize_50,
+                                height: AppConstants.containerSize_50,
+                                fit: BoxFit.fill,
+                                loadingBuilder:
+                                    (context,
+                                    child,
+                                    loadingProgress) {
+                                  if (loadingProgress ==
+                                      null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: Container(
+                                        width: AppConstants.containerSize_50,
+                                        height: AppConstants.containerSize_50,
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors
+                                              .blackColor,
+                                        ),
                                       ),
+                                    );
+                                  }
+                                },
+                                errorBuilder:
+                                    (context,
+                                    error,
+                                    stackTrace) {
+                                  return Container(
+                                    width: AppConstants.containerSize_50,
+                                    height: AppConstants.containerSize_50,
+                                    color: AppColors
+                                        .whiteColor,
+                                    alignment:
+                                    Alignment
+                                        .center,
+                                    child: Text(
+                                      AppStrings.failedToLoadString,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants
+                                              .font_14,
+                                          color:
+                                          AppColors.textColor),
                                     ),
                                   );
-                                }
-                              },
-                              errorBuilder:
-                                  (context,
-                                  error,
-                                  stackTrace) {
-                                return Container(
-                                  width: AppConstants.containerSize_50,
-                                  height: AppConstants.containerSize_50,
-                                  color: AppColors
-                                      .whiteColor,
-                                  alignment:
-                                  Alignment
-                                      .center,
-                                  child: Text(
-                                    AppStrings.failedToLoadString,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants
-                                            .font_14,
-                                        color:
-                                        AppColors.textColor),
-                                  ),
-                                );
-                              },
-                            )
-                                    : Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                                  width: AppConstants.containerSize_50,
-                                  height: AppConstants.containerSize_50,
+                                },
+                              )
+                                      : Image.asset(
+                              AppImagePath.imageNotAvailable5,
+                              fit: BoxFit.cover,
+                                    width: AppConstants.containerSize_50,
+                                    height: AppConstants.containerSize_50,
 
-                          ),
-                                //  5.width,
-                                Container(
-                                  width: 100,
-                                  child: Text(
-                                    productName,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      color: AppColors.blackColor,
-                                      size: AppConstants.font_14,
-                                    ),
-                                  ),
-                                ),
-                                //10.width,
-                                Text(
-                                  '${quantity.toString()}${' '}${scale}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                    color: AppColors.blackColor,
-                                    size: AppConstants.font_12,
-                                  ),
-                                ),
-                                //  10.width,
-                                Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: Text(
-                                  /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
-                                    '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
-                                    style: AppStyles.rkRegularTextStyle(
+                                                        ),
+                                  //  5.width,
+                                  Container(
+                                    width: 100,
+                                    child: Text(
+                                      productName,
+                                      style: AppStyles.rkRegularTextStyle(
                                         color: AppColors.blackColor,
                                         size: AppConstants.font_14,
-                                        fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  //10.width,
+                                  Text(
+                                    '${quantity.toString()}${' '}${scale}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor,
+                                      size: AppConstants.font_12,
+                                    ),
+                                  ),
+                                  //  10.width,
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                    /*  '${formatter(price.toString()) + AppLocalizations.of(context)!.currency}',*/
+                                      '${formatNumber(value: price.toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                          color: AppColors.blackColor,
+                                          size: AppConstants.font_14,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           20.height,
-                          Text(
-                            AppLocalizations.of(context)!.problem_detected,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                            child: Text(
+                              AppLocalizations.of(context)!.problem_detected,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.blackColor,
+                              ),
                             ),
                           ),
                           20.height,

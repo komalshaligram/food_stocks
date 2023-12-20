@@ -144,15 +144,21 @@ class HomeScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         )
-                                      : SvgPicture.asset(
-                                          AppImagePath.placeholderProfile,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.scaleDown,
-                                          // colorFilter: ColorFilter.mode(
-                                          //     AppColors.mainColor,
-                                          //     BlendMode.dstIn),
-                                        ) /*Image.asset(
+                                      : Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: AppColors.blackColor),
+                                          borderRadius: BorderRadius.circular(30)
+                                        ),
+                                        child: SvgPicture.asset(
+                                            AppImagePath.placeholderProfile,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.scaleDown,
+                                            // colorFilter: ColorFilter.mode(
+                                            //     AppColors.mainColor,
+                                            //     BlendMode.dstIn),
+                                          ),
+                                      ) /*Image.asset(
                                           AppImagePath.defaultProfileImage,
                                           height: 60,
                                           width: 60,
@@ -412,9 +418,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 child: DashBoardStatsWidget(
                                                     context: context,
                                                     image: AppImagePath.credits,
-                                                    title: AppLocalizations.of(
-                                                            context)!
-                                                        .total_credit,
+                                                    title:'${AppLocalizations.of(context)!.total_credit}',
                                                     value:
                                                         '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
                                               ),

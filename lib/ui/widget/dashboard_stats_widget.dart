@@ -43,12 +43,15 @@ class DashBoardStatsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.mainColor),
-                  maxLines: 2,
-                  overflow: TextOverflow.clip,
+                Container(
+                  height : 25,
+                  child: Text(
+                    title,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_10, color: AppColors.mainColor),
+                    maxLines: 2,
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
                 Directionality(
                   textDirection: TextDirection.ltr,

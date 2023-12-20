@@ -24,10 +24,10 @@ void main() async {
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-   // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
+    // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -45,7 +45,7 @@ void main() async {
       ),
     );
   },
-      (error, stack) =>
+          (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
@@ -69,21 +69,22 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(),
+      create: (context) =>
+      LocaleProvider()
+        ..setAppLocale(),
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          locale: Provider.of<LocaleProvider>(context).locale,
+          locale: Provider
+              .of<LocaleProvider>(context)
+              .locale,
           title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
           initialRoute: RouteDefine.splashScreen.name,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           theme: ThemeData(
+            cardColor: AppColors.whiteColor,
             primarySwatch: Colors.green,
-            snackBarTheme: SnackBarThemeData(
-              backgroundColor: AppColors.mainColor,
-              actionTextColor: AppColors.textColor,
-            ),
           ),
           scrollBehavior: MyBehavior(),
           onGenerateRoute: AppRouting.generateRoute,
@@ -92,3 +93,59 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+/*
+
+{
+"senderId": null,
+"category": null,
+"collapseKey": "com.foodstock.dev",
+"contentAvailable": false,
+"data": {
+"data":
+{
+"_id":"657c51518991f43ea806ecdc",
+"messageId":"657c200b244c4ecdb8dd902d",
+"type":"messages",
+"userId":"6565c6845a62a2165f00b085",
+"isRead":false,
+"isSuccess":false,
+"message":{
+"title":"Sale Sale Sale",
+"body":"<p><strong>Sale Body</strong></p>",
+"imageUrl":"","link":"undefined/undefined"
+}
+}
+},
+"from": "229653257750",
+"messageId": "0:1702646110700210%7dcf6cf27dcf6cf2",
+"messageType": null,
+"mutableContent": false,
+"notification":{
+"title": "Sale Sale Sale",
+"titleLocArgs": [],
+"titleLocKey": null,
+"body":" <p><strong>Sale Body</strong></p>",
+"bodyLocArgs": [],
+"bodyLocKey": null,
+"android": {
+"channelId": null,
+"clickAction": null,
+"color": null,
+"count": null,
+"imageUrl": null,
+"link": null,
+"priority": 0,
+"smallIcon": null,
+"sound": null,
+"ticker": null,
+"tag": null,
+"visibility": 0
+},
+"apple": null,
+"web": null
+},
+"sentTime": "1702646110690",
+"threadId": null,
+"ttl": "2419200"
+}*/

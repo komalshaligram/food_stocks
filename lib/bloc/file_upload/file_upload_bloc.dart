@@ -333,13 +333,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               //     type: SnackBarType.FAILURE);
             }
           } else {
-            emit(state.copyWith(
-                isUploadLoading: false, isFileSizeExceeds: true));
+            emit(state.copyWith(isUploadLoading: false, isFileSizeExceeds: true));
             emit(state.copyWith(isFileSizeExceeds: false));
             // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: AppStrings.fileSizeLimitString,
             //     type: SnackBarType.FAILURE);
+
           }
         }
       } else if (event is _uploadApiEvent) {
