@@ -59,20 +59,20 @@ class AppConfig {
     debugPrint('STARTED WITH FLAVOR ${AppConfigManager.appConfig!.flavor}');
   }
 //
-// static Future<String> getAppUrl() async {
-//   final String? flavor =
-//       await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
-//   switch (flavor) {
-//     case 'dev':
-//       return AppConfig.dev().appBaseUrl;
-//     case 'stag':
-//       return AppConfig.stag().appBaseUrl;
-//     case 'prod':
-//       return AppConfig.prod().appBaseUrl;
-//     default:
-//       return AppConfig.dev().appBaseUrl;
-//   }
-// }
+ static Future<String> getAppUrl() async {
+   final String? flavor =
+       await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+   switch (flavor) {
+     case 'dev':
+       return AppConfig.dev().appBaseUrl;
+     case 'stag':
+       return AppConfig.stag().appBaseUrl;
+     case 'prod':
+       return AppConfig.prod().appBaseUrl;
+     default:
+       return AppConfig.dev().appBaseUrl;
+   }
+ }
 }
 
 class AppConfigManager {

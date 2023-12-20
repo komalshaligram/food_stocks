@@ -20,12 +20,11 @@ import 'app_config.dart';
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await PushNotificationService().setupInteractedMessage();
+
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-   // await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
@@ -61,7 +60,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await PushNotificationService().setupInteractedMessage(context);
       await AppConfig.initializeAppConfig(context);
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     super.initState();
   }
