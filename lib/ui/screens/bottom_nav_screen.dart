@@ -16,7 +16,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
-import 'package:glitters/glitters.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 

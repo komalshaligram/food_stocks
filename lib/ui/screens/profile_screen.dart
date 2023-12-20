@@ -83,7 +83,6 @@ class ProfileScreenWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(
-              surfaceTintColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () {
                     if (!state.isUpdate) {
