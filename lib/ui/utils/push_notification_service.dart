@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
-  Future<void> setupInteractedMessage() async {
+  Future<void> setupInteractedMessage(BuildContext context) async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     NotificationSettings settings = await firebaseMessaging.requestPermission(
@@ -46,18 +48,29 @@ class PushNotificationService {
     }
 
     enableIOSNotifications();
-    await registerNotificationListeners();
+    await registerNotificationListeners(context);
   }
 
-  Future<void> registerNotificationListeners() async {
+
+  Future<void> registerNotificationListeners(BuildContext context) async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+
     const AndroidInitializationSettings androidSettings =
     AndroidInitializationSettings('@drawable/ic_launcher1');
+    if(Platform.isIOS){
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: true,
@@ -67,7 +80,7 @@ class PushNotificationService {
     String? fcmToken='';
 
 
-    fcmToken = Platform.isAndroid?await FirebaseMessaging.instance.getToken():await FirebaseMessaging.instance.getAPNSToken();
+    fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -85,46 +98,64 @@ class PushNotificationService {
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
-      debugPrint('noti:${notification!.toMap().toString()}');
       debugPrint('data:${data.toString()}');
       if(data != null ){
         final http.Response response;
         var fileName;
         if(data['message']['imageUrl']!=null){
           response = await http.get(Uri.parse(AppUrls.baseFileUrl+data['message']['imageUrl'].toString()));
-          final dir = await getTemporaryDirectory();
+          Directory dir;
+          if (Platform.isAndroid) {
+            dir = await getTemporaryDirectory();
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
           // Create an image name
           fileName = '${dir.path}/image.png';
           // Save to filesystem
           final file = File(fileName);
           await file.writeAsBytes(response.bodyBytes);
         }
+       /* if(data['message']['link']!=null){
+        manageNavigation(context,data['message']['link'].toString());
+        }*/
 
         String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
         String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-        debugPrint('noti:${data['message']['body'].toString()}');
-        debugPrint("body: ${body}");
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-         title,
-          body,
-          flutter_local_notifications.NotificationDetails(
-              iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
-            android:AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: android!.smallIcon,
-              styleInformation: BigPictureStyleInformation(
-                FilePathAndroidBitmap(fileName),
-            hideExpandedLargeIcon: false,
-          ),
-            ),
-          ),
-          payload: message.data.toString(),
-        );
+        showNotification(notification.hashCode,title,body,fileName,channel.id,channel.name,channel.description??'',android!.smallIcon,);
       }
     });
+  }
+
+showNotification(int id,String title,String body,String fileName,String channelId,String channelName,String channelDesc,String? androidIcon){
+  flutterLocalNotificationsPlugin.show(
+   id,
+    title,
+    body,
+    flutter_local_notifications.NotificationDetails(
+      iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
+      android:AndroidNotificationDetails(
+        channelId,
+        channelName,
+        channelDescription: channelDesc,
+        icon: androidIcon,
+        styleInformation: BigPictureStyleInformation(
+          FilePathAndroidBitmap(fileName),
+          hideExpandedLargeIcon: false,
+        ),
+      ),
+    ),
+    // payload: message.data.toString(),
+  );
+}
+   manageNavigation(BuildContext context,String linkToPage){
+     if( linkToPage == 'dashboard'){
+       Navigator.pushNamed(context, RouteDefine.homeScreen.name);
+     }else if(linkToPage == 'orders'){
+       Navigator.pushNamed(context, RouteDefine.orderScreen.name);
+     }else if(linkToPage == 'message'){
+       Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+     }
   }
 
   @pragma('vm:entry-point')
@@ -150,4 +181,5 @@ class PushNotificationService {
             'This channel is used for important notifications.', // description
         importance: Importance.max,
       );
+
 }

@@ -112,7 +112,7 @@ class DioClient {
             "userId" : preferencesHelper.getUserId()
           });
 
-          if(response1. statusCode == 200 && !isLogOut) {
+          if(response1.statusCode == 200 && !isLogOut) {
             isLogOut = true;
               await preferencesHelper.setUserLoggedIn();
               debugPrint('Token Expired = ${response1.data}');
@@ -129,7 +129,6 @@ class DioClient {
                   type: SnackBarType.SUCCESS);
             }
           }
-
         } else {
         throw _createErrorEntity(e, context: _context);
         }
