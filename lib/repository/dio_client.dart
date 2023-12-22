@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -85,9 +86,12 @@ class DioClient {
       } on DioException catch (e) {
 
        // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
-        if(e.response?.statusCode == 401) {
+        if(e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
 
-          debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+          preferencesHelper.setApiUrl(ApiUrl: path);
+          preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
+         debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+         debugPrint('[refreshToken] ${preferencesHelper.getRefreshToken()}');
 
            final res = await _dio.post(AppUrls.refreshTokenUrl, data: {
             "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
@@ -98,16 +102,33 @@ class DioClient {
           // RefreshTokenModel response = RefreshTokenModel.fromJson(res as dynamic);
 
           if(res.statusCode == 200) {
-            print('[refresh Api response]  ${res.data['data']}');
+            debugPrint('[refresh Api response]  ${res.data['data']}');
 
              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
              preferencesHelper.setAuthToken(accToken: res.data?['data']['accessToken'] ?? '');
              preferencesHelper.setRefreshToken(refToken: res.data?['data']['refreshToken'] ?? '');
-             print('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
+            debugPrint('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
+            debugPrint('refreshToken_____${res.data?['data']['refreshToken'] ?? ''}');
+            debugPrint('url_____${preferencesHelper.getApiUrl()}');
+            debugPrint('pram_____${jsonDecode(preferencesHelper.getRqPram())}');
+
+            final res1 = await _dio.post(preferencesHelper.getApiUrl(),
+            data: jsonDecode(preferencesHelper.getRqPram()),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${res.data?['data']['accessToken']}',
+                  },
+                )
+
+            );
+
+            print('res1________$res1');
 
           }
 
           if(res.statusCode == 401){
+
              var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
@@ -129,7 +150,11 @@ class DioClient {
                   type: SnackBarType.SUCCESS);
             }
           }
-        } else {
+        }else if(e.response?.statusCode == 401 && path == AppUrls.refreshTokenUrl ){
+
+
+        }
+        else {
         throw _createErrorEntity(e, context: _context);
         }
       }

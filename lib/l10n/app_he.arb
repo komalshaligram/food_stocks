@@ -355,6 +355,9 @@
       "select_next_day_shift": "please select next day shift",
       "item_deleted": "Item Deleted",
       "this_supplier_have": "This supplier have ",
-      "quantity_in_stock": "quantity in stock "
+      "quantity_in_stock": "quantity in stock ",
+      "enter_valid_owner_name": "Please enter valid owner name",
+      "enter_valid_contact_name": "Please enter valid contact name",
+      "enter_valid_address": "Please enter valid address"
 
 }
