@@ -6,23 +6,20 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
-
-import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
+  var fileName;
   Future<void> setupInteractedMessage(BuildContext context) async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -100,28 +97,16 @@ class PushNotificationService {
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if(data != null ){
-        final http.Response response;
-        var fileName;
-        if(data['message']['imageUrl']!=null){
-          response = await http.get(Uri.parse(AppUrls.baseFileUrl+data['message']['imageUrl'].toString()));
-          Directory dir;
-          if (Platform.isAndroid) {
-            dir = await getTemporaryDirectory();
-          } else {
-            dir = await getApplicationDocumentsDirectory();
-          }
-          // Create an image name
-          fileName = '${dir.path}/image.png';
-          // Save to filesystem
-          final file = File(fileName);
-          await file.writeAsBytes(response.bodyBytes);
-        }
-       /* if(data['message']['link']!=null){
-        manageNavigation(context,data['message']['link'].toString());
-        }*/
-
         String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
         String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+        String link = data['message']['link']??'';
+        String imageUrl = data['message']['imageUrl']??'';
+        if(imageUrl.isNotEmpty){
+         showImage(imageUrl);
+        }
+        if(link.isNotEmpty){
+        manageNavigation(context,link.toString());
+        }
         showNotification(notification.hashCode,title,body,fileName,channel.id,channel.name,channel.description??'',android!.smallIcon,);
       }
     });
@@ -148,7 +133,24 @@ showNotification(int id,String title,String body,String fileName,String channelI
     // payload: message.data.toString(),
   );
 }
-   manageNavigation(BuildContext context,String linkToPage){
+
+showImage(String imageUrl) async {
+  final http.Response response;
+  response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
+  Directory dir;
+  if (Platform.isAndroid) {
+    dir = await getTemporaryDirectory();
+  } else {
+    dir = await getApplicationDocumentsDirectory();
+  }
+  // Create an image name
+  fileName = '${dir.path}/image.png';
+  // Save to filesystem
+  final file = File(fileName);
+  await file.writeAsBytes(response.bodyBytes);
+}
+
+ void manageNavigation(BuildContext context,String linkToPage){
      if( linkToPage == 'dashboard'){
        Navigator.pushNamed(context, RouteDefine.homeScreen.name);
      }else if(linkToPage == 'orders'){

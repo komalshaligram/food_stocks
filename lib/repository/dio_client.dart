@@ -30,7 +30,7 @@ class DioClient {
               receiveTimeout: const Duration(milliseconds: 60000),
               headers: {
                 HttpHeaders.acceptHeader: Headers.jsonContentType,
-                HttpHeaders.authorizationHeader: 'Bearer 1',
+                HttpHeaders.authorizationHeader: 'Bearer ',
               },
               validateStatus: (status) {
                 if (status == 401) {
@@ -85,11 +85,12 @@ class DioClient {
       } on DioException catch (e) {
 
        // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
-        if(e.response?.statusCode == 401) {
+        if(e.response?.statusCode == 401 && path!=AppUrls.refreshTokenUrl) {
 
           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+          debugPrint('[refreshToken token] ${preferencesHelper.getRefreshToken()}');
 
-           final res = await _dio.post(AppUrls.refreshTokenUrl, data: {
+           final res = await post(AppUrls.refreshTokenUrl, data: {
             "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
           });
 
@@ -104,7 +105,6 @@ class DioClient {
              preferencesHelper.setAuthToken(accToken: res.data?['data']['accessToken'] ?? '');
              preferencesHelper.setRefreshToken(refToken: res.data?['data']['refreshToken'] ?? '');
              print('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
-
           }
 
           if(res.statusCode == 401){
@@ -129,7 +129,29 @@ class DioClient {
                   type: SnackBarType.SUCCESS);
             }
           }
-        } else {
+        }else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode ==401){
+          var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+            "userId" : preferencesHelper.getUserId()
+          });
+
+          if(response1.statusCode == 200 && !isLogOut) {
+            isLogOut = true;
+            await preferencesHelper.setUserLoggedIn();
+            debugPrint('Token Expired = ${response1.data}');
+            await Provider.of<LocaleProvider>(_context, listen: false)
+                .setAppLocale(locale: Locale(AppStrings.hebrewString));
+            Navigator.popUntil(_context,
+                    (route) => route.name == RouteDefine.bottomNavScreen.name);
+            Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
+            ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+            CustomSnackBar.showSnackBar(
+                context: _context,
+                title:
+                '${AppLocalizations.of(_context)!.logged_out_successfully}',
+                type: SnackBarType.SUCCESS);
+          }
+        }
+        else {
         throw _createErrorEntity(e, context: _context);
         }
       }
