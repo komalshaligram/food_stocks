@@ -24,7 +24,7 @@ class DashBoardStatsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: getScreenHeight(context) <= 730 ? 95 : 80,
 
       decoration: BoxDecoration(
           borderRadius:

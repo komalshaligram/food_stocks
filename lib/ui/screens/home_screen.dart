@@ -66,6 +66,7 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
+          print('width_____${getScreenWidth(context)}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,

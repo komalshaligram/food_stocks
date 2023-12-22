@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -87,27 +89,39 @@ class DioClient {
        // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
         if(e.response?.statusCode == 401 && path!=AppUrls.refreshTokenUrl) {
 
+          preferencesHelper.setApiUrl(ApiUrl: path);
+          preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
+
           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
           debugPrint('[refreshToken token] ${preferencesHelper.getRefreshToken()}');
 
-           final res = await post(AppUrls.refreshTokenUrl, data: {
+           final response = await post(AppUrls.refreshTokenUrl, data: {
             "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
           });
 
            debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+          print('[refresh Api response]  ${response}');
 
-          // RefreshTokenModel response = RefreshTokenModel.fromJson(res as dynamic);
+           RefreshTokenModel res = RefreshTokenModel.fromJson(response);
 
-          if(res.statusCode == 200) {
-            print('[refresh Api response]  ${res.data['data']}');
+          if(res.status == 200) {
+           // print('[refresh Api response]  ${res.data['data']}');
 
              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
-             preferencesHelper.setAuthToken(accToken: res.data?['data']['accessToken'] ?? '');
-             preferencesHelper.setRefreshToken(refToken: res.data?['data']['refreshToken'] ?? '');
-             print('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
+               preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
+              preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
+             print('accessToken_____${res.data?.accessToken ?? ''}');
+
+             final response = await post(preferencesHelper.getApiUrl(), data:
+               preferencesHelper.getRqPram()
+             );
+             print('res_______________________$response');
+
           }
 
-          if(res.statusCode == 401){
+
+
+          if(res.status == 401){
              var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
