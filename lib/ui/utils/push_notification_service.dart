@@ -92,6 +92,7 @@ class PushNotificationService {
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
+
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -99,20 +100,34 @@ class PushNotificationService {
       if(data != null ){
         String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
         String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-        String link = data['message']['link']??'';
+        String mainPage = data['message']['mainPage']??'';
+        mainPage = 'homeScreen';
+        String subPage = data['message']['subPage']??'';
         String imageUrl = data['message']['imageUrl']??'';
         if(imageUrl.isNotEmpty){
-         showImage(imageUrl);
+          final http.Response response;
+          response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
+          Directory dir;
+          if (Platform.isAndroid) {
+            dir = await getTemporaryDirectory();
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          // Create an image name
+          fileName = '${dir.path}/image.png';
+          // Save to filesystem
+          final file = File(fileName);
+          await file.writeAsBytes(response.bodyBytes);
         }
-        if(link.isNotEmpty){
-        manageNavigation(context,link.toString());
+        if(mainPage.isNotEmpty){
+        manageNavigation(context,subPage.isEmpty?mainPage:subPage);
         }
-        showNotification(notification.hashCode,title,body,fileName,channel.id,channel.name,channel.description??'',android!.smallIcon,);
+        showNotification(notification.hashCode,title,body,channel.id,channel.name,channel.description??'',android!.smallIcon,);
       }
     });
   }
 
-showNotification(int id,String title,String body,String fileName,String channelId,String channelName,String channelDesc,String? androidIcon){
+showNotification(int id,String title,String body,String channelId,String channelName,String channelDesc,String? androidIcon){
   flutterLocalNotificationsPlugin.show(
    id,
     title,
@@ -136,6 +151,7 @@ showNotification(int id,String title,String body,String fileName,String channelI
 
 showImage(String imageUrl) async {
   final http.Response response;
+  var fName;
   response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
   Directory dir;
   if (Platform.isAndroid) {
@@ -144,19 +160,30 @@ showImage(String imageUrl) async {
     dir = await getApplicationDocumentsDirectory();
   }
   // Create an image name
-  fileName = '${dir.path}/image.png';
+  fName = '${dir.path}/image.png';
   // Save to filesystem
-  final file = File(fileName);
+  final file = File(fName);
   await file.writeAsBytes(response.bodyBytes);
+  return fName;
 }
 
  void manageNavigation(BuildContext context,String linkToPage){
-     if( linkToPage == 'dashboard'){
-       Navigator.pushNamed(context, RouteDefine.homeScreen.name);
-     }else if(linkToPage == 'orders'){
-       Navigator.pushNamed(context, RouteDefine.orderScreen.name);
-     }else if(linkToPage == 'message'){
-       Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+     if(linkToPage == 'companyScreen'){
+       Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+     }else if(linkToPage == 'companyProductsScreen'){
+       Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
+     }else if(linkToPage == 'productSaleScreen'){
+       Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+     }else if(linkToPage == 'supplierScreen'){
+       Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+     }else if(linkToPage == 'supplierProductsScreen'){
+       Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
+     }else if(linkToPage == 'storeScreen'){
+       Navigator.pushNamed(context, RouteDefine.storeScreen.name);
+     }else if(linkToPage == 'storeCategoryScreen'){
+       Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
+     }else if(linkToPage == 'planogramProductScreen'){
+       Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
      }
   }
 

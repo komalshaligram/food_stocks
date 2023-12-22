@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
@@ -10,12 +8,12 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:provider/provider.dart';
-
 import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
@@ -84,7 +82,6 @@ class DioClient {
         return response.data;
       } on DioException catch (e) {
 
-       // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
         if(e.response?.statusCode == 401 && path!=AppUrls.refreshTokenUrl) {
 
           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
@@ -95,8 +92,6 @@ class DioClient {
           });
 
            debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
-
-          // RefreshTokenModel response = RefreshTokenModel.fromJson(res as dynamic);
 
           if(res.statusCode == 200) {
             print('[refresh Api response]  ${res.data['data']}');
