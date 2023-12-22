@@ -1554,7 +1554,6 @@ class StoreScreenWidget extends StatelessWidget {
                   value: context.read<StoreBloc>(),
                   child: BlocBuilder<StoreBloc, StoreState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -1569,7 +1568,7 @@ class StoreScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
+
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<StoreBloc>().add(

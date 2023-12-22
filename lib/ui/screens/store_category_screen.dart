@@ -1069,7 +1069,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+       showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -1092,7 +1092,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   value: context.read<StoreCategoryBloc>(),
                   child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
+
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -1107,7 +1107,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
+
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<StoreCategoryBloc>().add(
@@ -1203,15 +1203,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         context: context1));
                               },
                               noteController: state.noteController,
-                              // TextEditingController(text: state
-                              //     .productStockList[planoGramIndex][state
-                              //     .productStockUpdateIndex].note)
-                              //   ..selection = TextSelection.fromPosition(
-                              //       TextPosition(
-                              //           offset: state.productStockList[state
-                              //               .planoGramUpdateIndex][state
-                              //               .productStockUpdateIndex].note
-                              //               .length)),
+
                               onNoteChanged: (newNote) {
                                 context.read<StoreCategoryBloc>().add(
                                     StoreCategoryEvent.changeNoteOfProduct(
@@ -1236,150 +1228,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       },
     );
   }
-
-  // Container buildPlanoGramListItem(
-  //     {required BuildContext context, double? width, required bool isRTL}) {
-  //   return Container(
-  //     // height: 190,
-  //     width: width,
-  //     clipBehavior: Clip.hardEdge,
-  //     margin: EdgeInsets.symmetric(
-  //       horizontal: AppConstants.padding_10,
-  //       vertical: AppConstants.padding_10,
-  //     ),
-  //     decoration: BoxDecoration(
-  //         color: AppColors.whiteColor,
-  //         borderRadius: BorderRadius.all(
-  //           Radius.circular(AppConstants.radius_10),
-  //         ),
-  //         boxShadow: [
-  //           BoxShadow(
-  //               color: AppColors.shadowColor.withOpacity(0.15),
-  //               blurRadius: AppConstants.blur_10),
-  //         ]),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Image.asset(
-  //           AppImagePath.product3,
-  //           height: 80,
-  //           fit: BoxFit.fitHeight,
-  //         ),
-  //         4.height,
-  //         Text(
-  //           'ProductName',
-  //           style: AppStyles.rkBoldTextStyle(
-  //               size: AppConstants.font_14, color: AppColors.blackColor),
-  //           textAlign: TextAlign.center,
-  //         ),
-  //         4.height,
-  //         Text(
-  //           "23.00${AppLocalizations.of(context)!.currency}",
-  //           style: AppStyles.rkBoldTextStyle(
-  //               size: AppConstants.font_12, color: AppColors.blackColor),
-  //           textAlign: TextAlign.center,
-  //         ),
-  //         4.height,
-  //         Expanded(
-  //           child: Text(
-  //             "Sale 2 at a discount",
-  //             style: AppStyles.rkBoldTextStyle(
-  //                 size: AppConstants.font_12, color: AppColors.saleRedColor),
-  //             maxLines: 1,
-  //             overflow: TextOverflow.ellipsis,
-  //             textAlign: TextAlign.center,
-  //           ),
-  //         ),
-  //         Container(
-  //           height: 35,
-  //           decoration: BoxDecoration(
-  //             border: Border(
-  //                 top: BorderSide(
-  //                     color: AppColors.borderColor.withOpacity(0.7), width: 1)),
-  //           ),
-  //           child: Row(
-  //             children: [
-  //               Expanded(
-  //                 flex: 2,
-  //                 child: GestureDetector(
-  //                   onTap: () {
-  //                     debugPrint('+');
-  //                   },
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                       color: AppColors.iconBGColor,
-  //                       border: Border(
-  //                         left: isRTL
-  //                             ? BorderSide(
-  //                                 color: AppColors.borderColor.withOpacity(0.7),
-  //                                 width: 1)
-  //                             : BorderSide.none,
-  //                         right: isRTL
-  //                             ? BorderSide.none
-  //                             : BorderSide(
-  //                                 color: AppColors.borderColor.withOpacity(0.7),
-  //                                 width: 1),
-  //                       ),
-  //                     ),
-  //                     padding: EdgeInsets.symmetric(
-  //                         horizontal: AppConstants.padding_3),
-  //                     alignment: Alignment.center,
-  //                     child: Icon(Icons.add, color: AppColors.mainColor),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Expanded(
-  //                 flex: 3,
-  //                 child: Container(
-  //                   color: AppColors.whiteColor,
-  //                   padding: EdgeInsets.symmetric(
-  //                       horizontal: AppConstants.padding_5),
-  //                   alignment: Alignment.center,
-  //                   child: Text(
-  //                     '0',
-  //                     style: AppStyles.rkBoldTextStyle(
-  //                         size: 24,
-  //                         color: AppColors.blackColor,
-  //                         fontWeight: FontWeight.w600),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Expanded(
-  //                 flex: 2,
-  //                 child: GestureDetector(
-  //                   onTap: () {
-  //                     debugPrint('-');
-  //                   },
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                       color: AppColors.iconBGColor,
-  //                       border: Border(
-  //                         left: isRTL
-  //                             ? BorderSide.none
-  //                             : BorderSide(
-  //                                 color: AppColors.borderColor.withOpacity(0.7),
-  //                                 width: 1),
-  //                         right: isRTL
-  //                             ? BorderSide(
-  //                                 color: AppColors.borderColor.withOpacity(0.7),
-  //                                 width: 1)
-  //                             : BorderSide.none,
-  //                       ),
-  //                     ),
-  //                     padding: EdgeInsets.symmetric(
-  //                         horizontal: AppConstants.padding_3),
-  //                     alignment: Alignment.center,
-  //                     child: Icon(Icons.remove, color: AppColors.mainColor),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget buildTopNavigation({required BuildContext context,
     required String categoryName,

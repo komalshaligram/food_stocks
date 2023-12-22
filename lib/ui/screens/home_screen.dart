@@ -962,7 +962,7 @@ class HomeScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+       showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -982,7 +982,7 @@ class HomeScreenWidget extends StatelessWidget {
                   value: context.read<HomeBloc>(),
                   child: BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
+
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -998,7 +998,7 @@ class HomeScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
+
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<HomeBloc>().add(

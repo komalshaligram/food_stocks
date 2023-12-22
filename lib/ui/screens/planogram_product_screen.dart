@@ -233,7 +233,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+      showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -254,7 +254,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   child:
                       BlocBuilder<PlanogramProductBloc, PlanogramProductState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
+
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -269,7 +269,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
+
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<PlanogramProductBloc>().add(

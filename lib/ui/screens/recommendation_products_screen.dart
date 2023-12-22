@@ -326,7 +326,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+      showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
