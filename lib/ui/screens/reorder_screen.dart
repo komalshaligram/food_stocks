@@ -40,6 +40,7 @@ class ReorderScreen extends StatelessWidget {
 }
 
 class ReorderScreenWidget extends StatelessWidget {
+
   const ReorderScreenWidget({super.key});
 
   @override
@@ -222,8 +223,6 @@ class ReorderScreenWidget extends StatelessWidget {
   }) {
     return DelayedWidget(
       child: Container(
-        // height: 150,
-        // width: 130,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
@@ -268,7 +267,6 @@ class ReorderScreenWidget extends StatelessWidget {
                   return child;
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  // debugPrint('sale list image error : $error');
                   return Container(
                     child: Image.asset(AppImagePath.imageNotAvailable5,
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
@@ -328,7 +326,7 @@ class ReorderScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+      showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -348,7 +346,7 @@ class ReorderScreenWidget extends StatelessWidget {
                   value: context.read<ReorderBloc>(),
                   child: BlocBuilder<ReorderBloc, ReorderState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
+
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -363,7 +361,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
+
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<ReorderBloc>().add(
@@ -447,7 +445,6 @@ class ReorderScreenWidget extends StatelessWidget {
                                         context: context1));
                               },
                               noteController: state.noteController,
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
                               onNoteChanged: (newNote) {
                                 context.read<ReorderBloc>().add(
                                     ReorderEvent.changeNoteOfProduct(

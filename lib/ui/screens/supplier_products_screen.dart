@@ -400,7 +400,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+      showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -424,7 +424,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                   child:
                   BlocBuilder<SupplierProductsBloc, SupplierProductsState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(

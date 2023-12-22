@@ -1,8 +1,8 @@
 class AppUrls {
- static const String baseUrl = 'http://182.70.118.201:3000/api';
- // static const String baseUrl = 'http://192.168.1.46:8080/api';
-  static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
- //static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
+ //static const String baseUrl = 'http://182.70.118.201:3000/api';
+  static const String baseUrl = 'http://192.168.1.46:8080/api';
+ // static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
+ static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';

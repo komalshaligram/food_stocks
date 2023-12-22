@@ -181,115 +181,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required void Function() onButtonTap,
   }) {
     return DelayedWidget(
-        // delay: Duration(milliseconds: AppConstants.listAnimationDelay + (index * AppConstants.listAnimationItemDelay)),
         child: CommonProductSaleItemWidget(
             saleImage: saleImage,
             title: title,
             description: description,
             salePercentage: salePercentage,
             onButtonTap: onButtonTap)
-        // Container(
-        //   // height: 170,
-        //   // width: 140,
-        //   decoration: BoxDecoration(
-        //     color: AppColors.whiteColor,
-        //     borderRadius:
-        //         BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        //     boxShadow: [
-        //       BoxShadow(
-        //           color: AppColors.shadowColor.withOpacity(0.15),
-        //           blurRadius: AppConstants.blur_10),
-        //     ],
-        //   ),
-        //   clipBehavior: Clip.hardEdge,
-        //   margin: EdgeInsets.symmetric(
-        //       vertical: AppConstants.padding_10,
-        //       horizontal: AppConstants.padding_5),
-        //   padding: EdgeInsets.symmetric(
-        //       vertical: AppConstants.padding_5,
-        //       horizontal: AppConstants.padding_10),
-        //   child: InkWell(
-        //     splashColor: Colors.transparent,
-        //     highlightColor: Colors.transparent,
-        //     onTap: onButtonTap,
-        //     child: Column(
-        //       mainAxisSize: MainAxisSize.max,
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Center(
-        //           child: Image.network(
-        //             "${AppUrls.baseFileUrl}$saleImage",
-        //             height: 70,
-        //             fit: BoxFit.fitHeight,
-        //             loadingBuilder: (context, child, loadingProgress) {
-        //               if (loadingProgress?.cumulativeBytesLoaded !=
-        //                   loadingProgress?.expectedTotalBytes) {
-        //                 return CommonShimmerWidget(
-        //                   child: Container(
-        //                     height: 70,
-        //                     width: 70,
-        //                     decoration: BoxDecoration(
-        //                       color: AppColors.whiteColor,
-        //                       borderRadius: BorderRadius.all(
-        //                           Radius.circular(AppConstants.radius_10)),
-        //                     ),
-        //                     // alignment: Alignment.center,
-        //                     // child: CupertinoActivityIndicator(
-        //                     //   color: AppColors.blackColor,
-        //                     // ),
-        //                   ),
-        //                 );
-        //               }
-        //               return child;
-        //             },
-        //             errorBuilder: (context, error, stackTrace) {
-        //               // debugPrint('sale list image error : $error');
-        //               return Container(
-        //                 child: Image.asset(AppImagePath.imageNotAvailable5,
-        //                     height: 70,
-        //                     width: double.maxFinite,
-        //                     fit: BoxFit.cover),
-        //               );
-        //             },
-        //           ),
-        //         ),
-        //         5.height,
-        //         Text(
-        //           title,
-        //           style: AppStyles.rkBoldTextStyle(
-        //               size: AppConstants.font_12,
-        //               color: AppColors.saleRedColor,
-        //               fontWeight: FontWeight.w600),
-        //           maxLines: 1,
-        //           overflow: TextOverflow.ellipsis,
-        //         ),
-        //         5.height,
-        //         Expanded(
-        //           child: Text(
-        //             description,
-        //             style: AppStyles.rkRegularTextStyle(
-        //                 size: AppConstants.font_10, color: AppColors.blackColor),
-        //             maxLines: 3,
-        //             overflow: TextOverflow.ellipsis,
-        //           ),
-        //         ),
-        //         5.height,
-        //         Center(
-        //           child: CommonProductButtonWidget(
-        //             title:
-        //                 "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
-        //             onPressed: onButtonTap,
-        //             // height: 35,
-        //             textColor: AppColors.whiteColor,
-        //             bgColor: AppColors.mainColor,
-        //             borderRadius: AppConstants.radius_3,
-        //             textSize: AppConstants.font_12,
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
         );
   }
 
@@ -303,7 +200,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: true,
       clipBehavior: Clip.hardEdge,
-      // showDragHandle: true,
+      showDragHandle: true,
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
@@ -316,14 +213,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            //shouldCloseOnMinExtent: true,
+            shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(
                   value: context.read<ProductSaleBloc>(),
                   child: BlocBuilder<ProductSaleBloc, ProductSaleState>(
                     builder: (context, state) {
-                      final GlobalKey _contentKey = GlobalKey();
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -338,7 +234,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                               context: context,
-                              // contentKey: _contentKey,
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<ProductSaleBloc>().add(
