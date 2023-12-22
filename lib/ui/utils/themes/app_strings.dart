@@ -83,12 +83,13 @@ class AppStrings {
   static const reqSearchString = 'reqSearchParam';
   static const searchResultString = 'searchResultParam';
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
+  static const pushNavigationString = 'pushNavigationParam';
   static const monthlyCreditString = 'Monthly Credits';
   static const orderString = 'Order';
 
   //toast strings
   //static const registerSuccessString = 'Registered Successfully!';
- // static const otpResendSuccessString = 'OTP resend Successfully!';
+  // static const otpResendSuccessString = 'OTP resend Successfully!';
 
 //  static const loginSuccessString = 'Logged in Successfully!';
   //static const updateSuccessString = 'Updated Successfully!';
