@@ -45,8 +45,6 @@ class AuthFormValidation {
       case AppStrings.faxValString:
         return formFieldValidation.faxField(value,context);
 
-      case AppStrings.driverNameString:
-        return formFieldValidation.driverNameField(value,context);
 
     }
     return null;

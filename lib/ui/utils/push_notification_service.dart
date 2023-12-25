@@ -36,7 +36,15 @@ class PushNotificationService {
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
+        final AndroidNotificationChannel channel = androidNotificationChannel();
         debugPrint("onMessageOpenedApp: $message");
+        String? title = Bidi.stripHtmlIfNeeded(message.data['data']['message']['title'].toString());
+        String? body = Bidi.stripHtmlIfNeeded(message.data['data']['message']['body'].toString());
+        String mainPage = message.data['data']['message']['mainPage']??'';
+        String subPage = message.data['data']['message']['subPage']??'';
+        String imageUrl = message.data['data']['message']['imageUrl']??'';
+       // manageNavigation(context, message.data['data']['message']['mainPage']);
+        showNotification(message.notification.hashCode,'title',body,channel.id,channel.name,channel.description??'',message.notification?.android!.smallIcon,);
       //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
     );
@@ -88,11 +96,11 @@ class PushNotificationService {
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         print("details:$details");
+
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
-
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
@@ -101,7 +109,6 @@ class PushNotificationService {
         String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
         String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
         String mainPage = data['message']['mainPage']??'';
-        mainPage = 'homeScreen';
         String subPage = data['message']['subPage']??'';
         String imageUrl = data['message']['imageUrl']??'';
         if(imageUrl.isNotEmpty){
@@ -120,7 +127,7 @@ class PushNotificationService {
           await file.writeAsBytes(response.bodyBytes);
         }
         if(mainPage.isNotEmpty){
-        manageNavigation(context,subPage.isEmpty?mainPage:subPage);
+       // manageNavigation(context,subPage.isEmpty?mainPage:subPage);
         }
         showNotification(notification.hashCode,title,body,channel.id,channel.name,channel.description??'',android!.smallIcon,);
       }
@@ -133,38 +140,20 @@ showNotification(int id,String title,String body,String channelId,String channel
     title,
     body,
     flutter_local_notifications.NotificationDetails(
-      iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
+      iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName??'')]),
       android:AndroidNotificationDetails(
         channelId,
         channelName,
         channelDescription: channelDesc,
         icon: androidIcon,
         styleInformation: BigPictureStyleInformation(
-          FilePathAndroidBitmap(fileName),
+          FilePathAndroidBitmap(fileName??''),
           hideExpandedLargeIcon: false,
         ),
       ),
     ),
     // payload: message.data.toString(),
   );
-}
-
-showImage(String imageUrl) async {
-  final http.Response response;
-  var fName;
-  response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
-  Directory dir;
-  if (Platform.isAndroid) {
-    dir = await getTemporaryDirectory();
-  } else {
-    dir = await getApplicationDocumentsDirectory();
-  }
-  // Create an image name
-  fName = '${dir.path}/image.png';
-  // Save to filesystem
-  final file = File(fName);
-  await file.writeAsBytes(response.bodyBytes);
-  return fName;
 }
 
  void manageNavigation(BuildContext context,String linkToPage){

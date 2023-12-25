@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
@@ -8,12 +11,13 @@ import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:provider/provider.dart';
+
 import 'package:food_stock/ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
@@ -22,44 +26,43 @@ class DioClient {
 
   DioClient(this._context)
       : _dio = Dio(
-          BaseOptions(
-              baseUrl: AppUrls.baseUrl,
-              connectTimeout: const Duration(milliseconds: 60000),
-              receiveTimeout: const Duration(milliseconds: 60000),
-              headers: {
-                HttpHeaders.acceptHeader: Headers.jsonContentType,
-                HttpHeaders.authorizationHeader: 'Bearer ',
-              },
-              validateStatus: (status) {
-                if (status == 401) {
-                  return false;
-                } else {
-                  return true;
-                }
-              },
-              contentType: Headers.jsonContentType,
-              responseType: ResponseType.json),
-        )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-            // print("app request data ${options.data}");
-            return handler.next(options);
-          }, onResponse: (response, handler) async {
-            if (kDebugMode) {
-              debugPrint("app response data ${response.data}");
-            }
-            return handler.next(response);
-          }, onError: (DioException e, handler) {
-            if (kDebugMode) {
-              debugPrint("app error data $e");
-            }
-            return handler.next(e);
-          }));
+    BaseOptions(
+        baseUrl: AppUrls.baseUrl,
+        connectTimeout: const Duration(milliseconds: 60000),
+        receiveTimeout: const Duration(milliseconds: 60000),
+        headers: {
+          HttpHeaders.acceptHeader: Headers.jsonContentType,
+          HttpHeaders.authorizationHeader: 'Bearer ',
+        },
+        validateStatus: (status) {
+          if (status == 401) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+        contentType: Headers.jsonContentType,
+        responseType: ResponseType.json),
+  )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+    return handler.next(options);
+  }, onResponse: (response, handler) async {
+    if (kDebugMode) {
+      debugPrint("app response data ${response.data}");
+    }
+    return handler.next(response);
+  }, onError: (DioException e, handler) {
+    if (kDebugMode) {
+      debugPrint("app error data $e");
+    }
+    return handler.next(e);
+  }));
 
   Future post(String path,
       {Object? data,
-      Map<String, dynamic>? queryParameters,
-      Options? options}) async {
+        Map<String, dynamic>? queryParameters,
+        Options? options}) async {
     SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     debugPrint('URL = ${AppUrls.baseUrl}$path');
     debugPrint('token = ${preferencesHelper.getAuthToken()}');
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -69,9 +72,9 @@ class DioClient {
         Options requestOptions = options ??
             Options(
                 headers: {
-              HttpHeaders.authorizationHeader:
-                 'Bearer ${preferencesHelper.getAuthToken()}'
-            });
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}'
+                });
         requestOptions.headers = requestOptions.headers ?? {};
 
         var response = await _dio.post(path,
@@ -84,50 +87,63 @@ class DioClient {
 
         if(e.response?.statusCode == 401 && path!=AppUrls.refreshTokenUrl) {
 
+          preferencesHelper.setApiUrl(ApiUrl: path);
+          preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
+
           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
           debugPrint('[refreshToken token] ${preferencesHelper.getRefreshToken()}');
 
-           final res = await post(AppUrls.refreshTokenUrl, data: {
+          final response = await post(AppUrls.refreshTokenUrl, data: {
             "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
           });
 
-           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+          debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
+          print('[refresh Api response]  ${response}');
 
-          if(res.statusCode == 200) {
-            print('[refresh Api response]  ${res.data['data']}');
+          RefreshTokenModel res = RefreshTokenModel.fromJson(response);
 
-             preferencesHelper.setUserLoggedIn(isLoggedIn: true);
-             preferencesHelper.setAuthToken(accToken: res.data?['data']['accessToken'] ?? '');
-             preferencesHelper.setRefreshToken(refToken: res.data?['data']['refreshToken'] ?? '');
-             print('accessToken_____${res.data?['data']['accessToken'] ?? ''}');
+          if(res.status == 200) {
+
+            preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+            preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
+            preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
+            print('accessToken_____${res.data?.accessToken ?? ''}');
+
+            final response = await post(path, data: data,
+                queryParameters: queryParameters);
+
+            print('res_______________________$response');
+            return response.data;
           }
 
-          if(res.statusCode == 401){
-             var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
-            "userId" : preferencesHelper.getUserId()
-          });
+          if(res.status == 401){
+            var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+              "userId" : preferencesHelper.getUserId()
+            });
 
-          if(response1.statusCode == 200 && !isLogOut) {
-            isLogOut = true;
+            if(response1.statusCode == 200 && !isLogOut) {
+              isLogOut = true;
               await preferencesHelper.setUserLoggedIn();
               debugPrint('Token Expired = ${response1.data}');
               await Provider.of<LocaleProvider>(_context, listen: false)
                   .setAppLocale(locale: Locale(AppStrings.hebrewString));
               Navigator.popUntil(_context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
+                      (route) => route.name == RouteDefine.bottomNavScreen.name);
               Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
               ScaffoldMessenger.of(_context).hideCurrentSnackBar();
               CustomSnackBar.showSnackBar(
                   context: _context,
                   title:
-                      '${AppLocalizations.of(_context)!.logged_out_successfully}',
+                  '${AppLocalizations.of(_context)!.logged_out_successfully}',
                   type: SnackBarType.SUCCESS);
             }
           }
-        }else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode ==401){
+        }
+        else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode ==401){
           var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
+
 
           if(response1.statusCode == 200 && !isLogOut) {
             isLogOut = true;
@@ -147,7 +163,7 @@ class DioClient {
           }
         }
         else {
-        throw _createErrorEntity(e, context: _context);
+          throw _createErrorEntity(e, context: _context);
         }
       }
     } else {
@@ -164,11 +180,11 @@ class DioClient {
   // GET
   Future<Map<String, dynamic>> get(
       {required String path,
-      Map<String, dynamic>? query,
-      Options? options}) async {
+        Map<String, dynamic>? query,
+        Options? options}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final connectivityResult = await (Connectivity().checkConnectivity());
 
@@ -180,7 +196,7 @@ class DioClient {
               options: options ??
                   Options(headers: {
                     HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}'
+                    'Bearer ${preferencesHelper.getAuthToken()}'
                   }));
           debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
           return response.data as Map<String, dynamic>;
@@ -216,12 +232,12 @@ class DioClient {
   // PUT
   Future<Map<String, dynamic>> put(
       {required String path,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? query,
-      Options? options}) async {
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? query,
+        Options? options}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.put(path,
           data: data,
@@ -230,7 +246,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
+                  'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
       return response.data;
@@ -248,7 +264,7 @@ class DioClient {
   }) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.patch(path,
           data: data,
@@ -257,7 +273,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
+                  'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
 
@@ -270,13 +286,13 @@ class DioClient {
   // delete
   Future delete(
       {required String path,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? query,
-      Options? options,
-      required BuildContext context}) async {
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? query,
+        Options? options,
+        required BuildContext context}) async {
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
       final response = await _dio.delete(path,
           data: data,
@@ -285,7 +301,7 @@ class DioClient {
               Options(
                 headers: {
                   HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
+                  'Bearer ${preferencesHelper.getAuthToken()}',
                 },
               ));
       if (response.statusCode != 200) {
@@ -321,7 +337,7 @@ class ErrorEntity implements Exception {
 ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
-      //   CustomSnackBar.showSnackBar(context: context, title: title, bgColor: bgColor);
+    //   CustomSnackBar.showSnackBar(context: context, title: title, bgColor: bgColor);
       CustomSnackBar.showSnackBar(
           context: context!,
           title: '${AppLocalizations.of(context)!.connection_timed_out}',
@@ -384,7 +400,7 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
           return ErrorEntity(
               code: 500,
               message:
-                  '${AppLocalizations.of(context)!.server_internal_error}');
+              '${AppLocalizations.of(context)!.server_internal_error}');
       }
       CustomSnackBar.showSnackBar(
           context: context!,
