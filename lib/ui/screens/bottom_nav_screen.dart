@@ -19,6 +19,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../routes/app_routes.dart';
 
 class BottomNavRoute {
   static Widget get route => const BottomNavScreen();
@@ -51,7 +52,31 @@ class BottomNavScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
-      listener: (context, state) {},
+      listenWhen: (previous, current) => current.pushNotificationPath != '',
+      listener: (context, state) {
+        if (state.pushNotificationPath == 'companyScreen') {
+          debugPrint('push companyScreen');
+          Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+        } else if (state.pushNotificationPath == 'companyProductsScreen') {
+          debugPrint('push companyProductsScreen');
+          Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
+        } else if (state.pushNotificationPath == 'productSaleScreen') {
+          debugPrint('push productSaleScreen');
+          Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+        } else if (state.pushNotificationPath == 'supplierScreen') {
+          debugPrint('push supplierScreen');
+          Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+        } else if (state.pushNotificationPath == 'supplierProductsScreen') {
+          debugPrint('push supplierProductsScreen');
+          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
+        } else if (state.pushNotificationPath == 'storeCategoryScreen') {
+          debugPrint('push storeCategoryScreen');
+          Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
+        } else if (state.pushNotificationPath == 'planogramProductScreen') {
+          debugPrint('push planogramProductScreen');
+          Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
+        }
+      },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
           return PopScope(

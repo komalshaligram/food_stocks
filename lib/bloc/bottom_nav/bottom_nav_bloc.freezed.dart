@@ -640,6 +640,7 @@ mixin _$BottomNavState {
   int get index => throw _privateConstructorUsedError;
   int get cartCount => throw _privateConstructorUsedError;
   bool get isAnimation => throw _privateConstructorUsedError;
+  String get pushNotificationPath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -652,7 +653,11 @@ abstract class $BottomNavStateCopyWith<$Res> {
           BottomNavState value, $Res Function(BottomNavState) then) =
       _$BottomNavStateCopyWithImpl<$Res, BottomNavState>;
   @useResult
-  $Res call({int index, int cartCount, bool isAnimation});
+  $Res call(
+      {int index,
+      int cartCount,
+      bool isAnimation,
+      String pushNotificationPath});
 }
 
 /// @nodoc
@@ -671,6 +676,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? index = null,
     Object? cartCount = null,
     Object? isAnimation = null,
+    Object? pushNotificationPath = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -685,6 +691,10 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.isAnimation
           : isAnimation // ignore: cast_nullable_to_non_nullable
               as bool,
+      pushNotificationPath: null == pushNotificationPath
+          ? _value.pushNotificationPath
+          : pushNotificationPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -697,7 +707,11 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       __$$BottomNavStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int index, int cartCount, bool isAnimation});
+  $Res call(
+      {int index,
+      int cartCount,
+      bool isAnimation,
+      String pushNotificationPath});
 }
 
 /// @nodoc
@@ -714,6 +728,7 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? index = null,
     Object? cartCount = null,
     Object? isAnimation = null,
+    Object? pushNotificationPath = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -728,6 +743,10 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.isAnimation
           : isAnimation // ignore: cast_nullable_to_non_nullable
               as bool,
+      pushNotificationPath: null == pushNotificationPath
+          ? _value.pushNotificationPath
+          : pushNotificationPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -738,7 +757,8 @@ class _$BottomNavStateImpl implements _BottomNavState {
   const _$BottomNavStateImpl(
       {required this.index,
       required this.cartCount,
-      required this.isAnimation});
+      required this.isAnimation,
+      required this.pushNotificationPath});
 
   @override
   final int index;
@@ -746,10 +766,12 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final int cartCount;
   @override
   final bool isAnimation;
+  @override
+  final String pushNotificationPath;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath)';
   }
 
   @override
@@ -761,11 +783,14 @@ class _$BottomNavStateImpl implements _BottomNavState {
             (identical(other.cartCount, cartCount) ||
                 other.cartCount == cartCount) &&
             (identical(other.isAnimation, isAnimation) ||
-                other.isAnimation == isAnimation));
+                other.isAnimation == isAnimation) &&
+            (identical(other.pushNotificationPath, pushNotificationPath) ||
+                other.pushNotificationPath == pushNotificationPath));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index, cartCount, isAnimation);
+  int get hashCode => Object.hash(
+      runtimeType, index, cartCount, isAnimation, pushNotificationPath);
 
   @JsonKey(ignore: true)
   @override
@@ -779,7 +804,8 @@ abstract class _BottomNavState implements BottomNavState {
   const factory _BottomNavState(
       {required final int index,
       required final int cartCount,
-      required final bool isAnimation}) = _$BottomNavStateImpl;
+      required final bool isAnimation,
+      required final String pushNotificationPath}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -787,6 +813,8 @@ abstract class _BottomNavState implements BottomNavState {
   int get cartCount;
   @override
   bool get isAnimation;
+  @override
+  String get pushNotificationPath;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>

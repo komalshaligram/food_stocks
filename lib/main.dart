@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -61,8 +62,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await PushNotificationService().setupInteractedMessage(context);
+      // FirebaseMessaging.onMessageOpenedApp.listen(
+      //       (RemoteMessage message) {
+      //     debugPrint("onMessageOpenedApp: $message");
+      //     debugPrint("onMessageOpenedApp: ${message.data}");
+      //     Navigator.pushNamed(context, RouteDefine.splashScreen.name);
+      //   },
+      // );
       await AppConfig.initializeAppConfig(context);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     super.initState();
   }

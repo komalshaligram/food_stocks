@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
+import 'package:food_stock/ui/screens/company_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +41,7 @@ class PushNotificationService {
       (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: $message");
         debugPrint("onMessageOpenedApp: ${message.data}");
-        manageNavigation(context, false, 'companyScreen');
+        manageNavigation(context, true, 'companyScreen');
       },
     );
     if (Platform.isIOS) {
@@ -193,7 +195,16 @@ class PushNotificationService {
       debugPrint('push = ${linkToPage}');
       // Navigator.popUntil(
       //     context, (route) => route.name == RouteDefine.bottomNavScreen.name);
-      Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+      // Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CompanyRoute.route,
+              settings: RouteSettings(
+                  name: RouteDefine.companyScreen.name,
+                  arguments: {
+                    AppStrings.pushNavigationString: 'companyScreen'
+                  })));
     } else {
       AppRouting.generateRoute(RouteSettings(
           name: RouteDefine.splashScreen.name,

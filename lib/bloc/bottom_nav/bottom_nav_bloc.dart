@@ -29,34 +29,8 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       } else if (event is _PushNavigationEvent) {
         debugPrint('push = ${event.pushNavigation}');
         if (event.pushNavigation.isNotEmpty) {
-          emit(state.copyWith(index: 1));
-          if (event.pushNavigation == 'companyScreen') {
-            debugPrint('push companyScreen');
-            Navigator.pushNamed(event.context, RouteDefine.companyScreen.name);
-          } else if (event.pushNavigation == 'companyProductsScreen') {
-            debugPrint('push companyProductsScreen');
-            Navigator.pushNamed(
-                event.context, RouteDefine.companyProductsScreen.name);
-          } else if (event.pushNavigation == 'productSaleScreen') {
-            debugPrint('push productSaleScreen');
-            Navigator.pushNamed(
-                event.context, RouteDefine.productSaleScreen.name);
-          } else if (event.pushNavigation == 'supplierScreen') {
-            debugPrint('push supplierScreen');
-            Navigator.pushNamed(event.context, RouteDefine.supplierScreen.name);
-          } else if (event.pushNavigation == 'supplierProductsScreen') {
-            debugPrint('push supplierProductsScreen');
-            Navigator.pushNamed(
-                event.context, RouteDefine.supplierProductsScreen.name);
-          } else if (event.pushNavigation == 'storeCategoryScreen') {
-            debugPrint('push storeCategoryScreen');
-            Navigator.pushNamed(
-                event.context, RouteDefine.storeCategoryScreen.name);
-          } else if (event.pushNavigation == 'planogramProductScreen') {
-            debugPrint('push planogramProductScreen');
-            Navigator.pushNamed(
-                event.context, RouteDefine.planogramProductScreen.name);
-          }
+          emit(state.copyWith(
+              index: 1, pushNotificationPath: event.pushNavigation));
         }
       }
     });
