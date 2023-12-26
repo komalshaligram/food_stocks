@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,11 +21,9 @@ import 'app_config.dart';
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
-
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
     SharedPreferencesHelper preferencesHelper =
         SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
@@ -63,6 +62,12 @@ class _MyAppState extends State<MyApp> {
       await PushNotificationService().setupInteractedMessage(context);
       await AppConfig.initializeAppConfig(context);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      final RemoteMessage? _message = await PushNotificationService().firebaseMessaging.getInitialMessage();
+      if (_message != null) {
+        Future.delayed(const Duration(milliseconds: 1000), () async {
+          await Navigator.of(context).pushNamed(RouteDefine.companyScreen.name);
+        });
+      }
     });
     super.initState();
   }

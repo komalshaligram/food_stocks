@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
@@ -15,14 +16,14 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   var fileName;
-  Future<void> setupInteractedMessage(BuildContext context) async {
+  Future<void> setupInteractedMessage(BuildContext _context) async {
     await Firebase.initializeApp();
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -35,16 +36,29 @@ class PushNotificationService {
     print('User granted permission: ${settings.authorizationStatus}');
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
+      (RemoteMessage message) async {
         final AndroidNotificationChannel channel = androidNotificationChannel();
         debugPrint("onMessageOpenedApp: $message");
         String? title = Bidi.stripHtmlIfNeeded(message.data['data']['message']['title'].toString());
         String? body = Bidi.stripHtmlIfNeeded(message.data['data']['message']['body'].toString());
-        String mainPage = message.data['data']['message']['mainPage']??'';
-        String subPage = message.data['data']['message']['subPage']??'';
         String imageUrl = message.data['data']['message']['imageUrl']??'';
+        if(imageUrl.isNotEmpty){
+          final http.Response response;
+          response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
+          Directory dir;
+          if (Platform.isAndroid) {
+            dir = await getTemporaryDirectory();
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          // Create an image name
+          fileName = '${dir.path}/image.png';
+          // Save to filesystem
+          final file = File(fileName);
+          await file.writeAsBytes(response.bodyBytes);
+        }
        // manageNavigation(context, message.data['data']['message']['mainPage']);
-        showNotification(message.notification.hashCode,'title',body,channel.id,channel.name,channel.description??'',message.notification?.android!.smallIcon,);
+        showNotification(message.notification.hashCode,title,body,channel.id,channel.name,channel.description??'',message.notification?.android!.smallIcon,);
       //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
     );
@@ -53,7 +67,7 @@ class PushNotificationService {
     }
 
     enableIOSNotifications();
-    await registerNotificationListeners(context);
+    await registerNotificationListeners(_context);
   }
 
 
@@ -84,7 +98,6 @@ class PushNotificationService {
     );
     String? fcmToken='';
 
-
     fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
     SharedPreferencesHelper preferences =
@@ -95,8 +108,7 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        print("details:$details");
-
+        print("details:${details.payload}");
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -135,7 +147,9 @@ class PushNotificationService {
   }
 
 showNotification(int id,String title,String body,String channelId,String channelName,String channelDesc,String? androidIcon){
-  flutterLocalNotificationsPlugin.show(
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.show(
    id,
     title,
     body,
@@ -178,8 +192,31 @@ showNotification(int id,String title,String body,String channelId,String channel
 
   @pragma('vm:entry-point')
   Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
     debugPrint("Handling a background message: ${message.messageId}");
     debugPrint("Handling a background message: ${message.data.toString()}");
+    final AndroidNotificationChannel channel = androidNotificationChannel();
+    debugPrint("onMessageOpenedApp: $message");
+    String? title = Bidi.stripHtmlIfNeeded(message.data['data']['message']['title'].toString());
+    String? body = Bidi.stripHtmlIfNeeded(message.data['data']['message']['body'].toString());
+    String imageUrl = message.data['data']['message']['imageUrl']??'';
+    if(imageUrl.isNotEmpty){
+      final http.Response response;
+      response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
+      Directory dir;
+      if (Platform.isAndroid) {
+        dir = await getTemporaryDirectory();
+      } else {
+        dir = await getApplicationDocumentsDirectory();
+      }
+      // Create an image name
+      fileName = '${dir.path}/image.png';
+      // Save to filesystem
+      final file = File(fileName);
+      await file.writeAsBytes(response.bodyBytes);
+    }
+    // manageNavigation(context, message.data['data']['message']['mainPage']);
+    showNotification(message.notification.hashCode,title,body,channel.id,channel.name,channel.description??'',message.notification?.android!.smallIcon,);
   }
 
   Future<void> enableIOSNotifications() async {
