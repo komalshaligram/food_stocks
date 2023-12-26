@@ -1,11 +1,11 @@
-
-
 import 'package:bloc/bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../routes/app_routes.dart';
 
 part 'bottom_nav_event.dart';
 
@@ -21,11 +21,17 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       if (event is _ChangePageEvent) {
         emit(state.copyWith(index: event.index));
       } else if (event is _UpdateCartCountEvent) {
-        if( state.cartCount < preferencesHelper.getCartCount()){
+        if (state.cartCount < preferencesHelper.getCartCount()) {
           emit(state.copyWith(isAnimation: true));
         }
         emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         debugPrint('cart count = ${state.cartCount}');
+      } else if (event is _PushNavigationEvent) {
+        debugPrint('push = ${event.pushNavigation}');
+        if (event.pushNavigation.isNotEmpty) {
+          emit(state.copyWith(
+              index: 1, pushNotificationPath: event.pushNavigation));
+        }
       }
     });
   }

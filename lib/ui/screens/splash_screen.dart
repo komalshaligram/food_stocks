@@ -8,6 +8,7 @@ import 'package:food_stock/bloc/splash/splash_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,8 +23,13 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('splash args = $args');
     return BlocProvider(
-      create: (context) => SplashBloc()..add(SplashEvent.splashLoaded()),
+      create: (context) => SplashBloc()
+        ..add(SplashEvent.splashLoaded(
+            pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
       child: SplashScreenWidget(),
     );
   }
@@ -87,7 +93,9 @@ class SplashScreenWidget extends StatelessWidget {
           debugPrint('${preferencesHelper.getUserLoggedIn()}');
           if (preferencesHelper.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(
-                context, RouteDefine.bottomNavScreen.name);
+                context, RouteDefine.bottomNavScreen.name, arguments: {
+              AppStrings.pushNavigationString: state.pushNavigation
+            });
           } else {
             Navigator.pushReplacementNamed(
                 context, RouteDefine.connectScreen.name);

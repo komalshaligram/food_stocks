@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,6 +11,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(SplashState.initial()) {
     on<SplashEvent>((event, emit) async {
       if(event is _SplashLoadedEvent) {
+        emit(state.copyWith(pushNavigation: event.pushNavigation));
+        debugPrint('push = ${event.pushNavigation}');
         await Future.delayed(const Duration(seconds: 1));
         emit(state.copyWith(isAnimate: true));
         await Future.delayed(const Duration(seconds: 2));

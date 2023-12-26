@@ -21,6 +21,8 @@ mixin _$BottomNavEvent {
     required TResult Function(int index) changePage,
     required TResult Function() updateCartCountEvent,
     required TResult Function() animationCartEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +30,8 @@ mixin _$BottomNavEvent {
     TResult? Function(int index)? changePage,
     TResult? Function()? updateCartCountEvent,
     TResult? Function()? animationCartEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +39,8 @@ mixin _$BottomNavEvent {
     TResult Function(int index)? changePage,
     TResult Function()? updateCartCountEvent,
     TResult Function()? animationCartEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +49,7 @@ mixin _$BottomNavEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +57,7 @@ mixin _$BottomNavEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +65,7 @@ mixin _$BottomNavEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -148,6 +157,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(int index) changePage,
     required TResult Function() updateCartCountEvent,
     required TResult Function() animationCartEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
   }) {
     return changePage(index);
   }
@@ -158,6 +169,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(int index)? changePage,
     TResult? Function()? updateCartCountEvent,
     TResult? Function()? animationCartEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
   }) {
     return changePage?.call(index);
   }
@@ -168,6 +181,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(int index)? changePage,
     TResult Function()? updateCartCountEvent,
     TResult Function()? animationCartEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -182,6 +197,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
   }) {
     return changePage(this);
   }
@@ -192,6 +208,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
   }) {
     return changePage?.call(this);
   }
@@ -202,6 +219,7 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -262,6 +280,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(int index) changePage,
     required TResult Function() updateCartCountEvent,
     required TResult Function() animationCartEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
   }) {
     return updateCartCountEvent();
   }
@@ -272,6 +292,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(int index)? changePage,
     TResult? Function()? updateCartCountEvent,
     TResult? Function()? animationCartEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
   }) {
     return updateCartCountEvent?.call();
   }
@@ -282,6 +304,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(int index)? changePage,
     TResult Function()? updateCartCountEvent,
     TResult Function()? animationCartEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -296,6 +320,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
   }) {
     return updateCartCountEvent(this);
   }
@@ -306,6 +331,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
   }) {
     return updateCartCountEvent?.call(this);
   }
@@ -316,6 +342,7 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -370,6 +397,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     required TResult Function(int index) changePage,
     required TResult Function() updateCartCountEvent,
     required TResult Function() animationCartEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
   }) {
     return animationCartEvent();
   }
@@ -380,6 +409,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult? Function(int index)? changePage,
     TResult? Function()? updateCartCountEvent,
     TResult? Function()? animationCartEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
   }) {
     return animationCartEvent?.call();
   }
@@ -390,6 +421,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult Function(int index)? changePage,
     TResult Function()? updateCartCountEvent,
     TResult Function()? animationCartEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (animationCartEvent != null) {
@@ -404,6 +437,7 @@ class _$animationCartEventImpl implements _animationCartEvent {
     required TResult Function(_ChangePageEvent value) changePage,
     required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
     required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
   }) {
     return animationCartEvent(this);
   }
@@ -414,6 +448,7 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult? Function(_ChangePageEvent value)? changePage,
     TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
   }) {
     return animationCartEvent?.call(this);
   }
@@ -424,6 +459,7 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult Function(_ChangePageEvent value)? changePage,
     TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
     TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
     required TResult orElse(),
   }) {
     if (animationCartEvent != null) {
@@ -438,10 +474,173 @@ abstract class _animationCartEvent implements BottomNavEvent {
 }
 
 /// @nodoc
+abstract class _$$PushNavigationEventImplCopyWith<$Res> {
+  factory _$$PushNavigationEventImplCopyWith(_$PushNavigationEventImpl value,
+          $Res Function(_$PushNavigationEventImpl) then) =
+      __$$PushNavigationEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context, String pushNavigation});
+}
+
+/// @nodoc
+class __$$PushNavigationEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$PushNavigationEventImpl>
+    implements _$$PushNavigationEventImplCopyWith<$Res> {
+  __$$PushNavigationEventImplCopyWithImpl(_$PushNavigationEventImpl _value,
+      $Res Function(_$PushNavigationEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+    Object? pushNavigation = null,
+  }) {
+    return _then(_$PushNavigationEventImpl(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+      pushNavigation: null == pushNavigation
+          ? _value.pushNavigation
+          : pushNavigation // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$PushNavigationEventImpl implements _PushNavigationEvent {
+  const _$PushNavigationEventImpl(
+      {required this.context, required this.pushNavigation});
+
+  @override
+  final BuildContext context;
+  @override
+  final String pushNavigation;
+
+  @override
+  String toString() {
+    return 'BottomNavEvent.PushNavigationEvent(context: $context, pushNavigation: $pushNavigation)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PushNavigationEventImpl &&
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.pushNavigation, pushNavigation) ||
+                other.pushNavigation == pushNavigation));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context, pushNavigation);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PushNavigationEventImplCopyWith<_$PushNavigationEventImpl> get copyWith =>
+      __$$PushNavigationEventImplCopyWithImpl<_$PushNavigationEventImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int index) changePage,
+    required TResult Function() updateCartCountEvent,
+    required TResult Function() animationCartEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
+  }) {
+    return PushNavigationEvent(context, pushNavigation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int index)? changePage,
+    TResult? Function()? updateCartCountEvent,
+    TResult? Function()? animationCartEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
+  }) {
+    return PushNavigationEvent?.call(context, pushNavigation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int index)? changePage,
+    TResult Function()? updateCartCountEvent,
+    TResult Function()? animationCartEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
+    required TResult orElse(),
+  }) {
+    if (PushNavigationEvent != null) {
+      return PushNavigationEvent(context, pushNavigation);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ChangePageEvent value) changePage,
+    required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
+    required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+  }) {
+    return PushNavigationEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ChangePageEvent value)? changePage,
+    TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+  }) {
+    return PushNavigationEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ChangePageEvent value)? changePage,
+    TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    required TResult orElse(),
+  }) {
+    if (PushNavigationEvent != null) {
+      return PushNavigationEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PushNavigationEvent implements BottomNavEvent {
+  const factory _PushNavigationEvent(
+      {required final BuildContext context,
+      required final String pushNavigation}) = _$PushNavigationEventImpl;
+
+  BuildContext get context;
+  String get pushNavigation;
+  @JsonKey(ignore: true)
+  _$$PushNavigationEventImplCopyWith<_$PushNavigationEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$BottomNavState {
   int get index => throw _privateConstructorUsedError;
   int get cartCount => throw _privateConstructorUsedError;
   bool get isAnimation => throw _privateConstructorUsedError;
+  String get pushNotificationPath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -454,7 +653,11 @@ abstract class $BottomNavStateCopyWith<$Res> {
           BottomNavState value, $Res Function(BottomNavState) then) =
       _$BottomNavStateCopyWithImpl<$Res, BottomNavState>;
   @useResult
-  $Res call({int index, int cartCount, bool isAnimation});
+  $Res call(
+      {int index,
+      int cartCount,
+      bool isAnimation,
+      String pushNotificationPath});
 }
 
 /// @nodoc
@@ -473,6 +676,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? index = null,
     Object? cartCount = null,
     Object? isAnimation = null,
+    Object? pushNotificationPath = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -487,6 +691,10 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.isAnimation
           : isAnimation // ignore: cast_nullable_to_non_nullable
               as bool,
+      pushNotificationPath: null == pushNotificationPath
+          ? _value.pushNotificationPath
+          : pushNotificationPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -499,7 +707,11 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       __$$BottomNavStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int index, int cartCount, bool isAnimation});
+  $Res call(
+      {int index,
+      int cartCount,
+      bool isAnimation,
+      String pushNotificationPath});
 }
 
 /// @nodoc
@@ -516,6 +728,7 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? index = null,
     Object? cartCount = null,
     Object? isAnimation = null,
+    Object? pushNotificationPath = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -530,6 +743,10 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.isAnimation
           : isAnimation // ignore: cast_nullable_to_non_nullable
               as bool,
+      pushNotificationPath: null == pushNotificationPath
+          ? _value.pushNotificationPath
+          : pushNotificationPath // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -540,7 +757,8 @@ class _$BottomNavStateImpl implements _BottomNavState {
   const _$BottomNavStateImpl(
       {required this.index,
       required this.cartCount,
-      required this.isAnimation});
+      required this.isAnimation,
+      required this.pushNotificationPath});
 
   @override
   final int index;
@@ -548,10 +766,12 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final int cartCount;
   @override
   final bool isAnimation;
+  @override
+  final String pushNotificationPath;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath)';
   }
 
   @override
@@ -563,11 +783,14 @@ class _$BottomNavStateImpl implements _BottomNavState {
             (identical(other.cartCount, cartCount) ||
                 other.cartCount == cartCount) &&
             (identical(other.isAnimation, isAnimation) ||
-                other.isAnimation == isAnimation));
+                other.isAnimation == isAnimation) &&
+            (identical(other.pushNotificationPath, pushNotificationPath) ||
+                other.pushNotificationPath == pushNotificationPath));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, index, cartCount, isAnimation);
+  int get hashCode => Object.hash(
+      runtimeType, index, cartCount, isAnimation, pushNotificationPath);
 
   @JsonKey(ignore: true)
   @override
@@ -581,7 +804,8 @@ abstract class _BottomNavState implements BottomNavState {
   const factory _BottomNavState(
       {required final int index,
       required final int cartCount,
-      required final bool isAnimation}) = _$BottomNavStateImpl;
+      required final bool isAnimation,
+      required final String pushNotificationPath}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -589,6 +813,8 @@ abstract class _BottomNavState implements BottomNavState {
   int get cartCount;
   @override
   bool get isAnimation;
+  @override
+  String get pushNotificationPath;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>
