@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
+import 'package:food_stock/ui/screens/company_screen.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
@@ -15,11 +18,11 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   var fileName;
+
   Future<void> setupInteractedMessage(BuildContext context) async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -37,36 +40,38 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: $message");
-      //  notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
+        debugPrint("onMessageOpenedApp: ${message.data}");
+        manageNavigation(context, true, 'companyScreen');
       },
     );
-    if(Platform.isIOS){
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    if (Platform.isIOS) {
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
     }
 
     enableIOSNotifications();
     await registerNotificationListeners(context);
   }
 
-
   Future<void> registerNotificationListeners(BuildContext context) async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@drawable/ic_launcher1');
-    if(Platform.isIOS){
+        AndroidInitializationSettings('@drawable/ic_launcher1');
+    if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+            alert: true,
+            badge: true,
+            sound: true,
+          );
     }
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
@@ -74,8 +79,7 @@ class PushNotificationService {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
-    String? fcmToken='';
-
+    String? fcmToken = '';
 
     fcmToken = await FirebaseMessaging.instance.getToken();
     print("FCM Token: ${fcmToken}");
@@ -88,76 +92,139 @@ class PushNotificationService {
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         print("details:$details");
+        manageNavigation(context, true, 'companyScreen');
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
-    FirebaseMessaging.onMessage.listen((RemoteMessage? message) async{
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
-      if(data != null ){
-        String? title = Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
-        String? body = Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
-        String link = data['message']['link']??'';
-        String imageUrl = data['message']['imageUrl']??'';
-        if(imageUrl.isNotEmpty){
-         showImage(imageUrl);
+      if (data != null) {
+        String? title =
+            Bidi.stripHtmlIfNeeded(data['message']['title'].toString());
+        String? body =
+            Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
+        String mainPage = data['message']['mainPage'] ?? '';
+        mainPage = 'companyScreen';
+        String subPage = data['message']['subPage'] ?? '';
+        String imageUrl = data['message']['imageUrl'] ?? '';
+        if (imageUrl.isNotEmpty) {
+          final http.Response response;
+          response = await http
+              .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
+          Directory dir;
+          if (Platform.isAndroid) {
+            dir = await getTemporaryDirectory();
+          } else {
+            dir = await getApplicationDocumentsDirectory();
+          }
+          // Create an image name
+          fileName = '${dir.path}/image.png';
+          // Save to filesystem
+          final file = File(fileName);
+          await file.writeAsBytes(response.bodyBytes);
         }
-        if(link.isNotEmpty){
-        manageNavigation(context,link.toString());
-        }
-        showNotification(notification.hashCode,title,body,fileName,channel.id,channel.name,channel.description??'',android!.smallIcon,);
+        // if (mainPage.isNotEmpty) {
+        //   manageNavigation(context, false, subPage.isEmpty ? mainPage : subPage);
+        // }
+        showNotification(
+          notification.hashCode,
+          title,
+          body,
+          channel.id,
+          channel.name,
+          channel.description ?? '',
+          android!.smallIcon,
+        );
       }
     });
   }
 
-showNotification(int id,String title,String body,String fileName,String channelId,String channelName,String channelDesc,String? androidIcon){
-  flutterLocalNotificationsPlugin.show(
-   id,
-    title,
-    body,
-    flutter_local_notifications.NotificationDetails(
-      iOS:DarwinNotificationDetails(attachments: [DarwinNotificationAttachment(fileName)]),
-      android:AndroidNotificationDetails(
-        channelId,
-        channelName,
-        channelDescription: channelDesc,
-        icon: androidIcon,
-        styleInformation: BigPictureStyleInformation(
-          FilePathAndroidBitmap(fileName),
-          hideExpandedLargeIcon: false,
+  showNotification(int id, String title, String body, String channelId,
+      String channelName, String channelDesc, String? androidIcon) {
+    flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      flutter_local_notifications.NotificationDetails(
+        iOS: DarwinNotificationDetails(
+            attachments: [DarwinNotificationAttachment(fileName)]),
+        android: AndroidNotificationDetails(
+          channelId,
+          channelName,
+          channelDescription: channelDesc,
+          icon: androidIcon,
+          styleInformation: BigPictureStyleInformation(
+            FilePathAndroidBitmap(fileName),
+            hideExpandedLargeIcon: false,
+          ),
         ),
       ),
-    ),
-    // payload: message.data.toString(),
-  );
-}
-
-showImage(String imageUrl) async {
-  final http.Response response;
-  response = await http.get(Uri.parse(AppUrls.baseFileUrl+imageUrl.toString()));
-  Directory dir;
-  if (Platform.isAndroid) {
-    dir = await getTemporaryDirectory();
-  } else {
-    dir = await getApplicationDocumentsDirectory();
+      // payload: message.data.toString(),
+    );
   }
-  // Create an image name
-  fileName = '${dir.path}/image.png';
-  // Save to filesystem
-  final file = File(fileName);
-  await file.writeAsBytes(response.bodyBytes);
-}
 
- void manageNavigation(BuildContext context,String linkToPage){
-     if( linkToPage == 'dashboard'){
-       Navigator.pushNamed(context, RouteDefine.homeScreen.name);
-     }else if(linkToPage == 'orders'){
-       Navigator.pushNamed(context, RouteDefine.orderScreen.name);
-     }else if(linkToPage == 'message'){
-       Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-     }
+  showImage(String imageUrl) async {
+    final http.Response response;
+    var fName;
+    response =
+        await http.get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));
+    Directory dir;
+    if (Platform.isAndroid) {
+      dir = await getTemporaryDirectory();
+    } else {
+      dir = await getApplicationDocumentsDirectory();
+    }
+    // Create an image name
+    fName = '${dir.path}/image.png';
+    // Save to filesystem
+    final file = File(fName);
+    await file.writeAsBytes(response.bodyBytes);
+    return fName;
+  }
+
+  void manageNavigation(
+      BuildContext context, bool isAppOpen, String linkToPage) {
+    debugPrint('push = ${linkToPage}');
+    debugPrint('push = ${isAppOpen}');
+    if (isAppOpen) {
+      debugPrint('push = ${linkToPage}');
+      // Navigator.popUntil(
+      //     context, (route) => route.name == RouteDefine.bottomNavScreen.name);
+      // Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CompanyRoute.route,
+              settings: RouteSettings(
+                  name: RouteDefine.companyScreen.name,
+                  arguments: {
+                    AppStrings.pushNavigationString: 'companyScreen'
+                  })));
+    } else {
+      AppRouting.generateRoute(RouteSettings(
+          name: RouteDefine.splashScreen.name,
+          arguments: {AppStrings.pushNavigationString: linkToPage}));
+    }
+    // if(linkToPage == 'companyScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+    // }else if(linkToPage == 'companyProductsScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
+    // }else if(linkToPage == 'productSaleScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+    // }else if(linkToPage == 'supplierScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+    // }else if(linkToPage == 'supplierProductsScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
+    // }else if(linkToPage == 'storeScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.storeScreen.name);
+    // }else if(linkToPage == 'storeCategoryScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
+    // }else if(linkToPage == 'planogramProductScreen'){
+    //   Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
+    // }
   }
 
   @pragma('vm:entry-point')
@@ -183,5 +250,4 @@ showImage(String imageUrl) async {
             'This channel is used for important notifications.', // description
         importance: Importance.max,
       );
-
 }

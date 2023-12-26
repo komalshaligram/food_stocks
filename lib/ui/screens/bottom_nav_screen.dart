@@ -14,11 +14,12 @@ import 'package:food_stock/ui/screens/wallet_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_img_path.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
-
+import '../../routes/app_routes.dart';
 
 class BottomNavRoute {
   static Widget get route => const BottomNavScreen();
@@ -29,15 +30,21 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
+    debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc(),
-      child:  BottomNavScreenWidget(),
+      create: (context) => BottomNavBloc()
+        ..add(BottomNavEvent.PushNavigationEvent(
+            context: context,
+            pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
+      child: BottomNavScreenWidget(),
     );
   }
 }
 
 class BottomNavScreenWidget extends StatelessWidget {
-   BottomNavScreenWidget({super.key});
+  BottomNavScreenWidget({super.key});
 
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
@@ -45,8 +52,30 @@ class BottomNavScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
     return BlocListener<BottomNavBloc, BottomNavState>(
+      listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-
+        if (state.pushNotificationPath == 'companyScreen') {
+          debugPrint('push companyScreen');
+          Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+        } else if (state.pushNotificationPath == 'companyProductsScreen') {
+          debugPrint('push companyProductsScreen');
+          Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
+        } else if (state.pushNotificationPath == 'productSaleScreen') {
+          debugPrint('push productSaleScreen');
+          Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
+        } else if (state.pushNotificationPath == 'supplierScreen') {
+          debugPrint('push supplierScreen');
+          Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+        } else if (state.pushNotificationPath == 'supplierProductsScreen') {
+          debugPrint('push supplierProductsScreen');
+          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
+        } else if (state.pushNotificationPath == 'storeCategoryScreen') {
+          debugPrint('push storeCategoryScreen');
+          Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
+        } else if (state.pushNotificationPath == 'planogramProductScreen') {
+          debugPrint('push planogramProductScreen');
+          Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
+        }
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -141,9 +170,10 @@ class BottomNavScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _pageContainers({required double screenHeight,
-    required double screenWidth,
-    required BottomNavState state}) {
+  Widget _pageContainers(
+      {required double screenHeight,
+      required double screenWidth,
+      required BottomNavState state}) {
     return Container(
       height: screenHeight,
       width: screenWidth,
@@ -189,10 +219,10 @@ class BottomNavScreenWidget extends StatelessWidget {
                 width: 26,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    pos == state.index
-                        ? AppColors.whiteColor
-                        : AppColors.navSelectedColor,
-                    BlendMode.srcIn,
+                  pos == state.index
+                      ? AppColors.whiteColor
+                      : AppColors.navSelectedColor,
+                  BlendMode.srcIn,
                 ),
               ),
             )),
@@ -201,40 +231,42 @@ class BottomNavScreenWidget extends StatelessWidget {
               ? const SizedBox()
               : state.cartCount == 0
                   ? const SizedBox()
-                  :state.index != 2 ? Positioned(
-                      top: 5,
-                      right: isRTL ? null : 0,
-                      left: isRTL ? 0 : null,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: 18,
-                            width: 24,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: state.index == 2
-                                  ? AppColors.whiteColor
-                                  : AppColors.notificationColor,
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_100)),
-                              border: Border.all(
+                  : state.index != 2
+                      ? Positioned(
+                          top: 5,
+                          right: isRTL ? null : 0,
+                          left: isRTL ? 0 : null,
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 18,
+                                width: 24,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
                                   color: state.index == 2
-                                      ? AppColors.mainColor
-                                      : AppColors.whiteColor,
-                                  width: 1),
-                            ),
-                            child: Text(
-                              '${state.cartCount}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 10,
-                                  color: state.index == 2
-                                      ? AppColors.mainColor
-                                      : AppColors.whiteColor),
-                            ),
+                                      ? AppColors.whiteColor
+                                      : AppColors.notificationColor,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(AppConstants.radius_100)),
+                                  border: Border.all(
+                                      color: state.index == 2
+                                          ? AppColors.mainColor
+                                          : AppColors.whiteColor,
+                                      width: 1),
+                                ),
+                                child: Text(
+                                  '${state.cartCount}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: 10,
+                                      color: state.index == 2
+                                          ? AppColors.mainColor
+                                          : AppColors.whiteColor),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ) : SizedBox(),
+                        )
+                      : SizedBox(),
         ],
       ),
     );
