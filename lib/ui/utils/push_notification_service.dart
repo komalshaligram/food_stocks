@@ -187,8 +187,6 @@ class PushNotificationService {
 
   void manageNavigation(
       BuildContext context, bool isAppOpen, String linkToPage) {
-    // Navigator.pushNamed(context, RouteDefine.splashScreen.name,
-    //     arguments: {AppStrings.pushNavigationString: linkToPage});
     debugPrint('push = ${linkToPage}');
     debugPrint('push = ${isAppOpen}');
     if (isAppOpen) {
