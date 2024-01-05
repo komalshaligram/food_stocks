@@ -383,7 +383,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                 child: Text(
                                   AppLocalizations.of(context)!.history,
                                   style: AppStyles.rkRegularTextStyle(
-                                      size: getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
+                                      size:  getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
                                       color: AppColors.blackColor),
                                 ),
                               ),
@@ -440,7 +440,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     child: state.isExportShimmering ? CupertinoActivityIndicator(color: Colors.white,):Text(
                                       AppLocalizations.of(context)!.export,
                                       style: AppStyles.rkRegularTextStyle(
-                                          size: state.language == AppStrings.englishString ? AppConstants.font_12 : AppConstants.font_14,
+                                          size: state.language == AppStrings.englishString ?  AppConstants.font_12 : AppConstants.font_14,
                                           color: AppColors.whiteColor),
                                     ),
                                   ),

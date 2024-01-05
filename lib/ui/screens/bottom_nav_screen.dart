@@ -20,6 +20,7 @@ import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
 
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../../routes/app_routes.dart';
+import '../widget/confetti.dart';
 
 class BottomNavRoute {
   static Widget get route => const BottomNavScreen();
@@ -101,7 +102,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
                   index: state.index,
-                  height: 60.0,
+                  height: 65.0,
                   cartCount: state.cartCount,
                   isRTL: context.rtl,
                   items: [
@@ -267,6 +268,26 @@ class BottomNavScreenWidget extends StatelessWidget {
                           ),
                         )
                       : SizedBox(),
+          isCart ?  state.isAnimation ? Positioned(
+         //   top: 5,
+            right: isRTL ? null : 0,
+            left: isRTL ? 0 : null,
+            child: SizedBox(
+              height: 50,
+              width: 25,
+              child: Visibility(
+                visible:state.duringCelebration,
+                child: IgnorePointer(
+                  child: Confetti(
+                    isStopped:!state.duringCelebration,
+                    snippingsCount: 10,
+                    snipSize: 5.0,
+                    colors:[AppColors.mainColor],
+                  ),
+                ),
+              ),
+            ),
+          ):SizedBox() : SizedBox(),
         ],
       ),
     );

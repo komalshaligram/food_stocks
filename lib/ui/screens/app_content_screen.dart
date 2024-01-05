@@ -140,18 +140,23 @@ class AboutAppScreenWidget extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     CustomButtonWidget(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                    buttonEvent(state.appContentDetails.id!);
+                                        },
                                         buttonText:
                                             '${state.appContentDetails.textForButton1}',
                                         bGColor: AppColors.mainColor,
                                         fontColors: AppColors.whiteColor),
                                     10.height,
-                                    CustomButtonWidget(
-                                        onPressed: () {},
-                                        buttonText:
-                                            '${state.appContentDetails.textForButton2}',
-                                        bGColor: AppColors.mainColor,
-                                        fontColors: AppColors.whiteColor),
+                                    state.appContentDetails.textForButton2 !=
+                                            null
+                                        ? CustomButtonWidget(
+                                            onPressed: () {},
+                                            buttonText:
+                                                '${state.appContentDetails.textForButton2}',
+                                            bGColor: AppColors.mainColor,
+                                            fontColors: AppColors.whiteColor)
+                                        : 0.width,
                                   ],
                                 ),
                               )
@@ -164,4 +169,22 @@ class AboutAppScreenWidget extends StatelessWidget {
       ),
     );
   }
+
+  void buttonEvent(String id) {
+
+    switch (id) {
+      case '658d0e87a1bb68d47f70dd09':
+        debugPrint(
+            '______ about the app');
+        break;
+      case '658d0e5aa1bb68d47f70dd03':
+        debugPrint('______ contact us');
+        break;
+      case '658d0e0ea1bb68d47f70dcfd':
+        debugPrint(
+            '______ terms and conditions');
+        break;
+    }
+  }
+
 }

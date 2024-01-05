@@ -228,8 +228,7 @@ class StoreScreenWidget extends StatelessWidget {
                                 children: [
                                   buildListTitles(
                                       context: context,
-                                      title: AppLocalizations.of(context)!
-                                          .companies,
+                                      title: AppLocalizations.of(context)!.companies,
                                       subTitle: state
                                           .companiesList.length <
                                           6

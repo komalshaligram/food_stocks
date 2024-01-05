@@ -2,10 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/company/company_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -18,6 +16,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/company_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CompanyRoute {
   static Widget get route => CompanyScreen();
@@ -30,7 +29,7 @@ class CompanyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
-    debugPrint('company args = $args');
+    debugPrint('company args = ${args}');
     return BlocProvider(
       create: (context) => CompanyBloc()
         ..add(CompanyEvent.setSearchEvent(

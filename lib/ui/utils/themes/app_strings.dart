@@ -55,6 +55,7 @@ class AppStrings {
   static const jsonString = 'JSON';
   static const orderBySupplierId = 'orderSupplierId';
   static const getCartListString = 'getCartListString';
+  static const isSubCategory = 'false';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';
@@ -86,6 +87,8 @@ class AppStrings {
   static const pushNavigationString = 'pushNavigationParam';
   static const monthlyCreditString = 'Monthly Credits';
   static const orderString = 'Order';
+  static const companiesString = 'companies';
+  static const companiesNotAvailableString = 'companiesNotAvailable';
 
   //toast strings
   //static const registerSuccessString = 'Registered Successfully!';

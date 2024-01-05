@@ -114,7 +114,7 @@ class FormFieldValidation {
     } else if (regex.hasMatch(value)) {
       return "${AppLocalizations.of(context)!.enter_valid_address}";
     } else if (!regex1.hasMatch(value)) {
-      return "${AppLocalizations.of(context)!.enter_valid_address}";
+      return '${AppLocalizations.of(context)!.enter_valid_address}';
     }
     return null;
   }
@@ -130,4 +130,16 @@ class FormFieldValidation {
     return null;
   }
 
+  String? driverNameField(String value,BuildContext context) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*+-/=?^_`{|}~]).*$");
+    RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");
+    if (value.isEmpty) {
+      return 'Please enter driver name';
+    } else if (regex.hasMatch(value)) {
+      return '${AppLocalizations.of(context)!.please_enter_alphabets_only}';
+    } else if (!regex1.hasMatch(value)) {
+      return 'Please enter valid driver name';
+    }
+    return null;
+  }
 }

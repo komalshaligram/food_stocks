@@ -107,8 +107,7 @@ class CompanyProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                    response.message?.toLocalization() ?? 'something_is_wrong_try_again',
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -605,6 +604,7 @@ class CompanyProductsBloc
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));

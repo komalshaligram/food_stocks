@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/company_req_model/company_req_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -20,7 +22,10 @@ part 'company_bloc.freezed.dart';
 class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
   CompanyBloc() : super(CompanyState.initial()) {
     on<CompanyEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _GetCompaniesListEvent) {
+  emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
         if (state.isLoadMore) {
           return;
         }

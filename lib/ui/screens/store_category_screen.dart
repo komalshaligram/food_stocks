@@ -47,14 +47,17 @@ class StoreCategoryScreen extends StatelessWidget {
       create: (context) =>
       StoreCategoryBloc()
         ..add(
+            StoreCategoryEvent.isCategoryEvent(isSubCategory:(args?[AppStrings.isSubCategory] != null) ? false : true )
+        )..add(
             StoreCategoryEvent.updateGlobalSearchEvent(
                 search: args?[AppStrings.searchString] ?? '',
                 context: context,
                 searchList: args?[AppStrings.searchResultString] ?? []))..add(
           StoreCategoryEvent.changeCategoryDetailsEvent(
-              categoryId: args?[AppStrings.categoryIdString] ?? '',
+              categoryId: args?[AppStrings.categoryIdString] ?? args?[AppStrings.companyIdString],
               categoryName: args?[AppStrings.categoryNameString] ?? '',
               context: context)),
+
       child: StoreCategoryScreenWidget(),
     );
   }
@@ -110,11 +113,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 : buildTopNavigation(
                                 context: context,
                                 categoryName: state.categoryName,
-                                subCategoryName:
-                                state.subCategoryName,
+                                subCategoryName: state.subCategoryName,
                                 search: state.searchController.text,
                                 searchList: state.searchList),
-                            Expanded(child: state.isSubCategory
+                            Expanded(child:
+                            state.isSubCategory
                                 ?
                             // NotificationListener<ScrollNotification>(
                             //   child:
@@ -284,8 +287,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       getScreenWidth(context),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        '${AppLocalizations.of(context)!
-                                            .products_not_available}',
+                                        '${AppLocalizations.of(context)!.products_not_available}',
                                         textAlign: TextAlign.center,
                                         style: AppStyles
                                             .rkRegularTextStyle(

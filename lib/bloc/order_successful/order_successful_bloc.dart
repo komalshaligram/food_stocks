@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -24,9 +26,6 @@ class OrderSuccessfulBloc
 
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
- /*     SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelp
-          er(prefs: await SharedPreferences.getInstance());*/
 
       if (event is _getWalletRecordEvent) {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
@@ -64,42 +63,49 @@ class OrderSuccessfulBloc
         } on ServerException {}
       }
 
+      if(event is _getOrderCountEvent){
+        try {
+          int daysInMonth(DateTime date) => DateTimeRange(
+              start: DateTime(date.year, date.month, 1),
+              end: DateTime(date.year, date.month + 1))
+              .duration
+              .inDays;
 
-      try {
-        int daysInMonth(DateTime date) => DateTimeRange(
-                start: DateTime(date.year, date.month, 1),
-                end: DateTime(date.year, date.month + 1))
-            .duration
-            .inDays;
+          var now = DateTime.now();
 
-        var now = DateTime.now();
+          GetOrderCountReqModel reqMap = GetOrderCountReqModel(
+            startDate: DateTime(now.year, now.month, 1),
+            endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
+          );
 
-        GetOrderCountReqModel reqMap = GetOrderCountReqModel(
-          startDate: DateTime(now.year, now.month, 1),
-          endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
-        );
+          debugPrint('getOrdersCount reqMap = $reqMap}');
 
-        debugPrint('getOrdersCount reqMap = $reqMap}');
-
-        final res =
-            await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
-                data: reqMap,
-           /*     options: Options(
+          final res =
+          await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
+            data: reqMap,
+            /*     options: Options(
                   headers: {
                     HttpHeaders.authorizationHeader:
                         'Bearer ${preferencesHelper.getAuthToken()}',
                   },
                 )*/
-            );
+          );
 
-        debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
-        GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-        debugPrint('getOrdersCount response  = ${response}');
+          debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+          GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
+          debugPrint('getOrdersCount response  = ${response}');
 
-        if (response.status == 200) {
-          emit(state.copyWith(orderThisMonth: response.data!.toInt()));
-        }
-      } on ServerException {}
+          if (response.status == 200) {
+            emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+          }
+        } on ServerException {}
+      }
+
+      if(event is _celebrationEvent){
+
+        await Future.delayed(const Duration(milliseconds: 2000));
+          emit(state.copyWith(duringCelebration:false ));
+      }
     });
   }
 }

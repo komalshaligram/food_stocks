@@ -191,8 +191,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         width: getScreenWidth(context),
                         alignment: Alignment.center,
                         child: Text(
-                          '${AppLocalizations.of(context)!
-                              .currently_this_Supplier_has_no_products}',
+                          '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
+
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -374,8 +374,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 "${productPrice.toStringAsFixed(
                     AppConstants.amountFrLength) == "0.00" ? '0' : productPrice
                     .toStringAsFixed(
-                    AppConstants.amountFrLength)}${AppLocalizations.of(context)!
-                    .currency}",
+                    AppConstants.amountFrLength)}${'₪'}",
                 onPressed: onPressed,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
@@ -494,7 +493,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     AppConstants.padding_30),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                             '${AppLocalizations.of(context)!.suppliers_not_available}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
@@ -621,7 +620,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                '${AppLocalizations.of(context)!.select_supplier}',
+                              '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -703,7 +702,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -731,7 +730,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -762,7 +761,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        '${AppLocalizations.of(context)!.suppliers_not_available}',
+                      '${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),
@@ -942,7 +941,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -1027,7 +1026,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

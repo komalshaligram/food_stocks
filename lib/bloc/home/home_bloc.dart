@@ -80,8 +80,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             debugPrint('cart1 = ${response.data}');
             debugPrint('main cart count = ${response.data?.data?.length}');
             await preferences.setCartCount(
-                count:
-                    response.data?.data?.length ?? preferences.getCartCount());
+                count: response.data?.data?.length ?? preferences.getCartCount());
             // List<String> cartProductList = [];
             // cartProductList.addAll(response.data?.data?.map(
             //         (cartProduct) => cartProduct.productDetails?.id ?? '') ??

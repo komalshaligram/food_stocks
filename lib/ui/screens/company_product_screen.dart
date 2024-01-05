@@ -59,7 +59,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)?.products??'',
+             title: AppLocalizations.of(context)!.products,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -293,7 +293,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               child: totalSale == 0
                   ? 0.width
                   : Text(
-                      "$totalSale ${AppLocalizations.of(context)!.discount}",
+                "$totalSale ${AppLocalizations.of(context)!.discount}",
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_10,
                           color: AppColors.saleRedColor,
@@ -306,7 +306,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+                    "${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}",
                 onPressed: onPressed,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
@@ -419,7 +419,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     AppConstants.padding_30),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                '${AppLocalizations.of(context)!.suppliers_not_available}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),
@@ -542,7 +542,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               width: getScreenWidth(context),
                               alignment: Alignment.center,
                               child: Text(
-                                '${AppLocalizations.of(context)!.select_supplier}',
+                          '${AppLocalizations.of(context)!.select_supplier}',
                                 style: AppStyles.rkRegularTextStyle(
                                     size: AppConstants.smallFont,
                                     color: AppColors.blackColor),
@@ -624,7 +624,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -652,7 +652,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                                    'Price : ${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
                                                             size: AppConstants
@@ -683,7 +683,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                        '${AppLocalizations.of(context)!.suppliers_not_available}',
+               '${AppLocalizations.of(context)!.suppliers_not_available}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
                             color: AppColors.textColor),
@@ -721,7 +721,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context)!.suppliers,
+                                   AppLocalizations.of(context)!.suppliers,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.mainColor,
@@ -863,7 +863,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                              'Price : ${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,
@@ -948,7 +948,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                             ),
                                                             2.height,
                                                             Text(
-                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
+                                                              'Price : ${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}${'₪'}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants
                                                                       .font_14,

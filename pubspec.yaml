@@ -50,6 +50,7 @@ dependencies:
   image_picker: ^1.0.4
   syncfusion_flutter_signaturepad: ^23.1.39
   cached_network_image: ^3.3.0
+
   easy_localization: ^3.0.3
   shared_preferences: ^2.2.1
   syncfusion_flutter_gauges: ^23.1.36
@@ -73,6 +74,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   flutter_date_range_picker: ^0.0.14
   html: ^0.15.4
+  device_info_plus: ^9.1.1
   carousel_slider: ^4.2.1
   pull_to_refresh: ^2.0.0
   vibration: ^1.8.4
@@ -81,7 +83,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   audioplayers: ^5.2.1
   liquid_pull_to_refresh: ^3.0.1
-  glitters: ^0.4.0
+
+
   another_flushbar: ^1.12.30
 
 
@@ -115,10 +118,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
-    - .env
-    - assets/audio/
-    - shorebird.yaml
+     - assets/images/
+     - .env
+     - assets/audio/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

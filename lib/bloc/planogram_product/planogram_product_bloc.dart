@@ -55,6 +55,7 @@ class PlanogramProductBloc
             planogramName: event.planogram.planogramName ?? '',
             planogramProductList: event.planogram.planogramproducts ?? [],
             productStockList: productStockList));
+
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
@@ -559,6 +560,7 @@ class PlanogramProductBloc
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));

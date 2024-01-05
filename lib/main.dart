@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -16,18 +17,18 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -39,7 +40,7 @@ void main() async {
       const MyApp(),
     );
   },
-      (error, stack) =>
+          (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
@@ -83,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             ),
             primarySwatch: Colors.green,
             canvasColor: Colors.white,
-             cardColor: AppColors.whiteColor,
+            cardColor: AppColors.whiteColor,
             snackBarTheme: SnackBarThemeData(
               backgroundColor: AppColors.mainColor,
               actionTextColor: AppColors.textColor,
