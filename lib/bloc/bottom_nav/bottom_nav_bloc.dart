@@ -1,11 +1,8 @@
 import 'package:bloc/bloc.dart';
-
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../routes/app_routes.dart';
 
 part 'bottom_nav_event.dart';
 
@@ -29,8 +26,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       } else if (event is _PushNavigationEvent) {
         debugPrint('push = ${event.pushNavigation}');
         if (event.pushNavigation.isNotEmpty) {
-          emit(state.copyWith(
-              index: 1, pushNotificationPath: event.pushNavigation));
+          emit(state.copyWith(index: 1, pushNotificationPath: event.pushNavigation));
         }
       }
     });
