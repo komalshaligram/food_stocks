@@ -21,7 +21,7 @@ import Flutter
                          result(FlutterMethodNotImplemented)
                      }
              })
-    
+
 
     if #available(iOS 10.0, *) {
 
