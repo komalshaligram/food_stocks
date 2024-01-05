@@ -556,6 +556,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           color: AppColors.textColor),
                                     ),
                                   ),
+                                  7.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
                                         .type_of_business,

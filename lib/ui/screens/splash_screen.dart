@@ -63,6 +63,7 @@ class SplashScreenWidget extends StatelessWidget {
     final AppsFlyerOptions options = AppsFlyerOptions(
         afDevKey: dotenv.env["DEV_KEY"] ?? '',
         showDebug: true,
+        appId: 'com.foodstock',
         timeToWaitForATTUserAuthorization: 15);
     _appsflyerSdk = AppsflyerSdk(options);
     _appsflyerSdk.initSdk(
@@ -121,17 +122,7 @@ class SplashScreenWidget extends StatelessWidget {
                       width: getScreenWidth(context) * 0.47,
                     ),
                   ),
-                ) /*AnimatedOpacity(
-                  curve: Curves.easeInOut,
-                  opacity: state.isAnimate ? 1 : 0,
-                  duration: Duration(milliseconds: 1000),
-                  child: SvgPicture.asset(
-                    AppImagePath.splashLogo,
-                    height: getScreenHeight(context) * 0.12,
-                    width: getScreenWidth(context) * 0.47,
-                  ),
-                )*/
-                ,
+                ),
               ),
             ),
           );
@@ -140,5 +131,3 @@ class SplashScreenWidget extends StatelessWidget {
     );
   }
 }
-
-//eti3Gz3RRYuUgZVbNrqt5z:APA91bH29l6pxfxQtwh9l3xTQtoCcXhROpI1zX-1oSb3W2QOFW-RycCY63dMS1l41e-dUHG2J4Xmr2FRIL1TR6WvT6uu6vgd9xiyyIgaUuE8p81kOr9zySa5OwJUjeKdFBigKQVkiSq-

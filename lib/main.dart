@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,9 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -33,13 +37,7 @@ void main() async {
       });
     }
     runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Directionality(
-          textDirection: TextDirection.rtl,
-          child: const MyApp(),
-        ),
-      ),
+      const MyApp(),
     );
   },
       (error, stack) =>
@@ -71,6 +69,7 @@ class _MyAppState extends State<MyApp> {
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,
           title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
