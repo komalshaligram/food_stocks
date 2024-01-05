@@ -58,12 +58,12 @@ class SplashScreenWidget extends StatelessWidget {
     return deviceId;
   }
 
-  void appFlyerSetup() {
+void appFlyerSetup() {
     AppsflyerSdk? _appsflyerSdk;
     final AppsFlyerOptions options = AppsFlyerOptions(
         afDevKey: dotenv.env["DEV_KEY"] ?? '',
         showDebug: true,
-        appId: 'com.foodstock',
+        appId: 'com.foodstock.dev',
         timeToWaitForATTUserAuthorization: 15);
     _appsflyerSdk = AppsflyerSdk(options);
     _appsflyerSdk.initSdk(

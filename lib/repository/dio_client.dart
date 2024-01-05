@@ -112,13 +112,20 @@ class DioClient {
               preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
              print('accessToken_____${res.data?.accessToken ?? ''}');
 
-             final response = await post(preferencesHelper.getApiUrl(), data:
-               preferencesHelper.getRqPram()
+             var response = await _dio.post(preferencesHelper.getApiUrl(),
+                 data: preferencesHelper.getRqPram(),
+                 queryParameters: queryParameters,
              );
              print('res_______________________$response');
+             return response.data;
+
+           /*  final response = await post(preferencesHelper.getApiUrl(), data:
+               preferencesHelper.getRqPram()
+             );*/
+
           }
           if(res.status == 401){
-             var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
+             var response1 = await _dio.put(AppUrls.logOutUrl, data: {
             "userId" : preferencesHelper.getUserId()
           });
 
