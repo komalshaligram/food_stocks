@@ -128,11 +128,11 @@ class AppRouting {
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
       settings:
-          RouteSettings(name: settings.name, arguments: settings.arguments),
+          RouteSettings(name: settings.name, arguments: settings.arguments ,),
     );
+
   }
 }
-
 extension RouteExt on Object {
   String get name => toString().substring(toString().indexOf('.') + 1);
 }

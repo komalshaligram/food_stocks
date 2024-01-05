@@ -53,8 +53,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               ));
             });
 
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-                prefs: await SharedPreferences.getInstance());
             await preferencesHelper.setCartCount(
                 count: temp.isEmpty
                     ? preferencesHelper.getCartCount()
@@ -112,6 +110,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             double totalAmount = 0;
             if (list[event.listIndex].totalPayment! > payment) {
               totalAmount = event.totalPayment + newAmount;
+              await preferencesHelper.setIsAnimation(isAnimation: true);
             } else {
               totalAmount = event.totalPayment - newAmount;
             }

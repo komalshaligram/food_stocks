@@ -27,70 +27,73 @@ class CustomTextIconButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: AppConstants.buttonHeight,
-      width: width,
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        height: AppConstants.buttonHeight,
+        width: width,
+        decoration: BoxDecoration(
+            color: AppColors.mainColor,
+            borderRadius: BorderRadius.circular(AppConstants.padding_10)),
+        clipBehavior: Clip.hardEdge,
+        child: MaterialButton(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          elevation: 0,
           color: AppColors.mainColor,
-          borderRadius: BorderRadius.circular(AppConstants.padding_10)),
-      clipBehavior: Clip.hardEdge,
-      child: MaterialButton(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        elevation: 0,
-        color: AppColors.mainColor,
-        onPressed: onPressed,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                svgImage == null
-                    ? 0.height
-                    : Transform(
+          onPressed: onPressed,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  svgImage == null
+                      ? 0.height
+                      : Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                          child: SvgPicture.asset(svgImage!,
+                              height: 20,
+                              width: 20,
+                              fit: BoxFit.scaleDown,
+                              colorFilter: ColorFilter.mode(
+                                  AppColors.whiteColor, BlendMode.srcIn)),
+                        ),
+                  7.width,
+                  Text(
+                    title,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: titleSize ?? 18, color: AppColors.whiteColor),
+                  ),
+                ],
+              ),
+              10.width,
+              cartCount == null
+                  ? 0.height
+                  : AnimatedCrossFade(
+                      firstChild: 16.height,
+                      secondChild: Container(
+                        height: 16,
+                        width: 24,
                         alignment: Alignment.center,
-                        transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                        child: SvgPicture.asset(svgImage!,
-                            height: 20,
-                            width: 20,
-                            fit: BoxFit.scaleDown,
-                            colorFilter: ColorFilter.mode(
-                                AppColors.whiteColor, BlendMode.srcIn)),
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                        ),
+                        child: Text(
+                          '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
+                          style: AppStyles.rkRegularTextStyle(
+                              fontWeight: FontWeight.w100,
+                              size: AppConstants.padding_10,
+                              color: AppColors.mainColor),
+                        ),
                       ),
-                7.width,
-                Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: titleSize ?? 18, color: AppColors.whiteColor),
-                ),
-              ],
-            ),
-            10.width,
-            cartCount == null
-                ? 0.height
-                : AnimatedCrossFade(
-                    firstChild: 16.height,
-                    secondChild: Container(
-                      height: 16,
-                      width: 24,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(AppConstants.radius_100)),
-                      ),
-                      child: Text(
-                        '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
-                        style: AppStyles.rkRegularTextStyle(
-                            fontWeight: FontWeight.w100,
-                            size: AppConstants.padding_10,
-                            color: AppColors.mainColor),
-                      ),
-                    ),
-                    crossFadeState: cartCount == 0
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                    duration: Duration(milliseconds: 500)),
-          ],
+                      crossFadeState: cartCount == 0
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: Duration(milliseconds: 500)),
+            ],
+          ),
         ),
       ),
     );

@@ -283,6 +283,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   cartId: profileResModel.data?.client?.cartId ?? '');
               preferencesHelper.setAuthToken(
                   accToken: profileResModel.data?.authToken?.accessToken ?? '');
+              preferencesHelper.setRefreshToken(
+                  refToken: profileResModel.data?.authToken?.refreshToken ?? '');
               if ((profileResModel.data?.client?.clientData?.profileImage ??
                       '') !=
                   '') {

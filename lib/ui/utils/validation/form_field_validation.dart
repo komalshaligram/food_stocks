@@ -78,7 +78,7 @@ class FormFieldValidation {
     } else if (regex.hasMatch(value)) {
       return '${AppLocalizations.of(context)!.please_enter_alphabets_only}';
     } else if (!regex1.hasMatch(value)) {
-      return 'Please enter valid owner name';
+      return '${AppLocalizations.of(context)!.enter_valid_owner_name}';
     }
     return null;
   }
@@ -101,7 +101,7 @@ class FormFieldValidation {
     } else if (regex.hasMatch(value)) {
       return '${AppLocalizations.of(context)!.please_enter_alphabets_only}';
     } else if (!regex1.hasMatch(value)) {
-      return 'Please enter valid contact name';
+      return '${AppLocalizations.of(context)!.enter_valid_contact_name}';
     }
     return null;
   }
@@ -112,9 +112,9 @@ class FormFieldValidation {
     if (value.isEmpty) {
       return "${AppLocalizations.of(context)!.please_enter_address}";
     } else if (regex.hasMatch(value)) {
-      return "Please enter valid address";
+      return "${AppLocalizations.of(context)!.enter_valid_address}";
     } else if (!regex1.hasMatch(value)) {
-      return 'Please enter valid address';
+      return '${AppLocalizations.of(context)!.enter_valid_address}';
     }
     return null;
   }

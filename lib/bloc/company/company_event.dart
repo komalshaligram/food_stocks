@@ -10,4 +10,5 @@ class CompanyEvent with _$CompanyEvent {
 
   const factory CompanyEvent.refreshListEvent({required BuildContext context}) =
       _RefreshListEvent;
+
 }

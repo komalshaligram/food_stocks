@@ -32,7 +32,7 @@ class PlanogramProductScreen extends StatelessWidget {
       create: (context) => PlanogramProductBloc()
         ..add(PlanogramProductEvent.getPlanogramProductsEvent(
             planogram: args?[AppStrings.planogramProductsParamString] ??
-                PlanogramDatum())),
+                PlanogramDatum(),context: context)),
       child: PlanogramProductScreenWidget(),
     );
   }

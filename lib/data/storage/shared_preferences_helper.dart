@@ -16,6 +16,9 @@ class SharedPreferencesHelper {
   static const String userCartId = 'userCartId';
   static const String phoneNumber = 'phoneNumber';
   static const String walletId = 'walletId';
+  static const String reqApiUrl = 'reqApiUrl';
+  static const String apiPram = 'apiPram';
+  static const String isCelebrationAnimation = 'isCelebrationAnimation';
 
   // static const String userCartProducts = 'userCartProducts';
   // static const String userCartProductIds = 'userCartProductIds';
@@ -119,6 +122,17 @@ class SharedPreferencesHelper {
     await prefs.setString(walletId, UserWalletId);
   }
 
+  Future<void> setApiUrl({required String ApiUrl}) async {
+    await prefs.setString(reqApiUrl, ApiUrl);
+  }
+
+  Future<void> setReqPram({required String ReqPram}) async {
+    await prefs.setString(apiPram, ReqPram);
+  }
+
+  Future<void> setIsAnimation({required bool isAnimation}) async {
+    await prefs.setBool(isCelebrationAnimation, isAnimation);
+  }
   // Future<void> setCartProductIdList(
   //     {required List<String> cartProductIds}) async {
   //   await prefs.setStringList(userCartProductIds, cartProductIds);
@@ -190,6 +204,16 @@ class SharedPreferencesHelper {
 
   String getWalletId() {
     return prefs.getString(walletId) ?? '';
+  }
+  String getApiUrl() {
+    return prefs.getString(reqApiUrl) ?? '';
+  }
+  String getRqPram() {
+    return prefs.getString(apiPram) ?? '';
+  }
+  bool getIsAnimation() {
+    return prefs.getBool(isCelebrationAnimation) ?? false;
+
   }
 
 // List<String> getCartProductIdList() {
