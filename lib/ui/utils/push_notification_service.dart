@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/screens/bottom_nav_screen.dart';
 import 'package:food_stock/ui/screens/company_screen.dart';
+import 'package:food_stock/ui/screens/store_category_screen.dart';
+import 'package:food_stock/ui/screens/store_screen.dart';
+import 'package:food_stock/ui/screens/supplier_products_screen.dart';
+import 'package:food_stock/ui/screens/supplier_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
@@ -18,10 +21,16 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../screens/company_product_screen.dart';
+import '../screens/planogram_product_screen.dart';
+
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   var fileName;
+  String _subPage = '';
+  String _mainPage = '';
+  String _id = '';
 
   Future<void> setupInteractedMessage(BuildContext context) async {
     await Firebase.initializeApp();
@@ -41,7 +50,10 @@ class PushNotificationService {
       (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: $message");
         debugPrint("onMessageOpenedApp: ${message.data}");
-        manageNavigation(context, true, 'companyScreen');
+        _mainPage = message.data['data']['message']['mainPage'];
+        _subPage = message.data['data']['message']['subPage'];
+        _id = message.data['data']['message']['id'];
+        manageNavigation(context, true, _mainPage, _subPage , _id);
       },
     );
     if (Platform.isIOS) {
@@ -91,14 +103,16 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        print("details:$details");
-        manageNavigation(context, true, 'companyScreen');
+        print("details:${details}");
+        manageNavigation(context, true, _mainPage, _subPage , _id);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
       var data = json.decode(message!.data['data'].toString());
       final RemoteNotification? notification = message.notification;
+      final String? messageId = message.messageId;
+      debugPrint('messageId______${messageId}');
       final AndroidNotification? android = message.notification?.android;
       debugPrint('data:${data.toString()}');
       if (data != null) {
@@ -107,9 +121,13 @@ class PushNotificationService {
         String? body =
             Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
         String mainPage = data['message']['mainPage'] ?? '';
-        mainPage = 'companyScreen';
         String subPage = data['message']['subPage'] ?? '';
+        String id = data['message']['id'] ?? '';
+        _subPage = subPage;
+        _mainPage = mainPage;
+        _id = id;
         String imageUrl = data['message']['imageUrl'] ?? '';
+
         if (imageUrl.isNotEmpty) {
           final http.Response response;
           response = await http
@@ -126,9 +144,9 @@ class PushNotificationService {
           final file = File(fileName);
           await file.writeAsBytes(response.bodyBytes);
         }
-        // if (mainPage.isNotEmpty) {
-        //   manageNavigation(context, false, subPage.isEmpty ? mainPage : subPage);
-        // }
+        if (mainPage.isNotEmpty) {
+          manageNavigation(context, false, mainPage, subPage ,id );
+        }
         showNotification(
           notification.hashCode,
           title,
@@ -149,18 +167,27 @@ class PushNotificationService {
       title,
       body,
       flutter_local_notifications.NotificationDetails(
-        iOS: DarwinNotificationDetails(
-            attachments: [DarwinNotificationAttachment(fileName)]),
-        android: AndroidNotificationDetails(
-          channelId,
-          channelName,
-          channelDescription: channelDesc,
-          icon: androidIcon,
-          styleInformation: BigPictureStyleInformation(
-            FilePathAndroidBitmap(fileName),
-            hideExpandedLargeIcon: false,
-          ),
-        ),
+        iOS: fileName != null
+            ? DarwinNotificationDetails(
+                attachments: [DarwinNotificationAttachment(fileName)])
+            : DarwinNotificationDetails(),
+        android: fileName != null
+            ? AndroidNotificationDetails(
+                channelId,
+                channelName,
+                channelDescription: channelDesc,
+                icon: androidIcon,
+                styleInformation: BigPictureStyleInformation(
+                  FilePathAndroidBitmap(fileName),
+                  hideExpandedLargeIcon: false,
+                ),
+              )
+            : AndroidNotificationDetails(
+                channelId,
+                channelName,
+                channelDescription: channelDesc,
+                icon: androidIcon,
+              ),
       ),
       // payload: message.data.toString(),
     );
@@ -186,45 +213,66 @@ class PushNotificationService {
   }
 
   void manageNavigation(
-      BuildContext context, bool isAppOpen, String linkToPage) {
-    debugPrint('push = ${linkToPage}');
-    debugPrint('push = ${isAppOpen}');
+      BuildContext context, bool isAppOpen, String mainPage, String subPage , String id) {
+
+    debugPrint('main   = ${mainPage}');
+    debugPrint('subPage   = ${subPage}');
+    debugPrint('id = ${id}');
     if (isAppOpen) {
-      debugPrint('push = ${linkToPage}');
-      // Navigator.popUntil(
-      //     context, (route) => route.name == RouteDefine.bottomNavScreen.name);
-      // Navigator.pushNamed(context, RouteDefine.companyScreen.name);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CompanyRoute.route,
-              settings: RouteSettings(
-                  name: RouteDefine.companyScreen.name,
-                  arguments: {
-                    AppStrings.pushNavigationString: 'companyScreen'
-                  })));
+      if(subPage == ''){
+        if (mainPage == 'companyScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.companyScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+        if (mainPage == 'productSaleScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.productSaleScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+        if (mainPage == 'supplierScreen') {
+          Navigator.pushNamed(
+              navigatorKey.currentState!.context, RouteDefine.supplierScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+        if (mainPage == 'storeScreen') {
+          Navigator.pushNamed(
+              navigatorKey.currentState!.context, RouteDefine.storeScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+      }
+      else{
+        if (subPage == 'companyProductsScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.companyProductsScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+        else if (subPage == 'supplierProductsScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.supplierProductsScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+      else if (subPage == 'storeCategoryScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.storeCategoryScreen.name,
+              arguments: {AppStrings.companyIdString: id});
+        }
+      else if (subPage == 'planogramProductScreen') {
+          Navigator.pushNamed(navigatorKey.currentState!.context,
+              RouteDefine.storeCategoryScreen.name,
+              arguments: {
+                AppStrings.companyIdString: id,
+                AppStrings.isSubCategory: 'false',
+              });
+        }
+      }
+
+
     } else {
       AppRouting.generateRoute(RouteSettings(
           name: RouteDefine.splashScreen.name,
-          arguments: {AppStrings.pushNavigationString: linkToPage}));
+         ));
     }
-    // if(linkToPage == 'companyScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.companyScreen.name);
-    // }else if(linkToPage == 'companyProductsScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
-    // }else if(linkToPage == 'productSaleScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
-    // }else if(linkToPage == 'supplierScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
-    // }else if(linkToPage == 'supplierProductsScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
-    // }else if(linkToPage == 'storeScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.storeScreen.name);
-    // }else if(linkToPage == 'storeCategoryScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
-    // }else if(linkToPage == 'planogramProductScreen'){
-    //   Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
-    // }
   }
 
   @pragma('vm:entry-point')

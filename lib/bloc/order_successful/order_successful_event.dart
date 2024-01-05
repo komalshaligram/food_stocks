@@ -10,10 +10,10 @@ class OrderSuccessfulEvent with _$OrderSuccessfulEvent{
 
   const factory OrderSuccessfulEvent.getOrderCountEvent({
     required BuildContext context,
-  }) = _OrderSuccessfulEvent;
+  }) = _getOrderCountEvent;
 
 
-
+  const factory OrderSuccessfulEvent.celebrationEvent() = _celebrationEvent;
 
 }
 

@@ -116,11 +116,7 @@ class DioClient {
                preferencesHelper.getRqPram()
              );
              print('res_______________________$response');
-
           }
-
-
-
           if(res.status == 401){
              var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()

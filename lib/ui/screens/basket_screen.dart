@@ -318,20 +318,16 @@ class BasketScreenWidget extends StatelessWidget {
                               :*/
                           (state.basketProductList.length) != 0
                               ? Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: getScreenHeight(context) * 0.1),
-                                    child: ListView.builder(
-                                      itemCount: state.basketProductList.length,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_5),
-                                      itemBuilder: (context, index) =>
-                                          basketListItem(
-                                        index: index,
-                                        context: context,
-                                      ),
+                                  child: ListView.builder(
+                                    itemCount: state.basketProductList.length,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_5),
+                                    itemBuilder: (context, index) =>
+                                        basketListItem(
+                                      index: index,
+                                      context: context,
                                     ),
                                   ),
                                 )

@@ -383,7 +383,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                 child: Text(
                                   AppLocalizations.of(context)!.history,
                                   style: AppStyles.rkRegularTextStyle(
-                                      size:  getScreenHeight(context) <= 730 ? AppConstants.font_14 : AppConstants.smallFont,
+                                      size:  getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
                                       color: AppColors.blackColor),
                                 ),
                               ),

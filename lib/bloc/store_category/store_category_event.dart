@@ -80,4 +80,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.planogramRefreshListEvent(
       {required BuildContext context}) = _PlanogramRefreshListEvent;
+
+  const factory StoreCategoryEvent.isCategoryEvent(
+      {required bool isSubCategory}) = _isCategoryEvent;
 }

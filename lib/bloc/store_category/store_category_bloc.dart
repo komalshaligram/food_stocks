@@ -51,6 +51,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
   StoreCategoryBloc() : super(StoreCategoryState.initial()) {
     on<StoreCategoryEvent>((event, emit) async {
+      if (event is _isCategoryEvent) {
+        emit(state.copyWith(isSubCategory: event.isSubCategory));
+      }
       if (event is _ChangeCategoryExpansionEvent) {
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -61,8 +64,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(isSubCategory: event.isSubCategory));
       } else if (event is _ChangeCategoryDetailsEvent) {
         emit(state.copyWith(
-            isSubCategory: true,
-            categoryId: event.categoryId,
+            isSubCategory: state.isSubCategory,
+          // categoryId: event.categoryId,
+           categoryId: '650d812ce2d5ebe2b3d72028',
             categoryName: event.categoryName,
             subCategoryList: [],
             subCategoryPageNum: 0,
@@ -70,7 +74,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList: [
               [ProductStockModel(productId: '')]
             ]));
-        add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+        if(state.isSubCategory == true){
+          add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+        }
+        else{
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
+        }
       } else if (event is _GetProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isSearching: true));
@@ -109,7 +118,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             'sub category ${event.subCategoryId}(${event.subCategoryName})');
         if (event.subCategoryId != state.subCategoryId) {
           emit(state.copyWith(
-            subCategoryId: event.subCategoryId,
+            //subCategoryId: event.subCategoryId,
+            subCategoryId: '653a0ffa598a6cb04055463d',
             subCategoryName: event.subCategoryName,
             planoGramsList: [],
             productStockList: [
@@ -199,8 +209,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               pageLimit: AppConstants.planogramProductPageLimit,
               sortOrder: AppStrings.ascendingString,
               sortField: AppStrings.planogramSortFieldString,
-              categoryId: state.categoryId,
-              subCategoryId: state.subCategoryId);
+              //categoryId: state.categoryId  ,
+              categoryId:'650d812ce2d5ebe2b3d72028',
+             // subCategoryId: state.subCategoryId
+              subCategoryId: '653a0ffa598a6cb04055463d'
+          );
           Map<String, dynamic> req = planogramReqModel.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
@@ -861,6 +874,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
+        await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count = ${preferences.getCartCount()}');
       } else if (event is _GlobalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text));

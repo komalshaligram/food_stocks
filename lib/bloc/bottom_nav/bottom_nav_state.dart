@@ -7,13 +7,14 @@ class BottomNavState with _$BottomNavState {
     required int cartCount,
     required bool isAnimation,
     required String pushNotificationPath,
-    //late ConfettiController _controllerCenter;
+    required bool duringCelebration,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => const BottomNavState(
-    index: 0,
+        index: 0,
         cartCount: 0,
         isAnimation: false,
         pushNotificationPath: '',
+        duringCelebration: false,
       );
 }

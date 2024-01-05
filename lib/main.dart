@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,17 +17,18 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
 
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
     SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -36,16 +37,10 @@ void main() async {
       });
     }
     runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Directionality(
-          textDirection: TextDirection.rtl,
-          child: const MyApp(),
-        ),
-      ),
+      const MyApp(),
     );
   },
-      (error, stack) =>
+          (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
 
@@ -62,16 +57,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await PushNotificationService().setupInteractedMessage(context);
-      // FirebaseMessaging.onMessageOpenedApp.listen(
-      //       (RemoteMessage message) {
-      //     debugPrint("onMessageOpenedApp: $message");
-      //     debugPrint("onMessageOpenedApp: ${message.data}");
-      //     Navigator.pushNamed(context, RouteDefine.splashScreen.name);
-      //   },
-      // );
       await AppConfig.initializeAppConfig(context);
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
     super.initState();
   }
@@ -82,6 +69,7 @@ class _MyAppState extends State<MyApp> {
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,
           title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
@@ -96,7 +84,7 @@ class _MyAppState extends State<MyApp> {
             ),
             primarySwatch: Colors.green,
             canvasColor: Colors.white,
-             cardColor: AppColors.whiteColor,
+            cardColor: AppColors.whiteColor,
             snackBarTheme: SnackBarThemeData(
               backgroundColor: AppColors.mainColor,
               actionTextColor: AppColors.textColor,

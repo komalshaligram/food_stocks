@@ -66,7 +66,6 @@ class HomeScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          print('width_____${getScreenWidth(context)}');
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
@@ -87,9 +86,12 @@ class HomeScreenWidget extends StatelessWidget {
                   children: [
                     //appbar
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_10,
-                          horizontal: AppConstants.padding_10),
+                      padding: const EdgeInsets.only(
+                        top:AppConstants.padding_30 ,
+                          bottom: AppConstants.padding_5,
+                          left: AppConstants.padding_10,
+                          right: AppConstants.padding_10,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -604,34 +606,28 @@ class HomeScreenWidget extends StatelessWidget {
                                           10.height,
                                         ],
                                       ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Flexible(
-                                  child: CustomTextIconButtonWidget(
-                                    title:
-                                        AppLocalizations.of(context)!.new_order,
-                                    onPressed: () {
-                                      context.read<BottomNavBloc>().add(
-                                          BottomNavEvent.changePage(index: 1));
-                                    },
-                                    svgImage: AppImagePath.add,
-                                  ),
-                                ),
-                                Flexible(
-                                  child: CustomTextIconButtonWidget(
-                                    title:
-                                        AppLocalizations.of(context)!.my_basket,
-                                    onPressed: () {
-                                      context.read<BottomNavBloc>().add(
-                                          BottomNavEvent.changePage(index: 2));
-                                    },
-                                    svgImage: AppImagePath.cart,
-                                    cartCount: state.cartCount,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            state.cartCount == 0 ?  CustomTextIconButtonWidget(
+                              width: double.maxFinite,
+                                title:
+                                    AppLocalizations.of(context)!.new_order,
+                                onPressed: () {
+                                  context.read<BottomNavBloc>().add(
+                                      BottomNavEvent.changePage(index: 1));
+                                },
+                                svgImage: AppImagePath.add,
+                              )
+                            : CustomTextIconButtonWidget(
+                              width: double.maxFinite,
+                                title:
+                                AppLocalizations.of(context)!.my_basket,
+                                onPressed: () {
+                                  context.read<BottomNavBloc>().add(
+                                      BottomNavEvent.changePage(index: 2));
+                                },
+                                svgImage: AppImagePath.cart,
+                                cartCount: state.cartCount,
+                              ),
+
                             30.height,
                             state.messageList.isEmpty
                                 ? Padding(
