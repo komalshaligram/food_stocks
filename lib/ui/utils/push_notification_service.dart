@@ -2,11 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
-import 'package:food_stock/ui/screens/company_screen.dart';
-import 'package:food_stock/ui/screens/store_category_screen.dart';
-import 'package:food_stock/ui/screens/store_screen.dart';
-import 'package:food_stock/ui/screens/supplier_products_screen.dart';
-import 'package:food_stock/ui/screens/supplier_screen.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:http/http.dart' as http;
@@ -21,8 +16,6 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/company_product_screen.dart';
-import '../screens/planogram_product_screen.dart';
 
 class PushNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
