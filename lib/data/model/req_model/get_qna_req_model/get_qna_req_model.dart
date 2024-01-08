@@ -17,11 +17,11 @@ String getQnaReqModelToJson(GetQnaReqModel data) => json.encode(data.toJson());
 @freezed
 class GetQnaReqModel with _$GetQnaReqModel {
   const factory GetQnaReqModel({
-    @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "pageLimit") int? pageLimit,
-    @JsonKey(name: "search") String? search,
-    @JsonKey(name: "sortField") String? sortField,
-    @JsonKey(name: "sortOrder") String? sortOrder,
+ int? pageNum,
+ int? pageLimit,
+  String? search,
+ String? sortField,
+     String? sortOrder,
   }) = _GetQnaReqModel;
 
   factory GetQnaReqModel.fromJson(Map<String, dynamic> json) =>

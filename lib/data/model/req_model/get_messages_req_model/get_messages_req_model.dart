@@ -18,12 +18,12 @@ String getMessagesReqModelToJson(GetMessagesReqModel data) =>
 @freezed
 class GetMessagesReqModel with _$GetMessagesReqModel {
   const factory GetMessagesReqModel({
-    @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "pageLimit") int? pageLimit,
-    @JsonKey(name: "sortField") String? sortField,
-    @JsonKey(name: "sortOrder") String? sortOrder,
-    @JsonKey(name: "search") String? search,
-    @JsonKey(name: "messageId") String? messageId,
+  int? pageNum,
+   int? pageLimit,
+   String? sortField,
+   String? sortOrder,
+  String? search,
+   String? messageId,
   }) = _GetMessagesReqModel;
 
   factory GetMessagesReqModel.fromJson(Map<String, dynamic> json) =>

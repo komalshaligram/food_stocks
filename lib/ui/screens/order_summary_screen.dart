@@ -76,8 +76,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           margin: EdgeInsets.only(
-                              left: AppConstants.padding_40,
-                              right: AppConstants.padding_40,
+                              left: AppConstants.padding_20,
+                              right: AppConstants.padding_20,
                               top: AppConstants.padding_10,
                               bottom: AppConstants.padding_40),
                           decoration: BoxDecoration(
@@ -104,9 +104,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  flex: 3,
+                                  flex: 4,
                                   child: Container(
-                                      height: AppConstants.containerHeight_60,
+                                      height: AppConstants.containerHeight_65,
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,
@@ -133,7 +133,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                                   ? Radius.circular(
                                                       AppConstants.radius_30)
                                                   : Radius.circular(AppConstants.radius_6))),
-                                      child: Row(
+                                      child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
@@ -142,14 +142,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                               color: AppColors.whiteColor,
                                               size:
                                                   getScreenWidth(context) <= 380
-                                                      ? AppConstants.mediumFont
-                                                      : AppConstants.normalFont,
+                                                      ? AppConstants.smallFont
+                                                      : AppConstants.mediumFont,
                                             ),
                                           ),
                                           Directionality(
                                             textDirection: TextDirection.ltr,
                                             child: Text(
-                                               /* '${splitNumber(state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',*/
                                                 '${formatNumber(value: state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
@@ -204,7 +203,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                       }
                                     },
                                     child: Container(
-                                      height: AppConstants.containerHeight_60,
+                                      height: AppConstants.containerHeight_65,
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_5,

@@ -704,6 +704,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else if (event is _SetCartCountEvent) {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         emit(state.copyWith(cartCount: preferences.getCartCount()));
+        await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count = ${state.cartCount}');
       } else if (event is _getWalletRecordEvent) {
         try {

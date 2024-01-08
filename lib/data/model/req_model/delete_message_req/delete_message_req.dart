@@ -8,7 +8,7 @@ part 'delete_message_req.g.dart';
 @freezed
 class DeleteMessageReq with _$DeleteMessageReq {
   const factory DeleteMessageReq({
-    @JsonKey(name: "notificationIds")
+
     List<String>? notificationIds,
   }) = _DeleteMessageReq;
 

@@ -731,7 +731,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
     DateTime now = new DateTime.now();
 
     return Container(
-       height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.4 :getScreenHeight(context)/2,
+       height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.3 :getScreenHeight(context)/1.9,
         child: DateRangePickerWidget(
           doubleMonth: doubleMonth,
           initialDateRange: selectedDateRange,

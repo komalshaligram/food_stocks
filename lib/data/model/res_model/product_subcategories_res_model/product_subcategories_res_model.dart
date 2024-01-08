@@ -48,6 +48,7 @@ class SubCategory with _$SubCategory {
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
+    String? parentCategoryName,
   }) = _SubCategory;
 
   factory SubCategory.fromJson(Map<String, dynamic> json) =>

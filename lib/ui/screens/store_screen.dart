@@ -245,8 +245,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     width: getScreenWidth(context),
                                     height: 110,
                                     child: ListView.builder(
-                                      itemCount:
-                                      state.companiesList.length,
+                                      itemCount: state.companiesList.length,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       padding: EdgeInsets.symmetric(

@@ -147,7 +147,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             emit(state.copyWith(
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
-                totalPayment: state.totalPayment - event.totalAmount));
+                totalPayment: state.totalPayment - event.totalAmount,
+            ));
           } else {
             Navigator.pop(event.context);
           }

@@ -56,6 +56,7 @@ class StoreCategoryScreen extends StatelessWidget {
           StoreCategoryEvent.changeCategoryDetailsEvent(
               categoryId: args?[AppStrings.categoryIdString] ?? args?[AppStrings.companyIdString],
               categoryName: args?[AppStrings.categoryNameString] ?? '',
+              isSubCategory: args?[AppStrings.isSubCategory] ?? '',
               context: context)),
 
       child: StoreCategoryScreenWidget(),
@@ -443,7 +444,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         result[AppStrings.categoryIdString],
                                         categoryName:
                                         result[AppStrings.categoryNameString],
-                                        context: context));
+                                        context: context,
+                                    isSubCategory: ''
+                                    ));
                                   }
                                 } else {
                                   state.searchList[index].searchType ==
@@ -503,7 +506,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     state.searchList[index].searchId,
                                     categoryName:
                                     state.searchList[index].name,
-                                    context: context))
+                                    context: context,
+                                isSubCategory: ''
+                                ))
                                     : state.searchList[index].searchType ==
                                     SearchTypes.company
                                     ? Navigator.pushNamed(context, RouteDefine
