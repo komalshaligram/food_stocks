@@ -38,7 +38,6 @@ class PushNotificationService {
       sound: true,
     );
     print('User granted permission: ${settings.authorizationStatus}');
-// This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: $message");
@@ -218,7 +217,7 @@ class PushNotificationService {
               RouteDefine.companyScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-        if (mainPage == 'productSaleScreen') {
+        if (mainPage == 'saleScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.productSaleScreen.name,
               arguments: {AppStrings.companyIdString: id});
@@ -245,17 +244,17 @@ class PushNotificationService {
               RouteDefine.supplierProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-      else if (subPage == 'storeCategoryScreen') {
+      else if (subPage == 'catagoryScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-      else if (subPage == 'planogramProductScreen') {
+      else if (subPage == 'planogramScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {
                 AppStrings.companyIdString: id,
-                AppStrings.isSubCategory: 'false',
+                AppStrings.isSubCategory : 'false',
               });
         }
       }

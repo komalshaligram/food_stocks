@@ -187,7 +187,7 @@ class CompanyScreenWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: CachedNetworkImage(
-                  imageUrl:   "${AppUrls.baseFileUrl}$companyLogo",
+                  imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
                   placeholder: (context, url) => CommonShimmerWidget(

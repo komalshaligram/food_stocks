@@ -209,14 +209,14 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(
+                                        Navigator.pushNamed(
                                                 context,
                                                 RouteDefine
                                                     .orderSummaryScreen.name,
                                                 arguments: {
                                                   AppStrings.getCartListString:
                                                       state.CartItemList
-                                                });
+                                                }) ;
                                           },
                                           child: Container(
                                             // width: getScreenWidth(context) * 0.22,
@@ -356,7 +356,6 @@ class BasketScreenWidget extends StatelessWidget {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
-
         return Dismissible(
           key: Key(state.basketProductList.toString()),
           direction: DismissDirection.startToEnd,
@@ -383,12 +382,12 @@ class BasketScreenWidget extends StatelessWidget {
             ),
           ),
           onDismissed: (direction) {
-            bloc.add(BasketEvent.removeCartProductEvent(
-                context: context,
-                cartProductId: state.basketProductList[index].cartProductId,
-                listIndex: index,
-                dialogContext: context,
-                totalAmount: state.basketProductList[index].totalPayment!));
+              bloc.add(BasketEvent.removeCartProductEvent(
+                  context: context,
+                  cartProductId: state.basketProductList[index].cartProductId,
+                  listIndex: index,
+                  dialogContext: context,
+                  totalAmount: state.basketProductList[index].totalPayment!));
           },
           child: Container(
             margin: EdgeInsets.symmetric(

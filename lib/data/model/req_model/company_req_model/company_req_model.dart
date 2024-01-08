@@ -1,10 +1,6 @@
-// To parse this JSON data, do
-//
-//     final companyReqModel = companyReqModelFromJson(jsonString);
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
-
 part 'company_req_model.freezed.dart';
 
 part 'company_req_model.g.dart';
@@ -18,9 +14,9 @@ String companyReqModelToJson(CompanyReqModel data) =>
 @freezed
 class CompanyReqModel with _$CompanyReqModel {
   const factory CompanyReqModel({
-    @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "pageLimit") int? pageLimit,
-    @JsonKey(name: "search") String? search,
+  int? pageNum,
+  int? pageLimit,
+  String? search,
   }) = _CompanyReqModel;
 
   factory CompanyReqModel.fromJson(Map<String, dynamic> json) =>

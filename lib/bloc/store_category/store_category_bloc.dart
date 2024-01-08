@@ -48,9 +48,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   bool _isProductInCart = false;
   String _cartProductId = '';
   int _productQuantity = 0;
-
+  String isSubCategory = '';
+ String categoryId = '';
   StoreCategoryBloc() : super(StoreCategoryState.initial()) {
     on<StoreCategoryEvent>((event, emit) async {
+
       if (event is _isCategoryEvent) {
         emit(state.copyWith(isSubCategory: event.isSubCategory));
       }
@@ -65,8 +67,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       } else if (event is _ChangeCategoryDetailsEvent) {
         emit(state.copyWith(
             isSubCategory: state.isSubCategory,
-          // categoryId: event.categoryId,
-           categoryId: '650d812ce2d5ebe2b3d72028',
+           categoryId: event.categoryId,
             categoryName: event.categoryName,
             subCategoryList: [],
             subCategoryPageNum: 0,
@@ -78,6 +79,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
         }
         else{
+          isSubCategory = event.isSubCategory;
+          categoryId = event.categoryId;
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
         }
       } else if (event is _GetProductCategoriesListEvent) {
@@ -118,8 +121,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             'sub category ${event.subCategoryId}(${event.subCategoryName})');
         if (event.subCategoryId != state.subCategoryId) {
           emit(state.copyWith(
-            //subCategoryId: event.subCategoryId,
-            subCategoryId: '653a0ffa598a6cb04055463d',
+            subCategoryId: event.subCategoryId,
             subCategoryName: event.subCategoryName,
             planoGramsList: [],
             productStockList: [
@@ -165,6 +167,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               subCategoryPageNum: state.subCategoryPageNum + 1,
               isSubCategoryShimmering: false,
               isLoadMore: false,
+            categoryName: response.data?.subCategories?[0].parentCategoryName ?? ''
             ));
             emit(state.copyWith(
                 isBottomOfSubCategory:
@@ -203,16 +206,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           emit(state.copyWith(
               isPlanogramShimmering: state.planogramPageNum == 0 ? true : false,
               isLoadMore: state.planogramPageNum == 0 ? false : true));
-
-          PlanogramReqModel planogramReqModel = PlanogramReqModel(
+          PlanogramReqModel planogramReqModel = (isSubCategory == '') ? PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
               pageLimit: AppConstants.planogramProductPageLimit,
               sortOrder: AppStrings.ascendingString,
               sortField: AppStrings.planogramSortFieldString,
-              //categoryId: state.categoryId  ,
-              categoryId:'650d812ce2d5ebe2b3d72028',
-             // subCategoryId: state.subCategoryId
-              subCategoryId: '653a0ffa598a6cb04055463d'
+              categoryId: state.categoryId ,
+              subCategoryId: state.subCategoryId
+          ) : PlanogramReqModel(
+              pageNum: state.planogramPageNum + 1,
+              pageLimit: AppConstants.planogramProductPageLimit,
+              sortOrder: AppStrings.ascendingString,
+              sortField: AppStrings.planogramSortFieldString,
+              id: categoryId
           );
           Map<String, dynamic> req = planogramReqModel.toJson();
           req.removeWhere((key, value) {

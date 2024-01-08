@@ -33,7 +33,7 @@ class Confetti extends StatefulWidget {
   const Confetti({
     this.colors = _defaultColors,
     this.isStopped = false,
-    this.snipSize = 3.0,
+  required this.snipSize ,
    required this.snippingsCount ,
     super.key,
   });
@@ -53,11 +53,11 @@ class ConfettiPainter extends CustomPainter {
   DateTime _lastTime = DateTime.now();
 
   final UnmodifiableListView<Color> colors;
-  int? snippingsCount;
-   double? snipSize;
+  int snippingsCount ;
+   double snipSize;
 
   ConfettiPainter(
-      {required Listenable animation, required Iterable<Color> colors,required snippingsCount , required snipSize})
+      {required Listenable animation, required Iterable<Color> colors,required this.snippingsCount , required this.snipSize})
       : colors = UnmodifiableListView(colors),
         super(repaint: animation);
 
@@ -66,13 +66,12 @@ class ConfettiPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (_size == null) {
-      // First time we have a size.
       _snippings = List.generate(
-          snippingsCount ?? 10,
+          snippingsCount,
           (i) => _PaperSnipping(
                 frontColor: colors[i % colors.length],
                 bounds: size,
-            snipSize: snipSize ?? 3.0,
+            snipSize: snipSize,
               ));
     }
 
@@ -101,13 +100,16 @@ class _ConfettiState extends State<Confetti>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
+
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: ConfettiPainter(
         snippingsCount: widget.snippingsCount,
         colors: widget.colors,
-        animation: _controller, snipSize: widget.snipSize,
+        animation: _controller,
+        snipSize: widget.snipSize,
       ),
       willChange: true,
       child: const SizedBox(),
@@ -189,12 +191,12 @@ class _PaperSnipping {
 
   final paint = Paint()..style = PaintingStyle.fill;
 
-  var snipSize;
+  double snipSize;
 
   _PaperSnipping({
     required this.frontColor,
     required Size bounds,
-  required this.snipSize,
+    required this.snipSize,
   }) : _bounds = bounds;
 
   void draw(Canvas canvas) {

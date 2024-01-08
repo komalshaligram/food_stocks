@@ -10,9 +10,9 @@ part 'get_all_order_req_model.g.dart';
 @freezed
 class GetAllOrderReqModel with _$GetAllOrderReqModel {
   const factory GetAllOrderReqModel({
-    @JsonKey(name: "search")
+
     String? search,
-    @JsonKey(name: "orderId")
+
     String? orderId,
     int? pageNum,
     int? pageLimit,

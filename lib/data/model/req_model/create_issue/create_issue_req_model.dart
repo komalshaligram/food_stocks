@@ -11,8 +11,8 @@ part 'create_issue_req_model.g.dart';
 @freezed
 class CreateIssueReqModel with _$CreateIssueReqModel {
   const factory CreateIssueReqModel({
-    @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "products") List<Product>? products,
+ String? supplierId,
+    List<Product>? products,
   }) = _CreateIssueReqModel;
 
   factory CreateIssueReqModel.fromJson(Map<String, dynamic> json) =>
@@ -22,9 +22,9 @@ class CreateIssueReqModel with _$CreateIssueReqModel {
 @freezed
 class Product with _$Product {
   const factory Product({
-    @JsonKey(name: "productId") String? productId,
-    @JsonKey(name: "issue") String? issue,
-    @JsonKey(name: "missingQuantity") int? missingQuantity,
+ String? productId,
+  String? issue,
+   int? missingQuantity,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>

@@ -258,6 +258,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                       child: Confetti(
                         isStopped:!state.duringCelebration,
                         snippingsCount: 200,
+                        snipSize: 7.0,
                       ),
                     ),
                   ),

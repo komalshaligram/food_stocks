@@ -139,11 +139,10 @@ class DioClient {
                   type: SnackBarType.SUCCESS);
             }
           }
-        }else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode ==401){
+        }else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode == 401){
           var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
             "userId" : preferencesHelper.getUserId()
           });
-
           if(response1.statusCode == 200 && !isLogOut) {
             isLogOut = true;
             await preferencesHelper.setUserLoggedIn();

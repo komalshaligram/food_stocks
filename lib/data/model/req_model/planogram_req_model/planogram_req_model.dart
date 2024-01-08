@@ -24,6 +24,7 @@ class PlanogramReqModel with _$PlanogramReqModel {
     String? sortField,
     String? subCategoryId,
     String? categoryId,
+    @JsonKey(name: "_id") String? id,
   }) = _PlanogramReqModel;
 
   factory PlanogramReqModel.fromJson(Map<String, dynamic> json) =>

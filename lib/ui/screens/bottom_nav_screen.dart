@@ -268,7 +268,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                           ),
                         )
                       : SizedBox(),
-          isCart ?  state.isAnimation ? Positioned(
+          isCart ?  state.isAnimation  && state.index != 2 ? Positioned(
          //   top: 5,
             right: isRTL ? null : 0,
             left: isRTL ? 0 : null,
@@ -281,7 +281,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   child: Confetti(
                     isStopped:!state.duringCelebration,
                     snippingsCount: 10,
-                    snipSize: 5.0,
+                    snipSize: 3.0,
                     colors:[AppColors.mainColor],
                   ),
                 ),

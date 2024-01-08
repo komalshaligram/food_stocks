@@ -11,7 +11,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.changeCategoryDetailsEvent(
       {required String categoryId,
       required String categoryName,
-      required BuildContext context}) = _ChangeCategoryDetailsEvent;
+      required String isSubCategory,
+      required BuildContext context,
+      }) = _ChangeCategoryDetailsEvent;
 
   const factory StoreCategoryEvent.changeSubCategoryDetailsEvent(
       {required String subCategoryId,

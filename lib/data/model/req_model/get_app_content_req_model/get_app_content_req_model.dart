@@ -18,8 +18,8 @@ String getAppContentReqModelToJson(GetAppContentReqModel data) =>
 @freezed
 class GetAppContentReqModel with _$GetAppContentReqModel {
   const factory GetAppContentReqModel({
-    @JsonKey(name: "pageNum") int? pageNum,
-    @JsonKey(name: "pageLimit") int? pageLimit,
+    int? pageNum,
+    int? pageLimit,
   }) = _GetAppContentReqModel;
 
   factory GetAppContentReqModel.fromJson(Map<String, dynamic> json) =>

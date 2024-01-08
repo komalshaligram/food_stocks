@@ -14,6 +14,7 @@ class BasketState with _$BasketState {
     required int productImageIndex,
     required String language,
     required int cartCount,
+    required bool isremove,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -26,84 +27,9 @@ class BasketState with _$BasketState {
      isLoading: false,
        productImageIndex: 0,
      language: 'he',
-     cartCount: 0
+     cartCount: 0,
+     isremove: false
 
 );
 }
 
-
-
-/*basketProductList: [
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-       ProductDetailsModel(
-         productImage: AppImagePath.product3,
-         productName: 'Tomato',
-         productPrice: 12 ,
-         productWeight: 20 ,
-       ),
-     ],*/
