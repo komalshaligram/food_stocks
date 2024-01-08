@@ -25,7 +25,7 @@ class PushNotificationService {
   String _mainPage = '';
   String _id = '';
 
-  Future<void> setupInteractedMessage(BuildContext context) async {
+  Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     NotificationSettings settings = await firebaseMessaging.requestPermission(
@@ -45,7 +45,7 @@ class PushNotificationService {
         _mainPage = message.data['data']['message']['mainPage'];
         _subPage = message.data['data']['message']['subPage'];
         _id = message.data['data']['message']['id'];
-        manageNavigation(context, true, _mainPage, _subPage , _id);
+        manageNavigation( true, _mainPage, _subPage , _id);
       },
     );
     if (Platform.isIOS) {
@@ -54,10 +54,10 @@ class PushNotificationService {
     }
 
     enableIOSNotifications();
-    await registerNotificationListeners(context);
+    await registerNotificationListeners();
   }
 
-  Future<void> registerNotificationListeners(BuildContext context) async {
+  Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
 
     await flutterLocalNotificationsPlugin
@@ -96,7 +96,7 @@ class PushNotificationService {
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
         print("details:${details}");
-        manageNavigation(context, true, _mainPage, _subPage , _id);
+        manageNavigation(true, _mainPage, _subPage , _id);
       },
     );
 // onMessage is called when the app is in foreground and a notification is received
@@ -137,7 +137,7 @@ class PushNotificationService {
           await file.writeAsBytes(response.bodyBytes);
         }
         if (mainPage.isNotEmpty) {
-          manageNavigation(context, false, mainPage, subPage ,id );
+          manageNavigation(false, mainPage, subPage ,id );
         }
         showNotification(
           notification.hashCode,
@@ -204,8 +204,7 @@ class PushNotificationService {
     return fName;
   }
 
-  void manageNavigation(
-      BuildContext context, bool isAppOpen, String mainPage, String subPage , String id) {
+  void manageNavigation(bool isAppOpen, String mainPage, String subPage , String id) {
 
     debugPrint('main   = ${mainPage}');
     debugPrint('subPage   = ${subPage}');

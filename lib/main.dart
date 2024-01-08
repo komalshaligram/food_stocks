@@ -1,10 +1,11 @@
 import 'dart:async';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:food_stock/data/services/my_behavior.dart';
 import 'package:food_stock/data/storage/shared_preferences_helper.dart';
 import 'package:food_stock/routes/app_routes.dart';
@@ -17,13 +18,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
+
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
+    await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -36,6 +38,24 @@ void main() async {
         }
       });
     }
+    final AudioContext audioContext = AudioContext(
+      iOS: AudioContextIOS(
+       // defaultToSpeaker: true,
+        category: AVAudioSessionCategory.ambient,
+        options: [
+          AVAudioSessionOptions.defaultToSpeaker,
+          AVAudioSessionOptions.mixWithOthers,
+        ],
+      ),
+      android: AudioContextAndroid(
+        isSpeakerphoneOn: true,
+        stayAwake: true,
+        contentType: AndroidContentType.sonification,
+        usageType: AndroidUsageType.assistanceSonification,
+        audioFocus: AndroidAudioFocus.none,
+      ),
+    );
+    AudioPlayer.global.setAudioContext(audioContext);
     runApp(
       const MyApp(),
     );
@@ -56,7 +76,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await PushNotificationService().setupInteractedMessage(context);
       await AppConfig.initializeAppConfig(context);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });

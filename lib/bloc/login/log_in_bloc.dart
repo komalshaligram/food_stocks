@@ -50,7 +50,6 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
 
-
           } else {
             debugPrint(response.message!.toLocalization());
             CustomSnackBar.showSnackBar(
