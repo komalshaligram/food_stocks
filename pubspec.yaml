@@ -83,9 +83,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   audioplayers: ^5.2.1
   liquid_pull_to_refresh: ^3.0.1
-
-
   another_flushbar: ^1.12.30
+  flutter_staggered_animations: ^1.1.1
 
 
 dev_dependencies:

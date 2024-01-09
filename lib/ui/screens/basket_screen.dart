@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/basket/basket_bloc.dart';
@@ -97,7 +99,6 @@ class BasketScreenWidget extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
-                                          //width: getScreenWidth(context) * 0.36,
                                           height: AppConstants.containerSize_50,
                                           alignment: Alignment.center,
                                           padding: EdgeInsets.symmetric(
@@ -169,42 +170,6 @@ class BasketScreenWidget extends StatelessWidget {
                                                     )
                                                   ],
                                                 ),
-                                          /*RichText(
-                                            text: TextSpan(
-                                              text: AppLocalizations.of(context)!
-                                                  .total,
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                    size: getScreenWidth(
-                                                        context) <=
-                                                        380
-                                                        ? AppConstants
-                                                        .font_14
-                                                        : AppConstants
-                                                        .mediumFont,
-                                                    color: AppColors
-                                                        .whiteColor,
-                                                ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text:
-                                                    '${' : '}${formatter(state.totalPayment.toString())}${AppLocalizations.of(context)!.currency}',
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                        size: getScreenWidth(
-                                                            context) <=
-                                                            380
-                                                            ? AppConstants
-                                                            .smallFont
-                                                            : AppConstants
-                                                            .mediumFont,
-                                                        color: AppColors
-                                                            .whiteColor,
-                                                        fontWeight:
-                                                        FontWeight.w700)),
-                                              ],
-                                            ),
-                                          ),*/
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -304,30 +269,29 @@ class BasketScreenWidget extends StatelessWidget {
                       state.isShimmering
                           ? BasketScreenShimmerWidget()
                           :
-                          /*  : state.basketProductList.isEmpty
-                              ? Expanded(
-                                  child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.cart_empty,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w400),
-                                  )),
-                                )
-                              :*/
                           (state.basketProductList.length) != 0
-                              ? Expanded(
-                                  child: ListView.builder(
-                                    itemCount: state.basketProductList.length,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5),
-                                    itemBuilder: (context, index) =>
-                                        basketListItem(
-                                      index: index,
-                                      context: context,
+                              ?  Expanded(
+                                  child: AnimationLimiter(
+                                    child: ListView.builder(
+                                      itemCount: state.basketProductList.length,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5),
+                                      itemBuilder: (context, index) =>
+                                          AnimationConfiguration.staggeredList(
+                                            duration: const Duration(seconds: 2),
+                                            position: index,
+                                        child: SlideAnimation(
+                                          verticalOffset: 44.0,
+                                          child: FadeInAnimation(
+                                            child: basketListItem(
+                                              index: index,
+                                              context: context,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 )
@@ -356,7 +320,7 @@ class BasketScreenWidget extends StatelessWidget {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
-        return Dismissible(
+        return  Dismissible(
           key: Key(state.basketProductList.toString()),
           direction: DismissDirection.startToEnd,
           background: Container(
@@ -373,22 +337,100 @@ class BasketScreenWidget extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: SvgPicture.asset(
-                AppImagePath.delete,
-                color: AppColors.whiteColor,
-                height: 30,
-                width: 30,
+              child: GestureDetector(
+                onTap: (){
+                  deleteDialog(context: context,cartProductId: state.basketProductList[index].cartProductId,listIndex: index,
+                      updateClearString: '',totalAmount:  state.basketProductList[index].totalPayment!);
+                },
+                child: SvgPicture.asset(
+                  AppImagePath.delete,
+                  color: AppColors.whiteColor,
+                  height: 30,
+                  width: 30,
+                ),
               ),
             ),
           ),
           onDismissed: (direction) {
-              bloc.add(BasketEvent.removeCartProductEvent(
-                  context: context,
-                  cartProductId: state.basketProductList[index].cartProductId,
-                  listIndex: index,
-                  dialogContext: context,
-                  totalAmount: state.basketProductList[index].totalPayment!));
+
           },
+          confirmDismiss: (DismissDirection direction) async {
+            if (direction == DismissDirection.startToEnd) {
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context1) {
+                  return  AlertDialog(
+                    backgroundColor: AppColors.pageColor,
+                    contentPadding: EdgeInsets.all(20.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    title: Text(
+                        '${AppLocalizations.of(context)!.you_want_delete_product}',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.mediumFont,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.w400)),
+                    actionsPadding: EdgeInsets.only(
+                        right: AppConstants.padding_20,
+                        bottom: AppConstants.padding_20,
+                        left: AppConstants.padding_20),
+                    actions: [
+                      InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          bloc.add(BasketEvent.removeCartProductEvent(
+                              context: context,
+                              cartProductId: state.basketProductList[index].cartProductId,
+                              listIndex: index,
+                              dialogContext: context,
+                              totalAmount: state.basketProductList[index].totalPayment!));
+                         // Navigator.pop(context1);
+                        },
+                        child: Container(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                          alignment: Alignment.center,
+                          decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+                          width: 80,
+                          child: Text(
+                            '${AppLocalizations.of(context)!.yes}',
+                            style: AppStyles.rkRegularTextStyle(
+                                color: AppColors.mainColor.withOpacity(0.9),
+                                size: AppConstants.smallFont),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          bloc.add(BasketEvent.refreshListEvent(context: context1));
+                        },
+                        child: Container(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                          alignment: Alignment.center,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: AppColors.mainColor.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(
+                            '${AppLocalizations.of(context)!.no}',
+                            style: AppStyles.rkRegularTextStyle(
+                                color: AppColors.whiteColor,
+                                size: AppConstants.smallFont),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                },
+              );
+            }
+          },
+
           child: Container(
             margin: EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
@@ -719,11 +761,13 @@ class BasketScreenWidget extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context1) => AlertDialog(
+          backgroundColor: AppColors.pageColor,
               contentPadding: EdgeInsets.all(20.0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               title: Text(
-                  '${AppLocalizations.of(context)!.you_want_clear_cart}',
+                  updateClearString == AppStrings.clearString ? '${AppLocalizations.of(context)!.you_want_clear_cart}' :
+                  '${AppLocalizations.of(context)!.you_want_delete_product}',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.mediumFont,
                       color: AppColors.blackColor,
@@ -766,7 +810,7 @@ class BasketScreenWidget extends StatelessWidget {
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   onTap: () {
-                    Navigator.pop(context1);
+                    bloc.add(BasketEvent.refreshListEvent(context: context1));
                   },
                   child: Container(
                     padding:

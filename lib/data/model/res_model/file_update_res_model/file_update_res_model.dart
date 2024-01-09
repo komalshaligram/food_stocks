@@ -18,9 +18,9 @@ String fileUpdateResModelToJson(FileUpdateResModel data) =>
 @freezed
 class FileUpdateResModel with _$FileUpdateResModel {
   const factory FileUpdateResModel({
-    @JsonKey(name: "status") int? status,
-    @JsonKey(name: "data") Data? data,
-    @JsonKey(name: "message") String? message,
+   int? status,
+   Data? data,
+   String? message,
   }) = _FileUpdateResModel;
 
   factory FileUpdateResModel.fromJson(Map<String, dynamic> json) =>

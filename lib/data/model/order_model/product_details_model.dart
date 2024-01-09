@@ -13,6 +13,7 @@ class ProductDetailsModel{
   bool? isProcess;
 
 
+
   ProductDetailsModel({
     this.isProductIssue = false,
     required this.mainImage,
@@ -23,7 +24,8 @@ class ProductDetailsModel{
      this.cartProductId = '',
     required this.scales,
     required this.weight,
-     this.isProcess = false
+     this.isProcess = false,
+
 
   });
 

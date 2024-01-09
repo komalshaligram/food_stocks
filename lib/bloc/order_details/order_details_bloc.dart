@@ -30,10 +30,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
         try {
           final res = await DioClient(event.context).get(
               path: '${AppUrls.getOrderById}${event.orderId}',
-         /*     options: Options(headers: {
-                HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}'
-              })*/);
+       );
 
           debugPrint(
               'GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
