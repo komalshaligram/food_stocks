@@ -141,6 +141,7 @@ class AboutAppScreenWidget extends StatelessWidget {
                                   children: [
                                     CustomButtonWidget(
                                         onPressed: () {
+                                          Navigator.pop(context);
                                     buttonEvent(state.appContentDetails.id!);
                                         },
                                         buttonText:
@@ -151,7 +152,9 @@ class AboutAppScreenWidget extends StatelessWidget {
                                     state.appContentDetails.textForButton2 !=
                                             null
                                         ? CustomButtonWidget(
-                                            onPressed: () {},
+                                            onPressed: () {
+
+                                            },
                                             buttonText:
                                                 '${state.appContentDetails.textForButton2}',
                                             bGColor: AppColors.mainColor,
@@ -174,6 +177,7 @@ class AboutAppScreenWidget extends StatelessWidget {
 
     switch (id) {
       case '658d0e87a1bb68d47f70dd09':
+
         debugPrint(
             '______ about the app');
         break;

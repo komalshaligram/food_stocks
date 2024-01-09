@@ -53,53 +53,50 @@ class OrderDetailsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
         builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  bgColor: AppColors.pageColor,
-                  title: orderNumber.toString(),
-                  iconData: Icons.arrow_back_ios_sharp,
-                  trailingWidget: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppConstants.padding_10,
-                    ),
-                    child:
-                        (state.orderByIdList.data?.ordersBySupplier?.length ??
-                                    0) ==
-                                0
-                            ? SizedBox()
-                            : CircularButtonWidget(
-                                buttonName: AppLocalizations.of(context)!.total,
-                                buttonValue:
-                                '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-
-                              ),
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: orderNumber.toString(),
+                iconData: Icons.arrow_back_ios_sharp,
+                trailingWidget: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppConstants.padding_10,
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  child:
+                      (state.orderByIdList.data?.ordersBySupplier?.length ??
+                                  0) ==
+                              0
+                          ? SizedBox()
+                          : CircularButtonWidget(
+                              buttonName: AppLocalizations.of(context)!.total,
+                              buttonValue:
+                              '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                            ),
                 ),
-              ),
-              body: FocusDetector(
-                onFocusGained: () {
+                onTap: () {
+                  Navigator.pop(context);
                 },
-                child: (state.orderByIdList.data?.ordersBySupplier?.length ??
-                            0) ==
-                        0
-                    ? OrderSummaryScreenShimmerWidget()
-                    : ListView.builder(
-                        itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.symmetric(
-                            vertical: AppConstants.padding_5),
-                        itemBuilder: (context, index) =>
-                            orderListItem(index: index, context: context, orderByIdList : state.orderByIdList),
-                      ),
               ),
+            ),
+            body: FocusDetector(
+              onFocusGained: () {
+              },
+              child: (state.orderByIdList.data?.ordersBySupplier?.length ??
+                          0) ==
+                      0
+                  ? OrderSummaryScreenShimmerWidget()
+                  : ListView.builder(
+                      itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_5),
+                      itemBuilder: (context, index) =>
+                          orderListItem(index: index, context: context, orderByIdList : state.orderByIdList),
+                    ),
             ),
           );
         },

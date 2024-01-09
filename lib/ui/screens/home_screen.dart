@@ -25,6 +25,7 @@ import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/product_details_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
+import 'package:shimmer/shimmer.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/common_product_button_widget.dart';
@@ -487,7 +488,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ])
                                 : state.productSalesList.isEmpty
                                     ? 0.width
-                                    : Column(
+                                    : Column  (
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,

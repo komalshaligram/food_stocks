@@ -191,15 +191,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         );
                       },
                     ));
-
-
-                /*      Navigator.pushNamed(
-                      context, RouteDefine.productDetailsScreen.name,
-                      arguments: {
-                        AppStrings.orderIdString: state.orderDetailsList[index].id,
-                        AppStrings.orderNumberString: state.orderDetailsList[index].orderNumber,
-                        AppStrings.isNavigateToProductDetailString: true,
-                      });*/
               }
             },
             child: Container(
@@ -326,6 +317,5 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             ),
           ),
         );
-
   }
 }

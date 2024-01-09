@@ -146,7 +146,7 @@ class PushNotificationService {
           channel.id,
           channel.name,
           channel.description ?? '',
-          android!.smallIcon,
+          android!.smallIcon??'',
         );
       }
     });
@@ -168,7 +168,7 @@ class PushNotificationService {
                 channelId,
                 channelName,
                 channelDescription: channelDesc,
-                icon: androidIcon,
+                icon: androidIcon??'',
                 styleInformation: BigPictureStyleInformation(
                   FilePathAndroidBitmap(fileName),
                   hideExpandedLargeIcon: false,
@@ -178,7 +178,7 @@ class PushNotificationService {
                 channelId,
                 channelName,
                 channelDescription: channelDesc,
-                icon: androidIcon,
+                icon: androidIcon??'',
               ),
       ),
       // payload: message.data.toString(),

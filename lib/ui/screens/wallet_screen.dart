@@ -418,14 +418,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     } else {
                                       //for ios permission
                                     }
-
                                     state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
                                         .exportWalletTransactionEvent(
                                       context: context,
                                       startDate: startDate ?? DateTime.now(),
                                       endDate: endDate ?? DateTime.now(),
-
-
                                     )) : SizedBox();
                                   },
                                   child: Container(
