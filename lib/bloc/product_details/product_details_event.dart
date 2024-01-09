@@ -35,12 +35,14 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   }) = _getProductDataEvent;
 
   const factory ProductDetailsEvent.createIssueEvent({
+    required BuildContext BottomSheetContext,
     required BuildContext context,
     required String supplierId,
     required String productId,
     required String issue,
     required int missingQuantity,
     required String orderId,
+    required bool isDeliver
   }) = _createIssueEvent;
 
   const factory ProductDetailsEvent.checkAllEvent(

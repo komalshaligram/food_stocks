@@ -14,7 +14,7 @@ class BasketState with _$BasketState {
     required int productImageIndex,
     required String language,
     required int cartCount,
-    required bool isremove,
+    required bool isRemoveProcess,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -28,7 +28,7 @@ class BasketState with _$BasketState {
        productImageIndex: 0,
      language: 'he',
      cartCount: 0,
-     isremove: false
+     isRemoveProcess: false
 
 );
 }

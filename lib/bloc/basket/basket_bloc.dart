@@ -131,13 +131,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           }
         } on ServerException {}
       } else if (event is _removeCartProductEvent) {
+       // emit(state.copyWith(isRemoveProcess: true));
         try {
           final player = AudioPlayer();
           final response = await DioClient(event.context).post(
             AppUrls.removeCartProductUrl,
             data: {AppStrings.cartProductIdString: event.cartProductId},
           );
-
           if (response['status'] == 200) {
             player.play(AssetSource('audio/delete_sound.mp3'));
             add(BasketEvent.setCartCountEvent(isClearCart: false));
@@ -148,12 +148,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount,
+             // isRemoveProcess: false,
             ));
+           Navigator.pop(event.dialogContext);
           } else {
-            Navigator.pop(event.context);
+            Navigator.pop(event.dialogContext);
           }
         } on ServerException {}
-      } else if (event is _clearCartEvent) {
+      }
+      else if (event is _clearCartEvent) {
         try {
           final res = await DioClient(event.context)
               .post('${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
@@ -177,6 +180,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(productImageIndex: event.index));
       }
-    });
+     else if(event is _refreshListEvent) {
+       Navigator.pop(event.context);
+     emit(state.copyWith(CartItemList: state.CartItemList));
+}
+});
   }
 }

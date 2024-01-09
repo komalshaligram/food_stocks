@@ -83,12 +83,6 @@ class OrderSuccessfulBloc
           final res =
           await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
             data: reqMap,
-            /*     options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                )*/
           );
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');

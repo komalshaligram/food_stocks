@@ -43,12 +43,12 @@ class Data with _$Data {
 class Brand with _$Brand {
   const factory Brand({
     @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "brandName") String? brandName,
-    @JsonKey(name: "brandLogo") String? brandLogo,
-    @JsonKey(name: "isHomePreference") bool? isHomePreference,
-    @JsonKey(name: "order") int? order,
-    @JsonKey(name: "createdAt") DateTime? createdAt,
-    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+  String? brandName,
+  String? brandLogo,
+  bool? isHomePreference,
+   int? order,
+   DateTime? createdAt,
+    DateTime? updatedAt,
     @JsonKey(name: "__v") int? v,
   }) = _Brand;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
@@ -74,6 +75,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                               buttonName: AppLocalizations.of(context)!.total,
                               buttonValue:
                               '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+          
                             ),
                 ),
                 onTap: () {
@@ -81,22 +83,29 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 },
               ),
             ),
-            body: FocusDetector(
-              onFocusGained: () {
-              },
-              child: (state.orderByIdList.data?.ordersBySupplier?.length ??
-                          0) ==
-                      0
-                  ? OrderSummaryScreenShimmerWidget()
-                  : ListView.builder(
-                      itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_5),
-                      itemBuilder: (context, index) =>
-                          orderListItem(index: index, context: context, orderByIdList : state.orderByIdList),
+            body: SafeArea(
+              child: FocusDetector(
+                onFocusGained: () {
+                },
+                child: (state.orderByIdList.data?.ordersBySupplier?.length ??
+                            0) ==
+                        0
+                    ? OrderSummaryScreenShimmerWidget()
+                    : AnimationLimiter(
+                      child: ListView.builder(
+                          itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppConstants.padding_5),
+                          itemBuilder: (context, index) =>
+                              AnimationConfiguration.staggeredList(
+                                  duration: const Duration(seconds: 2),
+                                  position: index,
+                                  child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList : state.orderByIdList))),
+                        ),
                     ),
+              ),
             ),
           );
         },
@@ -107,32 +116,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context, required GetOrderByIdModel orderByIdList}) {
         return GestureDetector(
           onTap: () {
-  /*        Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return ScaleTransition(
-                  alignment: Alignment.center,
-                  scale: Tween<double>(begin: 0.6, end: 1).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.bounceIn,
-                    ),
-                  ),
-                  child: child,
-                );
-              },
-              transitionDuration: Duration(milliseconds: 800),
-              pageBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation) {
-                return ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
-                  productData: state.orderByIdList.data!.ordersBySupplier![index],
-                );
-              },
-            ),
-          );*/
+
             Navigator.push(context,   PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
               productData: orderByIdList.data!.ordersBySupplier![index],
@@ -148,17 +132,6 @@ class OrderDetailsScreenWidget extends StatelessWidget {
             );
             },
             ));
-
-
-
-          /*Navigator.pushNamed(context, RouteDefine.productDetailsScreen.name,
-                arguments: {
-                  AppStrings.productDataString:
-                      state.orderByIdList.data!.ordersBySupplier![index],
-                  AppStrings.orderIdString: orderId,
-                  AppStrings.orderNumberString: orderNumber,
-                  AppStrings.isNavigateToProductDetailString: false,
-                });*/
 
           },
           child: Container(
@@ -241,9 +214,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       flexValue: 3,
                       title: AppLocalizations.of(context)!.total_order,
-                   /*   value: '${formatter(state.orderByIdList.data!.ordersBySupplier![index].totalPayment?.toString() ?? '')}${AppLocalizations.of(context)!.currency}'*/
                       value: '${formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
                       valueTextWeight: FontWeight.w500,
@@ -260,41 +231,4 @@ class OrderDetailsScreenWidget extends StatelessWidget {
 }
 
 
-/*Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
-                          border: Border.all(
-                            color: AppColors.borderColor,
-                            width: 1,
-                          ),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_10,
-                              vertical: AppConstants.padding_5),
-                          decoration: BoxDecoration(
-                            color: AppColors.lightGreyColor,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppConstants.radius_100)),
-                            border: Border.all(
-                              color: AppColors.whiteColor,
-                              width: 1,
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                              text: AppLocalizations.of(context)!.total ,
-                             style: TextStyle(
-                          color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
-                               children: <TextSpan>[
-                            TextSpan(text: ' : 12,450₪',
-                                style: TextStyle(
-                                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
-                            ),
-                            ],
-                          ),
-                          ),
-                        ),
-                      )*/
+

@@ -196,17 +196,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           });
           try {
             debugPrint(
-                'more profile req = ${/*updatedProfileModel.toJson()*/ req}');
+                'more profile req = ${ req}');
             emit(state.copyWith(isLoading: true));
             final res = await DioClient(event.context).post(
                 "${AppUrls.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
-                data: /*updatedProfileModel.toJson()*/ req,
-            /*    options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                )*/);
+                data:  req,
+        );
 
             reqUpdate.ProfileDetailsUpdateResModel response =
                 reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);

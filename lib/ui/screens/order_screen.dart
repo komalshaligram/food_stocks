@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:food_stock/bloc/order/order_bloc.dart';
 import 'package:food_stock/data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
@@ -103,14 +104,25 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             )
                           : (state.orderDetailsList.length) != 0
                               ?
-                              ListView.builder(
-                                  itemCount: state.orderDetailsList.length,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) =>
-                                      orderListItem(
-                                          index: index, context: context,orderDetailsList : state.orderDetailsList),
-                                )
+                      AnimationLimiter(
+                                child: ListView.builder(
+                                    itemCount: state.orderDetailsList.length,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) =>
+                                        AnimationConfiguration.staggeredList(
+                                          duration: const Duration(seconds: 2),
+                                          position: index,
+                                          child: SlideAnimation(
+                                            verticalOffset: 44.0,
+                                            child: FadeInAnimation(
+                                              child: orderListItem(
+                                                  index: index, context: context,orderDetailsList : state.orderDetailsList),
+                                            ),
+                                          ),
+                                        ),
+                                  ),
+                              )
                               : SizedBox(
                                   height: getScreenHeight(context) * 0.8,
                                   child: Center(
@@ -191,6 +203,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         );
                       },
                     ));
+
               }
             },
             child: Container(
@@ -317,5 +330,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             ),
           ),
         );
+
   }
 }

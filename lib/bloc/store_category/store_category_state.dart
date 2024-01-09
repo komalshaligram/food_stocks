@@ -11,6 +11,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required String subCategoryName,
     required List<SubCategory> subCategoryList,
     required List<PlanogramDatum> planoGramsList,
+    required List<PlanogramProduct> planoGramsByIdList,
     required List<Category> productCategoryList,
     required List<List<ProductStockModel>> productStockList,
     required bool isPlanogramShimmering,
@@ -70,5 +71,6 @@ class StoreCategoryState with _$StoreCategoryState {
         noteController: TextEditingController(),
         subCategoryRefreshController: RefreshController(),
         planogramRefreshController: RefreshController(),
+    planoGramsByIdList: []
       );
 }
