@@ -8,11 +8,11 @@ part 'export_wallet_transactions_res_model.g.dart';
 @freezed
 class ExportWalletTransactionsResModel with _$ExportWalletTransactionsResModel {
   const factory ExportWalletTransactionsResModel({
-    @JsonKey(name: "status")
+
     int? status,
-    @JsonKey(name: "data")
+
     String? data,
-    @JsonKey(name: "message")
+
     String? message,
   }) = _ExportWalletTransactionsResModel;
 

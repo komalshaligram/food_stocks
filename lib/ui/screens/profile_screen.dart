@@ -107,7 +107,7 @@ class ProfileScreenWidget extends StatelessWidget {
               elevation: 0,
             ),
             body: state.isShimmering
-                ? /*Shimmer.fromColors(child: Container(height: 100, width: 200,), baseColor: AppColors.greyColor, highlightColor: AppColors.saleRedColor)*/ ProfileScreenShimmerWidget()
+                ?  ProfileScreenShimmerWidget()
                 : Stack(
                     children: [
                       SafeArea(
@@ -320,65 +320,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                                 ),
                                             backgroundColor:
                                                 Colors.transparent);
-                                        // showDialog(
-                                        //   context: context,
-                                        //   builder: (context1) {
-                                        //     return AlertDialog(
-                                        //       actionsPadding: EdgeInsets.only(
-                                        //           left: AppConstants.padding_15,
-                                        //           right: AppConstants.padding_15,
-                                        //           top: AppConstants.padding_15,
-                                        //           bottom: AppConstants.padding_30),
-                                        //       title: Align(
-                                        //           alignment: Alignment.center,
-                                        //           child: Text(
-                                        //               AppLocalizations.of(context)!
-                                        //                   .upload_photo)),
-                                        //       actions: [
-                                        //         Row(
-                                        //           mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceAround,
-                                        //           children: [
-                                        //             GestureDetector(
-                                        //                 onTap: () {
-                                        //                   bloc.add(ProfileEvent
-                                        //                       .pickProfileImageEvent(
-                                        //                           context: c,
-                                        //                           isFromCamera: true));
-                                        //                   Navigator.pop(context1);
-                                        //                 },
-                                        //                 child: Icon(
-                                        //                   Icons.camera_alt_rounded,
-                                        //                   color: AppColors.blackColor,
-                                        //                 )),
-                                        //             GestureDetector(
-                                        //                 onTap: () {
-                                        //                   bloc.add(ProfileEvent
-                                        //                       .pickProfileImageEvent(
-                                        //                           context: c,
-                                        //                           isFromCamera: false));
-                                        //                   Navigator.pop(context1);
-                                        //                 },
-                                        //                 child: Icon(
-                                        //                   Icons.photo,
-                                        //                   color: AppColors.blackColor,
-                                        //                 )),
-                                        //           ],
-                                        //         ),
-                                        //         Row(
-                                        //           mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceAround,
-                                        //           children: [
-                                        //             Text(AppLocalizations.of(context)!
-                                        //                 .camera),
-                                        //             Text(AppLocalizations.of(context)!
-                                        //                 .gallery),
-                                        //           ],
-                                        //         ),
-                                        //       ],
-                                        //     );
-                                        //   },
-                                        // );
                                       },
                                       child: Stack(
                                         children: [
@@ -632,7 +573,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     ],
                                     keyboardType: TextInputType.text,
                                     hint:
-                                        "" /*AppLocalizations.of(context)!.life_grocery_store*/,
+                                        "" ,
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.businessNameValString,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:food_stock/bloc/order_summary/order_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -60,14 +61,21 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 (state.orderSummaryList.data?.data?.length ?? 0) == 0
                     ? Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
-                        child: ListView.builder(
-                          itemCount: state.orderSummaryList.data?.data?.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          padding: EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_5),
-                          itemBuilder: (context, index) =>
-                              orderListItem(index: index, context: context),
+                        child: AnimationLimiter(
+                          child: ListView.builder(
+                            itemCount: state.orderSummaryList.data?.data?.length,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_5),
+                            itemBuilder: (context, index) =>
+                                AnimationConfiguration.staggeredList(
+                                    duration: const Duration(seconds: 2),
+                                    position: index,
+                                    child: SlideAnimation(
+                                        child: FadeInAnimation(
+                                            child: orderListItem(index: index, context: context)))),
+                          ),
                         ),
                       ),
                 (state.orderSummaryList.data?.data?.length ?? 0) == 0
@@ -166,28 +174,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                           ),
                                         ],
                                       )
-                                      /* RichText(
-                                text: TextSpan(
-                                  text: '${AppLocalizations.of(context)!.total}${' : '}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                    color: AppColors.whiteColor,
-                                    size: getScreenWidth(context) <= 380
-                                        ? AppConstants.mediumFont
-                                        : AppConstants.normalFont,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text:
-                                        '${formatter(state.orderSummaryList.data?.cart?.first.totalAmount?.toString() ?? '')}${AppLocalizations.of(context)!.currency}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            color: AppColors.whiteColor,
-                                            size: getScreenWidth(context) <= 380
-                                                ? AppConstants.smallFont
-                                                : AppConstants.mediumFont,
-                                            fontWeight: FontWeight.w700)),
-                                  ],
-                                ),
-                              ),*/
                                       ),
                                 ),
                                 6.width,
@@ -324,7 +310,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     flexValue: 2,
                     title: AppLocalizations.of(context)!.total_order,
                     value:
-                       /* '${splitNumber(state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0')}${AppLocalizations.of(context)!.currency}',*/
                     '${formatNumber(value: state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,

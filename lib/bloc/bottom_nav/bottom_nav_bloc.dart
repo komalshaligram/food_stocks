@@ -31,8 +31,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
         }
-        debugPrint('cart count____= ${state.cartCount}');
-        debugPrint('isAnimation  = ${state.isAnimation}');
+        debugPrint('cart count = ${state.cartCount}');
       } else if (event is _PushNavigationEvent) {
         debugPrint('push = ${event.pushNavigation}');
         if (event.pushNavigation.isNotEmpty) {

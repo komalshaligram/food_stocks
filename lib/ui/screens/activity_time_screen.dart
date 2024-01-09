@@ -147,9 +147,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                     },
                                   )
                                 : SizedBox(),
-                            // SizedBox(
-                            //   height: getScreenHeight(context) * 0.20,
-                            // ),
                             40.height,
                             Padding(
                               padding: EdgeInsets.only(
@@ -204,60 +201,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-            // bottomSheet: BottomSheet(
-            //   backgroundColor: AppColors.whiteColor,
-            //   onClosing: () {},
-            //   builder: (BuildContext context) {
-            //     return Column(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: [
-            //         10.height,
-            //         Padding(
-            //           padding: EdgeInsets.only(
-            //               left: getScreenWidth(context) * 0.08,
-            //               right: getScreenWidth(context) * 0.08),
-            //           child: ButtonWidget(
-            //             buttonText: state.isUpdate
-            //                 ? AppLocalizations.of(context)!.save
-            //                 : AppLocalizations.of(context)!.next,
-            //             fontColors: AppColors.whiteColor,
-            //             width: double.maxFinite,
-            //             onPressed: () {
-            //               context
-            //                   .read<ActivityTimeBloc>()
-            //                   .add(ActivityTimeEvent.activityTimeApiEvent(
-            //                     context: context,
-            //                   ));
-            //             },
-            //             bGColor: AppColors.mainColor,
-            //           ),
-            //         ),
-            //         20.height,
-            //         state.isUpdate
-            //             ? SizedBox()
-            //             : Padding(
-            //                 padding: EdgeInsets.only(
-            //                     left: getScreenWidth(context) * 0.08,
-            //                     right: getScreenWidth(context) * 0.08),
-            //                 child: ButtonWidget(
-            //                   buttonText: AppLocalizations.of(context)!
-            //                       .skip.toUpperCase()
-            //                       .toUpperCase(),
-            //                   fontColors: AppColors.mainColor,
-            //                   borderColor: AppColors.mainColor,
-            //                   width: double.maxFinite,
-            //                   onPressed: () {
-            //                     Navigator.pushNamed(
-            //                         context, RouteDefine.fileUploadScreen.name);
-            //                   },
-            //                   bGColor: AppColors.whiteColor,
-            //                 ),
-            //               ),
-            //         20.height
-            //       ],
-            //     );
-            //   },
-            // ),
+
           );
         },
       ),
@@ -313,8 +257,6 @@ class ActivityTimeRow extends StatelessWidget {
                                           )
                                           : Expanded(
                                             child: Container(
-                                               /* width: getScreenWidth(context) *
-                                                    0.22,*/
                                               ),
                                           ),
                                       SizedBox(
@@ -541,18 +483,3 @@ class TimeContainer extends StatelessWidget {
     );
   }
 }
-
-/*    CupertinoTimerPicker(
-                                      mode: CupertinoTimerPickerMode.hm,
-                                      minuteInterval: 30,
-                                      initialTimerDuration: initialTimer,
-                                      onTimerDurationChanged:
-                                          (Duration changeTimer) {
-                                        initialTimer = changeTimer;
-                                        String time =
-                                            '${changeTimer.inHours}:${changeTimer.inMinutes % 60}';
-                                        var format = DateFormat("HH:mm");
-                                        var start = format.parse(time);
-                                        datetime =
-                                            DateFormat.Hm().format(start);
-                                      }),*/

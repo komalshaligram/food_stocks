@@ -777,19 +777,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               bloc.add(MoreDetailsEvent
                                                   .registrationApiEvent(
                                                       context: context));
-
-                                              /*      if (state.isUpdate) {
-                                  if (state.image.path.isNotEmpty) {
-                                    bloc.add(MoreDetailsEvent
-                                        .registrationApiEvent(
-                                            context: context));
-                                  } else {
-                                    CustomSnackBar.CustomSnackBar.showSnackBar(
-                                        context: context,
-                                        title: AppStrings.selectCompanyLogoString,
-                                        bgColor: AppColors.redColor);
-                                  }
-                                }*/
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,
@@ -820,51 +807,4 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     );
   }
 
-/* void alertDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (c1) {
-        return AlertDialog(
-          actionsPadding: EdgeInsets.only(
-              left: AppConstants.padding_15,
-              right: AppConstants.padding_15,
-              top: AppConstants.padding_15,
-              bottom: AppConstants.padding_30),
-          title: Align(
-              alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context)!.upload_photo)),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      context.read<MoreDetailsBloc>().add(
-                          MoreDetailsEvent.pickLogoImageEvent(
-                              context: context, isFromCamera: true));
-                      Navigator.pop(c1);
-                    },
-                    child: Icon(Icons.camera_alt_rounded)),
-                GestureDetector(
-                    onTap: () {
-                      context.read<MoreDetailsBloc>().add(
-                          MoreDetailsEvent.pickLogoImageEvent(
-                              context: context, isFromCamera: false));
-                      Navigator.pop(c1);
-                    },
-                    child: Icon(Icons.photo)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(AppLocalizations.of(context)!.camera),
-                Text(AppLocalizations.of(context)!.gallery),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }*/
 }
