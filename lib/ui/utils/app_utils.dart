@@ -34,6 +34,7 @@ class CustomSnackBar {
       required SnackBarType type}) {
     if (!isSnackBarOpen) {
       isSnackBarOpen = true;
+
       Flushbar(
         dismissDirection: FlushbarDismissDirection.VERTICAL,
         margin: const EdgeInsets.only(

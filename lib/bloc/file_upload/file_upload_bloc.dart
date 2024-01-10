@@ -146,10 +146,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           type: SnackBarType.FAILURE);
                     }
                   } on ServerException {
-                    // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-                    //     context: event.context,
-                    //     title: AppStrings.somethingWrongString,
-                    //     type: SnackBarType.FAILURE);
                   }
                 }
               } else {
