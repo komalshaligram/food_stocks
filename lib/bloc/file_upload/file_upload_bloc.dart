@@ -401,14 +401,17 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.removed_successfully}',
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.SUCCESS,
+                );
               } else {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.SUCCESS,
+                  snackbarHeight: 0.8
+                );
               }
             } else {
               Navigator.popUntil(event.context,

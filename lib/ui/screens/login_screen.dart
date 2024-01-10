@@ -96,7 +96,8 @@ class LogInScreenWidget extends StatelessWidget {
                           hint: AppStrings.hintNumberString,
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.done,
-                          validator: AppStrings.mobileValString,
+                         // validator: AppStrings.mobileValString,
+                          validator: '',
                         ),
                         30.height,
                         CustomButtonWidget(

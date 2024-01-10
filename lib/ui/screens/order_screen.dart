@@ -51,115 +51,112 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OrderBloc, OrderState>(
-      listener: (context, state) {},
-      child: BlocBuilder<OrderBloc, OrderState>(
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
-                bgColor: AppColors.pageColor,
-                title: AppLocalizations.of(context)!.orders,
-                iconData: Icons.arrow_back_ios_sharp,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
+              bgColor: AppColors.pageColor,
+              title: AppLocalizations.of(context)!.orders,
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
-            body: SafeArea(
-              child:
-                  // NotificationListener<ScrollNotification>(
-                  //   child:
-                  SmartRefresher(
-                enablePullDown: true,
-                controller: state.refreshController,
-                header: RefreshWidget(),
-                footer: CustomFooter(
-                    builder: (context, mode) => OrderSummaryScreenShimmerWidget(
-                          itemCount: 2,
-                        )),
-                enablePullUp: !state.isBottomOfProducts,
-                onRefresh: () {
-                  context
-                      .read<OrderBloc>()
-                      .add(OrderEvent.refreshListEvent(context: context));
-                },
-                onLoading: () {
-                  context
-                      .read<OrderBloc>()
-                      .add(OrderEvent.getAllOrderEvent(context: context));
-                },
-                child: SingleChildScrollView(
-                  physics: state.orderDetailsList.isEmpty
-                      ? const NeverScrollableScrollPhysics()
-                      : null,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      state.isShimmering
-                          ? OrderSummaryScreenShimmerWidget(
-                              itemCount: 10,
-                            )
-                          : (state.orderDetailsList.length) != 0
-                              ?
-                      AnimationLimiter(
-                                child: ListView.builder(
-                                    itemCount: state.orderDetailsList.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) =>
-                                        AnimationConfiguration.staggeredList(
-                                          duration: const Duration(seconds: 2),
-                                          position: index,
-                                          child: SlideAnimation(
-                                            verticalOffset: 44.0,
-                                            child: FadeInAnimation(
-                                              child: orderListItem(
-                                                  index: index, context: context,orderDetailsList : state.orderDetailsList),
-                                            ),
+          ),
+          body: SafeArea(
+            child:
+                // NotificationListener<ScrollNotification>(
+                //   child:
+                SmartRefresher(
+              enablePullDown: true,
+              controller: state.refreshController,
+              header: RefreshWidget(),
+              footer: CustomFooter(
+                  builder: (context, mode) => OrderSummaryScreenShimmerWidget(
+                        itemCount: 2,
+                      )),
+              enablePullUp: !state.isBottomOfProducts,
+              onRefresh: () {
+                context
+                    .read<OrderBloc>()
+                    .add(OrderEvent.refreshListEvent(context: context));
+              },
+              onLoading: () {
+                context
+                    .read<OrderBloc>()
+                    .add(OrderEvent.getAllOrderEvent(context: context));
+              },
+              child: SingleChildScrollView(
+                physics: state.orderDetailsList.isEmpty
+                    ? const NeverScrollableScrollPhysics()
+                    : null,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    state.isShimmering
+                        ? OrderSummaryScreenShimmerWidget(
+                            itemCount: 10,
+                          )
+                        : (state.orderDetailsList.length) != 0
+                            ?
+                    AnimationLimiter(
+                              child: ListView.builder(
+                                  itemCount: state.orderDetailsList.length,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) =>
+                                      AnimationConfiguration.staggeredList(
+                                        duration: const Duration(seconds: 1),
+                                        position: index,
+                                        child: SlideAnimation(
+                                          verticalOffset: 44.0,
+                                          child: FadeInAnimation(
+                                            child: orderListItem(
+                                                index: index, context: context,orderDetailsList : state.orderDetailsList),
                                           ),
                                         ),
-                                  ),
-                              )
-                              : SizedBox(
-                                  height: getScreenHeight(context) * 0.8,
-                                  child: Center(
-                                      child: Text(
-                                    AppLocalizations.of(context)!.no_data,
-                                    style: AppStyles.pVRegularTextStyle(
-                                        size: AppConstants.normalFont,
-                                        color: AppColors.blackColor,
-                                        fontWeight: FontWeight.w400),
-                                  )),
+                                      ),
                                 ),
-                      // state.isLoadMore
-                      //     ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
-                      //     : 0.width,
-                    ],
-                  ),
+                            )
+                            : SizedBox(
+                                height: getScreenHeight(context) * 0.8,
+                                child: Center(
+                                    child: Text(
+                                  AppLocalizations.of(context)!.no_data,
+                                  style: AppStyles.pVRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w400),
+                                )),
+                              ),
+                    // state.isLoadMore
+                    //     ? OrderSummaryScreenShimmerWidget(itemCount: 2,)
+                    //     : 0.width,
+                  ],
                 ),
               ),
-              //   onNotification: (notification) {
-              //     if (notification.metrics.pixels ==
-              //         notification.metrics.maxScrollExtent) {
-              //       if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
-              //           state.orderDetailsList.length) {
-              //         context
-              //             .read<OrderBloc>()
-              //             .add(OrderEvent.getAllOrderEvent(context: context));
-              //       } else {
-              //         return false;
-              //       }
-              //     }
-              //     return true;
-              //   },
-              // ),
             ),
-          );
-        },
-      ),
+            //   onNotification: (notification) {
+            //     if (notification.metrics.pixels ==
+            //         notification.metrics.maxScrollExtent) {
+            //       if ((state.orderList.metaData?.totalFilteredCount ?? 1 ) >
+            //           state.orderDetailsList.length) {
+            //         context
+            //             .read<OrderBloc>()
+            //             .add(OrderEvent.getAllOrderEvent(context: context));
+            //       } else {
+            //         return false;
+            //       }
+            //     }
+            //     return true;
+            //   },
+            // ),
+          ),
+        );
+      },
     );
   }
 

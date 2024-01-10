@@ -327,7 +327,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                 type: SnackBarType.FAILURE);
           }
@@ -376,7 +376,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));

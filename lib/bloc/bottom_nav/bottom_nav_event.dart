@@ -7,6 +7,9 @@ class BottomNavEvent with _$BottomNavEvent {
   const factory BottomNavEvent.updateCartCountEvent() = _UpdateCartCountEvent;
 
   const factory BottomNavEvent.animationCartEvent() = _animationCartEvent;
+  const factory BottomNavEvent.snackbarEvent({
+    required bool isBottomNavBar
+}) = _snackbarEvent;
 
   const factory BottomNavEvent.PushNavigationEvent(
       {required BuildContext context,

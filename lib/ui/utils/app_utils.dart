@@ -1,5 +1,5 @@
+
 import 'dart:math';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -7,6 +7,8 @@ import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
+import 'package:getwidget/getwidget.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 
@@ -27,57 +29,103 @@ enum SnackBarType {
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
+  static void showSnackBar( {required BuildContext context,
+    required String title,
+    required SnackBarType type,
+    double snackbarHeight = 0.86
+  }) {
+    GFToast.showToast(
+      trailing:  Container(
+      ),
+      title,
+      context,
+      backgroundColor: type == SnackBarType.SUCCESS
+          ? AppColors.mainColor.withOpacity(0.85)
+          : AppColors.redColor.withOpacity(0.85),
+      toastBorderRadius: 8.0,
+      toastPosition: GFToastPosition.TOP,
+      // toastDuration:  1,
+      textStyle: AppStyles.rkRegularTextStyle(
+          size: AppConstants.smallFont,
+          color: AppColors.whiteColor,
+          fontWeight: FontWeight.w400),);
 
-  static void showSnackBar(
-      {required BuildContext context,
-      required String title,
-      required SnackBarType type}) {
-    if (!isSnackBarOpen) {
-      isSnackBarOpen = true;
 
-      Flushbar(
-        dismissDirection: FlushbarDismissDirection.VERTICAL,
-        margin: const EdgeInsets.only(
-            left: AppConstants.padding_10,
-            right: AppConstants.padding_10,
-            top: AppConstants.padding_10),
-        duration: const Duration(milliseconds: 2000),
-        borderRadius: BorderRadius.circular(8.0),
+/*    if (!Platform.isAndroid){
+      if (!isSnackBarOpen) {
+        isSnackBarOpen = true;
+        Flushbar(
+          dismissDirection: FlushbarDismissDirection.VERTICAL,
+          margin: const EdgeInsets.only(
+              left: AppConstants.padding_10,
+              right: AppConstants.padding_10,
+              top: AppConstants.padding_10),
+          duration: const Duration(milliseconds: 2000),
+          borderRadius: BorderRadius.circular(8.0),
+          backgroundColor: type == SnackBarType.SUCCESS
+              ? AppColors.mainColor.withOpacity(0.85)
+              : AppColors.redColor.withOpacity(0.85),
+          // backgroundGradient: AppColors.appMainGradientColor.scale(0.8),
+          borderWidth: 0,
+          flushbarStyle: FlushbarStyle.FLOATING,
+          flushbarPosition: FlushbarPosition.TOP,
+          messageText: Text(
+            title,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont,
+                color: AppColors.whiteColor,
+                fontWeight: FontWeight.w400),
+          ),
+        ).show(context).whenComplete(() {
+          isSnackBarOpen = false;
+          debugPrint('isSnackBarOpen after = $isSnackBarOpen');
+        }).catchError((err) {
+          debugPrint('snackbar err = $err');
+          isSnackBarOpen = false;
+        });
+      }
+    }
+    else{
+      GFFloatingWidget(
+        horizontalPosition:0.0,
+        verticalPosition:0.0,
+        child: GFToast.showToast(
+          title,
+          context,
+          backgroundColor: type == SnackBarType.SUCCESS
+              ? AppColors.mainColor.withOpacity(0.85)
+              : AppColors.redColor.withOpacity(0.85),
+          toastBorderRadius: 8.0,
+          toastPosition: GFToastPosition.TOP,
+          // toastDuration:  1,
+          textStyle: AppStyles.rkRegularTextStyle(
+              size: AppConstants.smallFont,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w400),),
+      );
+*//*      GFToast.showToast(
+        title,
+        context,
         backgroundColor: type == SnackBarType.SUCCESS
             ? AppColors.mainColor.withOpacity(0.85)
             : AppColors.redColor.withOpacity(0.85),
-        // backgroundGradient: AppColors.appMainGradientColor.scale(0.8),
-        borderWidth: 0,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        flushbarPosition: FlushbarPosition.TOP,
-        messageText: Text(
-          title,
-          style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont,
-              color: AppColors.whiteColor,
-              fontWeight: FontWeight.w400),
-        ),
-      ).show(context).whenComplete(() {
-        isSnackBarOpen = false;
-        debugPrint('isSnackBarOpen after = $isSnackBarOpen');
-      }).catchError((err) {
-        debugPrint('snackbar err = $err');
-        isSnackBarOpen = false;
-      });
-    }
-    // final snackBar = SnackBar(
-    //   content: Text(
-    //     title,
-    //     style: AppStyles.rkRegularTextStyle(
-    //         size: AppConstants.smallFont,
-    //         color: AppColors.whiteColor,
-    //         fontWeight: FontWeight.w400),
-    //   ),
-    //   backgroundColor: bgColor,
-    //   behavior: SnackBarBehavior.floating,
-    // );
-    // ScaffoldMessenger.of(context).CustomSnackBar.showSnackBar(snackBar);
+        toastBorderRadius: 8.0,
+        toastPosition: GFToastPosition.TOP,
+        // toastDuration:  ,
+        textStyle: AppStyles.rkRegularTextStyle(
+            size: AppConstants.smallFont,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w400),
+
+
+      );*//*
+
+
+    }*/
   }
+
+
+
 }
 
 Future<CroppedFile?> cropImage(

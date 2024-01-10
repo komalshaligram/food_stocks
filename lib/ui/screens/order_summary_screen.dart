@@ -70,7 +70,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                 vertical: AppConstants.padding_5),
                             itemBuilder: (context, index) =>
                                 AnimationConfiguration.staggeredList(
-                                    duration: const Duration(seconds: 2),
+                                    duration: const Duration(seconds: 1),
                                     position: index,
                                     child: SlideAnimation(
                                         child: FadeInAnimation(

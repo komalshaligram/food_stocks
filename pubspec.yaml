@@ -86,6 +86,8 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   another_flushbar: ^1.12.30
   flutter_staggered_animations: ^1.1.1
+  getwidget: ^4.0.0
+
 
 dev_dependencies:
   flutter_test:

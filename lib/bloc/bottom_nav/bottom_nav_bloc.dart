@@ -20,14 +20,14 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       if (event is _ChangePageEvent) {
         emit(state.copyWith(index: event.index));
       } else if (event is _UpdateCartCountEvent) {
-     emit(state.copyWith(isAnimation: false));
+     emit(state.copyWith(isAnimation: false,isBottomBar: false));
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: preferencesHelper.getIsAnimation()));
      }
-     emit(state.copyWith(cartCount: preferencesHelper.getCartCount(),));
+     emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
         if(state.isAnimation){
           await Future.delayed(const Duration(milliseconds: 1000));
-          emit(state.copyWith(duringCelebration:true ));
+          emit(state.copyWith(duringCelebration:true));
           await Future.delayed(const Duration(milliseconds: 2000));
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
         }
