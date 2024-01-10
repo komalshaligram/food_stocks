@@ -27,8 +27,6 @@ enum SnackBarType {
   FAILURE,
 }
 
-
-
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
   static void showSnackBar( {required BuildContext context,
@@ -36,23 +34,21 @@ class CustomSnackBar {
     required SnackBarType type,
     double snackbarHeight = 0.86
   }) {
-    GFFloatingWidget(
-      horizontalPosition:0.0,
-      verticalPosition:0.0,
-      child: GFToast.showToast(
-        title,
-        context,
-        backgroundColor: type == SnackBarType.SUCCESS
-            ? AppColors.mainColor.withOpacity(0.85)
-            : AppColors.redColor.withOpacity(0.85),
-        toastBorderRadius: 8.0,
-        toastPosition: GFToastPosition.TOP,
-        // toastDuration:  1,
-        textStyle: AppStyles.rkRegularTextStyle(
-            size: AppConstants.smallFont,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.w400),),
-    );
+    GFToast.showToast(
+      trailing:  Container(
+      ),
+      title,
+      context,
+      backgroundColor: type == SnackBarType.SUCCESS
+          ? AppColors.mainColor.withOpacity(0.85)
+          : AppColors.redColor.withOpacity(0.85),
+      toastBorderRadius: 8.0,
+      toastPosition: GFToastPosition.TOP,
+      // toastDuration:  1,
+      textStyle: AppStyles.rkRegularTextStyle(
+          size: AppConstants.smallFont,
+          color: AppColors.whiteColor,
+          fontWeight: FontWeight.w400),);
 
 
 /*    if (!Platform.isAndroid){

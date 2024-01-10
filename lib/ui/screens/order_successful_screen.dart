@@ -209,8 +209,8 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                               },
                               child: Container(
                                 margin: EdgeInsets.only(
-                                    left: AppConstants.padding_70,
-                                    right: AppConstants.padding_70,
+                                    left: 50,
+                                    right: 50,
                                    ),
                                 decoration: BoxDecoration(
                                   color: AppColors.whiteColor.withOpacity(0.95),
