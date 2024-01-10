@@ -13,6 +13,7 @@ import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../ui/utils/themes/app_strings.dart';
+
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -93,7 +94,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                       response.message?.toLocalization() ??
                           'loginsuccessmessage',
                       event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.SUCCESS,
+              snackbarHeight: 0.8
+              );
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -117,6 +120,63 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
         debugPrint('new otp = ${state.otp}');
+      } else if (event is _registerApiEvent) {
+        if (state.isLoading) {
+          return;
+        }
+        if (event.otp.length == 4) {
+          emit(state.copyWith(isLoading: true));
+          try {
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+
+            OtpReqModel reqMap = OtpReqModel(
+              contact: event.contact,
+              otp: event.otp,
+            );
+            debugPrint('otp req = $reqMap');
+
+            final res = await DioClient(event.context)
+                .post(AppUrls.otpVerifyUrl, data: reqMap);
+            debugPrint('otp res = $res');
+            LoginOtpResModel response = LoginOtpResModel.fromJson(res);
+
+            if (response.status == 200) {
+              _periodicOtpTimerSubscription.cancel();
+              preferencesHelper.setCartId(cartId: response.data?.cartId ?? '');
+              preferencesHelper.setAuthToken(
+                  accToken: response.data?.authToken?.accessToken ?? '');
+              preferencesHelper.setRefreshToken(
+                  refToken: response.data?.authToken?.refreshToken ?? '');
+              preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
+              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+              preferencesHelper.setWalletId(
+                  UserWalletId: response.data?.wallet ?? '');
+              emit(state.copyWith(isLoading: false));
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(event.context, RouteDefine.profileScreen.name,
+                  arguments: {AppStrings.contactString: event.contact});
+            } else {
+              emit(state.copyWith(isLoading: false));
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
+            }
+          } catch (e) {
+            debugPrint('err = ${e}');
+            emit(state.copyWith(isLoading: false));
+          }
+        } else {
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
+              type: SnackBarType.SUCCESS);
+        }
       }
     });
   }

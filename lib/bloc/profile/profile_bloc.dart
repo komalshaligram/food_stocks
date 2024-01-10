@@ -250,7 +250,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 file.FileUpdateResModel.fromJson(res);
 
             if (response.status == 200) {
-              await preferences.removeProfileImage();
               preferences.setUserImageUrl(
                   imageUrl: response.data!.client!.profileImage.toString());
               debugPrint('update profile image req________${response}');
@@ -335,7 +334,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.updated_successfully}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           } else {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(

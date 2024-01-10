@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
@@ -96,13 +97,14 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               }
             } on ServerException {}
           } else if (response.status == 403) {
-            CustomSnackBar.showSnackBar(
+           CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE,
+           );
             emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(

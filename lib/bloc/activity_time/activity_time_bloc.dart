@@ -63,7 +63,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             debugPrint('response_______$response');
 
             if (response.status == 200) {
-              if (response.data!.clients!.first.clientDetail!.operationTime!.length != 0) {
+              if ((response.data?.clients?.first.clientDetail?.operationTime?.length != 0) ) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
                 var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].sunday ?? [];
                 var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].monday ?? [];
@@ -227,7 +227,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   temp[event.rowIndex].monday[event.timeIndex - 1].until;
 
               var format = DateFormat("HH:mm");
-              var preEnd = format.parse(previousClosingTime!);
+              var preEnd = format.parse(previousClosingTime ?? AppStrings.timeString);
 
               if (event.openingIndex == 1) {
                 if (closingTime == AppStrings.timeString &&
@@ -553,7 +553,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     context: event.context,
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS);
+                    type: SnackBarType.SUCCESS,
+                snackbarHeight: 0.8
+                );
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,

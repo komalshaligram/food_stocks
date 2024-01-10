@@ -100,7 +100,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -144,7 +146,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -189,7 +193,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -216,7 +222,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -245,7 +253,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -441,7 +451,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           // emit(state.copyWith(isProductLoading: false));
@@ -462,7 +474,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.please_select_supplier}',
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+              snackbarHeight: 0.8
+              );
               return;
             }
             productStockList[state.productStockUpdateIndex] =
@@ -477,9 +491,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
+                    "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
                 // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE,
+              snackbarHeight: 0.8
+            );
           }
         }
       } else if (event is _DecreaseQuantityOfProduct) {
@@ -526,8 +542,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
-                    "${AppStrings.maxQuantityMsg1String}${productStockList[state.productStockUpdateIndex].stock}${AppStrings.maxQuantityMsg2String}",
-                type: SnackBarType.FAILURE);
+                    "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
+                type: SnackBarType.FAILURE,
+            snackbarHeight: 0.8
+            );
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           }
@@ -549,7 +567,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               context: event.context,
               title:
                   '${AppLocalizations.of(event.context)!.please_select_supplier}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.FAILURE,
+          snackbarHeight: 0.8
+          );
           return;
         }
         if (state.productStockList[state.productStockUpdateIndex].quantity ==
@@ -557,7 +577,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           CustomSnackBar.showSnackBar(
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.add_1_quantity}',
-              type: SnackBarType.FAILURE);
+              type: SnackBarType.FAILURE,
+          snackbarHeight: 0.8
+          );
           return;
         }
         if (_isProductInCart) {
@@ -595,7 +617,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message!.toLocalization(), event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.SUCCESS,
+              snackbarHeight: 0.8
+              );
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -604,7 +628,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       response.message?.toLocalization() ??
                           'something_is_wrong_try_again',
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+              snackbarHeight: 0.8
+              );
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
@@ -688,7 +714,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                   title: AppStrings.getLocalizedStrings(
                       response.message!.toLocalization(), event.context),
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.SUCCESS,
+              snackbarHeight: 0.8
+              );
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -697,7 +725,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       response.message?.toLocalization() ??
                           'something_is_wrong_try_again',
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+              snackbarHeight: 0.8
+              );
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -706,7 +736,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       response.message?.toLocalization() ??
                           'something_is_wrong_try_again',
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+              snackbarHeight: 0.8
+              );
             }
           } on ServerException {
             debugPrint('url1 = ');
@@ -923,7 +955,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS);
+                type: SnackBarType.SUCCESS,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));

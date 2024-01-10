@@ -89,4 +89,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   const factory StoreCategoryEvent.getPlanogramByIdEvent({
     required BuildContext context
   }) = _getPlanogramByIdEvent;
+
+
+
 }

@@ -71,6 +71,6 @@ class StoreCategoryState with _$StoreCategoryState {
         noteController: TextEditingController(),
         subCategoryRefreshController: RefreshController(),
         planogramRefreshController: RefreshController(),
-    planoGramsByIdList: []
+    planoGramsByIdList: [],
       );
 }

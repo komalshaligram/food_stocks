@@ -280,7 +280,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           vertical: AppConstants.padding_5),
                                       itemBuilder: (context, index) =>
                                           AnimationConfiguration.staggeredList(
-                                            duration: const Duration(seconds: 2),
+                                            duration: const Duration(seconds: 1),
                                             position: index,
                                         child: SlideAnimation(
                                           verticalOffset: 44.0,
@@ -351,9 +351,7 @@ class BasketScreenWidget extends StatelessWidget {
               ),
             ),
           ),
-          onDismissed: (direction) {
 
-          },
           confirmDismiss: (DismissDirection direction) async {
             if (direction == DismissDirection.startToEnd) {
               return await showDialog(
@@ -385,7 +383,6 @@ class BasketScreenWidget extends StatelessWidget {
                               listIndex: index,
                               dialogContext: context,
                               totalAmount: state.basketProductList[index].totalPayment!));
-                         // Navigator.pop(context1);
                         },
                         child: Container(
                           padding:

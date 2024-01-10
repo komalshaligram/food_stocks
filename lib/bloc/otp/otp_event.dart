@@ -16,5 +16,11 @@ class OtpEvent with _$OtpEvent {
     required BuildContext context,
 }) = _otpApiEvent;
 
+  const factory OtpEvent.registerApiEvent({
+    required String contact,
+    required String otp,
+    required bool isRegister,
+    required BuildContext context,
+  }) = _registerApiEvent;
 
 }

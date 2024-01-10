@@ -57,39 +57,149 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
-    return BlocListener<ShipmentVerificationBloc, ShipmentVerificationState>(
-      listener: (context, state) {},
-      child: BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-                      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-          child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: AppLocalizations.of(context)!.shipment_verification,
-            iconData: Icons.arrow_back_ios_sharp,
-            trailingWidget: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-              ),
-              child: CircularButtonWidget(
-                buttonName: AppLocalizations.of(context)!.total,
-                buttonValue:
-                '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0',local: AppStrings.hebrewLocal)}',
-              ),
+    return BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.pageColor,
+                    appBar: PreferredSize(
+        preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+        child: CommonAppBar(
+          bgColor: AppColors.pageColor,
+          title: AppLocalizations.of(context)!.shipment_verification,
+          iconData: Icons.arrow_back_ios_sharp,
+          trailingWidget: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: AppConstants.padding_10,
             ),
-            onTap: () {
-              Navigator.pop(context);
-            },
+            child: CircularButtonWidget(
+              buttonName: AppLocalizations.of(context)!.total,
+              buttonValue:
+              '${formatNumber(value: args?[AppStrings.totalAmountString] ?? '0',local: AppStrings.hebrewLocal)}',
+            ),
           ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+                    ),
+                    body: SafeArea(
+                      child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.all(AppConstants.padding_10),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_15,
+                                        horizontal: AppConstants.padding_10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                      color: AppColors.shadowColor.withOpacity(0.15),
+                      blurRadius: AppConstants.blur_10),
+                                      ],
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(AppConstants.radius_5)),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                      Text(
+                        args?[AppStrings.supplierNameString] ?? '',
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14,
+                          color: AppColors.blackColor,
+                        ),
                       ),
-                      body: SafeArea(
-                        child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
+                      Text(
+                        status?.toTitleCase()?? '',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: AppColors.orangeColor,
+                            fontWeight: FontWeight.w700),
+                      )
+                                          ],
+                                        ),
+                                        7.height,
+                                        Row(
+                                          children: [
+                      CommonOrderContentWidget(
+                        flexValue: 1,
+                        title: AppLocalizations.of(context)!.products,
+                        value: args?[AppStrings.quantityString] ?? '',
+                        titleColor: AppColors.mainColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextWeight: FontWeight.w700,
+                        valueTextSize: AppConstants.smallFont,
+                      ),
+                      5.width,
+                      CommonOrderContentWidget(
+                        flexValue: 2,
+                        title: AppLocalizations.of(context)!.delivery_date,
+                        value: args?[AppStrings.deliveryDateString] ?? '',
+                        titleColor: AppColors.mainColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextSize: AppConstants.font_10,
+                        valueTextWeight: FontWeight.w500,
+                        columnPadding: AppConstants.padding_8,
+                      ),
+                      5.width,
+                      CommonOrderContentWidget(
+                        flexValue: 2,
+                        title: AppLocalizations.of(context)!.total_order,
+                        value:
+                        '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0',local: AppStrings.hebrewLocal)}',
+
+                        titleColor: AppColors.mainColor,
+                        valueColor: AppColors.blackColor,
+                        valueTextWeight: FontWeight.w500,
+                        valueTextSize: AppConstants.smallFont,
+                      ),
+                                          ],
+                                        ),
+                                        15.height,
+                                        RichText(
+                                          text: TextSpan(
+                      text: AppLocalizations.of(context)!
+                          .supplier_order_number,
+                      style: AppStyles.rkRegularTextStyle(
+                        color: AppColors.blackColor,
+                        size: AppConstants.font_14,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: '${' : '}${args?[AppStrings.supplierOrderNumberString] ?? ''}',
+                            style: AppStyles.rkRegularTextStyle(
+                                color: AppColors.blackColor,
+                                size: AppConstants.font_14,
+                                fontWeight: FontWeight.w700)),
+                      ],
+                                          ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_5,
+                                        horizontal: AppConstants.padding_15),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.signature,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.blackColor,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
                                       margin: EdgeInsets.all(AppConstants.padding_10),
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_15,
@@ -102,216 +212,103 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                         blurRadius: AppConstants.blur_10),
                                         ],
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(AppConstants.radius_5)),
+                      Radius.circular(AppConstants.radius_5)),
                                       ),
                                       child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                        Text(
-                          args?[AppStrings.supplierNameString] ?? '',
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.font_14,
-                            color: AppColors.blackColor,
-                          ),
-                        ),
-                        Text(
-                          status?.toTitleCase()?? '',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.orangeColor,
-                              fontWeight: FontWeight.w700),
-                        )
-                                            ],
-                                          ),
-                                          7.height,
-                                          Row(
-                                            children: [
-                        CommonOrderContentWidget(
-                          flexValue: 1,
-                          title: AppLocalizations.of(context)!.products,
-                          value: args?[AppStrings.quantityString] ?? '',
-                          titleColor: AppColors.mainColor,
-                          valueColor: AppColors.blackColor,
-                          valueTextWeight: FontWeight.w700,
-                          valueTextSize: AppConstants.smallFont,
-                        ),
-                        5.width,
-                        CommonOrderContentWidget(
-                          flexValue: 2,
-                          title: AppLocalizations.of(context)!.delivery_date,
-                          value: args?[AppStrings.deliveryDateString] ?? '',
-                          titleColor: AppColors.mainColor,
-                          valueColor: AppColors.blackColor,
-                          valueTextSize: AppConstants.font_10,
-                          valueTextWeight: FontWeight.w500,
-                          columnPadding: AppConstants.padding_8,
-                        ),
-                        5.width,
-                        CommonOrderContentWidget(
-                          flexValue: 2,
-                          title: AppLocalizations.of(context)!.total_order,
-                          value:
-                          '${formatNumber(value: args?[AppStrings.totalOrderString] ?? '0',local: AppStrings.hebrewLocal)}',
-                                  
-                          titleColor: AppColors.mainColor,
-                          valueColor: AppColors.blackColor,
-                          valueTextWeight: FontWeight.w500,
-                          valueTextSize: AppConstants.smallFont,
-                        ),
-                                            ],
-                                          ),
-                                          15.height,
-                                          RichText(
-                                            text: TextSpan(
-                        text: AppLocalizations.of(context)!
-                            .supplier_order_number,
-                        style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.blackColor,
-                          size: AppConstants.font_14,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: '${' : '}${args?[AppStrings.supplierOrderNumberString] ?? ''}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  color: AppColors.blackColor,
-                                  size: AppConstants.font_14,
-                                  fontWeight: FontWeight.w700)),
-                        ],
-                                            ),
-                                          ),
+                                          state.isSignaturePadActive
+                        ? Expanded(
+                            child: SfSignaturePad(
+                                key: signatureGlobalKey,
+                                backgroundColor: Colors.white,
+                                strokeColor: Colors.black,
+                                minimumStrokeWidth: 1.0,
+                                maximumStrokeWidth: 4.0,
 
+                              onDrawStart: () {
+                                  isSign = true;
+                                return false;
+                              },
+                            ),
+                          )
+                        : 0.height,
+                                          Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              bloc.add(ShipmentVerificationEvent
+                                  .signatureEvent());
+                            },
+                            child: SvgPicture.asset(
+                              AppImagePath.signature,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              signatureGlobalKey.currentState!.clear();
+                              bloc.add(ShipmentVerificationEvent.signDeleteEvent());
+                            },
+                            child: SvgPicture.asset(
+                              AppImagePath.delete,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Padding(
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      if (state.isSignaturePadActive && !state.isDelete && isSign) {
+                                        ui.Image tempImage =
+                      await signatureGlobalKey.currentState!.toImage();
+                                        var data = await tempImage.toByteData(
+                      format: ui.ImageByteFormat.png);
+                                        final imageInUnit8List = (data!.buffer.asUint8List());
+                                        final directory =
+                      (await getApplicationDocumentsDirectory()).path; // to get path of the file
+                                        var path = '$directory/fileName.png';
+                                        File image = await File(path).writeAsBytes(imageInUnit8List);
+                                       bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
+                      context: context,
+                      supplierId: args?[AppStrings.supplierIdString],
+                      signPath: image.path,
+                      orderId: args?[AppStrings.orderIdString],
+                                        ),
+                                        );
+                                      } else {
+                                        CustomSnackBar.showSnackBar(
+                      context: context,
+                      title:
+                          '${AppLocalizations.of(context)!.signature_missing}',
+                      type: SnackBarType.FAILURE);
+                                      }
+                                    },
+                                    child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          vertical: AppConstants.padding_5,
-                                          horizontal: AppConstants.padding_15),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.signature,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
-                                        ),
+                                          vertical: AppConstants.padding_20,
+                                          horizontal: AppConstants.padding_30),
+                                      color: AppColors.pageColor,
+                                      child: CustomButtonWidget(
+                                        buttonText:
+                      AppLocalizations.of(context)!.save.toUpperCase(),
+                                        bGColor: AppColors.mainColor,
+                                        isLoading: state.isLoading,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.all(AppConstants.padding_10),
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_15,
-                                            horizontal: AppConstants.padding_10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.whiteColor,
-                                          boxShadow: [
-                                            BoxShadow(
-                          color: AppColors.shadowColor.withOpacity(0.15),
-                          blurRadius: AppConstants.blur_10),
-                                          ],
-                                          borderRadius: BorderRadius.all(
-                        Radius.circular(AppConstants.radius_5)),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            state.isSignaturePadActive
-                          ? Expanded(
-                              child: SfSignaturePad(
-                                  key: signatureGlobalKey,
-                                  backgroundColor: Colors.white,
-                                  strokeColor: Colors.black,
-                                  minimumStrokeWidth: 1.0,
-                                  maximumStrokeWidth: 4.0,
-                                  
-                                onDrawStart: () {
-                                    isSign = true;
-                                  return false;
-                                },
-                              ),
-                            )
-                          : 0.height,
-                                            Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                bloc.add(ShipmentVerificationEvent
-                                    .signatureEvent());
-                              },
-                              child: SvgPicture.asset(
-                                AppImagePath.signature,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                signatureGlobalKey.currentState!.clear();
-                                bloc.add(ShipmentVerificationEvent.signDeleteEvent());
-                              },
-                              child: SvgPicture.asset(
-                                AppImagePath.delete,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (state.isSignaturePadActive && !state.isDelete && isSign) {
-                                          ui.Image tempImage =
-                        await signatureGlobalKey.currentState!.toImage();
-                                          var data = await tempImage.toByteData(
-                        format: ui.ImageByteFormat.png);
-                                          final imageInUnit8List = (data!.buffer.asUint8List());
-                                          final directory =
-                        (await getApplicationDocumentsDirectory()).path; // to get path of the file
-                                          var path = '$directory/fileName.png';
-                                          File image = await File(path).writeAsBytes(imageInUnit8List);
-                                         bloc.add(ShipmentVerificationEvent.deliveryConfirmEvent(
-                        context: context,
-                        supplierId: args?[AppStrings.supplierIdString],
-                        signPath: image.path,
-                        orderId: args?[AppStrings.orderIdString],
-                                          ),
-                                          );
-                                        } else {
-                                          CustomSnackBar.showSnackBar(
-                        context: context,
-                        title:
-                            '${AppLocalizations.of(context)!.signature_missing}',
-                        type: SnackBarType.FAILURE);
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: AppConstants.padding_20,
-                                            horizontal: AppConstants.padding_30),
-                                        color: AppColors.pageColor,
-                                        child: CustomButtonWidget(
-                                          buttonText:
-                        AppLocalizations.of(context)!.save.toUpperCase(),
-                                          bGColor: AppColors.mainColor,
-                                          isLoading: state.isLoading,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                        ),
+                                  ),
+                                ],
                       ),
-                    );
-        },
-      ),
+                    ),
+                  );
+      },
     );
   }
 }
