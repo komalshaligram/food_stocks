@@ -34,4 +34,5 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.refreshListEvent({required BuildContext context}) =_refreshListEvent;
 
 
+
 }

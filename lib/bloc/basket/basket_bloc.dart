@@ -21,6 +21,7 @@ part 'basket_bloc.freezed.dart';
 class BasketBloc extends Bloc<BasketEvent, BasketState> {
   BasketBloc() : super(BasketState.initial()) {
     on<BasketEvent>((event, emit) async {
+
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
@@ -154,7 +155,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           } else {
             Navigator.pop(event.dialogContext);
           }
-        } on ServerException {}
+        } on ServerException { Navigator.pop(event.dialogContext);}
       }
       else if (event is _clearCartEvent) {
         try {
@@ -173,10 +174,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           }
         } on ServerException {}
       } else if (event is _SetCartCountEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
-        await preferences.setCartCount(
-            count: event.isClearCart ? 0 : preferences.getCartCount() - 1);
+
+        await preferencesHelper.setCartCount(
+            count: event.isClearCart ? 0 : preferencesHelper.getCartCount() - 1);
+
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(productImageIndex: event.index));
       }
@@ -184,6 +185,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
        Navigator.pop(event.context);
      emit(state.copyWith(CartItemList: state.CartItemList));
 }
+
 });
   }
 }

@@ -129,8 +129,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
-                    event.context),
-                type: SnackBarType.FAILURE);
+                    event.context,
+                ),
+                type: SnackBarType.FAILURE,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {}
       } else if (event is _getAllWalletTransactionEvent) {
@@ -266,11 +269,17 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             file = File(filePath);
            // debugPrint('[path]   ${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-              CustomSnackBar.showSnackBar(
+             CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
-                  type: SnackBarType.SUCCESS);
+                      response.message!.toLocalization(),
+
+                      event.context),
+                  type: SnackBarType.SUCCESS,
+               snackbarHeight: 0.8
+              );
+           /*   CustomSnackBarWidget(context: event.context, title: AppStrings.getLocalizedStrings(
+                  response.message!.toLocalization(),event.context), type: SnackBarType.SUCCESS,);*/
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
@@ -280,7 +289,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     response.message?.toLocalization() ??
                         'something_is_wrong_try_again',
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE,
+            snackbarHeight: 0.8
+            );
           }
         } on ServerException {emit(state.copyWith(isExportShimmering: false));}
       } else if (event is _getOrderCountEvent) {

@@ -18,7 +18,6 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../widget/common_product_button_widget.dart';
@@ -43,6 +42,7 @@ class StoreCategoryScreen extends StatelessWidget {
         ?.settings
         .arguments as Map?;
     debugPrint('store category args = $args');
+    debugPrint('store  = ${args?[AppStrings.isSubCategory]}');
     return BlocProvider(
       create: (context) =>
       StoreCategoryBloc()

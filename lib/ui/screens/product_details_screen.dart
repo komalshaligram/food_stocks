@@ -41,9 +41,6 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add( isNavigateToProductDetailString ?  ProductDetailsEvent.getOrderByIdEvent(
@@ -108,7 +105,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           buttonName: AppLocalizations.of(context)!.total,
                           buttonValue:
                          '${formatNumber(value: state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-          
+
                         ),
                 ),
                 onTap: () {
@@ -316,12 +313,15 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   '',
                             ),
                           ),
+
                         ],
                         )
                     ),
                   ),
                 ),
-            bottomSheet:state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
+
+
+            bottomSheet: state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
                 ==
                 AppLocalizations.of(context)!.pending_delivery ? Container(
               padding: EdgeInsets.symmetric(
@@ -331,59 +331,59 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               child: CustomButtonWidget(
                 onPressed: () {
                   state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
-                              !=
-                          AppLocalizations.of(context)!.pending_delivery ?
-                      Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          RouteDefine.orderScreen.name,
+                      !=
+                      AppLocalizations.of(context)!.pending_delivery ?
+                  Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RouteDefine.orderScreen.name,
                           (Route route) =>
-                              route.settings.name ==
-                              RouteDefine.menuScreen.name)
+                      route.settings.name ==
+                          RouteDefine.menuScreen.name)
                       :
-                              Navigator.pushNamed(context,
-                                  RouteDefine.shipmentVerificationScreen.name,
-                                  arguments: {
-                                      AppStrings.supplierNameString: state
-                                              .orderBySupplierProduct
-                                              .supplierName
-                                              ?.toString() ??
-                                          '',
-                                      AppStrings.deliveryStatusString: state
-                                              .orderBySupplierProduct
-                                              .deliverStatus
-                                              ?.statusName
-                                              .toString() ??
-                                          '',
-                                      AppStrings.totalOrderString: state
-                                              .orderBySupplierProduct
-                                              .totalPayment
-                                              ?.toStringAsFixed(2) ??
-                                          '0',
-                                      AppStrings
-                                              .deliveryDateString:
-                                          '-',
-                                      AppStrings.quantityString: state
-                                              .orderBySupplierProduct
-                                              .products
-                                              ?.length
-                                              .toString() ??
-                                          '',
-                                      AppStrings.totalAmountString: state
-                                              .orderBySupplierProduct
-                                              .totalPayment
-                                              ?.toStringAsFixed(2) ??
-                                          0,
-                                      AppStrings.orderIdString: widget.orderId,
-                                      AppStrings.supplierIdString:
-                                          state.orderBySupplierProduct.id,
-          
-                                      AppStrings.supplierOrderNumberString:
-                                          state.orderBySupplierProduct
-                                                  .supplierOrderNumber ??
-                                              0
-                                    });
-          
-                      },
+                  Navigator.pushNamed(context,
+                      RouteDefine.shipmentVerificationScreen.name,
+                      arguments: {
+                        AppStrings.supplierNameString: state
+                            .orderBySupplierProduct
+                            .supplierName
+                            ?.toString() ??
+                            '',
+                        AppStrings.deliveryStatusString: state
+                            .orderBySupplierProduct
+                            .deliverStatus
+                            ?.statusName
+                            .toString() ??
+                            '',
+                        AppStrings.totalOrderString: state
+                            .orderBySupplierProduct
+                            .totalPayment
+                            ?.toStringAsFixed(2) ??
+                            '0',
+                        AppStrings
+                            .deliveryDateString:
+                        '-',
+                        AppStrings.quantityString: state
+                            .orderBySupplierProduct
+                            .products
+                            ?.length
+                            .toString() ??
+                            '',
+                        AppStrings.totalAmountString: state
+                            .orderBySupplierProduct
+                            .totalPayment
+                            ?.toStringAsFixed(2) ??
+                            0,
+                        AppStrings.orderIdString: widget.orderId,
+                        AppStrings.supplierIdString:
+                        state.orderBySupplierProduct.id,
+
+                        AppStrings.supplierOrderNumberString:
+                        state.orderBySupplierProduct
+                            .supplierOrderNumber ??
+                            0
+                      });
+
+                },
                 buttonText: AppLocalizations.of(context)!.next,
                 bGColor: AppColors.mainColor,
               ),

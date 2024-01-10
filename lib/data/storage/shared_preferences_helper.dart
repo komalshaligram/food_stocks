@@ -20,6 +20,7 @@ class SharedPreferencesHelper {
   static const String apiPram = 'apiPram';
   static const String isCelebrationAnimation = 'isCelebrationAnimation';
 
+
   // static const String userCartProducts = 'userCartProducts';
   // static const String userCartProductIds = 'userCartProductIds';
   // static const String userCartProductQuantity = 'userCartProductQuantity';
@@ -133,6 +134,8 @@ class SharedPreferencesHelper {
   Future<void> setIsAnimation({required bool isAnimation}) async {
     await prefs.setBool(isCelebrationAnimation, isAnimation);
   }
+
+
   // Future<void> setCartProductIdList(
   //     {required List<String> cartProductIds}) async {
   //   await prefs.setStringList(userCartProductIds, cartProductIds);

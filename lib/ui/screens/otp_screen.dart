@@ -151,11 +151,16 @@ class OTPScreenWidget extends StatelessWidget {
                                       type: SnackBarType.FAILURE);
                                 } else {
                                   if (isRegister == true) {
-                                    Navigator.pushNamed(
+                              /*      Navigator.pushNamed(
                                         context, RouteDefine.profileScreen.name,
                                         arguments: {
                                           AppStrings.contactString: contact
-                                        });
+                                        });*/
+                                    bloc.add(OtpEvent.registerApiEvent(
+                                        contact: contact,
+                                        otp: state.otp,
+                                        isRegister: isRegister,
+                                        context: context));
                                   } else {
                                     bloc.add(OtpEvent.otpApiEvent(
                                         contact: contact,

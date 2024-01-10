@@ -49,6 +49,14 @@ class BottomNavScreenWidget extends StatelessWidget {
 
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
+  List Screen = [
+    HomeScreen(),
+    StoreScreen(),
+    BasketScreen(),
+    WalletScreen(),
+    ProfileMenuScreen()
+  ];
+
   @override
   Widget build(BuildContext context) {
     BottomNavBloc bloc = context.read<BottomNavBloc>();
@@ -171,6 +179,8 @@ class BottomNavScreenWidget extends StatelessWidget {
     );
   }
 
+
+
   Widget _pageContainers(
       {required double screenHeight,
       required double screenWidth,
@@ -180,13 +190,13 @@ class BottomNavScreenWidget extends StatelessWidget {
       width: screenWidth,
       child: FadeIndexedStack(
         index: state.index,
-        children: const [
+        children: [
           HomeScreen(),
           StoreScreen(),
           BasketScreen(),
           WalletScreen(),
           ProfileMenuScreen(),
-        ],
+        ]
       ),
     );
   }

@@ -75,7 +75,6 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                               buttonName: AppLocalizations.of(context)!.total,
                               buttonValue:
                               '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-          
                             ),
                 ),
                 onTap: () {
@@ -100,7 +99,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                               vertical: AppConstants.padding_5),
                           itemBuilder: (context, index) =>
                               AnimationConfiguration.staggeredList(
-                                  duration: const Duration(seconds: 2),
+                                  duration: const Duration(seconds: 1),
                                   position: index,
                                   child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList : state.orderByIdList))),
                         ),

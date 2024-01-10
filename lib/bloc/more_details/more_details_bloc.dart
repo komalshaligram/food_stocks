@@ -215,7 +215,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.updated_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  type: SnackBarType.SUCCESS,
+              snackbarHeight: 0.8
+              );
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -224,7 +226,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                       response.message?.toLocalization() ??
                           'something_is_wrong_try_again',
                       event.context),
-                  type: SnackBarType.FAILURE);
+                  type: SnackBarType.FAILURE,
+              );
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));

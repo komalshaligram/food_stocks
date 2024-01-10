@@ -1,7 +1,9 @@
 class AppUrls {
- static const String baseUrl = 'http://182.70.118.201:3000/api';
+static const String baseUrl = 'http://182.70.118.201:3000/api';
  // static const String baseUrl = 'http://192.168.1.46:8080/api';
+// static const String baseUrl = 'http://51.17.163.56:8080/api';
   static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
+ //static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
 // static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
@@ -76,4 +78,5 @@ class AppUrls {
       '/v1/notifications/getNotificationsCount';
   static const String refreshTokenUrl = '/v1/auth/refreshToken';
   static const String getPlanoramByIdUrl = '/v1/planograms/getPlanogram/';
+  static const String otpVerifyUrl = '/v1/auth/otpVerification';
 }
