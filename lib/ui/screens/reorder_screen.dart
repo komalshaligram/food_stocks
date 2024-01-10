@@ -253,6 +253,7 @@ class ReorderScreenWidget extends StatelessWidget {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
                     return CommonShimmerWidget(
+
                       child: Container(
                         height: 70,
                         width: 70,
