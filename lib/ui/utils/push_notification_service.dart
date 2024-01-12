@@ -121,6 +121,7 @@ class PushNotificationService {
         String imageUrl = data['message']['imageUrl'] ?? '';
 
         if (imageUrl.isNotEmpty) {
+
           final http.Response response;
           response = await http
               .get(Uri.parse(AppUrls.baseFileUrl + imageUrl.toString()));

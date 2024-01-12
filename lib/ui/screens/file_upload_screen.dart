@@ -42,14 +42,7 @@ class FileUploadScreen extends StatelessWidget {
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
                 ? true
-                : false))
-      // ..add(FileUploadEvent.getFilesListEvent(context: context))
-      /*..add(FileUploadEvent.getProfileFilesAndFormsEvent(
-            context: context,
-            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
-                ? true
-                : false))*/
-      ,
+                : false)),
       child: const FileUploadScreenWidget(),
     );
   }

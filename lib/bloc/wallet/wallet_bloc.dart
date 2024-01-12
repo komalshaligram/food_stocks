@@ -326,6 +326,4 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       }
     });
   }
-
 }
-

@@ -769,7 +769,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         try {
           emit(state.copyWith(isMessageShimmering: true));
           final res = await DioClient(event.context).post(
-            //  AppUrls.getAllMessagesUrl,
               AppUrls.getNotificationMessageUrl,
               data: GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson(),
               options: Options(
@@ -803,10 +802,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(
                 messageList: messageList, isMessageShimmering: false));
           } else {
-            /* CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? 'something_is_wrong_try_again',event.context),
-                type: SnackBarType.FAILURE);*/
           }
         } on ServerException {}
       } else if (event is _SetMessageCountEvent) {

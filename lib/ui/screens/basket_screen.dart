@@ -267,8 +267,7 @@ class BasketScreenWidget extends StatelessWidget {
                           : SizedBox(),
                       state.isShimmering
                           ? BasketScreenShimmerWidget()
-                          :
-                          (state.basketProductList.length) != 0
+                          : (state.basketProductList.length) != 0
                               ?  Expanded(
                                   child: AnimationLimiter(
                                     child: ListView.builder(

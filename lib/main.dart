@@ -40,24 +40,6 @@ void main() async {
         }
       });
     }
-    final AudioContext audioContext = AudioContext(
-      iOS: AudioContextIOS(
-       // defaultToSpeaker: true,
-        category: AVAudioSessionCategory.ambient,
-        options: [
-          AVAudioSessionOptions.defaultToSpeaker,
-          AVAudioSessionOptions.mixWithOthers,
-        ],
-      ),
-      android: AudioContextAndroid(
-        isSpeakerphoneOn: true,
-        stayAwake: true,
-        contentType: AndroidContentType.sonification,
-        usageType: AndroidUsageType.assistanceSonification,
-        audioFocus: AndroidAudioFocus.none,
-      ),
-    );
-    AudioPlayer.global.setAudioContext(audioContext);
     runApp(
       const MyApp(),
     );

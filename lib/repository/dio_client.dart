@@ -366,10 +366,10 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
           message: '${AppLocalizations.of(context)!.server_canceled}');
 
     case DioExceptionType.connectionError:
-/*      CustomSnackBar.showSnackBar(
-          context: context,
-          title: "Connection error",
-          bgColor: AppColors.redColor);*/
+      CustomSnackBar.showSnackBar(
+          context: context!,
+          title: 'Connection error',
+          type: SnackBarType.FAILURE);
       return ErrorEntity(code: -1, message: "Connection error");
 
     case DioExceptionType.unknown:
