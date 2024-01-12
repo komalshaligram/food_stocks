@@ -501,13 +501,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             return;
           }
           emit(state.copyWith(isUploadLoading: true, uploadIndex: event.index));
-          RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
+         RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
               path: formsAndFilesList[event.index].url);
           debugPrint('delete file req = ${reqModel.path}');
           final res = await DioClient(event.context)
               .post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
+
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
             emit(state.copyWith(isUploadLoading: false));

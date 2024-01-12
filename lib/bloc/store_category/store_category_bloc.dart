@@ -1036,8 +1036,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final response = await DioClient(event.context)
               .get(path: '${AppUrls.getPlanoramByIdUrl}${categoryId}');
 
-          print('categoryName______${response['data']?['planogram']?['categoryName'] ?? ''}');
-
+          debugPrint('categoryName______${response['data']?['planogram']?['categoryName'] ?? ''}');
+          debugPrint('categoryId_____${categoryId}');
+          debugPrint('url_____${AppUrls.getPlanoramByIdUrl}${categoryId}');
           if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(
                 categoryName : response['data']?['planogram']?['categoryName'] ?? '',

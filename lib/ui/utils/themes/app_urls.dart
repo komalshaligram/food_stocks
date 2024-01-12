@@ -5,7 +5,7 @@ class AppUrls {
  static const String baseUrl = 'https://api.foodstock.shtibel.com/api';
   //static const String baseFileUrl = 'http://182.70.118.201:3000/public/';
  //static const String baseFileUrl = 'http://192.168.1.46:8080/public/';
- static const String baseFileUrl = 'https://foodstock-bucket.s3.amazonaws.com/';
+ static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
 
   static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';

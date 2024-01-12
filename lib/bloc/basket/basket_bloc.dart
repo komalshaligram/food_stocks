@@ -122,6 +122,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               isLoading: false,
             ));
           } else {
+            emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -130,7 +131,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     event.context),
                 type: SnackBarType.FAILURE);
           }
-        } on ServerException {}
+
+        } on ServerException {    emit(state.copyWith(isLoading: false));}
       } else if (event is _removeCartProductEvent) {
         emit(state.copyWith(isRemoveProcess: true));
         try {
@@ -152,6 +154,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 totalPayment: state.totalPayment - event.totalAmount,
               isRemoveProcess: false,
             ));
+            add(BasketEvent.getAllCartEvent(context: event.context));
 
           } else {
             Navigator.pop(event.dialogContext);
