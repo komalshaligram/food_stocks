@@ -314,7 +314,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           return value == null;
         });
         try {
-          debugPrint('token____1 ${preferences.getFCMToken()}');
           debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
