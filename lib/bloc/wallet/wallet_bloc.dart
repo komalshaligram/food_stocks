@@ -42,7 +42,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       var date1 = new DateTime.now();
       var dateParse = DateTime.parse(date.toString());
       if (event is _checkLanguage) {
-
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
       } else if (event is _getYearListEvent) {
         emit(state.copyWith(isShimmering: true));
@@ -69,7 +68,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
           WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-      //    debugPrint('WalletRecordResModel  = $response');
+          //    debugPrint('WalletRecordResModel  = $response');
 
           if (response.status == 200) {
             emit(state.copyWith(
@@ -80,11 +79,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                         0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage : double.parse(response.data?.currentMonth?.expensePercentage ?? '')
-            ));
-          } else {
-
-          }
+                expensePercentage: double.parse(
+                    response.data?.currentMonth?.expensePercentage ?? '')));
+          } else {}
         } on ServerException {
         } catch (e) {}
       } else if (event is _getTotalExpenseEvent) {
@@ -104,35 +101,33 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
           expense.TotalExpenseResModel response =
               expense.TotalExpenseResModel.fromJson(res);
-        //  debugPrint('TotalExpenseResModel  = $response');
+          //  debugPrint('TotalExpenseResModel  = $response');
 
           if (response.status == 200) {
             List<FlSpot> temp = [];
             List<int> number = List<int>.generate(12, (i) => i);
-            List<int> reverseList ;
-            if(preferencesHelper.getAppLanguage() == 'he'){
-               reverseList = number.reversed.toList();
-             }
-             else{
+            List<int> reverseList;
+            if (preferencesHelper.getAppLanguage() == 'he') {
+              reverseList = number.reversed.toList();
+            } else {
               reverseList = number.toList();
-             }
+            }
 
-            response.data!.forEach((element) {
+            response.data?.forEach((element) {
               temp.add(FlSpot(
                   reverseList[element.month!.toInt() - 1].toDouble(),
-                  element.totalExpenses!.toDouble()));
+                  element.totalExpenses?.toDouble() ?? 0));
             });
             emit(state.copyWith(monthlyExpenseList: temp));
           } else {
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context,
-                ),
-                type: SnackBarType.FAILURE,
-            snackbarHeight: 0.8
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                response.message?.toLocalization() ??
+                    'something_is_wrong_try_again',
+                event.context,
+              ),
+              type: SnackBarType.FAILURE,
             );
           }
         } on ServerException {}
@@ -167,40 +162,37 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
           AllWalletTransactionResModel response =
               AllWalletTransactionResModel.fromJson(res);
-         // debugPrint('AllWalletTransactionResModel  = $response');
+          // debugPrint('AllWalletTransactionResModel  = $response');
 
           if (response.status == 200) {
+            //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
 
+            List<Datum> temp =
+                state.walletTransactionsList.toList(growable: true);
+            if ((response.metaData?.totalFilteredCount ?? 1) >
+                state.walletTransactionsList.length) {
+              temp.addAll(response.data ?? []);
+              emit(state.copyWith(
+                balanceSheetList: response,
+                pageNum: state.pageNum + 1,
+                walletTransactionsList: temp,
+                isLoadMore: false,
+                isShimmering: false,
+              ));
 
-           //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
-
-              List<Datum> temp = state.walletTransactionsList.toList(growable: true);
-              if ((response.metaData?.totalFilteredCount ?? 1) >
-                  state.walletTransactionsList.length) {
-                temp.addAll(response.data ?? []);
-                emit(state.copyWith(
-                  balanceSheetList: response,
-                  pageNum: state.pageNum + 1,
-                  walletTransactionsList: temp,
-                  isLoadMore: false,
-                  isShimmering: false,
-                ));
-
-                emit(state.copyWith(
-                    isBottomOfProducts: temp.length ==
-                            (response.metaData?.totalFilteredCount ?? 1)
-                        ? true
-                        : false));
-              } else {
-                emit(state.copyWith(isShimmering: false, isLoadMore: false));
-              }
-
+              emit(state.copyWith(
+                  isBottomOfProducts: temp.length ==
+                          (response.metaData?.totalFilteredCount ?? 1)
+                      ? true
+                      : false));
+            } else {
+              emit(state.copyWith(isShimmering: false, isLoadMore: false));
+            }
           } else {
-
-            emit(state.copyWith(isLoadMore: false,isShimmering: false));
+            emit(state.copyWith(isLoadMore: false, isShimmering: false));
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false,isShimmering: false));
+          emit(state.copyWith(isLoadMore: false, isShimmering: false));
         }
       } else if (event is _getDateRangeEvent) {
         if (event.range != state.selectedDateRange) {
@@ -208,19 +200,18 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               state.walletTransactionsList.toList(growable: true);
           temp.clear();
           emit(state.copyWith(
-              selectedDateRange: event.range,
-              walletTransactionsList: temp,
-              pageNum: 0,
-              isLoadMore: false,
-              isShimmering: false,
+            selectedDateRange: event.range,
+            walletTransactionsList: temp,
+            pageNum: 0,
+            isLoadMore: false,
+            isShimmering: false,
           ));
 
-         emit(state.copyWith(
+          emit(state.copyWith(
               isBottomOfProducts: temp.length ==
                       (state.balanceSheetList.metaData?.totalFilteredCount ?? 1)
                   ? true
                   : false));
-
         } else {
           emit(state.copyWith(
               selectedDateRange: event.range,
@@ -247,8 +238,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             userId: preferencesHelper.getUserId(),
             exportType: AppStrings.pdfString,
             responseType: AppStrings.jsonString,
-             startDate: event.startDate.toString(),
-             endDate:event.endDate.toString(),
+            startDate: event.startDate.toString(),
+            endDate: event.endDate.toString(),
           );
 
           debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
@@ -260,40 +251,43 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           ExportWalletTransactionsResModel response =
               ExportWalletTransactionsResModel.fromJson(res);
-       //   debugPrint('ExportWalletTransactions response  = ${response}');
+          //   debugPrint('ExportWalletTransactions response  = ${response}');
           if (response.status == 200) {
             emit(state.copyWith(isExportShimmering: false));
             Uint8List pdf = base64.decode(response.data.toString());
             filePath =
                 '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
             file = File(filePath);
-           // debugPrint('[path]   ${filePath}');
+            // debugPrint('[path]   ${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-             CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(),
-
-                      event.context),
-                  type: SnackBarType.SUCCESS,
-               snackbarHeight: 0.8
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message!.toLocalization(), event.context),
+                type: SnackBarType.SUCCESS,
               );
-           /*   CustomSnackBarWidget(context: event.context, title: AppStrings.getLocalizedStrings(
-                  response.message!.toLocalization(),event.context), type: SnackBarType.SUCCESS,);*/
             });
           } else {
             emit(state.copyWith(isExportShimmering: false));
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
-                type: SnackBarType.FAILURE,
-            snackbarHeight: 0.8
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      'something_is_wrong_try_again',
+                  event.context),
+              type: SnackBarType.FAILURE,
             );
           }
-        } on ServerException {emit(state.copyWith(isExportShimmering: false));}
+        } on ServerException {
+          emit(state.copyWith(isExportShimmering: false));
+        } catch (e) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: e.toString(),
+            type: SnackBarType.FAILURE,
+          );
+          emit(state.copyWith(isExportShimmering: false));
+        }
       } else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
@@ -310,14 +304,14 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           debugPrint('getOrdersCount reqMap = $reqMap}');
 
-          final res =
-              await DioClient(event.context).post(AppUrls.getOrdersCountUrl,
-                  data: reqMap,
-            );
+          final res = await DioClient(event.context).post(
+            AppUrls.getOrdersCountUrl,
+            data: reqMap,
+          );
 
           debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
           GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-       //   debugPrint('getOrdersCount response  = ${response}');
+          //   debugPrint('getOrdersCount response  = ${response}');
           if (response.status == 200) {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }

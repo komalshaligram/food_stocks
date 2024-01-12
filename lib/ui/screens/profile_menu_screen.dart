@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_urls.dart';
+import '../widget/common_alert_dialog.dart';
 
 class ProfileMenuRoute {
   static Widget get route => ProfileMenuScreen();
@@ -214,77 +216,78 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     15.height,
                     Expanded(
                       child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            15.height,
-                            profileMenuTiles(
-                                title: AppLocalizations.of(context)!
-                                    .business_details,
-                                onTap: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.pushNamed(
-                                      context, RouteDefine.profileScreen.name,
-                                      arguments: {
-                                        AppStrings.isUpdateParamString: true
-                                      });
-                                }),
-                            profileMenuTiles(
-                                title:
-                                    AppLocalizations.of(context)!.more_details,
-                                onTap: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.pushNamed(context,
-                                      RouteDefine.moreDetailsScreen.name,
-                                      arguments: {
-                                        AppStrings.isUpdateParamString: true
-                                      });
-                                }),
-                            profileMenuTiles(
-                                title:
-                                    AppLocalizations.of(context)!.activity_time,
-                                onTap: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.pushNamed(context,
-                                      RouteDefine.activityTimeScreen.name,
-                                      arguments: {
-                                        AppStrings.isUpdateParamString: true
-                                      });
-                                }),
-                            profileMenuTiles(
-                                title:
-                                    AppLocalizations.of(context)!.forms_files,
-                                onTap: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                  Navigator.pushNamed(context,
-                                      RouteDefine.fileUploadScreen.name,
-                                      arguments: {
-                                        AppStrings.isUpdateParamString: true
-                                      });
-                                }),
-                            profileMenuTiles(
-                                title: AppLocalizations.of(context)!.log_out,
-                                onTap: () {
-                                  bloc.add(ProfileMenuEvent.logOutEvent(
-                                      context: context));
-                                  /*   context.read<ProfileMenuBloc>().add(
-                                      ProfileMenuEvent.logOutEvent(
-                                          context: context));*/
-                                }),
-                            menuSwitchTile(
-                                title:
-                                    AppLocalizations.of(context)!.app_language,
-                                isHebrewLang: state.isHebrewLanguage,
-                                onChanged: (bool value) {
-                                  context.read<ProfileMenuBloc>().add(
-                                      ProfileMenuEvent.changeAppLanguageEvent(
-                                          context: context));
-                                }),
-                            AppConstants.bottomNavSpace.height,
-                          ],
+                        child: AnimationLimiter(
+                          child: Column(
+                            children: AnimationConfiguration.toStaggeredList(
+                              duration: const Duration(seconds: 3),
+                              childAnimationBuilder: (widget) => SlideAnimation(
+                                  duration: const Duration(seconds: 3) ,
+                                  verticalOffset: MediaQuery.of(context).size.height / 5,
+                                  child: FadeInAnimation(child: widget)
+                              ),
+                            children: [
+                              15.height,
+                              profileMenuTiles(
+                                  title: AppLocalizations.of(context)!
+                                      .business_details,
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, RouteDefine.profileScreen.name,
+                                        arguments: {
+                                          AppStrings.isUpdateParamString: true
+                                        });
+                                  }),
+                              profileMenuTiles(
+                                  title:
+                                      AppLocalizations.of(context)!.more_details,
+                                  onTap: () {
+                                    Navigator.pushNamed(context,
+                                        RouteDefine.moreDetailsScreen.name,
+                                        arguments: {
+                                          AppStrings.isUpdateParamString: true
+                                        });
+                                  }),
+                              profileMenuTiles(
+                                  title:
+                                      AppLocalizations.of(context)!.activity_time,
+                                  onTap: () {
+                                    Navigator.pushNamed(context,
+                                        RouteDefine.activityTimeScreen.name,
+                                        arguments: {
+                                          AppStrings.isUpdateParamString: true
+                                        });
+                                  }),
+                              profileMenuTiles(
+                                  title:
+                                      AppLocalizations.of(context)!.forms_files,
+                                  onTap: () {
+
+                                    Navigator.pushNamed(context,
+                                        RouteDefine.fileUploadScreen.name,
+                                        arguments: {
+                                          AppStrings.isUpdateParamString: true
+                                        });
+                                  }),
+                              profileMenuTiles(
+                                  title: AppLocalizations.of(context)!.log_out,
+                                  onTap: () {
+                                    LogOutDialog(
+                                      context: context
+                                    );
+
+                                  }),
+                              menuSwitchTile(
+                                  title:
+                                      AppLocalizations.of(context)!.app_language,
+                                  isHebrewLang: state.isHebrewLanguage,
+                                  onChanged: (bool value) {
+                                    context.read<ProfileMenuBloc>().add(
+                                        ProfileMenuEvent.changeAppLanguageEvent(
+                                            context: context));
+                                  }),
+                              AppConstants.bottomNavSpace.height,
+                            ],),
+                          ),
                         ),
                       ),
                     )
@@ -393,4 +396,37 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       ),
     );
   }
+  void LogOutDialog({
+    required BuildContext context,
+    }){
+    showDialog(
+      context: context,
+      builder: (context1) => BlocProvider.value(
+        value: context.read<ProfileMenuBloc>(),
+        child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
+          builder: (context, state) {
+            ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
+            return AbsorbPointer(
+          absorbing: state.isLogOutProcess ? true : false,
+          child: CommonAlertDialog(
+            title: '${AppLocalizations.of(context)!.log_out}',
+            subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+            positiveTitle: '${AppLocalizations.of(context)!.yes}',
+            negativeTitle: '${AppLocalizations.of(context)!.no}',
+            negativeOnTap: () {
+              Navigator.pop(context);
+            },
+            positiveOnTap: () async {
+              bloc.add(ProfileMenuEvent.logOutEvent(context: context));
+            },
+          ),
+        );
+          },
+        ),
+      ),
+    );
+    
+  }
+  
 }
+
