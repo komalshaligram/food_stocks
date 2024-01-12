@@ -23,5 +23,10 @@ samples, guidance on mobile development, and a full API reference.
 - for generating localization run below command :
   flutter gen-l10n
 
+- for creating release apk:
+  flutter build apk --flavor prod
+
+# changes in library:
+
 - date_rang_picker color change ,dialog.dart , data_range_picker.dart
 - CurvedNavigationBar add cart in package

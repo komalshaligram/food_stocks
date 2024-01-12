@@ -21,6 +21,8 @@ import 'app_config.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
 void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -38,24 +40,6 @@ void main() async {
         }
       });
     }
-    final AudioContext audioContext = AudioContext(
-      iOS: AudioContextIOS(
-       // defaultToSpeaker: true,
-        category: AVAudioSessionCategory.ambient,
-        options: [
-          AVAudioSessionOptions.defaultToSpeaker,
-          AVAudioSessionOptions.mixWithOthers,
-        ],
-      ),
-      android: AudioContextAndroid(
-        isSpeakerphoneOn: true,
-        stayAwake: true,
-        contentType: AndroidContentType.sonification,
-        usageType: AndroidUsageType.assistanceSonification,
-        audioFocus: AndroidAudioFocus.none,
-      ),
-    );
-    AudioPlayer.global.setAudioContext(audioContext);
     runApp(
       const MyApp(),
     );
@@ -88,6 +72,7 @@ class _MyAppState extends State<MyApp> {
       create: (context) => LocaleProvider()..setAppLocale(),
       builder: (context, child) {
         return MaterialApp(
+          key: scaffoldKey,
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,

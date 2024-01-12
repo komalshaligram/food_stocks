@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -63,7 +65,7 @@ void appFlyerSetup() {
     final AppsFlyerOptions options = AppsFlyerOptions(
         afDevKey: dotenv.env["DEV_KEY"] ?? '',
         showDebug: true,
-        appId: 'com.foodstock.dev',
+        appId: Platform.isAndroid?'com.foodstock.dev':'id6468264054',
         timeToWaitForATTUserAuthorization: 15);
     _appsflyerSdk = AppsflyerSdk(options);
     _appsflyerSdk.initSdk(
@@ -84,7 +86,9 @@ void appFlyerSetup() {
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
-        appFlyerSetup();
+        if(Platform.isAndroid){
+          appFlyerSetup();
+        }
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
