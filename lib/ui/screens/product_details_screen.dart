@@ -486,7 +486,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             alignment:
                             Alignment
                                 .center,
-                            child: Text(
+                            child: Image.asset(AppImagePath.imageNotAvailable5)
+                            /*Text(
                               AppStrings
                                   .failedToLoadString,
                               style: AppStyles.rkRegularTextStyle(
@@ -494,7 +495,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       .font_14,
                                   color:
                                   AppColors.textColor),
-                            ),
+                            ),*/
                           );
                         },
                       ),
@@ -792,14 +793,15 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   alignment:
                                   Alignment
                                       .center,
-                                  child: Text(
+                                  child: Image.asset(AppImagePath.imageNotAvailable5)
+                                  /*Text(
                                     AppStrings.failedToLoadString,
                                     style: AppStyles.rkRegularTextStyle(
                                         size: AppConstants
                                             .font_14,
                                         color:
                                         AppColors.textColor),
-                                  ),
+                                  ),*/
                                 );
                               },
                             )

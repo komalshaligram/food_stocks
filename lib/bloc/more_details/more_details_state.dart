@@ -18,6 +18,7 @@ class MoreDetailsState with _$MoreDetailsState {
     required CityListResModel? cityListResModel,
     required String companyLogo,
     required bool isFileSizeExceeds,
+    required bool isUploadProcess,
   }) = _MoreDetailsState;
 
   factory MoreDetailsState.initial() => MoreDetailsState(
@@ -36,5 +37,6 @@ class MoreDetailsState with _$MoreDetailsState {
         companyLogo: '',
         isFileSizeExceeds: false,
         isShimmering: false,
+        isUploadProcess: false
       );
 }
