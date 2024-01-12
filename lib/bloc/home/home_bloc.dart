@@ -805,6 +805,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         } on ServerException {}
       } else if (event is _SetMessageCountEvent) {
+
         emit(state.copyWith(
             messageCount: state.messageCount + event.messageCount));
       } else if (event is _RemoveOrUpdateMessageEvent) {

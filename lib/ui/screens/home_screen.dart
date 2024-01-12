@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class HomeScreenWidget extends StatelessWidget {
+
   HomeScreenWidget({super.key});
 
   @override
@@ -72,11 +74,10 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                  bloc.add(
+                bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
-
-                  bloc.add(HomeEvent.getMessageListEvent(context: context));
+                bloc.add(HomeEvent.getMessageListEvent(context: context));
 
               },
               child: SafeArea(
