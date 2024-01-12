@@ -79,7 +79,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   AppConstants.fileSizeCap &&
               imageSize.split(' ').last == 'KB') {
             try {
-              emit(state.copyWith(isFileUploading: true));
+              emit(state.copyWith(isFileUploading: true,isUploadingProcess: true));
               debugPrint("image1 = ${croppedImage?.path ?? pickedFile.path}");
               final response =
                   await DioClient(event.context).uploadFileProgressWithFormData(
@@ -99,6 +99,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 imgUrl = profileImageModel.filepath ?? '';
                 debugPrint("image1 = ${imgUrl}\n${profileImageModel.filepath}");
                 emit(state.copyWith(
+                    isUploadingProcess: false,
                     isFileUploading: false,
                     image: File(croppedImage?.path ?? pickedFile.path),
                     UserImageUrl: profileImageModel.filepath ?? ''));
@@ -107,18 +108,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 debugPrint("image1 = ${state.image}");
               }
             } on ServerException {
-              emit(state.copyWith(isFileUploading: false));
+              emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.please_enter_email}',
                   type: SnackBarType.FAILURE);
             } catch (e) {
-              emit(state.copyWith(isFileUploading: false));
+              emit(state.copyWith(isFileUploading: false,isUploadingProcess: false));
             }
           } else {
             emit(state.copyWith(
-                isFileSizeExceeds: true, isFileUploading: false));
+                isFileSizeExceeds: true, isFileUploading: false,isUploadingProcess: false));
             emit(state.copyWith(isFileSizeExceeds: false));
             // CustomSnackBar.showSnackBar(
             //     context: event.context,
@@ -143,7 +144,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             debugPrint('business types not found.\n${response.message}');
           }
         } on ServerException {
-        } catch (e) {}
+        } catch (e) { emit(state.copyWith(isShimmering: false));}
       } else if (event is _ChangeBusinessTypeEventEvent) {
         emit(state.copyWith(selectedBusinessType: event.newBusinessType));
       } else if (event is _navigateToMoreDetailsScreenEvent) {
@@ -280,7 +281,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         }*/
 
-        print('imageurl_____$imgUrl');
+        debugPrint('imageurl_____$imgUrl');
         ProfileModel updatedProfileModel = ProfileModel(
           profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
           contactName: state.contactController.text,

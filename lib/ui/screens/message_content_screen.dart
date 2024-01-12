@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
+import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -153,13 +154,14 @@ class MessageContentScreenWidget extends StatelessWidget {
                                             color: AppColors.whiteColor,
                                             shape: BoxShape.circle),
                                         alignment: Alignment.center,
-                                        child: Text(
+                                        child: Image.asset(AppImagePath.imageNotAvailable5)
+                                        /*Text(
                                           AppStrings.failedToLoadString,
                                           textAlign: TextAlign.center,
                                           style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               color: AppColors.textColor),
-                                        ),
+                                        ),*/
                                       );
                                     },
                                   )
@@ -241,7 +243,8 @@ class MessageContentScreenWidget extends StatelessWidget {
                                                     color: AppColors.whiteColor,
                                                     shape: BoxShape.circle),
                                                 alignment: Alignment.center,
-                                                child: Text(
+                                                child:Image.asset(AppImagePath.imageNotAvailable5)
+                                                /* Text(
                                                   AppStrings.failedToLoadString,
                                                   textAlign: TextAlign.center,
                                                   style: AppStyles
@@ -250,7 +253,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                                                               .font_14,
                                                           color: AppColors
                                                               .textColor),
-                                                ),
+                                                ),*/
                                               );
                                             },
                                           )
