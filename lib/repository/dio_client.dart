@@ -86,10 +86,10 @@ class DioClient {
         return response.data;
       } on DioException catch (e) {
         if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
-          tokenExpirationWork(path, data, preferencesHelper,'POST',queryParameters!);
+          tokenExpirationWork(path, data, preferencesHelper,'POST',queryParameters??{});
         } else if (path == AppUrls.refreshTokenUrl &&
             e.response?.statusCode == 401) {
-          manageRefreshTokenWork(preferencesHelper,queryParameters!);
+          manageRefreshTokenWork(preferencesHelper,queryParameters??{});
         } else {
           throw _createErrorEntity(e, context: _context);
         }
@@ -148,6 +148,10 @@ class DioClient {
         response = await _dio.post(preferencesHelper.getApiUrl(),
             data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
         break;
+      case "PUT":
+        response = await _dio.put(preferencesHelper.getApiUrl(),
+          data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
+        break;
     }
     print('res_______________________$response');
     return response.data;
@@ -199,10 +203,10 @@ class DioClient {
           return response.data as Map<String, dynamic>;
         }  on DioException catch (e) {
           if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
-            tokenExpirationWork(path, null, preferencesHelper,'GET',query!);
+            tokenExpirationWork(path, null, preferencesHelper,'GET',query??{});
           } else if (path == AppUrls.refreshTokenUrl &&
               e.response?.statusCode == 401) {
-            manageRefreshTokenWork(preferencesHelper,query!);
+            manageRefreshTokenWork(preferencesHelper,query??{});
           } else {
             throw _createErrorEntity(e, context: _context);
           }
@@ -240,26 +244,53 @@ class DioClient {
   }
 
   // PUT
-  Future<Map<String, dynamic>> put(
+  Future put(
       {required String path,
       Map<String, dynamic>? data,
       Map<String, dynamic>? query,
       Options? options}) async {
+
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
-      final response = await _dio.put(path,
-          data: data,
-          queryParameters: query,
-          options: options ??
-              Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
+      final connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        try {
+          debugPrint('URL = ${AppUrls.baseUrl}$path');
+          final response = await _dio.put(path,
+              data: data,
+              queryParameters: query,
+              options: options ??
+                  Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
                       'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-      return response.data;
+                    },
+                  ));
+          return response.data;
+        }  on DioException catch (e) {
+          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(path, data, preferencesHelper,'PUT',query??{});
+          } else if (path == AppUrls.refreshTokenUrl &&
+              e.response?.statusCode == 401) {
+            manageRefreshTokenWork(preferencesHelper,query??{});
+          } else {
+            throw _createErrorEntity(e, context: _context);
+          }
+        }
+      } else {
+        debugPrint('error');
+        showDialog(
+          context: _context,
+          builder: (context) => NoInternetDialog(positiveOnTap: () {
+            Navigator.pop(context);
+          }),
+        );
+        throw Exception("Network Error");
+      }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
     }
