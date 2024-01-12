@@ -441,7 +441,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             return;
           }
           //logo/659f7544cc3c883cf7b155a5/image_cropper_1704969828015.jpg
-          emit(state.copyWith(isLoading: true));
+       /*   emit(state.copyWith(isLoading: true));
           RemoveFormAndFileReqModel reqModel =
               RemoveFormAndFileReqModel(path: preferencesHelper.getUserCompanyLogoUrl());
           debugPrint('delete file req = ${reqModel.path}');
@@ -449,18 +449,48 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               .post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
-          debugPrint('delete file res = ${response.message}');
+          debugPrint('delete file res = ${response.message}');*/
+          emit(state.copyWith(isUploadProcess: true));
+          ProfileModel updatedProfileModel = ProfileModel(
+              logo: '',
+              clientDetail: ClientDetail()
+          );
+          Map<String, dynamic> req = updatedProfileModel.toJson();
+          Map<String, dynamic>? clientDetail =
+          updatedProfileModel.clientDetail?.toJson();
+          debugPrint("update before Model = ${req}");
+          clientDetail?.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          req[AppStrings.clientDetailString] = clientDetail;
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          debugPrint('profile req = ${req}');
+          final res = await DioClient(event.context).post(
+            AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
+            data: req,
+          );
+          reqUpdate.ProfileDetailsUpdateResModel response =
+          reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
+
           if (response.status == 200) {
             await preferencesHelper.removeCompanyLogo();
             emit(state.copyWith(
-                isLoading: false, companyLogo: '', image: File('')));
+                isLoading: false, companyLogo: '', image: File(''),isUploadProcess: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
                 type: SnackBarType.SUCCESS);
           } else {
-            emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(isLoading: false,isUploadProcess: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -470,7 +500,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 type: SnackBarType.FAILURE);
           }
         } catch (e) {
-          emit(state.copyWith(isLoading: false));
+          emit(state.copyWith(isLoading: false,isUploadProcess: false));
           CustomSnackBar.showSnackBar(
               context: event.context,
               title:

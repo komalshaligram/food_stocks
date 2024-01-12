@@ -597,9 +597,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           bloc.add(
                                               BasketEvent.productUpdateEvent(
                                             listIndex: index,
-                                            productWeight: state
-                                                    .basketProductList[index]
-                                                    .totalQuantity! +
+                                            productWeight: state.basketProductList[index].totalQuantity! +
                                                 1,
                                             context: context,
                                             productId: state

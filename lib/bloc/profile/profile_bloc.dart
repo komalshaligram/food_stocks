@@ -363,6 +363,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return;
           } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
             emit(state.copyWith(UserImageUrl: '', image: File('')));
+            await preferences.removeProfileImage();
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title:
@@ -371,14 +372,43 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return;
           }
           emit(state.copyWith(isFileUploading: true));
-          RemoveFormAndFileReqModel reqModel =
+    /*      RemoveFormAndFileReqModel reqModel =
               RemoveFormAndFileReqModel(path: state.UserImageUrl);
           debugPrint('delete file req = ${reqModel.path}');
           final res = await DioClient(event.context)
               .post(AppUrls.removeFileUrl, data: reqModel);
           RemoveFormAndFileResModel response =
               RemoveFormAndFileResModel.fromJson(res);
-          debugPrint('delete file res = ${response.message}');
+          debugPrint('delete file res = ${response.message}');*/
+
+          ProfileModel updatedProfileModel = ProfileModel(
+            profileImage: '',
+            clientDetail: ClientDetail()
+          );
+          Map<String, dynamic> req = updatedProfileModel.toJson();
+          Map<String, dynamic>? clientDetail =
+          updatedProfileModel.clientDetail?.toJson();
+          debugPrint("update before Model = ${req}");
+          clientDetail?.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          req[AppStrings.clientDetailString] = clientDetail;
+          req.removeWhere((key, value) {
+            if (value != null) {
+              debugPrint("[$key] = $value");
+            }
+            return value == null;
+          });
+          debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
+          final res = await DioClient(event.context).post(
+              AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+              data: req,
+          );
+          reqUpdate.ProfileDetailsUpdateResModel response =
+          reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
