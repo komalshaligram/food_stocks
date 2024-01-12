@@ -18,6 +18,7 @@ import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class DioClient {
   final Dio _dio;
   late BuildContext _context;
@@ -71,10 +72,9 @@ class DioClient {
         connectivityResult == ConnectivityResult.wifi) {
       try {
         Options requestOptions = options ??
-            Options(
-                headers: {
+            Options(headers: {
               HttpHeaders.authorizationHeader:
-                 'Bearer ${preferencesHelper.getAuthToken()}'
+                  'Bearer ${preferencesHelper.getAuthToken()}'
             });
         requestOptions.headers = requestOptions.headers ?? {};
 
@@ -85,90 +85,13 @@ class DioClient {
 
         return response.data;
       } on DioException catch (e) {
-
-       // isLoggedIn =  await preferencesHelper.getUserLoggedIn();
-        if(e.response?.statusCode == 401 && path!=AppUrls.refreshTokenUrl) {
-
-          preferencesHelper.setApiUrl(ApiUrl: path);
-          preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
-
-          debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
-          debugPrint('[refreshToken token] ${preferencesHelper.getRefreshToken()}');
-
-           final response = await post(AppUrls.refreshTokenUrl, data: {
-            "token" : 'Bearer ${preferencesHelper.getRefreshToken()}'
-          });
-
-           debugPrint('[refreshToken Api url] ${AppUrls.refreshTokenUrl}');
-          print('[refresh Api response]  ${response}');
-
-           RefreshTokenModel res = RefreshTokenModel.fromJson(response);
-
-          if(res.status == 200) {
-           // print('[refresh Api response]  ${res.data['data']}');
-
-             preferencesHelper.setUserLoggedIn(isLoggedIn: true);
-               preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
-              preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
-             print('accessToken_____${res.data?.accessToken ?? ''}');
-
-             var response = await _dio.post(preferencesHelper.getApiUrl(),
-                 data: preferencesHelper.getRqPram(),
-                 queryParameters: queryParameters,
-             );
-             print('res_______________________$response');
-             return response.data;
-
-           /*  final response = await post(preferencesHelper.getApiUrl(), data:
-               preferencesHelper.getRqPram()
-             );*/
-
-          }
-          if(res.status == 401){
-             var response1 = await _dio.put(AppUrls.logOutUrl, data: {
-            "userId" : preferencesHelper.getUserId()
-          });
-
-          if(response1.statusCode == 200 && !isLogOut) {
-            isLogOut = true;
-              await preferencesHelper.setUserLoggedIn();
-              debugPrint('Token Expired = ${response1.data}');
-              await Provider.of<LocaleProvider>(_context, listen: false)
-                  .setAppLocale(locale: Locale(AppStrings.hebrewString));
-              Navigator.popUntil(_context,
-                  (route) => route.name == RouteDefine.bottomNavScreen.name);
-              Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
-              ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-              CustomSnackBar.showSnackBar(
-                  context: _context,
-                  title:
-                      '${AppLocalizations.of(_context)!.logged_out_successfully}',
-                  type: SnackBarType.SUCCESS);
-            }
-          }
-        }else if(path == AppUrls.refreshTokenUrl && e.response?.statusCode == 401){
-          var response1 = await _dio.put(AppUrls.logOutUrl,  data: {
-            "userId" : preferencesHelper.getUserId()
-          });
-          if(response1.statusCode == 200 && !isLogOut) {
-            isLogOut = true;
-            await preferencesHelper.setUserLoggedIn();
-            debugPrint('Token Expired = ${response1.data}');
-            await Provider.of<LocaleProvider>(_context, listen: false)
-                .setAppLocale(locale: Locale(AppStrings.hebrewString));
-            Navigator.popUntil(_context,
-                    (route) => route.name == RouteDefine.bottomNavScreen.name);
-            Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
-            ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-            CustomSnackBar.showSnackBar(
-                context: _context,
-                title:
-                '${AppLocalizations.of(_context)!.logged_out_successfully}',
-                type: SnackBarType.SUCCESS);
-          }
-        }
-        else {
-        throw _createErrorEntity(e, context: _context);
+        if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+          tokenExpirationWork(path, data, preferencesHelper,'POST',queryParameters??{});
+        } else if (path == AppUrls.refreshTokenUrl &&
+            e.response?.statusCode == 401) {
+          manageRefreshTokenWork(preferencesHelper,queryParameters??{});
+        } else {
+          throw _createErrorEntity(e, context: _context);
         }
       }
     } else {
@@ -182,8 +105,81 @@ class DioClient {
     }
   }
 
+  tokenExpirationWork(String path, Object? data,
+      SharedPreferencesHelper preferencesHelper,String type,Map<String,dynamic> queryParams) async {
+    ///save data of expire api
+    preferencesHelper.setApiUrl(ApiUrl: path);
+    preferencesHelper.setReqPram(ReqPram: jsonEncode(data));
+
+    final response = await post(AppUrls.refreshTokenUrl,
+        data: {"token": 'Bearer ${preferencesHelper.getRefreshToken()}'});
+
+    RefreshTokenModel res = RefreshTokenModel.fromJson(response);
+    debugPrint('[refreshToken token] ${res.data?.accessToken}');
+
+    if (res.status == 200) {
+      manageAccessTokenWork(preferencesHelper, res, type,queryParams);
+    }
+    if (res.status == 401) {
+      //logout work
+      manageRefreshTokenWork(preferencesHelper,queryParams);
+    }
+  }
+
+  manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res,
+      String type,Map<String,dynamic> queryParams) async {
+    preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+    preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
+    preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
+    print('accessToken_____${res.data?.accessToken ?? ''}');
+    Options requestOptions = Options(headers: {
+      HttpHeaders.authorizationHeader:
+          'Bearer ${preferencesHelper.getAuthToken()}'
+    });
+    requestOptions.headers = requestOptions.headers ?? {};
+    var response;
+    switch(type){
+      case "GET":
+        response = await _dio.get(preferencesHelper.getApiUrl(),
+            queryParameters: queryParams,
+            options: requestOptions);
+        break;
+      case "POST":
+        response = await _dio.post(preferencesHelper.getApiUrl(),
+            data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
+        break;
+      case "PUT":
+        response = await _dio.put(preferencesHelper.getApiUrl(),
+          data: preferencesHelper.getRqPram(), options: requestOptions,queryParameters: queryParams,);
+        break;
+    }
+    print('res_______________________$response');
+    return response.data;
+  }
+
+  manageRefreshTokenWork(SharedPreferencesHelper preferencesHelper,Map<String,dynamic> queryParams) async {
+    var response = await _dio.put(AppUrls.logOutUrl,
+        data: {"userId": preferencesHelper.getUserId()});
+
+    if (response.statusCode == 200 && !isLogOut) {
+      isLogOut = true;
+      await preferencesHelper.setUserLoggedIn();
+      debugPrint('Token Expired = ${response.data}');
+      await Provider.of<LocaleProvider>(_context, listen: false)
+          .setAppLocale(locale: Locale(AppStrings.hebrewString));
+      Navigator.popUntil(
+          _context, (route) => route.name == RouteDefine.bottomNavScreen.name);
+      Navigator.pushNamed(_context, RouteDefine.connectScreen.name);
+      ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+      CustomSnackBar.showSnackBar(
+          context: _context,
+          title: '${AppLocalizations.of(_context)!.logged_out_successfully}',
+          type: SnackBarType.SUCCESS);
+    }
+  }
+
   // GET
-  Future<Map<String, dynamic>> get(
+  Future get(
       {required String path,
       Map<String, dynamic>? query,
       Options? options}) async {
@@ -205,11 +201,24 @@ class DioClient {
                   }));
           debugPrint("STATUS ${response.statusCode} ${response.statusMessage}");
           return response.data as Map<String, dynamic>;
-        } on DioException catch (e) {
-          throw _createErrorEntity(e, context: _context);
+        }  on DioException catch (e) {
+          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(path, null, preferencesHelper,'GET',query??{});
+          } else if (path == AppUrls.refreshTokenUrl &&
+              e.response?.statusCode == 401) {
+            manageRefreshTokenWork(preferencesHelper,query??{});
+          } else {
+            throw _createErrorEntity(e, context: _context);
+          }
         }
       } else {
         debugPrint('error');
+        showDialog(
+          context: _context,
+          builder: (context) => NoInternetDialog(positiveOnTap: () {
+            Navigator.pop(context);
+          }),
+        );
         throw Exception("Network Error");
       }
     } on DioException catch (e) {
@@ -235,89 +244,52 @@ class DioClient {
   }
 
   // PUT
-  Future<Map<String, dynamic>> put(
+  Future put(
       {required String path,
       Map<String, dynamic>? data,
       Map<String, dynamic>? query,
       Options? options}) async {
+
     try {
       SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       debugPrint('URL = ${AppUrls.baseUrl}$path');
-      final response = await _dio.put(path,
-          data: data,
-          queryParameters: query,
-          options: options ??
-              Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-      return response.data;
-    } on DioException catch (e) {
-      throw _createErrorEntity(e);
-    }
-  }
+      final connectivityResult = await (Connectivity().checkConnectivity());
 
-  // PATCH
-  Future<Map<String, dynamic>> patch({
-    required String path,
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? query,
-    Options? options,
-  }) async {
-    try {
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
-      final response = await _dio.patch(path,
-          data: data,
-          queryParameters: query,
-          options: options ??
-              Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        try {
+          debugPrint('URL = ${AppUrls.baseUrl}$path');
+          final response = await _dio.put(path,
+              data: data,
+              queryParameters: query,
+              options: options ??
+                  Options(
+                    headers: {
+                      HttpHeaders.authorizationHeader:
                       'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-
-      return response.data;
-    } on DioException catch (e) {
-      throw _createErrorEntity(e);
-    }
-  }
-
-  // delete
-  Future delete(
-      {required String path,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? query,
-      Options? options,
-      required BuildContext context}) async {
-    try {
-      SharedPreferencesHelper preferencesHelper =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-      debugPrint('URL = ${AppUrls.baseUrl}$path');
-      final response = await _dio.delete(path,
-          data: data,
-          queryParameters: query,
-          options: options ??
-              Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-      if (response.statusCode != 200) {
-        debugPrint("Errorr!!!! ${response.data}");
-        return CustomSnackBar.showSnackBar(
-            context: context,
-            title: response.statusMessage ??
-                '${AppLocalizations.of(context)!.something_is_wrong_try_again}',
-            type: SnackBarType.FAILURE);
+                    },
+                  ));
+          return response.data;
+        }  on DioException catch (e) {
+          if (e.response?.statusCode == 401 && path != AppUrls.refreshTokenUrl) {
+            tokenExpirationWork(path, data, preferencesHelper,'PUT',query??{});
+          } else if (path == AppUrls.refreshTokenUrl &&
+              e.response?.statusCode == 401) {
+            manageRefreshTokenWork(preferencesHelper,query??{});
+          } else {
+            throw _createErrorEntity(e, context: _context);
+          }
+        }
       } else {
-        return response.data as Map<String, dynamic>;
+        debugPrint('error');
+        showDialog(
+          context: _context,
+          builder: (context) => NoInternetDialog(positiveOnTap: () {
+            Navigator.pop(context);
+          }),
+        );
+        throw Exception("Network Error");
       }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
@@ -425,10 +397,10 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
           message: '${AppLocalizations.of(context)!.server_canceled}');
 
     case DioExceptionType.connectionError:
-/*      CustomSnackBar.showSnackBar(
-          context: context,
-          title: "Connection error",
-          bgColor: AppColors.redColor);*/
+      CustomSnackBar.showSnackBar(
+          context: context!,
+          title: 'Connection error',
+          type: SnackBarType.FAILURE);
       return ErrorEntity(code: -1, message: "Connection error");
 
     case DioExceptionType.unknown:

@@ -106,23 +106,14 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color: /*state.UserImageUrl.isNotEmpty
-                                        ? */
-                                        AppColors
-                                            .whiteColor /*: AppColors.mainColor.withOpacity(0.9)*/,
+                                    color: AppColors.whiteColor ,
                                     border: Border.all(
                                         color: AppColors.whiteColor,
                                         width: 0.5),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: /*state.UserImageUrl.isNotEmpty
-                                              ? */
-                                              AppColors.shadowColor.withOpacity(
-                                                  0.1) /*: AppColors.whiteColor*/,
-                                          blurRadius:
-                                              /*state.UserImageUrl.isNotEmpty
-                                                  ?*/
-                                              AppConstants.blur_10 /*: 0*/)
+                                          color: AppColors.shadowColor.withOpacity(0.1) ,
+                                          blurRadius: AppConstants.blur_10 )
                                     ],
                                     shape: BoxShape.circle,
                                   ),
@@ -157,22 +148,8 @@ class HomeScreenWidget extends StatelessWidget {
                                       width: 80,
                                       height: 80,
                                       fit: BoxFit.scaleDown,
-                                      // colorFilter: ColorFilter.mode(
-                                      //     AppColors.mainColor,
-                                      //     BlendMode.dstIn),
                                     ),
                                   ),
-                                  /*Image.asset(
-                                          AppImagePath.defaultProfileImage,
-                                          height: 60,
-                                          width: 60,
-                                          fit: BoxFit.scaleDown,
-                                        )*/
-                                  /*Icon(
-                                    Icons.person,
-                                          size: 45,
-                                          color: AppColors.whiteColor,
-                                        )*/
                                 ),
                                 15.width,
                                 state.UserCompanyLogoUrl.isNotEmpty
@@ -188,23 +165,15 @@ class HomeScreenWidget extends StatelessWidget {
                                                         width: 1),
                                                     boxShadow: [
                                                       BoxShadow(
-                                                          color: AppColors
-                                                              .shadowColor
-                                                              .withOpacity(
-                                                                  0.15),
-                                                          blurRadius:
-                                                              AppConstants
-                                                                  .blur_10)
+                                                          color: AppColors.shadowColor.withOpacity(0.15),
+                                                          blurRadius: AppConstants.blur_10)
                                                     ]),
                                                 alignment: Alignment.center,
                                                 child: Container(
                                                     height: 50,
-                                                    width: getScreenWidth(
-                                                            context) *
-                                                        0.35,
+                                                    width: getScreenWidth(context) * 0.35,
                                                     alignment: Alignment.center,
-                                                    child:
-                                                        const CupertinoActivityIndicator())),
+                                                    child: const CupertinoActivityIndicator())),
                                         imageUrl:
                                             '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
                                         height: 50,
@@ -217,10 +186,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           return Container(
                                             decoration: BoxDecoration(
                                                 color: AppColors.whiteColor,
-                                                // border: Border.all(
-                                                //     color: AppColors.borderColor
-                                                //         .withOpacity(0.5),
-                                                //     width: 1),
                                                 boxShadow: [
                                                   BoxShadow(
                                                       color: AppColors
@@ -281,8 +246,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         bloc.add(HomeEvent.updateMessageListEvent(
                                             messageIdList: messageResult[
                                                     AppStrings
-                                                        .messageIdListString] ??
-                                                ''));
+                                                        .messageIdListString] ?? ''));
                                       }
                                     },
                                     child: Stack(
@@ -485,7 +449,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       ])
                                 : state.productSalesList.isEmpty
                                     ? 0.width
-                                    : Column(
+                                    : Column  (
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
@@ -498,11 +462,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               allContentTitle: state
                                                           .productSalesList
                                                           .length <
-                                                      6
-                                                  ? ''
-                                                  : AppLocalizations.of(
-                                                          context)!
-                                                      .all_sales,
+                                                      6 ? '' : AppLocalizations.of(context)!.all_sales,
                                               onTap: () {
                                                 Navigator.pushNamed(
                                                     context,
@@ -515,90 +475,31 @@ class HomeScreenWidget extends StatelessWidget {
                                             child: ListView.builder(
                                                 itemCount: state
                                                             .productSalesList
-                                                            .length <
-                                                        6
-                                                    ? state
-                                                        .productSalesList.length
-                                                    : 6,
+                                                            .length < 6 ? state.productSalesList.length: 6,
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 shrinkWrap: true,
                                                 itemBuilder:
                                                     (context, index) =>
                                                         DelayedWidget(
-                                                          delay: Duration(
-                                                              milliseconds:
-                                                                  300 +
-                                                                      (index *
-                                                                          30)),
-                                                          slidingCurve:
-                                                              Curves.decelerate,
-                                                          slidingBeginOffset:
-                                                              Offset(0, 20),
+                                                          delay: Duration(milliseconds: 300 + (index * 30)),
+                                                          slidingCurve: Curves.decelerate,
+                                                          slidingBeginOffset: Offset(0, 20),
                                                           child:
                                                               CommonProductSaleItemWidget(
                                                                   width: 140,
                                                                   height: 170,
-                                                                  saleImage: state
-                                                                          .productSalesList[
-                                                                              index]
-                                                                          .mainImage ??
-                                                                      '',
-                                                                  title: state
-                                                                          .productSalesList[
-                                                                              index]
-                                                                          .salesName ??
-                                                                      '',
+                                                                  saleImage: state.productSalesList[index].mainImage ?? '',
+                                                                  title: state.productSalesList[index].salesName ?? '',
                                                                   description:
-                                                                      state.productSalesList[index].salesDescription ??
-                                                                          '',
-                                                                  salePercentage: double.parse(state
-                                                                          .productSalesList[
-                                                                              index]
-                                                                          .discountPercentage ??
-                                                                      '0.0'),
-                                                                  onButtonTap:
-                                                                      () {
+                                                                      state.productSalesList[index].salesDescription ?? '',
+                                                                  salePercentage: double.parse(state.productSalesList[index].discountPercentage ?? '0.0'),
+                                                                  onButtonTap: () {
                                                                     showProductDetails(
-                                                                        context:
-                                                                            context,
-                                                                        productId:
-                                                                            state.productSalesList[index].id ??
-                                                                                '');
+                                                                        context: context,
+                                                                        productId: state.productSalesList[index].id ?? '');
                                                                   }),
                                                         )
-                                                // buildProductSaleListItem(
-                                                // context: context,
-                                                // saleImage: state
-                                                //     .productSalesList[
-                                                // index]
-                                                //     .mainImage ??
-                                                //     '',
-                                                // title: state
-                                                //     .productSalesList[
-                                                // index]
-                                                //     .salesName ??
-                                                //     '',
-                                                // description: state
-                                                //     .productSalesList[
-                                                // index]
-                                                //     .salesDescription ??
-                                                //     '',
-                                                // salePercentage: double.parse(state
-                                                //     .productSalesList[
-                                                // index]
-                                                //     .discountPercentage ??
-                                                //     '0.0'),
-                                                // onButtonTap: () {
-                                                //   showProductDetails(
-                                                //       context: context,
-                                                //       productId: state
-                                                //           .productSalesList[
-                                                //       index]
-                                                //           .id ??
-                                                //           '');
-                                                // },
-                                                // )
                                                 ),
                                           ),
                                           10.height,
@@ -625,7 +526,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 svgImage: AppImagePath.cart,
                                 cartCount: state.cartCount,
                               ),
-
                             30.height,
                             state.messageList.isEmpty
                                 ? Padding(

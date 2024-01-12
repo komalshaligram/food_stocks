@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/data/model/form_and_file_model/form_and_file_model.dart';
@@ -146,10 +147,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           type: SnackBarType.FAILURE);
                     }
                   } on ServerException {
-                    // CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-                    //     context: event.context,
-                    //     title: AppStrings.somethingWrongString,
-                    //     type: SnackBarType.FAILURE);
                   }
                 }
               } else {
@@ -230,19 +227,27 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           return;
         }
         XFile? pickedFile;
+        File? file;
         if (event.isDocument) {
-          pickedFile = await ImagePicker()
-              .pickMedia(imageQuality: AppConstants.fileQuality);
+          if(Platform.isAndroid){
+            pickedFile = await ImagePicker()
+                .pickMedia(imageQuality: AppConstants.fileQuality);
+          }else{
+            FilePickerResult? result = await FilePicker.platform.pickFiles();
+            if(result!=null){
+              file = File(result.files.single.path!);
+            }
+
+          }
         } else {
           pickedFile = await ImagePicker().pickImage(
               source: event.isFromCamera
                   ? ImageSource.camera
                   : ImageSource.gallery);
         }
-        if (pickedFile != null) {
-          debugPrint(
-              "mime ${p.extension(pickedFile.path)}\n${pickedFile.path}");
-          String fileType = p.extension(pickedFile.path);
+        if (pickedFile != null || file !=null) {
+
+          String? fileType = p.extension(pickedFile!=null?pickedFile.path:file!.path);
           CroppedFile? croppedImage;
           if (fileType.contains('pdf') ||
               fileType.contains('doc') ||
@@ -252,7 +257,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               fileType.contains('jpeg') ||
               fileType.contains('heic')) {
             croppedImage = await cropImage(
-                path: pickedFile.path,
+                path: pickedFile!=null?pickedFile.path:file!.path,
                 shape: CropStyle.rectangle,
                 quality: AppConstants.fileQuality);
             if (croppedImage?.path.isEmpty ?? true) {
@@ -265,34 +270,59 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-          String fileSize = getFileSizeString(
-              bytes: croppedImage?.path.isNotEmpty ?? false
-                  ? await File(croppedImage!.path).length()
-                  : await pickedFile.length());
+          String? fileSize;
+          if(pickedFile!=null){
+             fileSize = getFileSizeString(
+                bytes: croppedImage?.path.isNotEmpty ?? false
+                    ? await File(croppedImage!.path).length()
+                    :await pickedFile.length());
+          }else if(file!=null){
+            fileSize = getFileSizeString(
+                bytes: croppedImage?.path.isNotEmpty ?? false
+                    ? await File(croppedImage!.path).length()
+                    :await file.length());
+          }
+
           debugPrint('file SIze = $fileSize');
-          if (int.parse(fileSize.split(' ').first) == 0) {
+          if (int.parse(fileSize!.split(' ').first) == 0) {
             return;
           }
           if (int.parse(fileSize.split(' ').first) <=
                   AppConstants.fileSizeCap &&
               fileSize.split(' ').last == 'KB') {
-            debugPrint(
-                'file upload = ${pickedFile.path}\n${croppedImage?.path}');
+
             debugPrint('file = ${croppedImage?.path == null}');
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
-            FormData formData = FormData.fromMap({
-              formAndFileList[event.fileIndex].isForm ?? false
-                  ? AppStrings.formString
-                  : AppStrings.fileString: await MultipartFile.fromFile(
-                croppedImage?.path ?? pickedFile.path,
-                filename:
-                    "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                contentType: MediaType('application', 'pdf'),
-              )
-            });
-            debugPrint(
-                'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
+            FormData formData;
+            if(pickedFile!=null){
+               formData = FormData.fromMap({
+                formAndFileList[event.fileIndex].isForm ?? false
+                    ? AppStrings.formString
+                    : AppStrings.fileString: await MultipartFile.fromFile(
+                  croppedImage?.path ??pickedFile.path,
+                  filename:
+                  "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
+                  contentType: MediaType('application', 'pdf'),
+                )
+              });
+              debugPrint(
+                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
+            }else{
+               formData = FormData.fromMap({
+                formAndFileList[event.fileIndex].isForm ?? false
+                    ? AppStrings.formString
+                    : AppStrings.fileString: await MultipartFile.fromFile(
+                  croppedImage?.path ??file!.path,
+                  filename:
+                  "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
+                  contentType: MediaType('application', 'pdf'),
+                )
+              });
+              debugPrint(
+                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
+            }
+
             try {
               emit(state.copyWith(
                   isUploadLoading: true, uploadIndex: event.fileIndex));
@@ -308,9 +338,16 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 formAndFileList[event.fileIndex] =
                     formAndFileList[event.fileIndex]
                         .copyWith(url: response.filepath);
-                formAndFileList[event.fileIndex] =
-                    formAndFileList[event.fileIndex].copyWith(
-                        localUrl: croppedImage?.path ?? pickedFile.path);
+                if(pickedFile!=null){
+                  formAndFileList[event.fileIndex] =
+                      formAndFileList[event.fileIndex].copyWith(
+                          localUrl: croppedImage?.path ?? pickedFile.path);
+                }else if(file!=null){
+                  formAndFileList[event.fileIndex] =
+                      formAndFileList[event.fileIndex].copyWith(
+                          localUrl: croppedImage?.path ?? file.path);
+                }
+
                 debugPrint(
                     'new Url [${event.fileIndex}] = ${formAndFileList[event.fileIndex].url}');
                 emit(state.copyWith(formsAndFilesList: formAndFileList));
