@@ -414,7 +414,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
                     type: SnackBarType.SUCCESS,
-                  snackbarHeight: 0.8
+
                 );
               }
             } else {
@@ -526,7 +526,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           //'https://filesamples.com/samples/document/pdf/sample3.pdf'
           String filePath =
               '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last ?? '')}';
-          debugPrint('download path = $filePath');
+          debugPrint( " download    ${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}");
           await Dio().download(
               "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}",
               filePath, onReceiveProgress: (received, total) {

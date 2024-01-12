@@ -159,7 +159,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                       .next
                                       .toUpperCase(),
                               fontColors: AppColors.whiteColor,
-                              isLoading: false,
+                              isLoading: state.isLoading,
                               onPressed: () {
                                 context.read<ActivityTimeBloc>().add(
                                         ActivityTimeEvent

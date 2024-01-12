@@ -82,12 +82,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         else{
           isSubCategory = event.isSubCategory;
           categoryId = event.categoryId;
-        if(isSubCategory == ''){
+
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-        }
-        else{
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
-        }
+
         }
       }
       else if (event is _GetProductCategoriesListEvent) {
@@ -1035,47 +1033,23 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       else if(event is _getPlanogramByIdEvent){
         try {
-          final res = await DioClient(event.context)
+          final response = await DioClient(event.context)
               .get(path: '${AppUrls.getPlanoramByIdUrl}${categoryId}');
-          GetPlanogramByIdModel response = GetPlanogramByIdModel.fromJson(res);
-          print('response_______[$response]');
-          if (response.status == 200) {
-            List<PlanogramProduct> planoGramsList = state.planoGramsByIdList.toList(growable: true);
-            planoGramsList.addAll(response.data?.planogramProducts ?? []);
-            List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-            List<ProductStockModel> barcodeStock = productStockList.removeLast();
-            for (int i = 0; i < (response.data?.planogramProducts?.length ?? 0); i++) {
-              List<ProductStockModel> stockList = [];
-              /*stockList.addAll(response.data!.planogramProducts?[i].map(
-                      (product) => ProductStockModel(
-                      productId: product.id ?? '',
-                      stock: product.productStock ?? 0)) ??
-                  []);*/
-              // debugPrint('stockList[$i] = $stockList');
-              productStockList.addAll([stockList]);
-            }
-            productStockList.add(barcodeStock);
-            // productStockList.add(barcodeStock.isNotEmpty ? barcodeStock : [ProductStockModel(productId: '')]);
-            debugPrint('planogram list = ${planoGramsList.length}');
-            debugPrint('planogram stock list = ${productStockList.length}');
+
+          print('categoryName______${response['data']?['planogram']?['categoryName'] ?? ''}');
+
+          if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(
-                planoGramsByIdList: planoGramsList,
-                productStockList: productStockList,
-                planogramPageNum: state.planogramPageNum + 1,
-                isPlanogramShimmering: false,
-                isLoadMore: false));
-           /* emit(state.copyWith(
-                isBottomOfPlanoGrams: planoGramsList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));*/
+                categoryName : response['data']?['planogram']?['categoryName'] ?? '',
+                subCategoryName :  response['data']?['planogram']?['subCategoryName'] ?? '',
+            ));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                    response['message'].toLocalization() ??
+                        response['message'],
                     event.context),
                 type: SnackBarType.FAILURE);
           }
