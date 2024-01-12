@@ -132,7 +132,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           }
         } on ServerException {}
       } else if (event is _removeCartProductEvent) {
-       // emit(state.copyWith(isRemoveProcess: true));
+        emit(state.copyWith(isRemoveProcess: true));
         try {
           final player = AudioPlayer();
           final response = await DioClient(event.context).post(
@@ -140,6 +140,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             data: {AppStrings.cartProductIdString: event.cartProductId},
           );
           if (response['status'] == 200) {
+            Navigator.pop(event.dialogContext);
             player.play(AssetSource('audio/delete_sound.mp3'));
             add(BasketEvent.setCartCountEvent(isClearCart: false));
             List<ProductDetailsModel> list = [];
@@ -149,15 +150,23 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 basketProductList: list,
                 isRefresh: !state.isRefresh,
                 totalPayment: state.totalPayment - event.totalAmount,
-             // isRemoveProcess: false,
+              isRemoveProcess: false,
             ));
-           Navigator.pop(event.dialogContext);
+
           } else {
             Navigator.pop(event.dialogContext);
+            emit(state.copyWith(
+              isRemoveProcess: false,
+            ));
           }
-        } on ServerException { Navigator.pop(event.dialogContext);}
+        } on ServerException {
+          emit(state.copyWith(
+            isRemoveProcess: false,
+          ));
+          Navigator.pop(event.dialogContext);}
       }
       else if (event is _clearCartEvent) {
+        emit(state.copyWith(isRemoveProcess: true));
         try {
           final res = await DioClient(event.context)
               .post('${AppUrls.clearCartUrl}${preferencesHelper.getCartId()}');
@@ -168,11 +177,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             list.clear();
             Navigator.pop(event.context);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh));
+                basketProductList: list, isRefresh: !state.isRefresh,isRemoveProcess: false));
           } else {
             Navigator.pop(event.context);
+            emit(state.copyWith(isRemoveProcess: false));
           }
-        } on ServerException {}
+        } on ServerException {
+          Navigator.pop(event.context);
+          emit(state.copyWith(isRemoveProcess: false));
+        }
       } else if (event is _SetCartCountEvent) {
 
         await preferencesHelper.setCartCount(

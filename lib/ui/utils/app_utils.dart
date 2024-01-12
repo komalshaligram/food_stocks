@@ -32,7 +32,6 @@ class CustomSnackBar {
   static void showSnackBar( {required BuildContext context,
     required String title,
     required SnackBarType type,
-    double snackbarHeight = 0.86
   }) {
     GFToast.showToast(
       trailing:  Container(
@@ -44,7 +43,6 @@ class CustomSnackBar {
           : AppColors.redColor.withOpacity(0.85),
       toastBorderRadius: 8.0,
       toastPosition: GFToastPosition.TOP,
-      // toastDuration:  1,
       textStyle: AppStyles.rkRegularTextStyle(
           size: AppConstants.smallFont,
           color: AppColors.whiteColor,

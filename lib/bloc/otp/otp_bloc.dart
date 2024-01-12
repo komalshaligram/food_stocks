@@ -95,7 +95,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                           'loginsuccessmessage',
                       event.context),
                   type: SnackBarType.SUCCESS,
-              snackbarHeight: 0.8
+
               );
             } else {
               emit(state.copyWith(isLoading: false));

@@ -141,7 +141,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         }
       } else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
-          if (state.image.path != '') {
+
+     /*     if (state.image.path != '') {
             Map<String, dynamic> req1 = {AppStrings.logoString: imgUrl};
             try {
               final res = await DioClient(event.context).post(
@@ -167,8 +168,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
             }
           }
+*/
 
           ProfileModel updatedProfileModel = ProfileModel(
+            logo: (state.image.path != '') ? imgUrl : preferencesHelper.getUserCompanyLogoUrl(),
             cityId: state.cityListResModel?.data?.cities
                 ?.firstWhere((city) => city.cityName == state.selectCity)
                 .id,
@@ -209,14 +212,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               preferencesHelper.removeCompanyLogo();
               preferencesHelper.setUserCompanyLogoUrl(
                   logoUrl: response.data!.client!.logo.toString());
-              emit(state.copyWith(isLoading: false));
+              emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
+              preferencesHelper.setUserCompanyLogoUrl(
+                  logoUrl: response.data!.client!.logo.toString());
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.updated_successfully}',
                   type: SnackBarType.SUCCESS,
-              snackbarHeight: 0.8
+
               );
             } else {
               emit(state.copyWith(isLoading: false));
@@ -419,6 +424,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           if (state.companyLogo.isEmpty) {
             return;
           } else if (state.companyLogo.contains(AppStrings.tempString)) {
+            preferencesHelper.removeCompanyLogo();
             emit(state.copyWith(companyLogo: '', image: File('')));
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -427,9 +433,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 type: SnackBarType.SUCCESS);
             return;
           }
+          //logo/659f7544cc3c883cf7b155a5/image_cropper_1704969828015.jpg
           emit(state.copyWith(isLoading: true));
           RemoveFormAndFileReqModel reqModel =
-              RemoveFormAndFileReqModel(path: state.companyLogo);
+              RemoveFormAndFileReqModel(path: preferencesHelper.getUserCompanyLogoUrl());
           debugPrint('delete file req = ${reqModel.path}');
           final res = await DioClient(event.context)
               .post(AppUrls.removeFileUrl, data: reqModel);

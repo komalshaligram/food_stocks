@@ -208,7 +208,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                           .data?.clients?.first.clientDetail?.bussinessName),
                   hpController: TextEditingController(
                       text:
-                      response.data?.clients?.first.clientDetail?.israelId),
+                          response.data?.clients?.first.clientDetail?.israelId),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
@@ -232,13 +232,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
-
           } catch (e) {
             emit(state.copyWith(isUpdating: false));
           }
         }
       } else if (event is _updateProfileDetailsEvent) {
-        if (state.image.path != '') {
+        /* if (state.image.path != '') {
           Map<String, dynamic> req1 = {AppStrings.profileUpdateString: imgUrl};
           try {
             final res = await DioClient(event.context).post(
@@ -279,9 +278,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 type: SnackBarType.FAILURE);
             return;
           }
-        }
+        }*/
 
+        print('imageurl_____$imgUrl');
         ProfileModel updatedProfileModel = ProfileModel(
+          profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList.data?.clientTypes
@@ -312,6 +313,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           return value == null;
         });
         try {
+          debugPrint('token____1 ${preferences.getFCMToken()}');
           debugPrint('profile req = ${/*updatedProfileModel.toJson()*/ req}');
           emit(state.copyWith(isLoading: true));
           final res = await DioClient(event.context).post(
@@ -328,14 +330,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == 200) {
             await preferences.setUserName(name: state.ownerNameController.text);
+            preferences.setUserImageUrl(
+                imageUrl: response.data?.client?.profileImage.toString() ?? '');
             emit(state.copyWith(isLoading: false));
+            emit(state.copyWith(UserImageUrl: response.data?.client?.profileImage.toString() ?? ''));
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.updated_successfully}',
-                type: SnackBarType.SUCCESS,
-            snackbarHeight: 0.8
+              context: event.context,
+              title:
+                  '${AppLocalizations.of(event.context)!.updated_successfully}',
+              type: SnackBarType.SUCCESS,
             );
           } else {
             emit(state.copyWith(isLoading: false));

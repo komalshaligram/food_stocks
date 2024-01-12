@@ -12,6 +12,7 @@ class ActivityTimeState with _$ActivityTimeState {
     required bool isUpdate,
     required bool isLoading,
     required bool isShimmering,
+
   }) = _ActivityTimeState;
 
   factory ActivityTimeState.initial()=> ActivityTimeState(

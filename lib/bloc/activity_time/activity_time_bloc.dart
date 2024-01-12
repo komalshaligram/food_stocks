@@ -111,7 +111,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 emit(state.copyWith(
                     isShimmering: false,
                     OperationTimeList: temp1,
-                    isRefresh: !state.isRefresh));
+                    isRefresh: !state.isRefresh,
+
+                ));
               } else {
                 emit(state.copyWith(isShimmering: false));
               }
@@ -123,8 +125,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                           'something_is_wrong_try_again',
                       event.context),
                   type: SnackBarType.FAILURE);
+              emit(state.copyWith(isShimmering: false));
             }
           } on ServerException {
+            emit(state.copyWith(isShimmering: false));
           }
         }
       }
@@ -392,7 +396,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-        // emit(state.copyWith(isLoading: true));
+
         bool isSnackbarActive = false;
         for (int i = 0; i < state.OperationTimeList.length; i++) {
           if (state.OperationTimeList[i].monday[0].until ==
@@ -450,6 +454,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           );
 
           if (!state.isUpdate) {
+            emit(state.copyWith(isLoading: true));
             if (sundayList.first.from != AppStrings.timeString ||
                 mondayList.first.from != AppStrings.timeString &&
                     tuesdayList.first.from != AppStrings.timeString ||
@@ -484,6 +489,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 if (response1['status'] == 200) {
                   Navigator.pushNamed(
                       event.context, RouteDefine.fileUploadScreen.name);
+                  emit(state.copyWith(isLoading: false));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -492,8 +498,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                               'something_is_wrong_try_again',
                           event.context),
                       type: SnackBarType.FAILURE);
+                  emit(state.copyWith(isLoading: false));
                 }
-              } on ServerException {}
+              } on ServerException { emit(state.copyWith(isLoading: false));}
             } else {
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -502,6 +509,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   type: SnackBarType.FAILURE);
             }
           } else {
+            emit(state.copyWith(isLoading: true));
             update.ProfileDetailsUpdateReqModel reqMap =
                 update.ProfileDetailsUpdateReqModel(
                     clientDetail: update.ClientDetail(
@@ -554,8 +562,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     title:
                         '${AppLocalizations.of(event.context)!.updated_successfully}',
                     type: SnackBarType.SUCCESS,
-                snackbarHeight: 0.8
+
                 );
+                emit(state.copyWith(isLoading: false));
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -564,8 +573,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                             'something_is_wrong_try_again',
                         event.context),
                     type: SnackBarType.FAILURE);
+                emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
+              emit(state.copyWith(isLoading: false));
             }
           }
         }

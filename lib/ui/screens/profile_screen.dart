@@ -80,7 +80,6 @@ class ProfileScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
-          debugPrint('image 1${state.image}');
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
             appBar: AppBar(

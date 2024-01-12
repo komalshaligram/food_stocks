@@ -34,13 +34,15 @@ class BasketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BasketBloc(),
-      child: const BasketScreenWidget(),
+      child: BasketScreenWidget(),
     );
   }
 }
 
 class BasketScreenWidget extends StatelessWidget {
-  const BasketScreenWidget({Key? key}) : super(key: key);
+  BasketScreenWidget({Key? key}) : super(key: key);
+
+  bool isRemoveProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -130,8 +132,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              :
-                                              Column(
+                                              : Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
@@ -173,14 +174,14 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                        Navigator.pushNamed(
+                                            Navigator.pushNamed(
                                                 context,
                                                 RouteDefine
                                                     .orderSummaryScreen.name,
                                                 arguments: {
                                                   AppStrings.getCartListString:
                                                       state.CartItemList
-                                                }) ;
+                                                });
                                           },
                                           child: Container(
                                             // width: getScreenWidth(context) * 0.22,
@@ -267,9 +268,8 @@ class BasketScreenWidget extends StatelessWidget {
                           : SizedBox(),
                       state.isShimmering
                           ? BasketScreenShimmerWidget()
-                          :
-                          (state.basketProductList.length) != 0
-                              ?  Expanded(
+                          : (state.basketProductList.length) != 0
+                              ? Expanded(
                                   child: AnimationLimiter(
                                     child: ListView.builder(
                                       itemCount: state.basketProductList.length,
@@ -279,8 +279,8 @@ class BasketScreenWidget extends StatelessWidget {
                                           vertical: AppConstants.padding_5),
                                       itemBuilder: (context, index) =>
                                           AnimationConfiguration.staggeredList(
-                                            duration: const Duration(seconds: 1),
-                                            position: index,
+                                        duration: const Duration(seconds: 1),
+                                        position: index,
                                         child: SlideAnimation(
                                           verticalOffset: 44.0,
                                           child: FadeInAnimation(
@@ -319,7 +319,7 @@ class BasketScreenWidget extends StatelessWidget {
     return BlocBuilder<BasketBloc, BasketState>(
       builder: (context, state) {
         BasketBloc bloc = context.read<BasketBloc>();
-        return  Dismissible(
+        return Dismissible(
           key: Key(state.basketProductList.toString()),
           direction: DismissDirection.startToEnd,
           background: Container(
@@ -337,9 +337,15 @@ class BasketScreenWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: GestureDetector(
-                onTap: (){
-                  deleteDialog(context: context,cartProductId: state.basketProductList[index].cartProductId,listIndex: index,
-                      updateClearString: '',totalAmount:  state.basketProductList[index].totalPayment!);
+                onTap: () {
+                  isRemoveProcess = true;
+                  deleteDialog(
+                    context: context,
+                    cartProductId: state.basketProductList[index].cartProductId,
+                    listIndex: index,
+                    updateClearString: '',
+                    totalAmount: state.basketProductList[index].totalPayment!,
+                  );
                 },
                 child: SvgPicture.asset(
                   AppImagePath.delete,
@@ -350,83 +356,98 @@ class BasketScreenWidget extends StatelessWidget {
               ),
             ),
           ),
-
           confirmDismiss: (DismissDirection direction) async {
             if (direction == DismissDirection.startToEnd) {
               return await showDialog(
                 context: context,
                 builder: (BuildContext context1) {
-                  return  AlertDialog(
-                    backgroundColor: AppColors.pageColor,
-                    contentPadding: EdgeInsets.all(20.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    title: Text(
-                        '${AppLocalizations.of(context)!.you_want_delete_product}',
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.mediumFont,
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w400)),
-                    actionsPadding: EdgeInsets.only(
-                        right: AppConstants.padding_20,
-                        bottom: AppConstants.padding_20,
-                        left: AppConstants.padding_20),
-                    actions: [
-                      InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          bloc.add(BasketEvent.removeCartProductEvent(
-                              context: context,
-                              cartProductId: state.basketProductList[index].cartProductId,
-                              listIndex: index,
-                              dialogContext: context,
-                              totalAmount: state.basketProductList[index].totalPayment!));
-                        },
-                        child: Container(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                          alignment: Alignment.center,
-                          decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-                          width: 80,
-                          child: Text(
-                            '${AppLocalizations.of(context)!.yes}',
-                            style: AppStyles.rkRegularTextStyle(
-                                color: AppColors.mainColor.withOpacity(0.9),
-                                size: AppConstants.smallFont),
+                  return BlocProvider.value(
+                    value: context.read<BasketBloc>(),
+                    child: BlocBuilder<BasketBloc, BasketState>(
+                      builder: (context, state) {
+                        return AbsorbPointer(
+                          absorbing: state.isRemoveProcess ? true : false,
+                          child: AlertDialog(
+                            backgroundColor: AppColors.pageColor,
+                            contentPadding: EdgeInsets.all(20.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            title: Text(
+                                '${AppLocalizations.of(context)!.you_want_delete_product}',
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.mediumFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400)),
+                            actionsPadding: EdgeInsets.only(
+                                right: AppConstants.padding_20,
+                                bottom: AppConstants.padding_20,
+                                left: AppConstants.padding_20),
+                            actions: [
+                              InkWell(
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  bloc.add(BasketEvent.removeCartProductEvent(
+                                      context: context,
+                                      cartProductId: state
+                                          .basketProductList[index]
+                                          .cartProductId,
+                                      listIndex: index,
+                                      dialogContext: context,
+                                      totalAmount: state
+                                          .basketProductList[index]
+                                          .totalPayment!));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 14.0, vertical: 10.0),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  width: 80,
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.yes}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.mainColor
+                                            .withOpacity(0.9),
+                                        size: AppConstants.smallFont),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                onTap: () {
+                                  bloc.add(BasketEvent.refreshListEvent(
+                                      context: context1));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 14.0, vertical: 10.0),
+                                  alignment: Alignment.center,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                      color:
+                                          AppColors.mainColor.withOpacity(0.9),
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.no}',
+                                    style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.whiteColor,
+                                        size: AppConstants.smallFont),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          bloc.add(BasketEvent.refreshListEvent(context: context1));
-                        },
-                        child: Container(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                          alignment: Alignment.center,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              color: AppColors.mainColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(8.0)),
-                          child: Text(
-                            '${AppLocalizations.of(context)!.no}',
-                            style: AppStyles.rkRegularTextStyle(
-                                color: AppColors.whiteColor,
-                                size: AppConstants.smallFont),
-                          ),
-                        ),
-                      )
-                    ],
+                        );
+                      },
+                    ),
                   );
                 },
               );
             }
           },
-
           child: Container(
             margin: EdgeInsets.symmetric(
                 vertical: AppConstants.padding_5,
@@ -506,8 +527,8 @@ class BasketScreenWidget extends StatelessWidget {
                                 },
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 100,
+                                    height: 100,
                                     color: AppColors.whiteColor,
                                     alignment: Alignment.center,
                                     child: Text(
@@ -550,7 +571,6 @@ class BasketScreenWidget extends StatelessWidget {
                               Directionality(
                                 textDirection: TextDirection.ltr,
                                 child: Text(
-                                  /* '${splitNumber(state.basketProductList[index].totalPayment?.toStringAsFixed(2) ??"0")}${AppLocalizations.of(context)!.currency}',*/
                                   '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
                                   style: TextStyle(
                                       color: AppColors.blackColor,
@@ -756,75 +776,87 @@ class BasketScreenWidget extends StatelessWidget {
     BasketBloc bloc = context.read<BasketBloc>();
     showDialog(
         context: context,
-        builder: (context1) => AlertDialog(
-          backgroundColor: AppColors.pageColor,
-              contentPadding: EdgeInsets.all(20.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              title: Text(
-                  updateClearString == AppStrings.clearString ? '${AppLocalizations.of(context)!.you_want_clear_cart}' :
-                  '${AppLocalizations.of(context)!.you_want_delete_product}',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.mediumFont,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w400)),
-              actionsPadding: EdgeInsets.only(
-                  right: AppConstants.padding_20,
-                  bottom: AppConstants.padding_20,
-                  left: AppConstants.padding_20),
-              actions: [
-                InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    updateClearString == AppStrings.clearString
-                        ? bloc
-                            .add(BasketEvent.clearCartEvent(context: context1))
-                        : bloc.add(BasketEvent.removeCartProductEvent(
-                            context: context,
-                            cartProductId: cartProductId,
-                            listIndex: listIndex,
-                            dialogContext: context1,
-                            totalAmount: totalAmount!));
-                  },
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                    alignment: Alignment.center,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-                    width: 80,
-                    child: Text(
-                      '${AppLocalizations.of(context)!.yes}',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.mainColor.withOpacity(0.9),
-                          size: AppConstants.smallFont),
+        builder: (context1) => BlocProvider.value(
+              value: context.read<BasketBloc>(),
+              child: BlocBuilder<BasketBloc, BasketState>(
+                builder: (context, state) {
+                  return AbsorbPointer(
+                    absorbing: state.isRemoveProcess ? true : false,
+                    child: AlertDialog(
+                      backgroundColor: AppColors.pageColor,
+                      contentPadding: EdgeInsets.all(20.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      title: Text(
+                          updateClearString == AppStrings.clearString
+                              ? '${AppLocalizations.of(context)!.you_want_clear_cart}'
+                              : '${AppLocalizations.of(context)!.you_want_delete_product}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.mediumFont,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.w400)),
+                      actionsPadding: EdgeInsets.only(
+                          right: AppConstants.padding_20,
+                          bottom: AppConstants.padding_20,
+                          left: AppConstants.padding_20),
+                      actions: [
+                        InkWell(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            updateClearString == AppStrings.clearString
+                                ? bloc.add(BasketEvent.clearCartEvent(
+                                    context: context1))
+                                : bloc.add(BasketEvent.removeCartProductEvent(
+                                    context: context,
+                                    cartProductId: cartProductId,
+                                    listIndex: listIndex,
+                                    dialogContext: context1,
+                                    totalAmount: totalAmount!));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 14.0, vertical: 10.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            width: 80,
+                            child: Text(
+                              '${AppLocalizations.of(context)!.yes}',
+                              style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.mainColor.withOpacity(0.9),
+                                  size: AppConstants.smallFont),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            bloc.add(BasketEvent.refreshListEvent(
+                                context: context1));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 14.0, vertical: 10.0),
+                            alignment: Alignment.center,
+                            width: 80,
+                            decoration: BoxDecoration(
+                                color: AppColors.mainColor.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: Text(
+                              '${AppLocalizations.of(context)!.no}',
+                              style: AppStyles.rkRegularTextStyle(
+                                  color: AppColors.whiteColor,
+                                  size: AppConstants.smallFont),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    bloc.add(BasketEvent.refreshListEvent(context: context1));
-                  },
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                    alignment: Alignment.center,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        color: AppColors.mainColor.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8.0)),
-                    child: Text(
-                      '${AppLocalizations.of(context)!.no}',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.whiteColor,
-                          size: AppConstants.smallFont),
-                    ),
-                  ),
-                )
-              ],
+                  );
+                },
+              ),
             ));
   }
 
@@ -1012,7 +1044,6 @@ class BasketScreenWidget extends StatelessWidget {
                                                             errorBuilder:
                                                                 (context, error,
                                                                     stackTrace) {
-                                                              // debugPrint('product category list image error : $error');
                                                               return Image
                                                                   .asset(
                                                                 AppImagePath

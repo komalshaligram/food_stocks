@@ -65,7 +65,8 @@ class StoreCategoryScreen extends StatelessWidget {
 }
 
 class StoreCategoryScreenWidget extends StatelessWidget {
-  const StoreCategoryScreenWidget({super.key});
+   StoreCategoryScreenWidget({super.key, });
+
 
   @override
   Widget build(BuildContext context) {
