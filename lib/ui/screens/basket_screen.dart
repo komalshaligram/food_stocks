@@ -531,13 +531,14 @@ class BasketScreenWidget extends StatelessWidget {
                                     height: 100,
                                     color: AppColors.whiteColor,
                                     alignment: Alignment.center,
-                                    child: Text(
+                                    child: Image.asset(AppImagePath.imageNotAvailable5)
+                                    /*Text(
                                       AppStrings.failedToLoadString,
                                       style: AppStyles.rkRegularTextStyle(
                                           size: AppConstants.font_14,
                                           color: AppColors.textColor),
                                       textAlign: TextAlign.center,
-                                    ),
+                                    ),*/
                                   );
                                 },
                               ),

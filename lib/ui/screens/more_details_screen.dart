@@ -600,7 +600,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              state.isUpdate
+                                              state.isUploadProcess ? Container(
+                                                  width: getScreenWidth(context),
+                                                  child: CupertinoActivityIndicator()):state.isUpdate
                                                   ? state.companyLogo.isNotEmpty
                                                       ? state.image.path != ''
                                                           ? Expanded(

@@ -347,7 +347,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       : AppColors.mainColor
                                                           .withOpacity(0.1),
                                             ),
-                                            child: state.isUpdate
+                                            child: state.isUploadingProcess ? CupertinoActivityIndicator() :state.isUpdate
                                                 ? state.UserImageUrl.isNotEmpty
                                                     ? state.image.path != ''
                                                         ? SizedBox(
@@ -388,8 +388,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   return child;
                                                                 } else {
                                                                   return Center(
-                                                                    child:
-                                                                        CupertinoActivityIndicator(
+                                                                    child: CupertinoActivityIndicator(
                                                                       color: AppColors
                                                                           .blackColor,
                                                                     ),
@@ -409,18 +408,13 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   alignment:
                                                                       Alignment
                                                                           .center,
-                                                                  child: Text(
-                                                                    AppStrings
-                                                                        .failedToLoadString,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style: AppStyles.rkRegularTextStyle(
-                                                                        size: AppConstants
-                                                                            .font_14,
-                                                                        color: AppColors
-                                                                            .textColor),
-                                                                  ),
+                                                                  child:SvgPicture.asset(
+                                                                    AppImagePath
+                                                                        .placeholderProfile,
+                                                                    width: 80,
+                                                                    height: 80,
+                                                                    fit: BoxFit.scaleDown,
+                                                                  )
                                                                 );
                                                               },
                                                             ),
@@ -431,9 +425,6 @@ class ProfileScreenWidget extends StatelessWidget {
                                                         width: 80,
                                                         height: 80,
                                                         fit: BoxFit.scaleDown,
-                                                        // colorFilter: ColorFilter.mode(
-                                                        //     AppColors.mainColor,
-                                                        //     BlendMode.dstIn),
                                                       )
                                                 : state.image.path != ''
                                                     ? ClipRRect(

@@ -105,6 +105,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   AppConstants.fileSizeCap &&
               imageSize.split(' ').last == 'KB') {
             try {
+           emit(state.copyWith(isUploadProcess: true));
+
               final response =
                   await DioClient(event.context).uploadFileProgressWithFormData(
                 path: AppUrls.fileUploadUrl,
@@ -120,19 +122,24 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   FileUploadModel.fromJson(response);
               if (profileImageModel.filepath != '') {
                 imgUrl = profileImageModel.filepath ?? '';
+                emit(state.copyWith(isUploadProcess: false));
                 emit(state.copyWith(
                     image: File(croppedImage?.path ?? pickedFile.path),
                     companyLogo: profileImageModel.filepath ?? ''));
               }
             } on ServerException {
+              emit(state.copyWith(isUploadProcess: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: '${AppLocalizations.of(event.context)!.image_not_set}',
                   type: SnackBarType.FAILURE);
             }
+            catch(e){
+              emit(state.copyWith(isUploadProcess: false));
+            }
           } else {
             emit(state.copyWith(isFileSizeExceeds: true));
-            emit(state.copyWith(isFileSizeExceeds: false));
+          //  emit(state.copyWith(isFileSizeExceeds: false));
             // CustomSnackBar.CustomSnackBar.showSnackBar(
             //     context: event.context,
             //     title: AppStrings.fileSizeLimitString,
@@ -171,7 +178,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 */
 
           ProfileModel updatedProfileModel = ProfileModel(
-            logo: (state.image.path != '') ? imgUrl : preferencesHelper.getUserCompanyLogoUrl(),
+            logo: (state.image.path != '') ? imgUrl : state.companyLogo,
             cityId: state.cityListResModel?.data?.cities
                 ?.firstWhere((city) => city.cityName == state.selectCity)
                 .id,
