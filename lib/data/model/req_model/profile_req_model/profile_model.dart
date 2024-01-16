@@ -18,6 +18,7 @@ class ProfileModel with _$ProfileModel {
     @JsonKey(name: "address")
     String? address,
     @JsonKey(name: "cityId") String? cityId,
+   String? statusId,
     @JsonKey(name: "logo") String? logo,
     @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "contactName") String? contactName,

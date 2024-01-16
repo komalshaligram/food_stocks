@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -1127,9 +1128,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 ),
                 (value == 4)
                     ? CustomFormField(
-                                      context: context,
+                      context: context,
                         fillColor: AppColors.pageColor,
                         validator: '',
+                  inputformet: [
+                    LengthLimitingTextInputFormatter(150)
+                  ],
                         controller: state.addNoteController,
                         keyboardType: state.selectedRadioTile == 4
                             ? TextInputType.text

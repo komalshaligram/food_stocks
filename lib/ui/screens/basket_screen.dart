@@ -728,6 +728,19 @@ class BasketScreenWidget extends StatelessWidget {
                                                     '')),
                                           ));
                                         }
+                                        else{
+                                          deleteDialog(
+                                              context: context,
+                                              updateClearString: '',
+                                              cartProductId: state
+                                                  .CartItemList
+                                                  .data
+                                                  ?.data?[index]
+                                                  .cartProductId ?? '',
+                                              listIndex: index,
+                                            totalAmount: state.totalPayment
+                                          );
+                                        }
                                       }
                                     },
                                     child: Container(

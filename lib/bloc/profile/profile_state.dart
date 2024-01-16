@@ -19,6 +19,7 @@ class ProfileState with _$ProfileState {
     required bool isFileSizeExceeds,
     required bool isFileUploading,
     required bool isUploadingProcess,
+    required String language,
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
@@ -37,7 +38,8 @@ class ProfileState with _$ProfileState {
       isFileSizeExceeds: false,
       isFileUploading: false,
       UserImageUrl: '',
-      isUploadingProcess: false
+      isUploadingProcess: false,
+    language: 'he'
   );
 }
 

@@ -30,7 +30,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         debugPrint('[UserImageUrl]  ${preferences.getUserImageUrl()}');
         debugPrint('[username]   ${preferences.getUserName()}');
         debugPrint('[logo]  ${preferences.getUserCompanyLogoUrl()}');
-        emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl()));
+        emit(state.copyWith(UserImageUrl: preferences.getUserImageUrl(),language: preferences.getAppLanguage()));
         emit(state.copyWith(
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
         emit(state.copyWith(userName: preferences.getUserName()));

@@ -89,6 +89,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                               showDialog(
                                 context: context,
                                 builder: (context1) => CommonAlertDialog(
+                                  directionality: state.language,
                                   title:
                                       '${AppLocalizations.of(context)!.delete}',
                                   subTitle:

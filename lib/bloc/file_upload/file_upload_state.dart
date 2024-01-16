@@ -13,6 +13,8 @@ class FileUploadState with _$FileUploadState {
     required bool isDownloading,
     required int downloadProgress,
     required bool isFileSizeExceeds,
+    required bool isRemoveProcess,
+    required String language,
   }) = _FileUploadState;
 
   factory FileUploadState.initial() => FileUploadState(
@@ -26,5 +28,7 @@ class FileUploadState with _$FileUploadState {
         isShimmering: false,
         isDownloading: false,
         downloadProgress: 0,
+    isRemoveProcess: false,
+    language: 'he'
       );
 }
