@@ -11,6 +11,9 @@ class MoreDetailsState with _$MoreDetailsState {
     required TextEditingController emailController,
     required TextEditingController faxController,
     required TextEditingController cityController,
+    required TextEditingController deviceTypeController,
+    required TextEditingController otpController,
+    required TextEditingController versionController,
     required File image,
     required bool isLoading,
     required bool isUpdating,
@@ -19,6 +22,10 @@ class MoreDetailsState with _$MoreDetailsState {
     required String companyLogo,
     required bool isFileSizeExceeds,
     required bool isUploadProcess,
+    required String language,
+    required String deviceType,
+    required String version,
+    required String OtpString,
   }) = _MoreDetailsState;
 
   factory MoreDetailsState.initial() => MoreDetailsState(
@@ -28,6 +35,9 @@ class MoreDetailsState with _$MoreDetailsState {
         addressController: TextEditingController(),
         emailController: TextEditingController(),
         faxController: TextEditingController(),
+        deviceTypeController:TextEditingController() ,
+        otpController: TextEditingController(),
+        versionController: TextEditingController(),
         image: File(''),
         isLoading: false,
         isUpdating: false,
@@ -37,6 +47,10 @@ class MoreDetailsState with _$MoreDetailsState {
         companyLogo: '',
         isFileSizeExceeds: false,
         isShimmering: false,
-        isUploadProcess: false
+        isUploadProcess: false,
+    language: 'he',
+    deviceType: '',
+    OtpString: '',
+    version: '',
       );
 }

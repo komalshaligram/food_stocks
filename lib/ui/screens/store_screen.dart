@@ -75,12 +75,12 @@ class StoreScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-                bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
+              /*  bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
                 bloc.add(StoreEvent.getCompaniesListEvent(context: context));
                 bloc.add(StoreEvent.getSuppliersListEvent(context: context));
                 bloc.add(StoreEvent.getProductSalesListEvent(context: context));
                 bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));*/
               },
               child: SafeArea(
                 child: Stack(

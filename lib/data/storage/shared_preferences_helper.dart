@@ -19,6 +19,7 @@ class SharedPreferencesHelper {
   static const String reqApiUrl = 'reqApiUrl';
   static const String apiPram = 'apiPram';
   static const String isCelebrationAnimation = 'isCelebrationAnimation';
+  static const String otpString = 'otp';
 
 
   // static const String userCartProducts = 'userCartProducts';
@@ -134,6 +135,9 @@ class SharedPreferencesHelper {
   Future<void> setIsAnimation({required bool isAnimation}) async {
     await prefs.setBool(isCelebrationAnimation, isAnimation);
   }
+  Future<void> setOtpString({required String otp}) async {
+    await prefs.setString(otpString, otp);
+  }
 
 
   // Future<void> setCartProductIdList(
@@ -216,7 +220,10 @@ class SharedPreferencesHelper {
   }
   bool getIsAnimation() {
     return prefs.getBool(isCelebrationAnimation) ?? false;
+  }
 
+  String getOtpString() {
+    return prefs.getString(otpString) ?? '1234';
   }
 
 // List<String> getCartProductIdList() {

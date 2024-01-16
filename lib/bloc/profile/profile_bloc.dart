@@ -129,7 +129,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _getBusinessTypeListEvent) {
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(isShimmering: true,language: preferences.getAppLanguage()));
           final res = await DioClient(event.context)
               .get(path: AppUrls.businessTypesUrl);
           debugPrint('business type list res = $res');

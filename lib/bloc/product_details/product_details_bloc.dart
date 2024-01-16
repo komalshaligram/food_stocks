@@ -135,13 +135,10 @@ class ProductDetailsBloc
             debugPrint('[order Id ] = ${event.orderId}');
             if (response['status'] == 201) {
               emit(state.copyWith(isLoading: false));
-              if(event.isDeliver){
+
                 Navigator.pop(event.BottomSheetContext);
                 Navigator.pop(event.context);
-              }
-              else{
-                Navigator.pop(event.BottomSheetContext);
-              }
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(

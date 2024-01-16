@@ -272,7 +272,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   title: AppLocalizations.of(context)!.log_out,
                                   onTap: () {
                                     LogOutDialog(
-                                      context: context
+                                      context: context,
+                                        directionality : state.language
                                     );
 
                                   }),
@@ -397,7 +398,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
   void LogOutDialog({
-    required BuildContext context,
+    required BuildContext context, required String directionality,
     }){
     showDialog(
       context: context,
@@ -409,6 +410,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             return AbsorbPointer(
           absorbing: state.isLogOutProcess ? true : false,
           child: CommonAlertDialog(
+            directionality: directionality,
             title: '${AppLocalizations.of(context)!.log_out}',
             subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
             positiveTitle: '${AppLocalizations.of(context)!.yes}',
