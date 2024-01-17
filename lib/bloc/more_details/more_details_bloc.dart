@@ -43,14 +43,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
   ProfileModel profileModel = ProfileModel();
   String imgUrl = '';
 
+
   MoreDetailsBloc() : super(MoreDetailsState.initial()) {
     on<MoreDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
-          emit(state.copyWith(isShimmering: true));
+          emit(state.copyWith(isShimmering: true ,language: preferencesHelper.getAppLanguage()));
           final response =
               await DioClient(event.context).get(path: AppUrls.cityListUrl);
           CityListResModel cityListResModel =
@@ -65,8 +67,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 cityList: temp,
                 filterList: temp,
                 cityListResModel: cityListResModel,
-                selectCity:
-                    cityListResModel.data!.cities!.first.cityName.toString()));
+                selectCity: cityListResModel.data!.cities!.first.cityName.toString(),
+              deviceTypeController: TextEditingController(
+                  text:  Platform.isAndroid
+                      ? AppStrings.androidString
+                      : AppStrings.iosString ?? '') ,
+              versionController:TextEditingController(
+                  text: packageInfo.version ?? ''
+              ),
+              otpController: TextEditingController(
+                  text: preferencesHelper.getOtpString()
+              ),
+            ));
           } else {
             emit(state.copyWith(isShimmering: false));
             debugPrint('cityListResModel____${cityListResModel}');
@@ -185,7 +197,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             address: state.addressController.text.trim(),
             email: state.emailController.text,
             //  phoneNumber: preferencesHelper.getPhoneNumber(),
-            clientDetail: ClientDetail(fax: state.faxController.text),
+            clientDetail: ClientDetail(fax: state.faxController.text.isNotEmpty ? state.faxController.text : ''),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail =
@@ -262,6 +274,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   ?.firstWhere(
                       (element) => element.cityName == state.selectCity)
                   .id,
+              statusId: "pending",
               contactName: profileModel.contactName,
               address: state.addressController.text.trim(),
               email: state.emailController.text,
@@ -369,6 +382,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 )*/);
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
+            print('ProfileDetails Response     =   ${response}');
             if (response.status == 200) {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
@@ -382,6 +396,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 faxController: TextEditingController(
                     text: response.data?.clients?.first.clientDetail?.fax),
                 companyLogo: response.data?.clients?.first.logo ?? '',
+                deviceTypeController: TextEditingController(
+                  text: response.data?.clients?.first.clientDetail?.deviceType ?? '') ,
+                versionController:TextEditingController(
+                  text: response.data?.clients?.first.clientDetail?.applicationVersion ?? ''
+                ),
+                otpController: TextEditingController(
+                    text: preferencesHelper.getOtpString()
+                ),
               ));
             } else {
               emit(state.copyWith(isUpdating: false));
@@ -426,7 +448,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             faxController: TextEditingController(text: newFaxNumber)
               ..selection = TextSelection.fromPosition(
                   TextPosition(offset: newFaxNumber.length))));
-      } else if (event is _deleteFileEvent) {
+      }
+      else if (event is _deleteFileEvent) {
         try {
           if (state.companyLogo.isEmpty) {
             return;

@@ -144,6 +144,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                     const NeverScrollableScrollPhysics(),
                                                 itemBuilder: (context, index) {
                                                   return buildFormsAndFilesUploadFields(
+                                                      directionality : state.language,
                                                     fileIndex: index,
                                                     context: context,
                                                     fileName: state
@@ -170,6 +171,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                                 index]
                                                             .isForm ??
                                                         false,
+                                                      isRemoveProcess : state.isRemoveProcess
                                                   );
                                                 },
                                               ),
@@ -282,6 +284,7 @@ class FileUploadScreenWidget extends StatelessWidget {
     required bool isUploading,
     required int uploadIndex,
     required String localUrl,
+    required bool isRemoveProcess, required String directionality,
   }) {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.padding_10),
@@ -507,6 +510,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                               context: context,
                                               builder: (context2) =>
                                                   CommonAlertDialog(
+                                                    directionality: directionality,
                                                 title: '${AppLocalizations.of(context)!.remove}',
                                                 subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
                                                 positiveTitle: '${AppLocalizations.of(context)!.yes}',
@@ -532,7 +536,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                             ),
                         backgroundColor: Colors.transparent);
                   },
-                  child: isUploading && uploadIndex == fileIndex
+                  child: (isUploading && uploadIndex == fileIndex) || (isRemoveProcess && uploadIndex == fileIndex)
                       ? Container(
                           height: 150,
                           color: AppColors.whiteColor,

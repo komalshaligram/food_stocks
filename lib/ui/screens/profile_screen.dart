@@ -272,9 +272,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       state.UserImageUrl.isEmpty
                                                           ? 0.width
                                                           : FileSelectionOptionWidget(
-                                                              title: AppLocalizations.of(
-                                                                      context1)!
-                                                                  .remove,
+                                                              title: AppLocalizations.of(context1)!.remove,
                                                               icon:
                                                                   Icons.delete,
                                                               iconColor:
@@ -290,6 +288,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   builder:
                                                                       (context2) =>
                                                                           CommonAlertDialog(
+                                                                            directionality: state.language,
                                                                     title:
                                                                         '${AppLocalizations.of(context)!.remove}',
                                                                     subTitle:

@@ -144,7 +144,7 @@ Future<CroppedFile?> cropImage(
               : CropAspectRatioPreset.square,
           hideBottomControls: true,
           showCropGrid: false,
-          lockAspectRatio: true,
+          lockAspectRatio: false,
           toolbarColor: AppColors.blackColor,
           toolbarTitle: AppStrings.cropImageString,
           toolbarWidgetColor: AppColors.whiteColor),

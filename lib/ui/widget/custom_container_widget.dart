@@ -13,7 +13,7 @@ class CustomContainerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: AppConstants.containerHeight,
-      width: MediaQuery.of(context).size.width,
+     // width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.only(
             top: AppConstants.padding_10, bottom: AppConstants.padding_10),
