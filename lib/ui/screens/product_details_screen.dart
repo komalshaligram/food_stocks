@@ -320,12 +320,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   ),
                 ),
 
-
             bottomSheet: state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
                 ==
                 AppLocalizations.of(context)!.pending_delivery ? Container(
               padding: EdgeInsets.symmetric(
-                  vertical: AppConstants.padding_20,
+                  vertical: AppConstants.padding_20,  
                   horizontal: AppConstants.padding_30),
               color: AppColors.pageColor,
               child: CustomButtonWidget(

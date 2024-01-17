@@ -88,7 +88,6 @@ class ProductDetailsBloc
           emit(state.copyWith(
               quantity: event.messingQuantity.round() + 1,
               isRefresh: !state.isRefresh,
-
           ));
         }
         else {
@@ -107,8 +106,6 @@ class ProductDetailsBloc
           missingQuantity: event.messingQuantity.round() - 1
           ));
         }
-
-
       } else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));
         if (event.issue != '') {
@@ -135,13 +132,8 @@ class ProductDetailsBloc
             debugPrint('[order Id ] = ${event.orderId}');
             if (response['status'] == 201) {
               emit(state.copyWith(isLoading: false));
-              if(event.isDeliver){
                 Navigator.pop(event.BottomSheetContext);
                 Navigator.pop(event.context);
-              }
-              else{
-                Navigator.pop(event.BottomSheetContext);
-              }
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(

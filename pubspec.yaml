@@ -83,7 +83,6 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   flutter_staggered_animations: ^1.1.1
   getwidget: ^4.0.0
-  otp_autofill: ^3.0.2
 
 
 dev_dependencies:

@@ -40,7 +40,6 @@ class PushNotificationService {
     print('User granted permission: ${settings.authorizationStatus}');
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
-        debugPrint("onMessageOpenedApp: $message");
         debugPrint("onMessageOpenedApp: ${message.data}");
         _mainPage = message.data['data']['message']['mainPage'];
         _subPage = message.data['data']['message']['subPage'];
@@ -147,7 +146,7 @@ class PushNotificationService {
           channel.id,
           channel.name,
           channel.description ?? '',
-          android!.smallIcon??'',
+          android?.smallIcon??'',
         );
       }
     });
@@ -159,11 +158,7 @@ class PushNotificationService {
       id,
       title,
       body,
-      flutter_local_notifications.NotificationDetails(
-        iOS: fileName != null
-            ? DarwinNotificationDetails(
-                attachments: [DarwinNotificationAttachment(fileName)])
-            : DarwinNotificationDetails(),
+    Platform.isAndroid?  flutter_local_notifications.NotificationDetails(
         android: fileName != null
             ? AndroidNotificationDetails(
                 channelId,
@@ -181,7 +176,12 @@ class PushNotificationService {
                 channelDescription: channelDesc,
                 icon: androidIcon??'',
               ),
-      ),
+      ):flutter_local_notifications.NotificationDetails(
+      iOS: fileName != null
+          ? DarwinNotificationDetails(
+          attachments: [DarwinNotificationAttachment(fileName)])
+          : DarwinNotificationDetails(),
+    ),
       // payload: message.data.toString(),
     );
   }
@@ -271,6 +271,11 @@ class PushNotificationService {
   Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling a background message: ${message.messageId}");
     debugPrint("Handling a background message: ${message.data.toString()}");
+    _mainPage = message.data['data']['message']['mainPage'];
+    _subPage = message.data['data']['message']['subPage'];
+    _id = message.data['data']['message']['id'];
+    manageNavigation( true, _mainPage, _subPage , _id);
+
   }
 
   Future<void> enableIOSNotifications() async {
