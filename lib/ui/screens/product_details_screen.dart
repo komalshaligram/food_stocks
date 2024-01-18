@@ -106,8 +106,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           buttonName: AppLocalizations.of(context)!.total,
                           buttonValue:
                          '${formatNumber(value: state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-
-                        ),
+                  ),
                 ),
                 onTap: () {
                   Navigator.pop(context);

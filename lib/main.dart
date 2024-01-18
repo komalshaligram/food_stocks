@@ -17,6 +17,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/services/locale_provider.dart';
 import 'app_config.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
+
+
+final shorebirdCodePush = ShorebirdCodePush();
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -62,7 +66,23 @@ class _MyAppState extends State<MyApp> {
       await AppConfig.initializeAppConfig(context);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
+    // Get the current patch number and print it to the console. It will be
+    // null if no patches are installed.
+    shorebirdCodePush
+        .currentPatchNumber()
+        .then((value) => print('current patch number is $value'));
+    _checkForUpdates();
     super.initState();
+  }
+
+
+  Future<void> _checkForUpdates() async {
+    // Check whether a patch is available to install.
+    final isUpdateAvailable = await shorebirdCodePush.isNewPatchAvailableForDownload();
+    if (isUpdateAvailable) {
+      // Download the new patch if it's available.
+      await shorebirdCodePush.downloadUpdateIfAvailable();
+    }
   }
 
   @override
