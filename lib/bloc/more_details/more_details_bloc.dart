@@ -68,16 +68,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 filterList: temp,
                 cityListResModel: cityListResModel,
                 selectCity: cityListResModel.data!.cities!.first.cityName.toString(),
-              deviceTypeController: TextEditingController(
-                  text:  Platform.isAndroid
-                      ? AppStrings.androidString
-                      : AppStrings.iosString ?? '') ,
-              versionController:TextEditingController(
-                  text: packageInfo.version ?? ''
-              ),
-              otpController: TextEditingController(
-                  text: preferencesHelper.getOtpString()
-              ),
             ));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -274,7 +264,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   ?.firstWhere(
                       (element) => element.cityName == state.selectCity)
                   .id,
-              statusId: "pending",
+              statusId: AppStrings.pendingString,
               contactName: profileModel.contactName,
               address: state.addressController.text.trim(),
               email: state.emailController.text,
@@ -396,14 +386,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 faxController: TextEditingController(
                     text: response.data?.clients?.first.clientDetail?.fax),
                 companyLogo: response.data?.clients?.first.logo ?? '',
-                deviceTypeController: TextEditingController(
-                  text: response.data?.clients?.first.clientDetail?.deviceType ?? '') ,
-                versionController:TextEditingController(
-                  text: response.data?.clients?.first.clientDetail?.applicationVersion ?? ''
-                ),
-                otpController: TextEditingController(
-                    text: preferencesHelper.getOtpString()
-                ),
               ));
             } else {
               emit(state.copyWith(isUpdating: false));

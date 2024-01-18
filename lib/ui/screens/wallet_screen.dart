@@ -137,7 +137,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                           ),
                         children: [
                           45.height,
-                          Padding(
+                         state.isProcess? WalletScreenShimmerWidget():Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_15),
                             child: Container(

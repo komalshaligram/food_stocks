@@ -59,12 +59,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 otp: event.otp,
                 tokenId: preferencesHelper.getFCMToken());
             debugPrint('otp req = $reqMap');
-              preferencesHelper.setOtpString(otp: event.otp);
+
             final res = await DioClient(event.context)
                 .post(AppUrls.loginOTPUrl, data: reqMap);
             debugPrint('otp res = $res');
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
-
             if (response.status == 200) {
               _periodicOtpTimerSubscription.cancel();
               preferencesHelper.setCartId(cartId: response.data?.cartId ?? '');
@@ -135,7 +134,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               otp: event.otp,
             );
             debugPrint('otp req = $reqMap');
-            preferencesHelper.setOtpString(otp: event.otp);
+
             final res = await DioClient(event.context)
                 .post(AppUrls.otpVerifyUrl, data: reqMap);
             debugPrint('otp res = $res');

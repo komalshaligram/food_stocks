@@ -57,6 +57,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           year: temp.first,
         ));
       } else if (event is _getWalletRecordEvent) {
+        emit(state.copyWith(isProcess: true));
         try {
           WalletRecordReqModel reqMap =
               WalletRecordReqModel(userId: preferencesHelper.getUserId());
@@ -80,10 +81,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
                 expensePercentage: double.parse(
-                    response.data?.currentMonth?.expensePercentage ?? '')));
-          } else {}
+                    response.data?.currentMonth?.expensePercentage ?? ''),
+              isProcess: false
+            ));
+          } else {emit(state.copyWith(isProcess: false));}
         } on ServerException {
-        } catch (e) {}
+          emit(state.copyWith(isProcess: false));
+        } catch (e) {emit(state.copyWith(isProcess: false));}
       } else if (event is _getTotalExpenseEvent) {
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(

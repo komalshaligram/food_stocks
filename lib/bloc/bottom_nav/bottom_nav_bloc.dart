@@ -18,9 +18,10 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _ChangePageEvent) {
-        emit(state.copyWith(index: event.index));
+        emit(state.copyWith(index: event.index,));
+
       } else if (event is _UpdateCartCountEvent) {
-     emit(state.copyWith(isAnimation: false,isBottomBar: false));
+     emit(state.copyWith(isAnimation: false));
      if(state.cartCount < preferencesHelper.getCartCount()){
        emit(state.copyWith(isAnimation: preferencesHelper.getIsAnimation()));
      }
@@ -33,9 +34,10 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         }
         debugPrint('cart count = ${state.cartCount}');
       } else if (event is _PushNavigationEvent) {
-        debugPrint('push = ${event.pushNavigation}');
-        if (event.pushNavigation.isNotEmpty) {
-          emit(state.copyWith(index: 1, pushNotificationPath: event.pushNavigation));
+      //  debugPrint('push = ${event.pushNavigation}');
+        if (event.pushNavigation != '') {
+         // add(BottomNavEvent.changePage(index: 1));
+         // emit(state.copyWith(index: 1, pushNotificationPath: event.pushNavigation));
         }
       }
     });

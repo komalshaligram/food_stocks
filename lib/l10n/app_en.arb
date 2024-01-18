@@ -354,9 +354,12 @@
   "item_deleted": "Item Deleted",
   "this_supplier_have": "This supplier have ",
   "quantity_in_stock": "quantity in stock ",
-   "enter_valid_owner_name": "Please enter valid owner name",
-        "enter_valid_contact_name": "Please enter valid contact name",
-        "enter_valid_address": "Please enter valid address"
+  "enter_valid_owner_name": "Please enter valid owner name",
+  "enter_valid_contact_name": "Please enter valid contact name",
+  "enter_valid_address": "Please enter valid address",
+  "this_company_has_no_product": "Currently this company has no products",
+  "out_of_stock1" : "Out of stock"
+
 
 
 }

@@ -64,7 +64,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, childAspectRatio: 9 / 12),
+                crossAxisCount: 3, childAspectRatio: 8 / 11.5),
             itemBuilder: (context, index) => buildPlanoGramProductItem(
                 productImage: state.planogramProductList[index].mainImage ?? '',
                 productName:
@@ -76,7 +76,9 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                   showProductDetails(
                       context: context,
                       productId: state.planogramProductList[index].id ?? '');
+
                 },
+                productStock :state.planogramProductList[index].productStock ?? 0,
                 context: context,
                 index: index,
                 isRTL: context.rtl),
@@ -94,13 +96,14 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       required double productPrice,
       required int totalSale,
       required void Function() onPressed,
-      required bool isRTL}) {
+      required bool isRTL, required int productStock}) {
     return DelayedWidget(
         child: CommonProductItemWidget(
             productImage: productImage,
             productName: productName,
             totalSaleCount: totalSale,
             price: productPrice,
+            productStock : productStock,
             onButtonTap: onPressed)
         // Container(
         //   // height: 170,

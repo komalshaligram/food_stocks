@@ -232,7 +232,7 @@
   "unknown_error":"בעיה לא ידועה",
   "login_successful":"התחברת בהצלחה",
   "add_1_quantity":"בחר לפחות כמות אחת",
-  "out_of_stock":"אזל במלאי",
+  "out_of_stock":"לא קיים במלאי",
   "select_business_type":"אנא בחר את סוג העסק",
   "reorder": "Reorder",
   "previous_order_products": "Products from Previous Order",
@@ -357,6 +357,9 @@
       "quantity_in_stock": "quantity in stock ",
       "enter_valid_owner_name": "Please enter valid owner name",
       "enter_valid_contact_name": "Please enter valid contact name",
-      "enter_valid_address": "Please enter valid address"
+      "enter_valid_address": "Please enter valid address",
+  "this_company_has_no_product": "Currently this company has no products",
+  "out_of_stock1" : "לא במלאי"
+
 
 }

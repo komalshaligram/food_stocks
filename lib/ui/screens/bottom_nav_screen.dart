@@ -35,27 +35,18 @@ class BottomNavScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc()
-        ..add(BottomNavEvent.PushNavigationEvent(
-            context: context,
-            pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
-      child: BottomNavScreenWidget(),
+      create: (context) => BottomNavBloc(),
+      child: BottomNavScreenWidget(storeScreen: args?[AppStrings.pushNavigationString] ?? ''),
     );
   }
 }
 
 class BottomNavScreenWidget extends StatelessWidget {
-  BottomNavScreenWidget({super.key});
+  String storeScreen;
+
+  BottomNavScreenWidget({super.key, this.storeScreen = ''});
 
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
-
-  List Screen = [
-    HomeScreen(),
-    StoreScreen(),
-    BasketScreen(),
-    WalletScreen(),
-    ProfileMenuScreen()
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +54,8 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-        if (state.pushNotificationPath == 'companyScreen') {
-          debugPrint('push companyScreen');
-          Navigator.pushNamed(context, RouteDefine.companyScreen.name);
+      /*  if (state.pushNotificationPath == 'storeScreen') {
+          Navigator.pushNamed(context, RouteDefine.storeScreen.name);
         } else if (state.pushNotificationPath == 'companyProductsScreen') {
           debugPrint('push companyProductsScreen');
           Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
@@ -84,7 +74,7 @@ class BottomNavScreenWidget extends StatelessWidget {
         } else if (state.pushNotificationPath == 'planogramProductScreen') {
           debugPrint('push planogramProductScreen');
           Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
-        }
+        }*/
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -109,7 +99,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ]),
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
-                  index: state.index,
+                  index: storeScreen == '' ? state.index : 1,
                   height: 65.0,
                   cartCount: state.cartCount,
                   isRTL: context.rtl,
@@ -152,6 +142,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) {
+                    storeScreen = '';
                     bloc.add(BottomNavEvent.changePage(index: index));
                   },
                   letIndexChange: (index) => true,
@@ -167,7 +158,8 @@ class BottomNavScreenWidget extends StatelessWidget {
                       _pageContainers(
                           screenHeight: getScreenHeight(context),
                           screenWidth: getScreenWidth(context),
-                          state: state),
+                          state: state
+                      ),
                     ],
                   ),
                 ),
@@ -189,7 +181,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       height: screenHeight,
       width: screenWidth,
       child: FadeIndexedStack(
-        index: state.index,
+        index: storeScreen == '' ? state.index : 1,
         children: [
           HomeScreen(),
           StoreScreen(),
@@ -215,7 +207,7 @@ class BottomNavScreenWidget extends StatelessWidget {
             width: 50,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-                color: pos == state.index
+                color: pos == (storeScreen == '' ? state.index : 1 )
                     ? AppColors.mainColor
                     : AppColors.whiteColor,
                 borderRadius: const BorderRadius.all(
@@ -230,7 +222,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                 width: 26,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  pos == state.index
+                  pos == (storeScreen == '' ? state.index : 1 )
                       ? AppColors.whiteColor
                       : AppColors.navSelectedColor,
                   BlendMode.srcIn,
