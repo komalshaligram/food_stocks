@@ -28,17 +28,17 @@ class FormFieldValidation {
     RegExp regex = RegExp(r"^(?=.*?[a-zA-Z.!#$%&'*+-/=?^_`{|}~]).*$");
     if (value.trim().isEmpty) {
       return '${AppLocalizations.of(context)!.please_enter_valid_phone_number}';
-    } else if (value.length <= 10) {
+    } else if (value.length <= 9) {
       if (regex.hasMatch(value)) {
         return "${AppLocalizations.of(context)!.please_enter_valid_phone_number}";
       }
-      else if(value.length < 10){
+      else if(value.length < 9){
         return "${AppLocalizations.of(context)!.phone_number_must_be_10digit}";
       }
       else{
         return null;
       }
-    } else if (value.length > 10) {
+    } else if (value.length > 9) {
       return "${AppLocalizations.of(context)!.phone_number_must_be_10digit}";
     }
     else {

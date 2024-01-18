@@ -496,6 +496,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               AppConstants.padding_5),
                                           itemBuilder: (context, index) =>
                                               CommonProductItemWidget(
+                                                productStock: state.recommendedProductsList[index].productStock ?? 0,
                                                 height: 150,
                                                 width: 140,
                                                 productImage:
@@ -1632,10 +1633,10 @@ class StoreScreenWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: Text(
                                   '${AppLocalizations.of(context)!
-                                      .suppliers_not_available}',
+                                      .out_of_stock}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
+                                      color: AppColors.redColor),
                                 ),
                               )
                                   : buildSupplierSelection(context: context),

@@ -18,9 +18,6 @@ class AuthFormValidation {
       case AppStrings.mobileValString:
         return formFieldValidation.mobileField(value,context);
 
-
-
-
       case AppStrings.businessNameValString:
         return formFieldValidation.businessNameField(value,context);
 

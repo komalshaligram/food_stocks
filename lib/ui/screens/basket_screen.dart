@@ -174,14 +174,16 @@ class BasketScreenWidget extends StatelessWidget {
                                         5.width,
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .orderSummaryScreen.name,
-                                                arguments: {
-                                                  AppStrings.getCartListString:
-                                                      state.CartItemList
-                                                });
+                                            if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .orderSummaryScreen.name,
+                                                  arguments: {
+                                                    AppStrings.getCartListString:
+                                                    state.CartItemList
+                                                  });
+                                            }
                                           },
                                           child: Container(
                                             // width: getScreenWidth(context) * 0.22,
