@@ -18,6 +18,9 @@ class AppStrings {
   static const deliverString = 'deliver';
   static const statusString = 'status';
   static const updateString = 'Updating';
+  static const pendingString = 'pending';
+  static const navigateToStore = 'true';
+
 
 
   //language Strings

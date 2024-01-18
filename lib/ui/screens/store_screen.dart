@@ -75,17 +75,20 @@ class StoreScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-              /*  bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
+           //  if(state.productCategoryList.isEmpty) {
+               bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
                 bloc.add(StoreEvent.getCompaniesListEvent(context: context));
                 bloc.add(StoreEvent.getSuppliersListEvent(context: context));
                 bloc.add(StoreEvent.getProductSalesListEvent(context: context));
                 bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));*/
+                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+         //   }
+
               },
               child: SafeArea(
                 child: Stack(
                   children: [
-                    state.isShimmering
+                    state.isShimmering && state.productCategoryList.isEmpty
                         ? StoreScreenShimmerWidget()
                         : SingleChildScrollView(
                       child: AnimationLimiter(
@@ -610,6 +613,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               CommonProductItemWidget(
                                                 height: 150,
                                                 width: 140,
+                                                productStock : state.previousOrderProductsList[index].productStock ?? 0,
                                                 productImage:
                                                 state
                                                     .previousOrderProductsList[

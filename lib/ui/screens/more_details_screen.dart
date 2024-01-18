@@ -353,141 +353,24 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     context: context,
                                     controller: state.faxController,
                                     inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(11)
                                     ],
-                                    onChangeValue: (FAX) {
+                                  /*  onChangeValue: (FAX) {
                                       bloc.add(
                                           MoreDetailsEvent.setFAXFormatEvent(
                                               FAX: FAX));
-                                    },
+                                    },*/
                                     textDirection:
                                         context.rtl ? TextDirection.ltr : null,
                                     keyboardType: TextInputType.number,
                                     hint: AppLocalizations.of(context)!.fax,
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
-                                    // validator: AppStrings.faxValString,
-                                    validator: '',
+                                     validator: AppStrings.faxValString,
+
                                   ),
                                   7.height,
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CustomContainerWidget(
-                                            star: '',
-                                            name:'Device type',
-                                          ),
-                                          // Text(state.deviceType,
-                                          //     style: AppStyles
-                                          //         .rkRegularTextStyle(
-                                          //             size: AppConstants
-                                          //                 .smallFont,
-                                          //             color: AppColors
-                                          //                 .blackColor)),
-
-                                          Container(
-                                            width: 100,
-                                            child: CustomFormField(
-                                              context: context,
-                                              isEnabled: false,
-                                              controller: state.deviceTypeController,
-                                              inputformet: [
-                                                /*FilteringTextInputFormatter.deny(
-                                                                              RegExp(r'\s')),*/
-                                                FilteringTextInputFormatter.digitsOnly,
-                                                LengthLimitingTextInputFormatter(11)
-                                              ],
-                                              textDirection:
-                                              context.rtl ? TextDirection.ltr : null,
-                                              keyboardType: TextInputType.number,
-                                              hint: AppLocalizations.of(context)!.fax,
-                                              fillColor: AppColors.greyColor.withOpacity(0.3),
-                                              textInputAction: TextInputAction.done,
-                                              // validator: AppStrings.faxValString,
-                                              validator: '',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CustomContainerWidget(
-                                            star: '',
-                                            name:'Application version',
-                                          ),
-
-                                          Container(
-                                            width: 100,
-                                            child: CustomFormField(
-                                              context: context,
-                                              isEnabled: false,
-                                              controller: state.versionController,
-                                              inputformet: [
-                                                /*FilteringTextInputFormatter.deny(
-                                                                              RegExp(r'\s')),*/
-                                                FilteringTextInputFormatter.digitsOnly,
-                                                LengthLimitingTextInputFormatter(11)
-                                              ],
-                                              textDirection:
-                                              context.rtl ? TextDirection.ltr : null,
-                                              keyboardType: TextInputType.number,
-                                              hint: AppLocalizations.of(context)!.fax,
-                                              fillColor: AppColors.greyColor.withOpacity(0.3),
-                                              textInputAction: TextInputAction.done,
-                                              // validator: AppStrings.faxValString,
-                                              validator: '',
-                                            ),
-                                          ),
-                                          // Text(state.version,
-                                          //     style: AppStyles
-                                          //         .rkRegularTextStyle(
-                                          //             size: AppConstants
-                                          //                 .smallFont,
-                                          //             color: AppColors
-                                          //                 .blackColor)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    star: '',
-                                    name:'OTP',
-                                  ),
-
-                                  CustomFormField(
-                                    context: context,
-                                    isEnabled: false,
-                                    controller: state.otpController,
-                                    inputformet: [
-                                      /*FilteringTextInputFormatter.deny(
-                                  RegExp(r'\s')),*/
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(11)
-                                    ],
-                                    textDirection:
-                                    context.rtl ? TextDirection.ltr : null,
-                                    keyboardType: TextInputType.number,
-                                    hint: '',
-                                    fillColor: AppColors.greyColor.withOpacity(0.3),
-                                    textInputAction: TextInputAction.done,
-                                    // validator: AppStrings.faxValString,
-                                    validator: '',
-                                  ),
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!
                                         .logo_image,

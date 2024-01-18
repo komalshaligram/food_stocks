@@ -22,6 +22,8 @@ class WalletState with _$WalletState {
     required bool isBottomOfProducts,
     required bool isExportShimmering,
     required double expensePercentage,
+    required bool isProcess,
+
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -43,40 +45,9 @@ class WalletState with _$WalletState {
     isLoadMore: false,
     isBottomOfProducts: false,
     isExportShimmering: false,
-    expensePercentage: 0
+    expensePercentage: 0,
+    isProcess: false,
       );
 }
 
 
-/*balanceSheetList: [
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: -1250,
-              orderPayment: 152658),
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: 1250,
-              orderPayment: 152658),
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: 1250,
-              orderPayment: 152658),
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: -1250,
-              orderPayment: 152658),
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: -1250,
-              orderPayment: 152658),
-          OrderBalance(
-              date: '15.02.2023',
-              balance: 12450,
-              difference: 1250,
-              orderPayment: 152658),
-        ],*/

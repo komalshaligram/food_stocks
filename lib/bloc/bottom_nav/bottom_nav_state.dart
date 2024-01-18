@@ -8,7 +8,6 @@ class BottomNavState with _$BottomNavState {
     required bool isAnimation,
     required String pushNotificationPath,
     required bool duringCelebration,
-    required bool isBottomBar,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => const BottomNavState(
@@ -17,6 +16,5 @@ class BottomNavState with _$BottomNavState {
         isAnimation: false,
         pushNotificationPath: '',
         duringCelebration: false,
-        isBottomBar: false
       );
 }
