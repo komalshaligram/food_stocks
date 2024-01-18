@@ -147,6 +147,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                     const NeverScrollableScrollPhysics(),
                                                 itemBuilder: (context, index) {
                                                   return buildFormsAndFilesUploadFields(
+                                                    updateState : state.isUpdate,
                                                       directionality : state.language,
                                                     fileIndex: index,
                                                     context: context,
@@ -287,7 +288,8 @@ class FileUploadScreenWidget extends StatelessWidget {
     required bool isUploading,
     required int uploadIndex,
     required String localUrl,
-    required bool isRemoveProcess, required String directionality,
+    required bool isRemoveProcess, required String directionality, required bool updateState,
+
   }) {
     return Container(
       margin: EdgeInsets.only(top: AppConstants.padding_10),
@@ -583,17 +585,17 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         ),
                                       ],
                                     )
-                                  : url.contains(AppStrings.tempString)
+                                  :  !updateState
                                       ? Image.file(
                                           File(localUrl),
                                           fit: BoxFit.cover,
                                           width: double.maxFinite,
                                         )
-                                      :CachedNetworkImage(
+                                      : CachedNetworkImage(
                                 imageUrl: "${AppUrls.baseFileUrl}$url",
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.center,
-                                placeholder: (context, url) =>Center(
+                                placeholder: (context, url) => Center(
                                   child:
                                   CupertinoActivityIndicator(
                                     color: AppColors.blackColor,

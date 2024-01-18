@@ -88,7 +88,7 @@ class LogInScreenWidget extends StatelessWidget {
                         CustomFormField(
                           inputformet: [
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10)
+                            LengthLimitingTextInputFormatter(9)
                           ],
                           context: context,
                           controller: phoneController,
@@ -96,8 +96,7 @@ class LogInScreenWidget extends StatelessWidget {
                           hint: AppStrings.hintNumberString,
                           fillColor: AppColors.whiteColor,
                           textInputAction: TextInputAction.done,
-                         // validator: AppStrings.mobileValString,
-                          validator: '',
+                          validator: AppStrings.mobileValString,
                         ),
                         30.height,
                         CustomButtonWidget(

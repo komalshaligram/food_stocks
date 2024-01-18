@@ -212,6 +212,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           itemBuilder: (context, index) =>
                               DelayedWidget(
                                 child: CommonProductItemWidget(
+                                  productStock: state.productList[index].productStock?.toInt() ?? 0,
                                     productImage: state.productList[index]
                                         .mainImage ??
                                         '',
