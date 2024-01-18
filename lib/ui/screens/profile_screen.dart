@@ -42,18 +42,13 @@ class ProfileScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfileBloc()
         ..add(
-          ProfileEvent.getBusinessTypeListEvent(context: context),
-        )
+          ProfileEvent.getBusinessTypeListEvent(context: context),)
         ..add(
           ProfileEvent.getProfileDetailsEvent(
               context: context,
               isUpdate:
-                  args?.containsKey(AppStrings.isUpdateParamString) ?? false
-                      ? true
-                      : false,
-              mobileNo: args?.containsKey(AppStrings.contactString) ?? false
-                  ? args![AppStrings.contactString]
-                  : ''),
+                  args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
+              mobileNo: args?.containsKey(AppStrings.contactString) ?? false ? args![AppStrings.contactString] : ''),
         ),
       child: ProfileScreenWidget(),
     );
@@ -94,11 +89,14 @@ class ProfileScreenWidget extends StatelessWidget {
                     }
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-              title: Text(
-                AppLocalizations.of(context)!.business_details,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: Colors.black,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)!.business_details,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               backgroundColor: AppColors.whiteColor,

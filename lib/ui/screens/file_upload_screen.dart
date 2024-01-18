@@ -83,11 +83,14 @@ class FileUploadScreenWidget extends StatelessWidget {
                 elevation: 0,
                 titleSpacing: 0,
                 leadingWidth: 60,
-                title: Text(AppLocalizations.of(context)!.forms_files,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.blackColor)),
+                title: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(AppLocalizations.of(context)!.forms_files,
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.smallFont,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.blackColor)),
+                ),
                 leading: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);

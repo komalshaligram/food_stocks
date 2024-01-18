@@ -87,10 +87,13 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-              title: Text(
-                AppLocalizations.of(context)!.more_details,
-                style:
-                    AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)!.more_details,
+                  style:
+                      AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
+                ),
               ),
               backgroundColor: AppColors.whiteColor,
               titleSpacing: 0,

@@ -60,10 +60,13 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             elevation: 0,
             titleSpacing: 0,
             leadingWidth: 60,
-            title: Text(AppLocalizations.of(context)!.activity_time,
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: AppColors.blackColor)),
+            title: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(AppLocalizations.of(context)!.activity_time,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.blackColor)),
+            ),
             leading: GestureDetector(
                 onTap: () {
                   if (!state.isUpdate) {
