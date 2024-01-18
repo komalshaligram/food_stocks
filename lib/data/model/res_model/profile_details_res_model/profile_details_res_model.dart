@@ -87,8 +87,8 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "promissoryNote") String? promissoryNote,
     @JsonKey(name: "businessCertificate") String? businessCertificate,
     @JsonKey(name: "israelIdImage") String? israelIdImage,
-    @JsonKey(name: "forms") Forms? forms,
-    @JsonKey(name: "files") Files? files,
+    @JsonKey(name: "forms") Map<String,String>? forms,
+    @JsonKey(name: "files") Map<String,String>? files,
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
@@ -118,7 +118,7 @@ class ClientType with _$ClientType {
 }
 
 @freezed
-class Files with _$Files {
+/*class Files with _$Files {
   const factory Files({
     @JsonKey(name: "651e7ccf30429b3f49e65f08")
     String? the651E7Ccf30429B3F49E65F08,
@@ -139,7 +139,7 @@ class Forms with _$Forms {
   }) = _Forms;
 
   factory Forms.fromJson(Map<String, dynamic> json) => _$FormsFromJson(json);
-}
+}*/
 
 @freezed
 class OperationTime with _$OperationTime {

@@ -142,6 +142,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                             .productGridAspectRatio),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
+                                        productStock: state.productList[index].productStock ?? 0,
                                           productImage: state.productList[index]
                                                   .mainImage ??
                                               '',
@@ -419,10 +420,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     AppConstants.padding_30),
                                 alignment: Alignment.center,
                                 child: Text(
-                                '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                '${AppLocalizations.of(context)!.out_of_stock}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
+                                      color: AppColors.redColor),
                                 ),
                               )
                                   : buildSupplierSelection(context: context),
@@ -683,10 +684,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-               '${AppLocalizations.of(context)!.suppliers_not_available}',
+               '${AppLocalizations.of(context)!.out_of_stock}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
-                            color: AppColors.textColor),
+                            color: AppColors.redColor),
                       ),
                     )
                   : ConstrainedBox(

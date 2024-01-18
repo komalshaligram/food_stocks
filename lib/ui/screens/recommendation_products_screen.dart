@@ -133,6 +133,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             .productGridAspectRatio),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
+                                        productStock:  state.recommendationProductsList[index].productStock ?? 0,
                                           productImage: state
                                                   .recommendationProductsList[
                                                       index]
