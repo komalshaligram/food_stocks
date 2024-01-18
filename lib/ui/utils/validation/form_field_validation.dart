@@ -121,12 +121,14 @@ class FormFieldValidation {
 
   String? faxField(String value,BuildContext context) {
     // RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
-
-    if (value.isEmpty) {
-      return "${AppLocalizations.of(context)!.please_enter_fax_number}";
-    } else if (value.length < 15 /*!regex.hasMatch(value)*/) {
+    if (value.trim().isEmpty) {
+      return null;
+    } /*else if (value.length < 15 *//*!regex.hasMatch(value)*//*) {
       return "${AppLocalizations.of(context)!.please_enter_valid_fax_number}";
-    }
+    }*/
+   /* else if(value.length > 15){
+      return "${AppLocalizations.of(context)!.please_enter_valid_fax_number}";
+    }*/
     return null;
   }
 

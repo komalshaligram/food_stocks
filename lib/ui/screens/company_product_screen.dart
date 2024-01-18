@@ -123,7 +123,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 width: getScreenWidth(context),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'Currently this company has no products',
+                                  AppLocalizations.of(context)!.this_company_has_no_product,
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
                                       color: AppColors.textColor),

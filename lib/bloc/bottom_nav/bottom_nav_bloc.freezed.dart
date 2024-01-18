@@ -828,7 +828,6 @@ mixin _$BottomNavState {
   bool get isAnimation => throw _privateConstructorUsedError;
   String get pushNotificationPath => throw _privateConstructorUsedError;
   bool get duringCelebration => throw _privateConstructorUsedError;
-  bool get isBottomBar => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -846,8 +845,7 @@ abstract class $BottomNavStateCopyWith<$Res> {
       int cartCount,
       bool isAnimation,
       String pushNotificationPath,
-      bool duringCelebration,
-      bool isBottomBar});
+      bool duringCelebration});
 }
 
 /// @nodoc
@@ -868,7 +866,6 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? isAnimation = null,
     Object? pushNotificationPath = null,
     Object? duringCelebration = null,
-    Object? isBottomBar = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -891,10 +888,6 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.duringCelebration
           : duringCelebration // ignore: cast_nullable_to_non_nullable
               as bool,
-      isBottomBar: null == isBottomBar
-          ? _value.isBottomBar
-          : isBottomBar // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -912,8 +905,7 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       int cartCount,
       bool isAnimation,
       String pushNotificationPath,
-      bool duringCelebration,
-      bool isBottomBar});
+      bool duringCelebration});
 }
 
 /// @nodoc
@@ -932,7 +924,6 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? isAnimation = null,
     Object? pushNotificationPath = null,
     Object? duringCelebration = null,
-    Object? isBottomBar = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -955,10 +946,6 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.duringCelebration
           : duringCelebration // ignore: cast_nullable_to_non_nullable
               as bool,
-      isBottomBar: null == isBottomBar
-          ? _value.isBottomBar
-          : isBottomBar // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -971,8 +958,7 @@ class _$BottomNavStateImpl implements _BottomNavState {
       required this.cartCount,
       required this.isAnimation,
       required this.pushNotificationPath,
-      required this.duringCelebration,
-      required this.isBottomBar});
+      required this.duringCelebration});
 
   @override
   final int index;
@@ -984,12 +970,10 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final String pushNotificationPath;
   @override
   final bool duringCelebration;
-  @override
-  final bool isBottomBar;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isBottomBar: $isBottomBar)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration)';
   }
 
   @override
@@ -1005,14 +989,12 @@ class _$BottomNavStateImpl implements _BottomNavState {
             (identical(other.pushNotificationPath, pushNotificationPath) ||
                 other.pushNotificationPath == pushNotificationPath) &&
             (identical(other.duringCelebration, duringCelebration) ||
-                other.duringCelebration == duringCelebration) &&
-            (identical(other.isBottomBar, isBottomBar) ||
-                other.isBottomBar == isBottomBar));
+                other.duringCelebration == duringCelebration));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, index, cartCount, isAnimation,
-      pushNotificationPath, duringCelebration, isBottomBar);
+      pushNotificationPath, duringCelebration);
 
   @JsonKey(ignore: true)
   @override
@@ -1028,8 +1010,7 @@ abstract class _BottomNavState implements BottomNavState {
       required final int cartCount,
       required final bool isAnimation,
       required final String pushNotificationPath,
-      required final bool duringCelebration,
-      required final bool isBottomBar}) = _$BottomNavStateImpl;
+      required final bool duringCelebration}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -1041,8 +1022,6 @@ abstract class _BottomNavState implements BottomNavState {
   String get pushNotificationPath;
   @override
   bool get duringCelebration;
-  @override
-  bool get isBottomBar;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>

@@ -725,7 +725,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
         builder: (context1, state) {
           return Container(
-            height: height,
+            height: 170,
             width: width,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -804,7 +804,17 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  5.height,
+                  2.height,
+                  (state.planoGramsList[index].planogramproducts?[subIndex]
+                      .productStock ?? 0) > 0 ? 0.width :Text(
+                    AppLocalizations.of(context)!
+                        .out_of_stock1,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.redColor,
+                        fontWeight: FontWeight.w400),
+                  ),
+                 // 2.height,
                   Expanded(
                     child: state.planoGramsList[index]
                         .planogramproducts?[subIndex].totalSale ==
@@ -1174,10 +1184,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: Text(
                                   '${AppLocalizations.of(context)!
-                                      .suppliers_not_available}',
+                                      .out_of_stock}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
+                                      color: AppColors.redColor),
                                 ),
                               )
                                   : buildSupplierSelection(
@@ -1366,7 +1376,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           : AppLocalizations.of(context)!.see_all),
                   5.height,
                   SizedBox(
-                    height: 170,
+                    height: 175,
                     child:
                     state.planoGramsList[index].planogramproducts?.isEmpty ??
                         false

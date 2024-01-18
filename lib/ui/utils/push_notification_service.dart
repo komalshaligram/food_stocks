@@ -229,8 +229,11 @@ class PushNotificationService {
         }
         if (mainPage == 'storeScreen') {
           Navigator.pushNamed(
-              navigatorKey.currentState!.context, RouteDefine.storeScreen.name,
-              arguments: {AppStrings.companyIdString: id});
+              navigatorKey.currentState!.context, RouteDefine.bottomNavScreen.name,
+              arguments: {
+                AppStrings.companyIdString: id,
+                AppStrings.pushNavigationString : 'storeScreen'
+              });
         }
       }
       else{

@@ -18,6 +18,7 @@ class CommonProductItemWidget extends StatelessWidget {
   final String productName;
   final int totalSaleCount;
   final double price;
+  final int productStock;
   final void Function() onButtonTap;
 
   const CommonProductItemWidget(
@@ -28,7 +29,7 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.productName,
       required this.totalSaleCount,
       required this.price,
-      required this.onButtonTap});
+      required this.onButtonTap, this.productStock = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +98,15 @@ class CommonProductItemWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             5.height,
+            (productStock) > 0 ? 0.width :Text(
+              AppLocalizations.of(context)!
+                  .out_of_stock1,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.redColor,
+                  fontWeight: FontWeight.w400),
+            ),
+
             Expanded(
               child: totalSaleCount == 0
                   ? 0.width
@@ -111,7 +121,7 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            5.height,
+           // 5.height,
             Center(
               child: CommonProductButtonWidget(
                 title:

@@ -23,6 +23,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -499,7 +500,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             //     context: event.context, isFromDelete: true));
             return;
           }
-          emit(state.copyWith(isRemoveProcess : true, uploadIndex: event.index));
+          emit(state.copyWith(isRemoveProcess : true, uploadIndex: event.index,isLoading: false));
 
     /*     RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
               path: formsAndFilesList[event.index].url);
@@ -535,12 +536,20 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               }
             }
           });
-          final res = await DioClient(event.context).post(
-            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
-            data: formsAndFiles,
-          );
-          FileUpdateResModel response = FileUpdateResModel.fromJson(res);
+          print('req_____${formsAndFiles}');
 
+          final res = await DioClient(event.context).post(
+              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
+              data: /*updatedProfileModel.toJson()*/ formsAndFiles,
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}',
+                },
+              ));
+
+          ProfileDetailsUpdateResModel response =
+          ProfileDetailsUpdateResModel.fromJson(res);
 
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
