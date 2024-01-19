@@ -33,7 +33,7 @@ class AppConfig {
     return AppConfig(
         flavor: 'prod',
         appName: 'Food Stock',
-        appBaseUrl: 'http://182.70.118.201:3000/api',
+        appBaseUrl: 'https://api.foodstock.shtibel.com/api',
         primaryColor: Colors.green);
   }
 

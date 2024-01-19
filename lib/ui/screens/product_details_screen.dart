@@ -106,8 +106,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           buttonName: AppLocalizations.of(context)!.total,
                           buttonValue:
                          '${formatNumber(value: state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
-
-                        ),
+                  ),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -321,12 +320,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   ),
                 ),
 
-
             bottomSheet: state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
                 ==
                 AppLocalizations.of(context)!.pending_delivery ? Container(
               padding: EdgeInsets.symmetric(
-                  vertical: AppConstants.padding_20,
+                  vertical: AppConstants.padding_20,  
                   horizontal: AppConstants.padding_30),
               color: AppColors.pageColor,
               child: CustomButtonWidget(

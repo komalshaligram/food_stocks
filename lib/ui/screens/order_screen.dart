@@ -161,7 +161,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
   }
 
   Widget orderListItem({required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
-
         return DelayedWidget(
           child: GestureDetector(
             onTap: () {
@@ -327,6 +326,5 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             ),
           ),
         );
-
   }
 }
