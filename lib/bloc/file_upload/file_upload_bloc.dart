@@ -470,6 +470,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     type: SnackBarType.FAILURE);
               }
             } on ServerException {
+
               emit(state.copyWith(isApiLoading: false));
             }
 
