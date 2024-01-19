@@ -387,6 +387,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           }
         }
       } else if (event is _uploadApiEvent) {
+
         try {
           emit(state.copyWith(isApiLoading: true));
           Map<String, Map<String, dynamic>> formsAndFiles = {
@@ -397,9 +398,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
           };
           Map<String, String> fileList = {
-
           };
-
           state.formsAndFilesList.forEach((formAndFile) {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
@@ -443,84 +442,79 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               return;
             }
           }
-/*
-         final res = await DioClient(event.context).post(
-            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
-            data: formsAndFiles,
-          );
+          else{
+            update.ProfileModel updatedProfileModel = update.ProfileModel(
+              clientDetail: update.ClientDetail(
+                forms: fileList,
+                files: formList,
+              ),
+            );
 
-          FileUpdateResModel response = FileUpdateResModel.fromJson(res);*/
-          update.ProfileModel updatedProfileModel = update.ProfileModel(
-            clientDetail: update.ClientDetail(
-              forms: fileList,
-              files: formList,
-            ),
-          );
+            print('req_____${updatedProfileModel}');
 
-          print('req_____${updatedProfileModel}');
-
-
-
-          final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
-              data:  updatedProfileModel.toJson(),
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-
-          ProfileDetailsUpdateResModel response =
-          ProfileDetailsUpdateResModel.fromJson(res);
-          debugPrint("file update res = $res");
-          if (response.status == 200) {
-            emit(state.copyWith(isApiLoading: false));
-            if (state.isUpdate) {
-              if (event.isFromDelete ?? false) {
-                CustomSnackBar.showSnackBar(
+            final res = await DioClient(event.context).post(
+                AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
+                data:  updatedProfileModel.toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                ));
+            ProfileDetailsUpdateResModel response =
+            ProfileDetailsUpdateResModel.fromJson(res);
+            debugPrint("file update res = $res");
+            if (response.status == 200) {
+              emit(state.copyWith(isApiLoading: false));
+              if (state.isUpdate) {
+                if (event.isFromDelete ?? false) {
+                  CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
-                        '${AppLocalizations.of(event.context)!.removed_successfully}',
+                    '${AppLocalizations.of(event.context)!.removed_successfully}',
                     type: SnackBarType.SUCCESS,
-                );
+                  );
+                } else {
+                  emit(state.copyWith(isApiLoading: false));
+                  Navigator.pop(event.context);
+                  CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                    '${AppLocalizations.of(event.context)!.updated_successfully}',
+                    type: SnackBarType.SUCCESS,
+
+                  );
+                }
+
               } else {
                 emit(state.copyWith(isApiLoading: false));
-                Navigator.pop(event.context);
+                Navigator.popUntil(event.context,
+                        (route) => route.name == RouteDefine.connectScreen.name);
+                Navigator.pushNamed(
+                    event.context, RouteDefine.bottomNavScreen.name);
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
-                        '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS,
-
-                );
+                    '${AppLocalizations.of(event.context)!.registered_successfully}',
+                    type: SnackBarType.SUCCESS);
               }
             } else {
               emit(state.copyWith(isApiLoading: false));
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
-              Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:
-                      '${AppLocalizations.of(event.context)!.registered_successfully}',
-                  type: SnackBarType.SUCCESS);
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
             }
-          } else {
-            emit(state.copyWith(isApiLoading: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
-                type: SnackBarType.FAILURE);
           }
+
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
         }
-      } else if (event is _deleteFileEvent) {
+      }
+      else if (event is _deleteFileEvent) {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {
@@ -677,58 +671,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   AppLocalizations.of(event.context)!.downloaded_successfully,
               type: SnackBarType.SUCCESS);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
-          // HttpClient httpClient = new HttpClient();
-          // String filePath = '';
-          // try {
-          //   var request = await httpClient.getUrl(Uri.parse(
-          //       "${AppUrls.baseFileUrl}${state.formsAndFilesList[event.fileIndex].sampleUrl}"));
-          //   var response = await request.close();
-          //   if (response.statusCode == 200) {
-          //     Uint8List fileBytes =
-          //         await consolidateHttpClientResponseBytes(response);
-          //     debugPrint('File bytes = $fileBytes');
-          //     filePath =
-          //         '${dir.path}/${state.formsAndFilesList[event.fileIndex].sampleUrl?.split('/').last}';
-          //     file = File(filePath);
-          //     if (file.existsSync()) {
-          //       debugPrint('File exist');
-          //       file.deleteSync();
-          //       // file = File(filePath);
-          //     }
-          //     await file
-          //         .writeAsBytes(fileBytes, mode: FileMode.writeOnly)
-          //         .then((value) {
-          //       CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-          //           context: event.context,
-          //           title: AppStrings.downloadString,
-          //           type: SnackBarType.SUCCESS);
-          //     });
-          //     emit(state.copyWith(isDownloading: false));
-          //   } else {
-          //     emit(state.copyWith(isDownloading: false));
-          //     filePath = 'Error code: ' + response.statusCode.toString();
-          //     debugPrint('download ${filePath}');
-          //     CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-          //         context: event.context,
-          //         title: AppStrings.downloadFailedString,
-          //         type: SnackBarType.FAILURE);
-          //   }
-          // } catch (e) {
-          //   emit(state.copyWith(isDownloading: false));
-          //   filePath = 'Can not fetch url';
-          //   debugPrint('file error = ${e}');
-          //   CustomSnackBar.CustomSnackBar.CustomSnackBar.showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.downloadFailedString,
-          //       type: SnackBarType.FAILURE);
-          // }
-          // } else {
-          //   emit(state.copyWith(isDownloading: false));
-          //   CustomSnackBar.CustomSnackBar.showSnackBar(
-          //       context: event.context,
-          //       title: AppStrings.docDownloadAllowPermissionString,
-          //       type: SnackBarType.FAILURE);
-          // }
+
         } catch (e) {
           emit(state.copyWith(isDownloading: false));
           CustomSnackBar.showSnackBar(
