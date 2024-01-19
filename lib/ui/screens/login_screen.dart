@@ -44,12 +44,12 @@ class LogInScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LogInBloc, LogInState>(
       listener: (context, state) async {
-        if (state.isLoginSuccess) {
+      /*  if (state.isLoginSuccess) {
           Navigator.pushNamed(context, RouteDefine.otpScreen.name, arguments: {
             AppStrings.contactString: phoneController.text.toString(),
             AppStrings.isRegisterString: state.isRegister
           });
-        }
+        }*/
       },
       child: BlocBuilder<LogInBloc, LogInState>(
         builder: (context, state) {
@@ -64,7 +64,8 @@ class LogInScreenWidget extends StatelessWidget {
                     : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                 // Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                  Navigator.pop(context);
                 },
               ),
             ),

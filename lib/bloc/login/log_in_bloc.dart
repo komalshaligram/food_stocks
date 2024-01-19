@@ -4,12 +4,14 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 
+import '../../routes/app_routes.dart';
 import '../../ui/utils/themes/app_strings.dart';
 
 part 'log_in_event.dart';
@@ -46,9 +48,15 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           //    debugPrint('login response --- ${response}');
 
           if (response.status == 200) {
+            await SmsAutoFill().listenForCode();
+            print('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
             preferencesHelper.setPhoneNumber(
                 userPhoneNumber: event.contactNumber);
+            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {
+              AppStrings.contactString: event.contactNumber,
+              AppStrings.isRegisterString: state.isRegister
+            });
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
           } else {
             debugPrint(response.message!.toLocalization());
@@ -72,7 +80,8 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             isLoading: false,
           ));
         }
-      } else if (event is _ChangeAuthEvent) {
+      }
+      else if (event is _ChangeAuthEvent) {
         emit(state.copyWith(isRegister: event.isRegister));
       }
     });
