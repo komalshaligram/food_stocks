@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/otp/otp_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -10,6 +12,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import '../utils/themes/app_strings.dart';
 import '../widget/common_app_bar.dart';
 
@@ -35,19 +38,32 @@ class OTPScreen extends StatelessWidget {
   }
 }
 
-class OTPScreenWidget extends StatelessWidget {
+
+class OTPScreenWidget extends StatefulWidget {
   final bool isRegister;
   final String contact;
 
   OTPScreenWidget({required this.isRegister, required this.contact});
 
+  @override
+  State<OTPScreenWidget> createState() => _OTPScreenWidgetState();
+}
+
+class _OTPScreenWidgetState extends State<OTPScreenWidget> {
+  String _code="";
+  FocusNode inputNode = FocusNode();
   // String otpCode = '';
 
   @override
   Widget build(BuildContext context) {
     OtpBloc bloc = context.read<OtpBloc>();
     return BlocListener<OtpBloc, OtpState>(
-      listener: (context, state) async {},
+      listener: (context, state) async {
+        print("state:$state");
+
+        await SmsAutoFill().listenForCode();
+
+      },
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
           return Scaffold(
@@ -56,13 +72,14 @@ class OTPScreenWidget extends StatelessWidget {
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.whiteColor,
-                title: isRegister
+                title: widget.isRegister
                     ? AppLocalizations.of(context)!.register
                     : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
-                  debugPrint('register ${isRegister}');
+                  debugPrint('register ${widget.isRegister}');
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
+
                   Navigator.pop(context);
                 },
               ),
@@ -90,36 +107,27 @@ class OTPScreenWidget extends StatelessWidget {
                           right: getScreenWidth(context) * 0.09),
                       child: Directionality(
                         textDirection: TextDirection.ltr,
-                        child: OtpTextField(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          autoFocus: true,
-                          fieldWidth: (getScreenWidth(context) -
-                                  (getScreenWidth(context) * 0.21)) /
-                              5.55,
-                          numberOfFields: 4,
-                          borderWidth: 1,
-                          disabledBorderColor: AppColors.borderColor,
-                          enabledBorderColor: AppColors.borderColor,
-                          fillColor: AppColors.whiteColor,
-                          cursorColor: AppColors.mainColor,
-                          borderColor: AppColors.greyColor,
-                          focusedBorderColor: AppColors.mainColor,
-                          showCursor: false,
-                          keyboardType: TextInputType.number,
-                          showFieldAsBox: true,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_5),
-                          margin: EdgeInsets.symmetric(
-                              horizontal: AppConstants.padding_5),
-                          textStyle: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                          onCodeChanged: (String code) {
-                            bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                          },
-                          onSubmit: (verificationCode) {
-                            bloc.add(
-                                OtpEvent.changeOtpEvent(otp: verificationCode));
-                          }, // end onSubmit
+                        child:SizedBox(
+                          height: 80,
+                          child: PinFieldAutoFill(
+                            decoration: BoxLooseDecoration(
+                              textStyle: const TextStyle(fontSize: AppConstants.font_30, color: Colors.black),
+                              strokeColorBuilder: FixedColorBuilder(AppColors.mainColor),
+                            ),
+                            currentCode: _code,
+                            autoFocus: true,
+                            focusNode: inputNode,
+                            enableInteractiveSelection:false ,
+                            codeLength: 4,
+                            onCodeSubmitted: (code) {
+                              bloc.add(OtpEvent.changeOtpEvent(otp: code));
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                            },
+                            onCodeChanged: (code) {
+                              _code= code!;
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -135,74 +143,38 @@ class OTPScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                                debugPrint('otp1 = ${state.otp}');
-                                debugPrint('otp1 = ${isRegister}');
-                                if (state.otp.isEmpty) {
-                                  CustomSnackBar.showSnackBar(
-                                      context: context,
-                                      title:
-                                          '${AppLocalizations.of(context)!.please_enter_otp}',
-                                      type: SnackBarType.FAILURE);
-                                } else if (state.otp.length != 4) {
-                                  CustomSnackBar.showSnackBar(
-                                      context: context,
-                                      title:
-                                          '${AppLocalizations.of(context)!.enter_4digit_otp}',
-                                      type: SnackBarType.FAILURE);
-                                } else {
-                                  if (isRegister == true) {
-                              /*      Navigator.pushNamed(
-                                        context, RouteDefine.profileScreen.name,
-                                        arguments: {
-                                          AppStrings.contactString: contact
-                                        });*/
-                                    bloc.add(OtpEvent.registerApiEvent(
-                                        contact: contact,
-                                        otp: state.otp,
-                                        isRegister: isRegister,
-                                        context: context));
-                                  } else {
-                                    bloc.add(OtpEvent.otpApiEvent(
-                                        contact: contact,
-                                        otp: state.otp,
-                                        isRegister: isRegister,
-                                        context: context));
-                                  }
-                                }
+                          FocusScope.of(context).unfocus();
+                          debugPrint('otp1 = ${state.otp}');
+                          debugPrint('otp1 = ${_code.length}');
+                          if (_code.isEmpty) {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                title:
+                                '${AppLocalizations.of(context)!.please_enter_otp}',
+                                type: SnackBarType.FAILURE);
+                          } else if (_code.length != 4) {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                title:
+                                '${AppLocalizations.of(context)!.enter_4digit_otp}',
+                                type: SnackBarType.FAILURE);
+                          } else {
+                            if (widget.isRegister == true) {
+                              bloc.add(OtpEvent.registerApiEvent(
+                                  contact: widget.contact,
+                                  otp: _code,
+                                  isRegister: widget.isRegister,
+                                  context: context));
+                            } else {
+                              bloc.add(OtpEvent.otpApiEvent(
+                                  contact: widget.contact,
+                                  otp: _code,
+                                  isRegister: widget.isRegister,
+                                  context: context));
+                            }
+                          }
 
-                                // if (state.otp.length != 4 &&
-                          //     state.codeLength == 1) {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enter4DigitOtpCode,
-                                //       bgColor: AppColors.redColor);
-                                // } else if (state.otp.length == 4 &&
-                                //     state.codeLength != 0) {
-                                //   if (isRegister == true) {
-                                //     Navigator.pushNamed(
-                                //         context, RouteDefine.profileScreen.name,
-                                //         arguments: {
-                                //           AppStrings.contactString: contact
-                                //         });
-                                //   } else {
-                                //     bloc.add(OtpEvent.otpApiEvent(
-                                //         contact: contact,
-                                //         otp: state.otp,
-                                //         isRegister: isRegister,
-                                //         context: context));
-                                //   }
-                          // } else if (state.otp.length == 0) {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enterOtpString,
-                                //       bgColor: AppColors.redColor);
-                          // } else {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enter4DigitOtpCode,
-                                //       bgColor: AppColors.redColor);
-                                // }
-                              },
+                        },
                         fontColors: AppColors.whiteColor,
                       ),
                     ),
@@ -227,7 +199,7 @@ class OTPScreenWidget extends StatelessWidget {
                               ? AppColors.pageColor
                               : AppColors.whiteColor,
                           border:
-                              Border.all(color: AppColors.mainColor, width: 1),
+                          Border.all(color: AppColors.mainColor, width: 1),
                           borderRadius: BorderRadius.all(
                               Radius.circular(AppConstants.radius_10)),
                         ),
@@ -237,12 +209,14 @@ class OTPScreenWidget extends StatelessWidget {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                            CustomSnackBar.showSnackBar(
-                                      context: context,
-                                     title: '${AppLocalizations.of(context)!.otp_resend_success}',
-                                type: SnackBarType.SUCCESS);
+                          /*  CustomSnackBar.showSnackBar(
+                                context: context,
+                                title: '${AppLocalizations.of(context)!.otp_resend_success}',
+                                type: SnackBarType.SUCCESS);*/
+                            bloc.add(OtpEvent.logInApiDataEvent(
+                                context: context,isRegister: widget.isRegister,contactNumber: widget.contact));
                             bloc.add(OtpEvent.setOtpTimer());
-                                },
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

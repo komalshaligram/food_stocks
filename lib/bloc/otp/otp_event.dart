@@ -23,4 +23,10 @@ class OtpEvent with _$OtpEvent {
     required BuildContext context,
   }) = _registerApiEvent;
 
+  factory OtpEvent.logInApiDataEvent({
+    required String contactNumber,
+    required BuildContext context,
+    required bool isRegister,
+  }) = _logInApiDataEvent;
+
 }

@@ -7,7 +7,11 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
+import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,8 +29,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
   OtpBloc() : super(OtpState.initial()) {
     on<OtpEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _SetOtpTimerEvent) {
-        if (state.otpTimer == 0) {
+        if (state.otpTimer == 0 ) {
           emit(state.copyWith(otpTimer: 30));
           _periodicOtpTimerSubscription =
               Stream.periodic(const Duration(seconds: 1), (x) => x).listen(
@@ -119,7 +126,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       } else if (event is _ChangeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
         debugPrint('new otp = ${state.otp}');
-      } else if (event is _registerApiEvent) {
+      }
+      else if (event is _registerApiEvent) {
         if (state.isLoading) {
           return;
         }
@@ -175,6 +183,57 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.please_enter_otp}',
               type: SnackBarType.SUCCESS);
+        }
+      }
+
+      if (event is _logInApiDataEvent) {
+        emit(state.copyWith(isLoading: false));
+        try {
+          LoginReqModel reqMap = LoginReqModel(
+              contact: event.contactNumber, isRegistration: event.isRegister);
+          debugPrint(
+              'login req = ${reqMap.toJson()}');
+          debugPrint('url3 = ${AppUrls.existingUserLoginUrl}');
+          final res = await DioClient(event.context).post(
+            AppUrls.existingUserLoginUrl,
+            data: reqMap,
+          );
+
+          LoginResModel response = LoginResModel.fromJson(res);
+
+            debugPrint('login response --- ${response}');
+
+          if (response.status == 200) {
+            await SmsAutoFill().listenForCode();
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: '${AppLocalizations.of(event.context)!.otp_resend_success}',
+                type: SnackBarType.SUCCESS);
+            preferencesHelper.setUserId(id: response.user?.id ?? '');
+            preferencesHelper.setPhoneNumber(
+                userPhoneNumber: event.contactNumber);
+            emit(state.copyWith(/*isLoginSuccess: true, */isLoading: false));
+          } else {
+            debugPrint(response.message!.toLocalization());
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
+            emit(state.copyWith(
+              isLoading: false,
+            ));
+          }
+        } on ServerException {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
+        } catch (e) {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
         }
       }
     });
