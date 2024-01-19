@@ -388,6 +388,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         }
       }
 
+
+
       else if(event is _formFileRegisterEvent){
 
         emit(state.copyWith(isApiLoading: true));
@@ -395,12 +397,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           AppStrings.formsString: {},
           AppStrings.filesString: {}
         };
-        Map<String, String> formList = {
 
-        };
-        Map<String, String> fileList = {
-
-        };
 
         state.formsAndFilesList.forEach((formAndFile) {
           debugPrint('url = ${formAndFile.url}');
@@ -413,7 +410,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             ) {
               formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                   formAndFile.url ?? '';
-              formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
+              //formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
             } else if ((formAndFile.isForm ==
                 false) /*&&
                   (state.formsAndFilesList[i].url
@@ -422,34 +419,20 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             ) {
               formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                   formAndFile.url ?? '';
-              fileList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
+           //   fileList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
             }
           }
         });
-   /*     if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
-            (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
-          emit(state.copyWith(isApiLoading: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-              '${AppLocalizations.of(event.context)!.registered_successfully}',
-              type: SnackBarType.SUCCESS);
-          Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
-          Navigator.pushNamed(
-              event.context, RouteDefine.bottomNavScreen.name);
-          return;
-        }
-        */
+
             try {
               final res = await DioClient(event.context).post(
                 "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
                 data: formsAndFiles,
               );
               debugPrint('forms&file register res_______${res}');
+              debugPrint('formsAndFiles______${formsAndFiles}');
 
-              FileUpdateResModel response =
-                  FileUpdateResModel.fromJson(res);
+              FileUpdateResModel response = FileUpdateResModel.fromJson(res);
 
               if (response.status == 200) {
                 emit(state.copyWith(isApiLoading: false));
@@ -475,6 +458,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
 
        }
+
 
 
       else if (event is _uploadApiEvent) {
@@ -612,7 +596,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
         }
-      } else if (event is _deleteFileEvent) {
+      }
+      else if (event is _deleteFileEvent) {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {

@@ -343,6 +343,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.something_is_wrong_try_again;
       case 'loginsuccessmessage':
         return AppLocalizations.of(context)!.loginsuccessmessage;
+      case 'accountnotapprove':
+        return AppLocalizations.of(context)!.accountnotapprove;
     }
     return '';
   }
