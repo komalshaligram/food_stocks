@@ -194,9 +194,18 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           onPressed: state.isApiLoading
                                               ? null
                                               : () {
-                                                  bloc.add(FileUploadEvent
-                                                      .uploadApiEvent(
-                                                          context: context));
+                                            if(state.isUpdate){
+                                              bloc.add(FileUploadEvent
+                                                  .uploadApiEvent(
+                                                  context: context));
+                                            }
+                                            else{
+                                              bloc.add(FileUploadEvent
+                                                  .formFileRegisterEvent(
+                                                isUpdate: false,
+                                                  context: context));
+                                            }
+
                                                 },
                                           bGColor: AppColors.mainColor,
                                         ),
