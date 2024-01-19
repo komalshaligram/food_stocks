@@ -324,7 +324,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                       LengthLimitingTextInputFormatter(50)
                                     ],
                                     keyboardType: TextInputType.text,
-                                    hint: AppLocalizations.of(context)!.address,
+                                    hint: '',
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.addressValString,

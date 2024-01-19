@@ -151,33 +151,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       } else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
 
-     /*     if (state.image.path != '') {
-            Map<String, dynamic> req1 = {AppStrings.logoString: imgUrl};
-            try {
-              final res = await DioClient(event.context).post(
-                "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
-                data: req1,
-              );
-              debugPrint('update logo image req_______${req1}');
 
-              file.FileUpdateResModel response =
-                  file.FileUpdateResModel.fromJson(res);
-
-              if (response.status == 200) {
-                debugPrint('update logo image req________${response}');
-                imgUrl = response.data!.client!.profileImage.toString();
-              } else {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                    type: SnackBarType.FAILURE);
-              }
-            } on ServerException {
-
-            }
-          }
-*/
 
           ProfileModel updatedProfileModel = ProfileModel(
             logo: (state.image.path != '') ? imgUrl : state.companyLogo,

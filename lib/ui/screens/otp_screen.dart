@@ -38,6 +38,7 @@ class OTPScreen extends StatelessWidget {
   }
 }
 
+
 class OTPScreenWidget extends StatefulWidget {
   final bool isRegister;
   final String contact;
@@ -50,7 +51,8 @@ class OTPScreenWidget extends StatefulWidget {
 
 class _OTPScreenWidgetState extends State<OTPScreenWidget> {
   String _code="";
-
+  FocusNode inputNode = FocusNode();
+  // String otpCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +60,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
         print("state:$state");
-        await SmsAutoFill().getAppSignature;
-        debugPrint(SmsAutoFill().getAppSignature.toString());
+
         await SmsAutoFill().listenForCode();
 
       },
@@ -106,24 +107,28 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                           right: getScreenWidth(context) * 0.09),
                       child: Directionality(
                         textDirection: TextDirection.ltr,
-                     child:PinFieldAutoFill(
-                       decoration: BoxLooseDecoration(
-                         textStyle: const TextStyle(fontSize: 20, color: Colors.black),
-                         strokeColorBuilder: FixedColorBuilder(Colors.black.withOpacity(0.3)),
-                       ),
-                       currentCode: _code,
-                       autoFocus: true,
-                       enableInteractiveSelection:false ,
-                       codeLength: 4,
-                       onCodeSubmitted: (code) {
-                         bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                       },
-                       onCodeChanged: (code) {
-                         _code= code!;
-                         SystemChannels.textInput.invokeMethod(
-                             "TextInput.show");
-                       },
-                     ),
+                        child:SizedBox(
+                          height: 80,
+                          child: PinFieldAutoFill(
+                            decoration: BoxLooseDecoration(
+                              textStyle: const TextStyle(fontSize: AppConstants.font_30, color: Colors.black),
+                              strokeColorBuilder: FixedColorBuilder(AppColors.mainColor),
+                            ),
+                            currentCode: _code,
+                            autoFocus: true,
+                            focusNode: inputNode,
+                            enableInteractiveSelection:false ,
+                            codeLength: 4,
+                            onCodeSubmitted: (code) {
+                              bloc.add(OtpEvent.changeOtpEvent(otp: code));
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                            },
+                            onCodeChanged: (code) {
+                              _code= code!;
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     15.height,
@@ -138,70 +143,38 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                                debugPrint('otp1 = ${state.otp}');
-                                debugPrint('otp1 = ${widget.isRegister}');
-                                if (state.otp.isEmpty) {
-                                  CustomSnackBar.showSnackBar(
-                                      context: context,
-                                      title:
-                                          '${AppLocalizations.of(context)!.please_enter_otp}',
-                                      type: SnackBarType.FAILURE);
-                                } else if (state.otp.length != 4) {
-                                  CustomSnackBar.showSnackBar(
-                                      context: context,
-                                      title:
-                                          '${AppLocalizations.of(context)!.enter_4digit_otp}',
-                                      type: SnackBarType.FAILURE);
-                                } else {
-                                  if (widget.isRegister == true) {
+                          FocusScope.of(context).unfocus();
+                          debugPrint('otp1 = ${state.otp}');
+                          debugPrint('otp1 = ${_code.length}');
+                          if (_code.isEmpty) {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                title:
+                                '${AppLocalizations.of(context)!.please_enter_otp}',
+                                type: SnackBarType.FAILURE);
+                          } else if (_code.length != 4) {
+                            CustomSnackBar.showSnackBar(
+                                context: context,
+                                title:
+                                '${AppLocalizations.of(context)!.enter_4digit_otp}',
+                                type: SnackBarType.FAILURE);
+                          } else {
+                            if (widget.isRegister == true) {
+                              bloc.add(OtpEvent.registerApiEvent(
+                                  contact: widget.contact,
+                                  otp: _code,
+                                  isRegister: widget.isRegister,
+                                  context: context));
+                            } else {
+                              bloc.add(OtpEvent.otpApiEvent(
+                                  contact: widget.contact,
+                                  otp: _code,
+                                  isRegister: widget.isRegister,
+                                  context: context));
+                            }
+                          }
 
-                                    bloc.add(OtpEvent.registerApiEvent(
-                                        contact: widget.contact,
-                                        otp: state.otp,
-                                        isRegister: widget.isRegister,
-                                        context: context));
-                                  } else {
-                                    bloc.add(OtpEvent.otpApiEvent(
-                                        contact: widget.contact,
-                                        otp: state.otp,
-                                        isRegister: widget.isRegister,
-                                        context: context));
-                                  }
-                                }
-
-                                // if (state.otp.length != 4 &&
-                          //     state.codeLength == 1) {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enter4DigitOtpCode,
-                                //       bgColor: AppColors.redColor);
-                                // } else if (state.otp.length == 4 &&
-                                //     state.codeLength != 0) {
-                                //   if (isRegister == true) {
-                                //     Navigator.pushNamed(
-                                //         context, RouteDefine.profileScreen.name,
-                                //         arguments: {
-                                //           AppStrings.contactString: contact
-                                //         });
-                                //   } else {
-                                //     bloc.add(OtpEvent.otpApiEvent(
-                                //         contact: contact,
-                                //         otp: state.otp,
-                                //         isRegister: isRegister,
-                                //         context: context));
-                                //   }
-                          // } else if (state.otp.length == 0) {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enterOtpString,
-                                //       bgColor: AppColors.redColor);
-                          // } else {
-                                //   CustomSnackBar.showSnackBar(
-                                //       context: context,
-                                //       title: AppStrings.enter4DigitOtpCode,
-                                //       bgColor: AppColors.redColor);
-                                // }
-                              },
+                        },
                         fontColors: AppColors.whiteColor,
                       ),
                     ),
@@ -226,7 +199,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               ? AppColors.pageColor
                               : AppColors.whiteColor,
                           border:
-                              Border.all(color: AppColors.mainColor, width: 1),
+                          Border.all(color: AppColors.mainColor, width: 1),
                           borderRadius: BorderRadius.all(
                               Radius.circular(AppConstants.radius_10)),
                         ),
@@ -236,12 +209,14 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                            CustomSnackBar.showSnackBar(
-                                      context: context,
-                                     title: '${AppLocalizations.of(context)!.otp_resend_success}',
-                                type: SnackBarType.SUCCESS);
+                          /*  CustomSnackBar.showSnackBar(
+                                context: context,
+                                title: '${AppLocalizations.of(context)!.otp_resend_success}',
+                                type: SnackBarType.SUCCESS);*/
+                            bloc.add(OtpEvent.logInApiDataEvent(
+                                context: context,isRegister: widget.isRegister,contactNumber: widget.contact));
                             bloc.add(OtpEvent.setOtpTimer());
-                                },
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
