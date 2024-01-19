@@ -34,8 +34,7 @@ class CustomSnackBar {
     required SnackBarType type,
   }) {
     GFToast.showToast(
-      trailing:  Container(
-      ),
+      trailing:  Container(),
       title,
       context,
       backgroundColor: type == SnackBarType.SUCCESS

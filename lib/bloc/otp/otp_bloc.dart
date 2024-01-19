@@ -103,7 +103,18 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   type: SnackBarType.SUCCESS,
 
               );
-            } else {
+            }else if(response.status == 400){
+              print('here 1');
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title:response.message.toString(),
+                  type: SnackBarType.FAILURE);
+              emit(state.copyWith(
+                isLoading: false,
+              ));
+            }
+            else {
+              print('here');
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -164,7 +175,17 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.profileScreen.name,
                   arguments: {AppStrings.contactString: event.contact});
-            } else {
+            }else if(response.status == 400){
+              print('here 1');
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title:response.message.toString(),
+                  type: SnackBarType.FAILURE);
+              emit(state.copyWith(
+                isLoading: false,
+              ));
+            }
+            else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -203,6 +224,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             debugPrint('login response --- ${response}');
 
+
           if (response.status == 200) {
             await SmsAutoFill().listenForCode();
             CustomSnackBar.showSnackBar(
@@ -213,7 +235,16 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             preferencesHelper.setPhoneNumber(
                 userPhoneNumber: event.contactNumber);
             emit(state.copyWith(/*isLoginSuccess: true, */isLoading: false));
-          } else {
+          } else if(response.status == 400){
+            print('here 1');
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:response.message.toString(),
+                type: SnackBarType.FAILURE);
+            emit(state.copyWith(
+              isLoading: false,
+            ));
+          }else {
             debugPrint(response.message!.toLocalization());
             CustomSnackBar.showSnackBar(
                 context: event.context,
