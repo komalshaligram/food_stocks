@@ -36,4 +36,9 @@ class FileUploadEvent with _$FileUploadEvent {
 
   factory FileUploadEvent.getProfileFilesAndFormsEvent({required BuildContext context,
     required bool isUpdate}) = _getProfileFilesAndFormsEvent;
+
+  factory FileUploadEvent.formFileRegisterEvent({
+    required BuildContext context,
+    required bool isUpdate
+  }) = _formFileRegisterEvent;
 }
