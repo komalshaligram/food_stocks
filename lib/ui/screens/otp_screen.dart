@@ -63,7 +63,7 @@ class OTPScreenWidget extends StatelessWidget {
                 onTap: () {
                   debugPrint('register ${isRegister}');
                   bloc.add(OtpEvent.cancelOtpTimerSubscription());
-                  Navigator.pushNamed(context, RouteDefine.loginScreen.name);
+                  Navigator.pop(context);
                 },
               ),
             ),

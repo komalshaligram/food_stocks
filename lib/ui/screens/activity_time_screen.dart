@@ -61,7 +61,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             titleSpacing: 0,
             leadingWidth: 60,
             title: Align(
-              alignment: Alignment.centerLeft,
+              alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
               child: Text(AppLocalizations.of(context)!.activity_time,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,

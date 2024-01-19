@@ -84,7 +84,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                 titleSpacing: 0,
                 leadingWidth: 60,
                 title: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
                   child: Text(AppLocalizations.of(context)!.forms_files,
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,

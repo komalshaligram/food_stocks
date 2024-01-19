@@ -90,7 +90,7 @@ class ProfileScreenWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
-                alignment: Alignment.centerLeft,
+                alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.business_details,
                   style: AppStyles.rkRegularTextStyle(
