@@ -386,7 +386,98 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             //     type: SnackBarType.FAILURE);
           }
         }
-      } else if (event is _uploadApiEvent) {
+      }
+
+      else if(event is _formFileRegisterEvent){
+
+        emit(state.copyWith(isApiLoading: true));
+        Map<String, Map<String, dynamic>> formsAndFiles = {
+          AppStrings.formsString: {},
+          AppStrings.filesString: {}
+        };
+        Map<String, String> formList = {
+
+        };
+        Map<String, String> fileList = {
+
+        };
+
+        state.formsAndFilesList.forEach((formAndFile) {
+          debugPrint('url = ${formAndFile.url}');
+          if (formAndFile.url?.isNotEmpty ?? false) {
+            if ((formAndFile.isForm ??
+                false) /*&&
+                  (state.formsAndFilesList[i].url
+                          ?.contains(AppStrings.tempString) ??
+                      false)*/
+            ) {
+              formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
+                  formAndFile.url ?? '';
+              formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
+            } else if ((formAndFile.isForm ==
+                false) /*&&
+                  (state.formsAndFilesList[i].url
+                      ?.contains(AppStrings.tempString) ??
+                      false)*/
+            ) {
+              formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
+                  formAndFile.url ?? '';
+              fileList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
+            }
+          }
+        });
+   /*     if ((formsAndFiles[AppStrings.formsString]?.isEmpty ?? true) &&
+            (formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
+          emit(state.copyWith(isApiLoading: false));
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title:
+              '${AppLocalizations.of(event.context)!.registered_successfully}',
+              type: SnackBarType.SUCCESS);
+          Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+          Navigator.pushNamed(
+              event.context, RouteDefine.bottomNavScreen.name);
+          return;
+        }
+        */
+            try {
+              final res = await DioClient(event.context).post(
+                "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+                data: formsAndFiles,
+              );
+              debugPrint('forms&file register res_______${res}');
+
+              FileUpdateResModel response =
+                  FileUpdateResModel.fromJson(res);
+
+              if (response.status == 200) {
+                emit(state.copyWith(isApiLoading: false));
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                    '${AppLocalizations.of(event.context)!.registered_successfully}',
+                    type: SnackBarType.SUCCESS);
+                Navigator.popUntil(event.context,
+                        (route) => route.name == RouteDefine.connectScreen.name);
+                Navigator.pushNamed(
+                    event.context, RouteDefine.bottomNavScreen.name);
+              } else {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    type: SnackBarType.FAILURE);
+              }
+            } on ServerException {
+
+              emit(state.copyWith(isApiLoading: false));
+            }
+
+       }
+
+
+      else if (event is _uploadApiEvent) {
 
         try {
           emit(state.copyWith(isApiLoading: true));
@@ -398,7 +489,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
           };
           Map<String, String> fileList = {
+
           };
+
           state.formsAndFilesList.forEach((formAndFile) {
             debugPrint('url = ${formAndFile.url}');
             if (formAndFile.url?.isNotEmpty ?? false) {
@@ -442,79 +535,84 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               return;
             }
           }
-          else{
-            update.ProfileModel updatedProfileModel = update.ProfileModel(
-              clientDetail: update.ClientDetail(
-                forms: fileList,
-                files: formList,
-              ),
-            );
+/*
+         final res = await DioClient(event.context).post(
+            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+            data: formsAndFiles,
+          );
 
-            print('req_____${updatedProfileModel}');
+          FileUpdateResModel response = FileUpdateResModel.fromJson(res);*/
+          update.ProfileModel updatedProfileModel = update.ProfileModel(
+            clientDetail: update.ClientDetail(
+              forms: fileList,
+              files: formList,
+            ),
+          );
 
-            final res = await DioClient(event.context).post(
-                AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
-                data:  updatedProfileModel.toJson(),
-                options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    'Bearer ${preferencesHelper.getAuthToken()}',
-                  },
-                ));
-            ProfileDetailsUpdateResModel response =
-            ProfileDetailsUpdateResModel.fromJson(res);
-            debugPrint("file update res = $res");
-            if (response.status == 200) {
-              emit(state.copyWith(isApiLoading: false));
-              if (state.isUpdate) {
-                if (event.isFromDelete ?? false) {
-                  CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!.removed_successfully}',
-                    type: SnackBarType.SUCCESS,
-                  );
-                } else {
-                  emit(state.copyWith(isApiLoading: false));
-                  Navigator.pop(event.context);
-                  CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS,
+          print('req_____${updatedProfileModel}');
 
-                  );
-                }
 
-              } else {
-                emit(state.copyWith(isApiLoading: false));
-                Navigator.popUntil(event.context,
-                        (route) => route.name == RouteDefine.connectScreen.name);
-                Navigator.pushNamed(
-                    event.context, RouteDefine.bottomNavScreen.name);
+
+          final res = await DioClient(event.context).post(
+              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
+              data:  updatedProfileModel.toJson(),
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferencesHelper.getAuthToken()}',
+                },
+              ));
+
+          ProfileDetailsUpdateResModel response =
+          ProfileDetailsUpdateResModel.fromJson(res);
+          debugPrint("file update res = $res");
+          if (response.status == 200) {
+            emit(state.copyWith(isApiLoading: false));
+            if (state.isUpdate) {
+              if (event.isFromDelete ?? false) {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title:
-                    '${AppLocalizations.of(event.context)!.registered_successfully}',
-                    type: SnackBarType.SUCCESS);
+                        '${AppLocalizations.of(event.context)!.removed_successfully}',
+                    type: SnackBarType.SUCCESS,
+                );
+              } else {
+                emit(state.copyWith(isApiLoading: false));
+                Navigator.pop(event.context);
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                        '${AppLocalizations.of(event.context)!.updated_successfully}',
+                    type: SnackBarType.SUCCESS,
+
+                );
               }
             } else {
               emit(state.copyWith(isApiLoading: false));
+              Navigator.popUntil(event.context,
+                  (route) => route.name == RouteDefine.connectScreen.name);
+              Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
-                      event.context),
-                  type: SnackBarType.FAILURE);
+                  title:
+                      '${AppLocalizations.of(event.context)!.registered_successfully}',
+                  type: SnackBarType.SUCCESS);
             }
+          } else {
+            emit(state.copyWith(isApiLoading: false));
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
+                type: SnackBarType.FAILURE);
           }
-
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
         }
-      }
-      else if (event is _deleteFileEvent) {
+      } else if (event is _deleteFileEvent) {
         List<FormAndFileModel> formsAndFilesList =
             state.formsAndFilesList.toList(growable: true);
         try {
