@@ -236,7 +236,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                   Navigator.pushNamed(
                                                       context,
                                                       RouteDefine
-                                                          .bottomNavScreen
+                                                          .loginScreen
                                                           .name);
                                                 },
                                                 bGColor: AppColors.whiteColor,
