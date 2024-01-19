@@ -38,6 +38,7 @@ class FileUploadScreen extends StatelessWidget {
         "isUpdate : ${args?.containsKey(AppStrings.isUpdateParamString)}");
     return BlocProvider(
       create: (context) => FileUploadBloc()
+
         ..add(FileUploadEvent.getFormsListEvent(
             context: context,
             isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
