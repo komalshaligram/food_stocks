@@ -48,6 +48,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           //    debugPrint('login response --- ${response}');
 
           if (response.status == 200) {
+
             await SmsAutoFill().listenForCode();
             print('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
@@ -58,7 +59,20 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               AppStrings.isRegisterString: state.isRegister
             });
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
-          } else {
+          } else if(response.status == 400){
+            print('here');
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message??'',
+                    event.context),
+                type: SnackBarType.FAILURE);
+            emit(state.copyWith(
+              isLoading: false,
+            ));
+          }
+          else {
+            print('here 1');
             debugPrint(response.message!.toLocalization());
             CustomSnackBar.showSnackBar(
                 context: event.context,
