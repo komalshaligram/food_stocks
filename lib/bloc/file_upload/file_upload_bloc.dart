@@ -435,6 +435,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               FileUpdateResModel response = FileUpdateResModel.fromJson(res);
 
               if (response.status == 200) {
+
                 emit(state.copyWith(isApiLoading: false));
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -443,8 +444,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     type: SnackBarType.SUCCESS);
                 Navigator.popUntil(event.context,
                         (route) => route.name == RouteDefine.connectScreen.name);
-                Navigator.pushNamed(
-                    event.context, RouteDefine.bottomNavScreen.name);
+               /* Navigator.pushNamed(
+                    event.context, RouteDefine.bottomNavScreen.name);*/
+                 Navigator.pushNamed(
+                    event.context, RouteDefine.loginScreen.name);
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
@@ -515,7 +518,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
+                  event.context, RouteDefine.loginScreen.name);
               return;
             }
           }
@@ -576,7 +579,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
+                  event.context, RouteDefine.loginScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
