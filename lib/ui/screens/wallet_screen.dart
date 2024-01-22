@@ -97,6 +97,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {},
+
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           WalletBloc bloc = context.read<WalletBloc>();
