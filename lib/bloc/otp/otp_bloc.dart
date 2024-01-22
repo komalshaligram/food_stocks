@@ -230,7 +230,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             debugPrint('login response --- ${response}');
 
-
           if (response.status == 200) {
             await SmsAutoFill().listenForCode();
             CustomSnackBar.showSnackBar(

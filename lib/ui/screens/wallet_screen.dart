@@ -97,6 +97,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
 
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {},
+
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           WalletBloc bloc = context.read<WalletBloc>();
@@ -366,23 +367,41 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                   ),
                                 ),
                           15.height,
-                          20.width,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .history,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.blackColor),
+                                ),
+                                Text('')
+                              ],
+                            ),
+                          ),
+                          3.height,
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
+                              /*  Expanded(
                                   flex: getScreenWidth(context) <= 370 ? 2:3,
                                   child: Text(
                                     AppLocalizations.of(context)!.history,
                                     style: AppStyles.rkRegularTextStyle(
-                                        size:  getScreenWidth(context) <= 370 ? AppConstants.font_12 : AppConstants.smallFont,
+                                        size:  getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
                                         color: AppColors.blackColor),
                                   ),
                                 ),
-                                2.width,
+                                2.width,*/
+
                                 Expanded(
                                   flex: 2,
                                   child: GestureDetector(
@@ -441,9 +460,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     ),
                                   ),
                                 ),
-                                5.width,
                                 Expanded(
-                                  flex: 10,
+                                    flex: 1,
+                                    child: SizedBox()),
+                                Expanded(
+                                  flex: 5 ,
                                   child: Container(
                                     height: 45,
                                       padding: EdgeInsets.symmetric(
@@ -459,10 +480,10 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       child: DateRangeField(
                                         decoration: InputDecoration(
                                           enabledBorder: InputBorder.none,
-                                          prefixIcon: Icon(
+                                          suffixIcon: Icon(
                                               Icons.keyboard_arrow_down),
                                           contentPadding: EdgeInsets.all(0),
-
+                      
                                         ),
                                         showDateRangePicker: (
                                             {required pickerBuilder,
@@ -476,13 +497,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 .withOpacity(0.6),
                                             builder: datePickerBuilder,
                                           );
-
                                         },
                                         onDateRangeSelected:
                                             (DateRange? value) {
                                           startDate = value?.start;
                                           endDate = value?.end;
-
+                      
                                           if (value == null) {
                                             selectedDateRange =
                                                 state.selectedDateRange;
@@ -496,7 +516,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 WalletEvent.getDateRangeEvent(
                                                     context: context,
                                                     range: value));
-
+                      
                                             bloc.add(WalletEvent
                                                 .getAllWalletTransactionEvent(
                                               context: context,
@@ -514,6 +534,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                         // pickerBuilder: datePickerBuilder,
                                       )),
                                 ),
+
                               ],
                             ),
                           ),
@@ -725,16 +746,17 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
     DateTime now = new DateTime.now();
 
     return Container(
-       height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.3 :getScreenHeight(context)/1.9,
-        child: DateRangePickerWidget(
-          doubleMonth: doubleMonth,
-          initialDateRange: selectedDateRange,
-          initialDisplayedDate: selectedDateRange?.end ?? DateTime.now(),
-          onDateRangeChanged: onDateRangeChanged,
-          minDate: minDate,
-          maxDate: DateTime(now.year, now.month, now.day),
-        ),
-      );
+      height: getScreenHeight(context) >= 725 ?  getScreenHeight(context) /2.3 :getScreenHeight(context)/1.9,
+      child: DateRangePickerWidget(
+        doubleMonth: doubleMonth,
+        initialDateRange: selectedDateRange,
+        initialDisplayedDate: selectedDateRange?.end ?? DateTime.now(),
+        onDateRangeChanged: onDateRangeChanged,
+        minDate: minDate,
+        //  theme: CalendarTheme(),
+        maxDate: DateTime(now.year, now.month, now.day),
+      ),
+    );
   }
 }
 
