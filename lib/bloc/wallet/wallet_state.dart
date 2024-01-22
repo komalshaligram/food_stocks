@@ -39,7 +39,7 @@ class WalletState with _$WalletState {
     totalCredit:0 ,
       monthlyExpenseList: [],
     isShimmering: false,
-    selectedDateRange: DateRange(DateTime.now(),DateTime.now()),
+    selectedDateRange: DateRange(DateTime(DateTime.now().year,DateTime.now().month,1),DateTime.now()),
     walletTransactionsList: [],
     pageNum: 0,
     isLoadMore: false,

@@ -107,7 +107,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               print('here 1');
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:response.message.toString(),
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(
                 isLoading: false,
@@ -179,7 +182,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               print('here 1');
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title:response.message.toString(),
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(
                 isLoading: false,
@@ -224,7 +230,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             debugPrint('login response --- ${response}');
 
-
           if (response.status == 200) {
             await SmsAutoFill().listenForCode();
             CustomSnackBar.showSnackBar(
@@ -239,7 +244,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             print('here 1');
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title:response.message.toString(),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        'something_is_wrong_try_again',
+                    event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(
               isLoading: false,
