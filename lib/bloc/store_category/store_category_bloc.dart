@@ -80,15 +80,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList: [
               [ProductStockModel(productId: '')]
             ]));
-        if(state.isSubCategory == true){
+        if(event.isSubCategory == ''){
           add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
         }
         else{
+          print('state.isSubCategory_____${state.isSubCategory}');
           isSubCategoryString = event.isSubCategory;
           categoryId = event.categoryId;
-
-
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
+          add(StoreCategoryEvent.getPlanogramProductEvent(context: event.context));
 
         }
       }
@@ -1055,8 +1055,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response['message'].toLocalization() ??
-                        response['message'],
+                    response[AppStrings.messageString].toLocalization() ??
+                        response[AppStrings.messageString],
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -1064,6 +1064,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           emit(state.copyWith(isLoadMore: false));
         }
 
+
+      }
+
+      else if(event is _getPlanogramProductEvent){
 
       }
 

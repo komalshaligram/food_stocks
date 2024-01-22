@@ -378,7 +378,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                   child: Text(
                                     AppLocalizations.of(context)!.history,
                                     style: AppStyles.rkRegularTextStyle(
-                                        size:  getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
+                                        size:  getScreenWidth(context) <= 370 ? AppConstants.font_12 : AppConstants.smallFont,
                                         color: AppColors.blackColor),
                                   ),
                                 ),
@@ -443,7 +443,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                 ),
                                 5.width,
                                 Expanded(
-                                  flex: 9,
+                                  flex: 10,
                                   child: Container(
                                     height: 45,
                                       padding: EdgeInsets.symmetric(
@@ -462,7 +462,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                           prefixIcon: Icon(
                                               Icons.keyboard_arrow_down),
                                           contentPadding: EdgeInsets.all(0),
-                      
+
                                         ),
                                         showDateRangePicker: (
                                             {required pickerBuilder,
@@ -476,13 +476,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 .withOpacity(0.6),
                                             builder: datePickerBuilder,
                                           );
-                      
+
                                         },
                                         onDateRangeSelected:
                                             (DateRange? value) {
                                           startDate = value?.start;
                                           endDate = value?.end;
-                      
+
                                           if (value == null) {
                                             selectedDateRange =
                                                 state.selectedDateRange;
@@ -496,7 +496,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 WalletEvent.getDateRangeEvent(
                                                     context: context,
                                                     range: value));
-                      
+
                                             bloc.add(WalletEvent
                                                 .getAllWalletTransactionEvent(
                                               context: context,

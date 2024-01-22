@@ -89,7 +89,7 @@ class LogInScreenWidget extends StatelessWidget {
                         CustomFormField(
                           inputformet: [
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(9)
+                            LengthLimitingTextInputFormatter(10)
                           ],
                           context: context,
                           controller: phoneController,

@@ -161,7 +161,7 @@
   "please_enter_valid_email" : "אנא הזן כתובת מייל חוקית",
   "phone_number_cant_be_empty" : "מספר טלפון לא יכול להיות ריק",
   "please_enter_valid_phone_number" : "אנא הזן מספר טלפון תקין",
-  "phone_number_must_be_10digit" : "מספר טלפון צריך להיות בן 9 ספרות",
+  "phone_number_must_be_10digit" : "מספר טלפון צריך להיות בן 10 ספרות",
   "please_enter_your_business_name" : "אנא הזן את שם העסק",
   "please_enter_valid_business_name" : "אנא הזן את שם העסק תקין",
   "please_enter_alphabets_only" : "אנא הזן אותיות בלבד",

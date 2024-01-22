@@ -283,7 +283,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
               Row(
                 children: [
                   CommonOrderContentWidget(
-                    flexValue: 1,
+                    backGroundColor: AppColors.iconBGColor,
+                    borderCoder: AppColors.lightBorderColor,
+                    flexValue: 2,
                     title: AppLocalizations.of(context)!.products,
                     value: state
                             .orderSummaryList.data?.data?[index].totalQuantity
@@ -296,18 +298,22 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   ),
                   5.width,
                   CommonOrderContentWidget(
-                    flexValue: 2,
+                    backGroundColor: AppColors.whiteColor,
+                    borderCoder: AppColors.whiteColor,
+                    flexValue: 1,
                     title: AppLocalizations.of(context)!.delivery_date,
                     value: '-',
-                    titleColor: AppColors.mainColor,
-                    valueColor: AppColors.blackColor,
+                    titleColor: AppColors.whiteColor,
+                    valueColor: AppColors.whiteColor,
                     valueTextSize: AppConstants.font_10,
                     valueTextWeight: FontWeight.w500,
                     columnPadding: AppConstants.padding_10,
                   ),
                   5.width,
                   CommonOrderContentWidget(
-                    flexValue: 2,
+                    backGroundColor: AppColors.iconBGColor,
+                    borderCoder: AppColors.lightBorderColor,
+                    flexValue: 7,
                     title: AppLocalizations.of(context)!.total_order,
                     value:
                     '${formatNumber(value: state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',

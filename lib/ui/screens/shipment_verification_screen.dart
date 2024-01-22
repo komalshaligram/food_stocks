@@ -127,6 +127,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                       Row(
                         children: [
                           CommonOrderContentWidget(
+                            backGroundColor: AppColors.iconBGColor,
+                            borderCoder: AppColors.lightBorderColor,
                             flexValue: 1,
                             title: AppLocalizations.of(context)!.products,
                             value: args?[AppStrings.quantityString] ?? '',
@@ -137,6 +139,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ),
                           5.width,
                           CommonOrderContentWidget(
+                            backGroundColor: AppColors.iconBGColor,
+                            borderCoder: AppColors.lightBorderColor,
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.delivery_date,
                             value: args?[AppStrings.deliveryDateString] ?? '',
@@ -148,6 +152,8 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                           ),
                           5.width,
                           CommonOrderContentWidget(
+                            backGroundColor: AppColors.iconBGColor,
+                            borderCoder: AppColors.lightBorderColor,
                             flexValue: 2,
                             title: AppLocalizations.of(context)!.total_order,
                             value:

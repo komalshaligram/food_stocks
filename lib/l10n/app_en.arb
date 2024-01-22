@@ -159,7 +159,7 @@
   "please_enter_valid_email": "Please enter valid email",
   "phone_number_cant_be_empty": "Phone number can't be Empty",
   "please_enter_valid_phone_number": "Please enter valid phone number",
-  "phone_number_must_be_10digit": "Phone number must be 9-digit",
+  "phone_number_must_be_10digit": "Phone number must be 10-digit",
   "please_enter_your_business_name": "Please enter your business name",
   "please_enter_valid_business_name": "Please enter valid business name",
   "please_enter_alphabets_only": "Please enter alphabets only",

@@ -39,13 +39,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
 
-      List<Day>? sundayList = [];
-      List<Day>? mondayList = [];
-      List<Day>? tuesdayList = [];
-      List<Day>? wednesdayList = [];
-      List<Day>? thursdayList = [];
-      List<Day>? fridayAndHolidayEvesList = [];
-      List<Day>? saturdayAndHolidaysList = [];
+      List<Day>? Sunday = [];
+      List<Day>? Monday = [];
+      List<Day>? Tuesday = [];
+      List<Day>? Wednesday = [];
+      List<Day>? Thursday = [];
+      List<Day>? Friday = [];
+      List<Day>? Saturday = [];
 
       if (event is _getActivityTimeDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
@@ -431,46 +431,46 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         }
 
         if (isSnackbarActive == false) {
-          sundayList.addAll(
+          Sunday.addAll(
             state.OperationTimeList[0].monday,
           );
-          mondayList.addAll(
+          Monday.addAll(
             state.OperationTimeList[1].monday,
           );
-          tuesdayList.addAll(
+          Tuesday.addAll(
             state.OperationTimeList[2].monday,
           );
-          wednesdayList.addAll(
+          Wednesday.addAll(
             state.OperationTimeList[3].monday,
           );
-          thursdayList.addAll(
+          Thursday.addAll(
             state.OperationTimeList[4].monday,
           );
-          fridayAndHolidayEvesList.addAll(
+          Friday.addAll(
             state.OperationTimeList[5].monday,
           );
-          saturdayAndHolidaysList.addAll(
+          Saturday.addAll(
             state.OperationTimeList[6].monday,
           );
 
           if (!state.isUpdate) {
             emit(state.copyWith(isLoading: true));
-            if (sundayList.first.from != AppStrings.timeString ||
-                mondayList.first.from != AppStrings.timeString &&
-                    tuesdayList.first.from != AppStrings.timeString ||
-                wednesdayList.first.from != AppStrings.timeString ||
-                thursdayList.first.from != AppStrings.timeString ||
-                fridayAndHolidayEvesList.first.from != AppStrings.timeString ||
-                saturdayAndHolidaysList.first.from != AppStrings.timeString) {
+            if (Sunday.first.from != AppStrings.timeString ||
+                Monday.first.from != AppStrings.timeString &&
+                    Tuesday.first.from != AppStrings.timeString ||
+                Wednesday.first.from != AppStrings.timeString ||
+                Thursday.first.from != AppStrings.timeString ||
+                Friday.first.from != AppStrings.timeString ||
+                Saturday.first.from != AppStrings.timeString) {
               ActivityTimeReqModel reqMap = ActivityTimeReqModel(
                 operationTime: OperationTime(
-                  sunday: sundayList,
-                  monday: mondayList,
-                  tuesday: tuesdayList,
-                  wednesday: wednesdayList,
-                  thursday: thursdayList,
-                  fridayAndHolidayEves: fridayAndHolidayEvesList,
-                  saturdayAndHolidays: saturdayAndHolidaysList,
+                  Sunday: Sunday,
+                  Monday: Monday,
+                  Tuesday: Tuesday,
+                  Wednesday: Wednesday,
+                  Thursday: Thursday,
+                  Friday: Friday,
+                  Saturday: Saturday,
                 ),
               );
 
@@ -514,13 +514,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 update.ProfileDetailsUpdateReqModel(
                     clientDetail: update.ClientDetail(
               operationTime: update.OperationTime(
-                sunday: sundayList,
-                monday: mondayList,
-                tuesday: tuesdayList,
-                wednesday: wednesdayList,
-                thursday: thursdayList,
-                fridayAndHolidayEves: fridayAndHolidayEvesList,
-                saturdayAndHolidays: saturdayAndHolidaysList,
+                Sunday: Sunday,
+                Monday: Monday,
+                Tuesday: Tuesday,
+                Wednesday: Wednesday,
+                Thursday: Thursday,
+                Friday: Friday,
+                Saturday: Saturday,
               ),
             ));
             Map<String, dynamic> req = reqMap.toJson();

@@ -285,7 +285,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                       productId: response.product?.first.id ?? '',
-                      stock: response.product?.first.numberOfUnit ?? 0);
+                      stock: response.product?.first.numberOfUnit ?? 0,
+              );
+
               emit(state.copyWith(productStockList: productStockList));
               debugPrint('new index = ${state.productStockList.last}');
               productStockUpdateIndex =
@@ -467,10 +469,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productStockUpdateIndex].quantity <
               productStockList[state.productStockUpdateIndex].stock) {
+            print('productSupplierIds______${productStockList}');
             if (productStockList[state.productStockUpdateIndex]
                 .productSupplierIds
                 .isEmpty) {
-              CustomSnackBar.showSnackBar(
+             CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
                       '${AppLocalizations.of(event.context)!.please_select_supplier}',

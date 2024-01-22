@@ -319,6 +319,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             index: index);
                                       },
                                     ),
+
+
+
+
+
                                     // state.isLoadMore
                                     //     ? StoreCategoryScreenPlanoGramShimmerWidget()
                                     //     : 0.width,

@@ -24,12 +24,14 @@ import '../../data/model/req_model/get_order_count/get_order_count_req_model.dar
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
+import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
@@ -857,6 +859,51 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 isNoteOpen: !productStockList[state.productStockUpdateIndex]
                     .isNoteOpen);
         emit(state.copyWith(productStockList: productStockList));
+      }
+
+      else if (event is _getProfileDetailsEvent) {
+
+          try {
+            debugPrint('req = ${preferences.getUserId()}');
+            final res = await DioClient(event.context).post(
+                AppUrls.getProfileDetailsUrl,
+                data: ProfileDetailsReqModel(id: preferences.getUserId())
+                    .toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}',
+                  },
+                ));
+            debugPrint('res = ${res}');
+            ProfileDetailsResModel response =
+            ProfileDetailsResModel.fromJson(res);
+            if (response.status == 200) {
+              debugPrint(
+                  'image = ${response.data?.clients?.first.profileImage}');
+              preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
+              preferences.setUserCompanyLogoUrl(logoUrl: response.data?.clients?.first.logo ?? '');
+              emit(
+                state.copyWith(
+                  UserImageUrl: response.data?.clients?.first.profileImage ?? '',
+                    UserCompanyLogoUrl :response.data?.clients?.first.logo ?? ''
+                ),
+              );
+            } else {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          'something_is_wrong_try_again',
+                      event.context),
+                  type: SnackBarType.FAILURE);
+            }
+          } on ServerException {
+
+          } catch (e) {
+
+          }
+
       }
     });
   }
