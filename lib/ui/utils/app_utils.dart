@@ -23,7 +23,7 @@ double getScreenWidth(BuildContext context) {
 }
 
 enum SnackBarType {
-  SUCCESS,
+  SUCCESS ,
   FAILURE,
 }
 
@@ -120,9 +120,6 @@ class CustomSnackBar {
 
     }*/
   }
-
-
-
 }
 
 Future<CroppedFile?> cropImage(

@@ -66,13 +66,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             if (response.status == 200) {
               if ((response.data?.clients?.first.clientDetail?.operationTime?.length != 0) ) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
-                var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].sunday ?? [];
-                var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].monday ?? [];
-                var tuesdayRs =response.data?.clients?.first.clientDetail?.operationTime?[0].tuesday ?? [];
-                var wednesdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].wednesday ?? [];
-                var thursdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].thursday ?? [];
-                var fridayAndHolidayEvesRs = response.data?.clients?.first.clientDetail?.operationTime?[0].fridayAndHolidayEves ?? [];
-                var saturdayAndHolidaysRs = response.data?.clients?.first.clientDetail?.operationTime?[0].saturdayAndHolidays ?? [];
+                var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Sunday ?? [];
+                var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Monday ?? [];
+                var tuesdayRs =response.data?.clients?.first.clientDetail?.operationTime?[0].Tuesday ?? [];
+                var wednesdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Wednesday ?? [];
+                var thursdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Thursday ?? [];
+                var fridayAndHolidayEvesRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Friday ?? [];
+                var saturdayAndHolidaysRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Saturday ?? [];
 
                 List<Day> sundayList = sundayRs.map((e) {
                   return Day(from: e.from, until: e.until);
@@ -465,13 +465,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 saturdayAndHolidaysList.first.from != AppStrings.timeString) {
               ActivityTimeReqModel reqMap = ActivityTimeReqModel(
                 operationTime: OperationTime(
-                  sunday: sundayList,
-                  monday: mondayList,
-                  tuesday: tuesdayList,
-                  wednesday: wednesdayList,
-                  thursday: thursdayList,
-                  fridayAndHolidayEves: fridayAndHolidayEvesList,
-                  saturdayAndHolidays: saturdayAndHolidaysList,
+                  Sunday: sundayList,
+                  Monday: mondayList,
+                  Tuesday: tuesdayList,
+                  Wednesday: wednesdayList,
+                  Thursday: thursdayList,
+                  Friday: fridayAndHolidayEvesList,
+                  Saturday: saturdayAndHolidaysList,
                 ),
               );
 
@@ -515,13 +515,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 update.ProfileDetailsUpdateReqModel(
                     clientDetail: update.ClientDetail(
               operationTime: update.OperationTime(
-                sunday: sundayList,
-                monday: mondayList,
-                tuesday: tuesdayList,
-                wednesday: wednesdayList,
-                thursday: thursdayList,
-                fridayAndHolidayEves: fridayAndHolidayEvesList,
-                saturdayAndHolidays: saturdayAndHolidaysList,
+                Sunday: sundayList,
+                Monday: mondayList,
+                Tuesday: tuesdayList,
+                Wednesday: wednesdayList,
+                Thursday: thursdayList,
+                Friday: fridayAndHolidayEvesList,
+                Saturday: saturdayAndHolidaysList,
               ),
             ));
             Map<String, dynamic> req = reqMap.toJson();

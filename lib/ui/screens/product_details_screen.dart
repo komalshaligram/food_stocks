@@ -23,6 +23,7 @@ import '../widget/custom_form_field_widget.dart';
 import '../widget/product_details_screen-shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
+
 class ProductDetailsRoute {
   static Widget get route => ProductDetailsScreen();
 }
@@ -34,10 +35,13 @@ class ProductDetailsScreen extends StatelessWidget {
 
   bool isNavigateToProductDetailString;
 
+
   var productData;
+  var orderData;
 
    ProductDetailsScreen({super.key, this.orderId = '', this.orderNumber = '', this.isNavigateToProductDetailString = false,
-   this.productData =const  OrdersBySupplier()
+   this.productData =const  OrdersBySupplier(),
+     this.orderData = const OrderDatum()
    });
 
   @override
@@ -51,6 +55,7 @@ class ProductDetailsScreen extends StatelessWidget {
         ProductDetailsEvent.getProductDataEvent(
           context: context,
           orderId: orderId,
+          orderData: orderData,
           orderBySupplierProduct: productData,
         ) ) ,
       child: ProductDetailsScreenWidget(
@@ -77,14 +82,16 @@ class ProductDetailsScreenWidget extends StatefulWidget {
 
 class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget> {
   TextEditingController addProblemController = TextEditingController();
-
+  int onTheWayStatus = 6;
 
   @override
   Widget build(BuildContext context) {
     ProductDetailsBloc bloc =context.read<ProductDetailsBloc>();
 
     return BlocListener<ProductDetailsBloc, ProductDetailsState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
           return Scaffold(
@@ -163,8 +170,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         ),
                                       ),
                                       Text(
-                                        state.orderBySupplierProduct.deliverStatus
-                                            ?.statusName?.toTitleCase() ??
+                                        state.orderData
+                                            .orderstatus?.statusName ??
                                             '',
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
@@ -268,8 +275,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       color: AppColors.blackColor,
                                     ),
                                   ),
-                                  state.orderBySupplierProduct
-                                      .deliverStatus?.statusName?.toTitleCase()  ==  AppStrings.onTheWayString ? GestureDetector(
+                                  state.orderData
+                                      .orderstatus?.orderStatusNumber == onTheWayStatus? GestureDetector(
                                     onTap: (){
                                       bloc.add(ProductDetailsEvent.checkAllEvent());
                                     },
@@ -333,9 +340,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   ),
                 ),
 
-            bottomSheet: state.orderBySupplierProduct.deliverStatus?.statusName?.toTitleCase()
-                ==
-                AppLocalizations.of(context)!.pending_delivery ? Container(
+            bottomSheet: state.orderData
+          .orderstatus?.orderStatusNumber == onTheWayStatus ?Container(
               padding: EdgeInsets.symmetric(
                   vertical: AppConstants.padding_20,  
                   horizontal: AppConstants.padding_30),

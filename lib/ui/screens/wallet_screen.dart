@@ -9,14 +9,16 @@ import 'package:flutter_date_range_picker/flutter_date_range_picker.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/wallet/wallet_bloc.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
+import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/app_utils.dart';
-import '../utils/themes/app_colors.dart';
+
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-import '../utils/themes/app_strings.dart';
+
 import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
@@ -130,9 +132,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: AnimationConfiguration.toStaggeredList(
-                          duration: const Duration(seconds: 3),
+                          duration: const Duration(seconds: 1),
                           childAnimationBuilder: (widget) => SlideAnimation(
-                            duration: const Duration(seconds: 3) ,
+                            duration: const Duration(seconds: 1) ,
                               verticalOffset: MediaQuery.of(context).size.height / 5,
                               child: FadeInAnimation(child: widget)
                           ),
@@ -775,7 +777,19 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
         initialDisplayedDate: selectedDateRange?.end ?? DateTime.now(),
         onDateRangeChanged: onDateRangeChanged,
         minDate: minDate,
-        //  theme: CalendarTheme(),
+          theme: CalendarTheme(
+            selectedColor: AppColors.mainColor,
+            dayNameTextStyle: TextStyle(color: Colors.black45, fontSize: 10),
+            inRangeColor: AppColors.lightMainColor,
+            inRangeTextStyle: TextStyle(color: Colors.black),
+            selectedTextStyle: TextStyle(color: Colors.white),
+            todayTextStyle: TextStyle(fontWeight: FontWeight.bold),
+            defaultTextStyle: TextStyle(color: Colors.black, fontSize: 12),
+            radius: 10,
+            tileSize: 40,
+              selectedQuickDateRangeColor:AppColors.mainColor,
+            disabledTextStyle: TextStyle(color: Colors.grey),
+          ),
         maxDate: DateTime(now.year, now.month, now.day),
       ),
     );

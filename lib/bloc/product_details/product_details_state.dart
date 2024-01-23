@@ -11,6 +11,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required int productWeight,
     required String phoneNumber,
     required OrdersBySupplier orderBySupplierProduct,
+    required OrderDatum orderData,
     required bool isShimmering,
     required bool isLoading,
     required int quantity,
@@ -29,6 +30,7 @@ class ProductDetailsState with _$ProductDetailsState {
     productWeight: 0,
     phoneNumber: '',
     orderBySupplierProduct: OrdersBySupplier(),
+     orderData: OrderDatum(),
      isShimmering: false,
     isLoading: false,
       quantity: 0,
@@ -40,90 +42,3 @@ class ProductDetailsState with _$ProductDetailsState {
 
   );
 }
-
-/*  productList: [
-      ProductDetailsModel(
-          productImage: AppImagePath.product3,
-          productName: 'Product Name  ',
-          productPrice: 12 ,
-          productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),  ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-      ProductDetailsModel(
-        productImage: AppImagePath.product3,
-        productName: 'Tomato',
-        productPrice: 12 ,
-        productWeight: 20 ,
-      ),
-
-    ],*/
