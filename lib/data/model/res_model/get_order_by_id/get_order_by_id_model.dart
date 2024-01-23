@@ -81,6 +81,8 @@ class Status with _$Status {
     int? v,
     @JsonKey(name: "isDeleted")
     bool? isDeleted,
+    @JsonKey(name:"orderStatusNumber")
+    int? orderStatusNumber
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);

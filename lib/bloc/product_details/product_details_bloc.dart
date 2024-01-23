@@ -46,6 +46,8 @@ class ProductDetailsBloc
                 orderBySupplierProduct:
                     response.data?.ordersBySupplier?.first ??
                         OrdersBySupplier(),
+                orderData: response.data?.orderData?.first ??
+                    OrderDatum(),
                 isShimmering: false));
           } else {
             CustomSnackBar.showSnackBar(
@@ -61,7 +63,7 @@ class ProductDetailsBloc
 
       if (event is _getProductDataEvent) {
         emit(state.copyWith(
-            orderBySupplierProduct: event.orderBySupplierProduct));
+            orderBySupplierProduct: event.orderBySupplierProduct,orderData: event.orderData));
       } else if (event is _productProblemEvent) {
         List<int> index = [];
         bool isAllCheck = false;
