@@ -103,8 +103,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                             ));
                     ProfileDetailsResModel response =
                         ProfileDetailsResModel.fromJson(res);
-                    Map<String, dynamic> newModel =
-                        res['data']['clients'][0]['clientDetail'];
+                    debugPrint('response = ${response}');
+
+                    Map<String, dynamic> newModel = res['data']['clients'][0]['clientDetail'];
                     debugPrint('data1 = ${newModel}');
 
                     debugPrint('files = ${newModel[AppStrings.filesString]}');
@@ -112,7 +113,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
                     if (response.status == 200) {
                       if (newModel[AppStrings.formsString] != null ||
-                          newModel[AppStrings.filesString] != null) {
+                          newModel[AppStrings.filesString] != null ) {
                         List<FormAndFileModel> formsAndFilesList =
                             state.formsAndFilesList.toList(growable: true);
                         print('list__${formsAndFilesList.length}');
@@ -192,7 +193,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
               type: SnackBarType.FAILURE);
         }
-      } else if (event is _getFilesListEvent) {
+      }
+      else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
           final res =
@@ -230,7 +232,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               type: SnackBarType.FAILURE);
           emit(state.copyWith(isLoading: false));
         }
-      } else if (event is _pickDocumentEvent) {
+      }
+      else if (event is _pickDocumentEvent) {
         if (state.isUploadLoading) {
           return;
         }
@@ -390,77 +393,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
 
 
 
-      else if(event is _formFileRegisterEvent){
 
-        emit(state.copyWith(isApiLoading: true));
-        Map<String, Map<String, dynamic>> formsAndFiles = {
-          AppStrings.formsString: {},
-          AppStrings.filesString: {}
-        };
-
-
-        state.formsAndFilesList.forEach((formAndFile) {
-          debugPrint('url = ${formAndFile.url}');
-          if (formAndFile.url?.isNotEmpty ?? false) {
-            if ((formAndFile.isForm ??
-                false) /*&&
-                  (state.formsAndFilesList[i].url
-                          ?.contains(AppStrings.tempString) ??
-                      false)*/
-            ) {
-              formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
-                  formAndFile.url ?? '';
-              //formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
-            } else if ((formAndFile.isForm ==
-                false) /*&&
-                  (state.formsAndFilesList[i].url
-                      ?.contains(AppStrings.tempString) ??
-                      false)*/
-            ) {
-              formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
-                  formAndFile.url ?? '';
-           //   fileList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
-            }
-          }
-        });
-
-            try {
-              final res = await DioClient(event.context).post(
-                "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
-                data: formsAndFiles,
-              );
-              debugPrint('forms&file register res_______${res}');
-              debugPrint('formsAndFiles______${formsAndFiles}');
-
-              FileUpdateResModel response = FileUpdateResModel.fromJson(res);
-
-              if (response.status == 200) {
-
-                emit(state.copyWith(isApiLoading: false));
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                    '${AppLocalizations.of(event.context)!.registered_successfully}',
-                    type: SnackBarType.SUCCESS);
-                Navigator.popUntil(event.context,
-                        (route) => route.name == RouteDefine.connectScreen.name);
-               /* Navigator.pushNamed(
-                    event.context, RouteDefine.bottomNavScreen.name);*/
-                 Navigator.pushNamed(
-                    event.context, RouteDefine.loginScreen.name);
-              } else {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                    type: SnackBarType.FAILURE);
-              }
-            } on ServerException {
-
-              emit(state.copyWith(isApiLoading: false));
-            }
-
-       }
 
 
 
@@ -522,36 +455,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               return;
             }
           }
-/*
+
          final res = await DioClient(event.context).post(
             "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
             data: formsAndFiles,
           );
 
-          FileUpdateResModel response = FileUpdateResModel.fromJson(res);*/
-          update.ProfileModel updatedProfileModel = update.ProfileModel(
-            clientDetail: update.ClientDetail(
-              forms: fileList,
-              files: formList,
-            ),
-          );
+          FileUpdateResModel response = FileUpdateResModel.fromJson(res);
 
-          print('req_____${updatedProfileModel}');
-
-
-
-          final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
-              data:  updatedProfileModel.toJson(),
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-
-          ProfileDetailsUpdateResModel response =
-          ProfileDetailsUpdateResModel.fromJson(res);
           debugPrint("file update res = $res");
           if (response.status == 200) {
             emit(state.copyWith(isApiLoading: false));
@@ -616,28 +527,15 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 title:
                     '${AppLocalizations.of(event.context)!.removed_successfully}',
                 type: SnackBarType.SUCCESS);
-            // add(FileUploadEvent.uploadApiEvent(context: event.context, isFromDelete: true));
+         //   add(FileUploadEvent.uploadApiEvent(context: event.context, isFromDelete: true));
             return;
           }
           emit(state.copyWith(isRemoveProcess : true, uploadIndex: event.index,isLoading: false));
 
-    /*     RemoveFormAndFileReqModel reqModel = RemoveFormAndFileReqModel(
-              path: formsAndFilesList[event.index].url);
-          debugPrint('delete file req = ${reqModel.path}');
-          final res = await DioClient(event.context)
-              .post(AppUrls.removeFileUrl, data: reqModel);
-          RemoveFormAndFileResModel response =
-              RemoveFormAndFileResModel.fromJson(res);*/
 
           Map<String, Map<String, dynamic>> formsAndFiles = {
             AppStrings.formsString: {},
             AppStrings.filesString: {}
-          };
-          Map<String, String> formList = {
-
-          };
-          Map<String, String> fileList = {
-
           };
 
           state.formsAndFilesList.forEach((formAndFile) {
@@ -651,7 +549,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               ) {
                 formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
-                formList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
               } else if ((formAndFile.isForm ==
                   false) /*&&
                   (state.formsAndFilesList[i].url
@@ -660,30 +557,18 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               ) {
                 formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
                     formAndFile.url ?? '';
-                fileList[formAndFile.id ?? ''] =  formAndFile.url ?? '';
               }
             }
           });
-          print('req_____${formsAndFiles}');
-          update.ProfileModel updatedProfileModel = update.ProfileModel(
-            clientDetail: update.ClientDetail(
-             forms: formList,
-              files: fileList,
-            ),
-          );
 
           final res = await DioClient(event.context).post(
-              AppUrls.updateProfileDetailsUrl + "/" + preferencesHelper.getUserId(),
-              data: /*updatedProfileModel.toJson()*/ updatedProfileModel,
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
+            "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
+            data: formsAndFiles,
+          );
+          debugPrint('forms&file register res_______${res}');
+          debugPrint('formsAndFiles______${formsAndFiles}');
 
-          ProfileDetailsUpdateResModel response =
-          ProfileDetailsUpdateResModel.fromJson(res);
+          FileUpdateResModel response = FileUpdateResModel.fromJson(res);
 
           debugPrint('delete file res = ${response.message}');
           if (response.status == 200) {
@@ -697,8 +582,8 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             //     context: event.context,
             //     title: response.message ?? AppStrings.removeSuccessString,
             //     type: SnackBarType.SUCCESS);
-            add(FileUploadEvent.uploadApiEvent(
-                context: event.context, isFromDelete: true));
+         /*   add(FileUploadEvent.uploadApiEvent(
+                context: event.context, isFromDelete: true));*/
           } else {
             emit(state.copyWith(isRemoveProcess: false));
             CustomSnackBar.showSnackBar(
@@ -792,8 +677,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               List<FormAndFileModel> formsAndFilesList =
                   state.formsAndFilesList.toList(growable: true);
               for (int i = 0; i < formsAndFilesList.length; i++) {
-                if (newModel[AppStrings.filesString]
-                        .containsKey(formsAndFilesList[i].id) ??
+                if (newModel[AppStrings.filesString].containsKey(formsAndFilesList[i].id) ??
                     false) {
                   formsAndFilesList[i] = formsAndFilesList[i].copyWith(
                       url: newModel[AppStrings.filesString]

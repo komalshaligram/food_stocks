@@ -209,10 +209,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                          /*  CustomSnackBar.showSnackBar(
-                                context: context,
-                                title: '${AppLocalizations.of(context)!.otp_resend_success}',
-                                type: SnackBarType.SUCCESS);*/
                             bloc.add(OtpEvent.logInApiDataEvent(
                                 context: context,isRegister: widget.isRegister,contactNumber: widget.contact));
                             bloc.add(OtpEvent.setOtpTimer());

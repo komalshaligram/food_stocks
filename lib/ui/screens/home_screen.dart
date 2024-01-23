@@ -74,11 +74,10 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                bloc.add(
-                      HomeEvent.getProductSalesListEvent(context: context));
+                bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
-
+                bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
               },
               child: SafeArea(
                 child: Column(
@@ -438,7 +437,7 @@ class HomeScreenWidget extends StatelessWidget {
                               ),
                             ),
                             20.height,
-                            state.isProductSaleShimmering
+                    /*        state.isProductSaleShimmering
                                 ? Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -448,7 +447,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         buildListItems(context, height: 170),
                                         13.height,
                                       ])
-                                : state.productSalesList.isEmpty
+                                :*/ state.productSalesList.isEmpty
                                     ? 0.width
                                     : Column  (
                                         crossAxisAlignment:

@@ -16,6 +16,7 @@ class AppStrings {
   static const clearString = 'Clear';
   static const deleteString = 'Delete';
   static const deliverString = 'deliver';
+  static const onTheWayString = 'onTheWay';
   static const statusString = 'status';
   static const updateString = 'Updating';
   static const pendingString = 'pending';

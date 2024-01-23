@@ -366,7 +366,7 @@ class TimeContainer extends StatelessWidget {
       builder: (context, state) {
         return Container(
           height: 40,
-          width: getScreenWidth(context) * 0.25,
+          width: getScreenWidth(context) * 0.26,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(3),
               border: Border.all(color: AppColors.borderColor),

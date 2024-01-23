@@ -169,7 +169,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         );
         Navigator.pushNamed(event.context, RouteDefine.moreDetailsScreen.name,
             arguments: {AppStrings.profileParamString: profileModel});
-      } else if (event is _getProfileDetailsEvent) {
+      }
+      else if (event is _getProfileDetailsEvent) {
         mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {

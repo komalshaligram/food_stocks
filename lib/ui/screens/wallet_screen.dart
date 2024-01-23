@@ -466,11 +466,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                     flex: 1,
                                     child: SizedBox()),
                                 Expanded(
-                                  flex: 5 ,
+                                  flex: 7 ,
                                   child: Container(
                                     height: 45,
                                       padding: EdgeInsets.symmetric(
-                                          horizontal:AppConstants.padding_5,
+                                          horizontal:AppConstants.padding_10,
                                           vertical: AppConstants.padding_5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
@@ -498,6 +498,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 .whiteColor
                                                 .withOpacity(0.6),
                                             builder: datePickerBuilder,
+
                                           );
                                         },
                                         onDateRangeSelected:

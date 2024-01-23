@@ -69,4 +69,10 @@ class HomeEvent with _$HomeEvent {
   }) = _UpdateMessageListEvent;
 
   const factory HomeEvent.toggleNoteEvent() = _ToggleNoteEvent;
+
+  const factory HomeEvent.getProfileDetailsEvent({
+    required BuildContext context,
+}) = _getProfileDetailsEvent;
+
+
 }

@@ -10,7 +10,7 @@ class ShipmentVerificationState with _$ShipmentVerificationState{
 }) = _ShipmentVerificationState;
 
   factory ShipmentVerificationState.initial()=>  ShipmentVerificationState(
- isSignaturePadActive: false,
+ isSignaturePadActive: true,
     isLoading: false,
     isDelete: false
 

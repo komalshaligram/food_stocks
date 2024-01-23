@@ -269,7 +269,7 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
-                      state.isShimmering
+                      state.isShimmering && state.basketProductList.isEmpty
                           ? BasketScreenShimmerWidget()
                           : (state.basketProductList.length) != 0
                               ? Expanded(
