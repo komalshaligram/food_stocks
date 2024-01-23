@@ -85,6 +85,9 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? status,
     @JsonKey(name: "productNumber")
     String? productNumber,
+  double? productPrice,
+  double? totalSale,
+
   }) = _PlanogramAllProduct;
 
   factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);

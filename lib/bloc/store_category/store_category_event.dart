@@ -94,5 +94,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
     required BuildContext context,
   }) = _getPlanogramAllProductEvent;
 
+  const factory StoreCategoryEvent.getSubCategoryProductEvent({
+    required BuildContext context,
+  }) = _getSubCategoryProductEvent;
 
 }

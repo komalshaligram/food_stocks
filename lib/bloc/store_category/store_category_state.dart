@@ -37,6 +37,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required RefreshController subCategoryRefreshController,
     required RefreshController planogramRefreshController,
     required List<PlanogramAllProduct> planogramProductList,
+    required List<Planogramproduct> categoryPlanogramList,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -73,6 +74,7 @@ class StoreCategoryState with _$StoreCategoryState {
         subCategoryRefreshController: RefreshController(),
         planogramRefreshController: RefreshController(),
     planoGramsByIdList: [],
-    planogramProductList: []
+    planogramProductList: [],
+    categoryPlanogramList: []
       );
 }
