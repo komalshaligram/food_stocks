@@ -171,15 +171,15 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       ),
                                       Text(
                                         state.orderData
-                                            .orderstatus?.statusName ??
+                                            .orderstatus?.statusName?.toTitleCase() ??
                                             '',
                                         style: AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
                                             color:
-                                            state.orderBySupplierProduct
-                                                .orderDeliveryDate == ''
-                                                ? AppColors.orangeColor
-                                                : AppColors.mainColor,
+                                            state.orderData
+                                                .orderstatus?.orderStatusNumber == 6
+                                                ? AppColors.graphColor
+                                                : AppColors.orangeColor,
                                             fontWeight: FontWeight.w700),
                                       )
                                     ],
@@ -311,9 +311,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 itemBuilder: (context, index) => productListItem(
                                   index: index,
                                   context: context,
-                                  status: state.orderBySupplierProduct
-                                      .deliverStatus?.statusName?.toTitleCase() ??
-                                      '',
+                                  statusNumber: state.orderData.orderstatus?.orderStatusNumber??0,
                                   issue: state.orderBySupplierProduct
                                       .products?[index].issue ??
                                       '',
@@ -367,9 +365,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             ?.toString() ??
                             '',
                         AppStrings.deliveryStatusString: state
-                            .orderBySupplierProduct
-                            .deliverStatus
-                            ?.statusName
+                            .orderData.orderstatus?.statusName
                             .toString() ??
                             '',
                         AppStrings.totalOrderString: state
@@ -415,7 +411,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
   Widget productListItem(
       {required int index,
       required BuildContext context,
-      required String status,
+      required int statusNumber,
       String? issue,
       bool? isIssue,
       int? missingQuantity,
@@ -442,9 +438,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
-              mainAxisAlignment: status ==  AppStrings.onTheWayString ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start ,
+              mainAxisAlignment: statusNumber ==  onTheWayStatus ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start ,
               children: [
-                status ==  AppStrings.onTheWayString ? Checkbox(
+                statusNumber ==  onTheWayStatus ? Checkbox(
                         value:((isIssue ?? false) ||
                                 state.productListIndex.contains(index))
                             ? true
@@ -469,8 +465,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       child:
                       Image.network(
                         '${AppUrls.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
-                        width: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
-                        height: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
+                        width: statusNumber ==  onTheWayStatus? AppConstants.containerSize_50 : 60,
+                        height: statusNumber ==  onTheWayStatus ? AppConstants.containerSize_50 : 60,
                         fit: BoxFit.fill,
                         loadingBuilder:
                             (context,
@@ -482,8 +478,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           } else {
                             return Center(
                               child: Container(
-                                width: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
-                                height: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
+                                width: statusNumber ==  onTheWayStatus ? AppConstants.containerSize_50 : 60,
+                                height:statusNumber ==  onTheWayStatus ? AppConstants.containerSize_50 : 60,
                                 child: CupertinoActivityIndicator(
                                   color: AppColors
                                       .blackColor,
@@ -521,8 +517,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     : Image.asset(
                   AppImagePath.imageNotAvailable5,
                   fit: BoxFit.cover,
-                  width: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
-                  height: status ==  AppStrings.onTheWayString ? AppConstants.containerSize_50 : 60,
+                  width: statusNumber ==  onTheWayStatus ? AppConstants.containerSize_50 : 60,
+                  height:statusNumber ==  onTheWayStatus ? AppConstants.containerSize_50 : 60,
 
                 ),
                 15.width,
@@ -557,7 +553,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     ),
                   ],
                 ),
-                status ==  AppStrings.onTheWayString ?   Column(
+                statusNumber ==  onTheWayStatus ?   Column(
                         children: [
                           GestureDetector(
                             onTap: () {
