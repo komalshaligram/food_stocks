@@ -166,6 +166,23 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   children: [
                                     5.height,
                                     state.isSubCategoryShimmering
+                                        ? StoreCategoryScreenPlanoGramShimmerWidget() : state
+                                        .planoGramsList.isEmpty ? SizedBox()
+                                        :ListView.builder(
+                                      itemCount: state
+                                          .planoGramsList.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                      const NeverScrollableScrollPhysics(),
+                                      itemBuilder:
+                                          (context, index) {
+                                        return  buildPlanoGramItem(
+                                            context: context,
+                                            index: index);
+                                      },
+                                    ),
+
+                                    state.isSubCategoryShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
                                         : state.subCategoryList.isEmpty
                                         ? Container(
@@ -225,7 +242,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         context));
                                               }),
                                     ),
-                                    state.categoryPlanogramList
+                                  /*  state.categoryPlanogramList
                                         .isNotEmpty ? Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: Text('${AppLocalizations.of(context)!
@@ -306,7 +323,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         // },
                                         // isRTL: context.rtl),
                                       ),
-                                    ),
+                                    ),*/
 
 
 
@@ -426,7 +443,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             fontWeight: FontWeight.w600
                                           ),),
                                       ) : SizedBox(),
-                                      Container(
+                                      state.isPlanogramShimmering
+                                          ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                      : state.planogramProductList.isEmpty ? SizedBox()
+                                          : Container(
                                         color: AppColors.whiteColor,
                                         child: GridView.builder(
                                             itemCount: state.planogramProductList
@@ -1317,7 +1337,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           )
                               : CommonProductDetailsWidget(
                               context: context,
-
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<StoreCategoryBloc>().add(
@@ -1550,7 +1569,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildPlanoGramTitles(
+                  state.planoGramsList.isEmpty ? SizedBox(): buildPlanoGramTitles(
                       context: context,
                       title: state.planoGramsList[index].planogramName ?? '',
                       onTap: () {

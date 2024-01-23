@@ -40,6 +40,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
 
       List<Day>? sundayList = [];
+      Map<String,String> sundayList1 = {};
       List<Day>? mondayList = [];
       List<Day>? tuesdayList = [];
       List<Day>? wednesdayList = [];

@@ -82,7 +82,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [ProductStockModel(productId: '')]
             ]));
         if(event.isSubCategory == ''){
-          add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
         }
         else{
@@ -173,7 +173,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           ProductSubcategoriesResModel response =
               ProductSubcategoriesResModel.fromJson(res);
           if (response.status == 200) {
-            add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
+
             List<SubCategory> subCategoryList =
                 state.subCategoryList.toList(growable: true);
             subCategoryList.addAll(response.data?.subCategories ?? []);
@@ -211,7 +211,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryPageNum: 0,
             subCategoryList: [],
             isBottomOfSubCategory: false));
-        add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+        add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
       }
       else if (event is _GetPlanoGramProductsEvent) {
@@ -259,6 +259,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           PlanogramResModel response = PlanogramResModel.fromJson(res);
 
           if (response.status == 200) {
+            if(state.isSubCategory){
+              add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+            }
             emit(state.copyWith(categoryPlanogramList: []));
             List<PlanogramDatum> planoGramsList =
                 state.planoGramsList.toList(growable: true);
@@ -1100,8 +1103,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           state.planogramProductList.toList(growable: true);
 
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
-            categoryId : "652e5dd5cc32da1f44557aeb",
-            subCategoryId: "65a9296106b4281bb5ec2b34",
+            categoryId : state.categoryId,
+            subCategoryId: state.subCategoryId,
           );
 
           final res = await DioClient(event.context)
