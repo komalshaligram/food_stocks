@@ -29,6 +29,7 @@ import '../../data/model/req_model/product_details_req_model/product_details_req
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_planogram_by_id/get_planogram_by_id_model.dart';
+import '../../data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
@@ -80,15 +81,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList: [
               [ProductStockModel(productId: '')]
             ]));
-        if(state.isSubCategory == true){
+        if(event.isSubCategory == ''){
           add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
         }
         else{
+          print('state.isSubCategory_____${state.isSubCategory}');
           isSubCategoryString = event.isSubCategory;
           categoryId = event.categoryId;
-
-
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
+          add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
 
         }
       }
@@ -142,8 +143,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramPageNum: 0,
             isBottomOfPlanoGrams: false,
           ));
-          add(StoreCategoryEvent.getPlanoGramProductsEvent(
-              context: event.context));
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
+
         }
         emit(state.copyWith(isSubCategory: false));
       }
@@ -245,6 +246,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
           if (response.status == 200) {
+            add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             List<PlanogramDatum> planoGramsList =
                 state.planoGramsList.toList(growable: true);
             planoGramsList.addAll(response.data ?? []);
@@ -330,6 +332,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   [0] = productStockList[
                       productStockList.indexOf(productStockList.last)][0]
                   .copyWith(
+                quantity: 1,
                       productId: response.product?.first.id ??
                           '' /*,
                   stock: response.product?.first.numberOfUnit ?? 0*/
@@ -1055,14 +1058,60 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response['message'].toLocalization() ??
-                        response['message'],
+                    response[AppStrings.messageString].toLocalization() ??
+                        response[AppStrings.messageString],
                     event.context),
                 type: SnackBarType.FAILURE);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
+
+      }
+
+      else if(event is _getPlanogramAllProductEvent){
+        try{
+          List<PlanogramAllProduct> planogramProductList =
+          state.planogramProductList.toList(growable: true);
+
+          PlanogramReqModel planogramReqModel =  PlanogramReqModel(
+            categoryId: "652e5dd5cc32da1f44557aeb",
+            subCategoryId: "65a9296106b4281bb5ec2b34",
+          );
+
+          final res = await DioClient(event.context)
+              .post('${AppUrls.getPlanogramAllProductUrl}',
+          data: planogramReqModel
+          );
+
+          debugPrint('getPlanogramAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
+          debugPrint('req_____${planogramReqModel}');
+          GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
+          debugPrint('getPlanogramAllProduct response_____${response}');
+
+          if(response.status == 200){
+           planogramProductList.addAll(response.data ?? []);
+            emit(state.copyWith(planogramProductList: planogramProductList));
+
+          }
+          else{
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE);
+          }
+
+        }
+        on ServerException {
+        }
+
+        catch(e){
+        }
+
+
 
 
       }

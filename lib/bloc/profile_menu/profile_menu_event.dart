@@ -12,4 +12,9 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
 
   const factory ProfileMenuEvent.changeAppLanguageEvent(
       {required BuildContext context}) = _ChangeAppLanguageEvent;
+
+  const factory ProfileMenuEvent.getProfileDetailsEvent({
+    required BuildContext context,
+  }) = _getProfileDetailsEvent;
+
 }

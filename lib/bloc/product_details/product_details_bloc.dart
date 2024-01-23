@@ -137,7 +137,7 @@ class ProductDetailsBloc
               emit(state.copyWith(isLoading: false));
 
                 Navigator.pop(event.BottomSheetContext);
-                Navigator.pop(event.context);
+               // Navigator.pop(event.context);
 
               CustomSnackBar.showSnackBar(
                   context: event.context,

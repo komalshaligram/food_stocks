@@ -1550,6 +1550,7 @@ class StoreScreenWidget extends StatelessWidget {
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
+
               return BlocProvider.value(
                   value: context.read<StoreBloc>(),
                   child: BlocBuilder<StoreBloc, StoreState>(
@@ -1565,10 +1566,16 @@ class StoreScreenWidget extends StatelessWidget {
                         clipBehavior: Clip.hardEdge,
                         child: Scaffold(
                           body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
+                              ? ProductDetailsShimmerWidget() : state.productDetails.isEmpty ?
+                              Center(
+                                  child: Text(AppLocalizations.of(context)!
+                                      .no_data,style:AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.normalFont,
+                                      color: AppColors.greyColor,
+                                      fontWeight: FontWeight.w500 ,)),
+                              )
                               : CommonProductDetailsWidget(
                               context: context,
-
                               productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
                                 context.read<StoreBloc>().add(
@@ -1599,14 +1606,8 @@ class StoreScreenWidget extends StatelessWidget {
                                   .body
                                   ?.text ??
                                   '',
-                              productPrice: state
-                                  .productStockList[
-                              state.productStockUpdateIndex]
-                                  .totalPrice *
-                                  state
-                                      .productStockList[state
-                                      .productStockUpdateIndex]
-                                      .quantity,
+                              productPrice: state.productStockList[state.productStockUpdateIndex].totalPrice *
+                                  state.productStockList[state.productStockUpdateIndex].quantity,
                               productScaleType: state.productDetails.first
                                   .scales?.scaleType ?? '',
                               productWeight: state.productDetails.first
@@ -1643,8 +1644,7 @@ class StoreScreenWidget extends StatelessWidget {
                               productStock: state.productStockList[state
                                   .productStockUpdateIndex].stock,
                               isRTL: context.rtl,
-                              isSupplierAvailable: state.productSupplierList
-                                  .isEmpty ? false : true,
+                              isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
                               productQuantity: state.productStockList[state
                                   .productStockUpdateIndex].quantity,
@@ -1825,8 +1825,7 @@ class StoreScreenWidget extends StatelessWidget {
                                         ProductSupplierModel(
                                             supplierId: '',
                                             companyName: ''),
-                                  )
-                                      .selectedIndex ==
+                                  ).selectedIndex ==
                                       -2
                                       ? Column(
                                     crossAxisAlignment:

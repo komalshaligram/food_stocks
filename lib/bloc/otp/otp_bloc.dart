@@ -170,7 +170,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setRefreshToken(
                   refToken: response.data?.authToken?.refreshToken ?? '');
               preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
-              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
+            /* preferencesHelper.setUserLoggedIn(isLoggedIn: true);*/
               preferencesHelper.setWalletId(
                   UserWalletId: response.data?.wallet ?? '');
               emit(state.copyWith(isLoading: false));

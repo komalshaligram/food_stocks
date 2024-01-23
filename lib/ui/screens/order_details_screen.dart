@@ -184,6 +184,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 Row(
                   children: [
                     CommonOrderContentWidget(
+                      backGroundColor: AppColors.iconBGColor,
+                      borderCoder: AppColors.lightBorderColor,
                       flexValue: 2,
                       title: AppLocalizations.of(context)!.products,
                       value: orderByIdList.data!.ordersBySupplier![index]
@@ -196,6 +198,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
+                      backGroundColor: AppColors.iconBGColor,
+                      borderCoder: AppColors.lightBorderColor,
                       flexValue: 3,
                       title: AppLocalizations.of(context)!.delivery_date,
                       value: orderByIdList.data!.ordersBySupplier![index]
@@ -211,6 +215,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     ),
                     5.width,
                     CommonOrderContentWidget(
+                      backGroundColor: AppColors.iconBGColor,
+                      borderCoder: AppColors.lightBorderColor,
                       flexValue: 3,
                       title: AppLocalizations.of(context)!.total_order,
                       value: '${formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',

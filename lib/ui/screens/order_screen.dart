@@ -271,6 +271,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   Row(
                     children: [
                       CommonOrderContentWidget(
+                        backGroundColor: AppColors.iconBGColor,
+                        borderCoder: AppColors.lightBorderColor,
                         flexValue: 2,
                         title: AppLocalizations.of(context)!.products,
                         value:
@@ -281,6 +283,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       ),
                       5.width,
                       CommonOrderContentWidget(
+                        backGroundColor: AppColors.iconBGColor,
+                        borderCoder: AppColors.lightBorderColor,
                         flexValue: 2,
                         title: AppLocalizations.of(context)!.suppliers,
                         value:
@@ -291,6 +295,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       ),
                       5.width,
                       CommonOrderContentWidget(
+                        backGroundColor: AppColors.iconBGColor,
+                        borderCoder: AppColors.lightBorderColor,
                         flexValue: 4,
                         title: AppLocalizations.of(context)!.order_date,
                         value: orderDetailsList[index].createdAt
@@ -304,6 +310,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                       ),
                       5.width,
                       CommonOrderContentWidget(
+                        backGroundColor: AppColors.iconBGColor,
+                        borderCoder: AppColors.lightBorderColor,
                         flexValue: 4,
                         title: AppLocalizations.of(context)!.order_status,
                         value: orderDetailsList[index].status?.statusName

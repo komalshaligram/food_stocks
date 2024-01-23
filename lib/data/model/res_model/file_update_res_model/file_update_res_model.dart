@@ -90,12 +90,12 @@ class ClientDetail with _$ClientDetail {
 class OperationTime with _$OperationTime {
   const factory OperationTime({
     @JsonKey(name: "Monday") dynamic monday,
-    @JsonKey(name: "tuesday") dynamic tuesday,
-    @JsonKey(name: "wednesday") dynamic wednesday,
-    @JsonKey(name: "thursday") dynamic thursday,
-    @JsonKey(name: "fridayAndHolidayEves") dynamic fridayAndHolidayEves,
-    @JsonKey(name: "saturdayAndHolidays") dynamic saturdayAndHolidays,
-    @JsonKey(name: "sunday") dynamic sunday,
+    @JsonKey(name: "Tuesday") dynamic tuesday,
+    @JsonKey(name: "Wednesday") dynamic wednesday,
+    @JsonKey(name: "Thursday") dynamic thursday,
+    @JsonKey(name: "Friday") dynamic fridayAndHolidayEves,
+    @JsonKey(name: "Saturday") dynamic saturdayAndHolidays,
+    @JsonKey(name: "Sunday") dynamic sunday,
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>

@@ -61,6 +61,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             onFocusGained: () {
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
+              bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
