@@ -140,7 +140,7 @@
   "nov": "נוב",
   "dec": "דצמ",
   "ok": "בסדר",
-    "confirm":"לְאַשֵׁר",
+  "confirm":"לְאַשֵׁר",
   "cancel": "לְבַטֵל",
   "see_all": "ראה הכל",
   "discount": "בהנחה",
@@ -361,8 +361,7 @@
       "enter_valid_address": "אנא הזן כתובת תקינה",
   "this_company_has_no_product": "כרגע אין מוצרים לחברה הזו",
   "out_of_stock1" : "לא במלאי",
-  "accountnotapprove": "חשבון לא מאושר",
-  "confirm": "לְאַשֵׁר"
+  "accountnotapprove": "חשבון לא מאושר"
 
 
 

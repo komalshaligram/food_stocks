@@ -40,7 +40,6 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
 
       List<Day>? sundayList = [];
-      Map<String,String> sundayList1 = {};
       List<Day>? mondayList = [];
       List<Day>? tuesdayList = [];
       List<Day>? wednesdayList = [];
@@ -51,6 +50,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _getActivityTimeDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
       }
+
+
+
+
 
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
@@ -66,13 +69,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             if (response.status == 200) {
               if ((response.data?.clients?.first.clientDetail?.operationTime?.length != 0) ) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
-                var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Sunday ?? [];
-                var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Monday ?? [];
-                var tuesdayRs =response.data?.clients?.first.clientDetail?.operationTime?[0].Tuesday ?? [];
-                var wednesdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Wednesday ?? [];
-                var thursdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Thursday ?? [];
-                var fridayAndHolidayEvesRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Friday ?? [];
-                var saturdayAndHolidaysRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Saturday ?? [];
+                var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].sunday ?? [];
+                var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].monday ?? [];
+                var tuesdayRs =response.data?.clients?.first.clientDetail?.operationTime?[0].tuesday ?? [];
+                var wednesdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].wednesday ?? [];
+                var thursdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].thursday ?? [];
+                var fridayAndHolidayEvesRs = response.data?.clients?.first.clientDetail?.operationTime?[0].fridayAndHolidayEves ?? [];
+                var saturdayAndHolidaysRs = response.data?.clients?.first.clientDetail?.operationTime?[0].saturdayAndHolidays ?? [];
 
                 List<Day> sundayList = sundayRs.map((e) {
                   return Day(from: e.from, until: e.until);
@@ -85,6 +88,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 List<Day> tuesdayList = tuesdayRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
+                
                 List<Day> wednesdayList = wednesdayRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
@@ -102,6 +106,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     saturdayAndHolidaysRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
+                
                 temp1[0].monday = sundayList;
                 temp1[1].monday = mondayList;
                 temp1[2].monday = tuesdayList;
@@ -109,6 +114,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 temp1[4].monday = thursdayList;
                 temp1[5].monday = fridayAndHolidayEvesList;
                 temp1[6].monday = saturdayAndHolidaysList;
+                
                 emit(state.copyWith(
                     isShimmering: false,
                     OperationTimeList: temp1,
@@ -465,13 +471,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 saturdayAndHolidaysList.first.from != AppStrings.timeString) {
               ActivityTimeReqModel reqMap = ActivityTimeReqModel(
                 operationTime: OperationTime(
-                  Sunday: sundayList,
-                  Monday: mondayList,
-                  Tuesday: tuesdayList,
-                  Wednesday: wednesdayList,
-                  Thursday: thursdayList,
-                  Friday: fridayAndHolidayEvesList,
-                  Saturday: saturdayAndHolidaysList,
+                  sunday: sundayList,
+                  monday: mondayList,
+                  tuesday: tuesdayList,
+                  wednesday: wednesdayList,
+                  thursday: thursdayList,
+                  fridayAndHolidayEves: fridayAndHolidayEvesList,
+                  saturdayAndHolidays: saturdayAndHolidaysList,
                 ),
               );
 
@@ -515,13 +521,13 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 update.ProfileDetailsUpdateReqModel(
                     clientDetail: update.ClientDetail(
               operationTime: update.OperationTime(
-                Sunday: sundayList,
-                Monday: mondayList,
-                Tuesday: tuesdayList,
-                Wednesday: wednesdayList,
-                Thursday: thursdayList,
-                Friday: fridayAndHolidayEvesList,
-                Saturday: saturdayAndHolidaysList,
+                sunday: sundayList,
+                monday: mondayList,
+                tuesday: tuesdayList,
+                wednesday: wednesdayList,
+                thursday: thursdayList,
+                fridayAndHolidayEves: fridayAndHolidayEvesList,
+                saturdayAndHolidays: saturdayAndHolidaysList,
               ),
             ));
             Map<String, dynamic> req = reqMap.toJson();

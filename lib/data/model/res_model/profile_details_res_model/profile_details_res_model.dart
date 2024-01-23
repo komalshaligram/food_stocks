@@ -118,40 +118,25 @@ class ClientType with _$ClientType {
 }
 
 @freezed
-/*class Files with _$Files {
-  const factory Files({
-    @JsonKey(name: "651e7ccf30429b3f49e65f08")
-    String? the651E7Ccf30429B3F49E65F08,
-    @JsonKey(name: "651e7cec30429b3f49e65f0a")
-    String? the651E7Cec30429B3F49E65F0A,
-  }) = _Files;
 
-  factory Files.fromJson(Map<String, dynamic> json) => _$FilesFromJson(json);
-}
-
-@freezed
-class Forms with _$Forms {
-  const factory Forms({
-    @JsonKey(name: "651e7c0b30429b3f49e65f03")
-    String? the651E7C0B30429B3F49E65F03,
-    @JsonKey(name: "651e7c8130429b3f49e65f06")
-    String? the651E7C8130429B3F49E65F06,
-  }) = _Forms;
-
-  factory Forms.fromJson(Map<String, dynamic> json) => _$FormsFromJson(json);
-}*/
 
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
 
-    List<Day>? Sunday,
-   List<Day>? Monday,
-   List<Day>? Tuesday,
-    List<Day>? Wednesday,
-    List<Day>? Thursday,
-    List<Day>? Friday,
-    List<Day>? Saturday,
+    List<Day>? sunday,
+   List<Day>? monday,
+   List<Day>? tuesday,
+    List<Day>? wednesday,
+    List<Day>? thursday,
+    List<Day>? fridayAndHolidayEves,
+    List<Day>? saturdayAndHolidays,
+
+
+
+
+
+
 
   }) = _OperationTime;
 
