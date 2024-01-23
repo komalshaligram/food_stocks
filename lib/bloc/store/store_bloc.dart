@@ -276,7 +276,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ProductDetailsResModel.fromJson(res);
           if (response.status == 200) {
             int productStockUpdateIndex = state.productStockList.indexWhere(
-                (productStock) => productStock.productId == event.productId);
+                (productStock) => productStock.productId == event.productId,);
             if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
                   state.productStockList.toList(growable: false);
@@ -284,6 +284,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .indexOf(productStockList.last)] = productStockList[
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
+                quantity: 1,
                       productId: response.product?.first.id ?? '',
                       stock: response.product?.first.numberOfUnit ?? 0,
               );
@@ -292,6 +293,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               debugPrint('new index = ${state.productStockList.last}');
               productStockUpdateIndex =
                   productStockList.indexOf(productStockList.last);
+
               debugPrint('barcode stock = ${state.productStockList.last}');
               debugPrint(
                   'barcode stock update index = ${state.productStockList.length}');
@@ -306,6 +308,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
+
             supplierList.addAll(response.product?.first.supplierSales
                     ?.map((supplier) => ProductSupplierModel(
                           supplierId: supplier.supplierId ?? '',

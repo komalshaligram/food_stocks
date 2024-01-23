@@ -41,6 +41,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       var date = new DateTime.now().toString();
       var date1 = new DateTime.now();
       var dateParse = DateTime.parse(date.toString());
+      DateTime firstDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
+
+      DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(Duration(days: 1));
       if (event is _checkLanguage) {
         emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
       } else if (event is _getYearListEvent) {
@@ -152,8 +155,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               userId: preferencesHelper.getUserId(),
               pageNum: state.pageNum + 1,
               pageLimit: AppConstants.walletLimit,
-              startDate: event.startDate ?? date1,
-              endDate: event.endDate ?? date1);
+              startDate: event.startDate ?? firstDayCurrentMonth,
+              endDate: event.endDate ?? lastDayCurrentMonth);
 
           debugPrint('AllWalletTransactionReqModel = $reqMap}');
 

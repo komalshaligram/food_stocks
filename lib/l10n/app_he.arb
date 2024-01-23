@@ -360,7 +360,11 @@
       "enter_valid_address": "אנא הזן כתובת תקינה",
   "this_company_has_no_product": "כרגע אין מוצרים לחברה הזו",
   "out_of_stock1" : "לא במלאי",
-  "accountnotapprove": "חשבון לא מאושר"
+  "accountnotapprove": "חשבון לא מאושר",
+  "confirm": "לְאַשֵׁר"
+
+
+
 
 
 
