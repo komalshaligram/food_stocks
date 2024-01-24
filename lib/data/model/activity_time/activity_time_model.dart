@@ -35,14 +35,6 @@ class ActivityTimeModel{
     required this.dayString,
 
 });
-   ActivityTimeModel.fromJson(Map<String, dynamic> json)
-       : monday = json['Monday'],
-         dayString = json['dayString'];
-
-   Map<String, dynamic> toJson() => {
-     'monday': monday,
-     'dayString': dayString,
-   };
 
   }
 

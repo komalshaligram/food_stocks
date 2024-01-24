@@ -168,6 +168,11 @@ class ProductDetailsBloc
               context: event.context,
               title: '${AppLocalizations.of(event.context)!.select_issue}',
               type: SnackBarType.FAILURE);
+
+
+
+
+
         }
       } else if (event is _checkAllEvent) {
         List<int> number = [];

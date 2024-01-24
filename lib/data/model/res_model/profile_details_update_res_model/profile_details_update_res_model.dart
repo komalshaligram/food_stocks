@@ -87,13 +87,13 @@ class ClientDetail with _$ClientDetail {
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
-    List<Day>? Sunday,
-    List<Day>? Monday,
-    List<Day>? Tuesday,
-    List<Day>? Wednesday,
-    List<Day>? Thursday,
-    List<Day>? Friday,
-    List<Day>? Saturday,
+    List<Day>? sunday,
+    List<Day>? monday,
+    List<Day>? tuesday,
+    List<Day>? wednesday,
+    List<Day>? thursday,
+    List<Day>? fridayAndHolidayEves,
+    List<Day>? saturdayAndHolidays,
   }) = _OperationTime;
 
   factory OperationTime.fromJson(Map<String, dynamic> json) =>

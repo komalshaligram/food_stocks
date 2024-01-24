@@ -135,6 +135,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   // scrollDirection: Axis.vertical,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
+                                 //   print('list____${state.OperationTimeList.length}');
                                     return Padding(
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_3),
@@ -270,7 +271,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         rowIndex: rowIndex,
                                         dayString: dayString,
                                         time: state.OperationTimeList[rowIndex]
-                                            .monday[index].from!,
+                                            .monday[index].from ?? "0:0",
                                       ),
                                       15.width,
                                       TimeContainer(
@@ -279,7 +280,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         dayString: dayString,
                                         rowIndex: rowIndex,
                                         time: state.OperationTimeList[rowIndex]
-                                            .monday[index].until!,
+                                            .monday[index].until ?? "0:0" ,
                                       ),
                                       15.width,
                                       index == 0

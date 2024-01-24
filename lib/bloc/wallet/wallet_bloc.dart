@@ -114,6 +114,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             List<FlSpot> temp = [];
             List<int> number = List<int>.generate(12, (i) => i);
             List<int> reverseList;
+            List<String> reverseList1;
             if (preferencesHelper.getAppLanguage() == 'he') {
               reverseList = number.reversed.toList();
             } else {
@@ -125,7 +126,20 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                   reverseList[element.month!.toInt() - 1].toDouble(),
                   element.totalExpenses?.toDouble() ?? 0));
             });
-            emit(state.copyWith(monthlyExpenseList: temp));
+            List<String>graphList = [];
+            response.data?.forEach((element) {
+              graphList.add((
+                  element.totalExpenses?.toString() ?? '0'));
+            });
+
+            if (preferencesHelper.getAppLanguage() == 'he') {
+              reverseList1 = graphList.reversed.toList();
+            } else {
+              reverseList1 = graphList.toList();
+            }
+
+            emit(state.copyWith(monthlyExpenseList: temp,graphDataList: reverseList1));
+
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
