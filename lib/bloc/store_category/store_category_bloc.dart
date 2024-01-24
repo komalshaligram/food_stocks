@@ -235,9 +235,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           ): state.isSubCategory ? PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
              pageLimit: AppConstants.planogramProductPageLimit,
-              //sortOrder: AppStrings.ascendingString,
-             // sortField: AppStrings.planogramSortFieldString,
-              categoryId: "650d812ce2d5ebe2b3d72028"
+              sortOrder: AppStrings.ascendingString,
+             sortField: AppStrings.planogramSortFieldString,
+              categoryId: state.categoryId
           )  : PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
               pageLimit: AppConstants.planogramProductPageLimit,
@@ -1098,6 +1098,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
 
       else if(event is _getPlanogramAllProductEvent){
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfPlanoGrams) {
+          return;
+        }
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
@@ -1135,9 +1141,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList.add(barcodeStock);
            planogramProductList.addAll(response.data ?? []);
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList ));
-
+            emit(state.copyWith(
+                isBottomOfPlanoGrams: planogramProductList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
           }
           else{
+            emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -1148,8 +1159,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
         }
         on ServerException {
+          emit(state.copyWith(isLoadMore: false));
         }
         catch(e){
+          emit(state.copyWith(isLoadMore: false));
         }
 
       }

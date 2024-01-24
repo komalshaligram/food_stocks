@@ -35,6 +35,7 @@ class ActivityTimeModel{
     required this.dayString,
 
 });
+
   }
 
 

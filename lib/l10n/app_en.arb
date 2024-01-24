@@ -360,7 +360,10 @@
   "enter_valid_address": "Please enter valid address",
   "this_company_has_no_product": "Currently this company has no products",
   "out_of_stock1" : "Out of stock",
-  "accountnotapprove": "account not approve"
+  "accountnotapprove": "Account not approve",
+  "rivchitcredentialsnotset":"Rivchit credentials not set",
+  "comaxinvoicenotfound":"Comax invoice not found"
+
 
 
 

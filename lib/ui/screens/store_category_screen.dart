@@ -165,7 +165,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   CrossAxisAlignment.start,
                                   children: [
                                     5.height,
-                                    state.isSubCategoryShimmering
+                                    state.isPlanogramShimmering
                                         ? StoreCategoryScreenPlanoGramShimmerWidget() : state
                                         .planoGramsList.isEmpty ? SizedBox()
                                         :ListView.builder(
@@ -182,7 +182,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       },
                                     ),
 
-                                    state.isSubCategoryShimmering
+                                    state.isPlanogramShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
                                         : state.subCategoryList.isEmpty
                                         ? Container(
