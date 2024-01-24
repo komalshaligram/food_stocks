@@ -117,21 +117,18 @@ class ClientType with _$ClientType {
       _$ClientTypeFromJson(json);
 }
 
-@freezed
-
 
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
 
     List<Day>? Sunday,
-    List<Day>? Monday,
-    List<Day>? Tuesday,
+   List<Day>? Monday,
+   List<Day>? Tuesday,
     List<Day>? Wednesday,
     List<Day>? Thursday,
     List<Day>? Friday,
     List<Day>? Saturday,
-
 
   }) = _OperationTime;
 
@@ -169,4 +166,3 @@ class Status with _$Status {
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
 }
-

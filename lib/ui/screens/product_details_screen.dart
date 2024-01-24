@@ -177,8 +177,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                             size: AppConstants.smallFont,
                                             color:
                                             state.orderData
-                                                .orderstatus?.orderStatusNumber == 6
-                                                ? AppColors.graphColor
+                                                .orderstatus?.orderStatusNumber == onTheWayStatus ||   state.orderData
+                                                .orderstatus?.orderStatusNumber == 5
+                                            ? AppColors.graphColor
                                                 : AppColors.orangeColor,
                                             fontWeight: FontWeight.w700),
                                       )
@@ -325,7 +326,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       .orderBySupplierProduct
                                       .products?[index]
                                       .issueStatus!
-                                      .statusName ??
+                                      .statusName.toString().toTitleCase() ??
                                       '',
                                 ),
                               ),
@@ -366,7 +367,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             '',
                         AppStrings.deliveryStatusString: state
                             .orderData.orderstatus?.statusName
-                            .toString() ??
+                            .toString().toTitleCase() ??
                             '',
                         AppStrings.totalOrderString: state
                             .orderBySupplierProduct
