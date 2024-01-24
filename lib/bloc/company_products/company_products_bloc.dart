@@ -107,7 +107,8 @@ class CompanyProductsBloc
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? 'something_is_wrong_try_again',
+                    response.message?.toLocalization() ??
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -289,7 +290,7 @@ class CompanyProductsBloc
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -484,7 +485,9 @@ class CompanyProductsBloc
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
@@ -492,7 +495,7 @@ class CompanyProductsBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -579,7 +582,7 @@ class CompanyProductsBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             } else {
@@ -588,7 +591,7 @@ class CompanyProductsBloc
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }

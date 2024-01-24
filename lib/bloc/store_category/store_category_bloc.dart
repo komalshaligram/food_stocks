@@ -90,9 +90,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           isSubCategoryString = event.isSubCategory;
           categoryId = event.categoryId;
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
-          add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
-          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-
         }
       }
       else if (event is _GetProductCategoriesListEvent) {
@@ -146,8 +143,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false,
           ));
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-          add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
-
         }
         emit(state.copyWith(isSubCategory: false));
       }
@@ -196,7 +191,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -262,6 +257,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
             }
+            else{
+              add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
+            }
             emit(state.copyWith(categoryPlanogramList: []));
             List<PlanogramDatum> planoGramsList =
                 state.planoGramsList.toList(growable: true);
@@ -307,7 +305,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -537,7 +535,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -793,7 +791,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
@@ -801,7 +801,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -899,7 +899,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   /*  title: response.message ??
                     '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));
@@ -907,7 +909,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             } else {
@@ -916,7 +918,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -1086,8 +1088,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString].toLocalization() ??
-                        response[AppStrings.messageString],
+                    response.message?.toLocalization() ??
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }

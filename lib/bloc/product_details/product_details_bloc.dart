@@ -54,7 +54,7 @@ class ProductDetailsBloc
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.SUCCESS);
           }
@@ -154,9 +154,8 @@ class ProductDetailsBloc
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response[AppStrings.messageString]
-                          .toString()
-                          .toLocalization(),
+                      response.message?.toLocalization() ??
+                          response.message!,
                       event.context),
                   type: SnackBarType.SUCCESS);
             }

@@ -24,6 +24,8 @@ class WalletState with _$WalletState {
     required double expensePercentage,
     required bool isProcess,
     required List<String> graphDataList,
+    required bool isGraphProcess,
+
 
   }) = _WalletState;
 
@@ -48,7 +50,8 @@ class WalletState with _$WalletState {
     isExportShimmering: false,
     expensePercentage: 0,
     isProcess: false,
-    graphDataList: []
+    graphDataList: ["0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0",],
+    isGraphProcess: false
       );
 }
 
