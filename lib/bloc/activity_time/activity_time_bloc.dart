@@ -51,6 +51,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         emit(state.copyWith(isUpdate: event.isUpdate));
       }
 
+
+
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
           emit(state.copyWith(isShimmering: true));
@@ -59,6 +61,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson(),
             );
+
+
             response = resGet.ProfileDetailsResModel.fromJson(res);
             debugPrint('response_______$response');
 
@@ -84,6 +88,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 List<Day> tuesdayList = tuesdayRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
+                
                 List<Day> wednesdayList = wednesdayRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
@@ -101,6 +106,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     saturdayAndHolidaysRs.map((e) {
                   return Day(from: e.from, until: e.until);
                 }).toList();
+                
                 temp1[0].monday = sundayList;
                 temp1[1].monday = mondayList;
                 temp1[2].monday = tuesdayList;
@@ -108,6 +114,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 temp1[4].monday = thursdayList;
                 temp1[5].monday = fridayAndHolidayEvesList;
                 temp1[6].monday = saturdayAndHolidaysList;
+                
                 emit(state.copyWith(
                     isShimmering: false,
                     OperationTimeList: temp1,
@@ -508,7 +515,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
                   type: SnackBarType.FAILURE);
             }
-          } else {
+          }
+          else {
             emit(state.copyWith(isLoading: true));
             update.ProfileDetailsUpdateReqModel reqMap =
                 update.ProfileDetailsUpdateReqModel(

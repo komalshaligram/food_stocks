@@ -292,7 +292,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             touchTooltipData: LineTouchTooltipData(
                                                   fitInsideHorizontally: true,
                                               getTooltipItems: (value) {
-                                                return value.map((e) {
+                                               return value.map((e) {
                                                   return LineTooltipItem(
                                                       "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y}${AppLocalizations.of(context)!.currency}",
                                                       TextStyle(fontSize: 8));
@@ -331,23 +331,28 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             ),
                                           ],
                                           minY: 0,
-                                          gridData: FlGridData(show: false),
+                                          gridData: FlGridData(show: false
+                                          ),
                                           titlesData: FlTitlesData(
                                             bottomTitles: AxisTitles(
                                               sideTitles: SideTitles(
                                                 showTitles: true,
                                                 getTitlesWidget: ((value, meta) {
                                                   String? month = monthMap[value];
-                                                  return Text(
-                                                    month.toString(),
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                      size: AppConstants.font_8,
-                                                      color: AppColors
-                                                          .navSelectedColor,
+                                                  return Padding(
+                                                    padding: const EdgeInsets.only(top: 5),
+                                                    child: Text(
+                                                      month.toString(),
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                        size: AppConstants.font_8,
+                                                        color: AppColors
+                                                            .navSelectedColor,
+                                                      ),
                                                     ),
                                                   );
-                                                }),
+                                                }
+                                                ),
                                               ),
                                             ),
                                             leftTitles: AxisTitles(
@@ -360,9 +365,25 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             ),
                                             topTitles: AxisTitles(
                                               sideTitles:
-                                                  SideTitles(showTitles: false),
+                                                  SideTitles(showTitles: true,
+                                                    getTitlesWidget: ((value, meta) {
+                                                      String? month = state.graphDataList[value.toInt()];
+                                                      return Text(
+                                                        month.toString(),
+                                                        style: AppStyles
+                                                            .rkRegularTextStyle(
+                                                          size: AppConstants.font_8,
+                                                          color: AppColors
+                                                              .navSelectedColor,
+                                                        ),
+                                                      );
+                                                    }
+                                                    ),
+                                                  ),
                                             ),
+
                                           ),
+
                                         ),
                                       ),
                                     ),
@@ -412,7 +433,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       statuses = await [
                                         Permission.storage,
                                       ].request();
-                      
+
                                       if (Platform.isAndroid) {
                                         DeviceInfoPlugin deviceInfo =
                                         DeviceInfoPlugin();
@@ -434,14 +455,14 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       } else {
                                         //for ios permission
                                       }
-                      
+
                                       state.walletTransactionsList.isNotEmpty ? bloc.add(WalletEvent
                                           .exportWalletTransactionEvent(
                                         context: context,
                                         startDate: startDate ?? DateTime.now(),
                                         endDate: endDate ?? DateTime.now(),
-                      
-                      
+
+
                                       )) : SizedBox();
                                     },
                                     child: Container(
@@ -485,7 +506,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                           suffixIcon: Icon(
                                               Icons.keyboard_arrow_down),
                                           contentPadding: EdgeInsets.all(0),
-                      
+
                                         ),
                                         showDateRangePicker: (
                                             {required pickerBuilder,
@@ -505,7 +526,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             (DateRange? value) {
                                           startDate = value?.start;
                                           endDate = value?.end;
-                      
+
                                           if (value == null) {
                                             selectedDateRange =
                                                 state.selectedDateRange;
@@ -519,7 +540,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                 WalletEvent.getDateRangeEvent(
                                                     context: context,
                                                     range: value));
-                      
+
                                             bloc.add(WalletEvent
                                                 .getAllWalletTransactionEvent(
                                               context: context,
@@ -621,7 +642,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                       }
                       return true;
                     },
-                
+
                   ),
                 ),
               ),

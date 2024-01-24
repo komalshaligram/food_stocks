@@ -82,7 +82,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [ProductStockModel(productId: '')]
             ]));
         if(event.isSubCategory == ''){
-          add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
         }
         else{
@@ -173,7 +173,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           ProductSubcategoriesResModel response =
               ProductSubcategoriesResModel.fromJson(res);
           if (response.status == 200) {
-            add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
+
             List<SubCategory> subCategoryList =
                 state.subCategoryList.toList(growable: true);
             subCategoryList.addAll(response.data?.subCategories ?? []);
@@ -211,7 +211,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryPageNum: 0,
             subCategoryList: [],
             isBottomOfSubCategory: false));
-        add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+        add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
       }
       else if (event is _GetPlanoGramProductsEvent) {
@@ -235,8 +235,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           ): state.isSubCategory ? PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
              pageLimit: AppConstants.planogramProductPageLimit,
-              //sortOrder: AppStrings.ascendingString,
-             // sortField: AppStrings.planogramSortFieldString,
+              sortOrder: AppStrings.ascendingString,
+             sortField: AppStrings.planogramSortFieldString,
               categoryId: state.categoryId
           )  : PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
@@ -259,6 +259,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           PlanogramResModel response = PlanogramResModel.fromJson(res);
 
           if (response.status == 200) {
+            if(state.isSubCategory){
+              add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
+            }
             emit(state.copyWith(categoryPlanogramList: []));
             List<PlanogramDatum> planoGramsList =
                 state.planoGramsList.toList(growable: true);
@@ -1095,13 +1098,19 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
 
       else if(event is _getPlanogramAllProductEvent){
+        if (state.isLoadMore) {
+          return;
+        }
+        if (state.isBottomOfPlanoGrams) {
+          return;
+        }
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
 
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
-            categoryId : "652e5dd5cc32da1f44557aeb",
-            subCategoryId: "65a9296106b4281bb5ec2b34",
+            categoryId : state.categoryId,
+            subCategoryId: state.subCategoryId,
           );
 
           final res = await DioClient(event.context)
@@ -1132,9 +1141,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList.add(barcodeStock);
            planogramProductList.addAll(response.data ?? []);
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList ));
-
+            emit(state.copyWith(
+                isBottomOfPlanoGrams: planogramProductList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
           }
           else{
+            emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -1145,8 +1159,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
         }
         on ServerException {
+          emit(state.copyWith(isLoadMore: false));
         }
         catch(e){
+          emit(state.copyWith(isLoadMore: false));
         }
 
       }
