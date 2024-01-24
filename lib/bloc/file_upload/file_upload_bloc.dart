@@ -151,7 +151,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                           context: event.context,
                           title: AppStrings.getLocalizedStrings(
                               response.message?.toLocalization() ??
-                                  'something_is_wrong_try_again',
+                                  response.message!,
                               event.context),
                           type: SnackBarType.FAILURE);
                     }
@@ -163,7 +163,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
                         response.message?.toLocalization() ??
-                            'something_is_wrong_try_again',
+                            response.message!,
                         event.context),
                     type: SnackBarType.FAILURE);
                 emit(state.copyWith(isLoading: false));
@@ -180,7 +180,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
@@ -219,7 +219,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
@@ -503,7 +503,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -590,7 +590,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -698,7 +698,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }

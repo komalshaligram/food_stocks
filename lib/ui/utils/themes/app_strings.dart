@@ -346,7 +346,11 @@ class AppStrings {
         return AppLocalizations.of(context)!.loginsuccessmessage;
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.accountnotapprove;
+      case 'rivchitcredentialsnotset':
+        return AppLocalizations.of(context)!.rivchitcredentialsnotset;
+      case 'comaxinvoicenotfound':
+        return AppLocalizations.of(context)!.comaxinvoicenotfound;
     }
-    return '';
+    return key;
   }
 }

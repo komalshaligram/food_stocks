@@ -96,10 +96,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
                 type: SnackBarType.SUCCESS,
 
             );
@@ -218,10 +218,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
                 type: SnackBarType.SUCCESS,
 
             );
@@ -249,10 +249,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
                 type: SnackBarType.SUCCESS,
 
             );
@@ -452,10 +452,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
                 type: SnackBarType.FAILURE,
 
             );
@@ -621,8 +621,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.SUCCESS,
 
               );
@@ -630,10 +632,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
-                      event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.FAILURE,
 
               );
@@ -718,8 +720,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   context: event.context,
                   /* title: response.message ??
                     '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
-                  title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.SUCCESS,
 
               );
@@ -727,10 +731,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
-                      event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.FAILURE,
 
               );
@@ -738,10 +742,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
-                      event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.FAILURE,
 
               );

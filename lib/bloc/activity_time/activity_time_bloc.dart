@@ -129,7 +129,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(isShimmering: false));
@@ -502,7 +502,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       context: event.context,
                       title: AppStrings.getLocalizedStrings(
                           response1.message?.toLocalization() ??
-                              'something_is_wrong_try_again',
+                              response.message!,
                           event.context),
                       type: SnackBarType.FAILURE);
                   emit(state.copyWith(isLoading: false));
@@ -578,7 +578,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
                         res1.message?.toLocalization() ??
-                            'something_is_wrong_try_again',
+                            response.message!,
                         event.context),
                     type: SnackBarType.FAILURE);
                 emit(state.copyWith(isLoading: false));
