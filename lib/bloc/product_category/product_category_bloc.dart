@@ -65,7 +65,7 @@ class ProductCategoryBloc
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.SUCCESS);
           }

@@ -96,10 +96,10 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   event.context, RouteDefine.bottomNavScreen.name);
               CustomSnackBar.showSnackBar(
                   context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          'loginsuccessmessage',
-                      event.context),
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                   type: SnackBarType.SUCCESS,
 
               );
@@ -109,7 +109,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(
@@ -123,7 +123,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -184,7 +184,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(
@@ -197,7 +197,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -255,7 +255,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(

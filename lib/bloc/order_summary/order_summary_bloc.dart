@@ -49,7 +49,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -99,10 +99,10 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           } else if (response.status == 403) {
            CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
-                    event.context),
+             title: AppStrings.getLocalizedStrings(
+                 response.message?.toLocalization() ??
+                     response.message!,
+                 event.context),
                 type: SnackBarType.FAILURE,
            );
             emit(state.copyWith(isLoading: false));
@@ -111,7 +111,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));

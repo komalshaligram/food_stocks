@@ -119,7 +119,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 bloc.add(WalletEvent.getTotalExpenseEvent(
                     year: state.year, context: context));
                 bloc.add(WalletEvent.getDropDownElementEvent(
-                    year: state.yearList.first));
+                    year: state.year));
                 minDate = DateTime(state.yearList.last, 1, 1);
 
               },
@@ -140,7 +140,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                           ),
                         children: [
                           45.height,
-                         state.isProcess? WalletScreenShimmerWidget():Padding(
+                         Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: AppConstants.padding_15),
                             child: Container(
@@ -274,7 +274,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             ),
                           ),
                           30.height,
-                          state.monthlyExpenseList.isEmpty
+                          state.isGraphProcess
                               ? WalletScreenShimmerWidget()
                               : Padding(
                                   padding: const EdgeInsets.all(4.0),

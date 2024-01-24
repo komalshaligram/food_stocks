@@ -228,7 +228,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -345,18 +345,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.FAILURE);
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
+              type: SnackBarType.FAILURE,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.FAILURE);
         }
       } else if (event is _deleteFileEvent) {
         try {
@@ -422,10 +420,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else {
             emit(state.copyWith(isFileUploading: false));
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: response.message ??
-                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.FAILURE);
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
+              type: SnackBarType.FAILURE,
+            );
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));

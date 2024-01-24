@@ -339,7 +339,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
-                        'something_is_wrong_try_again',
+                        response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
@@ -574,7 +574,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
@@ -582,7 +584,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -682,7 +684,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));
@@ -692,7 +696,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }
@@ -894,7 +898,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
                       response.message?.toLocalization() ??
-                          'something_is_wrong_try_again',
+                          response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
             }

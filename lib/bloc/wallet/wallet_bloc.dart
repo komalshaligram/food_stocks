@@ -92,6 +92,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           emit(state.copyWith(isProcess: false));
         } catch (e) {emit(state.copyWith(isProcess: false));}
       } else if (event is _getTotalExpenseEvent) {
+        print('year_____${event.year}');
+        emit(state.copyWith(isGraphProcess: true));
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(
             userId: preferencesHelper.getUserId(),
@@ -111,6 +113,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           //  debugPrint('TotalExpenseResModel  = $response');
 
           if (response.status == 200) {
+
             List<FlSpot> temp = [];
             List<int> number = List<int>.generate(12, (i) => i);
             List<int> reverseList;
@@ -139,19 +142,24 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             }
 
             emit(state.copyWith(monthlyExpenseList: temp,graphDataList: reverseList1));
-
+            emit(state.copyWith(isGraphProcess: false));
           } else {
+            emit(state.copyWith(isGraphProcess: false));
+
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                response.message?.toLocalization() ??
-                    'something_is_wrong_try_again',
-                event.context,
-              ),
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
               type: SnackBarType.FAILURE,
             );
           }
-        } on ServerException {}
+
+        } on ServerException {
+          emit(state.copyWith(isGraphProcess: false));
+
+        }
       } else if (event is _getAllWalletTransactionEvent) {
         if (state.isLoadMore) {
           return;
@@ -294,7 +302,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               context: event.context,
               title: AppStrings.getLocalizedStrings(
                   response.message?.toLocalization() ??
-                      'something_is_wrong_try_again',
+                      response.message!,
                   event.context),
               type: SnackBarType.FAILURE,
             );

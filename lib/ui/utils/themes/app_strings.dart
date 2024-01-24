@@ -127,8 +127,8 @@ class AppStrings {
         return AppLocalizations.of(context)!.invalidoperation;
       case 'documentcreatedmessage':
         return AppLocalizations.of(context)!.documentcreatedmessage;
-      case 'loginsuccessmessage':
-        return AppLocalizations.of(context)!.loginsuccessmessage;
+    /*  case 'loginsuccessmessage':
+        return AppLocalizations.of(context)!.loginsuccessmessage;*/
       case 'usercreatedmessage':
         return AppLocalizations.of(context)!.usercreatedmessage;
       case 'validationerror':
@@ -348,10 +348,9 @@ class AppStrings {
         return AppLocalizations.of(context)!.accountnotapprove;
       case 'rivchitcredentialsnotset':
         return AppLocalizations.of(context)!.rivchitcredentialsnotset;
-
       case 'comaxinvoicenotfound':
         return AppLocalizations.of(context)!.comaxinvoicenotfound;
     }
-    return '';
+    return key;
   }
 }
