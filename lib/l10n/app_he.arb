@@ -140,7 +140,6 @@
   "nov": "נוב",
   "dec": "דצמ",
   "ok": "בסדר",
-    "confirm":"לְאַשֵׁר",
   "cancel": "לְבַטֵל",
   "see_all": "ראה הכל",
   "discount": "בהנחה",
@@ -362,7 +361,9 @@
   "this_company_has_no_product": "כרגע אין מוצרים לחברה הזו",
   "out_of_stock1" : "לא במלאי",
   "accountnotapprove": "חשבון לא מאושר",
-  "confirm": "לְאַשֵׁר"
+  "confirm": "לְאַשֵׁר",
+  "rivchitcredentialsnotset":"Rivchit credentials not set",
+  "comaxinvoicenotfound":"Comax invoice not found"
 
 
 

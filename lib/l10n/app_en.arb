@@ -41,7 +41,6 @@
   "messages": "Messages",
   "read_more": "Read More",
   "menu": "Menu",
-  "confirm":"Confirm,
   "my_orders": "My Orders",
   "questions_and_answers": "FAQ",
   "terms_of_use": "Terms and Conditions",
@@ -361,8 +360,9 @@
   "this_company_has_no_product": "Currently this company has no products",
   "out_of_stock1" : "Out of stock",
   "accountnotapprove": "account not approve",
-  "confirm": "Confirm"
-
+  "confirm": "Confirm",
+"rivchitcredentialsnotset":"Rivchit credentials not set",
+"comaxinvoicenotfound":"Comax invoice not found"
 
 
 }

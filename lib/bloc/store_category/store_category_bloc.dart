@@ -237,7 +237,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
              pageLimit: AppConstants.planogramProductPageLimit,
               //sortOrder: AppStrings.ascendingString,
              // sortField: AppStrings.planogramSortFieldString,
-              categoryId: "650d812ce2d5ebe2b3d72028"
+              categoryId: state.categoryId
           )  : PlanogramReqModel(
               pageNum: state.planogramPageNum + 1,
               pageLimit: AppConstants.planogramProductPageLimit,

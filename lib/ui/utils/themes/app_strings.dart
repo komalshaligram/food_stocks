@@ -22,8 +22,6 @@ class AppStrings {
   static const pendingString = 'pending';
   static const navigateToStore = 'true';
 
-
-
   //language Strings
   static const englishString = 'en';
   static const hebrewString = 'he';
@@ -32,7 +30,7 @@ class AppStrings {
 
   //api req param strings
   static const profileImageString = 'profileImg';
-  static const profileUpdateString =  'profileImage';
+  static const profileUpdateString = 'profileImage';
   static const promissoryNoteString = 'promissoryNote';
   static const personalGuaranteeString = 'personalGuarantee';
   static const israelIdImageString = 'israelIdImage';
@@ -117,8 +115,8 @@ class AppStrings {
   static const messageIdListString = 'messageIdList';
   static const isReadMoreString = 'isReadMore';
 
-  static String getLocalizedStrings(String key,BuildContext context){
-    switch(key){
+  static String getLocalizedStrings(String key, BuildContext context) {
+    switch (key) {
       case 'errmessage':
         return AppLocalizations.of(context)!.errmessage;
       case 'successmessage':
@@ -307,7 +305,8 @@ class AppStrings {
       case 'alredylinkedwithuser':
         return AppLocalizations.of(context)!.alredylinkedwithuser;
       case 'youcannotplaceorderqtymustabovezero':
-        return AppLocalizations.of(context)!.youcannotplaceorderqtymustabovezero;
+        return AppLocalizations.of(context)!
+            .youcannotplaceorderqtymustabovezero;
       case 'youcannotplaceordernotenoughqty':
         return AppLocalizations.of(context)!.youcannotplaceordernotenoughqty;
       case 'contentalreadyexist':
@@ -346,6 +345,11 @@ class AppStrings {
         return AppLocalizations.of(context)!.loginsuccessmessage;
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.accountnotapprove;
+      case 'rivchitcredentialsnotset':
+        return AppLocalizations.of(context)!.rivchitcredentialsnotset;
+
+      case 'comaxinvoicenotfound':
+        return AppLocalizations.of(context)!.comaxinvoicenotfound;
     }
     return '';
   }

@@ -87,8 +87,8 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "promissoryNote") String? promissoryNote,
     @JsonKey(name: "businessCertificate") String? businessCertificate,
     @JsonKey(name: "israelIdImage") String? israelIdImage,
-    @JsonKey(name: "forms") Map<String,String>? forms,
-    @JsonKey(name: "files") Map<String,String>? files,
+    @JsonKey(name: "forms") dynamic forms,
+    @JsonKey(name: "files") dynamic files,
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
@@ -117,29 +117,6 @@ class ClientType with _$ClientType {
       _$ClientTypeFromJson(json);
 }
 
-@freezed
-/*class Files with _$Files {
-  const factory Files({
-    @JsonKey(name: "651e7ccf30429b3f49e65f08")
-    String? the651E7Ccf30429B3F49E65F08,
-    @JsonKey(name: "651e7cec30429b3f49e65f0a")
-    String? the651E7Cec30429B3F49E65F0A,
-  }) = _Files;
-
-  factory Files.fromJson(Map<String, dynamic> json) => _$FilesFromJson(json);
-}
-
-@freezed
-class Forms with _$Forms {
-  const factory Forms({
-    @JsonKey(name: "651e7c0b30429b3f49e65f03")
-    String? the651E7C0B30429B3F49E65F03,
-    @JsonKey(name: "651e7c8130429b3f49e65f06")
-    String? the651E7C8130429B3F49E65F06,
-  }) = _Forms;
-
-  factory Forms.fromJson(Map<String, dynamic> json) => _$FormsFromJson(json);
-}*/
 
 @freezed
 class OperationTime with _$OperationTime {
