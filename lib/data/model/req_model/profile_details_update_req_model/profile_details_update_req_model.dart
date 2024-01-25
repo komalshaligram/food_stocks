@@ -48,24 +48,9 @@ class ClientDetail with _$ClientDetail {
     String? applicationVersion,
     @JsonKey(name: "deviceType")
     String? deviceType,
-    @JsonKey(name: "operationTime")
-    OperationTime? operationTime,
+    @JsonKey(name: "operationTime") List<OperationTime>? operationTime,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
-@freezed
-class OperationTime with _$OperationTime {
-  const factory OperationTime({
-    List<Day>? Sunday,
-    List<Day>? Monday,
-    List<Day>? Tuesday,
-    List<Day>? Wednesday,
-    List<Day>? Thursday,
-    List<Day>? Friday,
-    List<Day>? Saturday,
-  }) = _OperationTime;
-
-  factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);
-}

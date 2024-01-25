@@ -1069,19 +1069,23 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
       else if(event is _getPlanogramByIdEvent){
         try {
-          final response = await DioClient(event.context)
+          final res = await DioClient(event.context)
               .get(path: '${AppUrls.getPlanoramByIdUrl}${categoryId}');
 
-          debugPrint('categoryName______${response['data']?['planogram']?['categoryName'] ?? ''}');
-          debugPrint('categoryId_____${categoryId}');
+
           debugPrint('url_____${AppUrls.getPlanoramByIdUrl}${categoryId}');
-          if (response[AppStrings.statusString] == 200) {
+
+          GetPlanogramByIdModel response = GetPlanogramByIdModel.fromJson(res);
+
+          if (response.status == 200) {
             add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
             add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
-            parentCategoryId = response['data']?['planogram']?['categoryId'] ?? '';
+            parentCategoryId = response.data?.planogram?.categoryId ?? '';
             emit(state.copyWith(
-                categoryName : response['data']?['planogram']?['categoryName'] ?? '',
-                subCategoryName :  response['data']?['planogram']?['subCategoryName'] ?? '',
+                categoryName : response.data?.planogram?.categoryName ?? '',
+                subCategoryName : response.data?.planogram?.subCategoryName ?? '',
+              categoryId: response.data?.planogram?.categoryId ?? '',
+              subCategoryId: response.data?.planogram?.subCategoryId ?? ''
             ));
           } else {
             emit(state.copyWith(isLoadMore: false));
@@ -1120,7 +1124,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           data: planogramReqModel
           );
 
-          debugPrint('getPlanogramAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
+          debugPrint('getPlanogramAllProduct Url_____${AppUrls.getPlanogramAllProductUrl}');
           debugPrint('req_____${planogramReqModel}');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getPlanogramAllProduct response_____${response}');

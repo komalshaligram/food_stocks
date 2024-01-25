@@ -1,5 +1,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../req_model/activity_time/activity_time_req_model.dart';
 part 'login_res_model.freezed.dart';
 part 'login_res_model.g.dart';
 
@@ -104,22 +106,4 @@ class ClientDetail with _$ClientDetail {
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
-@freezed
-class OperationTime with _$OperationTime {
-  const factory OperationTime({
-    @JsonKey(name: "Monday")
-    List<Monday>? monday,
-  }) = _OperationTime;
 
-  factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);
-}
-
-@freezed
-class Monday with _$Monday {
-  const factory Monday({
-    String? from,
-    String? unitl,
-  }) = _Monday;
-
-  factory Monday.fromJson(Map<String, dynamic> json) => _$MondayFromJson(json);
-}

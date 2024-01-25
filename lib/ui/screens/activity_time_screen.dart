@@ -135,7 +135,6 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                                   // scrollDirection: Axis.vertical,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                 //   print('list____${state.OperationTimeList.length}');
                                     return Padding(
                                       padding: EdgeInsets.symmetric(
                                           vertical: AppConstants.padding_3),
@@ -271,7 +270,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         rowIndex: rowIndex,
                                         dayString: dayString,
                                         time: state.OperationTimeList[rowIndex]
-                                            .monday[index].from ?? "0:0",
+                                            .monday[index].from ?? AppStrings.timeString,
                                       ),
                                       15.width,
                                       TimeContainer(
@@ -280,7 +279,7 @@ class ActivityTimeRow extends StatelessWidget {
                                         dayString: dayString,
                                         rowIndex: rowIndex,
                                         time: state.OperationTimeList[rowIndex]
-                                            .monday[index].until ?? "0:0" ,
+                                            .monday[index].until ?? AppStrings.timeString,
                                       ),
                                       15.width,
                                       index == 0
@@ -463,7 +462,7 @@ class TimeContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: Text(time == AppStrings.timeString ? '' : time,
+                    child: Text(time == AppStrings.timeString ? '' : time == '24:59' ? '': time,
                         style: AppStyles.rkRegularTextStyle(
                           size: getScreenWidth(context) <= 370
                               ? AppConstants.smallFont

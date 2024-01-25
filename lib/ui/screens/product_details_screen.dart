@@ -328,6 +328,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                       .issueStatus!
                                       .statusName.toString().toTitleCase() ??
                                       '',
+
                                 ),
                               ),
                             ),
@@ -395,7 +396,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         AppStrings.supplierOrderNumberString:
                         state.orderBySupplierProduct
                             .supplierOrderNumber ??
-                            0
+                            0,
+                        AppStrings.orderStatusNo:
+                        state.orderData
+                            .orderstatus?.orderStatusNumber ??
+                            2,
                       });
 
                 },
@@ -416,7 +421,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
       String? issue,
       bool? isIssue,
       int? missingQuantity,
-      String issueStatus = ''}) {
+      String issueStatus = '',
+
+      }) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
@@ -439,7 +446,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
-              mainAxisAlignment: statusNumber ==  onTheWayStatus ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start ,
+
+              mainAxisAlignment: statusNumber ==  onTheWayStatus ?  MainAxisAlignment.spaceBetween: MainAxisAlignment.start ,
               children: [
                 statusNumber ==  onTheWayStatus ? Checkbox(
                         value:((isIssue ?? false) ||
@@ -460,6 +468,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               isProductProblem: value!, index: index));
                         }) : SizedBox(),
                    // : 0.width,
+
                 state.orderBySupplierProduct.products?[index].mainImage != ''
                     ? Expanded(
                     flex: 2,
@@ -554,9 +563,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     ),
                   ],
                 ),
-                statusNumber ==  onTheWayStatus ?   Column(
+
+                Expanded(child: SizedBox()),
+                statusNumber ==  onTheWayStatus ||  statusNumber ==  5 ?   Column(
                         children: [
-                          GestureDetector(
+                          statusNumber !=  5 ? GestureDetector(
                             onTap: () {
                               (isIssue! || state.productListIndex.contains(index))
                                   ? ProductProblemBottomSheet(
@@ -655,12 +666,18 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     fontWeight: FontWeight.w400),
                               ),
                             ),
-                          ),
+                          ) : SizedBox(),
                           (isIssue ?? false)
-                              ? Text('${issueStatus.toString()}')
+                              ? Text('${issueStatus.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.blackColor,
+                              size: AppConstants.font_14,
+                              fontWeight: FontWeight.w400),
+                          )
                               : SizedBox(),
                         ],
-                      ) : SizedBox()
+                      ) : SizedBox(),
+                10.width,
                    // : SizedBox(),
               ],
             ),
