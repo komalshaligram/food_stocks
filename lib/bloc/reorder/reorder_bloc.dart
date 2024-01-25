@@ -487,7 +487,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
@@ -574,7 +576,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));

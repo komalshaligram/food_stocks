@@ -6,7 +6,7 @@ class AppStrings {
   static const cropImageString = 'Crop Image';
   static const androidString = 'Android';
   static const iosString = 'IOS';
-  static const timeString = '00:00';
+  static const timeString = '';
   static const hr24String = '24:00';
   static const tempString = 'temp';
   static const cancelString = 'Cancel';
@@ -21,6 +21,7 @@ class AppStrings {
   static const updateString = 'Updating';
   static const pendingString = 'pending';
   static const navigateToStore = 'true';
+  static const orderStatusNo = 'orderStatusNo';
 
 
 

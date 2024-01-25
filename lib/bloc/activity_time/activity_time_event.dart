@@ -33,6 +33,7 @@ class ActivityTimeEvent with _$ActivityTimeEvent{
 
   factory ActivityTimeEvent.activityTimeApiEvent({
     required BuildContext context,
+
 }
       ) = _activityTimeApiEvent;
 

@@ -5,6 +5,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
+import '../../req_model/activity_time/activity_time_req_model.dart';
+
 part 'profile_details_res_model.freezed.dart';
 part 'profile_details_res_model.g.dart';
 
@@ -118,33 +120,6 @@ class ClientType with _$ClientType {
 }
 
 
-@freezed
-class OperationTime with _$OperationTime {
-  const factory OperationTime({
-
-    List<Day>? Sunday,
-   List<Day>? Monday,
-   List<Day>? Tuesday,
-    List<Day>? Wednesday,
-    List<Day>? Thursday,
-    List<Day>? Friday,
-    List<Day>? Saturday,
-
-  }) = _OperationTime;
-
-  factory OperationTime.fromJson(Map<String, dynamic> json) =>
-      _$OperationTimeFromJson(json);
-}
-
-@freezed
-class Day with _$Day {
-  const factory Day({
-    @JsonKey(name: "from") String? from,
-    @JsonKey(name: "until") String? until,
-  }) = _Day;
-
-  factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
-}
 
 @freezed
 class RoleDetails with _$RoleDetails {

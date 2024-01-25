@@ -1590,7 +1590,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   SizedBox(
                     height: 175,
                     child:
-                    state.planoGramsList[index].planogramproducts?.isEmpty ??
+                    state.planoGramsList.isEmpty ??
                         false
                         ? Center(
                       child: Text(

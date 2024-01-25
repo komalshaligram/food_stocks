@@ -43,7 +43,7 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
         ),
 
         ListView.builder(
-          itemCount: 1,
+          itemCount: 4,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {

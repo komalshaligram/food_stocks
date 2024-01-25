@@ -1,5 +1,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../req_model/activity_time/activity_time_req_model.dart';
 part 'activity_time_res_model.freezed.dart';
 part 'activity_time_res_model.g.dart';
 
@@ -110,6 +112,7 @@ class ClientDetail with _$ClientDetail {
   factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
+/*
 @freezed
 class OperationTime with _$OperationTime {
   const factory OperationTime({
@@ -137,4 +140,5 @@ class Day with _$Day {
   factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
 }
 
+*/
 

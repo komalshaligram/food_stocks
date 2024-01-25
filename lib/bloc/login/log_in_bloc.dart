@@ -59,16 +59,19 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               AppStrings.isRegisterString: state.isRegister
             });
             emit(state.copyWith(isLoginSuccess: true, isLoading: false));
-          } /*else if(response.status == 403){
+          } else if(response.status == 403){
             print('here');
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: response.message??'',
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(
               isLoading: false,
             ));
-          }*/
+          }
           else {
             print('here 1');
             CustomSnackBar.showSnackBar(
