@@ -169,7 +169,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ? StoreCategoryScreenPlanoGramShimmerWidget()
                                         : state
                                         .planoGramsList.isEmpty &&
-                                        state.subCategoryList.isEmpty && !state.isSubCategoryShimmering ? Container(
+                                        state.subCategoryList.isEmpty ? Container(
                                       height: getScreenHeight(
                                           context) -
                                           160,
@@ -205,27 +205,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                                     state.isPlanogramShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                    /*     : state.subCategoryList.isEmpty
-                                        ? Container(
-                                      height: getScreenHeight(
-                                          context) -
-                                          160,
-                                      width:
-                                      getScreenWidth(context),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!
-                                            .sub_categories_not_available}',
-                                        textAlign:
-                                        TextAlign.center,
-                                        style: AppStyles
-                                            .rkRegularTextStyle(
-                                            size: AppConstants
-                                                .smallFont,
-                                            color: AppColors
-                                                .textColor),
-                                      ),
-                                    )*/
                                         : ListView.builder(
                                       itemCount: state
                                           .subCategoryList.length,
@@ -263,88 +242,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         context));
                                               }),
                                     ),
-                                    /*  state.categoryPlanogramList
-                                        .isNotEmpty ? Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text('${AppLocalizations.of(context)!
-                                          .products}',
-                                        style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.smallFont,
-                                            color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w600
-                                        ),),
-                                    ):SizedBox(),
-                                    Container(
-                                      color: AppColors.whiteColor,
-                                      child: GridView.builder(
-                                          itemCount: state.categoryPlanogramList
-                                              .length,
-                                          shrinkWrap: true,
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: AppConstants
-                                                  .padding_5),
-                                          gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              childAspectRatio: AppConstants
-                                                  .productGridAspectRatio),
-                                          itemBuilder: (context, index) =>
-                                              DelayedWidget(
-                                                child: CommonProductItemWidget(
-                                                    productStock: state.categoryPlanogramList[index]
-                                                            .productStock ??
-                                                            0,
-                                                    productImage: state
-                                                        .categoryPlanogramList[index]
-                                                        .mainImage ??
-                                                        '',
-                                                    productName: state
-                                                        .categoryPlanogramList[index]
-                                                        .productName ??
-                                                        '',
-                                                    totalSaleCount: state
-                                                        .categoryPlanogramList[index]
-                                                        .totalSale?.toInt() ?? 0 ,
-                                                    price: state.categoryPlanogramList[index]
-                                                        .productPrice ?? 0.0,
-                                                    onButtonTap: () {
-                                                      showProductDetails(
-                                                          context: context,
-                                                          productId: state
-                                                              .categoryPlanogramList[index]
-                                                              .id ??
-                                                              '',
-                                                          planoGramIndex: 0,
-                                                          isBarcode: false
-                                                      );
-                                                    }),
-                                              )
-                                        // buildCompanyProducts(
-                                        // context: context,
-                                        // index: index,
-                                        // productImage: state
-                                        //     .productList[index].mainImage ??
-                                        //     '',
-                                        // productName: state.productList[index]
-                                        //     .productName ??
-                                        //     '',
-                                        // productPrice: state.productList[index]
-                                        //     .productPrice ??
-                                        //     0.0,
-                                        // totalSale: state
-                                        //     .productList[index].totalSale ??
-                                        //     0,
-                                        // onPressed: () {
-                                        //   showProductDetails(
-                                        //       context: context,
-                                        //       productId:
-                                        //       state.productList[index].id ??
-                                        //           '');
-                                        // },
-                                        // isRTL: context.rtl),
-                                      ),
-                                    ),*/
+
 
 
                                     // state.isLoadMore

@@ -87,6 +87,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                 Future.value(false);
               }
             },
+
+
+
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.pageColor,
@@ -97,12 +100,14 @@ class BottomNavScreenWidget extends StatelessWidget {
                       color: AppColors.shadowColor.withOpacity(0.1),
                       blurRadius: AppConstants.blur_10)
                 ]),
+
+
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
                   index: storeScreen == '' ? state.index : 1,
                   height: 65.0,
-                  cartCount: state.cartCount,
-                  isRTL: context.rtl,
+                 cartCount: state.cartCount,
+                isRTL: context.rtl,
                   items: [
                     _navItem(
                       pos: 0,

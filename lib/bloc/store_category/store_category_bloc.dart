@@ -62,9 +62,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _ChangeCategoryExpansionEvent) {
         print('event.isOpened123___${event.isOpened}');
         if (event.isOpened != null) {
-          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,categoryPlanogramList : []));
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          print('state.categoryPlanogramList___${state.categoryPlanogramList}');
         } else {
-          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,categoryPlanogramList : []));
+          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          print('state.categoryPlanogramList_qww__${state.categoryPlanogramList}');
+
         }
       }
       else if (event is _ChangeSubCategoryOrPlanogramEvent) {
@@ -78,8 +81,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
            categoryId: event.categoryId ,
             categoryName: event.categoryName,
             subCategoryList: [],
+            planoGramsList : [],
             subCategoryPageNum: 0,
             isBottomOfSubCategory: false,
+            isBottomOfPlanoGrams: false,
             productStockList: [
               [ProductStockModel(productId: '')]
             ]));
@@ -107,6 +112,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           debugPrint('product categories = ${response.data?.categories}');
           if (response.status == 200) {
             List<SearchModel> searchList = [];
+
+
             searchList.addAll(response.data?.categories?.map((category) =>
                     SearchModel(
                         searchId: category.id ?? '',
@@ -254,7 +261,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res = await DioClient(event.context)
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
-
+//650d812ce2d5ebe2b3d72028
           if (response.status == 200) {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
