@@ -78,6 +78,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     return BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
       builder: (context, state) {
+        print('stateplanoGramsList___${state.planoGramsList}');
         return WillPopScope(
           onWillPop: () {
             if (state.isSubCategory) {
@@ -165,11 +166,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   CrossAxisAlignment.start,
                                   children: [
                                     5.height,
-                                    state.isPlanogramShimmering
+                                    state.isPlanogramShimmering ||  state.isSubCategoryShimmering
                                         ? StoreCategoryScreenPlanoGramShimmerWidget()
                                         : state
                                         .planoGramsList.isEmpty &&
-                                        state.subCategoryList.isEmpty ? Container(
+                                        state.subCategoryList.isEmpty && state.planoGramsList.isEmpty ? Container(
                                       height: getScreenHeight(
                                           context) -
                                           160,

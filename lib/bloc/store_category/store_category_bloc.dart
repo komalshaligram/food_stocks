@@ -83,6 +83,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryList: [],
             planoGramsList : [],
             subCategoryPageNum: 0,
+            planogramPageNum : 0,
             isBottomOfSubCategory: false,
             isBottomOfPlanoGrams: false,
             productStockList: [
@@ -261,7 +262,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res = await DioClient(event.context)
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
-//650d812ce2d5ebe2b3d72028
+
           if (response.status == 200) {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
@@ -303,7 +304,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 planogramPageNum: state.planogramPageNum + 1,
                 isPlanogramShimmering: false,
                 isLoadMore: false,
-              categoryPlanogramList: categoryPlanogramList
+
 
             ));
             emit(state.copyWith(
@@ -313,13 +314,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            CustomSnackBar.showSnackBar(
+           /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE);*/
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
