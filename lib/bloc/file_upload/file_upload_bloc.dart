@@ -23,8 +23,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
-import '../../data/model/req_model/profile_req_model/profile_model.dart' as update;
-import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -314,7 +312,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? pickedFile.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                  contentType: MediaType('application', 'pdf'),
+                  contentType:MediaType('application', 'pdf'),
                 )
               });
               debugPrint(
@@ -324,7 +322,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
                     : AppStrings.fileString: await MultipartFile.fromFile(
-                  croppedImage?.path ??file!.path,
+                  croppedImage?.path ?? file!.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
                   contentType: MediaType('application', 'pdf'),

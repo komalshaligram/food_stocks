@@ -16,16 +16,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 
-import '../../data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
-import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
-    as file;
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
     as resGet;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
 import '../../data/model/res_model/profile_res_model/profile_res_model.dart'
     as res;
-import '../../data/model/res_model/remove_form_and_file_res_model/remove_form_and_file_res_model.dart';
+
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -49,6 +46,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String city = '';
       if (event is _getProfileModelEvent) {
         profileModel = event.profileModel;
         try {
@@ -67,7 +65,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 cityList: temp,
                 filterList: temp,
                 cityListResModel: cityListResModel,
-                selectCity: cityListResModel.data!.cities!.first.cityName.toString(),
+               // selectCity: cityListResModel.data!.cities!.first.cityName.toString(),
             ));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -82,7 +80,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _pickLogoImageEvent) {
+      }
+      else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(
             source:
@@ -148,37 +147,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             //     type: SnackBarType.FAILURE);
           }
         }
-      } else if (event is _registrationApiEvent) {
+      }
+      else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
-
-     /*     if (state.image.path != '') {
-            Map<String, dynamic> req1 = {AppStrings.logoString: imgUrl};
-            try {
-              final res = await DioClient(event.context).post(
-                "${AppUrls.fileUpdateUrl}/${preferencesHelper.getUserId()}",
-                data: req1,
-              );
-              debugPrint('update logo image req_______${req1}');
-
-              file.FileUpdateResModel response =
-                  file.FileUpdateResModel.fromJson(res);
-
-              if (response.status == 200) {
-                debugPrint('update logo image req________${response}');
-                imgUrl = response.data!.client!.profileImage.toString();
-              } else {
-                CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                        '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                    type: SnackBarType.FAILURE);
-              }
-            } on ServerException {
-
-            }
-          }
-*/
-
           ProfileModel updatedProfileModel = ProfileModel(
             logo: (state.image.path != '') ? imgUrl : state.companyLogo,
             cityId: state.cityListResModel?.data?.cities
@@ -340,15 +311,18 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             );
           }
         }
-      } else if (event is _citySearchEvent) {
+      }
+      else if (event is _citySearchEvent) {
         List<String> list = state.cityList
             .where((city) => city.contains(event.search))
             .toList();
         emit(state.copyWith(filterList: list));
-      } else if (event is _selectCityEvent) {
+      }
+      else if (event is _selectCityEvent) {
         debugPrint('new city = ${event.city}');
         emit(state.copyWith(selectCity: event.city));
-      } else if (event is _getProfileMoreDetailsEvent) {
+      }
+      else if (event is _getProfileMoreDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
@@ -373,6 +347,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == 200) {
               debugPrint(
                   'update city : ${response.data?.clients?.first.city?.cityName}');
+              city = response.data?.clients?.first.city?.cityName ?? '';
               emit(state.copyWith(
                 isUpdating: false,
                 selectCity: response.data?.clients?.first.city?.cityName ?? '',
@@ -406,7 +381,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 type: SnackBarType.SUCCESS);
           }
         }
-      } else if (event is _SetFAXFormatEvent) {
+      }
+      else if (event is _SetFAXFormatEvent) {
         RegExp regEx = RegExp(r'(\d)');
         String newFaxNumber = '';
         List<RegExpMatch> matches = regEx.allMatches(event.FAX).toList();
