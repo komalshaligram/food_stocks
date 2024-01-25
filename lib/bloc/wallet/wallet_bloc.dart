@@ -292,7 +292,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message!.toLocalization(), event.context),
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
                 type: SnackBarType.SUCCESS,
               );
             });

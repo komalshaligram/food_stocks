@@ -555,7 +555,9 @@ class SupplierProductsBloc
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else {
               emit(state.copyWith(isLoading: false));
@@ -644,7 +646,9 @@ class SupplierProductsBloc
                   /*title: response.message ??
                     '${AppLocalizations.of(event.context)!.product_added_to_cart}',*/
                   title: AppStrings.getLocalizedStrings(
-                      response.message!.toLocalization(), event.context),
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
                   type: SnackBarType.SUCCESS);
             } else if (response.status == 403) {
               emit(state.copyWith(isLoading: false));

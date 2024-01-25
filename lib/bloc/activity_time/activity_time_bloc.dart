@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -10,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
-import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart'
-    as update;
+
+import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart';
 import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart'
     as res;
 import '../../data/storage/shared_preferences_helper.dart';
@@ -39,74 +38,111 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       resGet.ProfileDetailsResModel response = resGet.ProfileDetailsResModel();
 
-      List<Day>? sundayList = [];
-      List<Day>? mondayList = [];
-      List<Day>? tuesdayList = [];
-      List<Day>? wednesdayList = [];
-      List<Day>? thursdayList = [];
-      List<Day>? fridayAndHolidayEvesList = [];
-      List<Day>? saturdayAndHolidaysList = [];
+      List<Day> sundayList = [];
+      List<Day> mondayList = [];
+      List<Day> tuesdayList = [];
+      List<Day> wednesdayList = [];
+      List<Day> thursdayList = [];
+      List<Day> fridayAndHolidayEvesList = [];
+      List<Day> saturdayAndHolidaysList = [];
 
       if (event is _getActivityTimeDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
       }
 
-
-
       if (event is _getActivityTimeListEvent) {
         if (state.isUpdate) {
           emit(state.copyWith(isShimmering: true));
           try {
-            final res = await DioClient(event.context).post(AppUrls.getProfileDetailsUrl,
-                data: req.ProfileDetailsReqModel(id: preferences.getUserId())
-                    .toJson(),
+            final res = await DioClient(event.context).post(
+              AppUrls.getProfileDetailsUrl,
+              data: req.ProfileDetailsReqModel(id: preferences.getUserId())
+                  .toJson(),
             );
 
+            debugPrint('respo_______$res');
 
             response = resGet.ProfileDetailsResModel.fromJson(res);
-            debugPrint('response_______$response');
+            debugPrint('response_______${response.toJson()}');
 
             if (response.status == 200) {
-              if ((response.data?.clients?.first.clientDetail?.operationTime?.length != 0) ) {
+              if ((response.data?.clients?.first.clientDetail?.operationTime
+                      ?.length !=
+                  0)) {
                 List<ActivityTimeModel> temp1 = state.OperationTimeList;
-                var sundayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Sunday ?? [];
-                var mondayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Monday ?? [];
-                var tuesdayRs =response.data?.clients?.first.clientDetail?.operationTime?[0].Tuesday ?? [];
-                var wednesdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Wednesday ?? [];
-                var thursdayRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Thursday ?? [];
-                var fridayAndHolidayEvesRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Friday ?? [];
-                var saturdayAndHolidaysRs = response.data?.clients?.first.clientDetail?.operationTime?[0].Saturday ?? [];
+                int listLength = response.data?.clients?.first.clientDetail
+                        ?.operationTime?.length ??
+                    0;
 
-                List<Day> sundayList = sundayRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                print('listLength_____${listLength}');
+                var sundayRs = (listLength) > 0
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[0].Sunday ?? [Day(from:AppStrings.timeString ,until: AppStrings.timeString )]
+                        )
+                    : [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )];
+                var mondayRs = (listLength) > 1
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[1].Monday ??
+                    [Day(from: AppStrings.timeString,until: AppStrings.timeString)])
+                    : [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var tuesdayRs = (listLength) > 2
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[2].Tuesday ??
+                    [Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
+                    : [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var wednesdayRs = (listLength) > 3
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[3].Wednesday ??
+                    [Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
+                    : [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var thursdayRs = (listLength) > 4
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[4].Thursday ??
+                    [Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
+                    :   [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var fridayAndHolidayEvesRs = (listLength) > 5
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[5].Friday ??
+                    [Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
+                    : [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+                var saturdayAndHolidaysRs = (listLength) > 6
+                    ? (response.data?.clients?.first.clientDetail
+                            ?.operationTime?[6].Saturday ??
+                    [Day(from:AppStrings.timeString ,until: AppStrings.timeString)])
+                    : [Day(from:AppStrings.timeString ,until: AppStrings.timeString)];
+
+                sundayList = sundayRs.map((e) {
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
-                List<Day> mondayList = mondayRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                mondayList = mondayRs.map((e) {
+                  return Day(
+                      from:  e.from ?? AppStrings.timeString,
+                      until:  e.until ?? AppStrings.timeString );
                 }).toList();
 
-                List<Day> tuesdayList = tuesdayRs.map((e) {
-                  return Day(from: e.from, until: e.until);
-                }).toList();
-                
-                List<Day> wednesdayList = wednesdayRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                tuesdayList = tuesdayRs.map((e) {
+                  return Day(
+                      from:  e.from ?? AppStrings.timeString,
+                      until: e.until  ?? AppStrings.timeString);
                 }).toList();
 
-                List<Day> thursdayList = thursdayRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                wednesdayList = wednesdayRs.map((e) {
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
-                List<Day> fridayAndHolidayEvesList =
-                    fridayAndHolidayEvesRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                thursdayList = thursdayRs.map((e) {
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
 
-                List<Day> saturdayAndHolidaysList =
-                    saturdayAndHolidaysRs.map((e) {
-                  return Day(from: e.from, until: e.until);
+                  fridayAndHolidayEvesList = fridayAndHolidayEvesRs.map((e) {
+                    return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
+                  }).toList();
+
+                saturdayAndHolidaysList = saturdayAndHolidaysRs.map((e) {
+                  return Day(from: e.from ?? AppStrings.timeString, until: e.until ?? AppStrings.timeString);
                 }).toList();
-                
+
                 temp1[0].monday = sundayList;
                 temp1[1].monday = mondayList;
                 temp1[2].monday = tuesdayList;
@@ -114,12 +150,11 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 temp1[4].monday = thursdayList;
                 temp1[5].monday = fridayAndHolidayEvesList;
                 temp1[6].monday = saturdayAndHolidaysList;
-                
-                emit(state.copyWith(
-                    isShimmering: false,
-                    OperationTimeList: temp1,
-                    isRefresh: !state.isRefresh,
 
+                emit(state.copyWith(
+                  isShimmering: false,
+                  OperationTimeList: temp1,
+                  isRefresh: !state.isRefresh,
                 ));
               } else {
                 emit(state.copyWith(isShimmering: false));
@@ -128,8 +163,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response.message?.toLocalization() ?? response.message!,
                       event.context),
                   type: SnackBarType.FAILURE);
               emit(state.copyWith(isShimmering: false));
@@ -214,39 +248,39 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
         if (state.time.isNotEmpty) {
           String? selectedTime;
           selectedTime = state.time;
-          if(event.openingIndex == 0  && event.time == AppStrings.timeString){
-              selectedTime = AppStrings.hr24String;
-              emit(state.copyWith(time: selectedTime));
+          if (event.openingIndex == 0 && event.time == AppStrings.timeString || event.time == '' || event.time == '24:59' ) {
+            selectedTime = AppStrings.hr24String;
+            emit(state.copyWith(time: selectedTime));
           }
 
           List<ActivityTimeModel> temp = [];
           temp.addAll(state.OperationTimeList);
-          String openingTime =
-              temp[event.rowIndex].monday[event.timeIndex].from!;
-          String closingTime =
-              temp[event.rowIndex].monday[event.timeIndex].until!;
+
+          String? openingTime =
+              temp[event.rowIndex].monday[event.timeIndex].from!.isEmpty ?'00:00': temp[event.rowIndex].monday[event.timeIndex].from;
+          String? closingTime =
+              temp[event.rowIndex].monday[event.timeIndex].until!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].until;
           String? previousClosingTime;
 
           var format = DateFormat("HH:mm");
-          var start = format.parse(openingTime);
-          var end = format.parse(closingTime);
+          var start = format.parse(openingTime!);
+          var end = format.parse(closingTime!);
 
           var selectTimeZone = format.parse(selectedTime);
-          if (selectedTime != AppStrings.timeString) {
+          if (selectedTime != AppStrings.timeString ) {
             if (event.timeIndex > 0) {
               previousClosingTime =
                   temp[event.rowIndex].monday[event.timeIndex - 1].until;
 
               var format = DateFormat("HH:mm");
-              var preEnd = format.parse(previousClosingTime ?? AppStrings.timeString);
+              var preEnd =
+                  format.parse(previousClosingTime ?? AppStrings.timeString);
 
               if (event.openingIndex == 1) {
                 if (closingTime == AppStrings.timeString &&
                     selectTimeZone.isAfter(preEnd)) {
                   temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex]
-                      .monday
-                      .add(Day(from: selectedTime, until: closingTime));
+                  temp[event.rowIndex].monday.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime != AppStrings.timeString) {
                   if (selectTimeZone.isAfter(preEnd) &&
                       selectTimeZone.isBefore(end)) {
@@ -350,11 +384,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       if (event is _addMoreTimeZoneEventEvent) {
         List<ActivityTimeModel> temp = [];
         temp.addAll(state.OperationTimeList);
-        if(state.time != AppStrings.hr24String){
+
+        if (state.time != AppStrings.hr24String) {
           if (state.OperationTimeList[event.rowIndex].monday.length > 1) {
             int len = state.OperationTimeList[event.rowIndex].monday.length;
             if (state.OperationTimeList[event.rowIndex].monday[len - 1].from !=
-                AppStrings.timeString &&
+                    AppStrings.timeString &&
                 state.OperationTimeList[event.rowIndex].monday[len - 1].until !=
                     AppStrings.timeString) {
               temp[event.rowIndex].monday.add(
@@ -370,7 +405,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             }
           } else {
             if (state.OperationTimeList[event.rowIndex].monday[0].from !=
-                AppStrings.timeString &&
+                    AppStrings.timeString &&
                 state.OperationTimeList[event.rowIndex].monday[0].until !=
                     AppStrings.timeString) {
               temp[event.rowIndex].monday.add(
@@ -403,41 +438,53 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-
         bool isSnackbarActive = false;
+
+
         for (int i = 0; i < state.OperationTimeList.length; i++) {
-          if (state.OperationTimeList[i].monday[0].until ==
-                  AppStrings.timeString &&
-              state.OperationTimeList[i].monday[0].from !=
-                  AppStrings.timeString) {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                    '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
-                type: SnackBarType.FAILURE);
-            isSnackbarActive = true;
-          }
-          for (int j = 1; j < state.OperationTimeList[i].monday.length; j++) {
-            if (state.OperationTimeList[i].monday[j] ==
-                Day(
-                    from: AppStrings.timeString,
-                    until: AppStrings.timeString)) {
-              state.OperationTimeList[i].monday.removeAt(j);
-            } else if (state.OperationTimeList[i].monday[j].until ==
-                    AppStrings.timeString &&
-                state.OperationTimeList[i].monday[j].from !=
-                    AppStrings.timeString) {
+
+          if(state.OperationTimeList[i].monday != [] && state.OperationTimeList[i].monday.isNotEmpty  ){
+
+            if (state.OperationTimeList[i].monday[0].until ==
+                AppStrings.timeString &&
+                state.OperationTimeList[i].monday[0].from !=
+                    AppStrings.timeString || state.OperationTimeList[i].monday[0].until ==
+                '24:59'
+
+            ) {
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title:
-                      '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
+                  '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
                   type: SnackBarType.FAILURE);
               isSnackbarActive = true;
+            }
+            for (int j = 1; j < state.OperationTimeList[i].monday.length; j++) {
+              if (state.OperationTimeList[i].monday[j] ==
+                  Day(
+                      from: AppStrings.timeString,
+                      until: AppStrings.timeString)) {
+                state.OperationTimeList[i].monday.removeAt(j);
+              } else if (state.OperationTimeList[i].monday[j].until ==
+                  AppStrings.timeString &&
+                  state.OperationTimeList[i].monday[j].from !=
+                      AppStrings.timeString ||
+                  state.OperationTimeList[i].monday[j].until ==
+                      '24:59'
+              ) {
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                    '${AppLocalizations.of(event.context)!.please_fill_up_closing_time}',
+                    type: SnackBarType.FAILURE);
+                isSnackbarActive = true;
+              }
             }
           }
         }
 
         if (isSnackbarActive == false) {
+
           sundayList.addAll(
             state.OperationTimeList[0].monday,
           );
@@ -460,6 +507,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             state.OperationTimeList[6].monday,
           );
 
+
           if (!state.isUpdate) {
             emit(state.copyWith(isLoading: true));
             if (sundayList.first.from != AppStrings.timeString ||
@@ -469,17 +517,30 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 thursdayList.first.from != AppStrings.timeString ||
                 fridayAndHolidayEvesList.first.from != AppStrings.timeString ||
                 saturdayAndHolidaysList.first.from != AppStrings.timeString) {
-              ActivityTimeReqModel reqMap = ActivityTimeReqModel(
-                operationTime: OperationTime(
-                  Sunday: sundayList,
-                  Monday: mondayList,
-                  Tuesday: tuesdayList,
+              ActivityTimeReqModel reqMap =
+                  ActivityTimeReqModel(operationTime: [
+                OperationTime(
+                  Sunday:sundayList,
+                ),
+                OperationTime(Monday: mondayList),
+                OperationTime(Tuesday: tuesdayList),
+                OperationTime(
+                  Wednesday: wednesdayList,
+                ),
+                OperationTime(
+                  Thursday: thursdayList,
+                ),
+                OperationTime(
+                  Friday: fridayAndHolidayEvesList,
+                ),
+                OperationTime(Saturday: saturdayAndHolidaysList),
+
+                /*   Tuesday: tuesdayList,
                   Wednesday: wednesdayList,
                   Thursday: thursdayList,
                   Friday: fridayAndHolidayEvesList,
-                  Saturday: saturdayAndHolidaysList,
-                ),
-              );
+                  Saturday: saturdayAndHolidaysList,*/
+              ]);
 
               debugPrint('operation time reqMap + $reqMap');
               try {
@@ -507,7 +568,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       type: SnackBarType.FAILURE);
                   emit(state.copyWith(isLoading: false));
                 }
-              } on ServerException { emit(state.copyWith(isLoading: false));}
+              } on ServerException {
+                emit(state.copyWith(isLoading: false));
+              }
             } else {
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -515,22 +578,21 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       '${AppLocalizations.of(event.context)!.please_select_first_shift_time}',
                   type: SnackBarType.FAILURE);
             }
-          }
-          else {
+          } else {
             emit(state.copyWith(isLoading: true));
-            update.ProfileDetailsUpdateReqModel reqMap =
-                update.ProfileDetailsUpdateReqModel(
-                    clientDetail: update.ClientDetail(
-              operationTime: update.OperationTime(
-                Sunday: sundayList,
-                Monday: mondayList,
-                Tuesday: tuesdayList,
-                Wednesday: wednesdayList,
-                Thursday: thursdayList,
-                Friday: fridayAndHolidayEvesList,
-                Saturday: saturdayAndHolidaysList,
-              ),
-            ));
+
+            ProfileDetailsUpdateReqModel reqMap = ProfileDetailsUpdateReqModel(
+                clientDetail: ClientDetail(operationTime: [
+                  OperationTime(Sunday: sundayList),
+              OperationTime(Monday: mondayList),
+              OperationTime(Tuesday: tuesdayList),
+              OperationTime(Wednesday: wednesdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+              OperationTime(Thursday: thursdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+              OperationTime(Friday: fridayAndHolidayEvesList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+              OperationTime(Saturday: saturdayAndHolidaysList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+            ]));
+
+
             Map<String, dynamic> req = reqMap.toJson();
             Map<String, dynamic>? clientDetail = reqMap.clientDetail?.toJson();
             debugPrint("update before Model = ${req}");
@@ -550,11 +612,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             debugPrint("update after Model = ${req}");
             try {
               final res = await DioClient(event.context).post(
-                  AppUrls.updateProfileDetailsUrl +
-                      "/" +
-                      preferences.getUserId(),
-                  data: /*reqMap.toJson()*/ req,
-
+                AppUrls.updateProfileDetailsUrl + "/" + preferences.getUserId(),
+                data: /*reqMap.toJson()*/ req,
               );
 
               debugPrint('operation update req _____${req}');
@@ -566,19 +625,17 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               if (res1.status == 200) {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title:
-                        '${AppLocalizations.of(event.context)!.updated_successfully}',
-                    type: SnackBarType.SUCCESS,
-
+                  context: event.context,
+                  title:
+                      '${AppLocalizations.of(event.context)!.updated_successfully}',
+                  type: SnackBarType.SUCCESS,
                 );
                 emit(state.copyWith(isLoading: false));
               } else {
                 CustomSnackBar.showSnackBar(
                     context: event.context,
                     title: AppStrings.getLocalizedStrings(
-                        res1.message?.toLocalization() ??
-                            response.message!,
+                        res1.message?.toLocalization() ?? response.message!,
                         event.context),
                     type: SnackBarType.FAILURE);
                 emit(state.copyWith(isLoading: false));
