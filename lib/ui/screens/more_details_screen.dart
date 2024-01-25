@@ -36,16 +36,15 @@ class MoreDetailsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => MoreDetailsBloc()
+      create: (context) => MoreDetailsBloc()  ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
+          context: context,
+          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
+              ? true
+              : false))
         ..add(MoreDetailsEvent.getProfileModelEvent(
           profileModel: args?[AppStrings.profileParamString] ?? ProfileModel(),
           context: context,
-        ))
-        ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
-            context: context,
-            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
-                ? true
-                : false)),
+        )),
       child: MoreDetailsScreenWidget(),
     );
   }
@@ -75,6 +74,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
         builder: (context, state) {
+          print('ststacity____${state.selectCity}');
           if (list.isEmpty) {
             list = [...state.cityList];
           }
