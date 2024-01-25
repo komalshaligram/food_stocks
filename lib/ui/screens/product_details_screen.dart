@@ -177,9 +177,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                             size: AppConstants.smallFont,
                                             color:
                                             state.orderData
-                                                .orderstatus?.orderStatusNumber == onTheWayStatus ||   state.orderData
+                                                .orderstatus?.orderStatusNumber == onTheWayStatus ?AppColors.blueColor :   state.orderData
                                                 .orderstatus?.orderStatusNumber == 5
-                                            ? AppColors.graphColor
+                                            ? AppColors.mainColor
                                                 : AppColors.orangeColor,
                                             fontWeight: FontWeight.w700),
                                       )

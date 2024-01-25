@@ -220,9 +220,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         child: AnimationLimiter(
                           child: Column(
                             children: AnimationConfiguration.toStaggeredList(
-                              duration: const Duration(seconds: 3),
+                              duration: const Duration(seconds: 1),
                               childAnimationBuilder: (widget) => SlideAnimation(
-                                  duration: const Duration(seconds: 3) ,
+                                  duration: const Duration(seconds: 1) ,
                                   verticalOffset: MediaQuery.of(context).size.height / 5,
                                   child: FadeInAnimation(child: widget)
                               ),

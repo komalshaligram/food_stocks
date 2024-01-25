@@ -166,9 +166,30 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   children: [
                                     5.height,
                                     state.isPlanogramShimmering
-                                        ? StoreCategoryScreenPlanoGramShimmerWidget() : state
-                                        .planoGramsList.isEmpty ? SizedBox()
-                                        :ListView.builder(
+                                        ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                        : state
+                                        .planoGramsList.isEmpty &&
+                                        state.subCategoryList.isEmpty && !state.isSubCategoryShimmering ? Container(
+                                      height: getScreenHeight(
+                                          context) -
+                                          160,
+                                      width:
+                                      getScreenWidth(context),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${AppLocalizations.of(context)!
+                                            .no_data}',
+                                        textAlign:
+                                        TextAlign.center,
+                                        style: AppStyles
+                                            .rkRegularTextStyle(
+                                            size: AppConstants
+                                                .smallFont,
+                                            color: AppColors
+                                                .textColor),
+                                      ),
+                                    )
+                                        : ListView.builder(
                                       itemCount: state
                                           .planoGramsList.length,
                                       shrinkWrap: true,
@@ -176,7 +197,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       const NeverScrollableScrollPhysics(),
                                       itemBuilder:
                                           (context, index) {
-                                        return  buildPlanoGramItem(
+                                        return buildPlanoGramItem(
                                             context: context,
                                             index: index);
                                       },
@@ -184,7 +205,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                                     state.isPlanogramShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                        : state.subCategoryList.isEmpty
+                                    /*     : state.subCategoryList.isEmpty
                                         ? Container(
                                       height: getScreenHeight(
                                           context) -
@@ -204,7 +225,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             color: AppColors
                                                 .textColor),
                                       ),
-                                    )
+                                    )*/
                                         : ListView.builder(
                                       itemCount: state
                                           .subCategoryList.length,
@@ -242,7 +263,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         context));
                                               }),
                                     ),
-                                  /*  state.categoryPlanogramList
+                                    /*  state.categoryPlanogramList
                                         .isNotEmpty ? Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: Text('${AppLocalizations.of(context)!
@@ -324,8 +345,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         // isRTL: context.rtl),
                                       ),
                                     ),*/
-
-
 
 
                                     // state.isLoadMore
@@ -428,28 +447,32 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           index: index);
                                     },
                                   ),
-                                   Column(
+                                  Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
                                     children: [
                                       state.planogramProductList
                                           .isNotEmpty ? Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Text('${AppLocalizations.of(context)!
-                                            .products}',
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!
+                                              .products}',
                                           style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.smallFont,
                                               color: AppColors.blackColor,
-                                            fontWeight: FontWeight.w600
+                                              fontWeight: FontWeight.w600
                                           ),),
                                       ) : SizedBox(),
                                       state.isPlanogramShimmering
                                           ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                      : state.planogramProductList.isEmpty ? SizedBox()
+                                          : state.planogramProductList.isEmpty
+                                          ? SizedBox()
                                           : Container(
                                         color: AppColors.whiteColor,
                                         child: GridView.builder(
-                                            itemCount: state.planogramProductList
+                                            itemCount: state
+                                                .planogramProductList
                                                 .length,
                                             shrinkWrap: true,
                                             physics: const NeverScrollableScrollPhysics(),
@@ -478,10 +501,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           .productName ??
                                                           '',
                                                       totalSaleCount: state
-                                                       .planogramProductList[index]
-                                                       .totalSale?.toInt() ?? 0 ,
-                                                      price: state.planogramProductList[index]
-                                                       .productPrice ?? 0.0,
+                                                          .planogramProductList[index]
+                                                          .totalSale?.toInt() ??
+                                                          0,
+                                                      price: state
+                                                          .planogramProductList[index]
+                                                          .productPrice ?? 0.0,
                                                       onButtonTap: () {
                                                         showProductDetails(
                                                             context: context,
@@ -1326,14 +1351,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         clipBehavior: Clip.hardEdge,
                         child: Scaffold(
                           body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget():
+                              ? ProductDetailsShimmerWidget() :
                           state.productDetails.isEmpty ?
                           Center(
                             child: Text(AppLocalizations.of(context)!
-                                .no_data,style:AppStyles.rkRegularTextStyle(
+                                .no_data, style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.normalFont,
                               color: AppColors.greyColor,
-                              fontWeight: FontWeight.w500 ,)),
+                              fontWeight: FontWeight.w500,)),
                           )
                               : CommonProductDetailsWidget(
                               context: context,
@@ -1569,7 +1594,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  state.planoGramsList.isEmpty ? SizedBox(): buildPlanoGramTitles(
+                  state.planoGramsList.isEmpty
+                      ? SizedBox()
+                      : buildPlanoGramTitles(
                       context: context,
                       title: state.planoGramsList[index].planogramName ?? '',
                       onTap: () {

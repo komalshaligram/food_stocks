@@ -363,7 +363,13 @@
   "accountnotapprove": "חשבון לא מאושר",
   "confirm": "לְאַשֵׁר",
   "rivchitcredentialsnotset":"Rivchit credentials not set",
-  "comaxinvoicenotfound":"Comax invoice not found"
+  "comaxinvoicenotfound":"Comax invoice not found",
+"totalamountcantbezero" : "on create order if total amount will be zore",
+"salenotexists" : "on create order if sended sale id does not exists",
+"comaxordererror" : "at the order creation time if comax error occurs",
+"comaxclienterror" : "at the client register or update time if comax error occurs"
+
+
 
 
 

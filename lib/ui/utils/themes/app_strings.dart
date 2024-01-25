@@ -351,6 +351,17 @@ class AppStrings {
         return AppLocalizations.of(context)!.rivchitcredentialsnotset;
       case 'comaxinvoicenotfound':
         return AppLocalizations.of(context)!.comaxinvoicenotfound;
+      case 'totalamountcantbezero':
+        return AppLocalizations.of(context)!.totalamountcantbezero;
+      case 'comaxinvoicenotfound':
+        return AppLocalizations.of(context)!.comaxinvoicenotfound;
+      case 'salenotexists':
+        return AppLocalizations.of(context)!.salenotexists;
+        case 'comaxordererror':
+      return AppLocalizations.of(context)!.comaxordererror;
+      case 'comaxclienterror':
+        return AppLocalizations.of(context)!.comaxclienterror;
+
     }
     return key;
   }
