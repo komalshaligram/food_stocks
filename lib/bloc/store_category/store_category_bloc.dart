@@ -83,6 +83,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryList: [],
             planoGramsList : [],
             subCategoryPageNum: 0,
+            planogramPageNum : 0,
             isBottomOfSubCategory: false,
             isBottomOfPlanoGrams: false,
             productStockList: [
@@ -261,7 +262,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final res = await DioClient(event.context)
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
-//650d812ce2d5ebe2b3d72028
+
           if (response.status == 200) {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
@@ -296,15 +297,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             if((response.data?.length ?? 0) > 0){
               categoryPlanogramList.addAll(response.data?[0].planogramproducts ?? []);
             }
-
             emit(state.copyWith(
                 planoGramsList: planoGramsList,
                 productStockList: productStockList,
                 planogramPageNum: state.planogramPageNum + 1,
                 isPlanogramShimmering: false,
                 isLoadMore: false,
-              categoryPlanogramList: categoryPlanogramList
-
             ));
             emit(state.copyWith(
                 isBottomOfPlanoGrams: planoGramsList.length ==
@@ -313,13 +311,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            CustomSnackBar.showSnackBar(
+           /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE);*/
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -1091,7 +1089,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           if (response.status == 200) {
             add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-            add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
+           // add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             parentCategoryId = response.data?.planogram?.categoryId ?? '';
             emit(state.copyWith(
                 categoryName : response.data?.planogram?.categoryName ?? '',
@@ -1116,6 +1114,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       }
 
       else if(event is _getPlanogramAllProductEvent){
+
         if (state.isLoadMore) {
           return;
         }
@@ -1125,10 +1124,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
-
+          emit(state.copyWith(isPlanogramShimmering: true));
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
             categoryId : state.categoryId,
             subCategoryId: state.subCategoryId,
+            pageNum: state.planogramPageNum + 1,
+            pageLimit: AppConstants.planogramProductPageLimit,
+            sortOrder: AppStrings.ascendingString,
+            sortField: AppStrings.planogramSortFieldString,
           );
 
           final res = await DioClient(event.context)
@@ -1158,7 +1161,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             }
             productStockList.add(barcodeStock);
            planogramProductList.addAll(response.data ?? []);
-            emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList ));
+            emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
+                isPlanogramShimmering: false
+            ));
             emit(state.copyWith(
                 isBottomOfPlanoGrams: planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
@@ -1166,21 +1171,21 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     : false));
           }
           else{
-            emit(state.copyWith(isLoadMore: false));
-            CustomSnackBar.showSnackBar(
+            emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+          /*  CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
-                type: SnackBarType.FAILURE);
+                type: SnackBarType.FAILURE);*/
           }
         }
         on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
         }
         catch(e){
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
         }
 
       }

@@ -165,11 +165,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   CrossAxisAlignment.start,
                                   children: [
                                     5.height,
-                                    state.isPlanogramShimmering
+                                    state.isPlanogramShimmering ||  state.isSubCategoryShimmering
                                         ? StoreCategoryScreenPlanoGramShimmerWidget()
                                         : state
                                         .planoGramsList.isEmpty &&
-                                        state.subCategoryList.isEmpty ? Container(
+                                        state.subCategoryList.isEmpty && state.planoGramsList.isEmpty ? Container(
                                       height: getScreenHeight(
                                           context) -
                                           160,
