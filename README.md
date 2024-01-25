@@ -30,3 +30,9 @@ samples, guidance on mobile development, and a full API reference.
 
 - date_rang_picker color change ,dialog.dart , data_range_picker.dart
 - CurvedNavigationBar add cart in package
+
+- Reference the following commands to get started:
+  📦 To create a new release use: "shorebird release".
+  🚀 To push an update use: "shorebird patch".
+  👀 To preview a release use: "shorebird preview".
+  🚀 To make this patch available to your users : "shorebird patch ios-alpha".

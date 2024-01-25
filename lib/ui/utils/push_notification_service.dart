@@ -38,21 +38,24 @@ class PushNotificationService {
       sound: true,
     );
     print('User granted permission: ${settings.authorizationStatus}');
+if(Platform.isAndroid){
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
-        debugPrint("onMessageOpenedApp: ${message.data}");
-        _mainPage = message.data['data']['message']['mainPage'];
-        _subPage = message.data['data']['message']['subPage'];
-        _id = message.data['data']['message']['id'];
-        manageNavigation( true, _mainPage, _subPage , _id);
-      },
-    );
+        (RemoteMessage message) {
+      debugPrint("onMessageOpenedApp: ${message.data}");
+      _mainPage = message.data['data']['message']['mainPage'];
+      _subPage = message.data['data']['message']['subPage'];
+      _id = message.data['data']['message']['id'];
+      manageNavigation( true, _mainPage, _subPage , _id);
+    },
+  );
+}
+
     if (Platform.isIOS) {
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
     }
 
-    enableIOSNotifications();
+    //enableIOSNotifications();
     await registerNotificationListeners();
   }
 
