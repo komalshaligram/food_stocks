@@ -106,7 +106,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   key: _bottomNavigationKey,
                   index: storeScreen == '' ? state.index : 1,
                   height: 65.0,
-                 cartCount: state.cartCount,
+                cartCount: state.cartCount,
                 isRTL: context.rtl,
                   items: [
                     _navItem(
