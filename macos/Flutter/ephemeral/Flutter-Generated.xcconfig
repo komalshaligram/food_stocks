@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\Users\sit107.SIT\Downloads\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\sit107.SIT\AndroidStudioProjects\food_stocks
+FLUTTER_ROOT=/Users/urvishjani/.shorebird/bin/cache/flutter/0a7a66cbc9850f7bd7fe9c36a2f9b9084fa73a13
+FLUTTER_APPLICATION_PATH=/Users/urvishjani/Documents/Project/food_stocks
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
