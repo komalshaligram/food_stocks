@@ -118,7 +118,7 @@ class ShipmentVerificationScreenWidget extends StatelessWidget {
                             status?.toTitleCase() ?? '',
                             style: AppStyles.rkRegularTextStyle(
                                 size: AppConstants.smallFont,
-                                color:  args?[AppStrings.orderStatusNo] == 6 ||args?[AppStrings.orderStatusNo] == 4 ? AppColors.mainColor:AppColors.orangeColor,
+                                color:  args?[AppStrings.orderStatusNo] == 6  ? AppColors.blueColor: AppColors.mainColor,
                                 fontWeight: FontWeight.w700),
                           )
                         ],
