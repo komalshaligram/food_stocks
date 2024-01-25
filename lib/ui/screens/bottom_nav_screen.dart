@@ -87,6 +87,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                 Future.value(false);
               }
             },
+
+
+
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.pageColor,
