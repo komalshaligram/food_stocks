@@ -256,7 +256,7 @@ extension StringCasingExtension on String {
       .map((str) => str.toCapitalized())
       .join(' ');
 
-  String toLocalization() => this.split('.')[1].toLowerCase();
+  String toLocalization() => this.contains('.')?this.split('.')[1].toLowerCase():this;
 }
 
 

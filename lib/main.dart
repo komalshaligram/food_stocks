@@ -68,13 +68,14 @@ class _MyAppState extends State<MyApp> {
     });
     // Get the current patch number and print it to the console. It will be
     // null if no patches are installed.
-    shorebirdCodePush
+  /*  shorebirdCodePush
         .currentPatchNumber()
         .then((value) => print('current patch number is $value'));
-    _checkForUpdates();
+    _checkForUpdates();*/
     super.initState();
   }
 
+/*
 
   Future<void> _checkForUpdates() async {
     // Check whether a patch is available to install.
@@ -84,6 +85,7 @@ class _MyAppState extends State<MyApp> {
       await shorebirdCodePush.downloadUpdateIfAvailable();
     }
   }
+*/
 
   @override
   Widget build(BuildContext context) {
