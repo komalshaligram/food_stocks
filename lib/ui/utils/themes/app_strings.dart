@@ -361,7 +361,6 @@ class AppStrings {
       return AppLocalizations.of(context)!.comaxordererror;
       case 'comaxclienterror':
         return AppLocalizations.of(context)!.comaxclienterror;
-
     }
     return key;
   }

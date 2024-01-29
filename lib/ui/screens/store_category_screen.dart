@@ -305,7 +305,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 children: [
                                   state.isPlanogramShimmering
                                       ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                      : state.planoGramsList.isEmpty
+                                      : state.planoGramsList.isEmpty && state.planogramProductList.isEmpty
                                       ? Container(
                                     height:
                                     getScreenHeight(context) -
