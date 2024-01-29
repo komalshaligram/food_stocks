@@ -792,11 +792,15 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   ),
                 ),
                 10.width,
-                Text(
-                  searchName,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.blackColor,
+                Expanded(
+                  child: Text(
+                    searchName,
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_12,
+                      color: AppColors.blackColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -1273,6 +1277,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 ...state.productDetails.first.images?.map((
                                     image) => image.imageUrl ?? '') ?? []
                               ],
+                              productPerUnit: state.productDetails.first
+                                  .numberOfUnit ?? 0,
+                              productUnitPrice: state.productStockList[state
+                                  .planoGramUpdateIndex][state
+                                  .productStockUpdateIndex].totalPrice,
                               productName:
                               state.productDetails.first.productName ??
                                   '',
@@ -1293,7 +1302,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       .productStockList[state
                                       .planoGramUpdateIndex]
                                   [state.productStockUpdateIndex]
-                                      .quantity,
+                                      .quantity *
+                                  (state.productDetails.first.numberOfUnit ??
+                                      0),
                               productScaleType: state.productDetails.first
                                   .scales?.scaleType ?? '',
                               productWeight: state.productDetails.first
