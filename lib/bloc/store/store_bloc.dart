@@ -285,8 +285,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                 quantity: 1,
-                      productId: response.product?.first.id ?? '',
-                      stock: response.product?.first.numberOfUnit ?? 0,
+                productId: response.product?.first.id ?? '',
+                stock: response.product?.first.numberOfUnit ?? 0,
+                productSaleId: '',
+                productSupplierIds: '',
+                note: '',
+                isNoteOpen: false,
               );
 
               emit(state.copyWith(productStockList: productStockList));

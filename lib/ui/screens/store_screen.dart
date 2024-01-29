@@ -75,14 +75,14 @@ class StoreScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-           //  if(state.productCategoryList.isEmpty) {
-               bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
-                bloc.add(StoreEvent.getCompaniesListEvent(context: context));
-                bloc.add(StoreEvent.getSuppliersListEvent(context: context));
-                bloc.add(StoreEvent.getProductSalesListEvent(context: context));
-                bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
-         //   }
+                //  if(state.productCategoryList.isEmpty) {
+                //     bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
+                //      bloc.add(StoreEvent.getCompaniesListEvent(context: context));
+                //      bloc.add(StoreEvent.getSuppliersListEvent(context: context));
+                //      bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+                //      bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+                //      bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+                //   }
 
               },
               child: SafeArea(
@@ -900,7 +900,8 @@ class StoreScreenWidget extends StatelessWidget {
                         } /*else {
                           showProductDetails(
                               context: context,
-                              productId: "653a337366a6f5add6e02727",
+                              productId: "7290115205527",
+                              // productId: "9843022871217",
                               isBarcode: true);
                         }*/
                       },
