@@ -38,6 +38,7 @@ class PushNotificationService {
       sound: true,
     );
     print('User granted permission: ${settings.authorizationStatus}');
+
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
         debugPrint("onMessageOpenedApp: ${message.data}");

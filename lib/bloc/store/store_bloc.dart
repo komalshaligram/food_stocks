@@ -267,6 +267,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
+        state.productStockList.clear();
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
@@ -380,6 +381,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     ? ''
                     : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
+              productStockList: state.productStockList,
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
