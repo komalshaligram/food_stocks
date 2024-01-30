@@ -26,6 +26,7 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
@@ -622,16 +623,26 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              emit(state.copyWith(isLoading: false));
+              List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+              productStockList[state.productStockUpdateIndex] =
+                  productStockList[state.productStockUpdateIndex].copyWith(
+                note: '',
+                isNoteOpen: false,
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
+              );
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
-                  context: event.context,
+                context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message?.toLocalization() ?? response.message!,
                     event.context),
-                  type: SnackBarType.SUCCESS,
-
+                type: SnackBarType.SUCCESS,
               );
             } else {
               emit(state.copyWith(isLoading: false));
@@ -706,12 +717,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                note: '',
+                    note: '',
                 isNoteOpen: false,
-                // quantity: 0,
-                // productSupplierIds: '',
-                // totalPrice: 0.0,
-                // productSaleId: '',
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
               );
               add(StoreEvent.setCartCountEvent());
               Vibration.vibrate(amplitude: 128);
@@ -821,6 +832,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           debugPrint('data1 = $res');
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
           debugPrint('cat len = ${response.data?.categoryData?.length}');
+          debugPrint('sub cat len = ${response.data?.subCategoryData?.length}');
           debugPrint('com len = ${response.data?.companyData?.length}');
           debugPrint('sale len = ${response.data?.saleData?.length}');
           debugPrint('sup len = ${response.data?.supplierData?.length}');
@@ -846,6 +858,17 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         name: category.categoryName ?? '',
                         searchType: SearchTypes.category,
                         image: category.categoryImage ?? ''))
+                    .toList() ??
+                []);
+            //subcategory search result
+            searchList.addAll(response.data?.subCategoryData
+                    ?.map((subCategory) => SearchModel(
+                        searchId: subCategory.id ?? '',
+                        name: subCategory.subCategoryName ?? '',
+                        searchType: SearchTypes.subCategory,
+                        image: '',
+                        categoryId: subCategory.parentCategoryId ?? '',
+                        categoryName: subCategory.parentCategoryName ?? ''))
                     .toList() ??
                 []);
             //company search result
@@ -898,8 +921,20 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             //     type: SnackBarType.SUCCESS);
           }
         } on ServerException {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title:
+                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+            type: SnackBarType.FAILURE,
+          );
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title:
+                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+            type: SnackBarType.FAILURE,
+          );
           emit(state.copyWith(isSearching: false));
         }
       } else if (event is _UpdateImageIndexEvent) {

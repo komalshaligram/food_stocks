@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/bloc/recommendation_products/recommendation_products_bloc.dart';
+import 'package:food_stock/ui/widget/common_product_details_button.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/refresh_widget.dart';
@@ -133,7 +134,11 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             .productGridAspectRatio),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
-                                        productStock:  state.recommendationProductsList[index].productStock ?? 0,
+                                          productStock: state
+                                                  .recommendationProductsList[
+                                                      index]
+                                                  .productStock ??
+                                              0,
                                           productImage: state
                                                   .recommendationProductsList[
                                                       index]
@@ -362,7 +367,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
                                   context: context,
-                              // contentKey: _contentKey,
+                            // contentKey: _contentKey,
                                   productImageIndex: state.imageIndex,
                                   onPageChanged: (index, p1) {
                                     context
@@ -467,7 +472,30 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             .changeNoteOfProduct(
                                                 newNote: newNote));
                                   },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
+                                  ? null
+                                  : () {
+                                context
+                                    .read<
+                                    RecommendationProductsBloc>()
+                                    .add(RecommendationProductsEvent
+                                    .addToCartProductEvent(
+                                    context: context1));
+                              }*/
+                                ),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
                                   isLoading: state.isLoading,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
                                   onAddToOrderPressed: state.isLoading
                                       ? null
                                       : () {

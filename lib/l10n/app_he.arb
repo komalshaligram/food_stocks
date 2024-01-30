@@ -370,5 +370,7 @@
   "comax_client_error": "משהו השתבש",
   "unit_in_box": "יחידות במארז",
   "price": "מחיר",
+
+  "sub_categories": "Sub Categories",
   "per_unit": "ליחידה"
 }

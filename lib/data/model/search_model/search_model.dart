@@ -11,6 +11,8 @@ class SearchModel with _$SearchModel {
     required String name,
     required SearchTypes searchType,
     @Default('') String image,
+    @Default('') String categoryId,
+    @Default('') String categoryName,
   }) = _SearchModel;
 
   factory SearchModel.fromJson(Map<String, dynamic> json) =>
@@ -19,6 +21,7 @@ class SearchModel with _$SearchModel {
 
 enum SearchTypes {
   category,
+  subCategory,
   company,
   supplier,
   product,

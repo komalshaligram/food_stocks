@@ -21,6 +21,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../widget/common_product_button_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
@@ -1366,22 +1367,42 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                         context: context1));
                               },
-                              noteController: state.noteController,
+                            noteController: state.noteController,
 
-                              onNoteChanged: (newNote) {
-                                context.read<StoreCategoryBloc>().add(
-                                    StoreCategoryEvent.changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
+                            onNoteChanged: (newNote) {
+                              context.read<StoreCategoryBloc>().add(
+                                  StoreCategoryEvent.changeNoteOfProduct(
+                                      newNote: newNote));
+                            },
+                            // isLoading: state.isLoading,
+                            /*onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                 context.read<StoreCategoryBloc>().add(
                                     StoreCategoryEvent
                                         .addToCartProductEvent(
                                         context: context1));
-                              }),
+                              }*/),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
+                              isLoading: state.isLoading,
+                              isSupplierAvailable:
+                              state.productSupplierList.isEmpty
+                                  ? false
+                                  : true,
+                              productStock: state
+                                  .productStockList[state
+                                  .planoGramUpdateIndex][
+                              state.productStockUpdateIndex]
+                                  .stock, onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<StoreCategoryBloc>().add(
+                                StoreCategoryEvent
+                                    .addToCartProductEvent(
+                                    context: context1));
+                          }),
                         ),
                       );
                     },

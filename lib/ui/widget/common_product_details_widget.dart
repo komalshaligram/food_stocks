@@ -28,14 +28,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String productScaleType;
   final ScrollController scrollController;
   final TextEditingController noteController;
-  final void Function()? onAddToOrderPressed;
+  // final void Function()? onAddToOrderPressed;
   final void Function() onQuantityIncreaseTap;
   final void Function() onQuantityDecreaseTap;
   final void Function(String)? onNoteChanged;
   final void Function(String) onQuantityChanged;
   final void Function() onNoteToggleChanged;
   final bool isRTL;
-  final bool isLoading;
+
+  // final bool isLoading;
   final bool isNoteOpen;
   final int productStock;
   final Widget supplierWidget;
@@ -60,7 +61,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.isRTL,
     required this.isNoteOpen,
     required this.scrollController,
-    required this.onAddToOrderPressed,
+    // this.onAddToOrderPressed,
     required this.noteController,
     required this.productQuantity,
     required this.onQuantityIncreaseTap,
@@ -68,7 +69,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.onNoteToggleChanged,
     this.onNoteChanged,
     required this.onQuantityChanged,
-    required this.isLoading,
+    // required this.isLoading,
     required this.productStock,
     required this.productScaleType,
     required this.supplierWidget,
@@ -92,20 +93,21 @@ class CommonProductDetailsWidget extends StatelessWidget {
           top: AppConstants.padding_10,
           bottom: MediaQuery.of(context).viewInsets.bottom),
       clipBehavior: Clip.hardEdge,
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
+      child:
+          // Stack(
+          //   fit: StackFit.passthrough,
+          //   children: [
           Column(
-            mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(child: 0.width),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      productName,
+              Expanded(child: 0.width),
+              Expanded(
+                flex: 4,
+                child: Text(
+                  productName,
                       style: AppStyles.rkBoldTextStyle(
                         size: AppConstants.normalFont,
                         color: AppColors.blackColor,
@@ -727,9 +729,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          90.height,
-                                          // Padding(
-                                          //   padding: const EdgeInsets.only(
+                                          // 90.height,
+                                      // Padding(
+                                      //   padding: const EdgeInsets.only(
                                           //       top: 0,
                                           //       left: AppConstants.padding_20,
                                           //       right: AppConstants.padding_20,
@@ -749,48 +751,48 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           // ),
                                         ],
                                       ),
-                              ],
-                            )
-                          : 0.width,
-                      // 160.height,
-                    ],
-                  ),
-                ),
+                          ],
+                        )
+                      : 0.width,
+                  // 160.height,
+                ],
               ),
-            ],
+            ),
           ),
-          !isSupplierAvailable || productStock == 0
-              ? 0.width
-              : Positioned(
-                  bottom: 0,
-                  right: 0,
-                  left: 0,
-                  child: Container(
-                    height: 90,
-                    width: getScreenWidth(context),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppConstants.padding_20,
-                        vertical: AppConstants.padding_20),
-                    decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        border: Border(
-                            top: BorderSide(
-                                color: AppColors.lightBorderColor, width: 1))),
-                    child: CommonProductButtonWidget(
-                      title: AppLocalizations.of(context)!.add_to_order,
-                      isLoading: isLoading,
-                      onPressed: onAddToOrderPressed,
-                      width: double.maxFinite,
-                      height: AppConstants.buttonHeight,
-                      borderRadius: AppConstants.radius_5,
-                      textSize: AppConstants.normalFont,
-                      textColor: AppColors.whiteColor,
-                      bgColor: AppColors.mainColor,
-                    ),
-                  ),
-                ),
         ],
       ),
+      // !isSupplierAvailable || productStock == 0
+      //     ? 0.width
+      //     : Positioned(
+      //         bottom: 0,
+      //         right: 0,
+      //         left: 0,
+      //         child: Container(
+      //           height: 90,
+      //           width: getScreenWidth(context),
+      //           padding: EdgeInsets.symmetric(
+      //               horizontal: AppConstants.padding_20,
+      //               vertical: AppConstants.padding_20),
+      //           decoration: BoxDecoration(
+      //               color: AppColors.whiteColor,
+      //               border: Border(
+      //                   top: BorderSide(
+      //                       color: AppColors.lightBorderColor, width: 1))),
+      //           child: CommonProductButtonWidget(
+      //             title: AppLocalizations.of(context)!.add_to_order,
+      //             isLoading: isLoading,
+      //             onPressed: onAddToOrderPressed,
+      //             width: double.maxFinite,
+      //             height: AppConstants.buttonHeight,
+      //             borderRadius: AppConstants.radius_5,
+      //             textSize: AppConstants.normalFont,
+      //             textColor: AppColors.whiteColor,
+      //             bgColor: AppColors.mainColor,
+      //           ),
+      //         ),
+      //       ),
+      // ],
+      // ),
     );
   }
 }

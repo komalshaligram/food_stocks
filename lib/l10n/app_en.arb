@@ -369,5 +369,6 @@
   "comax_client_error": "Something went wrong.",
   "unit_in_box": "units in the b  ox",
   "price": "price",
-  "per_unit": "per unit"
+  "per_unit": "per unit",
+  "sub_categories": "Sub Categories"
 }

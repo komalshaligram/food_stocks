@@ -121,7 +121,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                              SystemChannels.textInput.invokeMethod("TextInput.hide");
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
                               _code= code!;
