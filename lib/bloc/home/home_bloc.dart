@@ -561,7 +561,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              emit(state.copyWith(isLoading: false));
+              List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+              productStockList[state.productStockUpdateIndex] =
+                  productStockList[state.productStockUpdateIndex].copyWith(
+                note: '',
+                isNoteOpen: false,
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
+              );
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList));
               // cartProductQuantityList[lastQuantityIndex] =
               //     "${int.parse(cartProductQuantityList[lastQuantityIndex]) + state.productStockList[state.productStockUpdateIndex].quantity}";
               // debugPrint(
@@ -654,12 +666,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                note: '',
+                    note: '',
                 isNoteOpen: false,
-                // quantity: 0,
-                // productSupplierIds: '',
-                // totalPrice: 0.0,
-                // productSaleId: '',
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
               );
 
               // List<String> cartProductList = preferences.getCartProductList();

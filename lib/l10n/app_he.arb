@@ -370,5 +370,6 @@
   "comaxclienterror": "at the client register or update time if comax error occurs",
   "unit_in_box": "יחידות במארז",
   "price": "מחיר",
-  "per_unit": "per unit"
+  "per_unit": "per unit",
+  "sub_categories": "Sub Categories"
 }

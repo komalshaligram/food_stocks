@@ -25,6 +25,7 @@ class StoreState with _$StoreState {
     required int imageIndex,
     required TextEditingController searchController,
     required TextEditingController noteController,
+    required RefreshController refreshController,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -50,5 +51,6 @@ class StoreState with _$StoreState {
         imageIndex: 0,
         searchController: TextEditingController(),
         noteController: TextEditingController(),
+        refreshController: RefreshController(),
       );
 }

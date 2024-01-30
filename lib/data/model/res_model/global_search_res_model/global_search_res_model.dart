@@ -31,6 +31,7 @@ class GlobalSearchResModel with _$GlobalSearchResModel {
 class Data with _$Data {
   const factory Data({
     @JsonKey(name: "categoryData") List<CategoryDatum>? categoryData,
+    @JsonKey(name: "subCategoryData") List<SubCategoryDatum>? subCategoryData,
     @JsonKey(name: "companyData") List<CompanyDatum>? companyData,
     @JsonKey(name: "saleData") List<SaleDatum>? saleData,
     @JsonKey(name: "supplierProductData")
@@ -57,6 +58,24 @@ class CategoryDatum with _$CategoryDatum {
 
   factory CategoryDatum.fromJson(Map<String, dynamic> json) =>
       _$CategoryDatumFromJson(json);
+}
+
+@freezed
+class SubCategoryDatum with _$SubCategoryDatum {
+  const factory SubCategoryDatum({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "subCategoryName") String? subCategoryName,
+    @JsonKey(name: "parentCategoryId") String? parentCategoryId,
+    @JsonKey(name: "createdAt") DateTime? createdAt,
+    @JsonKey(name: "updatedAt") DateTime? updatedAt,
+    @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "isDeleted") bool? isDeleted,
+    @JsonKey(name: "subCategoryNumber") int? subCategoryNumber,
+    @JsonKey(name: "parentCategoryName") String? parentCategoryName,
+  }) = _SubCategoryDatum;
+
+  factory SubCategoryDatum.fromJson(Map<String, dynamic> json) =>
+      _$SubCategoryDatumFromJson(json);
 }
 
 @freezed
@@ -129,6 +148,7 @@ class SupplierDatum with _$SupplierDatum {
     // @JsonKey(name: "cityId") String? cityId,
     @JsonKey(name: "contactName") String? contactName,
     // @JsonKey(name: "statusId") String? statusId,
+    @JsonKey(name: "qrcode") String? qrcode,
     @JsonKey(name: "logo") String? logo,
     // @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "supplierDetail") SupplierDetail? supplierDetail,
@@ -280,8 +300,8 @@ class SupplierProductDatum with _$SupplierProductDatum {
     // @JsonKey(name: "updatedAt") String? updatedAt,
     @JsonKey(name: "productId") String? productId,
     @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "productPrice") double? productPrice,
-    @JsonKey(name: "productStock") int? productStock,
+    @JsonKey(name: "productPrice") String? productPrice,
+    @JsonKey(name: "productStock") String? productStock,
   }) = _SupplierProductDatum;
 
   factory SupplierProductDatum.fromJson(Map<String, dynamic> json) =>

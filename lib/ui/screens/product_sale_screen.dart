@@ -16,6 +16,7 @@ import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_strings.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
@@ -319,25 +320,46 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               onQuantityDecreaseTap: () {
                                 context.read<ProductSaleBloc>().add(
                                     ProductSaleEvent
-                                        .decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: state.noteController,
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                              onNoteChanged: (newNote) {
-                                context.read<ProductSaleBloc>().add(
-                                    ProductSaleEvent.changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
+                                            .decreaseQuantityOfProduct(
+                                                context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<ProductSaleBloc>().add(
+                                        ProductSaleEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                 context.read<ProductSaleBloc>().add(
                                     ProductSaleEvent
                                         .addToCartProductEvent(
                                         context: context1));
-                              }),
+                              }*/
+                                ),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
+                                  isLoading: state.isLoading,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<ProductSaleBloc>().add(
+                                              ProductSaleEvent
+                                                  .addToCartProductEvent(
+                                                      context: context1));
+                                        }),
                         ),
                       );
                     },

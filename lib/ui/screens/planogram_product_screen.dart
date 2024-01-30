@@ -13,6 +13,7 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -361,18 +362,18 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 context.read<PlanogramProductBloc>().add(
                                     PlanogramProductEvent
                                         .decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: state.noteController,
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                              onNoteChanged: (newNote) {
-                                context.read<PlanogramProductBloc>().add(
-                                    PlanogramProductEvent
-                                        .changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
+                                                context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<PlanogramProductBloc>().add(
+                                        PlanogramProductEvent
+                                            .changeNoteOfProduct(
+                                                newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                 context
@@ -380,7 +381,29 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     .add(PlanogramProductEvent
                                     .addToCartProductEvent(
                                     context: context1));
-                              }),
+                              }*/
+                                ),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
+                                  isLoading: state.isLoading,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context
+                                              .read<PlanogramProductBloc>()
+                                              .add(PlanogramProductEvent
+                                                  .addToCartProductEvent(
+                                                      context: context1));
+                                        }),
                         ),
                       );
                     },
