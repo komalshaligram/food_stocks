@@ -158,8 +158,9 @@ class SupplierProductsBloc
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[productStockUpdateIndex].productSupplierIds}');
-            response.product?.first.supplierSales?.forEach((supplier) {
-              if (supplier.supplierId == state.supplierId) {
+            debugPrint('sIs = ${state.supplierId}');
+            if (state.supplierId.isEmpty) {
+              response.product?.first.supplierSales?.forEach((supplier) {
                 supplierList.add(ProductSupplierModel(
                   supplierId: supplier.supplierId ?? '',
                   companyName: supplier.supplierCompanyName ?? '',
@@ -211,9 +212,65 @@ class SupplierProductsBloc
                       [],
                 ));
                 debugPrint('supplier found');
-                return;
-              }
-            });
+              });
+            } else {
+              response.product?.first.supplierSales?.forEach((supplier) {
+                if (supplier.supplierId == state.supplierId) {
+                  supplierList.add(ProductSupplierModel(
+                    supplierId: supplier.supplierId ?? '',
+                    companyName: supplier.supplierCompanyName ?? '',
+                    basePrice: double.parse(supplier.productPrice ?? '0.0'),
+                    stock: int.parse(supplier.productStock ?? '0'),
+                    selectedIndex: (supplier.supplierId ?? '') ==
+                            state.productStockList[productStockUpdateIndex]
+                                .productSupplierIds
+                        ? supplier.saleProduct
+                                    ?.indexOf(supplier.saleProduct?.firstWhere(
+                                          (sale) =>
+                                              sale.saleId ==
+                                              state
+                                                  .productStockList[
+                                                      productStockUpdateIndex]
+                                                  .productSaleId,
+                                          orElse: () => SaleProduct(),
+                                        ) ??
+                                        SaleProduct()) ==
+                                -1
+                            ? -2
+                            : supplier.saleProduct
+                                    ?.indexOf(supplier.saleProduct?.firstWhere(
+                                          (sale) =>
+                                              sale.saleId ==
+                                              state
+                                                  .productStockList[
+                                                      productStockUpdateIndex]
+                                                  .productSaleId,
+                                          orElse: () => SaleProduct(),
+                                        ) ??
+                                        SaleProduct()) ??
+                                -1
+                        : -1,
+                    supplierSales: supplier.saleProduct
+                            ?.map((sale) => SupplierSaleModel(
+                                saleId: sale.saleId ?? '',
+                                saleName: sale.saleName ?? '',
+                                saleDescription:
+                                    parse(sale.salesDescription ?? '')
+                                            .body
+                                            ?.text ??
+                                        '',
+                                salePrice:
+                                    double.parse(sale.discountedPrice ?? '0.0'),
+                                saleDiscount: double.parse(
+                                    sale.discountPercentage ?? '0.0')))
+                            .toList() ??
+                        [],
+                  ));
+                  debugPrint('supplier found');
+                  return;
+                }
+              });
+            }
             supplierList.removeWhere((supplier) => supplier.stock == 0);
             // supplierList.addAll(response.product?.first.supplierSales
             //     ?.map((supplier) => ProductSupplierModel(
