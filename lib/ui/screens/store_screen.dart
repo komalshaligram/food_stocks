@@ -75,14 +75,14 @@ class StoreScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
-           //  if(state.productCategoryList.isEmpty) {
-               bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
-                bloc.add(StoreEvent.getCompaniesListEvent(context: context));
-                bloc.add(StoreEvent.getSuppliersListEvent(context: context));
-               // bloc.add(StoreEvent.getProductSalesListEvent(context: context));
-              //  bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-               // bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
-         //   }
+                //  if(state.productCategoryList.isEmpty) {
+                //     bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
+                //      bloc.add(StoreEvent.getCompaniesListEvent(context: context));
+                //      bloc.add(StoreEvent.getSuppliersListEvent(context: context));
+                //      bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+                //      bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+                //      bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+                //   }
 
               },
               child: SafeArea(
@@ -317,17 +317,12 @@ class StoreScreenWidget extends StatelessWidget {
                                             horizontal:
                                             AppConstants.padding_5),
                                         itemBuilder: (context, index) {
-
                                           return buildCompanyListItem(
                                               companyLogo: state
                                                   .suppliersList
                                                   .data?[index]
                                                   .logo ??
                                                   '',
-                                              isHomePreference: state
-                                                  .suppliersList.data?[index].supplierDetail
-                                                  ?.isHomePreference ??
-                                                  false,
                                               companyName: state
                                                   .suppliersList
                                                   .data?[index]
@@ -830,7 +825,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     SearchTypes.sale ||
                                     state.searchList[index].searchType ==
                                         SearchTypes.product) {
-                                  debugPrint("Here !!!!!!!!!");
+
                                   showProductDetails(
                                       context: context,
                                       productId: state
@@ -899,7 +894,7 @@ class StoreScreenWidget extends StatelessWidget {
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
                           debugPrint('result = $scanResult');
-                          debugPrint("Here !!!!!!!!!111");
+
                           showProductDetails(
                               context: context,
                               productId: scanResult,
@@ -990,9 +985,13 @@ class StoreScreenWidget extends StatelessWidget {
                         : BorderSide(
                         color: AppColors.borderColor.withOpacity(0.5),
                         width: 1))),
-            padding: EdgeInsets.symmetric(
-                horizontal: AppConstants.padding_20,
-                vertical: AppConstants.padding_5),
+            padding: EdgeInsets.only(top: AppConstants.padding_5,
+                left: AppConstants.padding_20,
+                right: AppConstants.padding_20,
+                bottom: AppConstants.padding_5),
+            // padding: EdgeInsets.symmetric(
+            //     horizontal: AppConstants.padding_20,
+            //     vertical: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1032,11 +1031,15 @@ class StoreScreenWidget extends StatelessWidget {
                   ),
                 ),
                 10.width,
-                Text(
-                  searchName,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.blackColor,
+                Expanded(
+                  child: Text(
+                    searchName,
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_12,
+                      color: AppColors.blackColor,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -1595,6 +1598,10 @@ class StoreScreenWidget extends StatelessWidget {
                                         (image) => image.imageUrl ?? '') ??
                                     []
                               ],
+                              productPerUnit: state.productDetails.first
+                                  .numberOfUnit ?? 0,
+                              productUnitPrice: state.productStockList[state
+                                  .productStockUpdateIndex].totalPrice,
                               productName: state.productDetails.first
                                   .productName ??
                                   '',
@@ -1613,8 +1620,12 @@ class StoreScreenWidget extends StatelessWidget {
                                   .body
                                   ?.text ??
                                   '',
-                              productPrice: state.productStockList[state.productStockUpdateIndex].totalPrice *
-                                  state.productStockList[state.productStockUpdateIndex].quantity,
+                              productPrice: state.productStockList[state
+                                  .productStockUpdateIndex].totalPrice *
+                                  state.productStockList[state
+                                      .productStockUpdateIndex].quantity *
+                                  (state.productDetails.first.numberOfUnit ??
+                                      0),
                               productScaleType: state.productDetails.first
                                   .scales?.scaleType ?? '',
                               productWeight: state.productDetails.first

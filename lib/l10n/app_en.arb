@@ -359,18 +359,15 @@
   "enter_valid_contact_name": "Please enter valid contact name",
   "enter_valid_address": "Please enter valid address",
   "this_company_has_no_product": "Currently this company has no products",
-  "out_of_stock1" : "Out of stock",
+  "out_of_stock1": "Out of stock",
   "accountnotapprove": "account not approve",
-
-"rivchitcredentialsnotset":"Rivchit credentials not set",
-"comaxinvoicenotfound":"Comax invoice not found",
-"totalamountcantbezero" : "on create order if total amount will be zore",
-"salenotexists" : "on create order if sended sale id does not exists",
-"comaxordererror" : "at the order creation time if comax error occurs",
-"comaxclienterror" : "at the client register or update time if comax error occurs"
-
-
-
-
-
+  "rivchitcredentialsnotset": "Rivchit credentials not set",
+  "comaxinvoicenotfound": "Comax invoice not found",
+  "totalamountcantbezero": "on create order if total amount will be zore",
+  "salenotexists": "on create order if sended sale id does not exists",
+  "comaxordererror": "at the order creation time if comax error occurs",
+  "comaxclienterror": "at the client register or update time if comax error occurs",
+  "unit_in_box": "units in the box",
+  "price": "price",
+  "per_unit": "per unit"
 }

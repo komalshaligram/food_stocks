@@ -452,6 +452,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                         (image) => image.imageUrl ?? '') ??
                                     []
                               ],
+                              productPerUnit: state.productDetails.first
+                                  .numberOfUnit ?? 0,
+                              productUnitPrice: state.productStockList[state
+                                  .productStockUpdateIndex].totalPrice,
                               productName:
                               state.productDetails.first.productName ??
                                   '',
@@ -465,16 +469,21 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   .first.productDescription ??
                                   '',
                               productPrice:
-                              state.productStockList[state.productStockUpdateIndex].totalPrice *
+                              state.productStockList[state
+                                  .productStockUpdateIndex].totalPrice *
                                   state
                                       .productStockList[
                                   state.productStockUpdateIndex]
-                                      .quantity,
+                                      .quantity *
+                                  (state.productDetails.first.numberOfUnit ??
+                                      0),
                               productScaleType:
                               state.productDetails.first.scales?.scaleType ??
                                   '',
-                              productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                              isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
+                              productWeight: state.productDetails.first
+                                  .itemsWeight?.toDouble() ?? 0.0,
+                              isNoteOpen: state.productStockList[state
+                                  .productStockUpdateIndex].isNoteOpen,
                               onNoteToggleChanged: () {
                                 context.read<SupplierProductsBloc>().add(
                                     SupplierProductsEvent

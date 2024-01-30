@@ -285,8 +285,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       productStockList.indexOf(productStockList.last)]
                   .copyWith(
                 quantity: 1,
-                      productId: response.product?.first.id ?? '',
-                      stock: response.product?.first.numberOfUnit ?? 0,
+                productId: response.product?.first.id ?? '',
+                stock: response.product?.first.numberOfUnit ?? 0,
                 productSaleId: '',
                 productSupplierIds: '',
                 note: '',
@@ -380,6 +380,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     ? ''
                     : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
+              productStockList: state.productStockList,
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
@@ -425,11 +426,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
-
             }
-            debugPrint('barcode stock1 = ${state.productStockList.last}');
-            debugPrint(
-                'barcode stock update index1 = ${state.productStockList.length}');
             try {
               SharedPreferencesHelper preferences = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());

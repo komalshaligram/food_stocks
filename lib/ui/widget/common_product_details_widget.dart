@@ -22,6 +22,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final String productSaleDescription;
   final double productPrice;
   final double productWeight;
+  final double productUnitPrice;
+  final int productPerUnit;
   final int productQuantity;
   final String productScaleType;
   final ScrollController scrollController;
@@ -53,6 +55,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.productSaleDescription,
     required this.productPrice,
     required this.productWeight,
+    required this.productUnitPrice,
+    required this.productPerUnit,
     required this.isRTL,
     required this.isNoteOpen,
     required this.scrollController,
@@ -127,31 +131,52 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 ],
               ),
               5.height,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${productWeight.toStringAsFixed(1)}$productScaleType',
+                    '$productPerUnit${AppLocalizations.of(context)!
+                        .unit_in_box}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),
                   ),
-                  productCompanyName == ''
-                      ? 0.height
-                      : Text(
-                          ' | ',
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: AppColors.blackColor),
-                        ),
                   Text(
-                    '$productCompanyName',
+                    '${AppLocalizations.of(context)!.price} : ${productUnitPrice
+                        .toStringAsFixed(2)}${AppLocalizations.of(context)!
+                        .per_unit}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),
                   ),
                 ],
               ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Text(
+              //       '${productWeight.toStringAsFixed(1)}$productScaleType',
+              //       style: AppStyles.rkRegularTextStyle(
+              //           size: AppConstants.smallFont,
+              //           color: AppColors.blackColor),
+              //     ),
+              //     productCompanyName == ''
+              //         ? 0.height
+              //         : Text(
+              //             ' | ',
+              //             style: AppStyles.rkRegularTextStyle(
+              //                 size: AppConstants.smallFont,
+              //                 color: AppColors.blackColor),
+              //           ),
+              //     Text(
+              //       '$productCompanyName',
+              //       style: AppStyles.rkRegularTextStyle(
+              //           size: AppConstants.smallFont,
+              //           color: AppColors.blackColor),
+              //     ),
+              //   ],
+              // ),
               10.height,
               Expanded(
                 // fit: FlexFit.tight,

@@ -896,45 +896,49 @@ class HomeScreenWidget extends StatelessWidget {
 
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
-                                context.read<HomeBloc>().add(
-                                    HomeEvent.updateImageIndexEvent(
-                                        index: index));
-                              },
-                              productImages: [
-                                state.productDetails.first.mainImage ?? '',
-                                ...state.productDetails.first.images?.map(
-                                        (image) => image.imageUrl ?? '') ??
-                                    []
-                              ],
-                              productName:
-                              state.productDetails.first.productName ??
-                                  '',
-                              productCompanyName:
-                              state.productDetails.first.brandName ??
-                                  '',
-                              productDescription: state.productDetails.first
-                                  .productDescription ??
-                                  '',
-                              productSaleDescription: state.productDetails
-                                  .first.productDescription ??
-                                  '',
-                              productPrice:
-                              state.productStockList[state.productStockUpdateIndex].totalPrice *
-                                  state
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.updateImageIndexEvent(
+                                            index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ?? '',
+                                    ...state.productDetails.first.images?.map(
+                                            (image) => image.imageUrl ?? '') ??
+                                        []
+                                  ],
+                                  productPerUnit:
+                                      state.productDetails.first.numberOfUnit ??
+                                          0,
+                                  productUnitPrice: state
                                       .productStockList[
-                                  state.productStockUpdateIndex]
-                                      .quantity,
-                              productScaleType:
-                              state.productDetails.first.scales?.scaleType ??
-                                  '',
-                              productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                              isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                              onNoteToggleChanged: () {
-                                context
-                                    .read<HomeBloc>()
-                                    .add(HomeEvent.toggleNoteEvent());
-                              },
-                              supplierWidget: state.productSupplierList.isEmpty
+                                          state.productStockUpdateIndex]
+                                      .totalPrice,
+                                  productName:
+                                      state.productDetails.first.productName ??
+                                          '',
+                                  productCompanyName:
+                                      state.productDetails.first.brandName ??
+                                          '',
+                                  productDescription: state.productDetails.first
+                                          .productDescription ??
+                                      '',
+                                  productSaleDescription: state.productDetails
+                                          .first.productDescription ??
+                                      '',
+                                  productPrice: state
+                                          .productStockList[state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state.productStockList[state.productStockUpdateIndex].quantity *
+                                      (state.productDetails.first.numberOfUnit ?? 0),
+                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
+                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
+                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context
+                                        .read<HomeBloc>()
+                                        .add(HomeEvent.toggleNoteEvent());
+                                  },
+                                  supplierWidget: state.productSupplierList.isEmpty
                                   ? Container(
                                 decoration: BoxDecoration(
                                     border: Border(
