@@ -3,7 +3,7 @@
 "register": "הרשמה",
 "login": "התחברות",
 "business_details": "פרטי עסק",
-"type_of_picture": "Type of Picture",
+"type_of_picture": "סוג תמונה",
 "type_of_business": "סוג העסק",
 "profile_picture": "תמונת פרופיל",
 "institutional": "מוסדי",
@@ -234,8 +234,8 @@
 "add_1_quantity":"בחר לפחות כמות אחת",
 "out_of_stock":"לא קיים במלאי",
 "select_business_type":"אנא בחר את סוג העסק",
-"reorder": "Reorder",
-"previous_order_products": "Products from Previous Order",
+"reorder": "הזמן שוב",
+"previous_order_products": "מוצרים מהזמנה קודמת",
 "errmessage":"משהו השתבש",
 "successmessage":"הבקשה הושלמה בהצלחה",
 "invalidoperation":" פעולה לא חוקית",
@@ -370,7 +370,6 @@
   "comax_client_error": "משהו השתבש",
   "unit_in_box": "יחידות במארז",
   "price": "מחיר",
-
-  "sub_categories": "Sub Categories",
+  "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה"
 }
