@@ -28,7 +28,7 @@ class PushNotificationService {
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    NotificationSettings settings = await firebaseMessaging.requestPermission(
+   /* NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -37,7 +37,7 @@ class PushNotificationService {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+    print('User granted permission: ${settings.authorizationStatus}');*/
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {

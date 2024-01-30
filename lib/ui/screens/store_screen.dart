@@ -93,7 +93,25 @@ class StoreScreenWidget extends StatelessWidget {
                     SmartRefresher(
                       enablePullDown: true,
                       controller: state.refreshController,
-                      header: RefreshWidget(),
+                        header: CustomHeader(
+                          refreshStyle: RefreshStyle.Behind,
+                          builder: (c, m) {
+                            return Container(
+                              height: 30,
+                              width: 30,
+                              margin: EdgeInsets.only(top: 90),
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: AppColors.shadowColor.withOpacity(0.1),
+                                    blurRadius: AppConstants.blur_10)
+                              ], color: AppColors.whiteColor, shape: BoxShape.circle),
+                              child: CupertinoActivityIndicator(
+                                color: AppColors.mainColor,
+                                radius: 10,
+                              ),
+                            );
+                          },
+                        ),
                       footer: CustomFooter(
                         builder: (context, mode) => StoreScreenShimmerWidget(),
                       ),

@@ -89,6 +89,7 @@ class SupplierDetail with _$SupplierDetail {
     @JsonKey(name: "totalIncome") int? totalIncome,
     @JsonKey(name: "incomeByThisMonth") int? incomeByThisMonth,
     @JsonKey(name: "orders") int? orders,
+    @JsonKey(name:"isHomePreference") bool? isHomePreference
   }) = _SupplierDetail;
 
   factory SupplierDetail.fromJson(Map<String, dynamic> json) =>

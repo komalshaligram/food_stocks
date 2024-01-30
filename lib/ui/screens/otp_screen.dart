@@ -121,11 +121,11 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                              // SystemChannels.textInput.invokeMethod("TextInput.show");
+                              SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
-                              _code = code!;
-                              if (_code.length == 4) {
+                              _code= code!;
+                              if(code.length==4){
                                 if (widget.isRegister == true) {
                                   bloc.add(OtpEvent.registerApiEvent(
                                       contact: widget.contact,
@@ -140,7 +140,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                                       context: context));
                                 }
                               }
-                              // SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                           ),
                         ),
