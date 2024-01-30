@@ -50,8 +50,8 @@ class SupplierDatum with _$SupplierDatum {
     @JsonKey(name: "updatedAt") String? updatedAt,
     @JsonKey(name: "productId") String? productId,
     @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "productPrice") double? productPrice,
-    @JsonKey(name: "productStock") double? productStock,
+    @JsonKey(name: "productPrice") String? productPrice,
+    @JsonKey(name: "productStock") String? productStock,
   }) = _SupplierDatum;
 
   factory SupplierDatum.fromJson(Map<String, dynamic> json) =>

@@ -369,5 +369,6 @@
   "comaxclienterror": "at the client register or update time if comax error occurs",
   "unit_in_box": "units in the box",
   "price": "price",
-  "per_unit": "per unit"
+  "per_unit": "per unit",
+  "sub_categories": "Sub Categories"
 }

@@ -29,6 +29,7 @@ import 'package:html/parser.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/common_product_button_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/dashboard_stats_widget.dart';
 
@@ -74,7 +75,10 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+                if (state.productSalesList.isEmpty) {
+                  bloc.add(
+                      HomeEvent.getProductSalesListEvent(context: context));
+                }
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
@@ -977,24 +981,44 @@ class HomeScreenWidget extends StatelessWidget {
                               },
                               onQuantityDecreaseTap: () {
                                 context.read<HomeBloc>().add(
-                                    HomeEvent.decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: state.noteController,
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                              onNoteChanged: (newNote) {
-                                context.read<HomeBloc>().add(
-                                    HomeEvent.changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
+                                        HomeEvent.decreaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                 context.read<HomeBloc>().add(
                                     HomeEvent.addToCartProductEvent(
                                         context: context));
-                              }),
+                              }*/
+                                ),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
+                                  isLoading: state.isLoading,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context.read<HomeBloc>().add(
+                                              HomeEvent.addToCartProductEvent(
+                                                  context: context));
+                                        }),
                         ),
                       );
                     },

@@ -482,13 +482,24 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              emit(state.copyWith(isLoading: false));
+              List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+              productStockList[state.productStockUpdateIndex] =
+                  productStockList[state.productStockUpdateIndex].copyWith(
+                note: '',
+                isNoteOpen: false,
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
+              );
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response.message?.toLocalization() ?? response.message!,
                       event.context),
                   type: SnackBarType.SUCCESS);
             } else {
@@ -562,12 +573,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   state.productStockList.toList(growable: true);
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
-                note: '',
+                    note: '',
                 isNoteOpen: false,
-                // quantity: 0,
-                // productSupplierIds: '',
-                // totalPrice: 0.0,
-                // productSaleId: '',
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
               );
               add(ReorderEvent.setCartCountEvent());
               emit(state.copyWith(

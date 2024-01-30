@@ -121,11 +121,26 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                              // SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
-                              _code= code!;
-                              SystemChannels.textInput.invokeMethod("TextInput.show");
+                              _code = code!;
+                              if (_code.length == 4) {
+                                if (widget.isRegister == true) {
+                                  bloc.add(OtpEvent.registerApiEvent(
+                                      contact: widget.contact,
+                                      otp: _code,
+                                      isRegister: widget.isRegister,
+                                      context: context));
+                                } else {
+                                  bloc.add(OtpEvent.otpApiEvent(
+                                      contact: widget.contact,
+                                      otp: _code,
+                                      isRegister: widget.isRegister,
+                                      context: context));
+                                }
+                              }
+                              // SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                           ),
                         ),

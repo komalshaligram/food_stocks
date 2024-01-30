@@ -798,13 +798,27 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == 201) {
               Vibration.vibrate();
-              emit(state.copyWith(isLoading: false));
+              List<List<ProductStockModel>> productStockList =
+                  state.productStockList.toList(growable: true);
+              productStockList[state.planoGramUpdateIndex]
+                      [state.productStockUpdateIndex] =
+                  productStockList[state.planoGramUpdateIndex]
+                          [state.productStockUpdateIndex]
+                      .copyWith(
+                note: '',
+                isNoteOpen: false,
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
+              );
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ??
-                          response.message!,
+                      response.message?.toLocalization() ?? response.message!,
                       event.context),
                   type: SnackBarType.SUCCESS);
             } else {
@@ -896,12 +910,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                   [state.productStockUpdateIndex]
                       .copyWith(
                     note: '',
-                    isNoteOpen: false,
-                    // quantity: 0,
-                    // productSupplierIds: '',
-                    // totalPrice: 0.0,
-                    // productSaleId: '',
-                  );
+                isNoteOpen: false,
+                quantity: 0,
+                productSupplierIds: '',
+                totalPrice: 0.0,
+                productSaleId: '',
+              );
               add(StoreCategoryEvent.setCartCountEvent());
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));

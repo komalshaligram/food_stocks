@@ -18,6 +18,7 @@ import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/product_details_shimmer_widget.dart';
@@ -212,25 +213,31 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           itemBuilder: (context, index) =>
                               DelayedWidget(
                                 child: CommonProductItemWidget(
-                                  productStock: state.productList[index].productStock?.toInt() ?? 0,
-                                    productImage: state.productList[index]
-                                        .mainImage ??
-                                        '',
-                                    productName: state.productList[index]
-                                        .productName ??
-                                        '',
-                                    totalSaleCount: 0,
-                                    price: state.productList[index]
-                                        .productPrice ??
-                                        0.0,
-                                    onButtonTap: () {
-                                      showProductDetails(
-                                          context: context,
-                                          productId: state
-                                              .productList[index]
-                                              .productId ??
-                                              '');
-                                    }),
+                                    productStock: int.parse(state
+                                                    .productList[index]
+                                                    .productStock ??
+                                                '0'),
+                                            productImage: state
+                                                    .productList[index]
+                                                    .mainImage ??
+                                                '',
+                                            productName: state
+                                                    .productList[index]
+                                                    .productName ??
+                                                '',
+                                            totalSaleCount: 0,
+                                            price: double.parse(state
+                                                    .productList[index]
+                                                    .productPrice ??
+                                                "0.0"),
+                                            onButtonTap: () {
+                                              showProductDetails(
+                                                  context: context,
+                                                  productId: state
+                                                          .productList[index]
+                                                          .productId ??
+                                                      '');
+                                            }),
                               )
                         // buildSupplierProducts(
                         // context: context,
@@ -536,18 +543,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                 context.read<SupplierProductsBloc>().add(
                                     SupplierProductsEvent
                                         .decreaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              noteController: state.noteController,
-                              // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                              onNoteChanged: (newNote) {
-                                context.read<SupplierProductsBloc>().add(
-                                    SupplierProductsEvent
-                                        .changeNoteOfProduct(
-                                        newNote: newNote));
-                              },
-                              isLoading: state.isLoading,
-                              onAddToOrderPressed: state.isLoading
+                                                context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<SupplierProductsBloc>().add(
+                                        SupplierProductsEvent
+                                            .changeNoteOfProduct(
+                                                newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
                                   ? null
                                   : () {
                                 context
@@ -555,7 +562,29 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     .add(SupplierProductsEvent
                                     .addToCartProductEvent(
                                     context: context1));
-                              }),
+                              }*/
+                                ),
+                          bottomNavigationBar: state.isProductLoading
+                              ? 0.height
+                              : CommonProductDetailsButton(
+                                  isLoading: state.isLoading,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
+                                  onAddToOrderPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          context
+                                              .read<SupplierProductsBloc>()
+                                              .add(SupplierProductsEvent
+                                                  .addToCartProductEvent(
+                                                      context: context1));
+                                        }),
                         ),
                       );
                     },
