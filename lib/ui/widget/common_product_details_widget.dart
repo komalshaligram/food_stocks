@@ -144,7 +144,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                   Text(
                     '${AppLocalizations.of(context)!.price} : ${productUnitPrice
-                        .toStringAsFixed(2)}${AppLocalizations.of(context)!
+                        .toStringAsFixed(2)} ${AppLocalizations.of(context)!
                         .per_unit}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,

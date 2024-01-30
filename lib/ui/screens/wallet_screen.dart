@@ -300,7 +300,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                               },
                                               tooltipBgColor: Colors.transparent,
                                               showOnTopOfTheChartBoxArea: false,
-                                              tooltipMargin: 3,
+                                              tooltipMargin: 15,
                                               tooltipPadding: EdgeInsets.only(bottom: 6)
                                             ),
                                           ),

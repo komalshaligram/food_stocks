@@ -360,15 +360,15 @@
 "enter_valid_address": "אנא הזן כתובת תקינה",
   "this_company_has_no_product": "כרגע אין מוצרים לחברה הזו",
   "out_of_stock1": "לא במלאי",
-  "accountnotapprove": "חשבון לא מאושר",
+  "account_not_approve": "חשבון לא מאושר",
   "confirm": "לְאַשֵׁר",
-  "rivchitcredentialsnotset": "Rivchit credentials not set",
-  "comaxinvoicenotfound": "Comax invoice not found",
-  "totalamountcantbezero": "on create order if total amount will be zore",
-  "salenotexists": "on create order if sended sale id does not exists",
-  "comaxordererror": "at the order creation time if comax error occurs",
-  "comaxclienterror": "at the client register or update time if comax error occurs",
+  "rivchit_credentials_not_set": "פרטי ריווחית לא הוגדרו",
+  "comax_invoice_not_found": "חשבונית קומקס לא קיימת",
+  "total_amount_cant_be_zero": "סה\"כ לתשלום לא יכול להיות אפס",
+  "sale_not_exists": "המבצע לא קיים יותר",
+  "comax_order_error": "משהו השתבש",
+  "comax_client_error": "משהו השתבש",
   "unit_in_box": "יחידות במארז",
   "price": "מחיר",
-  "per_unit": "per unit"
+  "per_unit": "ליחידה"
 }
