@@ -79,9 +79,9 @@ class StoreScreenWidget extends StatelessWidget {
                bloc.add(StoreEvent.getProductCategoriesListEvent(context: context));
                 bloc.add(StoreEvent.getCompaniesListEvent(context: context));
                 bloc.add(StoreEvent.getSuppliersListEvent(context: context));
-                bloc.add(StoreEvent.getProductSalesListEvent(context: context));
-                bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
-                bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
+               // bloc.add(StoreEvent.getProductSalesListEvent(context: context));
+              //  bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
+               // bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
          //   }
 
               },
@@ -317,12 +317,17 @@ class StoreScreenWidget extends StatelessWidget {
                                             horizontal:
                                             AppConstants.padding_5),
                                         itemBuilder: (context, index) {
+
                                           return buildCompanyListItem(
                                               companyLogo: state
                                                   .suppliersList
                                                   .data?[index]
                                                   .logo ??
                                                   '',
+                                              isHomePreference: state
+                                                  .suppliersList.data?[index].supplierDetail
+                                                  ?.isHomePreference ??
+                                                  false,
                                               companyName: state
                                                   .suppliersList
                                                   .data?[index]
@@ -411,7 +416,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                   .discountPercentage ??
                                                   '0.0'),
                                               onButtonTap: () {
-                                                print("tap 1");
                                                 showProductDetails(
                                                     context: context,
                                                     productId: state
@@ -527,7 +531,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                     0.0,
                                                 onButtonTap:
                                                     () {
-                                                      print("tap 2");
                                                   showProductDetails(
                                                       context: context,
                                                       productId: state
@@ -644,7 +647,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                     0.0,
                                                 onButtonTap:
                                                     () {
-                                                      print("tap 3");
                                                   showProductDetails(
                                                       context: context,
                                                       productId: state
@@ -828,7 +830,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     SearchTypes.sale ||
                                     state.searchList[index].searchType ==
                                         SearchTypes.product) {
-                                  print("tap 4");
+                                  debugPrint("Here !!!!!!!!!");
                                   showProductDetails(
                                       context: context,
                                       productId: state
@@ -897,7 +899,7 @@ class StoreScreenWidget extends StatelessWidget {
                         if (scanResult != '-1') {
                           // -1 result for cancel scanning
                           debugPrint('result = $scanResult');
-                          print("tap 5");
+                          debugPrint("Here !!!!!!!!!111");
                           showProductDetails(
                               context: context,
                               productId: scanResult,
@@ -1917,8 +1919,7 @@ class StoreScreenWidget extends StatelessWidget {
                       color: AppColors.textColor),
                 ),
               )
-                  : Container(),
-         /*     ConstrainedBox(
+                  : ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: getScreenHeight(context) * 0.5,
                     maxWidth: getScreenWidth(context)),
@@ -2243,7 +2244,7 @@ class StoreScreenWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),*/
+              ),
               crossFadeState: state.isSelectSupplier
                   ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,

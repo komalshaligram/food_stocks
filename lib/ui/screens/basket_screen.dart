@@ -104,7 +104,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           height: AppConstants.containerSize_50,
                                           alignment: Alignment.center,
                                           padding: EdgeInsets.symmetric(
-                                              vertical: AppConstants.padding_5,
+                                              vertical: AppConstants.padding_3,
                                               horizontal:
                                                   AppConstants.padding_10),
                                           decoration: BoxDecoration(

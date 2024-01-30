@@ -267,7 +267,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         _isProductInCart = false;
         _cartProductId = '';
         _productQuantity = 0;
-        state.productStockList.clear();
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
           final res = await DioClient(event.context).post(
@@ -288,6 +287,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 quantity: 1,
                       productId: response.product?.first.id ?? '',
                       stock: response.product?.first.numberOfUnit ?? 0,
+                productSaleId: '',
+                productSupplierIds: '',
+                note: '',
+                isNoteOpen: false,
               );
 
               emit(state.copyWith(productStockList: productStockList));
@@ -377,7 +380,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     ? ''
                     : state.productStockList[productStockUpdateIndex].note;
             emit(state.copyWith(
-              productStockList: state.productStockList,
                 productDetails: response.product ?? [],
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
@@ -423,7 +425,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     context: event.context,
                     supplierSaleIndex: supplierSaleIndex));
               }
+
             }
+            debugPrint('barcode stock1 = ${state.productStockList.last}');
+            debugPrint(
+                'barcode stock update index1 = ${state.productStockList.length}');
             try {
               SharedPreferencesHelper preferences = SharedPreferencesHelper(
                   prefs: await SharedPreferences.getInstance());
