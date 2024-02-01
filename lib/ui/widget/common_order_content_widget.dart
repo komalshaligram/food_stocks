@@ -18,6 +18,7 @@ class CommonOrderContentWidget extends StatelessWidget {
   final Color borderCoder;
   final Color backGroundColor;
 
+
   const CommonOrderContentWidget(
       {super.key,
       required this.title,
@@ -37,6 +38,7 @@ class CommonOrderContentWidget extends StatelessWidget {
     return Expanded(
         flex: flexValue ?? 1,
         child: Container(
+
           decoration: BoxDecoration(
             color: backGroundColor,
             borderRadius: BorderRadius.all(

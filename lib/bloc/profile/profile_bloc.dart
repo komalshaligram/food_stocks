@@ -152,7 +152,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           phoneNumber: mobileNo.trim(),
           profileImage: state.UserImageUrl,
           clientDetail: ClientDetail(
-            bussinessId: int.tryParse(state.idController.text) ?? 0,
+            bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text.trim(),
             ownerName: state.ownerNameController.text.trim(),
             clientTypeId: state.businessTypeList.data?.clientTypes
@@ -160,7 +160,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                     businessType.businessType == state.selectedBusinessType)
                 .id,
             // applicationVersion: '1.0.0',
-            israelId: state.hpController.text,
+            israelId: state.israelIdController.text,
             deviceType: Platform.isAndroid
                 ? AppStrings.androidString
                 : AppStrings.iosString,
@@ -208,16 +208,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   businessNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.bussinessName),
-                  hpController: TextEditingController(
+                  businessIdController: TextEditingController(
                       text:
-                          response.data?.clients?.first.clientDetail?.israelId),
+                          response.data?.clients?.first.clientDetail?.bussinessId.toString()),
                   ownerNameController: TextEditingController(
                       text: response
                           .data?.clients?.first.clientDetail?.ownerName),
-                  idController: TextEditingController(
+                  israelIdController: TextEditingController(
                       text: response
-                          .data?.clients?.first.clientDetail?.bussinessId
+                          .data?.clients?.first.clientDetail?.israelId
                           .toString()),
+
                   contactController: TextEditingController(
                       text: response.data?.clients?.first.contactName),
                 ),
@@ -291,10 +292,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 ?.firstWhere((businessType) =>
                     businessType.businessType == state.selectedBusinessType)
                 .id,
-            bussinessId: int.tryParse(state.idController.text) ?? 0,
+            bussinessId: int.tryParse(state.businessIdController.text) ?? 0,
             bussinessName: state.businessNameController.text,
             ownerName: state.ownerNameController.text,
-            israelId: state.hpController.text,
+            israelId: state.israelIdController.text,
           ),
         );
         Map<String, dynamic> req = updatedProfileModel.toJson();

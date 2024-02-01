@@ -155,7 +155,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              buildListTitles(
+                                              state.isCatVisible?   buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
@@ -194,10 +194,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                                       AppStrings
                                                                           .searchResultString]));
                                                     }
-                                                  }),
+                                                  }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 110,
+                                                height: state.isCatVisible? 110:0,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .productCategoryList
@@ -282,7 +282,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              buildListTitles(
+                                              state.isCompanyVisible?buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
@@ -301,10 +301,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                         RouteDefine
                                                             .companyScreen
                                                             .name);
-                                                  }),
+                                                  }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 110,
+                                                height:   state.isCompanyVisible?110:0,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .companiesList.length,
@@ -363,7 +363,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              buildListTitles(
+                                              state.isSupplierVisible?   buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
@@ -383,10 +383,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                         RouteDefine
                                                             .supplierScreen
                                                             .name);
-                                                  }),
+                                                  }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 110,
+                                                height:state.isSupplierVisible?  110:0,
                                                 child: ListView.builder(
                                                   itemCount: state.suppliersList
                                                       .data?.length,
@@ -404,6 +404,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 .data?[index]
                                                                 .logo ??
                                                             '',
+                                                       /* isHomePreference: state
+                                                            .suppliersList.data?[index]
+                                                            .isHomePreference ??
+                                                            false,*/
                                                         companyName: state
                                                                 .suppliersList
                                                                 .data?[index]
@@ -480,6 +484,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     return CommonProductSaleItemWidget(
                                                         height: 170,
                                                         width: 140,
+                                                        productName: state.productSalesList[index].productName??'',
                                                         saleImage: state
                                                                 .productSalesList[
                                                                     index]

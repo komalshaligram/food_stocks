@@ -26,6 +26,9 @@ class StoreState with _$StoreState {
     required TextEditingController searchController,
     required TextEditingController noteController,
     required RefreshController refreshController,
+    required bool isCatVisible,
+    required bool isSupplierVisible,
+    required bool isCompanyVisible
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -52,5 +55,8 @@ class StoreState with _$StoreState {
         searchController: TextEditingController(),
         noteController: TextEditingController(),
         refreshController: RefreshController(),
+        isCompanyVisible: true,
+        isCatVisible: true,
+        isSupplierVisible: true
       );
 }

@@ -257,7 +257,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           temp.addAll(state.OperationTimeList);
 
           String? openingTime =
-              temp[event.rowIndex].monday[event.timeIndex].from!.isEmpty ?'00:00': temp[event.rowIndex].monday[event.timeIndex].from;
+              temp[event.rowIndex].monday[event.timeIndex].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
           String? closingTime =
               temp[event.rowIndex].monday[event.timeIndex].until!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].until;
           String? previousClosingTime;

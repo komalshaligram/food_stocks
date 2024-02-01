@@ -572,7 +572,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   CustomFormField(
                                     context: context,
-                                    controller: state.hpController,
+                                    controller: state.businessIdController,
                                     inputformet: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(9)
@@ -607,7 +607,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   CustomFormField(
                                     context: context,
-                                    controller: state.idController,
+                                    controller: state.israelIdController,
                                     inputformet: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       LengthLimitingTextInputFormatter(9)

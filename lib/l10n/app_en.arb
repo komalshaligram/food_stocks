@@ -370,5 +370,6 @@
   "unit_in_box": "units in the b  ox",
   "price": "price",
   "per_unit": "per unit",
-  "sub_categories": "Sub Categories"
+  "sub_categories": "Sub Categories",
+  "delivery_date_value":"Delivery up to 3 business days"
 }

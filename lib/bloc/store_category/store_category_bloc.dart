@@ -268,7 +268,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
             }
             else{
-              emit(state.copyWith(isBottomOfPlanoGrams: false));
+             // emit(state.copyWith(isBottomOfPlanoGrams: false));
 
               add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
             }

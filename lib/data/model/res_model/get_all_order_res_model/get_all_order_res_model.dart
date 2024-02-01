@@ -71,6 +71,8 @@ class Status with _$Status {
     String? id,
     @JsonKey(name: "statusName")
     String? statusName,
+    @JsonKey(name: "orderStatusNumber")
+    int? orderStatusNo,
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);

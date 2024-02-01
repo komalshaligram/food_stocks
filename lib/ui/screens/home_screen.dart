@@ -491,6 +491,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           slidingBeginOffset: Offset(0, 20),
                                                           child:
                                                               CommonProductSaleItemWidget(
+                                                                productName: state.productSalesList[index].productName??'',
                                                                   width: 140,
                                                                   height: 170,
                                                                   saleImage: state.productSalesList[index].mainImage ?? '',

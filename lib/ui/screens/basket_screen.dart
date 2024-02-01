@@ -133,44 +133,23 @@ class BasketScreenWidget extends StatelessWidget {
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '${AppLocalizations.of(context)!.total}',
-                                                      style: AppStyles
-                                                          .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .font_14,
-                                                        color: AppColors
-                                                            .whiteColor,
-                                                      ),
-                                                    ),
-                                                    Directionality(
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      child: Expanded(
-                                                        child: Text(
-                                                          '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',
-                                                          style: AppStyles.rkRegularTextStyle(
-                                                              size: getScreenWidth(
-                                                                          context) <=
-                                                                      380
-                                                                  ? AppConstants
-                                                                      .font_14
-                                                                  : AppConstants
-                                                                      .smallFont,
-                                                              color: AppColors
-                                                                  .whiteColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                              :
+                                          Directionality(
+                                            textDirection:
+                                            TextDirection.ltr,
+                                            child: Expanded(
+                                              child: Text(
+                                                '${AppLocalizations.of(context)!.total} : ${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',
+                                                style: AppStyles.rkRegularTextStyle(
+                                                    size: 18,
+                                                    color: AppColors
+                                                        .whiteColor,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w700),
+                                              ),
+                                            ),
+                                          )
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -472,8 +451,8 @@ class BasketScreenWidget extends StatelessWidget {
                     ? LinearProgressIndicator(
                         color: AppColors.mainColor,
                         minHeight: 3,
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_5)),
+            /*            borderRadius: BorderRadius.all(
+                            Radius.circular(AppConstants.radius_5)),*/
                         backgroundColor: AppColors.mainColor.withOpacity(0.5),
                       )
                     : 3.height,
@@ -572,6 +551,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               5.height,
+
                               Directionality(
                                 textDirection: TextDirection.ltr,
                                 child: Text(

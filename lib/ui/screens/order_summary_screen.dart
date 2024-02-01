@@ -141,7 +141,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                                   ? Radius.circular(
                                                       AppConstants.radius_30)
                                                   : Radius.circular(AppConstants.radius_6))),
-                                      child: Column(
+                                      child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
@@ -162,13 +162,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                                     AppStyles.rkRegularTextStyle(
                                                         color:
                                                             AppColors.whiteColor,
-                                                        size: getScreenWidth(
-                                                                    context) <=
-                                                                380
-                                                            ? AppConstants
-                                                                .smallFont
-                                                            : AppConstants
-                                                                .mediumFont,
+                                                        size: AppConstants
+                                                            .normalFont,
                                                         fontWeight:
                                                             FontWeight.w700)),
                                           ),
@@ -301,8 +296,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     backGroundColor: AppColors.whiteColor,
                     borderCoder: AppColors.whiteColor,
                     flexValue: 1,
-                    title: AppLocalizations.of(context)!.delivery_date,
-                    value: '-',
+                    title: AppLocalizations.of(context).delivery_date,
+                    value: AppLocalizations.of(context).delivery_date_value,
                     titleColor: AppColors.whiteColor,
                     valueColor: AppColors.whiteColor,
                     valueTextSize: AppConstants.font_10,

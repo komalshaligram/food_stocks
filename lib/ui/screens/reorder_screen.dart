@@ -342,7 +342,7 @@ class ReorderScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            shouldCloseOnMinExtent: true,
+            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(

@@ -294,7 +294,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                               getTooltipItems: (value) {
                                                return value.map((e) {
                                                   return LineTooltipItem(
-                                                      "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y}${AppLocalizations.of(context)!.currency}",
+                                                      "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}",
                                                       TextStyle(fontSize: 8));
                                                 }).toList();
                                               },

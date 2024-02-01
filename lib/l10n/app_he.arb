@@ -123,9 +123,9 @@
 "back_to_home_page": "בחזרה לעמוד הבית",
 "kg": "ק”ג",
 "monthly_expense_graph": "גרף הוצאות חודשיות",
-"history": "הסטוריה",
+"history": "תנועות בארנק",
 "export": "יצוא",
-"order": "להזמין",
+"order": "הזמנה",
 "jan": "ינו",
 "feb": "פבר",
 "mar": "מרץ",
@@ -371,5 +371,6 @@
   "unit_in_box": "יחידות במארז",
   "price": "מחיר",
   "sub_categories": "תתי קטגויות",
-  "per_unit": "ליחידה"
+  "per_unit": "ליחידה",
+  "delivery_date_value":"משלוח עד 3 ימי עסקים"
 }

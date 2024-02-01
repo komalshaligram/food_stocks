@@ -320,11 +320,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                 ?.toTitleCase() ??
                             '',
                         titleColor: AppColors.blackColor,
-                        valueColor: orderDetailsList[index].status?.statusName
-                                    ?.toTitleCase() ==
-                                AppLocalizations.of(context)!
-                                    .pending_delivery
-                                    .toTitleCase()
+                        valueColor: orderDetailsList[index].status?.orderStatusNo==2
+
                             ? AppColors.orangeColor
                             : orderDetailsList[index].status?.statusName
                             ?.toTitleCase() ==

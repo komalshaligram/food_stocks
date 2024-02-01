@@ -31,7 +31,7 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
-    await dotenv.load(fileName: ".env");
+    //await dotenv.load(fileName: ".env");
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     SharedPreferencesHelper preferencesHelper =

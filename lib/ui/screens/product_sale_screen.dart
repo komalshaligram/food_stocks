@@ -125,6 +125,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       title: state.productSalesList[index]
                                               .salesName ??
                                           '',
+                                      productName: state.productSalesList[index].productName??'',
                                       description: parse(state
                                                       .productSalesList[index]
                                                       .salesDescription ??
@@ -179,15 +180,17 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String title,
     required String description,
     required double salePercentage,
+    required String productName,
     required void Function() onButtonTap,
   }) {
     return DelayedWidget(
         child: CommonProductSaleItemWidget(
             saleImage: saleImage,
             title: title,
+
             description: description,
             salePercentage: salePercentage,
-            onButtonTap: onButtonTap)
+            onButtonTap: onButtonTap, productName: productName,)
         );
   }
 
@@ -214,7 +217,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     getScreenHeight(context)),
             minChildSize: 0.4,
             initialChildSize: AppConstants.bottomSheetInitHeight,
-            shouldCloseOnMinExtent: true,
+            //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
               return BlocProvider.value(

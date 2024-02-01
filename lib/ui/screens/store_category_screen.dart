@@ -126,10 +126,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               searchList: state.searchList),
                           Expanded(child:
                           state.isSubCategory
-                              ?
-                          // NotificationListener<ScrollNotification>(
-                          //   child:
-                          SmartRefresher(
+                              ? SmartRefresher(
                             enablePullDown: true,
                             controller: state.subCategoryRefreshController,
                             header: RefreshWidget(),
@@ -167,7 +164,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   children: [
                                     5.height,
                                     state.isPlanogramShimmering ||  state.isSubCategoryShimmering
-                                        ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                        ? StoreCategoryScreenSubcategoryShimmerWidget()
                                         : state
                                         .planoGramsList.isEmpty &&
                                         state.subCategoryList.isEmpty && state.planoGramsList.isEmpty ? Container(
@@ -272,10 +269,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               //   },
                             ),
                           )
-                              :
-                          // NotificationListener<ScrollNotification>(
-                          //   child:
-                          SmartRefresher(
+                              : SmartRefresher(
                             enablePullDown: true,
                             controller: state.planogramRefreshController,
                             header: RefreshWidget(),

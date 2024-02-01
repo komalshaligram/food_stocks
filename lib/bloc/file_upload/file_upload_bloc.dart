@@ -304,7 +304,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
             FormData formData;
+            String? contentType = 'pdf';
+            String type = 'application';
+            String? extension = 'pdf';
+
+
+
             if(pickedFile!=null){
+              extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():pickedFile.path.split(".")[1].toString();
+              if(extension =='png'|| extension =='jpg'||extension =='jpeg'){
+                contentType = Platform.isAndroid?'png':'jpeg';
+                type = 'image';
+              }else if(extension == 'doc'){
+                contentType ='msword';
+                type = 'application';
+              }
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
@@ -312,12 +326,21 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? pickedFile.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                  contentType:MediaType('application', 'pdf'),
+                  contentType:MediaType(type, contentType!),
                 )
               });
               debugPrint(
                   'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
             }else{
+
+              extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():file?.path.split(".")[1].toString();
+              if(extension =='png'|| extension =='jpg'||extension =='jpeg'){
+                contentType = Platform.isAndroid?'png':'jpeg';
+                type = 'image';
+              }else if(extension == 'doc'){
+                contentType ='msword';
+                type = 'application';
+              }
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
@@ -325,9 +348,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? file!.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
-                  contentType: MediaType('application', 'pdf'),
+                  contentType: MediaType(type,contentType),
                 )
               });
+              debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
               debugPrint(
                   'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
             }

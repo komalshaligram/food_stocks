@@ -87,7 +87,7 @@ void appFlyerSetup() {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if(Platform.isAndroid){
-          appFlyerSetup();
+        //  appFlyerSetup();
         }
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(

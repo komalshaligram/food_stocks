@@ -78,13 +78,13 @@ class BottomNavScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
-          return PopScope(
-            onPopInvoked: (onPop) {
+          return WillPopScope(
+            onWillPop: () {
               if (state.index == 0) {
-                Future.value(true);
+                return Future.value(true);
               } else {
                 bloc.add(BottomNavEvent.changePage(index: 0));
-                Future.value(false);
+                return Future.value(false);
               }
             },
 

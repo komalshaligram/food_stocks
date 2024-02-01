@@ -89,6 +89,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         image: category.categoryImage ?? '')) ??
                 []);
             debugPrint('store search list = ${searchList.length}');
+            bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
+            emit(state.copyWith(isCatVisible: productVisible));
             emit(state.copyWith(
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
@@ -148,7 +150,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 title:
                     '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
                 type: SnackBarType.SUCCESS,
-
             );
           }
         } on ServerException {
@@ -214,6 +215,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
+            bool productVisible = response.data!.any((element) => element.supplierDetail?.isHomePreference==true)??true;
+            emit(state.copyWith(isSupplierVisible: productVisible));
+//            print('supplier visible:$productVisible');
             emit(state.copyWith(suppliersList: response, isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -243,6 +247,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           CompanyResModel response = CompanyResModel.fromJson(res);
           debugPrint('companies = ${response.data}');
           if (response.status == 200) {
+           bool company = response.data?.brandList?.any((element) => element.isHomePreference==true)??true;
+            emit(state.copyWith(isCompanyVisible: company));
             emit(state.copyWith(
                 companiesList: response.data?.brandList ?? [],
                 isShimmering: false));
@@ -849,9 +855,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
+          debugPrint('store search list =${response.status}');
           if (response.status == 200) {
             List<SearchModel> searchList = [];
-            //category search result
+           //category search result
             searchList.addAll(response.data?.categoryData
                     ?.map((category) => SearchModel(
                         searchId: category.id ?? '',

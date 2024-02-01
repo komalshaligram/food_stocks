@@ -17,6 +17,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String saleImage;
   final String title;
   final String description;
+  final String productName;
   final double salePercentage;
   final void Function() onButtonTap;
 
@@ -28,6 +29,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
       required this.title,
       required this.description,
       required this.salePercentage,
+        required this.productName,
       required this.onButtonTap});
 
   @override
@@ -91,6 +93,15 @@ class CommonProductSaleItemWidget extends StatelessWidget {
               ),
             ),
             5.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.blackColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             Text(
               title,
               style: AppStyles.rkBoldTextStyle(

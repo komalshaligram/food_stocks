@@ -18,13 +18,14 @@ samples, guidance on mobile development, and a full API reference.
 # commands:
 
 - for generating freeze class run below command :
+  flutter pub run build_runner build
   flutter pub run build_runner watch --delete-conflicting-outputs
 
 - for generating localization run below command :
   flutter gen-l10n
 
 - for creating release apk:
-  flutter build apk --flavor prod
+  flutter build apk --flavor dev
 
 # changes in library:
 
