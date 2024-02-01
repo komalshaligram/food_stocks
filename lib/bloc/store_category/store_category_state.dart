@@ -19,6 +19,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isLoading,
     required bool isProductLoading,
     required int planogramPageNum,
+    required int subPlanogramPageNum,
     required int subCategoryPageNum,
     required bool isLoadMore,
     required bool isBottomOfPlanoGrams,
@@ -38,6 +39,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required RefreshController planogramRefreshController,
     required List<PlanogramAllProduct> planogramProductList,
     required List<Planogramproduct> categoryPlanogramList,
+    required List<Planogramproduct> subCategoryPlanogramList,
+    required List<PlanogramDatum> subCatPlanoGramsList
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -75,6 +78,9 @@ class StoreCategoryState with _$StoreCategoryState {
         planogramRefreshController: RefreshController(),
     planoGramsByIdList: [],
     planogramProductList: [],
-    categoryPlanogramList: []
+    categoryPlanogramList: [],
+      subCategoryPlanogramList:[],
+      subCatPlanoGramsList:[],
+      subPlanogramPageNum:0
       );
 }

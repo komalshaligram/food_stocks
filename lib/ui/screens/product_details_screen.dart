@@ -602,7 +602,9 @@ class _ProductDetailsScreenWidgetState
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
-                        '${formatNumber(value: state.orderBySupplierProduct.products?[index].totalPayment?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                        '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0?state.orderBySupplierProduct.products![index].discountedPrice!.toStringAsFixed(2)
+                            : (state.orderBySupplierProduct.products![index].totalPayment!.toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+                       // '${formatNumber(value: state.orderBySupplierProduct.products?[index].totalPayment!='0'? ?? '0', local: AppStrings.hebrewLocal)}',
                         style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
                             size: AppConstants.font_14,

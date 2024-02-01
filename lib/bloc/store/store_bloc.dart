@@ -74,11 +74,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           final res = await DioClient(event.context).post(
               AppUrls.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
-                      pageNum: 1, pageLimit: AppConstants.searchPageLimit)
+                      pageNum: 1, pageLimit: 10)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories}');
+          debugPrint('product categories = ${response.data?.categories!.length.toString()}');
           if (response.status == 200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) =>

@@ -892,6 +892,7 @@ class StoreScreenWidget extends StatelessWidget {
                                   ? true
                                   : false,
                               onSeeAllTap: () async {
+                                debugPrint("searchType: ${state.searchList[index].searchType}");
                                 if (state.searchList[index].searchType ==
                                     SearchTypes.category) {
                                   dynamic searchResult =

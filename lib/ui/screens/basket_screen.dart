@@ -133,8 +133,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              :
-                                          Directionality(
+                                              : Directionality(
                                             textDirection:
                                             TextDirection.ltr,
                                             child: Expanded(
