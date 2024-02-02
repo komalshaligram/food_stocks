@@ -376,7 +376,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${state.balance.toString()}${AppLocalizations.of(context).currency}',
+                                              '${state.balance.toString()}${AppLocalizations.of(context)!.currency}',
                                               style: AppStyles.rkRegularTextStyle(
                                                   size: AppConstants.font_14,
                                                   fontWeight: FontWeight.bold,

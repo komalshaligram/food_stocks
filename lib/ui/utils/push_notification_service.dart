@@ -28,7 +28,7 @@ class PushNotificationService {
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-   /* NotificationSettings settings = await firebaseMessaging.requestPermission(
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -37,7 +37,7 @@ class PushNotificationService {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');*/
+    print('User granted permission: ${settings.authorizationStatus}');
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
@@ -67,7 +67,7 @@ class PushNotificationService {
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@drawable/ic_launcher1');
-    if (Platform.isIOS) {
+   /* if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               IOSFlutterLocalNotificationsPlugin>()
@@ -76,7 +76,7 @@ class PushNotificationService {
             badge: true,
             sound: true,
           );
-    }
+    }*/
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: true,
@@ -114,7 +114,7 @@ class PushNotificationService {
             Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
         String mainPage = data['message']['mainPage'] ?? '';
         String subPage = data['message']['subPage'] ?? '';
-        String id = data['message']['id'] ?? '';
+        String id = data['_id'] ?? '';
         _subPage = subPage;
         _mainPage = mainPage;
         _id = id;
@@ -248,7 +248,7 @@ class PushNotificationService {
               RouteDefine.supplierProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-      else if (subPage == 'catagoryScreen') {
+      else if (subPage == 'storeCategoryScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {AppStrings.companyIdString: id});

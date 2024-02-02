@@ -81,6 +81,26 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           emit(state.copyWith(isShimmering: false));
         }
       }
+      else if(event is _manageDataInBackEvent){
+        ProfileModel reqMap = ProfileModel(
+            profileImage: profileModel.profileImage,
+            phoneNumber: profileModel.phoneNumber,
+            logo: imgUrl,
+            cityId: state.cityListResModel?.data?.cities
+                ?.firstWhere(
+                    (element) => element.cityName == state.selectCity)
+                .id,
+            statusId: AppStrings.pendingString,
+            contactName: profileModel.contactName,
+            address: state.addressController.text.trim(),
+            email: state.emailController.text,
+            clientDetail: ClientDetail(
+                fax: state.faxController.text.trim(),
+            ));
+
+        state.addressController.text=profileModel.address??'';
+        state.emailController.text=profileModel.email??'';
+      }
       else if (event is _pickLogoImageEvent) {
         final picker = ImagePicker();
         final pickedFile = await picker.pickImage(

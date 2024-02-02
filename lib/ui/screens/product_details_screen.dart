@@ -232,7 +232,7 @@ class _ProductDetailsScreenWidgetState
                                                     ''
                                                 ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString().replaceRange(10, 24, '')}'
                                                 : AppLocalizations.of(context)
-                                                    .delivery_date_value,
+                                                    !.delivery_date_value,
                                             titleColor: AppColors.mainColor,
                                             valueColor: AppColors.blackColor,
                                             valueTextSize:
