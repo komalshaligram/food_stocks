@@ -138,8 +138,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '$productPerUnit${AppLocalizations.of(context)!
-                        .unit_in_box}',
+                    '$productPerUnit ${AppLocalizations.of(context)!.unit_in_box} ',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),

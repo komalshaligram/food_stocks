@@ -183,6 +183,15 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             expense: state.expensePercentage,
                                             totalBalance: 100
                                           ),
+                                          6.height,
+                                          Text(
+                                            '${state.balance.toString()}${AppLocalizations.of(context).currency}',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_14,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.blackColor),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ],
                                       )),
                                   5.width,
@@ -762,6 +771,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
         },
       ),
     );
+  }
+
+  String? getType(String type){
+    if(type == 'credit'){
+      return AppLocalizations.of(context).order;
+    }else if(type =='debit'){
+      return AppLocalizations.of(context).monthly_credit;
+    }else{
+      return AppLocalizations.of(context).refund;
+    }
   }
 
   Widget datePickerBuilder(

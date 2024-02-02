@@ -18,6 +18,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:mime/mime.dart' as mimeManager;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -300,25 +301,25 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   AppConstants.fileSizeCap &&
               fileSize.split(' ').last == 'KB') {
 
-            debugPrint('file = ${croppedImage?.path == null}');
+            debugPrint('file = ${croppedImage?.path!=null?croppedImage!.path:pickedFile!.path}');
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
             FormData formData;
-            String? contentType = 'pdf';
-            String type = 'application';
-            String? extension = 'pdf';
-
-
+            String? contentType = 'jpg';
+            String type = 'image';
+            String? extension = 'jpg';
 
             if(pickedFile!=null){
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():pickedFile.path.split(".")[1].toString();
-              if(extension =='png'|| extension =='jpg'||extension =='jpeg'){
-                contentType = Platform.isAndroid?'png':'jpeg';
-                type = 'image';
+              print('extension:$extension');
+              if(extension =='pdf'){
+                contentType = 'pdf';
+                type = 'application';
               }else if(extension == 'doc'){
                 contentType ='msword';
                 type = 'application';
               }
+              print('contentType:$contentType');
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
@@ -326,21 +327,23 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? pickedFile.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                  contentType:MediaType(type, contentType!),
-                )
+                   // contentType: MediaType(type,contentType!))
+                    contentType: MediaType(type,contentType))
               });
+              debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
               debugPrint(
                   'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
             }else{
 
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():file?.path.split(".")[1].toString();
-              if(extension =='png'|| extension =='jpg'||extension =='jpeg'){
-                contentType = Platform.isAndroid?'png':'jpeg';
-                type = 'image';
+              if(extension =='pdf'){
+                contentType = 'pdf';
+                type = 'application';
               }else if(extension == 'doc'){
                 contentType ='msword';
                 type = 'application';
               }
+              print('contentType:$contentType');
                formData = FormData.fromMap({
                 formAndFileList[event.fileIndex].isForm ?? false
                     ? AppStrings.formString
@@ -348,9 +351,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                   croppedImage?.path ?? file!.path,
                   filename:
                   "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
-                  contentType: MediaType(type,contentType),
-                )
+                    contentType: MediaType(type,contentType))
+            //    contentType: MediaType(mimeManager.lookupMimeType(croppedImage!.path.split('/')[0])!,'png'))
               });
+              debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
               debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
               debugPrint(
                   'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');

@@ -971,7 +971,8 @@ class StoreScreenWidget extends StatelessWidget {
                                       context,
                                       RouteDefine.supplierProductsScreen.name,
                                       arguments: {
-                                        AppStrings.searchString: state.search
+                                        AppStrings.searchString: state.search,
+                                        AppStrings.searchType : SearchTypes.product.toString()
                                       });
                                 }
                               },

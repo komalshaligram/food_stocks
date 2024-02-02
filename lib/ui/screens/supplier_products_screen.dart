@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/supplier_products/supplier_products_bloc.dart';
+import 'package:food_stock/data/model/search_model/search_model.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -46,7 +47,7 @@ class SupplierProductsScreen extends StatelessWidget {
             supplierId: args?[AppStrings.supplierIdString] ?? '',
             search: args?[AppStrings.searchString] ?? ''))..add(
           SupplierProductsEvent.getSupplierProductsListEvent(
-              context: context)),
+              context: context,searchType: args?[AppStrings.searchType]??'')),
       child: SupplierProductsScreenWidget(),
     );
   }
@@ -95,7 +96,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 onLoading: () {
                   context.read<SupplierProductsBloc>().add(
                       SupplierProductsEvent.getSupplierProductsListEvent(
-                          context: context));
+                          context: context,searchType: state.searchType));
                 },
                 child: SingleChildScrollView(
                   physics: state.productList.isEmpty
@@ -213,10 +214,9 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           itemBuilder: (context, index) =>
                               DelayedWidget(
                                 child: CommonProductItemWidget(
-                                    productStock: int.parse(state
-                                                    .productList[index]
-                                                    .productStock ??
-                                                '0'),
+                                    productStock: state
+                                        .productList[index]
+                                        .productStock.toString()??'',
                                             productImage: state
                                                     .productList[index]
                                                     .mainImage ??
@@ -228,42 +228,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                             totalSaleCount: 0,
                                             price: double.parse(state
                                                     .productList[index]
-                                                    .productPrice ??
+                                                    .productPrice.toString() ??
                                                 "0.0"),
                                             onButtonTap: () {
                                               showProductDetails(
                                                   context: context,
-                                                  productId: state
+                                                  productId: state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
                                                           .productList[index]
                                                           .productId ??
                                                       '');
                                             }),
                               )
-                        // buildSupplierProducts(
-                        // context: context,
-                        // index: index,
-                        // productImage: state.productList[index]
-                        //     .mainImage ??
-                        //     '',
-                        // productName: state.productList[index]
-                        //     .productName ??
-                        //     '',
-                        // productPrice: state.productList[index]
-                        //     .productPrice ??
-                        //     0.0,
-                        // onPressed: () {
-                        //   showProductDetails(
-                        //       context: context,
-                        //       productId: state
-                        //           .productList[index]
-                        //           .productId ??
-                        //           '');
-                        // },
-                        // isRTL: context.rtl),
                       ),
-                      // state.isLoadMore
-                      //     ? SupplierProductsScreenShimmerWidget()
-                      //     : 0.width,
                     ],
                   ),
                 ),

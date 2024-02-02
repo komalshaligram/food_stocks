@@ -28,7 +28,7 @@ class StoreState with _$StoreState {
     required RefreshController refreshController,
     required bool isCatVisible,
     required bool isSupplierVisible,
-    required bool isCompanyVisible
+    required bool isCompanyVisible,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -57,6 +57,7 @@ class StoreState with _$StoreState {
         refreshController: RefreshController(),
         isCompanyVisible: true,
         isCatVisible: true,
-        isSupplierVisible: true
+        isSupplierVisible: true,
+
       );
 }

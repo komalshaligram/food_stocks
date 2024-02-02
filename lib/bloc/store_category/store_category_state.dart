@@ -11,6 +11,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required String subCategoryName,
     required List<SubCategory> subCategoryList,
     required List<PlanogramDatum> planoGramsList,
+    required List<PlanogramDatum> subPlanoGramsList,
     required List<PlanogramProduct> planoGramsByIdList,
     required List<Category> productCategoryList,
     required List<List<ProductStockModel>> productStockList,
@@ -19,6 +20,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isLoading,
     required bool isProductLoading,
     required int planogramPageNum,
+    required int subProductPageNum,
     required int subPlanogramPageNum,
     required int subCategoryPageNum,
     required bool isLoadMore,
@@ -40,7 +42,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<PlanogramAllProduct> planogramProductList,
     required List<Planogramproduct> categoryPlanogramList,
     required List<Planogramproduct> subCategoryPlanogramList,
-    required List<PlanogramDatum> subCatPlanoGramsList
+    required List<PlanogramDatum> subCatPlanoGramsList,
+    required bool isBottomOfProducts,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -72,6 +75,7 @@ class StoreCategoryState with _$StoreCategoryState {
         search: '',
         isSearching: false,
         imageIndex: 0,
+      isBottomOfProducts: false,
         searchController: TextEditingController(),
         noteController: TextEditingController(),
         subCategoryRefreshController: RefreshController(),
@@ -81,6 +85,8 @@ class StoreCategoryState with _$StoreCategoryState {
     categoryPlanogramList: [],
       subCategoryPlanogramList:[],
       subCatPlanoGramsList:[],
-      subPlanogramPageNum:0
+      subPlanogramPageNum:0,
+      subPlanoGramsList:[],
+    subProductPageNum: 0
       );
 }

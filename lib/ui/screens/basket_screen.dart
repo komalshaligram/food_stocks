@@ -133,7 +133,32 @@ class BasketScreenWidget extends StatelessWidget {
                                                       0) ==
                                                   0
                                               ? CupertinoActivityIndicator()
-                                              : Directionality(
+                                              : Row(
+                                            children: [
+                                              Text(
+                                                '${AppLocalizations.of(context)!.total}',
+                                                style: AppStyles.rkRegularTextStyle(
+                                                    size: AppConstants.font_14,
+                                                    color: AppColors
+                                                        .whiteColor,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w700),
+                                              ),
+                                              Text(
+                                                ' : ${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',
+                                                style: AppStyles.rkRegularTextStyle(
+                                                    size: AppConstants.mediumFont,
+                                                    color: AppColors
+                                                        .whiteColor,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w700),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          )
+                                         /* Directionality(
                                             textDirection:
                                             TextDirection.ltr,
                                             child: Expanded(
@@ -148,7 +173,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                         .w700),
                                               ),
                                             ),
-                                          )
+                                          )*/
                                         ),
                                         5.width,
                                         GestureDetector(

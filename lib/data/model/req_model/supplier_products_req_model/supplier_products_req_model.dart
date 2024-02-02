@@ -22,6 +22,7 @@ class SupplierProductsReqModel with _$SupplierProductsReqModel {
     @JsonKey(name: "pageLimit") int? pageLimit,
     @JsonKey(name: "pageNum") int? pageNum,
     @JsonKey(name: "search") String? search,
+    @JsonKey(name:"onlySearch") bool? onlySearch
   }) = _SupplierProductsReqModel;
 
   factory SupplierProductsReqModel.fromJson(Map<String, dynamic> json) =>

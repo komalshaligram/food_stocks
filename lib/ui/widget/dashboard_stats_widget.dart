@@ -25,44 +25,44 @@ class DashBoardStatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: getScreenHeight(context) <= 730 ? 95 : 80,
-
       decoration: BoxDecoration(
           borderRadius:
               const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           color: AppColors.iconBGColor),
       padding: EdgeInsets.symmetric(
-          horizontal: AppConstants.padding_10,
-          vertical: AppConstants.padding_10),
-      child: Row(
+          horizontal: AppConstants.padding_8,
+          vertical: AppConstants.padding_8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(context.rtl ? pi : 0),
-              child: SvgPicture.asset(image)),
-          10.width,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
+          Row(
+            children: [
+              Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                  child: SvgPicture.asset(image)),
+              5.width,
+              Expanded(
+                child: Text(
                   title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_10, color: AppColors.mainColor),
                   maxLines: 2,
-                  overflow: TextOverflow.clip,
+                  overflow: TextOverflow.visible,
                 ),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    value,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.blackColor),
-                  ),
-                ),
-              ],
+              ),
+            ],
+          ),
+          10.height,
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              value,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.blackColor),
             ),
           ),
         ],

@@ -4,7 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/error/exceptions.dart';
+import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import 'package:food_stock/data/model/req_model/supplier_products_req_model/supplier_products_req_model.dart';
+import 'package:food_stock/data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import 'package:food_stock/data/model/res_model/supplier_products_res_model/supplier_products_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -26,6 +28,7 @@ import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -66,6 +69,7 @@ class SupplierProductsBloc
               supplierId: state.supplierId,
               pageLimit: AppConstants.supplierProductPageLimit,
               pageNum: state.pageNum + 1,
+              onlySearch :event.searchType == SearchTypes.product.toString()?true:false,
               search: state.search);
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {
@@ -75,10 +79,20 @@ class SupplierProductsBloc
             return value == '';
           });
           debugPrint('supplier products req = $req');
-          final res = await DioClient(event.context)
-              .post(AppUrls.getSupplierProductsUrl, data: req);
-          SupplierProductsResModel response =
-              SupplierProductsResModel.fromJson(res);
+          SupplierProductsResModel response ;
+          if(event.searchType == SearchTypes.product.toString()){
+            emit(state.copyWith(searchType: event.searchType.toString()));
+            final res = await DioClient(event.context)
+                .post(AppUrls.getPlanogramAllProductUrl, data: req);
+            response =
+                SupplierProductsResModel.fromJson(res);
+          }else{
+            final res = await DioClient(event.context)
+                .post(AppUrls.getSupplierProductsUrl, data: req);
+            response =
+                SupplierProductsResModel.fromJson(res);
+          }
+          emit(state.copyWith(searchType: event.searchType.toString()));
           debugPrint('supplier Products res = ${response.data}');
           if (response.status == 200) {
             List<SupplierDatum> productList =
@@ -88,8 +102,8 @@ class SupplierProductsBloc
                 state.productStockList.toList(growable: true);
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
-                        productId: product.productId ?? '',
-                        stock: int.parse(product.productStock ?? '0'))) ??
+                        productId:event.searchType == SearchTypes.product.toString()?product.id??'': product.productId ?? '',
+                        stock:event.searchType == SearchTypes.product.toString()?product.productStock: int.parse(product.productStock ?? '0'))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');
             debugPrint(
@@ -125,14 +139,79 @@ class SupplierProductsBloc
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      } else if (event is _RefreshListEvent) {
+      }  else if(event is _GetAllProductsEvent){
+        try {
+          PlanogramReqModel planogramReqModel =  PlanogramReqModel(
+            pageLimit: AppConstants.supplierProductPageLimit,
+            pageNum: state.pageNum + 1,
+            sortOrder: AppStrings.ascendingString,
+            sortField: AppStrings.planogramSortFieldString,
+          );
+
+          emit(state.copyWith(isShimmering: true));
+
+          final res = await DioClient(event.context).post(
+              AppUrls.getPlanogramAllProductUrl,
+              data: planogramReqModel);
+          SupplierProductsResModel response =
+          SupplierProductsResModel.fromJson(res);
+          debugPrint('product categories = ${response.data!.length.toString()}');
+          if (response.status == 200) {
+            List<SupplierDatum> productList =
+            state.productList.toList(growable: true);
+            productList.addAll(response.data ?? []);
+            List<ProductStockModel> productStockList =
+            state.productStockList.toList(growable: true);
+            productStockList.addAll(response.data?.map((product) =>
+                ProductStockModel(
+                    productId: product.productId ?? '',
+                    stock: int.parse(product.productStock ?? '0'))) ??
+                []);
+            debugPrint('new product list len = ${productList.length}');
+            debugPrint(
+                'new product stock list len = ${productStockList.length}');
+            debugPrint(
+                'new product stock list len = ${productStockList.where((element) {
+                  debugPrint('ids = ${element.productId}');
+                  return true;
+                })}}');
+            emit(state.copyWith(
+                productList: productList,
+                productStockList: productStockList,
+                pageNum: state.pageNum + 1,
+                isShimmering: false,
+                isLoadMore: false));
+            emit(state.copyWith(
+                isBottomOfProducts: state.productList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));
+          } else {
+            emit(state.copyWith(isLoadMore: false));
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE);
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
+      }
+
+
+      else if (event is _RefreshListEvent) {
         emit(state.copyWith(
             pageNum: 0,
             productList: [],
             productStockList: [],
             isBottomOfProducts: false));
         add(SupplierProductsEvent.getSupplierProductsListEvent(
-            context: event.context));
+            context: event.context,searchType:''));
       } else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;

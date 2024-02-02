@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
@@ -34,9 +35,9 @@ class BalanceIndicator extends StatelessWidget {
                 color: AppColors.borderColor),
             annotations: [
               GaugeAnnotation(
-                angle: 270,
+                angle: 180,
                 widget: Text(
-                 '$pendingBalance\n${AppLocalizations.of(context)!.currency}',
+                  context.rtl?'% ${expense.toString()}':'${expense.toString()} %',
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.font_14,
                       color: AppColors.blackColor,

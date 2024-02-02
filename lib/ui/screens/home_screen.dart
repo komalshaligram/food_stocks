@@ -355,8 +355,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         flex: 1,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
+                                              MainAxisAlignment.start,
+                                         // mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
                                               AppLocalizations.of(context)!
@@ -374,6 +374,15 @@ class HomeScreenWidget extends StatelessWidget {
                                                     state.balance.toString()),
                                                 expense: state.expensePercentage,
                                                 totalBalance: 100),
+                                            6.height,
+                                            Text(
+                                              '${state.balance.toString()}${AppLocalizations.of(context).currency}',
+                                              style: AppStyles.rkRegularTextStyle(
+                                                  size: AppConstants.font_14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.blackColor),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ],
                                         )),
                                     5.width,
@@ -392,7 +401,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.totalCredit.toString()}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(

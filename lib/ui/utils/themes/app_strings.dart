@@ -93,6 +93,7 @@ class AppStrings {
   static const monthlyCreditString = 'Monthly Credits';
   static const orderString = 'Order';
   static const companiesString = 'companies';
+  static const searchType = 'searchType';
 //  static const companiesNotAvailableString = 'companiesNotAvailable';
 
   //hint strings

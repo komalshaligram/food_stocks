@@ -372,5 +372,8 @@
   "price": "מחיר",
   "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה",
-  "delivery_date_value":"משלוח עד 3 ימי עסקים"
+  "delivery_date_value":"משלוח עד 3 ימי עסקים",
+  "order":"הזמנה",
+  "monthly_credit":"זיכוי חודשי",
+   "refund":"החזר תשלום"
 }

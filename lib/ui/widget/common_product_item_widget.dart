@@ -17,8 +17,8 @@ class CommonProductItemWidget extends StatelessWidget {
   final String productImage;
   final String productName;
   final int totalSaleCount;
-  final double price;
-  final int productStock;
+  final dynamic price;
+  final dynamic productStock;
   final void Function() onButtonTap;
 
   const CommonProductItemWidget(
@@ -98,7 +98,7 @@ class CommonProductItemWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             5.height,
-            (productStock) > 0 ? 0.width :Text(
+            (productStock.toString()) !='0' ? 0.width :Text(
               AppLocalizations.of(context)!
                   .out_of_stock1,
               style: AppStyles.rkBoldTextStyle(

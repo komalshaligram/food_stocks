@@ -7,7 +7,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
       required String search}) = _GetSupplierProductsIdEvent;
 
   const factory SupplierProductsEvent.getSupplierProductsListEvent(
-      {required BuildContext context}) = _GetSupplierProductsListEvent;
+      {required BuildContext context,required String searchType}) = _GetSupplierProductsListEvent;
 
   const factory SupplierProductsEvent.getProductDetailsEvent(
       {required BuildContext context,
@@ -47,4 +47,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;
+
+  const factory SupplierProductsEvent.getAllProducts(
+      {required BuildContext context,required String search}) = _GetAllProductsEvent;
 }

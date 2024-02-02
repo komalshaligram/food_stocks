@@ -367,9 +367,12 @@
   "sale_not_exists": "Sale does not exist",
   "comax_order_error": "Something went wrong.",
   "comax_client_error": "Something went wrong.",
-  "unit_in_box": "units in the b  ox",
+  "unit_in_box": "units in the box",
   "price": "price",
   "per_unit": "per unit",
   "sub_categories": "Sub Categories",
-  "delivery_date_value":"Delivery up to 3 business days"
+  "delivery_date_value":"Delivery up to 3 business days",
+  "order":"Order",
+  "monthly_credit":"Monthly Credits",
+  "refund":"Refund"
 }

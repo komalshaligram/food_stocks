@@ -72,4 +72,5 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.toggleNoteEvent({required bool isBarcode}) =
       _ToggleNoteEvent;
+
 }
