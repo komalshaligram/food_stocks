@@ -832,11 +832,13 @@ class StoreScreenWidget extends StatelessWidget {
                         bloc.add(StoreEvent.changeCategoryExpansion());
                       },
                       onSearchTap: () {
-                        bloc.add(
-                            StoreEvent.changeCategoryExpansion(isOpened: true));
+                   //     bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                    /*    bloc.add(
+                            StoreEvent.globalSearchEvent(context: context));*/
                       },
                       onSearch: (String search) {
-                        if (search.length > 2) {
+                        if (search.length > 1) {
+                          bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
                           bloc.add(
                               StoreEvent.globalSearchEvent(context: context));
                         }
