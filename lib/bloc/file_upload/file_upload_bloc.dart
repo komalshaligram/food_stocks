@@ -305,9 +305,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             List<FormAndFileModel> formAndFileList =
                 state.formsAndFilesList.toList(growable: true);
             FormData formData;
-            String? contentType = 'jpg';
+            String? contentType = 'png';
             String type = 'image';
-            String? extension = 'jpg';
+            String? extension = 'png';
 
             if(pickedFile!=null){
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():pickedFile.path.split(".")[1].toString();
@@ -318,6 +318,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               }else if(extension == 'doc'){
                 contentType ='msword';
                 type = 'application';
+              }else{
+                contentType ='png';
+                type = 'image';
               }
               print('contentType:$contentType');
                formData = FormData.fromMap({
@@ -342,6 +345,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
               }else if(extension == 'doc'){
                 contentType ='msword';
                 type = 'application';
+              }else{
+                contentType ='png';
+                type = 'image';
               }
               print('contentType:$contentType');
                formData = FormData.fromMap({

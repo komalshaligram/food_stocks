@@ -36,7 +36,7 @@ class MoreDetailsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => MoreDetailsBloc()  ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
+      create: (context) => MoreDetailsBloc() ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
           context: context,
           isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
               ? true
@@ -85,6 +85,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
+                    bloc.add(MoreDetailsEvent.manageDataInBackEvent(context: context));
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
