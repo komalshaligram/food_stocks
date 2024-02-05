@@ -75,7 +75,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           final res = await DioClient(event.context).post(
               AppUrls.getProductCategoriesUrl,
               data: ProductCategoriesReqModel(
-                      pageNum: 1, pageLimit: 12)
+                      pageNum: 1, pageLimit: 18)
                   .toJson());
           ProductCategoriesResModel response =
               ProductCategoriesResModel.fromJson(res);
@@ -93,6 +93,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
             emit(state.copyWith(isCatVisible: productVisible));
             emit(state.copyWith(
+
                 productCategoryList: response.data?.categories ?? [],
                 searchList: searchList,
                 isShimmering: false));

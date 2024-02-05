@@ -71,6 +71,7 @@ class BasketScreenWidget extends StatelessWidget {
                       (state.basketProductList.length) != 0
                           ? Container(
                               margin: EdgeInsets.all(AppConstants.padding_10),
+                              padding: EdgeInsets.all(AppConstants.padding_10),
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor.withOpacity(0.95),
                                 boxShadow: [
@@ -86,7 +87,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
+                                 /* Container(
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_5,
                                         horizontal: AppConstants.padding_5),
@@ -100,6 +101,7 @@ class BasketScreenWidget extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+
                                         Container(
                                           height: AppConstants.containerSize_50,
                                           alignment: Alignment.center,
@@ -158,7 +160,7 @@ class BasketScreenWidget extends StatelessWidget {
                                               ),
                                             ],
                                           )
-                                         /* Directionality(
+                                         *//* Directionality(
                                             textDirection:
                                             TextDirection.ltr,
                                             child: Expanded(
@@ -173,7 +175,7 @@ class BasketScreenWidget extends StatelessWidget {
                                                         .w700),
                                               ),
                                             ),
-                                          )*/
+                                          )*//*
                                         ),
                                         5.width,
                                         GestureDetector(
@@ -236,8 +238,19 @@ class BasketScreenWidget extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ),*/
                                   10.width,
+                                  Text(
+                                    AppLocalizations.of(context)!.my_basket,
+                                    textAlign: TextAlign.center,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.mediumFont,
+                                        color: AppColors
+                                            .mainColor,
+                                        fontWeight:
+                                        FontWeight
+                                            .w500),
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       deleteDialog(
@@ -253,21 +266,19 @@ class BasketScreenWidget extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           SvgPicture.asset(
-                                            AppImagePath.delete,
-                                          ),
+                                            AppImagePath.delete,color: AppColors.redColor,),
                                           5.width,
                                           Text(
                                             AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
-                                              color: AppColors.greyColor,
+                                              color: AppColors.redColor,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  2.width,
                                 ],
                               ),
                             )
@@ -310,6 +321,12 @@ class BasketScreenWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w400),
                                   )),
                                 ),
+                      (state.CartItemList.data?.cart!
+                          .length ??
+                          0) ==
+                          0
+                          ? CupertinoActivityIndicator()
+                          : totalAmountCard(state,context)
                     ],
                   ),
                 ),
@@ -318,6 +335,58 @@ class BasketScreenWidget extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+
+  Widget totalAmountCard(BasketState state,BuildContext context){
+    return Container(
+        alignment: state.language == AppStrings.englishString
+            ? Alignment.centerLeft
+            : Alignment.centerRight,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.symmetric(
+            vertical: AppConstants.padding_5,
+            horizontal: AppConstants.padding_10),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius:
+          BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        ),
+        child: Column(
+          children: [
+            basketRow('${AppLocalizations.of(context)!.sub_total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
+            Divider(),
+            basketRow('VAT',  '${(formatNumber(value: '0', local: AppStrings.hebrewLocal))}'),
+            Divider(),
+            basketRow('${AppLocalizations.of(context)!.total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',isTitle: true),
+
+
+          ],
+        ));
+  }
+
+  Widget basketRow(String title,String amount,{bool isTitle = false}){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+         title,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.font_14,
+              color: AppColors
+                  .blackColor),
+        ),
+        Text(
+         amount,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.mediumFont,
+              color: AppColors
+                  .blackColor,
+          fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 

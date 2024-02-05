@@ -374,5 +374,6 @@
   "delivery_date_value":"Delivery up to 3 business days",
   "order":"Order",
   "monthly_credit":"Monthly Credits",
-  "refund":"Refund"
+  "refund":"Refund",
+  "sub_total": "Sub Total"
 }

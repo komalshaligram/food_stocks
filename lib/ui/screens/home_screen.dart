@@ -376,7 +376,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${state.balance.toString()}${AppLocalizations.of(context)!.currency}',
+                                              '${state.balance.toString()}${AppLocalizations.of(context).currency}',
                                               style: AppStyles.rkRegularTextStyle(
                                                   size: AppConstants.font_14,
                                                   fontWeight: FontWeight.bold,
@@ -412,7 +412,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.thisMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -427,7 +427,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.lastMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(

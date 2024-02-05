@@ -148,7 +148,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           emit(state.copyWith(
             subCategoryId: event.subCategoryId,
             subCategoryName: event.subCategoryName,
-            planoGramsList: [],
+        //    planoGramsList: [],
             subPlanoGramsList: [],
             productStockList: [
               [ProductStockModel(productId: '')]
@@ -351,13 +351,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(
             planogramPageNum: 0,
             planoGramsList: [],
-            planogramProductList: [],
             subProductPageNum: 0,
-            isBottomOfProducts: false,
             productStockList: [
               [ProductStockModel(productId: '')]
             ],
-            isBottomOfPlanoGrams: true));
+            isBottomOfPlanoGrams: false));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(
             context: event.context));
         add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
