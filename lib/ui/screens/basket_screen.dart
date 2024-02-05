@@ -239,24 +239,13 @@ class BasketScreenWidget extends StatelessWidget {
                                       ],
                                     ),
                                   ),*/
-                                  10.width,
-                                  Text(
-                                    AppLocalizations.of(context)!.my_basket,
-                                    textAlign: TextAlign.center,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.mediumFont,
-                                        color: AppColors
-                                            .mainColor,
-                                        fontWeight:
-                                        FontWeight
-                                            .w500),
-                                  ),
+
                                   InkWell(
                                     onTap: () {
                                       deleteDialog(
                                         context: context,
                                         updateClearString:
-                                            AppStrings.clearString,
+                                        AppStrings.clearString,
                                         listIndex: 0,
                                         cartProductId: '',
                                         totalAmount: 0.0,
@@ -273,6 +262,74 @@ class BasketScreenWidget extends StatelessWidget {
                                             style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               color: AppColors.redColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.my_basket,
+                                    textAlign: TextAlign.center,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.mediumFont,
+                                        color: AppColors
+                                            .greyColor,
+                                        fontWeight:
+                                        FontWeight
+                                            .w500),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
+                                        Navigator.pushNamed(
+                                            context,
+                                            RouteDefine
+                                                .orderSummaryScreen.name,
+                                            arguments: {
+                                              AppStrings.getCartListString:
+                                              state.CartItemList
+                                            });
+                                      }
+                                    },
+                                    child: Container(
+                                      height:
+                                      AppConstants.containerSize_50,
+                                      alignment: Alignment.center,
+                                      margin: EdgeInsets.all(0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical:
+                                          AppConstants.padding_5,
+                                          horizontal:
+                                          AppConstants.padding_10),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.mainColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: context.rtl
+                                                  ? Radius.circular(AppConstants
+                                                  .radius_25)
+                                                  : Radius.circular(
+                                                  AppConstants
+                                                      .radius_4),
+                                              bottomLeft: context.rtl
+                                                  ? Radius.circular(
+                                                  AppConstants
+                                                      .radius_25)
+                                                  : Radius.circular(
+                                                  AppConstants
+                                                      .radius_4),
+                                              bottomRight: context.rtl
+                                                  ? Radius.circular(AppConstants.radius_4)
+                                                  : Radius.circular(AppConstants.radius_25),
+                                              topRight: context.rtl ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!.submit,
+                                            style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.whiteColor,
                                             ),
                                           ),
                                         ],
