@@ -344,9 +344,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w400),
                                   )),
                                 ),
-                      (state.CartItemList.data?.cart!
-                          .length ??
-                          0) ==
+                      (state.basketProductList.length)  ==
                           0
                           ? CupertinoActivityIndicator()
                           : totalAmountCard(state,context)
