@@ -85,7 +85,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
               leading: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    bloc.add(MoreDetailsEvent.manageDataInBackEvent(context: context));
+                  //  bloc.add(MoreDetailsEvent.manageDataInBackEvent(context: context));
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(

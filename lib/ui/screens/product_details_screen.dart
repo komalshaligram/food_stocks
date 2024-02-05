@@ -218,7 +218,9 @@ class _ProductDetailsScreenWidgetState
                                                 AppConstants.smallFont,
                                           ),
                                           5.width,
-                                          CommonOrderContentWidget(
+                                          (state.orderBySupplierProduct
+                                              .orderDeliveryDate) !=
+                                              ''?CommonOrderContentWidget(
                                             backGroundColor:
                                                 AppColors.iconBGColor,
                                             borderCoder:
@@ -239,7 +241,7 @@ class _ProductDetailsScreenWidgetState
                                                 AppConstants.smallFont,
                                             valueTextWeight: FontWeight.w500,
                                             // columnPadding: AppConstants.padding_5,
-                                          ),
+                                          ):Container(),
                                           5.width,
                                           CommonOrderContentWidget(
                                             backGroundColor:

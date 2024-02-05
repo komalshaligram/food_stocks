@@ -36,11 +36,5 @@ class MoreDetailsEvent with _$MoreDetailsEvent {
     required BuildContext context,
   }) = _deleteFileEvent;
 
-  factory MoreDetailsEvent.manageDataInBackEvent({
-    required BuildContext context,
-  }) = _manageDataInBackEvent;
 
-  factory MoreDetailsEvent.getDataEvent({
-    required BuildContext context,
-  }) = _getDataEvent;
 }
