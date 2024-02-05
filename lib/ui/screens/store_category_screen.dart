@@ -73,7 +73,8 @@ class StoreCategoryScreen extends StatelessWidget {
 
 class StoreCategoryScreenWidget extends StatelessWidget {
   StoreCategoryScreenWidget({super.key,});
-  
+
+
   @override
   Widget build(BuildContext context) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
@@ -1197,8 +1198,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-
+  
+  
   void showProductDetails({required BuildContext context,
     required String productId,
     required int planoGramIndex,

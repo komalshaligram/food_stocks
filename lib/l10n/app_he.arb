@@ -375,5 +375,7 @@
   "delivery_date_value":"משלוח עד 3 ימי עסקים",
   "order":"הזמנה",
   "monthly_credit":"זיכוי חודשי",
-   "refund":"החזר תשלום"
+   "refund":"החזר תשלום",
+   "sub_total": "Sub Total"
+
 }

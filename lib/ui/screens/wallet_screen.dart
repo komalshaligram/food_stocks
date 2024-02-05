@@ -213,7 +213,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${formatter(state.totalCredit.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.totalCredit.toString()}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -224,7 +224,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${formatter(state.thisMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${state.thisMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
                                               ),
                                             ],
                                           ),
@@ -821,9 +821,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
 
   String? getType(String type) {
     if (type == 'credit') {
-      return AppLocalizations.of(context)!.order;
-    } else if (type == 'debit') {
       return AppLocalizations.of(context)!.monthly_credit;
+    } else if (type == 'debit') {
+      return AppLocalizations.of(context)!.order;
     } else {
       return AppLocalizations.of(context)!.refund;
     }
