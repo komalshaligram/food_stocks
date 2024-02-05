@@ -73,8 +73,8 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? categories,
     @JsonKey(name: "subcategories")
     String? subcategories,
-    @JsonKey(name: "subsubcategories")
-    String? subsubcategories,
+   // @JsonKey(name: "subsubcategories")
+   // String? subsubcategories,
     @JsonKey(name: "manufacturingCountry")
     String? manufacturingCountry,
     @JsonKey(name: "caseType")

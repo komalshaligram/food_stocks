@@ -52,7 +52,7 @@ class CompanyDatum with _$CompanyDatum {
     @JsonKey(name: "sku") String? sku,
     @JsonKey(name: "categories") String? categories,
     @JsonKey(name: "subcategories") String? subcategories,
-    @JsonKey(name: "subsubcategories") String? subsubcategories,
+   // @JsonKey(name: "subsubcategories") String? subsubcategories,
     @JsonKey(name: "manufacturingCountry") String? manufacturingCountry,
     @JsonKey(name: "productType") String? productType,
     @JsonKey(name: "caseType") String? caseType,

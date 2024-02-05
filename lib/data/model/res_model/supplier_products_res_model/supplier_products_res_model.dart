@@ -34,7 +34,7 @@ class SupplierDatum with _$SupplierDatum {
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "category") String? category,
     @JsonKey(name: "subcategories") String? subcategories,
-    @JsonKey(name: "subsubcategories") String? subsubcategories,
+    //@JsonKey(name: "subsubcategories") String? subsubcategories,
     @JsonKey(name: "casetypes") String? casetypes,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "sku") String? sku,
