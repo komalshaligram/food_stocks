@@ -165,8 +165,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     5.height,
                                     state.isPlanogramShimmering ||  state.isSubCategoryShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                        : state
-                                        .planoGramsList.isEmpty &&
+                                        : state.planoGramsList.isEmpty &&
                                         state.subCategoryList.isEmpty ? Container(
                                       height: getScreenHeight(
                                           context) -
@@ -198,7 +197,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         return buildPlanoGramItem(
                                             context: context,
                                             list: state.planoGramsList,
-                                            index: index);
+                                            index: index,
+                                        );
                                       },
                                     ),
 
@@ -241,7 +241,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         context));
                                               }),
                                     ),
-
 
 
                                     // state.isLoadMore
@@ -340,7 +339,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         buildPlanoGramItem(
                                           context: context,
                                           list: state.subPlanoGramsList,
-                                          index: index);
+                                          index: index
+                                        );
                                     },
                                   ),
                                   Column(
@@ -410,7 +410,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                 .planogramProductList[index]
                                                                 .id ??
                                                                 '',
-                                                            planoGramIndex: 2,
+                                                            planoGramIndex: state.subPlanoGramsList.isEmpty ? 0 : 1,
                                                             isBarcode: false
                                                         );
                                                       }),
@@ -882,7 +882,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     productId:list[index]
                         .planogramproducts?[subIndex].id ??
                         '',
-                    planoGramIndex: index);
+                    planoGramIndex: 0);
               },
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -966,8 +966,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   Center(
                     child: CommonProductButtonWidget(
                       title:
-                      "${list[index]
-                          .planogramproducts?[subIndex]
+                      "${list[index].planogramproducts?[subIndex]
                           .productPrice?.toStringAsFixed(
                           AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex]
                           .productPrice?.toStringAsFixed(
@@ -979,7 +978,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             productId: list[index]
                                 .planogramproducts?[subIndex].id ??
                                 '',
-                            planoGramIndex: index);
+                            planoGramIndex: 0);
                       },
                       textColor: AppColors.whiteColor,
                       bgColor: AppColors.mainColor,

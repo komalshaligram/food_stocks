@@ -82,6 +82,7 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+                bloc.add(HomeEvent.getCartCountEvent(context: context));
               },
               child: SafeArea(
                 child: Column(

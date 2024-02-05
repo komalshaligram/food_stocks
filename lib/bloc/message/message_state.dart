@@ -11,6 +11,8 @@ class MessageState with _$MessageState {
     required bool isMessageRead,
     required List<String> deletedMessageList,
     required RefreshController refreshController,
+    required String language,
+    required bool isRemoveProcess,
   }) = _MessageState;
 
   factory MessageState.initial() => MessageState(
@@ -22,5 +24,7 @@ class MessageState with _$MessageState {
         isMessageRead: false,
         deletedMessageList: [],
         refreshController: RefreshController(),
-      );
+    language: 'he',
+    isRemoveProcess: false,
+  );
 }

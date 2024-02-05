@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/message/message_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
@@ -8,12 +9,15 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
+import 'package:food_stock/ui/widget/message_screen_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_routes.dart';
+import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_strings.dart';
+import '../widget/common_alert_dialog.dart';
 import '../widget/question_and_answer_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 
@@ -39,6 +43,7 @@ class MessageScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MessageBloc bloc = context.read<MessageBloc>();
     return BlocListener<MessageBloc, MessageState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageBloc, MessageState>(
@@ -125,50 +130,166 @@ class MessageScreenWidget extends StatelessWidget {
                                         const NeverScrollableScrollPhysics(),
                                     padding: EdgeInsets.symmetric(
                                         vertical: AppConstants.padding_10),
-                                    itemBuilder: (context, index) =>
-                                        messageListItem(
-                                      index: index,
-                                      context: context,
-                                      title: state.messageList[index].message
-                                              ?.title ??
-                                          '',
-                                      content: parse(state.messageList[index]
-                                                      .message?.body ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      dateTime: state
-                                              .messageList[index].updatedAt
-                                              ?.replaceRange(16, 19, '') ??
-                                          '',
-                                      onTap: () async {
-                                        dynamic messageNewData =
-                                            await Navigator.pushNamed(
-                                                context,
-                                                RouteDefine
-                                                    .messageContentScreen.name,
-                                                arguments: {
-                                              AppStrings.messageDataString:
-                                                  state.messageList[index],
-                                              AppStrings.messageIdString:
-                                                  state.messageList[index].id
-                                            });
-                                        debugPrint('message = $messageNewData');
-                                        context.read<MessageBloc>().add(
-                                            MessageEvent.removeOrUpdateMessageEvent(
-                                                messageId: messageNewData[
-                                                    AppStrings.messageIdString],
-                                                isRead: messageNewData[
-                                                    AppStrings
-                                                        .messageReadString],
-                                                isDelete: messageNewData[
-                                                    AppStrings
-                                                        .messageDeleteString]));
-                                      },
-                                      isRead: state.messageList[index].isRead ??
-                                          false,
-                                    ),
+                                    itemBuilder: (context, index) {
+                                      return Dismissible(
+                                        key: Key(state.messageList.toString()),
+                                        direction: DismissDirection.startToEnd,
+                                        background: Container(
+                                          alignment: state.language == AppStrings.englishString
+                                              ? Alignment.centerLeft
+                                              : Alignment.centerRight,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: AppConstants.padding_5,
+                                              horizontal: AppConstants.padding_10),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.redColor,
+                                            borderRadius:
+                                            BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: SvgPicture.asset(
+                                              AppImagePath.delete,
+                                              color: AppColors.whiteColor,
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        confirmDismiss: (DismissDirection direction) async {
+                                          if (direction == DismissDirection.startToEnd) {
+                                            return await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context1) {
+                                                return BlocProvider.value(
+                                                  value: context.read<MessageBloc>(),
+                                                  child: BlocBuilder<MessageBloc, MessageState>(
+                                                    builder: (context, state) {
+                                                      return AbsorbPointer(
+                                                        absorbing: state.isRemoveProcess ? true : false,
+                                                        child: AlertDialog(
+                                                          backgroundColor: AppColors.pageColor,
+                                                          contentPadding: EdgeInsets.all(20.0),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(20.0)),
+                                                          title: Text(
+                                                              '${AppLocalizations.of(context)!.are_you_sure}',
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.mediumFont,
+                                                                  color: AppColors.blackColor,
+                                                                  fontWeight: FontWeight.w400)),
+                                                          actionsPadding: EdgeInsets.only(
+                                                              right: AppConstants.padding_20,
+                                                              bottom: AppConstants.padding_20,
+                                                              left: AppConstants.padding_20),
+                                                          actions: [
+                                                            InkWell(
+                                                              highlightColor: Colors.transparent,
+                                                              splashColor: Colors.transparent,
+                                                              onTap: () {
+                                                                bloc.add(MessageEvent.MessageDeleteEvent(
+                                                                    messageId: state.messageList[index].id.toString(),
+                                                                    context: context,
+                                                                    dialogContext: context1
+                                                                )
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                padding: EdgeInsets.symmetric(
+                                                                    horizontal: 14.0, vertical: 10.0),
+                                                                alignment: Alignment.center,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(8.0)),
+                                                                width: 80,
+                                                                child: Text(
+                                                                  '${AppLocalizations.of(context)!.yes}',
+                                                                  style: AppStyles.rkRegularTextStyle(
+                                                                      color: AppColors.mainColor
+                                                                          .withOpacity(0.9),
+                                                                      size: AppConstants.smallFont),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            InkWell(
+                                                              highlightColor: Colors.transparent,
+                                                              splashColor: Colors.transparent,
+                                                              onTap: () {
+                                                                Navigator.pop(context1);
+                                                                /*bloc.add(MessageEvent.refreshListEvent(
+                                                                    context: context1));*/
+                                                              },
+                                                              child: Container(
+                                                                padding: EdgeInsets.symmetric(
+                                                                    horizontal: 14.0, vertical: 10.0),
+                                                                alignment: Alignment.center,
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    color:
+                                                                    AppColors.mainColor.withOpacity(0.9),
+                                                                    borderRadius: BorderRadius.circular(8.0)),
+                                                                child: Text(
+                                                                  '${AppLocalizations.of(context)!.no}',
+                                                                  style: AppStyles.rkRegularTextStyle(
+                                                                      color: AppColors.whiteColor,
+                                                                      size: AppConstants.smallFont),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                                        child: messageListItem(
+                                        index: index,
+                                        context: context,
+                                        title: state.messageList[index].message
+                                                ?.title ??
+                                            '',
+                                        content: parse(state.messageList[index]
+                                                        .message?.body ??
+                                                    '')
+                                                .body
+                                                ?.text ??
+                                            '',
+                                        dateTime: state
+                                                .messageList[index].updatedAt
+                                                ?.replaceRange(16, 19, '') ??
+                                            '',
+                                        onTap: () async {
+                                          dynamic messageNewData =
+                                              await Navigator.pushNamed(
+                                                  context,
+                                                  RouteDefine
+                                                      .messageContentScreen.name,
+                                                  arguments: {
+                                                AppStrings.messageDataString:
+                                                    state.messageList[index],
+                                                AppStrings.messageIdString:
+                                                    state.messageList[index].id
+                                              });
+                                          debugPrint('message = $messageNewData');
+                                          context.read<MessageBloc>().add(
+                                              MessageEvent.removeOrUpdateMessageEvent(
+                                                  messageId: messageNewData[
+                                                      AppStrings.messageIdString],
+                                                  isRead: messageNewData[
+                                                      AppStrings
+                                                          .messageReadString],
+                                                  isDelete: messageNewData[
+                                                      AppStrings
+                                                          .messageDeleteString]));
+                                        },
+                                        isRead: state.messageList[index].isRead ??
+                                            false,
+                                                                              ),
+                                      );
+                                    },
                                   ),
                         // state.isLoadMore
                         //     ? QuestionAndAnswerScreenShimmerWidget()
@@ -285,4 +406,93 @@ class MessageScreenWidget extends StatelessWidget {
       ),
     );
   }
+
+/*  void deleteDialog({
+    required BuildContext context,
+    required String messageId,
+    required int listIndex,
+
+  }) {
+    MessageBloc bloc = context.read<MessageBloc>();
+    showDialog(
+        context: context,
+        builder: (context1) => BlocProvider.value(
+          value: context.read<MessageBloc>(),
+          child: BlocBuilder<MessageBloc, MessageState>(
+            builder: (context, state) {
+              return AbsorbPointer(
+                absorbing: state.isRemoveProcess ? true : false,
+                child: AlertDialog(
+                  backgroundColor: AppColors.pageColor,
+                  contentPadding: EdgeInsets.all(20.0),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  title: Text(
+                       '${AppLocalizations.of(context)!.you_want_delete_product}',
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.mediumFont,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.w400)),
+                  actionsPadding: EdgeInsets.only(
+                      right: AppConstants.padding_20,
+                      bottom: AppConstants.padding_20,
+                      left: AppConstants.padding_20),
+                  actions: [
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                      bloc.add(MessageEvent.MessageDeleteEvent(
+                            context: context,
+                            messageId: messageId,
+                            dialogContext: context1,
+                            ));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14.0, vertical: 10.0),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        width: 80,
+                        child: Text(
+                          '${AppLocalizations.of(context)!.yes}',
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.mainColor.withOpacity(0.9),
+                              size: AppConstants.smallFont),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                       bloc.add(MessageEvent.refreshListEvent(
+                            context: context1));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14.0, vertical: 10.0),
+                        alignment: Alignment.center,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            color: AppColors.mainColor.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Text(
+                          '${AppLocalizations.of(context)!.no}',
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.whiteColor,
+                              size: AppConstants.smallFont),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        ));
+  }*/
+
+
 }
