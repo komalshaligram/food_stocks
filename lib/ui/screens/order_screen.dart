@@ -302,7 +302,7 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         flexValue: 4,
                         title: AppLocalizations.of(context)!.order_date,
                         value: orderDetailsList[index].createdAt
-                                ?.replaceRange(11, 16, '') ??
+                                ?.replaceRange(11, 16, '').replaceRange(6, 8, '') ??
                             '',
                         titleColor: AppColors.blackColor,
                         valueColor: AppColors.blackColor,

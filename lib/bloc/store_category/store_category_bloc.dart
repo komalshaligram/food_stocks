@@ -60,7 +60,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(isSubCategory: event.isSubCategory));
       }
       if (event is _ChangeCategoryExpansionEvent) {
-        print('event.isOpened123___${event.isOpened}');
+
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
           print('state.categoryPlanogramList___${state.categoryPlanogramList}');
@@ -75,6 +75,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if(categoryId != ''){
           add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: 'true', categoryName: '' ,categoryId: parentCategoryId));
         }
+        else{
+          emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false));
+         add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: '', categoryName: state.categoryName ,categoryId: state.categoryId));
+
+        }
+
       } else if (event is _ChangeCategoryDetailsEvent) {
         emit(state.copyWith(
             isSubCategory: state.isSubCategory,
@@ -99,7 +105,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
         }
         else{
-          print('state.isSubCategory_____${state.isSubCategory}');
           isSubCategoryString = event.isSubCategory;
           categoryId = event.categoryId;
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
@@ -1083,6 +1088,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.searchController.text == '') {
           add(StoreCategoryEvent.getProductCategoriesListEvent(
               context: event.context));
+
         }
       }
       else if (event is _ToggleNoteEvent) {
