@@ -68,7 +68,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                       preferredSize: Size.fromHeight(AppConstants.appBarHeight),
                       child: CommonAppBar(
                         bgColor: AppColors.pageColor,
-                        title: AppLocalizations.of(context)!.message,
+                        title: AppLocalizations.of(context)!.messages,
                         iconData: Icons.arrow_back_ios_sharp,
                         onTap: () {
                           Navigator.pop(context, {

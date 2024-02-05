@@ -417,8 +417,6 @@ class BasketScreenWidget extends StatelessWidget {
             basketRow('VAT',  '${(formatNumber(value: '0', local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',isTitle: true),
-
-
           ],
         ));
   }

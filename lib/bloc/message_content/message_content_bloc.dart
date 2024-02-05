@@ -61,7 +61,7 @@ class MessageContentBloc
               AppStrings.messageDeleteString: true,
             });
           } else {
-            /* CustomSnackBar.CustomSnackBar.showSnackBar(
+            /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response[AppStrings.messageString],
                 type: SnackBarType.SUCCESS);*/
@@ -92,7 +92,7 @@ class MessageContentBloc
 
           if (response[AppStrings.statusString] == 200) {
           } else {
-            /* CustomSnackBar.CustomSnackBar.showSnackBar(
+            /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: response[AppStrings.messageString],
                 type: SnackBarType.SUCCESS);*/

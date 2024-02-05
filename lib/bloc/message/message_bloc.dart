@@ -10,11 +10,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/delete_message_req/delete_message_req.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 
+import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
 
+import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 
 part 'message_event.dart';
@@ -26,9 +29,12 @@ part 'message_bloc.freezed.dart';
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageState.initial()) {
     on<MessageEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+        prefs: await SharedPreferences.getInstance());
       if (event is _GetMessageListEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
+        emit(state.copyWith(language: preferences.getAppLanguage()));
         if (state.isLoadMore) {
           return;
         }
@@ -103,7 +109,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(state.copyWith(
             pageNum: 0, messageList: [], isBottomOfMessage: false));
         add(MessageEvent.getMessageListEvent(context: event.context));
-      } else if (event is _RemoveOrUpdateMessageEvent) {
+      }
+      else if (event is _RemoveOrUpdateMessageEvent) {
         List<MessageData> messageList =
             state.messageList.toList(growable: true);
         debugPrint('message list len before delete = ${messageList.length}');
@@ -142,6 +149,53 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           debugPrint('message list len after delete = ${messageList.length}');
         }
         emit(state.copyWith(messageList: messageList));
+      }
+
+      else if(event is _MessageDeleteEvent){
+        try {
+          DeleteMessageReq reqMap = DeleteMessageReq(
+            notificationIds: [
+              event.messageId,
+            ],
+          );
+          debugPrint('DeleteMessage req  = ${reqMap}');
+          final response =
+          await DioClient(event.context).post(AppUrls.deleteMessageUrl,
+              data: reqMap,
+              options: Options(
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  'Bearer ${preferences.getAuthToken()}',
+                },
+              ));
+
+          debugPrint(
+              'DeleteMessage url  = ${AppUrls.baseUrl}${AppUrls.deleteMessageUrl}');
+
+          debugPrint('DeleteMessage response  = ${response}');
+
+          if (response[AppStrings.statusString] == 200) {
+              add(MessageEvent.refreshListEvent(context: event.context));
+            Navigator.pop(event.dialogContext);
+
+          } else {
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response[AppStrings.messageString].toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE);
+          }
+        } on ServerException {}
+        catch(e){
+     /*      CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: e.toString(),
+                type: SnackBarType.FAILURE);*/
+        }
+
+
       }
     });
   }
