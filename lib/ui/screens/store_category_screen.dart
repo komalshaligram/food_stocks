@@ -1416,6 +1416,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     String? subCategoryName, required String search, required List<
         SearchModel> searchList}) {
     debugPrint('subCategoryName:$subCategoryName');
+
     return Container(
       width: getScreenWidth(context),
       margin: EdgeInsets.only(top: AppConstants.padding_10,
@@ -1461,6 +1462,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             onTap: () {
               if (!(subCategoryName?.isEmpty ?? true)) {
                 debugPrint('cate');
+
                 BlocProvider.of<StoreCategoryBloc>(context).add(
                     StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
                         isSubCategory: true, context: context));

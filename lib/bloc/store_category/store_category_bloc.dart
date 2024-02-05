@@ -51,8 +51,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   String _cartProductId = '';
   int _productQuantity = 0;
   String isSubCategoryString = '';
-  String categoryId = '';
-  String parentCategoryId = '';
+ String categoryId = '';
+ String parentCategoryId = '';
   StoreCategoryBloc() : super(StoreCategoryState.initial()) {
     on<StoreCategoryEvent>((event, emit) async {
 
@@ -62,10 +62,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _ChangeCategoryExpansionEvent) {
 
         if (event.isOpened != null) {
-          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [], planogramPageNum : 0));
           print('state.categoryPlanogramList___${state.categoryPlanogramList}');
         } else {
-          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [] , planogramPageNum : 0));
           print('state.categoryPlanogramList_qww__${state.categoryPlanogramList}');
 
         }
@@ -73,10 +73,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if (event is _ChangeSubCategoryOrPlanogramEvent) {
         emit(state.copyWith(isSubCategory: event.isSubCategory));
         if(categoryId != ''){
-          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: 'true', categoryName: '' ,categoryId: parentCategoryId));
+          emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false , planoGramsList: [] , isBottomOfPlanoProduct: false));
+          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: 'true', categoryName: '' ,categoryId: parentCategoryId,));
         }
         else{
-          emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false));
+          emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false , planoGramsList: [] , isBottomOfPlanoProduct: false));
          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: '', categoryName: state.categoryName ,categoryId: state.categoryId));
 
         }
@@ -227,8 +228,17 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(
             subCategoryPageNum: 0,
             subCategoryList: [],
+            categoryPlanogramList: [],
             isBottomOfPlanoGrams: false,
-            isBottomOfSubCategory: false));
+            isBottomOfSubCategory: false,
+          subPlanoGramsList : [],
+          planogramProductList : [],
+            planoGramsList : [],
+            subProductPageNum : 0,
+            planogramPageNum : 0,
+          isBottomOfPlanoProduct:false
+
+        ));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
       }
@@ -289,8 +299,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planoGramsList.addAll(state.planoGramsList);
             List<PlanogramDatum> subPlanoGramList =
             state.subPlanoGramsList.toList(growable: true);
-            List<Planogramproduct> categoryPlanogramList =
-            state.categoryPlanogramList.toList(growable: true);
             if(isSubCategoryString == '' && !state.isSubCategory ){
               subPlanoGramList.addAll(response.data??[]);
               emit(state.copyWith(subPlanoGramsList: subPlanoGramList,));
@@ -318,15 +326,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             // productStockList.add(barcodeStock.isNotEmpty ? barcodeStock : [ProductStockModel(productId: '')]);
             debugPrint('planogram list = ${planoGramsList.length}');
             debugPrint('planogram stock list = ${productStockList.length}');
-            if((response.data?.length ?? 0) > 0){
+          /*  if((response.data?.length ?? 0) > 0){
               categoryPlanogramList.addAll(response.data?[0].planogramproducts ?? []);
-            }
+            }*/
             emit(state.copyWith(
-              categoryPlanogramList: categoryPlanogramList,
+
               subPlanoGramsList: state.subPlanoGramsList,
               planoGramsList: state.planoGramsList,
               productStockList: productStockList,
-              subProductPageNum: state.subProductPageNum+1,
+              subProductPageNum: state.subProductPageNum + 1,
                 planogramPageNum: state.planogramPageNum + 1,
               isPlanogramShimmering: false,
               isLoadMore: false,
@@ -1161,9 +1169,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-       /*  if (state.isBottomOfPlanoGrams) {
+         if (state.isBottomOfPlanoProduct) {
           return;
-        }*/
+        }
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
@@ -1171,7 +1179,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
             categoryId : state.categoryId,
             subCategoryId: state.subCategoryId,
-            pageNum: state.subProductPageNum,
+            pageNum: state.planogramPageNum,
             pageLimit: 10,
             sortOrder: AppStrings.ascendingString,
             sortField: AppStrings.planogramSortFieldString,
@@ -1208,18 +1216,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 isPlanogramShimmering: false
             ));
             emit(state.copyWith(
-                isBottomOfProducts: planogramProductList.length ==
-                    (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
-            emit(state.copyWith(
-                isBottomOfPlanoGrams: planogramProductList.length ==
+                isBottomOfPlanoProduct: planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
           }
           else{
-            emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+            emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false , ));
             /*  CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
