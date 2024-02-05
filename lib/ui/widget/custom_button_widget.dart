@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
@@ -14,6 +15,7 @@ class CustomButtonWidget extends StatelessWidget {
   final double? radius;
   final bool isLoading;
   final Color borderColor;
+  final bool isFromConnectScreen;
 
   CustomButtonWidget(
       {super.key,
@@ -23,6 +25,7 @@ class CustomButtonWidget extends StatelessWidget {
       this.isLoading = false,
       this.bGColor = Colors.white,
       this.fontColors = Colors.white,
+        this.isFromConnectScreen = false,
       this.height,
       this.radius,
       this.borderColor = Colors.white,
@@ -36,7 +39,8 @@ class CustomButtonWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
           // border: Border.all(color: AppColors.mainColor),
-          color: bGColor,
+          //color: bGColor,
+          gradient: isFromConnectScreen?LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(radius ?? AppConstants.radius_10))),

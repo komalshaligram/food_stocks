@@ -258,7 +258,8 @@ class SupplierScreenWidget extends StatelessWidget {
                     vertical: AppConstants.padding_5,
                     horizontal: AppConstants.padding_5),
                 decoration: BoxDecoration(
-                  color: AppColors.mainColor,
+                  gradient: AppColors.appMainGradientColor,
+                //  color: AppColors.mainColor,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppConstants.radius_10),
                       bottomRight: Radius.circular(AppConstants.radius_10)),

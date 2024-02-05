@@ -212,9 +212,10 @@ class BottomNavScreenWidget extends StatelessWidget {
             width: 50,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-                color: pos == (storeScreen == '' ? state.index : 1 )
+              gradient: pos == (storeScreen == '' ? state.index : 1 )?AppColors.appMainGradientColor:LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
+              /*  color: pos == (storeScreen == '' ? state.index : 1 )
                     ? AppColors.mainColor
-                    : AppColors.whiteColor,
+                    : AppColors.whiteColor,*/
                 borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_100))),
             child: Center(
@@ -251,9 +252,11 @@ class BottomNavScreenWidget extends StatelessWidget {
                                 width: 24,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  color: state.index == 2
+                                  gradient: state.index == 2
+                                    ?LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
+                                /*  color: state.index == 2
                                       ? AppColors.whiteColor
-                                      : AppColors.notificationColor,
+                                      : AppColors.notificationColor,*/
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(AppConstants.radius_100)),
                                   border: Border.all(

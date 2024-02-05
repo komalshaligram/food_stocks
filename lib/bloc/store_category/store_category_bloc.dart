@@ -1172,7 +1172,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             categoryId : state.categoryId,
             subCategoryId: state.subCategoryId,
             pageNum: state.subProductPageNum,
-            pageLimit: 10,
+            pageLimit: 15,
             sortOrder: AppStrings.ascendingString,
             sortField: AppStrings.planogramSortFieldString,
           );

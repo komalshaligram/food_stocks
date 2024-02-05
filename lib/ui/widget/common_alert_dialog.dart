@@ -78,7 +78,8 @@ class CommonAlertDialog extends StatelessWidget {
                     alignment: Alignment.center,
                     width: 80,
                     decoration: BoxDecoration(
-                        color: AppColors.mainColor.withOpacity(0.9),
+                      gradient: AppColors.appMainGradientColor,
+                       // color: AppColors.mainColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(8.0)),
                     child: Text(
                       negativeTitle ?? '',

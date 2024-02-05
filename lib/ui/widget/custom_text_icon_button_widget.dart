@@ -33,13 +33,15 @@ class CustomTextIconButtonWidget extends StatelessWidget {
         height: AppConstants.buttonHeight,
         width: width,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [AppColors.mainColor,AppColors.whiteColor],),
+          gradient: AppColors.appMainGradientColor,
+         // gradient: LinearGradient(colors: [AppColors.mainColor,AppColors.whiteColor],),
             borderRadius: BorderRadius.circular(AppConstants.padding_10)),
         clipBehavior: Clip.hardEdge,
         child: MaterialButton(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           elevation: 0,
-          color: AppColors.mainColor,
+
+          //color: AppColors.mainColor,
           onPressed: onPressed,
           child: Row(
             mainAxisSize: MainAxisSize.min,

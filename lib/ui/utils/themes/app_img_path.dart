@@ -1,6 +1,7 @@
 class AppImagePath {
   ///svg
-  static const String splashLogo = 'assets/images/splash_logo.svg';
+  //static const String splashLogo = 'assets/images/splash_logo.svg';
+  static const String splashLogo = 'assets/images/tavili_splash_logo.svg';
   static const String profile = 'assets/images/profile.svg';
   static const String wallet = 'assets/images/wallet.svg';
   static const String cart = 'assets/images/cart.svg';

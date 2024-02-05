@@ -1341,7 +1341,8 @@ class StoreScreenWidget extends StatelessWidget {
                     horizontal: AppConstants.padding_5,
                     vertical: AppConstants.padding_2),
                 decoration: BoxDecoration(
-                  color: AppColors.mainColor,
+                  gradient: AppColors.appMainGradientColor,
+              //    color: AppColors.mainColor,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppConstants.radius_10),
                       bottomRight:
@@ -1657,7 +1658,8 @@ class StoreScreenWidget extends StatelessWidget {
                     horizontal: AppConstants.padding_5,
                     vertical: AppConstants.padding_2),
                 decoration: BoxDecoration(
-                  color: AppColors.mainColor,
+                  gradient: AppColors.appMainGradientColor,
+                //  color: AppColors.mainColor,
                   borderRadius: BorderRadius.only(
                       bottomRight:
                       Radius.circular(AppConstants.radius_10),
@@ -2084,7 +2086,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        'Price : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex == -2)
                                             .basePrice
@@ -2121,7 +2123,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                       2.height,
                                       Text(
-                                        'Price : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
                                             .supplierSales[index].salePrice

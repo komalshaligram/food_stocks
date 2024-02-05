@@ -55,6 +55,7 @@ class ConnectScreen extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.login,
                     fontColors: AppColors.mainColor,
                     borderColor: AppColors.mainColor,
+                    isFromConnectScreen: true,
                     onPressed: () {
                       Navigator.pushNamed(context, RouteDefine.loginScreen.name,
                           arguments: {AppStrings.isRegisterString: false});

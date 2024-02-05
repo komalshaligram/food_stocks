@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 
@@ -43,7 +44,8 @@ class CommonProductButtonWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
-          color: bgColor,
+        gradient: AppColors.appMainGradientColor,
+        //  color: bgColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(borderRadius ?? AppConstants.radius_10))),

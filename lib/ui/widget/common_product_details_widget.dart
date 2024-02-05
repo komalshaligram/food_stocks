@@ -143,14 +143,14 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),
                   ),
-                  Text(
+               /*   Text(
                     '${AppLocalizations.of(context)!.price} : ${productUnitPrice
                         .toStringAsFixed(2)} ${AppLocalizations.of(context)!
                         .per_unit}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),
-                  ),
+                  ),*/
                 ],
               ),
               // Row(
@@ -341,6 +341,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
+
                                                   Text(
                                                     '${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
                                                     style: AppStyles

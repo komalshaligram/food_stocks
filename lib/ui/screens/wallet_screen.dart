@@ -498,7 +498,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             vertical: AppConstants.padding_5,
                                             horizontal: AppConstants.padding_3),
                                         decoration: BoxDecoration(
-                                            color: AppColors.mainColor,
+                                          gradient: AppColors.appMainGradientColor,
+                                         //   color: AppColors.mainColor,
                                             borderRadius: BorderRadius.circular(
                                                 AppConstants.radius_3)),
                                         child: state.isExportShimmering

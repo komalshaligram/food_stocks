@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color mainColor = const Color(0xff20BF6B);
+  static Color mainColor = const Color(0xff8AC540)/*Color(0xff20BF6B)*/;
   static Color notificationColor = const Color(0xff40C057);
-  static Color blueColor = const Color(0xff1890FF);
+  static Color blueColor = const Color(0xff144D9A)/*Color(0xff1890FF)*/;
   static Color borderColor = const Color(0xffD9D9D9);
   static Color whiteColor = const Color(0xffFFFFFF);
   static Color blackColor = const Color(0xff000000);
@@ -20,7 +20,7 @@ class AppColors {
   static Color redColor = const Color(0xffFF4D4F);
   static Color textFieldBorderColor = const Color(0xffCED4DA);
   static Color notesBGColor = const Color(0xffF1F3F5);
-  static Color graphColor = const Color(0xff1AC769);
+  static Color graphColor = const Color(0xff8AC540)/*Color(0xff1AC769)*/;
   static Color shimmer1Color = const Color(0xCCE0E0E0);
   static Color shimmer2Color = const Color(0xffF5F5F5);
   static Color lightMainColor = const Color(0xffd2fcd2);
@@ -28,5 +28,5 @@ class AppColors {
   static Gradient appMainGradientColor = const LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
-      colors: [Color(0xff20BF6B), Color(0xff40C057)]);
+      colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
 }
