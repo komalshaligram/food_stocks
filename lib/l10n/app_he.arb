@@ -376,6 +376,7 @@
   "order":"הזמנה",
   "monthly_credit":"זיכוי חודשי",
    "refund":"החזר תשלום",
-   "sub_total": "Sub Total"
+   "sub_total": "מחיר לפני מע\"מ",
+  "vat": "מע\"מ"
 
 }

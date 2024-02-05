@@ -375,5 +375,7 @@
   "order":"Order",
   "monthly_credit":"Monthly Credits",
   "refund":"Refund",
-  "sub_total": "Sub Total"
+  "sub_total": "Sub Total",
+  "vat": "VAT"
+
 }

@@ -13,6 +13,8 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_product_button_widget.dart';
+import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
@@ -281,54 +283,18 @@ class BasketScreenWidget extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
-                                        Navigator.pushNamed(
-                                            context,
-                                            RouteDefine
-                                                .orderSummaryScreen.name,
-                                            arguments: {
-                                              AppStrings.getCartListString:
-                                              state.CartItemList
-                                            });
-                                      }
+
                                     },
                                     child: Container(
-                                      height:
-                                      AppConstants.containerSize_50,
-                                      alignment: Alignment.center,
-                                      margin: EdgeInsets.all(0),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical:
-                                          AppConstants.padding_5,
-                                          horizontal:
-                                          AppConstants.padding_10),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.mainColor,
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: context.rtl
-                                                  ? Radius.circular(AppConstants
-                                                  .radius_25)
-                                                  : Radius.circular(
-                                                  AppConstants
-                                                      .radius_4),
-                                              bottomLeft: context.rtl
-                                                  ? Radius.circular(
-                                                  AppConstants
-                                                      .radius_25)
-                                                  : Radius.circular(
-                                                  AppConstants
-                                                      .radius_4),
-                                              bottomRight: context.rtl
-                                                  ? Radius.circular(AppConstants.radius_4)
-                                                  : Radius.circular(AppConstants.radius_25),
-                                              topRight: context.rtl ? Radius.circular(AppConstants.radius_4) : Radius.circular(AppConstants.radius_25))
-                                      ),
                                       child: Row(
                                         children: [
+                                          SvgPicture.asset(
+                                            AppImagePath.delete,color: AppColors.whiteColor,),
+                                          5.width,
                                           Text(
-                                            AppLocalizations.of(context)!.submit,
+                                            AppLocalizations.of(context)!.empty,
                                             style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.smallFont,
+                                              size: AppConstants.font_14,
                                               color: AppColors.whiteColor,
                                             ),
                                           ),
@@ -414,11 +380,29 @@ class BasketScreenWidget extends StatelessWidget {
           children: [
             basketRow('${AppLocalizations.of(context)!.sub_total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('VAT',  '${(formatNumber(value: '0', local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.vat}',  '${(formatNumber(value: '0', local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',isTitle: true),
-
-
+            Divider(),
+            CustomButtonWidget(
+              buttonText: AppLocalizations.of(context)!.submit,
+              bGColor: AppColors.mainColor,
+              isLoading: state.isLoading,
+              onPressed: () {
+                if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
+                  Navigator.pushNamed(
+                      context,
+                      RouteDefine
+                          .orderSummaryScreen.name,
+                      arguments: {
+                        AppStrings.getCartListString:
+                        state.CartItemList
+                      });
+                }
+              },
+              fontColors: AppColors.whiteColor,
+            ),
+10.height
           ],
         ));
   }
