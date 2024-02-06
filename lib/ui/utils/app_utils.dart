@@ -47,78 +47,6 @@ class CustomSnackBar {
           color: AppColors.whiteColor,
           fontWeight: FontWeight.w400),);
 
-
-/*    if (!Platform.isAndroid){
-      if (!isSnackBarOpen) {
-        isSnackBarOpen = true;
-        Flushbar(
-          dismissDirection: FlushbarDismissDirection.VERTICAL,
-          margin: const EdgeInsets.only(
-              left: AppConstants.padding_10,
-              right: AppConstants.padding_10,
-              top: AppConstants.padding_10),
-          duration: const Duration(milliseconds: 2000),
-          borderRadius: BorderRadius.circular(8.0),
-          backgroundColor: type == SnackBarType.SUCCESS
-              ? AppColors.mainColor.withOpacity(0.85)
-              : AppColors.redColor.withOpacity(0.85),
-          // backgroundGradient: AppColors.appMainGradientColor.scale(0.8),
-          borderWidth: 0,
-          flushbarStyle: FlushbarStyle.FLOATING,
-          flushbarPosition: FlushbarPosition.TOP,
-          messageText: Text(
-            title,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w400),
-          ),
-        ).show(context).whenComplete(() {
-          isSnackBarOpen = false;
-          debugPrint('isSnackBarOpen after = $isSnackBarOpen');
-        }).catchError((err) {
-          debugPrint('snackbar err = $err');
-          isSnackBarOpen = false;
-        });
-      }
-    }
-    else{
-      GFFloatingWidget(
-        horizontalPosition:0.0,
-        verticalPosition:0.0,
-        child: GFToast.showToast(
-          title,
-          context,
-          backgroundColor: type == SnackBarType.SUCCESS
-              ? AppColors.mainColor.withOpacity(0.85)
-              : AppColors.redColor.withOpacity(0.85),
-          toastBorderRadius: 8.0,
-          toastPosition: GFToastPosition.TOP,
-          // toastDuration:  1,
-          textStyle: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont,
-              color: AppColors.whiteColor,
-              fontWeight: FontWeight.w400),),
-      );
-*//*      GFToast.showToast(
-        title,
-        context,
-        backgroundColor: type == SnackBarType.SUCCESS
-            ? AppColors.mainColor.withOpacity(0.85)
-            : AppColors.redColor.withOpacity(0.85),
-        toastBorderRadius: 8.0,
-        toastPosition: GFToastPosition.TOP,
-        // toastDuration:  ,
-        textStyle: AppStyles.rkRegularTextStyle(
-            size: AppConstants.smallFont,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.w400),
-
-
-      );*//*
-
-
-    }*/
   }
 }
 
@@ -264,4 +192,15 @@ String formatNumber({required String value, required String local}){
   String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
  String result1 =  splitNumber(result);
   return result1;
+}
+
+
+double vatCalculation({required double price , required double vat}){
+ double result = price + ((price * vat)/100);
+  return result;
+}
+
+double saleCalculation({required double price , required double salePer}){
+  double result = price - (price * (salePer/100));
+  return result;
 }

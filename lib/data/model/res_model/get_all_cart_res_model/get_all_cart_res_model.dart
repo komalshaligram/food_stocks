@@ -24,6 +24,7 @@ class GetAllCartResModel with _$GetAllCartResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
+    double? vatPercentage,
     @JsonKey(name: "cart")
     List<Cart>? cart,
     @JsonKey(name: "data")
@@ -115,7 +116,7 @@ class Sale with _$Sale {
     @JsonKey(name: "salesName")
     String? salesName,
     @JsonKey(name: "discountPercentage")
-    int? discountPercentage,
+    double? discountPercentage,
     @JsonKey(name: "salesType")
     String? salesType,
     @JsonKey(name: "salesDescription")

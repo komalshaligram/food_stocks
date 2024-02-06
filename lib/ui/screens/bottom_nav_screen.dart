@@ -253,7 +253,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   gradient: state.index == 2
-                                    ?LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
+                                    ? LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
                                 /*  color: state.index == 2
                                       ? AppColors.whiteColor
                                       : AppColors.notificationColor,*/

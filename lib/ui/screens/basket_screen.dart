@@ -378,9 +378,9 @@ class BasketScreenWidget extends StatelessWidget {
           children: [
             basketRow('${AppLocalizations.of(context)!.sub_total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.vat}',  '${(formatNumber(value: '0', local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.vat}', '(${(state.vatPercentage.toString())}''${'%'})''${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}',isTitle: true),
+            basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat: state.vatPercentage).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
             CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,
@@ -393,8 +393,7 @@ class BasketScreenWidget extends StatelessWidget {
                       RouteDefine
                           .orderSummaryScreen.name,
                       arguments: {
-                        AppStrings.getCartListString:
-                        state.CartItemList
+                        AppStrings.getCartListString: state.CartItemList,
                       });
                 }
               },
@@ -416,14 +415,17 @@ class BasketScreenWidget extends StatelessWidget {
               color: AppColors
                   .blackColor),
         ),
-        Text(
-         amount,
-          style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.mediumFont,
-              color: AppColors
-                  .blackColor,
-          fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
-          overflow: TextOverflow.ellipsis,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Text(
+           amount,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.mediumFont,
+                color: AppColors
+                    .blackColor,
+            fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
@@ -583,8 +585,6 @@ class BasketScreenWidget extends StatelessWidget {
                     ? LinearProgressIndicator(
                         color: AppColors.mainColor,
                         minHeight: 3,
-            /*            borderRadius: BorderRadius.all(
-                            Radius.circular(AppConstants.radius_5)),*/
                         backgroundColor: AppColors.mainColor.withOpacity(0.5),
                       )
                     : 3.height,
@@ -646,13 +646,6 @@ class BasketScreenWidget extends StatelessWidget {
                                     color: AppColors.whiteColor,
                                     alignment: Alignment.center,
                                     child: Image.asset(AppImagePath.imageNotAvailable5)
-                                    /*Text(
-                                      AppStrings.failedToLoadString,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_14,
-                                          color: AppColors.textColor),
-                                      textAlign: TextAlign.center,
-                                    ),*/
                                   );
                                 },
                               ),
@@ -674,7 +667,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 },
                                 child: Container(
                                   child: Text(
-                                    state.basketProductList[index].productName!,
+                                    state.basketProductList[index].productName ?? '',
                                     style: TextStyle(
                                         color: AppColors.blackColor,
                                         fontSize: AppConstants.smallFont,
@@ -687,7 +680,7 @@ class BasketScreenWidget extends StatelessWidget {
                               Directionality(
                                 textDirection: TextDirection.ltr,
                                 child: Text(
-                                  '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
+                                    '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
                                   style: TextStyle(
                                       color: AppColors.blackColor,
                                       fontSize: AppConstants.smallFont,

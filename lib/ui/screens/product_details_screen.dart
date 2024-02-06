@@ -220,19 +220,18 @@ class _ProductDetailsScreenWidgetState
                                           5.width,
                                           (state.orderBySupplierProduct
                                               .orderDeliveryDate) !=
-                                              ''?CommonOrderContentWidget(
+                                              '' ? CommonOrderContentWidget(
                                             backGroundColor:
                                                 AppColors.iconBGColor,
                                             borderCoder:
                                                 AppColors.lightBorderColor,
                                             flexValue: 3,
-
                                             title: AppLocalizations.of(context)!
                                                 .delivery_date,
                                             value: (state.orderBySupplierProduct
                                                         .orderDeliveryDate) !=
                                                     ''
-                                                ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString().replaceRange(10, 24, '')}'
+                                                ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString()}'
                                                 : AppLocalizations.of(context)
                                                     !.delivery_date_value,
                                             titleColor: AppColors.mainColor,

@@ -75,10 +75,10 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                if (state.productSalesList.isEmpty) {
+
                   bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
-                }
+
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));

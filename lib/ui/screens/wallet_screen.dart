@@ -393,7 +393,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                       ((value, meta) {
                                                     String? month =
                                                         state.graphDataList[
-                                                            value.toInt()];
+                                                            value.round()];
                                                     return Text(
                                                       month.toString(),
                                                       style: AppStyles

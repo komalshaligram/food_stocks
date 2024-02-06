@@ -122,8 +122,8 @@ void appFlyerSetup() {
                     duration: Duration(milliseconds: 600),
                     child: SvgPicture.asset(
                       AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.12,
-                      width: getScreenWidth(context) * 0.47,
+                      height: getScreenHeight(context) * 0.17,
+                      width: getScreenWidth(context) * 0.52,
                     ),
                   ),
                 ),

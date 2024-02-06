@@ -141,6 +141,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               reverseList1 = graphList.toList();
             }
 
+
             emit(state.copyWith(monthlyExpenseList: temp,graphDataList: reverseList1));
             emit(state.copyWith(isGraphProcess: false));
           } else {

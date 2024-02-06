@@ -42,15 +42,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           if (response.status == 200) {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
             List<ProductDetailsModel> temp = [];
-            state.CartItemList.data!.data!.forEach((element) {
+
+            state.CartItemList.data?.data?.forEach((element) {
               temp.add(ProductDetailsModel(
                 totalQuantity: element.totalQuantity,
-                productName: element.productDetails!.productName!,
-                mainImage: element.productDetails!.mainImage!,
-                totalPayment: double.parse(element.totalAmount!.toString()),
-                cartProductId: element.cartProductId!,
-                scales: element.productDetails!.scales!,
-                weight: element.productDetails!.itemsWeight!,
+                productName: element.productDetails?.productName ?? '',
+                mainImage: element.productDetails?.mainImage ?? '',
+                totalPayment: double.parse(element.totalAmount?.toString() ?? '0'),
+                cartProductId: element.cartProductId ?? '',
+                scales: element.productDetails?.scales ?? '',
+                weight: element.productDetails?.itemsWeight ?? 0,
+               //  discountPercentage:  (element.sales?.length != 0 ) ?  element.sales?.first.discountPercentage ?? 1 : 1
               ));
             });
 
@@ -59,9 +61,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     ? preferencesHelper.getCartCount()
                     : temp.length);
             emit(state.copyWith(
+               vatPercentage: response.data?.vatPercentage ?? 1,
                 basketProductList: temp,
                 isRefresh: !state.isRefresh,
-                totalPayment: response.data!.cart!.first.totalAmount!));
+                totalPayment: response.data?.cart?.first.totalAmount ?? 0));
           } else {
             emit(state.copyWith(CartItemList: response, isShimmering: false));
           }
