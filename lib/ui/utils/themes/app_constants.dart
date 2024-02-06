@@ -94,9 +94,9 @@ class AppConstants{
   static const int saleProductPageLimit = 18;
   static const int reorderPageLimit = 18;
   static const int planogramProductPageLimit = 4;
-  static const int qnaPageLimit = 10;
+  static const int qnaPageLimit = 15;
   static const int messagePageLimit = 10;
   static const int appContentPageLimit = 10;
-  static const int oderPageLimit = 10;
+  static const int orderPageLimit = 15;
   static const int walletLimit = 10;
 }
