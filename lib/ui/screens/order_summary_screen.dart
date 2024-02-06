@@ -157,7 +157,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                           Directionality(
                                             textDirection: TextDirection.ltr,
                                             child: Text(
-                                                '${formatNumber(value: state.orderSummaryList.data?.cart?.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                                                '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
                                                 style:
                                                     AppStyles.rkRegularTextStyle(
                                                         color:
@@ -311,7 +311,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     flexValue: 7,
                     title: AppLocalizations.of(context)!.total_order,
                     value:
-                    '${formatNumber(value: state.orderSummaryList.data?.data?[index].totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                    '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.data?[index].totalAmount ?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
                     titleColor: AppColors.mainColor,
                     valueColor: AppColors.blackColor,
                     valueTextWeight: FontWeight.w500,

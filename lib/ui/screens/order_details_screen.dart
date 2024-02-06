@@ -186,7 +186,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
                       borderCoder: AppColors.lightBorderColor,
-                      flexValue: 2,
+                      flexValue: 1,
                       title: AppLocalizations.of(context)!.products,
                       value: orderByIdList.data!.ordersBySupplier![index]
                           .products!.length
@@ -200,12 +200,12 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
                       borderCoder: AppColors.lightBorderColor,
-                      flexValue: 3,
+                      flexValue: 4,
                       title: AppLocalizations.of(context)!.delivery_date,
                       value: orderByIdList.data!.ordersBySupplier![index]
                                   .orderDeliveryDate !=
                               ''
-                          ? '${orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString().replaceRange(10, 24, '')}'
+                          ? '${orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString()}'
                           : '-',
                       titleColor: AppColors.mainColor,
                       valueColor: AppColors.blackColor,
@@ -217,7 +217,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                     CommonOrderContentWidget(
                       backGroundColor: AppColors.iconBGColor,
                       borderCoder: AppColors.lightBorderColor,
-                      flexValue: 3,
+                      flexValue: 4,
                       title: AppLocalizations.of(context)!.total_order,
                       value: '${formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                       titleColor: AppColors.mainColor,

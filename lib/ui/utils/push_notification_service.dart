@@ -211,7 +211,9 @@ class PushNotificationService {
     debugPrint('main   = ${mainPage}');
     debugPrint('subPage   = ${subPage}');
     debugPrint('id = ${id}');
+    debugPrint('isAppOpen = ${isAppOpen}');
     if (isAppOpen) {
+      debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
@@ -248,12 +250,12 @@ class PushNotificationService {
               RouteDefine.supplierProductsScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-      else if (subPage == 'storeCategoryScreen') {
-          Navigator.pushNamed(navigatorKey.currentState!.context,
+      else if (subPage == 'catagoryScreen' || subPage == 'storeCategoryScreen') {
+           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {AppStrings.companyIdString: id});
         }
-      else if (subPage == 'planogramScreen') {
+      else if (subPage == 'planogramScreen' || subPage ==  'planogramProductScreen') {
           Navigator.pushNamed(navigatorKey.currentState!.context,
               RouteDefine.storeCategoryScreen.name,
               arguments: {

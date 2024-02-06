@@ -23,6 +23,7 @@ class CartProductsSupplierResModel with _$CartProductsSupplierResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
+    double? vatPercentage,
     @JsonKey(name: "cart")
     List<Cart>? cart,
     @JsonKey(name: "data")
