@@ -39,7 +39,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
             pageNum: state.pageNum + 1,
-            pageLimit: AppConstants.oderPageLimit,
+            pageLimit: AppConstants.orderPageLimit,
           );
           debugPrint('[getAllOrder req] = $reqMap}');
           final res = await DioClient(event.context).post(

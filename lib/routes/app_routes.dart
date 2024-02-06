@@ -18,7 +18,6 @@ import 'package:food_stock/ui/screens/reorder_screen.dart';
 import 'package:food_stock/ui/screens/splash_screen.dart';
 import 'package:food_stock/ui/screens/store_category_screen.dart';
 import 'package:food_stock/ui/screens/supplier_products_screen.dart';
-
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/company_product_screen.dart';
 import '../ui/screens/company_screen.dart';
@@ -75,6 +74,7 @@ enum RouteDefine {
   companyProductsScreen,
   recommendationProductsScreen,
   reorderScreen,
+
 }
 
 class AppRouting {
