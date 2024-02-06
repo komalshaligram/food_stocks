@@ -113,8 +113,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         width: getScreenWidth(context),
                         child: Column(children: [
                           80.height,
-                          state.isSubCategory
-                              ? buildTopNavigation(
+                          state.isSubCategory ?
+                          buildTopNavigation(
                               context: context,
                               categoryName: state.categoryName,
                               search: state.searchController.text,
@@ -203,7 +203,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       },
                                     ),
 
-                                    state.isPlanogramShimmering
+                                    state.isSubCategoryShimmering
                                         ? StoreCategoryScreenSubcategoryShimmerWidget()
                                         : ListView.builder(
                                       itemCount: state
@@ -242,32 +242,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         context));
                                               }),
                                     ),
-
-
-                                    // state.isLoadMore
-                                    //     ? StoreCategoryScreenSubcategoryShimmerWidget()
-                                    //     : 0.width,
-                                    // state.subCategoryList.isEmpty
-                                    //     ? 0.width
-                                    //     : state.isBottomOfPlanoGrams
-                                    //         ? CommonPaginationEndWidget(
-                                    //             pageEndText:
-                                    //                 'No more Sub Categories')
-                                    //         : 0.width,
                                   ],
                                 ),
                               ),
-                              // ),
-                              //   onNotification: (notification) {
-                              //     if (notification.metrics.pixels ==
-                              //         notification.metrics.maxScrollExtent) {
-                              //       context.read<StoreCategoryBloc>().add(
-                              //           StoreCategoryEvent
-                              //               .getSubCategoryListEvent(
-                              //               context: context));
-                              //     }
-                              //     return true;
-                              //   },
                             ),
                           )
                               : SmartRefresher(
@@ -292,7 +269,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       context: context));
                             },
                             child: SingleChildScrollView(
-                              physics: state.planoGramsList.isEmpty
+                              physics: state.subPlanoGramsList.isEmpty
                                   ? const NeverScrollableScrollPhysics()
                                   : null,
                               child: Column(
@@ -405,13 +382,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           .planogramProductList[index]
                                                           .productPrice ?? 0.0,
                                                       onButtonTap: () {
+                                                        debugPrint("state.planogramProductList[index]:${index}");
                                                         showProductDetails(
                                                             context: context,
                                                             productId: state
                                                                 .planogramProductList[index]
                                                                 .id ??
                                                                 '',
-                                                            planoGramIndex: state.subPlanoGramsList.isEmpty ? 0 : 1,
+                                                            planoGramIndex: index,
                                                             isBarcode: false
                                                         );
                                                       }),
