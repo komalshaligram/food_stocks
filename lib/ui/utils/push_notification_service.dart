@@ -185,6 +185,7 @@ class PushNotificationService {
     ),
       // payload: message.data.toString(),
     );
+    showImage(fileName);
   }
 
   showImage(String imageUrl) async {
