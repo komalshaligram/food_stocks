@@ -62,10 +62,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       if (event is _ChangeCategoryExpansionEvent) {
         print('event.isOpened123___${event.isOpened}');
         if (event.isOpened != null) {
-          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [],isBottomPlanoProduct: false , planoProductPageNum : 0));
           print('state.categoryPlanogramList___${state.categoryPlanogramList}');
         } else {
-          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
+          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : [],isBottomPlanoProduct: false,planoProductPageNum : 0));
           print('state.categoryPlanogramList_qww__${state.categoryPlanogramList}');
 
         }
@@ -85,6 +85,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subPlanoGramsList: [],
             planogramProductList:[],
             subProductPageNum: 0,
+            planoProductPageNum : 0,
             subCategoryPageNum: 0,
             planogramPageNum : 0,
             subPlanogramPageNum: 0,
@@ -148,7 +149,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           emit(state.copyWith(
             subCategoryId: event.subCategoryId,
             subCategoryName: event.subCategoryName,
-            planoGramsList: [],
+          //  planoGramsList: [],
             subPlanoGramsList: [],
             productStockList: [
               [ProductStockModel(productId: '')]
@@ -159,6 +160,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planoGramUpdateIndex: -1,
             planogramPageNum: 0,
             isBottomOfPlanoGrams: false,
+              planoProductPageNum : 0,
           ));
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
         }
@@ -223,7 +225,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             subCategoryPageNum: 0,
             subCategoryList: [],
             isBottomOfPlanoGrams: false,
-            isBottomOfSubCategory: false));
+            isBottomOfSubCategory: false,
+        isBottomPlanoProduct: false,
+
+        ));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
 
       }
@@ -332,7 +337,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     ? true
                     : false));
           } else {
-            emit(state.copyWith(isLoadMore: false));
+            emit(state.copyWith(isLoadMore: false, isBottomOfPlanoGrams : false));
             /* CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -342,7 +347,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 type: SnackBarType.FAILURE);*/
           }
         } on ServerException {
-          emit(state.copyWith(isLoadMore: false));
+          emit(state.copyWith(isLoadMore: false , isBottomOfPlanoGrams : false));
         }
         state.planogramRefreshController.refreshCompleted();
         state.planogramRefreshController.loadComplete();
@@ -354,10 +359,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramProductList: [],
             subProductPageNum: 0,
             isBottomOfProducts: false,
+            planoProductPageNum: 0,
             productStockList: [
               [ProductStockModel(productId: '')]
             ],
-            isBottomOfPlanoGrams: true));
+            isBottomOfPlanoGrams: true,
+          isBottomPlanoProduct: false,
+
+        ));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(
             context: event.context));
         add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
@@ -1157,20 +1166,23 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-       /*  if (state.isBottomOfPlanoGrams) {
+         if (state.isBottomPlanoProduct) {
           return;
-        }*/
+        }
         try{
+          emit(state.copyWith(
+              isLoadMore: state.planoProductPageNum == 0 ? false : true));
+
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
           emit(state.copyWith(isPlanogramShimmering: true));
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
             categoryId : state.categoryId,
             subCategoryId: state.subCategoryId,
-            pageNum: state.subProductPageNum,
+            pageNum: state.planoProductPageNum + 1,
             pageLimit: 10,
-            sortOrder: AppStrings.ascendingString,
-            sortField: AppStrings.planogramSortFieldString,
+         //   sortOrder: AppStrings.ascendingString,
+           // sortField: AppStrings.planogramSortFieldString,
           );
 
           final res = await DioClient(event.context)
@@ -1199,17 +1211,28 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockList.addAll([stockList]);
             }
             productStockList.add(barcodeStock);
+
+          if (planogramProductList.length !=
+                (response.metaData?.totalFilteredCount ?? 0)){
+            planogramProductList.addAll(state.planogramProductList);
+            }
             planogramProductList.addAll(response.data ?? []);
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
-                isPlanogramShimmering: false
+                isPlanogramShimmering: false, planoProductPageNum : state.planogramPageNum + 1
             ));
-            emit(state.copyWith(
+
+   /*       emit(state.copyWith(
                 isBottomOfProducts: planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
             emit(state.copyWith(
                 isBottomOfPlanoGrams: planogramProductList.length ==
+                    (response.metaData?.totalFilteredCount ?? 0)
+                    ? true
+                    : false));*/
+            emit(state.copyWith(
+                isBottomPlanoProduct: planogramProductList.length ==
                     (response.metaData?.totalFilteredCount ?? 0)
                     ? true
                     : false));
@@ -1226,11 +1249,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
         }
         on ServerException {
-          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+
+          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false,));
         }
         catch(e){
-          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+
+          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false ,));
         }
+        state.planogramRefreshController.refreshCompleted();
+        state.planogramRefreshController.loadComplete();
       }
     });
   }

@@ -410,7 +410,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                 .planogramProductList[index]
                                                                 .id ??
                                                                 '',
-                                                            planoGramIndex: 2,
+                                                            planoGramIndex: state.subPlanoGramsList.isEmpty ? 0 : 1,
                                                             isBarcode: false
                                                         );
                                                       }),
@@ -882,7 +882,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     productId:list[index]
                         .planogramproducts?[subIndex].id ??
                         '',
-                    planoGramIndex: index);
+                    planoGramIndex: 1);
               },
               child: Column(
                 mainAxisSize: MainAxisSize.max,

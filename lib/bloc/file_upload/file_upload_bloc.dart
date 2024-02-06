@@ -333,9 +333,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                    // contentType: MediaType(type,contentType!))
                     contentType: MediaType(type,contentType))
               });
-              debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-              debugPrint(
-                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
+            //  debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
+             /* debugPrint(
+                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename *//*.contentType?.parameters*//*}');*/
             }else{
 
               extension = croppedImage?.path!=null? croppedImage?.path.split(".")[1].toString():file?.path.split(".")[1].toString();
@@ -360,10 +360,10 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                     contentType: MediaType(type,contentType))
             //    contentType: MediaType(mimeManager.lookupMimeType(croppedImage!.path.split('/')[0])!,'png'))
               });
-              debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
-              debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
-              debugPrint(
-                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename /*.contentType?.parameters*/}');
+         //     debugPrint('qqq${mimeManager.lookupMimeType(croppedImage!.path)}');
+          //    debugPrint("file name:${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}");
+           /*   debugPrint(
+                  'file upload = ${formData.files.first.key}/${formData.files.first.value.filename *//*.contentType?.parameters*//*}');*/
             }
 
             try {

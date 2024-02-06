@@ -44,6 +44,8 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<Planogramproduct> subCategoryPlanogramList,
     required List<PlanogramDatum> subCatPlanoGramsList,
     required bool isBottomOfProducts,
+    required bool isBottomPlanoProduct,
+    required int planoProductPageNum,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -87,6 +89,8 @@ class StoreCategoryState with _$StoreCategoryState {
       subCatPlanoGramsList:[],
       subPlanogramPageNum:0,
       subPlanoGramsList:[],
-    subProductPageNum: 0
+    subProductPageNum: 0,
+      isBottomPlanoProduct: false,
+      planoProductPageNum : 1
       );
 }
