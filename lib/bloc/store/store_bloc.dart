@@ -794,7 +794,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         await preferences.setIsAnimation(isAnimation: true);
         debugPrint('cart count = ${preferences.getCartCount()}');
-      } else if (event is _SupplierSelectionEvent) {
+      }
+      else if (event is _SupplierSelectionEvent) {
         debugPrint(
             'supplier[${event.supplierIndex}][${event.supplierSaleIndex}]');
         if (event.supplierIndex >= 0) {
@@ -833,7 +834,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               productSupplierList: supplierList,
               productStockList: productStockList));
         }
-      } else if (event is _GlobalSearchEvent) {
+      }
+      else if (event is _GlobalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text));
         debugPrint('data1 = ${state.searchController.text}');
         try {

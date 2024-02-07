@@ -204,3 +204,4 @@ double saleCalculation({required double price , required double salePer}){
   double result = price - (price * (salePer/100));
   return result;
 }
+
