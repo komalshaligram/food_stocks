@@ -111,7 +111,7 @@ class _ProductDetailsScreenWidgetState
                       : CircularButtonWidget(
                           buttonName: AppLocalizations.of(context)!.total,
                           buttonValue:
-                              '${formatNumber(value: state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                              '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                         ),
                 ),
                 onTap: () {
@@ -251,7 +251,7 @@ class _ProductDetailsScreenWidgetState
                                             title: AppLocalizations.of(context)!
                                                 .total_order,
                                             value:
-                                                '${formatNumber(value: state.orderBySupplierProduct.totalPayment?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                                                '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
                                             titleColor: AppColors.mainColor,
                                             valueColor: AppColors.blackColor,
                                             valueTextWeight: FontWeight.w500,
@@ -424,7 +424,7 @@ class _ProductDetailsScreenWidgetState
                                             .toTitleCase() ??
                                         '',
                                     AppStrings.totalOrderString: state
-                                            .orderBySupplierProduct.totalPayment
+                                            .orderData.totalVatAmount
                                             ?.toStringAsFixed(2) ??
                                         '0',
                                     AppStrings.deliveryDateString: '-',
@@ -435,7 +435,7 @@ class _ProductDetailsScreenWidgetState
                                             .toString() ??
                                         '',
                                     AppStrings.totalAmountString: state
-                                            .orderBySupplierProduct.totalPayment
+                                            .orderData.totalVatAmount
                                             ?.toStringAsFixed(2) ??
                                         0,
                                     AppStrings.orderIdString: widget.orderId,
@@ -603,8 +603,8 @@ class _ProductDetailsScreenWidgetState
                     Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
-                        '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0?state.orderBySupplierProduct.products![index].discountedPrice!.toStringAsFixed(2)
-                            : (state.orderBySupplierProduct.products![index].totalPayment!.toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+                        '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
+                            : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
                        // '${formatNumber(value: state.orderBySupplierProduct.products?[index].totalPayment!='0'? ?? '0', local: AppStrings.hebrewLocal)}',
                         style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,

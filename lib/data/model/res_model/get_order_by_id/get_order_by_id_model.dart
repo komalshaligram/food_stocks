@@ -37,6 +37,8 @@ class OrderDatum with _$OrderDatum {
   const factory OrderDatum({
     @JsonKey(name: "_id")
     String? id,
+    double? vatPercentage,
+    double? totalVatAmount,
     @JsonKey(name: "createdAt")
     String? createdAt,
     @JsonKey(name: "orderstatus")
@@ -71,6 +73,7 @@ class Status with _$Status {
   const factory Status({
     @JsonKey(name: "_id")
     String? id,
+
     @JsonKey(name: "statusName")
     String? statusName,
     @JsonKey(name: "createdAt")

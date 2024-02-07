@@ -277,6 +277,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               .post(AppUrls.getPlanogramProductsUrl, data: req);
           PlanogramResModel response = PlanogramResModel.fromJson(res);
           print('state.issubcat:${state.isSubCategory}');
+          print('GetPlanoGramProductsEvent   response :${response}');
           if (response.status == 200) {
             if(state.isSubCategory){
               add(StoreCategoryEvent.getSubCategoryListEvent(context: event.context));
@@ -1196,7 +1197,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                       productId: product.id ?? '',
                       stock: int.parse(product.numberOfUnit  ?? '0') )) ??
                   []);
-              // debugPrint('stockList[$i] = $stockList');
               productStockList.addAll([stockList]);
             }
             productStockList.add(barcodeStock);
@@ -1217,13 +1217,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
           else{
             emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
-            /*  CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.FAILURE);*/
           }
         }
         on ServerException {

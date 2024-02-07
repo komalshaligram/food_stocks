@@ -102,6 +102,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           UpdateCartResModel response = UpdateCartResModel.fromJson(res);
 
           if (response.status == 201) {
+            add(BasketEvent.getAllCartEvent(context: event.context));
             List<ProductDetailsModel> list = [];
             list = [...state.basketProductList];
             int quantity = list[event.listIndex].totalQuantity!;
