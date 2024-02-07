@@ -399,7 +399,7 @@ class BasketScreenWidget extends StatelessWidget {
               },
               fontColors: AppColors.whiteColor,
             ),
-10.height
+            10.height
           ],
         ));
   }
