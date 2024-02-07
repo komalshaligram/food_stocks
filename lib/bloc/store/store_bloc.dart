@@ -160,7 +160,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _GetRecommendationProductsListEvent) {
+      }
+      else if (event is _GetRecommendationProductsListEvent) {
         try {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
               prefs: await SharedPreferences.getInstance());
@@ -178,6 +179,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               ));
           RecommendationProductsResModel response =
               RecommendationProductsResModel.fromJson(res);
+          print('storeresponse____${response}');
           if (response.status == 200) {
             List<ProductStockModel> productStockList =
                 state.productStockList.toList(growable: true);
@@ -207,7 +209,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _GetSuppliersListEvent) {
+      }
+      else if (event is _GetSuppliersListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -272,7 +275,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _GetProductDetailsEvent) {
+      }
+      else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';
@@ -481,7 +485,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (e) {
           Navigator.pop(event.context);
         }
-      } else if (event is _IncreaseQuantityOfProduct) {
+      }
+      else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {

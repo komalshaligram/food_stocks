@@ -30,6 +30,7 @@ import '../utils/themes/app_urls.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_button.dart';
+import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/dashboard_stats_widget.dart';
 
@@ -49,7 +50,8 @@ class HomeScreen extends StatelessWidget {
         ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
-        ..add(HomeEvent.getMessageListEvent(context: context)),
+        ..add(HomeEvent.getMessageListEvent(context: context))
+      ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -78,7 +80,7 @@ class HomeScreenWidget extends StatelessWidget {
 
                   bloc.add(
                       HomeEvent.getProductSalesListEvent(context: context));
-
+                  bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
                 bloc.add(HomeEvent.getMessageListEvent(context: context));
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
@@ -462,7 +464,8 @@ class HomeScreenWidget extends StatelessWidget {
                                         buildListItems(context, height: 170),
                                         13.height,
                                       ])
-                                :*/ state.productSalesList.isEmpty
+                                :*/
+                           /* state.productSalesList.isEmpty
                                     ? 0.width
                                     : Column  (
                                         crossAxisAlignment:
@@ -477,7 +480,7 @@ class HomeScreenWidget extends StatelessWidget {
                                               allContentTitle: state
                                                           .productSalesList
                                                           .length <
-                                                      6 ? '' : AppLocalizations.of(context)!.all_sales,
+                                                      3 ? '' : AppLocalizations.of(context)!.all_sales,
                                               onTap: () {
                                                 Navigator.pushNamed(
                                                     context,
@@ -520,7 +523,228 @@ class HomeScreenWidget extends StatelessWidget {
                                           ),
                                           10.height,
                                         ],
+                                      ),*/
+
+
+
+
+                           /* state.recommendedProductsList.isEmpty && state.isShimmering
+                                ? 0.width
+                                : Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    titleRowWidget(
+                                        context: context,
+                                        title:
+                                        AppLocalizations.of(context)!
+                                            .recommended_for_you,
+                                        allContentTitle: state
+                                            .recommendedProductsList
+                                            .length <
+                                            0 ? '' : AppLocalizations.of(context)!.more,
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context,
+                                              RouteDefine
+                                                  .recommendationProductsScreen
+                                                  .name);
+                                        }),
+                                    state.recommendedProductsList.isEmpty && state.isShimmering ? 0.width:SizedBox(
+                                      width: getScreenWidth(context),
+                                      height: 170,
+                                      child: ListView.builder(
+                                          itemCount: state
+                                              .recommendedProductsList
+                                              .length,
+                                          shrinkWrap: true,
+                                          scrollDirection:
+                                          Axis.horizontal,
+                                          padding:
+                                          EdgeInsets.symmetric(
+                                              horizontal:
+                                              AppConstants
+                                                  .padding_5),
+                                          itemBuilder: (context,
+                                              index) =>
+                                              CommonProductItemWidget(
+                                                productStock: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productStock ??
+                                                    0,
+                                                height: 150,
+                                                width: 140,
+                                                productImage: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .mainImage ??
+                                                    '',
+                                                productName: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productName ??
+                                                    '',
+                                                totalSaleCount: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .totalSale ??
+                                                    0,
+                                                price: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productPrice
+                                                    ?.toDouble() ??
+                                                    0.0,
+                                                onButtonTap: () {
+                                                  print("tap 2");
+                                                  showProductDetails(
+                                                      context:
+                                                      context,
+                                                      productId: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .id ??
+                                                          '');
+                                                },
+                                              )
+
                                       ),
+                                    ),
+                                  ],
+                                ),*/
+
+                            AnimatedCrossFade(
+                                firstChild:
+                                getScreenWidth(context).width,
+                                secondChild: Column(
+                                  children: [
+                                    buildListTitles(
+                                        context: context,
+                                        title: AppLocalizations.of(
+                                            context)!
+                                            .recommended_for_you,
+                                        subTitle: /*state
+                                              .recommendedProductsList
+                                              .length <
+                                              6
+                                              ? ''
+                                              : */
+                                        AppLocalizations.of(
+                                            context)!
+                                            .more,
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context,
+                                              RouteDefine
+                                                  .recommendationProductsScreen
+                                                  .name);
+                                        }),
+                                    SizedBox(
+                                      width: getScreenWidth(context),
+                                      height: 170,
+                                      child: ListView.builder(
+                                          itemCount: state
+                                              .recommendedProductsList
+                                              .length,
+                                          shrinkWrap: true,
+                                          scrollDirection:
+                                          Axis.horizontal,
+                                          padding:
+                                          EdgeInsets.symmetric(
+                                              horizontal:
+                                              AppConstants
+                                                  .padding_5),
+                                          itemBuilder: (context,
+                                              index) =>
+                                              CommonProductItemWidget(
+                                                productStock: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productStock ??
+                                                    0,
+                                                height: 150,
+                                                width: 140,
+                                                productImage: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .mainImage ??
+                                                    '',
+                                                productName: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productName ??
+                                                    '',
+                                                totalSaleCount: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .totalSale ??
+                                                    0,
+                                                price: state
+                                                    .recommendedProductsList[
+                                                index]
+                                                    .productPrice
+                                                    ?.toDouble() ??
+                                                    0.0,
+                                                onButtonTap: () {
+                                                  print("tap 2");
+                                                  showProductDetails(
+                                                      context:
+                                                      context,
+                                                      productId: state
+                                                          .recommendedProductsList[
+                                                      index]
+                                                          .id ??
+                                                          '');
+                                                },
+                                              )
+                                        // buildRecommendationAndPreviousOrderProductsListItem(
+                                        //   context: context,
+                                        //   productImage: state
+                                        //       .recommendedProductsList[
+                                        //   index]
+                                        //       .mainImage ??
+                                        //       '',
+                                        //   productName: state
+                                        //       .recommendedProductsList[
+                                        //   index]
+                                        //       .productName ??
+                                        //       '',
+                                        //   totalSale: state
+                                        //       .recommendedProductsList[
+                                        //   index]
+                                        //       .totalSale ??
+                                        //       0,
+                                        //   price: state
+                                        //       .recommendedProductsList[
+                                        //   index]
+                                        //       .productPrice
+                                        //       ?.toDouble() ??
+                                        //       0.0,
+                                        //   onButtonTap: () {
+                                        //     showProductDetails(
+                                        //         context: context,
+                                        //         productId: state
+                                        //             .recommendedProductsList[
+                                        //         index]
+                                        //             .id ??
+                                        //             '');
+                                        //   },
+                                        // )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                crossFadeState: state
+                                    .recommendedProductsList
+                                    .isEmpty
+                                    ? CrossFadeState.showFirst
+                                    : CrossFadeState.showSecond,
+                                duration:
+                                Duration(milliseconds: 300)),
+
+
                             state.cartCount == 0 ?  CustomTextIconButtonWidget(
                               width: double.maxFinite,
                                 title:
@@ -704,7 +928,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildListTitles() {
+/*  Widget buildListTitles() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
       child: Row(
@@ -712,6 +936,37 @@ class HomeScreenWidget extends StatelessWidget {
         children: [
           buildTextFieldTitle(),
           buildTextFieldTitle(),
+        ],
+      ),
+    );
+  }*/
+
+ Padding buildListTitles({required BuildContext context,
+    required String title,
+    required void Function() onTap,
+    required subTitle}) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: AppConstants.padding_10,
+        right: AppConstants.padding_10,
+        top: AppConstants.padding_10,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont, color: AppColors.blackColor),
+          ),
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              subTitle,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.mainColor),
+            ),
+          ),
         ],
       ),
     );

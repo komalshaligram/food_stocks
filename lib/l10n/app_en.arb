@@ -376,6 +376,7 @@
   "monthly_credit":"Monthly Credits",
   "refund":"Refund",
   "sub_total": "Sub Total",
-  "vat": "VAT"
+  "vat": "VAT",
+  "close": "Close"
 
 }

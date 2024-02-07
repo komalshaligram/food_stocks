@@ -61,7 +61,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               prefs: await SharedPreferences.getInstance());
           debugPrint('recommendation products req = ${request.toJson()}');
           final res = await DioClient(event.context)
-              .post(AppUrls.getRecommendationProductsUrl,
+              .post(AppUrls.getPreviousOrderProductsUrl,
                   data: request.toJson(),
                   options: Options(
                     headers: {

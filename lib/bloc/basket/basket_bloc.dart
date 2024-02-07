@@ -146,6 +146,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             data: {AppStrings.cartProductIdString: event.cartProductId},
           );
           if (response['status'] == 200) {
+            add(BasketEvent.getAllCartEvent(context: event.context));
             Navigator.pop(event.dialogContext);
             player.play(AssetSource('audio/delete_sound.mp3'));
             add(BasketEvent.setCartCountEvent(isClearCart: false));
@@ -158,7 +159,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 totalPayment: state.totalPayment - event.totalAmount,
               isRemoveProcess: false,
             ));
-            add(BasketEvent.getAllCartEvent(context: event.context));
 
           } else {
             Navigator.pop(event.dialogContext);

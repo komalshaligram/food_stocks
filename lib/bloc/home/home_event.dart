@@ -74,5 +74,7 @@ class HomeEvent with _$HomeEvent {
     required BuildContext context,
 }) = _getProfileDetailsEvent;
 
+  const factory HomeEvent.getRecommendationProductsListEvent(
+      {required BuildContext context}) = _GetRecommendationProductsListEvent;
 
 }
