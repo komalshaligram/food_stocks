@@ -92,7 +92,6 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           emit(state.copyWith(isProcess: false));
         } catch (e) {emit(state.copyWith(isProcess: false));}
       } else if (event is _getTotalExpenseEvent) {
-        print('year_____${event.year}');
         emit(state.copyWith(isGraphProcess: true));
         try {
           TotalExpenseReqModel reqMap = TotalExpenseReqModel(
@@ -132,7 +131,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             List<String>graphList = [];
             response.data?.forEach((element) {
               graphList.add((
-                  element.totalExpenses?.toString() ?? '0'));
+                  element.totalExpenses?.toStringAsFixed(2) ?? '0'));
             });
 
             if (preferencesHelper.getAppLanguage() == 'he') {

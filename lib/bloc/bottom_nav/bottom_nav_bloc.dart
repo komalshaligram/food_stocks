@@ -18,7 +18,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _ChangePageEvent) {
-        print('index______${event.index}');
         emit(state.copyWith(index: event.index));
 
 

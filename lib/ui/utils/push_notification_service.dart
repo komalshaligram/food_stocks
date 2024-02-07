@@ -114,7 +114,7 @@ class PushNotificationService {
             Bidi.stripHtmlIfNeeded(data['message']['body'].toString());
         String mainPage = data['message']['mainPage'] ?? '';
         String subPage = data['message']['subPage'] ?? '';
-        String id = data['_id'] ?? '';
+        String id = data['message']['id'] ?? '';
         _subPage = subPage;
         _mainPage = mainPage;
         _id = id;
@@ -185,7 +185,9 @@ class PushNotificationService {
     ),
       // payload: message.data.toString(),
     );
-    showImage(fileName);
+    if(fileName != null){
+      showImage(fileName);
+    }
   }
 
   showImage(String imageUrl) async {

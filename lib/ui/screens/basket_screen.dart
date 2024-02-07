@@ -378,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
           children: [
             basketRow('${AppLocalizations.of(context)!.sub_total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.vat}', '(${(state.vatPercentage.toString())}''${'%'})''${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.vat}', '(${(state.vatPercentage.toString())}' + '${'%'})${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat: state.vatPercentage).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
