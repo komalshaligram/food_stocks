@@ -369,7 +369,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramPageNum: 0,
             planoGramsList: [],
            productCategoryList: [],
-            subPlanoGramsList: isSubCategoryString != '' ? [] : state.subPlanoGramsList,
+           // subPlanoGramsList: isSubCategoryString != '' ? [] : state.subPlanoGramsList,
             //subProductPageNum: 0,
             /*productStockList: [
               [ProductStockModel(productId: '')]
