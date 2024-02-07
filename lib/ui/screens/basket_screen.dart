@@ -306,6 +306,7 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                             )
                           : SizedBox(),
+
                       state.isShimmering && state.basketProductList.isEmpty
                           ? BasketScreenShimmerWidget()
                           : (state.basketProductList.length) != 0
@@ -399,7 +400,7 @@ class BasketScreenWidget extends StatelessWidget {
               },
               fontColors: AppColors.whiteColor,
             ),
-10.height
+            10.height
           ],
         ));
   }

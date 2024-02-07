@@ -397,8 +397,16 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             //1 product
             //2 barcode
             List<List<ProductStockModel>> productStockList =
-            state.productStockList.toList(growable: true);
-            int planoGramIndex = event.planoGramIndex;
+             state.productStockList.toList(growable: true);
+            int planoGramIndex  = event.planoGramIndex;
+          /*  if(isSubCategoryString == '' && !state.isSubCategory ){
+              debugPrint("sub planogram");
+              planoGramIndex = event.planoGramIndex==0?1:event.planoGramIndex;
+            }else{
+              debugPrint("Planogram");
+              planoGramIndex = event.planoGramIndex;
+            }*/
+
             int productStockUpdateIndex = state.productStockList[planoGramIndex]
                 .indexWhere((productStock) =>
             productStock.productId == event.productId);
@@ -424,7 +432,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             // productStockList[planoGramIndex][productStockUpdateIndex] =
             //     productStockList[planoGramIndex][productStockUpdateIndex]
             //         .copyWith(stock: response.product?.first.numberOfUnit ?? 0);
-
+            debugPrint(
+                'stock ${productStockList[planoGramIndex][productStockUpdateIndex].stock}');
+            debugPrint(
+                'supplier list stock = ${response.product?.first.supplierSales?.map((e) => e.productStock)}');
             List<ProductSupplierModel> supplierList = [];
             debugPrint(
                 'supplier id = ${state.productStockList[planoGramIndex][productStockUpdateIndex].productSupplierIds}');

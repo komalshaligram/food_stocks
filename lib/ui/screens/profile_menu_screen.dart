@@ -8,6 +8,7 @@ import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:food_stock/bloc/profile_menu/profile_menu_bloc.dart';
 import 'package:food_stock/routes/app_routes.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
@@ -15,7 +16,7 @@ import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../utils/app_utils.dart';
+
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
