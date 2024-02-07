@@ -382,14 +382,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           .planogramProductList[index]
                                                           .productPrice ?? 0.0,
                                                       onButtonTap: () {
-                                                        debugPrint("state.planogramProductList[index]:${index}");
+                                                        debugPrint("state.planogramProductList[index]:${index==0?(state
+                                                            .planogramProductList.length>1)?1:0:index}");
                                                         showProductDetails(
                                                             context: context,
                                                             productId: state
                                                                 .planogramProductList[index]
                                                                 .id ??
                                                                 '',
-                                                            planoGramIndex: index,
+                                                            planoGramIndex: index==0?(state
+                                                                .planogramProductList.length>1)?1:0:index,
                                                             isBarcode: false
                                                         );
                                                       }),

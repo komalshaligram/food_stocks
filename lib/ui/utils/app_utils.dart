@@ -12,6 +12,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 
+
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
   return screenHeight;
