@@ -19,6 +19,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String description;
   final String productName;
   final double salePercentage;
+  final double discountedPrice;
   final void Function() onButtonTap;
 
   const CommonProductSaleItemWidget(
@@ -30,7 +31,9 @@ class CommonProductSaleItemWidget extends StatelessWidget {
       required this.description,
       required this.salePercentage,
         required this.productName,
-      required this.onButtonTap});
+      required this.onButtonTap,
+      required this.discountedPrice,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +128,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${salePercentage.toStringAsFixed(0)}%" /*${AppLocalizations.of(context)!.currency}*/,
+                    "${discountedPrice.toStringAsFixed(2)}" /*${AppLocalizations.of(context)!.currency}*/,
                 onPressed: onButtonTap,
                 // height: 35,
                 textColor: AppColors.whiteColor,

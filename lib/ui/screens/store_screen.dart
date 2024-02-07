@@ -509,6 +509,11 @@ class StoreScreenWidget extends StatelessWidget {
                                                                         index]
                                                                     .discountPercentage ??
                                                                 '0.0'),
+                                                        discountedPrice: state
+                                                            .productSalesList[
+                                                        index]
+                                                            .discountedPrice ??
+                                                            0,
                                                         onButtonTap: () {
                                                           print("tap 1");
                                                           showProductDetails(

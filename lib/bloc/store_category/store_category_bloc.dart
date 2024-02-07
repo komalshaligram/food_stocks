@@ -71,9 +71,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
       }
       else if (event is _ChangeSubCategoryOrPlanogramEvent) {
-        emit( state.copyWith(isSubCategory: event.isSubCategory,subCategoryId: ''));
+
+        emit( state.copyWith(isSubCategory: event.isSubCategory, subCategoryId: ''));
+
         if(categoryId != ''){
-          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: 'true', categoryName: '' ,categoryId: parentCategoryId));
+          add(StoreCategoryEvent.changeCategoryDetailsEvent(context:event.context , isSubCategory: 'true', categoryName: state.categoryName ,categoryId: parentCategoryId));
         }
         else{
           emit(state.copyWith(planogramPageNum : 0 , isBottomOfPlanoGrams: false));
@@ -102,7 +104,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             ]));
         if(event.isSubCategory == ''){
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
-
         }
         else{
           isSubCategoryString = event.isSubCategory;
@@ -293,10 +294,16 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             state.subPlanoGramsList.toList(growable: true);
             List<Planogramproduct> categoryPlanogramList =
             state.categoryPlanogramList.toList(growable: true);
+
             if(isSubCategoryString == '' && !state.isSubCategory ){
               subPlanoGramList.addAll(response.data??[]);
               emit(state.copyWith(subPlanoGramsList: subPlanoGramList,));
-            }else{
+            }
+            else if(isSubCategoryString != '' && !state.isSubCategory ){
+              subPlanoGramList.addAll(response.data??[]);
+              emit(state.copyWith(subPlanoGramsList: subPlanoGramList,));
+            }
+            else{
               planoGramsList.addAll(response.data ?? []);
               emit(state.copyWith(planoGramsList: planoGramsList,));
             }
@@ -362,7 +369,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramPageNum: 0,
             planoGramsList: [],
            productCategoryList: [],
-           // subPlanoGramsList: [],
+           // subPlanoGramsList: isSubCategoryString != '' ? [] : state.subPlanoGramsList,
             //subProductPageNum: 0,
             /*productStockList: [
               [ProductStockModel(productId: '')]

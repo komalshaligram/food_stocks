@@ -27,6 +27,8 @@ class HomeState with _$HomeState {
     required bool isMessageShimmering,
     required double expensePercentage,
     required TextEditingController noteController,
+    required List<RecommendationData> recommendedProductsList,
+    required bool isShimmering,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -54,5 +56,8 @@ class HomeState with _$HomeState {
         isMessageShimmering: false,
         expensePercentage: 0,
         noteController: TextEditingController(),
+        recommendedProductsList: [],
+    isShimmering: false
+
       );
 }

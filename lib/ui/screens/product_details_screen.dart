@@ -402,16 +402,7 @@ class _ProductDetailsScreenWidgetState
                     color: AppColors.pageColor,
                     child: CustomButtonWidget(
                       onPressed: () {
-                        state.orderBySupplierProduct.deliverStatus?.statusName
-                                    ?.toTitleCase() !=
-                                AppLocalizations.of(context)!.pending_delivery
-                            ? Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                RouteDefine.orderScreen.name,
-                                (Route route) =>
-                                    route.settings.name ==
-                                    RouteDefine.menuScreen.name)
-                            : Navigator.pushNamed(context,
+                      Navigator.pushNamed(context,
                                 RouteDefine.shipmentVerificationScreen.name,
                                 arguments: {
                                     AppStrings.supplierNameString: state
@@ -600,140 +591,148 @@ class _ProductDetailsScreenWidgetState
                         size: AppConstants.font_12,
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
-                        '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
-                            : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
-                       // '${formatNumber(value: state.orderBySupplierProduct.products?[index].totalPayment!='0'? ?? '0', local: AppStrings.hebrewLocal)}',
-                        style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.blackColor,
-                            size: AppConstants.font_14,
-                            fontWeight: FontWeight.w700),
-                      ),
+                    Row(
+                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Text(
+                            '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
+                                : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+
+                            style: AppStyles.rkRegularTextStyle(
+                                color: AppColors.blackColor,
+                                size: AppConstants.font_14,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+
+                      ],
                     ),
+                    statusNumber == onTheWayStatus || statusNumber == 5
+                        ? Column(
+                      children: [
+                        statusNumber != 5
+                            ? GestureDetector(
+                          onTap: () {
+                            (isIssue! ||
+                                state.productListIndex
+                                    .contains(index))
+                                ? ProductProblemBottomSheet(
+                                radioValue: isIssue == true
+                                    ? ((issue ?? '') ==
+                                    AppLocalizations.of(context)!
+                                        .the_product_did_not_arrive_at_all)
+                                    ? 1
+                                    : ((issue ?? '') ==
+                                    AppLocalizations.of(context)!
+                                        .product_arrived_damaged)
+                                    ? 2
+                                    : ((issue ?? '') ==
+                                    AppLocalizations.of(context)!
+                                        .the_product_arrived_missing)
+                                    ? 3
+                                    : 4
+                                    : 0,
+                                context: context,
+                                productName: state
+                                    .orderBySupplierProduct
+                                    .products?[index]
+                                    .productName
+                                    .toString() ??
+                                    '',
+                                weight: state.orderBySupplierProduct
+                                    .products![index].itemWeight!
+                                    .toDouble(),
+                                price: double.parse(state
+                                    .orderBySupplierProduct
+                                    .products![index]
+                                    .totalPayment!
+                                    .toStringAsFixed(2)),
+                                image:
+                                '${state.orderBySupplierProduct.products![index].mainImage ?? ''}',
+                                listIndex: index,
+                                productId: state.orderBySupplierProduct.products?[index].productId ?? '',
+                                supplierId: state.orderBySupplierProduct.id.toString(),
+                                scale: (state.orderBySupplierProduct.products?[index].scale.toString() ?? ''),
+                                isIssue: isIssue,
+                                issue: issue,
+                                missingQuantity: missingQuantity,
+                                quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
+                                isDeliver: (state.orderBySupplierProduct.orderDeliveryDate != '') ? true : false)
+                                : SizedBox();
+                            bloc.add(
+                                ProductDetailsEvent.radioButtonEvent(
+                                    selectRadioTile: isIssue == true
+                                        ? ((issue ?? '') ==
+                                        AppLocalizations.of(
+                                            context)!
+                                            .the_product_did_not_arrive_at_all)
+                                        ? 1
+                                        : ((issue ?? '') ==
+                                        AppLocalizations.of(
+                                            context)!
+                                            .product_arrived_damaged)
+                                        ? 2
+                                        : ((issue ?? '') ==
+                                        AppLocalizations.of(
+                                            context)!
+                                            .the_product_arrived_missing)
+                                        ? 3
+                                        : 4
+                                        : 0));
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.all(AppConstants.padding_10),
+                            padding: EdgeInsets.symmetric(
+                                vertical: AppConstants.padding_5,
+                                horizontal: AppConstants.padding_5),
+                            decoration: BoxDecoration(
+                              color: (isIssue ?? false)
+                                  ? AppColors.mainColor
+                                  : state.productListIndex
+                                  .contains(index)
+                                  ? AppColors.mainColor
+                                  : AppColors.lightBorderColor,
+                              border: Border.all(
+                                  color: AppColors.lightGreyColor),
+                              borderRadius: BorderRadius.circular(
+                                  AppConstants.radius_3),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .product_issue,
+                              style: AppStyles.rkRegularTextStyle(
+                                  color: (isIssue ?? false) ||
+                                      state.productListIndex
+                                          .contains(index)
+                                      ? AppColors.whiteColor
+                                      : AppColors.blackColor,
+                                  size: AppConstants.font_12,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        )
+                            : SizedBox(),
+                        (isIssue ?? false)
+                            ? Text(
+                          '${issueStatus.toString()}',
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.blackColor,
+                              size: AppConstants.font_14,
+                              fontWeight: FontWeight.w400),
+                        )
+                            : SizedBox(),
+                      ],
+                    )
+                        : SizedBox(),
+
                   ],
                 ),
 
                 // Expanded(child: SizedBox()),
-                statusNumber == onTheWayStatus || statusNumber == 5
-                    ? Column(
-                        children: [
-                          statusNumber != 5
-                              ? GestureDetector(
-                                  onTap: () {
-                                    (isIssue! ||
-                                            state.productListIndex
-                                                .contains(index))
-                                        ? ProductProblemBottomSheet(
-                                            radioValue: isIssue == true
-                                                ? ((issue ?? '') ==
-                                                        AppLocalizations.of(context)!
-                                                            .the_product_did_not_arrive_at_all)
-                                                    ? 1
-                                                    : ((issue ?? '') ==
-                                                            AppLocalizations.of(context)!
-                                                                .product_arrived_damaged)
-                                                        ? 2
-                                                        : ((issue ?? '') ==
-                                                                AppLocalizations.of(context)!
-                                                                    .the_product_arrived_missing)
-                                                            ? 3
-                                                            : 4
-                                                : 0,
-                                            context: context,
-                                            productName: state
-                                                    .orderBySupplierProduct
-                                                    .products?[index]
-                                                    .productName
-                                                    .toString() ??
-                                                '',
-                                            weight: state.orderBySupplierProduct
-                                                .products![index].itemWeight!
-                                                .toDouble(),
-                                            price: double.parse(state
-                                                .orderBySupplierProduct
-                                                .products![index]
-                                                .totalPayment!
-                                                .toStringAsFixed(2)),
-                                            image:
-                                                '${state.orderBySupplierProduct.products![index].mainImage ?? ''}',
-                                            listIndex: index,
-                                            productId: state.orderBySupplierProduct.products?[index].productId ?? '',
-                                            supplierId: state.orderBySupplierProduct.id.toString(),
-                                            scale: (state.orderBySupplierProduct.products?[index].scale.toString() ?? ''),
-                                            isIssue: isIssue,
-                                            issue: issue,
-                                            missingQuantity: missingQuantity,
-                                            quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
-                                            isDeliver: (state.orderBySupplierProduct.orderDeliveryDate != '') ? true : false)
-                                        : SizedBox();
-                                    bloc.add(
-                                        ProductDetailsEvent.radioButtonEvent(
-                                            selectRadioTile: isIssue == true
-                                                ? ((issue ?? '') ==
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .the_product_did_not_arrive_at_all)
-                                                    ? 1
-                                                    : ((issue ?? '') ==
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .product_arrived_damaged)
-                                                        ? 2
-                                                        : ((issue ?? '') ==
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .the_product_arrived_missing)
-                                                            ? 3
-                                                            : 4
-                                                : 0));
-                                  },
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.all(AppConstants.padding_10),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5,
-                                        horizontal: AppConstants.padding_5),
-                                    decoration: BoxDecoration(
-                                      color: (isIssue ?? false)
-                                          ? AppColors.mainColor
-                                          : state.productListIndex
-                                                  .contains(index)
-                                              ? AppColors.mainColor
-                                              : AppColors.lightBorderColor,
-                                      border: Border.all(
-                                          color: AppColors.lightGreyColor),
-                                      borderRadius: BorderRadius.circular(
-                                          AppConstants.radius_3),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .product_issue,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          color: (isIssue ?? false) ||
-                                                  state.productListIndex
-                                                      .contains(index)
-                                              ? AppColors.whiteColor
-                                              : AppColors.blackColor,
-                                          size: AppConstants.font_12,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(),
-                          (isIssue ?? false)
-                              ? Text(
-                                  '${issueStatus.toString()}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      color: AppColors.blackColor,
-                                      size: AppConstants.font_14,
-                                      fontWeight: FontWeight.w400),
-                                )
-                              : SizedBox(),
-                        ],
-                      )
-                    : SizedBox(),
+
                 10.width,
                 // : SizedBox(),
               ],

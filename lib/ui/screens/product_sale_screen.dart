@@ -137,6 +137,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               .productSalesList[index]
                                               .discountPercentage ??
                                           '0.0'),
+                                      discountedPrice: state.productSalesList[index].discountedPrice ?? 0,
                                       onButtonTap: () {
                                         showProductDetails(
                                           context: context,
@@ -181,6 +182,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String description,
     required double salePercentage,
     required String productName,
+  required double discountedPrice,
     required void Function() onButtonTap,
   }) {
     return DelayedWidget(
@@ -190,7 +192,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
             description: description,
             salePercentage: salePercentage,
-            onButtonTap: onButtonTap, productName: productName,)
+            onButtonTap: onButtonTap, productName: productName,
+          discountedPrice: discountedPrice,)
         );
   }
 
