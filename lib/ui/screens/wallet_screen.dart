@@ -552,6 +552,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                           }) {
                                             return showDateRangePickerDialog(
                                               context: context,
+
                                               offset: Offset(65, 200),
                                               barrierColor: AppColors.whiteColor
                                                   .withOpacity(0.6),
