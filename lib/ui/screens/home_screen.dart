@@ -381,7 +381,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${state.balance.toString()}${AppLocalizations.of(context)?.currency}',
+                                              '${AppLocalizations.of(context)?.currency}${state.balance.toString()}',
                                               style: AppStyles.rkRegularTextStyle(
                                                   size: AppConstants.font_14,
                                                   fontWeight: FontWeight.bold,
@@ -406,7 +406,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${state.totalCredit.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -417,7 +417,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${state.thisMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                               ),
                                             ],
                                           ),
@@ -432,7 +432,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${state.lastMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -1708,13 +1708,13 @@ class HomeScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                            .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex == -2)
                                             .basePrice
                                             .toStringAsFixed(AppConstants
-                                            .amountFrLength)}${AppLocalizations
-                                            .of(context)!.currency}',
+                                            .amountFrLength)}',
                                         style: AppStyles
                                             .rkRegularTextStyle(
                                             size: AppConstants
@@ -1745,13 +1745,13 @@ class HomeScreenWidget extends StatelessWidget {
                                       ),
                                       2.height,
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                            .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
                                             .supplierSales[index].salePrice
                                             .toStringAsFixed(AppConstants
-                                            .amountFrLength)}${AppLocalizations
-                                            .of(context)!.currency}(${state
+                                            .amountFrLength)}(${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
@@ -1957,13 +1957,13 @@ class HomeScreenWidget extends StatelessWidget {
                                               MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price} : ${AppLocalizations
+                                                      .of(context)!.currency}${state
                                                       .productSupplierList[index]
                                                       .basePrice
                                                       .toStringAsFixed(
                                                       AppConstants
-                                                          .amountFrLength)}${AppLocalizations
-                                                      .of(context)!.currency}',
+                                                          .amountFrLength)}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -2053,7 +2053,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 ),
                                                 2.height,
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price} : ${state
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .salePrice
@@ -2086,7 +2086,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                               .saleDescription}');
                                                     },
                                                     child: Text(
-                                                      'Read condition',
+                                                      '${AppLocalizations.of(context)!.read_condition}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                           size: AppConstants
@@ -2129,6 +2129,6 @@ class HomeScreenWidget extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            buttonTitle: "OK"));
+            buttonTitle: "${AppLocalizations.of(context)!.price}"));
   }
 }

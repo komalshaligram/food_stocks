@@ -343,7 +343,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                 children: [
 
                                                   Text(
-                                                    '${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}',
+                                                    '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                     style: AppStyles
                                                         .rkBoldTextStyle(
                                                             size: AppConstants

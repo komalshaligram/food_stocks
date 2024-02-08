@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
@@ -128,7 +128,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${discountedPrice.toStringAsFixed(2)}" /*${AppLocalizations.of(context)!.currency}*/,
+                    "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}" ,
                 onPressed: onButtonTap,
                 // height: 35,
                 textColor: AppColors.whiteColor,

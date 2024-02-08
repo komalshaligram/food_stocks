@@ -140,7 +140,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                             totalBalance: 100),
                                         6.height,
                                         Text(
-                                          '${state.balance.toString()}${AppLocalizations.of(context)?.currency}',
+                                          '${AppLocalizations.of(context)?.currency}${state.balance.toString()}',
                                           style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 title: AppLocalizations.of(context)!
                                                     .total_credit,
                                                 value:
-                                                    '${state.totalCredit.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                    '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -174,7 +174,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 title: AppLocalizations.of(context)!
                                                     .this_months_expenses,
                                                 value:
-                                                    '${state.thisMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                    '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                           ),
                                         ],
                                       ),
@@ -188,7 +188,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 title: AppLocalizations.of(context)!
                                                     .last_months_expenses,
                                                 value:
-                                                    '${state.lastMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                    '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
                                           ),
                                           10.width,
                                           Flexible(

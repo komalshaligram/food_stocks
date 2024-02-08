@@ -125,7 +125,7 @@ class CommonProductItemWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                    "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}${AppLocalizations.of(context)!.currency}",
+                    "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",
                 onPressed: onButtonTap,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,

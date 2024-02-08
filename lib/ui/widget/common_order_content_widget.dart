@@ -63,17 +63,14 @@ class CommonOrderContentWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               5.height,
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  value,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: valueTextSize,
-                      color: valueColor,
-                      fontWeight: valueTextWeight),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              Text(
+                value,
+                style: AppStyles.rkRegularTextStyle(
+                    size: valueTextSize,
+                    color: valueColor,
+                    fontWeight: valueTextWeight),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
