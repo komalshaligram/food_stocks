@@ -377,6 +377,7 @@
   "refund":"Refund",
   "sub_total": "Sub Total",
   "vat": "VAT",
-  "close": "Close"
+  "close": "Close",
+  "read_condition":"Read condition"
 
 }

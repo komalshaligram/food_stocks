@@ -436,6 +436,7 @@ class TimeContainer extends StatelessWidget {
                                               timeIndex: index,
                                               openingIndex: openingIndex,
                                               time: datetime,
+                                              previousTime: time,
                                               timePickerContext: c1));
                                     },
                                     child: Container(

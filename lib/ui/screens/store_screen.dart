@@ -33,7 +33,6 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
-import '../widget/refresh_widget.dart';
 import '../widget/store_screen_shimmer_widget.dart';
 
 class StoreRoute {
@@ -1570,11 +1569,11 @@ class StoreScreenWidget extends StatelessWidget {
             Center(
               child: CommonProductButtonWidget(
                 title:
-                "${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00"
+                "${AppLocalizations.of(context)!
+                    .currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00"
                     ? '0'
                     : price.toStringAsFixed(
-                    AppConstants.amountFrLength)}${AppLocalizations.of(context)!
-                    .currency}",
+                    AppConstants.amountFrLength)}",
                 onPressed: onButtonTap,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
@@ -2091,13 +2090,13 @@ class StoreScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                            .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex == -2)
                                             .basePrice
                                             .toStringAsFixed(AppConstants
-                                            .amountFrLength)}${AppLocalizations
-                                            .of(context)!.currency}',
+                                            .amountFrLength)}',
                                         style: AppStyles
                                             .rkRegularTextStyle(
                                             size: AppConstants
@@ -2128,13 +2127,13 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                       2.height,
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${state.productSupplierList
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                            .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
                                             .supplierSales[index].salePrice
                                             .toStringAsFixed(AppConstants
-                                            .amountFrLength)}${AppLocalizations
-                                            .of(context)!.currency}(${state
+                                            .amountFrLength)}(${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
@@ -2340,13 +2339,13 @@ class StoreScreenWidget extends StatelessWidget {
                                               MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price}  : ${AppLocalizations
+                                                      .of(context)!.currency}${state
                                                       .productSupplierList[index]
                                                       .basePrice
                                                       .toStringAsFixed(
                                                       AppConstants
-                                                          .amountFrLength)}${AppLocalizations
-                                                      .of(context)!.currency}',
+                                                          .amountFrLength)}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -2436,15 +2435,15 @@ class StoreScreenWidget extends StatelessWidget {
                                                 ),
                                                 2.height,
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price}  : ${AppLocalizations
+                                                      .of(context)!
+                                                      .currency}${state
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .salePrice
                                                       .toStringAsFixed(
                                                       AppConstants
-                                                          .amountFrLength)}${AppLocalizations
-                                                      .of(context)!
-                                                      .currency}(${state
+                                                          .amountFrLength)}(${state
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .saleDiscount
@@ -2469,7 +2468,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               .saleDescription}');
                                                     },
                                                     child: Text(
-                                                      'Read condition',
+                                                      '${AppLocalizations.of(context)!.read_condition}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                           size: AppConstants
@@ -2513,6 +2512,6 @@ class StoreScreenWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                buttonTitle: "OK"));
+                buttonTitle: "${AppLocalizations.of(context)!.ok}"));
   }
 }

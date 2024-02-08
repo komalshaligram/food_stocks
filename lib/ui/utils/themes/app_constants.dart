@@ -75,6 +75,7 @@ class AppConstants{
 
   //product grid aspect ratio
   static const double productGridAspectRatio = 9 / 13;
+  static const double saleProductAspectRatio = 8 / 13;
 
   //bottom nav space
   static const double bottomNavSpace = 30;

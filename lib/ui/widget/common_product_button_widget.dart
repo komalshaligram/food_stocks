@@ -62,7 +62,7 @@ class CommonProductButtonWidget extends StatelessWidget {
           height: height ?? AppConstants.buttonHeightSmall,
           minWidth: width,
           padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-          onPressed: null /*isLoading ? null : onPressed*/,
+          onPressed: null ,
           child: isLoading
               ? CupertinoActivityIndicator(
                   color: Colors.white,

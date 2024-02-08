@@ -24,6 +24,8 @@ mixin _$BottomNavEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -34,6 +36,8 @@ mixin _$BottomNavEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,6 +48,8 @@ mixin _$BottomNavEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -54,6 +60,8 @@ mixin _$BottomNavEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -63,6 +71,8 @@ mixin _$BottomNavEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -72,6 +82,8 @@ mixin _$BottomNavEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -166,6 +178,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) {
     return changePage(index);
   }
@@ -179,6 +193,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) {
     return changePage?.call(index);
   }
@@ -192,6 +208,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -208,6 +226,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) {
     return changePage(this);
   }
@@ -220,6 +240,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) {
     return changePage?.call(this);
   }
@@ -232,6 +254,8 @@ class _$ChangePageEventImpl implements _ChangePageEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (changePage != null) {
@@ -295,6 +319,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) {
     return updateCartCountEvent();
   }
@@ -308,6 +334,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) {
     return updateCartCountEvent?.call();
   }
@@ -321,6 +349,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -337,6 +367,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) {
     return updateCartCountEvent(this);
   }
@@ -349,6 +381,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) {
     return updateCartCountEvent?.call(this);
   }
@@ -361,6 +395,8 @@ class _$UpdateCartCountEventImpl implements _UpdateCartCountEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (updateCartCountEvent != null) {
@@ -418,6 +454,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) {
     return animationCartEvent();
   }
@@ -431,6 +469,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) {
     return animationCartEvent?.call();
   }
@@ -444,6 +484,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (animationCartEvent != null) {
@@ -460,6 +502,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) {
     return animationCartEvent(this);
   }
@@ -472,6 +516,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) {
     return animationCartEvent?.call(this);
   }
@@ -484,6 +530,8 @@ class _$animationCartEventImpl implements _animationCartEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (animationCartEvent != null) {
@@ -568,6 +616,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) {
     return snackbarEvent(isBottomNavBar);
   }
@@ -581,6 +631,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) {
     return snackbarEvent?.call(isBottomNavBar);
   }
@@ -594,6 +646,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (snackbarEvent != null) {
@@ -610,6 +664,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) {
     return snackbarEvent(this);
   }
@@ -622,6 +678,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) {
     return snackbarEvent?.call(this);
   }
@@ -634,6 +692,8 @@ class _$snackbarEventImpl implements _snackbarEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (snackbarEvent != null) {
@@ -734,6 +794,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     required TResult Function(bool isBottomNavBar) snackbarEvent,
     required TResult Function(BuildContext context, String pushNavigation)
         PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
   }) {
     return PushNavigationEvent(context, pushNavigation);
   }
@@ -747,6 +809,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     TResult? Function(bool isBottomNavBar)? snackbarEvent,
     TResult? Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
   }) {
     return PushNavigationEvent?.call(context, pushNavigation);
   }
@@ -760,6 +824,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     TResult Function(bool isBottomNavBar)? snackbarEvent,
     TResult Function(BuildContext context, String pushNavigation)?
         PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (PushNavigationEvent != null) {
@@ -776,6 +842,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     required TResult Function(_animationCartEvent value) animationCartEvent,
     required TResult Function(_snackbarEvent value) snackbarEvent,
     required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
   }) {
     return PushNavigationEvent(this);
   }
@@ -788,6 +856,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     TResult? Function(_animationCartEvent value)? animationCartEvent,
     TResult? Function(_snackbarEvent value)? snackbarEvent,
     TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
   }) {
     return PushNavigationEvent?.call(this);
   }
@@ -800,6 +870,8 @@ class _$PushNavigationEventImpl implements _PushNavigationEvent {
     TResult Function(_animationCartEvent value)? animationCartEvent,
     TResult Function(_snackbarEvent value)? snackbarEvent,
     TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
     required TResult orElse(),
   }) {
     if (PushNavigationEvent != null) {
@@ -822,13 +894,195 @@ abstract class _PushNavigationEvent implements BottomNavEvent {
 }
 
 /// @nodoc
+abstract class _$$NavigateToStoreScreenEventImplCopyWith<$Res> {
+  factory _$$NavigateToStoreScreenEventImplCopyWith(
+          _$NavigateToStoreScreenEventImpl value,
+          $Res Function(_$NavigateToStoreScreenEventImpl) then) =
+      __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({BuildContext context, String storeScreen});
+}
+
+/// @nodoc
+class __$$NavigateToStoreScreenEventImplCopyWithImpl<$Res>
+    extends _$BottomNavEventCopyWithImpl<$Res, _$NavigateToStoreScreenEventImpl>
+    implements _$$NavigateToStoreScreenEventImplCopyWith<$Res> {
+  __$$NavigateToStoreScreenEventImplCopyWithImpl(
+      _$NavigateToStoreScreenEventImpl _value,
+      $Res Function(_$NavigateToStoreScreenEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? context = null,
+    Object? storeScreen = null,
+  }) {
+    return _then(_$NavigateToStoreScreenEventImpl(
+      context: null == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext,
+      storeScreen: null == storeScreen
+          ? _value.storeScreen
+          : storeScreen // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$NavigateToStoreScreenEventImpl implements _NavigateToStoreScreenEvent {
+  const _$NavigateToStoreScreenEventImpl(
+      {required this.context, required this.storeScreen});
+
+  @override
+  final BuildContext context;
+  @override
+  final String storeScreen;
+
+  @override
+  String toString() {
+    return 'BottomNavEvent.NavigateToStoreScreenEvent(context: $context, storeScreen: $storeScreen)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NavigateToStoreScreenEventImpl &&
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.storeScreen, storeScreen) ||
+                other.storeScreen == storeScreen));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, context, storeScreen);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
+      get copyWith => __$$NavigateToStoreScreenEventImplCopyWithImpl<
+          _$NavigateToStoreScreenEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int index) changePage,
+    required TResult Function() updateCartCountEvent,
+    required TResult Function() animationCartEvent,
+    required TResult Function(bool isBottomNavBar) snackbarEvent,
+    required TResult Function(BuildContext context, String pushNavigation)
+        PushNavigationEvent,
+    required TResult Function(BuildContext context, String storeScreen)
+        NavigateToStoreScreenEvent,
+  }) {
+    return NavigateToStoreScreenEvent(context, storeScreen);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int index)? changePage,
+    TResult? Function()? updateCartCountEvent,
+    TResult? Function()? animationCartEvent,
+    TResult? Function(bool isBottomNavBar)? snackbarEvent,
+    TResult? Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
+    TResult? Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
+  }) {
+    return NavigateToStoreScreenEvent?.call(context, storeScreen);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int index)? changePage,
+    TResult Function()? updateCartCountEvent,
+    TResult Function()? animationCartEvent,
+    TResult Function(bool isBottomNavBar)? snackbarEvent,
+    TResult Function(BuildContext context, String pushNavigation)?
+        PushNavigationEvent,
+    TResult Function(BuildContext context, String storeScreen)?
+        NavigateToStoreScreenEvent,
+    required TResult orElse(),
+  }) {
+    if (NavigateToStoreScreenEvent != null) {
+      return NavigateToStoreScreenEvent(context, storeScreen);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ChangePageEvent value) changePage,
+    required TResult Function(_UpdateCartCountEvent value) updateCartCountEvent,
+    required TResult Function(_animationCartEvent value) animationCartEvent,
+    required TResult Function(_snackbarEvent value) snackbarEvent,
+    required TResult Function(_PushNavigationEvent value) PushNavigationEvent,
+    required TResult Function(_NavigateToStoreScreenEvent value)
+        NavigateToStoreScreenEvent,
+  }) {
+    return NavigateToStoreScreenEvent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ChangePageEvent value)? changePage,
+    TResult? Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult? Function(_animationCartEvent value)? animationCartEvent,
+    TResult? Function(_snackbarEvent value)? snackbarEvent,
+    TResult? Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult? Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
+  }) {
+    return NavigateToStoreScreenEvent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ChangePageEvent value)? changePage,
+    TResult Function(_UpdateCartCountEvent value)? updateCartCountEvent,
+    TResult Function(_animationCartEvent value)? animationCartEvent,
+    TResult Function(_snackbarEvent value)? snackbarEvent,
+    TResult Function(_PushNavigationEvent value)? PushNavigationEvent,
+    TResult Function(_NavigateToStoreScreenEvent value)?
+        NavigateToStoreScreenEvent,
+    required TResult orElse(),
+  }) {
+    if (NavigateToStoreScreenEvent != null) {
+      return NavigateToStoreScreenEvent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _NavigateToStoreScreenEvent implements BottomNavEvent {
+  const factory _NavigateToStoreScreenEvent(
+      {required final BuildContext context,
+      required final String storeScreen}) = _$NavigateToStoreScreenEventImpl;
+
+  BuildContext get context;
+  String get storeScreen;
+  @JsonKey(ignore: true)
+  _$$NavigateToStoreScreenEventImplCopyWith<_$NavigateToStoreScreenEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$BottomNavState {
   int get index => throw _privateConstructorUsedError;
   int get cartCount => throw _privateConstructorUsedError;
   bool get isAnimation => throw _privateConstructorUsedError;
   String get pushNotificationPath => throw _privateConstructorUsedError;
   bool get duringCelebration => throw _privateConstructorUsedError;
-  bool get isStoreScreen => throw _privateConstructorUsedError;
+  String get isStoreScreen => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -847,7 +1101,7 @@ abstract class $BottomNavStateCopyWith<$Res> {
       bool isAnimation,
       String pushNotificationPath,
       bool duringCelebration,
-      bool isStoreScreen});
+      String isStoreScreen});
 }
 
 /// @nodoc
@@ -894,7 +1148,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
       isStoreScreen: null == isStoreScreen
           ? _value.isStoreScreen
           : isStoreScreen // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as String,
     ) as $Val);
   }
 }
@@ -913,7 +1167,7 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       bool isAnimation,
       String pushNotificationPath,
       bool duringCelebration,
-      bool isStoreScreen});
+      String isStoreScreen});
 }
 
 /// @nodoc
@@ -958,7 +1212,7 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
       isStoreScreen: null == isStoreScreen
           ? _value.isStoreScreen
           : isStoreScreen // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as String,
     ));
   }
 }
@@ -985,7 +1239,7 @@ class _$BottomNavStateImpl implements _BottomNavState {
   @override
   final bool duringCelebration;
   @override
-  final bool isStoreScreen;
+  final String isStoreScreen;
 
   @override
   String toString() {
@@ -1029,7 +1283,7 @@ abstract class _BottomNavState implements BottomNavState {
       required final bool isAnimation,
       required final String pushNotificationPath,
       required final bool duringCelebration,
-      required final bool isStoreScreen}) = _$BottomNavStateImpl;
+      required final String isStoreScreen}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -1042,7 +1296,7 @@ abstract class _BottomNavState implements BottomNavState {
   @override
   bool get duringCelebration;
   @override
-  bool get isStoreScreen;
+  String get isStoreScreen;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>

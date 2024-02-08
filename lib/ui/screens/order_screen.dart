@@ -46,6 +46,9 @@ class OrderScreenWidget extends StatefulWidget {
 
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
   @override
+
+  int onTheWayStatus = 6;
+  int deliveryStatus = 5;
   void initState() {
     super.initState();
 
@@ -254,16 +257,12 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                               width: 1,
                             ),
                           ),
-                          child: Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Text(
-                              /*                    '${formatter(double.parse(state.orderDetailsList[index].totalAmount.toString() ?? "0").toStringAsFixed(2))}${AppLocalizations.of(context)!.currency}',*/
-                              '${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.font_14,
-                                  color: AppColors.whiteColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                          child: Text(
+                            '${(formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal))}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.whiteColor,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       )
@@ -320,9 +319,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                 ?.toTitleCase() ??
                             '',
                         titleColor: AppColors.blackColor,
-                        valueColor: orderDetailsList[index].status?.orderStatusNo == 6
+                        valueColor: orderDetailsList[index].status?.orderStatusNo == onTheWayStatus
                             ? AppColors.blueColor: orderDetailsList[index].status?.orderStatusNo ==
-                            5
+                            deliveryStatus
                             ? AppColors.mainColor : AppColors.orangeColor,
 
                         valueTextSize: AppConstants.smallFont,

@@ -947,12 +947,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   Center(
                     child: CommonProductButtonWidget(
                       title:
-                      "${list[index].planogramproducts?[subIndex]
+                      "${AppLocalizations.of(
+                          context)!.currency}${list[index].planogramproducts?[subIndex]
                           .productPrice?.toStringAsFixed(
-                          AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex]
-                          .productPrice?.toStringAsFixed(
-                          AppConstants.amountFrLength)}${AppLocalizations.of(
-                          context)!.currency}",
+                          AppConstants.amountFrLength) == "0.00" ? '0' : list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(
+                          AppConstants.amountFrLength)}",
                       onPressed: () {
                         showProductDetails(
                             context: context,
@@ -971,209 +970,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               ),
             ),
           );
-          // return Container(
-          //   height: height,
-          //   width: width,
-          //   clipBehavior: Clip.hardEdge,
-          //   margin: EdgeInsets.symmetric(
-          //     horizontal: AppConstants.padding_10,
-          //     vertical: AppConstants.padding_10,
-          //   ),
-          //   padding: EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-          //   decoration: BoxDecoration(
-          //       color: AppColors.whiteColor,
-          //       borderRadius: BorderRadius.all(
-          //         Radius.circular(AppConstants.radius_10),
-          //       ),
-          //       boxShadow: [
-          //         BoxShadow(
-          //             color: AppColors.shadowColor.withOpacity(0.15),
-          //             blurRadius: AppConstants.blur_10),
-          //       ]),
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //       Expanded(
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(
-          //               top: AppConstants.padding_5,
-          //               left: AppConstants.padding_10,
-          //               right: AppConstants.padding_10),
-          //           child: Image.network(
-          //             '${AppUrls.baseFileUrl}${state.planoGramsList[index].planogramproducts?[subIndex].mainImage}',
-          //             // height: 120,
-          //             fit: BoxFit.contain,
-          //             loadingBuilder: (context, child, loadingProgress) {
-          //               if (loadingProgress?.cumulativeBytesLoaded !=
-          //                   loadingProgress?.expectedTotalBytes) {
-          //                 return CommonShimmerWidget(
-          //                   child: Container(
-          //                     // height: 120,
-          //                     margin: EdgeInsets.only(
-          //                         bottom: AppConstants.padding_5),
-          //                     decoration: BoxDecoration(
-          //                         color: AppColors.whiteColor,
-          //                         borderRadius: BorderRadius.all(
-          //                             Radius.circular(AppConstants.radius_10))),
-          //                   ),
-          //                 );
-          //               }
-          //               return child;
-          //             },
-          //             errorBuilder: (context, error, stackTrace) {
-          //               // debugPrint('product category list image error : $error');
-          //               return Container(
-          //                 child: Image.asset(
-          //                   AppImagePath.imageNotAvailable5,
-          //                   fit: BoxFit.cover,
-          //                   // width: 80,
-          //                   // height: 120,
-          //                 ),
-          //               );
-          //             },
-          //           ),
-          //         ),
-          //       ),
-          //       4.height,
-          //       Container(
-          //         width: double.maxFinite,
-          //         decoration: BoxDecoration(
-          //           color: AppColors.mainColor,
-          //           borderRadius: BorderRadius.all(
-          //             Radius.circular(AppConstants.radius_10),
-          //           ),
-          //         ),
-          //         alignment: Alignment.center,
-          //         padding: EdgeInsets.symmetric(
-          //             horizontal: AppConstants.padding_5,
-          //             vertical: AppConstants.padding_10),
-          //         margin:
-          //             EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-          //         child: CommonMarqueeWidget(
-          //           child: Text(
-          //             '${state.planoGramsList[index].planogramproducts?[subIndex].productName}',
-          //             style: AppStyles.rkBoldTextStyle(
-          //                 size: AppConstants.smallFont,
-          //                 color: AppColors.whiteColor,
-          //                 fontWeight: FontWeight.w500),
-          //             textAlign: TextAlign.center,
-          //           ),
-          //         ),
-          //       ),
-          //       // 4.height,
-          //       // Text(
-          //       //   "23.00${AppLocalizations.of(context)!.currency}",
-          //       //   style: AppStyles.rkBoldTextStyle(
-          //       //       size: AppConstants.font_12, color: AppColors.blackColor),
-          //       //   textAlign: TextAlign.center,
-          //       // ),
-          //       // 4.height,
-          //       // Expanded(
-          //       //   child: Text(
-          //       //     "Sale 2 at a discount",
-          //       //     style: AppStyles.rkBoldTextStyle(
-          //       //         size: AppConstants.font_12,
-          //       //         color: AppColors.saleRedColor),
-          //       //     maxLines: 1,
-          //       //     overflow: TextOverflow.ellipsis,
-          //       //     textAlign: TextAlign.center,
-          //       //   ),
-          //       // ),
-          //       // Container(
-          //       //   height: 35,
-          //       //   decoration: BoxDecoration(
-          //       //     border: Border(
-          //       //         top: BorderSide(
-          //       //             color: AppColors.borderColor.withOpacity(0.7),
-          //       //             width: 1)),
-          //       //   ),
-          //       //   child: Row(
-          //       //     children: [
-          //       //       Expanded(
-          //       //         flex: 2,
-          //       //         child: GestureDetector(
-          //       //           onTap: () {
-          //       //             debugPrint('+');
-          //       //           },
-          //       //           child: Container(
-          //       //             decoration: BoxDecoration(
-          //       //               color: AppColors.iconBGColor,
-          //       //               border: Border(
-          //       //                 left: isRTL
-          //       //                     ? BorderSide(
-          //       //                         color: AppColors.borderColor
-          //       //                             .withOpacity(0.7),
-          //       //                         width: 1)
-          //       //                     : BorderSide.none,
-          //       //                 right: isRTL
-          //       //                     ? BorderSide.none
-          //       //                     : BorderSide(
-          //       //                         color: AppColors.borderColor
-          //       //                             .withOpacity(0.7),
-          //       //                         width: 1),
-          //       //               ),
-          //       //             ),
-          //       //             padding: EdgeInsets.symmetric(
-          //       //                 horizontal: AppConstants.padding_3),
-          //       //             alignment: Alignment.center,
-          //       //             child: Icon(Icons.add, color: AppColors.mainColor),
-          //       //           ),
-          //       //         ),
-          //       //       ),
-          //       //       Expanded(
-          //       //         flex: 3,
-          //       //         child: Container(
-          //       //           color: AppColors.whiteColor,
-          //       //           padding: EdgeInsets.symmetric(
-          //       //               horizontal: AppConstants.padding_5),
-          //       //           alignment: Alignment.center,
-          //       //           child: Text(
-          //       //             '0',
-          //       //             style: AppStyles.rkBoldTextStyle(
-          //       //                 size: 24,
-          //       //                 color: AppColors.blackColor,
-          //       //                 fontWeight: FontWeight.w600),
-          //       //           ),
-          //       //         ),
-          //       //       ),
-          //       //       Expanded(
-          //       //         flex: 2,
-          //       //         child: GestureDetector(
-          //       //           onTap: () {
-          //       //             debugPrint('-');
-          //       //           },
-          //       //           child: Container(
-          //       //             decoration: BoxDecoration(
-          //       //               color: AppColors.iconBGColor,
-          //       //               border: Border(
-          //       //                 left: isRTL
-          //       //                     ? BorderSide.none
-          //       //                     : BorderSide(
-          //       //                         color: AppColors.borderColor
-          //       //                             .withOpacity(0.7),
-          //       //                         width: 1),
-          //       //                 right: isRTL
-          //       //                     ? BorderSide(
-          //       //                         color: AppColors.borderColor
-          //       //                             .withOpacity(0.7),
-          //       //                         width: 1)
-          //       //                     : BorderSide.none,
-          //       //               ),
-          //       //             ),
-          //       //             padding: EdgeInsets.symmetric(
-          //       //                 horizontal: AppConstants.padding_3),
-          //       //             alignment: Alignment.center,
-          //       //             child:
-          //       //                 Icon(Icons.remove, color: AppColors.mainColor),
-          //       //           ),
-          //       //         ),
-          //       //       ),
-          //       //     ],
-          //       //   ),
-          //       // )
-          //     ],
-          //   ),
-          // );
         },
       ),
     );
@@ -1527,8 +1323,7 @@ Widget buildPlanoGramItem(
                 SizedBox(
                   height: 175,
                   child:
-                  list.isEmpty ??
-                      false
+                  list.isEmpty
                       ? Center(
                     child: Text(
                       '${AppLocalizations.of(context)!.out_of_stock}',
@@ -1761,16 +1556,16 @@ Widget buildSubCategoryListItem({required int index,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        'Price : ${state
+                                        '${AppLocalizations.of(context)!.price} : ${AppLocalizations
+                                            .of(context)!
+                                            .currency}${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex ==
                                             -2)
                                             .basePrice
                                             .toStringAsFixed(
-                                            2)}${AppLocalizations
-                                            .of(context)!
-                                            .currency}',
+                                            2)}',
                                         style: AppStyles
                                             .rkRegularTextStyle(
                                             size: AppConstants
@@ -1802,16 +1597,14 @@ Widget buildSubCategoryListItem({required int index,
                                       ),
                                       2.height,
                                       Text(
-                                        'Price : ${state
+                                        '${AppLocalizations.of(context)!.price}  :${AppLocalizations.of(context)!.currency} ${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
                                             .supplierSales[index]
                                             .salePrice
                                             .toStringAsFixed(
-                                            2)}${AppLocalizations
-                                            .of(context)!
-                                            .currency}(${state
+                                            2)}(${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
@@ -2028,13 +1821,13 @@ Widget buildSubCategoryListItem({required int index,
                                               MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price} :${AppLocalizations
+                                                      .of(context)!.currency} ${state
                                                       .productSupplierList[index]
                                                       .basePrice
                                                       .toStringAsFixed(
                                                       AppConstants
-                                                          .amountFrLength)}${AppLocalizations
-                                                      .of(context)!.currency}',
+                                                          .amountFrLength)}',
                                                   style: AppStyles
                                                       .rkRegularTextStyle(
                                                       size: AppConstants
@@ -2126,15 +1919,15 @@ Widget buildSubCategoryListItem({required int index,
                                                 ),
                                                 2.height,
                                                 Text(
-                                                  'Price : ${state
+                                                  '${AppLocalizations.of(context)!.price} :${AppLocalizations
+                                                      .of(context)!
+                                                      .currency} ${state
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .salePrice
                                                       .toStringAsFixed(
                                                       AppConstants
-                                                          .amountFrLength)}${AppLocalizations
-                                                      .of(context)!
-                                                      .currency}(${state
+                                                          .amountFrLength)}(${state
                                                       .productSupplierList[index]
                                                       .supplierSales[subIndex]
                                                       .saleDiscount
@@ -2159,7 +1952,7 @@ Widget buildSubCategoryListItem({required int index,
                                                               .saleDescription}');
                                                     },
                                                     child: Text(
-                                                      'Read condition',
+                                                      '${AppLocalizations.of(context)!.read_condition}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                           size: AppConstants
@@ -2203,6 +1996,8 @@ Widget buildSubCategoryListItem({required int index,
                 onTap: () {
                   Navigator.pop(context);
                 },
-                buttonTitle: "OK"));
+                buttonTitle: "${AppLocalizations
+                    .of(context)!
+                    .ok}"));
   }
 }

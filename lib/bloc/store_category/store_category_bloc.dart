@@ -63,10 +63,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
-          print('state.categoryPlanogramList___${state.categoryPlanogramList}');
+
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand,isBottomOfPlanoGrams: false,isBottomOfSubCategory : false,planoGramsList : []));
-          print('state.categoryPlanogramList_qww__${state.categoryPlanogramList}');
 
         }
       }
@@ -103,6 +102,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               [ProductStockModel(productId: '')]
             ]));
         if(event.isSubCategory == ''){
+          add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
+        }
+        else if(event.isSubCategory != '' && state.isSubCategory){
           add(StoreCategoryEvent.getPlanoGramProductsEvent(context: event.context));
         }
         else{
@@ -369,7 +371,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramPageNum: 0,
             planoGramsList: [],
            productCategoryList: [],
-           // subPlanoGramsList: isSubCategoryString != '' ? [] : state.subPlanoGramsList,
+            subPlanoGramsList: isSubCategoryString != '' && !state.isSubCategory ? [] : isSubCategoryString != '' && state.isSubCategory ? [] : state.subPlanoGramsList,
             //subProductPageNum: 0,
             /*productStockList: [
               [ProductStockModel(productId: '')]
@@ -377,8 +379,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             isBottomOfPlanoGrams: false));
         add(StoreCategoryEvent.getPlanoGramProductsEvent(
             context: event.context));
-      //  add(StoreCategoryEvent.getPlanogramAllProductEvent(context: event.context));
-
       }
       else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
@@ -399,13 +399,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             List<List<ProductStockModel>> productStockList =
              state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
-          /*  if(isSubCategoryString == '' && !state.isSubCategory ){
-              debugPrint("sub planogram");
-              planoGramIndex = event.planoGramIndex==0?1:event.planoGramIndex;
-            }else{
-              debugPrint("Planogram");
-              planoGramIndex = event.planoGramIndex;
-            }*/
 
             int productStockUpdateIndex = state.productStockList[planoGramIndex]
                 .indexWhere((productStock) =>

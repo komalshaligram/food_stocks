@@ -84,6 +84,7 @@ class _ProductDetailsScreenWidgetState
     extends State<ProductDetailsScreenWidget> {
   TextEditingController addProblemController = TextEditingController();
   int onTheWayStatus = 6;
+  int deliveryStatus = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +190,7 @@ class _ProductDetailsScreenWidgetState
                                                                 .orderData
                                                                 .orderstatus
                                                                 ?.orderStatusNumber ==
-                                                            5
+                                             deliveryStatus
                                                         ? AppColors.mainColor
                                                         : AppColors.orangeColor,
                                                 fontWeight: FontWeight.w700),
@@ -594,17 +595,14 @@ class _ProductDetailsScreenWidgetState
                     Row(
                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Text(
-                            '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
-                                : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
+                        Text(
+                          '${formatNumber(value: (state.orderBySupplierProduct.products![index].discountedPrice)!=0? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,vat:state.orderData.vatPercentage ?? 0 ).toStringAsFixed(2))
+                              : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0 ,vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),local: AppStrings.hebrewLocal)}',
 
-                            style: AppStyles.rkRegularTextStyle(
-                                color: AppColors.blackColor,
-                                size: AppConstants.font_14,
-                                fontWeight: FontWeight.w700),
-                          ),
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.blackColor,
+                              size: AppConstants.font_14,
+                              fontWeight: FontWeight.w700),
                         ),
 
                       ],
@@ -915,15 +913,12 @@ class _ProductDetailsScreenWidgetState
                                   ),
                                 ),
                                 //  10.width,
-                                Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: Text(
-                                    '${formatNumber(value: price.toStringAsFixed(2), local: AppStrings.hebrewLocal)}',
-                                    style: AppStyles.rkRegularTextStyle(
-                                        color: AppColors.blackColor,
-                                        size: AppConstants.font_14,
-                                        fontWeight: FontWeight.w700),
-                                  ),
+                                Text(
+                                  '${formatNumber(value: price.toStringAsFixed(2), local: AppStrings.hebrewLocal)}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor,
+                                      size: AppConstants.font_14,
+                                      fontWeight: FontWeight.w700),
                                 ),
                               ],
                             ),
