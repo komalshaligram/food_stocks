@@ -184,7 +184,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${state.balance.toString()}${AppLocalizations.of(context)!.currency}',
+                                              '${AppLocalizations.of(context)!.currency}${state.balance.toString()}',
                                               style:
                                                   AppStyles.rkRegularTextStyle(
                                                       size:
@@ -213,7 +213,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${state.totalCredit.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -224,7 +224,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${state.thisMonthExpense.toString()}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                               ),
                                             ],
                                           ),
@@ -239,7 +239,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${formatter(state.lastMonthExpense.toString())}${AppLocalizations.of(context)!.currency}'),
+                                                        '${AppLocalizations.of(context)!.currency}${formatter(state.lastMonthExpense.toString())}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -310,7 +310,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                       getTooltipItems: (value) {
                                                         return value.map((e) {
                                                           return LineTooltipItem(
-                                                              "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${e.y.toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}",
+                                                              "${monthMap1[e.x]} ${state.year} ${AppLocalizations.of(context)!.total}: ${AppLocalizations.of(context)!.currency}${e.y.toStringAsFixed(2)}",
                                                               TextStyle(
                                                                   fontSize: 8));
                                                         }).toList();
@@ -395,7 +395,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                         state.graphDataList[
                                                             value.round()];
                                                     return Text(
-                                                      month.toString(),
+                                                      month.toString() == "0.00"?'0':
+                                                        '${month.toString()}',
                                                       style: AppStyles
                                                           .rkRegularTextStyle(
                                                         size:
@@ -439,16 +440,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  /*  Expanded(
-                                  flex: getScreenWidth(context) <= 370 ? 2:3,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.history,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size:  getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.smallFont,
-                                        color: AppColors.blackColor),
-                                  ),
-                                ),
-                                2.width,*/
 
                                   Expanded(
                                     flex: 2,
@@ -464,8 +455,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               DeviceInfoPlugin();
                                           AndroidDeviceInfo androidInfo =
                                               await deviceInfo.androidInfo;
-                                          print(
-                                              'Running on android version ${androidInfo.version.sdkInt}');
                                           if (androidInfo.version.sdkInt < 33) {
                                             if (!statuses[Permission.storage]!
                                                 .isGranted) {
@@ -778,7 +767,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   Text(
             getType(state.walletTransactionsList[listIndex].type
               .toString()) ==
-             AppLocalizations.of(context)!.order ?  '${getType(state.walletTransactionsList[listIndex].type.toString())} : ${state.walletTransactionsList[listIndex].orderId}' :
+             AppLocalizations.of(context)!.order ? '${getType(state.walletTransactionsList[listIndex].type.toString())} : ${state.walletTransactionsList[listIndex].orderId}' :
             '${getType(state.walletTransactionsList[listIndex].type.toString())}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12, color: AppColors.blueColor),
@@ -791,24 +780,21 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      getType(state.walletTransactionsList[listIndex].type
-                                  .toString()) ==
-                              AppLocalizations.of(context)!.order
-                          ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
-                          : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
-                      style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: getType(state
-                                      .walletTransactionsList[listIndex].type
-                                      .toString()) ==
-                                  AppLocalizations.of(context)!.monthly_credit
-                              ? AppColors.mainColor
-                              : AppColors.redColor,
-                          fontWeight: FontWeight.w600),
-                    ),
+                  Text(
+                    getType(state.walletTransactionsList[listIndex].type
+                                .toString()) ==
+                            AppLocalizations.of(context)!.order
+                        ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
+                        : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: getType(state
+                                    .walletTransactionsList[listIndex].type
+                                    .toString()) ==
+                                AppLocalizations.of(context)!.monthly_credit
+                            ? AppColors.mainColor
+                            : AppColors.redColor,
+                        fontWeight: FontWeight.w600),
                   ),
                   3.height,
                   CircularButtonWidget(

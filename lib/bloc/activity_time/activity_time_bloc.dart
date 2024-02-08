@@ -256,10 +256,28 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
           List<ActivityTimeModel> temp = [];
           temp.addAll(state.OperationTimeList);
 
+          String? beforeOpeningTime;
+          String? afterClosingTime;
+
+
           String? openingTime =
               temp[event.rowIndex].monday[event.timeIndex].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
           String? closingTime =
-              temp[event.rowIndex].monday[event.timeIndex].until!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].until;
+          temp[event.rowIndex].monday[event.timeIndex].until!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].until;
+
+
+          /*
+          if(temp[event.rowIndex].monday.length == 1){
+           beforeOpeningTime =
+            temp[event.rowIndex].monday[event.timeIndex - 1].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
+          }
+         else if(temp[event.rowIndex].monday.length > 1){
+            beforeOpeningTime =
+            temp[event.rowIndex].monday[event.timeIndex - 1].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
+            afterClosingTime =
+            temp[event.rowIndex].monday[event.timeIndex + 1].from!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].from;
+          }*/
+
           String? previousClosingTime;
 
           var format = DateFormat("HH:mm");
@@ -268,6 +286,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
           var selectTimeZone = format.parse(selectedTime);
           if (selectedTime != AppStrings.timeString ) {
+
             if (event.timeIndex > 0) {
               previousClosingTime =
                   temp[event.rowIndex].monday[event.timeIndex - 1].until;
@@ -308,7 +327,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                           '${AppLocalizations.of(event.context)!.please_select_opening_time_after_previous_closing_time}',
                       type: SnackBarType.FAILURE);
                 }
-              } else if (event.openingIndex == 0) {
+              }
+              else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -328,7 +348,12 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       type: SnackBarType.FAILURE);
                 }
               }
-            } else {
+            }
+
+            else if(temp[event.rowIndex].monday.length > 0 && event.openingIndex == 0){
+
+            }
+            else {
               if (event.openingIndex == 1) {
                 if (closingTime != AppStrings.timeString &&
                     selectTimeZone.isBefore(end)) {
@@ -348,7 +373,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                           '${AppLocalizations.of(event.context)!.please_select_opening_time_before_closing_time}',
                       type: SnackBarType.FAILURE);
                 }
-              } else if (event.openingIndex == 0) {
+              }
+              else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -368,6 +394,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       type: SnackBarType.FAILURE);
                 }
               }
+
             }
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));

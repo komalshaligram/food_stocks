@@ -1281,7 +1281,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         textAlign: TextAlign.center,
                                       ),
                                       Text(
-                                        '${(double.parse(CartItemList.data?.data?[index].totalAmount.toString() ?? '0') / (CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}${AppLocalizations.of(context)!.currency}',
+                                        '${AppLocalizations.of(context)!.currency}${(double.parse(CartItemList.data?.data?[index].totalAmount.toString() ?? '0') / (CartItemList.data?.data?[index].totalQuantity ?? 1)).toStringAsFixed(2)}',
                                         style: AppStyles.rkBoldTextStyle(
                                           size: AppConstants.smallFont,
                                           color: AppColors.blackColor,

@@ -44,9 +44,10 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   final String orderId;
   final String orderNumber;
 
-  const OrderDetailsScreenWidget(
+   OrderDetailsScreenWidget(
       {required this.orderId, required this.orderNumber});
-
+  int onTheWayStatus = 6;
+  int deliveryStatus = 5;
   @override
   Widget build(BuildContext context) {
   /*  OrderDetailsBloc bloc = context.read<OrderDetailsBloc>();*/
@@ -169,13 +170,15 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           .toTitleCase(),
                       style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
-                          color: /*state.orderByIdList.data!.ordersBySupplier![index]
-                              .deliverStatus!.statusName == AppLocalizations.of(context)!.pending_delivery*/
-                              orderByIdList.data!.ordersBySupplier![index]
-                                          .orderDeliveryDate ==
-                                      ''
-                                  ? AppColors.orangeColor
-                                  : AppColors.mainColor,
+                           color: orderByIdList.data!.ordersBySupplier![index]
+                               .deliverStatus?.orderStatusNumber == onTheWayStatus
+                      ? AppColors.blueColor
+                          : orderByIdList.data!.ordersBySupplier![index]
+                               .deliverStatus?.orderStatusNumber ==
+                               deliveryStatus
+                      ? AppColors.mainColor
+                          : AppColors.orangeColor,
+
                           fontWeight: FontWeight.w700),
                     )
                   ],

@@ -42,12 +42,9 @@ class CircularButtonWidget extends StatelessWidget {
               style: TextStyle(
                   color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
             ),
-            Directionality(
-              textDirection: TextDirection.ltr,
-              child: Text('${buttonValue}',
-                  style: TextStyle(
-                      color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
-              ),
+            Text('${buttonValue}',
+                style: TextStyle(
+                    color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
             )
           ],
         )

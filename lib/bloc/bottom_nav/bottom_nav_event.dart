@@ -14,4 +14,8 @@ class BottomNavEvent with _$BottomNavEvent {
   const factory BottomNavEvent.PushNavigationEvent(
       {required BuildContext context,
       required String pushNavigation}) = _PushNavigationEvent;
+
+  const factory BottomNavEvent.NavigateToStoreScreenEvent(
+      {required BuildContext context,
+        required String storeScreen}) = _NavigateToStoreScreenEvent;
 }

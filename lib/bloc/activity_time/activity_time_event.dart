@@ -11,6 +11,7 @@ class ActivityTimeEvent with _$ActivityTimeEvent{
     required int timeIndex,
     required String time,
     required BuildContext context,
+    required String previousTime,
 }) = _timePickerEvent;
 
   factory ActivityTimeEvent.defaultValueAddInListEvent({
