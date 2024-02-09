@@ -74,7 +74,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                         ?.operationTime?.length ??
                     0;
 
-                print('listLength_____${listLength}');
+
                 var sundayRs = (listLength) > 0
                     ? (response.data?.clients?.first.clientDetail
                             ?.operationTime?[0].Sunday ?? [Day(from:AppStrings.timeString ,until: AppStrings.timeString )]
@@ -252,44 +252,48 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
             selectedTime = AppStrings.hr24String;
             emit(state.copyWith(time: selectedTime));
           }
-
+          var format = DateFormat("HH:mm");
           List<ActivityTimeModel> temp = [];
           temp.addAll(state.OperationTimeList);
 
-          String? beforeOpeningTime;
-          String? afterClosingTime;
+          String?  afterOpeningTime;
+          var afterStart;
 
+          var shortVar = temp[event.rowIndex].monday;
 
           String? openingTime =
-              temp[event.rowIndex].monday[event.timeIndex].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
+          shortVar[event.timeIndex].from!.isEmpty ?'24:59': shortVar[event.timeIndex].from;
           String? closingTime =
-          temp[event.rowIndex].monday[event.timeIndex].until!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].until;
+          shortVar[event.timeIndex].until!.isEmpty ?'24:59' : shortVar[event.timeIndex].until;
 
 
-          /*
-          if(temp[event.rowIndex].monday.length == 1){
-           beforeOpeningTime =
-            temp[event.rowIndex].monday[event.timeIndex - 1].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
+          if(shortVar.length > 1 && event.openingIndex == 0 && event.previousTime != AppStrings.timeString
+          && event.previousTime != '24:59' && shortVar.length != event.timeIndex + 1
+          ){
+             afterOpeningTime =
+             shortVar[event.timeIndex + 1].from!.isEmpty ?'24:59' : shortVar[event.timeIndex + 1].from;
+
+         afterStart = format.parse(afterOpeningTime ?? '');
           }
-         else if(temp[event.rowIndex].monday.length > 1){
-            beforeOpeningTime =
-            temp[event.rowIndex].monday[event.timeIndex - 1].from!.isEmpty ?'24:59': temp[event.rowIndex].monday[event.timeIndex].from;
-            afterClosingTime =
-            temp[event.rowIndex].monday[event.timeIndex + 1].from!.isEmpty ?'24:59' : temp[event.rowIndex].monday[event.timeIndex].from;
-          }*/
+
+
 
           String? previousClosingTime;
 
-          var format = DateFormat("HH:mm");
+
           var start = format.parse(openingTime!);
           var end = format.parse(closingTime!);
 
+
+
           var selectTimeZone = format.parse(selectedTime);
+
+
           if (selectedTime != AppStrings.timeString ) {
 
             if (event.timeIndex > 0) {
               previousClosingTime =
-                  temp[event.rowIndex].monday[event.timeIndex - 1].until;
+                  shortVar[event.timeIndex - 1].until;
 
               var format = DateFormat("HH:mm");
               var preEnd =
@@ -298,15 +302,16 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
               if (event.openingIndex == 1) {
                 if (closingTime == AppStrings.timeString &&
                     selectTimeZone.isAfter(preEnd)) {
-                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex].monday.add(Day(from: selectedTime, until: closingTime));
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                //  shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime != AppStrings.timeString) {
                   if (selectTimeZone.isAfter(preEnd) &&
                       selectTimeZone.isBefore(end)) {
-                    temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                    temp[event.rowIndex]
-                        .monday
-                        .add(Day(from: selectedTime, until: closingTime));
+                    shortVar.removeAt(event.timeIndex);
+                    shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+
+                    //shortVar.add(Day(from: selectedTime, until: closingTime));
                   } else if (selectTimeZone.isBefore(preEnd)) {
                     CustomSnackBar.showSnackBar(
                         context: event.context,
@@ -336,10 +341,9 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                           '${AppLocalizations.of(event.context)!.please_select_opening_time}',
                       type: SnackBarType.FAILURE);
                 } else if (selectTimeZone.isAfter(start)) {
-                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex]
-                      .monday
-                      .add(Day(from: openingTime, until: selectedTime));
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
+                  //shortVar.add(Day(from: openingTime, until: selectedTime));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -349,23 +353,17 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                 }
               }
             }
-
-            else if(temp[event.rowIndex].monday.length > 0 && event.openingIndex == 0){
-
-            }
             else {
               if (event.openingIndex == 1) {
                 if (closingTime != AppStrings.timeString &&
                     selectTimeZone.isBefore(end)) {
-                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex]
-                      .monday
-                      .add(Day(from: selectedTime, until: closingTime));
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                 // shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else if (closingTime == AppStrings.timeString) {
-                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex]
-                      .monday
-                      .add(Day(from: selectedTime, until: closingTime));
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: selectedTime, until: closingTime));
+                  //shortVar.add(Day(from: selectedTime, until: closingTime));
                 } else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
@@ -374,6 +372,8 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       type: SnackBarType.FAILURE);
                 }
               }
+
+
               else if (event.openingIndex == 0) {
                 if (openingTime == AppStrings.timeString) {
                   CustomSnackBar.showSnackBar(
@@ -381,20 +381,29 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                       title:
                           '${AppLocalizations.of(event.context)!.please_select_opening_time}',
                       type: SnackBarType.FAILURE);
-                } else if (selectTimeZone.isAfter(start)) {
-                  temp[event.rowIndex].monday.removeAt(event.timeIndex);
-                  temp[event.rowIndex]
-                      .monday
-                      .add(Day(from: openingTime, until: selectedTime));
-                } else {
+                } else if (shortVar.length == 1   && selectTimeZone.isAfter(start) ) {
+
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
+
+
+                }
+                else if(shortVar.length > 1   && selectTimeZone.isAfter(start) &&
+                    selectTimeZone.isBefore(afterStart)){
+
+                  shortVar.removeAt(event.timeIndex);
+                  shortVar.insert(event.timeIndex,Day(from: openingTime, until: selectedTime));
+
+                }
+
+                else {
                   CustomSnackBar.showSnackBar(
                       context: event.context,
                       title:
-                          '${AppLocalizations.of(event.context)!.please_select_closing_time_after_opening_time}',
+                          '${AppLocalizations.of(event.context)!.please_provide_valid_time}',
                       type: SnackBarType.FAILURE);
                 }
               }
-
             }
             emit(state.copyWith(
                 OperationTimeList: temp, isRefresh: !state.isRefresh));
@@ -613,10 +622,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   OperationTime(Sunday: sundayList),
               OperationTime(Monday: mondayList),
               OperationTime(Tuesday: tuesdayList),
-              OperationTime(Wednesday: wednesdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Thursday: thursdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Friday: fridayAndHolidayEvesList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Saturday: saturdayAndHolidaysList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+              OperationTime(Wednesday: wednesdayList),
+              OperationTime(Thursday: thursdayList),
+              OperationTime(Friday: fridayAndHolidayEvesList),
+              OperationTime(Saturday: saturdayAndHolidaysList),
             ]));
 
 

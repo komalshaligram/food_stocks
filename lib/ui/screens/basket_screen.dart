@@ -13,7 +13,6 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
-import 'package:food_stock/ui/widget/common_product_button_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -162,7 +161,8 @@ class BasketScreenWidget extends StatelessWidget {
                                               ),
                                             ],
                                           )
-                                         *//* Directionality(
+                                         *//*
+                                         Directionality(
                                             textDirection:
                                             TextDirection.ltr,
                                             child: Expanded(
@@ -335,7 +335,7 @@ class BasketScreenWidget extends StatelessWidget {
                                     ),
                                   ),
                                 )
-                              : Expanded(
+                              :   !state.isShimmering && state.basketProductList.isEmpty ? Expanded(
                                   child: Center(
                                       child: Text(
                                     AppLocalizations.of(context)!.cart_empty,
@@ -344,7 +344,7 @@ class BasketScreenWidget extends StatelessWidget {
                                         color: AppColors.blackColor,
                                         fontWeight: FontWeight.w400),
                                   )),
-                                ),
+                                ) : BasketScreenShimmerWidget(),
                       (state.basketProductList.length)  ==
                           0
                           ? CupertinoActivityIndicator()
@@ -362,6 +362,7 @@ class BasketScreenWidget extends StatelessWidget {
 
 
   Widget totalAmountCard(BasketState state,BuildContext context){
+    BasketBloc bloc = context.read<BasketBloc>();
     return Container(
         alignment: state.language == AppStrings.englishString
             ? Alignment.centerLeft
@@ -379,7 +380,7 @@ class BasketScreenWidget extends StatelessWidget {
           children: [
             basketRow('${AppLocalizations.of(context)!.sub_total}',  '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.vat}', '(${(state.vatPercentage.toString())}' + '${'%'})${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.vat}', '${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat: state.vatPercentage).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
@@ -389,13 +390,18 @@ class BasketScreenWidget extends StatelessWidget {
               isLoading: state.isLoading,
               onPressed: () {
                 if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
-                  Navigator.pushNamed(
-                      context,
-                      RouteDefine
-                          .orderSummaryScreen.name,
-                      arguments: {
-                        AppStrings.getCartListString: state.CartItemList,
-                      });
+                  if(state.supplierCount == 1){
+                    bloc.add(BasketEvent.orderSendEvent(context: context));
+                  }
+                  else{
+                    Navigator.pushNamed(
+                        context,
+                        RouteDefine
+                            .orderSummaryScreen.name,
+                        arguments: {
+                          AppStrings.getCartListString: state.CartItemList,
+                        });
+                  }
                 }
               },
               fontColors: AppColors.whiteColor,

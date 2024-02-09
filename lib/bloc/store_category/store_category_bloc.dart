@@ -1169,14 +1169,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-        /* if (state.isBottomOfPlanoGrams) {
-          return;
-        }*/
+        //  if (state.isBottomOfPlanoGrams) {
+        //   return;
+        // }
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
           state.planogramProductList.toList(growable: true);
-          emit(state.copyWith(isPlanogramShimmering: true));
+          emit(state.copyWith(isPlanogramProductShimmering: true));
           PlanogramReqModel planogramReqModel =  PlanogramReqModel(
             categoryId : state.categoryId,
             subCategoryId: state.subCategoryId,
@@ -1213,7 +1213,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             productStockList.add(barcodeStock);
             planogramProductList.addAll(response.data ?? []);
             emit(state.copyWith(planogramProductList: planogramProductList,productStockList: productStockList,
-                isPlanogramShimmering: false
+                isPlanogramProductShimmering: false,isPlanogramShimmering: false
             ));
             emit(state.copyWith(
                 isBottomOfProducts: planogramProductList.length ==
@@ -1227,14 +1227,14 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     : false));
           }
           else{
-            emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+            emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));
           }
         }
         on ServerException {
-          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+          emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));
         }
         catch(e){
-          emit(state.copyWith(isLoadMore: false,isPlanogramShimmering: false));
+          emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));
         }
       }
     });

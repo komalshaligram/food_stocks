@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 import '../utils/themes/app_styles.dart';
 
 class CommonOrderContentWidget extends StatelessWidget {
@@ -17,6 +15,7 @@ class CommonOrderContentWidget extends StatelessWidget {
   final double columnPadding;
   final Color borderCoder;
   final Color backGroundColor;
+  final int maxLine;
 
 
   const CommonOrderContentWidget(
@@ -29,8 +28,9 @@ class CommonOrderContentWidget extends StatelessWidget {
       this.valueTextSize = 14,
         this.valueTextWeight = FontWeight.bold,
        this.columnPadding = 5,
-      required  this.backGroundColor ,
-      required  this.borderCoder
+      required  this.backGroundColor,
+      required  this.borderCoder,
+         this.maxLine = 1,
       });
 
   @override
@@ -38,7 +38,6 @@ class CommonOrderContentWidget extends StatelessWidget {
     return Expanded(
         flex: flexValue ?? 1,
         child: Container(
-
           decoration: BoxDecoration(
             color: backGroundColor,
             borderRadius: BorderRadius.all(
@@ -69,7 +68,7 @@ class CommonOrderContentWidget extends StatelessWidget {
                     size: valueTextSize,
                     color: valueColor,
                     fontWeight: valueTextWeight),
-                maxLines: 1,
+                maxLines: maxLine,
                 overflow: TextOverflow.ellipsis,
               ),
             ],

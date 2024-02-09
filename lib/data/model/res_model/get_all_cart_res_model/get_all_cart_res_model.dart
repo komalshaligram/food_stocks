@@ -41,6 +41,8 @@ class Cart with _$Cart {
     String? id,
     @JsonKey(name: "totalAmount")
     double? totalAmount,
+    int? suppliers,
+
   }) = _Cart;
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
