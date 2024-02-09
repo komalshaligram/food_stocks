@@ -379,6 +379,7 @@
   "vat": "VAT",
   "close": "Close",
   "read_condition":"Read condition",
+  "bottle_deposit": "Bottle Deposit",
   "please_provide_valid_time" :"Please provide valid time",
   "please_enter_city" : "Please enter city",
   "remove" : "remove",
