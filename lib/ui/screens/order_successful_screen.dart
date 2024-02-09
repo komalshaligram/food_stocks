@@ -136,11 +136,11 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         6.height,
                                         BalanceIndicator(
                                             pendingBalance: formatNumber(value: (state.balance.toString()),local: AppStrings.hebrewLocal),
-                                            expense: state.expensePercentage,
+                                            expense: state.expensePercentage.round(),
                                             totalBalance: 100),
                                         6.height,
                                         Text(
-                                          '${formatNumber(value: (state.balance.toString()),local: AppStrings.hebrewLocal)}',
+                                          '${AppLocalizations.of(context)!.currency}${state.balance.toString()}',
                                           style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 title: AppLocalizations.of(context)!
                                                     .this_months_expenses,
                                                 value:
-                                                '${formatNumber(value: (state.thisMonthExpense.toString()),local: AppStrings.hebrewLocal)}'),
+                                                '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                           ),
                                           10.width,
                                           Flexible(
@@ -174,7 +174,8 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                                 title: AppLocalizations.of(context)!
                                                     .total_credit,
                                                 value:
-                                                    '${formatNumber(value: (state.totalCredit.toString()),local: AppStrings.hebrewLocal)}'),
+                                                '${AppLocalizations.of(context)!.currency}${ state.totalCredit.toString()}'),
+
                                           ),
                                         ],
                                       ),

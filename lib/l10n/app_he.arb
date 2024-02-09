@@ -362,8 +362,8 @@
   "out_of_stock1": "לא במלאי",
   "account_not_approve": "חשבון לא מאושר",
   "confirm": "לְאַשֵׁר",
-  "rivchit_credentials_not_set": "פרטי ריווחית לא הוגדרו",
-  "comax_invoice_not_found": "חשבונית קומקס לא קיימת",
+  "rivchitcredentialsnotset": "פרטי ריווחית לא הוגדרו",
+  "comaxinvoicenotfound": "חשבונית קומקס לא קיימת",
   "total_amount_cant_be_zero": "סה\"כ לתשלום לא יכול להיות אפס",
   "sale_not_exists": "המבצע לא קיים יותר",
   "comax_order_error": "משהו השתבש",
@@ -381,7 +381,10 @@
   "close": "סגור",
   "read_condition":"מצב קריאה",
   "bottle_deposit": "פקדון בקבוק",
-  "please_provide_valid_time" : "אנא הזן שעה תקינה"
+  "please_provide_valid_time" : "אנא הזן שעה תקינה",
+  "please_enter_city" : "נא להיכנס לעיר",
+  "remove" : "הסר",
+  "issueremoved" : "הבעיה הוסרה בהצלחה"
 
 
 

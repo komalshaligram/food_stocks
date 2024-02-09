@@ -42,7 +42,8 @@ class AuthFormValidation {
       case AppStrings.faxValString:
         return formFieldValidation.faxField(value,context);
 
-
+      case AppStrings.cityValString:
+        return formFieldValidation.cityNameField(value,context);
     }
     return null;
   }

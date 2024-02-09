@@ -189,12 +189,10 @@ extension StringCasingExtension on String {
 }
 
 
-String formatNumber({required String value, required String local , String symbol = ''}){
+String formatNumber({required String value, required String local}){
   String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
- // String result = (NumberFormat.compactCurrency(locale: local,symbol: '₪', name: '-').format(double.parse(value)));
-
  String result1 =  splitNumber(result);
-  return '${result1}${symbol}';
+  return '${result1}';
 }
 
 

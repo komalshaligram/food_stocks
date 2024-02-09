@@ -134,7 +134,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             45.height,
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_15),
+                                  horizontal: AppConstants.padding_10),
                               child: Container(
                                 width: getScreenWidth(context),
                                 clipBehavior: Clip.hardEdge,
@@ -173,23 +173,21 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: formatter(
-                                                    state.balance.toString()),
+                                                pendingBalance: '${state.balance.toString()}',
                                                 expense:
-                                                    state.expensePercentage,
+                                                    state.expensePercentage.round(),
                                                 totalBalance: 100),
                                             6.height,
-                                            Text(
-                                              '${formatNumber(value: state.balance.toString() ,local: AppStrings.hebrewLocal)}',
-                                              style:
-                                                  AppStyles.rkRegularTextStyle(
-                                                      size:
-                                                          AppConstants.font_14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color:
-                                                          AppColors.blackColor),
-                                              textAlign: TextAlign.center,
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: Text(
+                                                '${AppLocalizations.of(context)!.currency}${(state.balance.toString())}',
+                                                style: AppStyles.rkRegularTextStyle(
+                                                    size: AppConstants.font_14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.blackColor),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                           ],
                                         )),
@@ -209,7 +207,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${formatNumber(value: state.totalCredit.toString() , local:  AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString() }'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -220,7 +218,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${formatNumber(value: state.thisMonthExpense.toString(),local: AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                               ),
                                             ],
                                           ),
@@ -246,7 +244,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${formatNumber(value: state.lastMonthExpense.toString() ,local: AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
                                               ),
                                             ],
                                           ),
@@ -780,7 +778,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                     getType(state.walletTransactionsList[listIndex].type
                                 .toString()) ==
                             AppLocalizations.of(context)!.order
-                       ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
+                       ? '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
                         : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,

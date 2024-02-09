@@ -11,6 +11,7 @@ class CommonAlertDialog extends StatelessWidget {
   final String? positiveTitle;
   final String? negativeTitle;
   final String directionality;
+  final bool isLogOutProcess;
 
   CommonAlertDialog({
     super.key,
@@ -21,6 +22,7 @@ class CommonAlertDialog extends StatelessWidget {
     this.positiveTitle,
     this.negativeTitle,
     required this.directionality,
+    this.isLogOutProcess = false
   });
 
   @override

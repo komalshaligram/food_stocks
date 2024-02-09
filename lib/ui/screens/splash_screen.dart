@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -122,8 +121,8 @@ void appFlyerSetup() {
                     duration: Duration(milliseconds: 600),
                     child: SvgPicture.asset(
                       AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.17,
-                      width: getScreenWidth(context) * 0.52,
+                      height: getScreenHeight(context) * 0.19,
+                      width: getScreenWidth(context) * 0.54,
                     ),
                   ),
                 ),

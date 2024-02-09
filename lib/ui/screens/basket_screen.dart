@@ -378,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            basketRow('${AppLocalizations.of(context)!.bottle_deposit} X 1', '${(formatNumber(value:bottleDepositCalculation(deposit:0.26 ,qty: 1).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
+        //    basketRow('${AppLocalizations.of(context)!.bottle_deposit} X 1', '${(formatNumber(value:bottleDepositCalculation(deposit:0.26 ,qty: 1).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
@@ -394,7 +394,8 @@ class BasketScreenWidget extends StatelessWidget {
                 if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
                   if(state.supplierCount == 1){
                     bloc.add(BasketEvent.orderSendEvent(context: context));
-                  } else{
+                  }
+                  else{
                     Navigator.pushNamed(
                         context,
                         RouteDefine
@@ -423,17 +424,14 @@ class BasketScreenWidget extends StatelessWidget {
               color: AppColors
                   .blackColor),
         ),
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: Text(
-           amount,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.mediumFont,
-                color: AppColors
-                    .blackColor,
-            fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
-            overflow: TextOverflow.ellipsis,
-          ),
+        Text(
+         amount,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.mediumFont,
+              color: AppColors
+                  .blackColor,
+          fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -685,15 +683,12 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                               5.height,
 
-                              Directionality(
-                                textDirection: TextDirection.ltr,
-                                child: Text(
-                                    '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
-                                  style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.smallFont,
-                                      fontWeight: FontWeight.w700),
-                                ),
+                              Text(
+                                  '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
+                                style: TextStyle(
+                                    color: AppColors.blackColor,
+                                    fontSize: AppConstants.smallFont,
+                                    fontWeight: FontWeight.w700),
                               ),
                               10.height,
                               Row(

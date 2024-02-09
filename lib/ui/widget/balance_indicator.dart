@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -7,7 +6,7 @@ import '../utils/themes/app_styles.dart';
 
 class BalanceIndicator extends StatelessWidget {
   final String pendingBalance;
-  final double expense;
+  final int expense;
   final double totalBalance;
 
   BalanceIndicator({super.key, required this.pendingBalance ,required this.expense , required this.totalBalance});
@@ -36,9 +35,9 @@ class BalanceIndicator extends StatelessWidget {
               GaugeAnnotation(
                 angle: 180,
                 widget: Text(
-                  context.rtl?'% ${expense.toString()}':'${expense.toString()}%',
+                 '${expense.toString()}%',
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12,
+                      size: AppConstants.font_14,
                       color: AppColors.blackColor,
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
@@ -52,7 +51,7 @@ class BalanceIndicator extends StatelessWidget {
                 animationDuration: 300,
                 animationType: AnimationType.ease,
                 cornerStyle: CornerStyle.bothCurve,
-                value: expense,
+                value: expense.toDouble(),
                 width: 6,
               ),
             ],
