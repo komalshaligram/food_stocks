@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -30,25 +31,31 @@ class CompanyProductsRoute {
 }
 
 class CompanyProductsScreen extends StatelessWidget {
-  const CompanyProductsScreen({super.key});
+   CompanyProductsScreen({super.key});
+  String? companyName;
+  String? companyLogo;
 
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
+    companyName = args?[AppStrings.companyName];
+    companyLogo = args?[AppStrings.companyLogo];
     return BlocProvider(
       create: (context) => CompanyProductsBloc()
         ..add(CompanyProductsEvent.getCompanyProductsIdEvent(
             companyId: args?[AppStrings.companyIdString]))
         ..add(
             CompanyProductsEvent.getCompanyProductsListEvent(context: context)),
-      child: CompanyProductsScreenWidget(),
+      child: CompanyProductsScreenWidget(companyName:companyName,companyLogo:companyLogo),
     );
   }
 }
 
 class CompanyProductsScreenWidget extends StatelessWidget {
-  const CompanyProductsScreenWidget({super.key});
+   const CompanyProductsScreenWidget({super.key,required this.companyName,required this.companyLogo});
+  final String? companyName;
+  final String? companyLogo;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +67,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-             title: AppLocalizations.of(context)!.products,
+             title: companyName??'',
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -116,6 +123,38 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Center(
+                      child: CachedNetworkImage(
+                        imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
+                        fit: BoxFit.scaleDown,
+                        height: 100,
+                        alignment: Alignment.center,
+                        placeholder: (context, url) => CommonShimmerWidget(
+                          child: Container(
+                            height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft:
+                                  Radius.circular(AppConstants.radius_10),
+                                  topRight:
+                                  Radius.circular(AppConstants.radius_10)),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 100,
+                          //width: getScreenWidth(context),
+                          color: AppColors.whiteColor,
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    10.height,
                     state.isShimmering
                         ? SupplierProductsScreenShimmerWidget()
                         : state.productList.isEmpty

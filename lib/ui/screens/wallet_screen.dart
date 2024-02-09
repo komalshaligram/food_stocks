@@ -774,24 +774,16 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   ),
                 ],
               ),
-              //  10.width,
-
-              //  10.width,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    getType(state.walletTransactionsList[listIndex].type
-                                .toString()) ==
-                            AppLocalizations.of(context)!.order
-                        ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
-                        : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
+                    getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.order
+                        ? '${formatNumber(value:state.walletTransactionsList[listIndex].amount ?? '0', local: AppStrings.hebrewLocal,isNegativePossible: true)}'
+                        : '${formatNumber(value: state.walletTransactionsList[listIndex].amount ?? '', local: AppStrings.hebrewLocal)}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
-                        color: getType(state
-                                    .walletTransactionsList[listIndex].type
-                                    .toString()) ==
-                                AppLocalizations.of(context)!.monthly_credit
+                        color: getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.monthly_credit
                             ? AppColors.mainColor
                             : AppColors.redColor,
                         fontWeight: FontWeight.w600),
@@ -799,8 +791,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   3.height,
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
-                      buttonValue:
-                          '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
+                      buttonValue: '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
                 ],
               ),
             ],
