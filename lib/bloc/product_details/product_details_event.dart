@@ -57,5 +57,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
   const factory ProductDetailsEvent.getBottomSheetDataEvent({
     required String note,
   }) = _getBottomSheetDataEvent;
+
+  const factory ProductDetailsEvent.removeIssue({required BuildContext context,required String supplierId,required String orderId,required List<String> Product })= _removeIssue;
 }
 
