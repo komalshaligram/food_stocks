@@ -621,7 +621,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .companyProductsScreen
                                   .name, arguments: {
                                 AppStrings.companyIdString: state
-                                    .searchList[index].searchId
+                                    .searchList[index].searchId,
+
                               }) : Navigator.pushNamed(
                                   context,
                                   RouteDefine

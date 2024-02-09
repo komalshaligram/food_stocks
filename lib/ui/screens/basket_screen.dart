@@ -378,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            basketRow('${AppLocalizations.of(context)!.bottle_deposit}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.bottle_deposit} X 1', '${(formatNumber(value:bottleDepositCalculation(deposit:0.26 ,qty: 1).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
@@ -394,8 +394,7 @@ class BasketScreenWidget extends StatelessWidget {
                 if(!state.isRemoveProcess && !state.isLoading && !state.isShimmering){
                   if(state.supplierCount == 1){
                     bloc.add(BasketEvent.orderSendEvent(context: context));
-                  }
-                  else{
+                  } else{
                     Navigator.pushNamed(
                         context,
                         RouteDefine

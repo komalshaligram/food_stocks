@@ -203,6 +203,11 @@ double vatCalculation({required double price , required double vat}){
   return result;
 }
 
+double bottleDepositCalculation({required double qty, required double deposit}){
+  double result = qty * deposit;
+  return result;
+}
+
 double saleCalculation({required double price , required double salePer}){
   double result = price - (price * (salePer/100));
   return result;

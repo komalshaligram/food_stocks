@@ -41,6 +41,7 @@ class CompanyDatum with _$CompanyDatum {
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "productName") String? productName,
     @JsonKey(name: "brandId") String? brandId,
+    @JsonKey(name: "brandLogo") String? brandLogo,
     @JsonKey(name: "manufactureName") String? manufactureName,
     @JsonKey(name: "healthAndLifestye") String? healthAndLifestye,
     @JsonKey(name: "productDescription") String? productDescription,

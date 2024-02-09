@@ -216,43 +216,6 @@ class CompanyScreenWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              /*  child: Image.network(
-                  "${AppUrls.baseFileUrl}$companyLogo",
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.center,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress?.cumulativeBytesLoaded !=
-                        loadingProgress?.expectedTotalBytes) {
-                      return CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(AppConstants.radius_10),
-                                topRight:
-                                    Radius.circular(AppConstants.radius_10)),
-                          ),
-                        ),
-                      );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    // debugPrint('product category list image error : $error');
-                    return Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
-                ),*/
               ),
               Container(
                 alignment: Alignment.center,
