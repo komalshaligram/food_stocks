@@ -378,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            basketRow('${AppLocalizations.of(context)!.bottle_deposit}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
+        //    basketRow('${AppLocalizations.of(context)!.bottle_deposit}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),

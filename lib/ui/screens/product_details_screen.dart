@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -28,6 +29,7 @@ class ProductDetailsRoute {
 
 class ProductDetailsScreen extends StatelessWidget {
   String orderId;
+  String issue;
 
   String orderNumber;
 
@@ -42,10 +44,13 @@ class ProductDetailsScreen extends StatelessWidget {
       this.orderNumber = '',
       this.isNavigateToProductDetailString = false,
       this.productData = const OrdersBySupplier(),
-      this.orderData = const OrderDatum()});
+      this.orderData = const OrderDatum(),
+      this.issue = ''
+      });
 
   @override
   Widget build(BuildContext context) {
+    print('issue_____${issue}');
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(isNavigateToProductDetailString
@@ -94,361 +99,365 @@ class _ProductDetailsScreenWidgetState
       listener: (context, state) {},
       child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
         builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            resizeToAvoidBottomInset: false,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
-                bgColor: AppColors.pageColor,
-                title: widget.orderNumber.toString(),
-                iconData: Icons.arrow_back_ios_sharp,
-                trailingWidget: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
+          return FocusDetector(
+            onFocusGained: (){
+             bloc.add(ProductDetailsEvent.getOrderByIdEvent(context: context, orderId: widget.orderId));
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.pageColor,
+              resizeToAvoidBottomInset: false,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(AppConstants.appBarHeight),
+                child: CommonAppBar(
+                  bgColor: AppColors.pageColor,
+                  title: widget.orderNumber.toString(),
+                  iconData: Icons.arrow_back_ios_sharp,
+                  trailingWidget: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppConstants.padding_10,
+                    ),
+                    child: (state.orderBySupplierProduct) == 0
+                        ? CupertinoActivityIndicator()
+                        : CircularButtonWidget(
+                            buttonName: AppLocalizations.of(context)!.total,
+                            buttonValue:
+                                '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                          ),
                   ),
-                  child: (state.orderBySupplierProduct) == 0
-                      ? CupertinoActivityIndicator()
-                      : CircularButtonWidget(
-                          buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue:
-                              '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
-                        ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
               ),
-            ),
-            body: state.isShimmering
-                ? ProductDetailsScreenShimmerWidget()
-                : SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: SafeArea(
-                      child: AnimationLimiter(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: AnimationConfiguration.toStaggeredList(
-                              duration: const Duration(seconds: 1),
-                              childAnimationBuilder: (widget) => SlideAnimation(
-                                  horizontalOffset:
-                                      MediaQuery.of(context).size.width / 2,
-                                  child: FadeInAnimation(child: widget)),
-                              children: [
-                                Container(
-                                  margin:
-                                      EdgeInsets.all(AppConstants.padding_10),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_15,
-                                      horizontal: AppConstants.padding_10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppColors.shadowColor
-                                              .withOpacity(0.15),
-                                          blurRadius: 10),
-                                    ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(AppConstants.radius_5)),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            state.orderBySupplierProduct
-                                                    .supplierName
-                                                    ?.toString() ??
-                                                '',
-                                            style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              color: AppColors.blackColor,
+              body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
+                  ? ProductDetailsScreenShimmerWidget():
+              SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: SafeArea(
+                        child: AnimationLimiter(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: AnimationConfiguration.toStaggeredList(
+                                duration: const Duration(seconds: 1),
+                                childAnimationBuilder: (widget) => SlideAnimation(
+                                    horizontalOffset:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: FadeInAnimation(child: widget)),
+                                children: [
+                                  Container(
+                                    margin:
+                                        EdgeInsets.all(AppConstants.padding_10),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: AppConstants.padding_15,
+                                        horizontal: AppConstants.padding_10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: AppColors.shadowColor
+                                                .withOpacity(0.15),
+                                            blurRadius: 10),
+                                      ],
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(AppConstants.radius_5)),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              state.orderBySupplierProduct
+                                                      .supplierName
+                                                      ?.toString() ??
+                                                  '',
+                                              style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_14,
+                                                color: AppColors.blackColor,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            state.orderData.orderstatus
-                                                    ?.statusName
-                                                    ?.toTitleCase() ??
-                                                '',
-                                            style: AppStyles.rkRegularTextStyle(
-                                                size: AppConstants.smallFont,
-                                                color: state
-                                                            .orderData
-                                                            .orderstatus
-                                                            ?.orderStatusNumber ==
-                                                        onTheWayStatus
-                                                    ? AppColors.blueColor
-                                                    : state
-                                                                .orderData
-                                                                .orderstatus
-                                                                ?.orderStatusNumber ==
-                                             deliveryStatus
-                                                        ? AppColors.mainColor
-                                                        : AppColors.orangeColor,
-                                                fontWeight: FontWeight.w700),
-                                          )
-                                        ],
-                                      ),
-                                      7.height,
-                                      Row(
-                                        children: [
-                                          CommonOrderContentWidget(
-                                            backGroundColor:
-                                                AppColors.iconBGColor,
-                                            borderCoder:
-                                                AppColors.lightBorderColor,
-                                            flexValue: 2,
-                                            title: AppLocalizations.of(context)!
-                                                .products,
-                                            value: state.orderBySupplierProduct
-                                                    .products?.length
-                                                    .toString() ??
-                                                '',
-                                            titleColor: AppColors.mainColor,
-                                            valueColor: AppColors.blackColor,
-                                            valueTextWeight: FontWeight.w700,
-                                            valueTextSize:
-                                                AppConstants.smallFont,
-                                          ),
-                                          5.width,
-                                          (state.orderBySupplierProduct
-                                              .orderDeliveryDate) !=
-                                              '' ? CommonOrderContentWidget(
-                                            backGroundColor:
-                                                AppColors.iconBGColor,
-                                            borderCoder:
-                                                AppColors.lightBorderColor,
-                                            flexValue: 5,
-                                            maxLine: 2,
-                                            columnPadding: 5,
-                                            title: AppLocalizations.of(context)!
-                                                .delivery_date,
-                                            value: (state.orderBySupplierProduct
-                                                        .orderDeliveryDate) !=
-                                                    ''
-                                                ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString()}'
-                                                : AppLocalizations.of(context)
-                                                    !.delivery_date_value,
-                                            titleColor: AppColors.mainColor,
-                                            valueColor: AppColors.blackColor,
-                                            valueTextSize:13,
-                                             //   AppConstants.font_14,
-                                            valueTextWeight: FontWeight.w500,
-                                            // columnPadding: AppConstants.padding_5,
-                                          ):Container(),
-                                          5.width,
-                                          CommonOrderContentWidget(
-                                            backGroundColor:
-                                                AppColors.iconBGColor,
-                                            borderCoder:
-                                                AppColors.lightBorderColor,
-                                            flexValue: 3,
-                                            title: AppLocalizations.of(context)!
-                                                .total_order,
-                                            value:
-                                                '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
-                                            titleColor: AppColors.mainColor,
-                                            valueColor: AppColors.blackColor,
-                                            valueTextWeight: FontWeight.w500,
-                                            valueTextSize:
-                                                AppConstants.smallFont,
-                                            // columnPadding: AppConstants.padding_5,
-                                          ),
-                                        ],
-                                      ),
-                                      15.height,
-                                      RichText(
-                                        text: TextSpan(
-                                          text: AppLocalizations.of(context)!
-                                              .supplier_order_number,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            color: AppColors.blackColor,
-                                            size: AppConstants.font_14,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text:
-                                                    '${' : '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        color: AppColors
-                                                            .blackColor,
-                                                        size: AppConstants
-                                                            .font_14,
-                                                        fontWeight:
-                                                            FontWeight.w700)),
+                                            Text(
+                                              state.orderData.orderstatus
+                                                      ?.statusName
+                                                      ?.toTitleCase() ??
+                                                  '',
+                                              style: AppStyles.rkRegularTextStyle(
+                                                  size: AppConstants.smallFont,
+                                                  color: state
+                                                              .orderData
+                                                              .orderstatus
+                                                              ?.orderStatusNumber ==
+                                                          onTheWayStatus
+                                                      ? AppColors.blueColor
+                                                      : state
+                                                                  .orderData
+                                                                  .orderstatus
+                                                                  ?.orderStatusNumber ==
+                                               deliveryStatus
+                                                          ? AppColors.mainColor
+                                                          : AppColors.orangeColor,
+                                                  fontWeight: FontWeight.w700),
+                                            )
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: AppConstants.padding_5,
-                                      horizontal: AppConstants.padding_15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .order_products_list,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.blackColor,
+                                        7.height,
+                                        Row(
+                                          children: [
+                                            CommonOrderContentWidget(
+                                              backGroundColor:
+                                                  AppColors.iconBGColor,
+                                              borderCoder:
+                                                  AppColors.lightBorderColor,
+                                              flexValue: 2,
+                                              title: AppLocalizations.of(context)!
+                                                  .products,
+                                              value: state.orderBySupplierProduct
+                                                      .products?.length
+                                                      .toString() ??
+                                                  '',
+                                              titleColor: AppColors.mainColor,
+                                              valueColor: AppColors.blackColor,
+                                              valueTextWeight: FontWeight.w700,
+                                              valueTextSize:
+                                                  AppConstants.smallFont,
+                                            ),
+                                            5.width,
+                                            (state.orderBySupplierProduct
+                                                .orderDeliveryDate) !=
+                                                '' ? CommonOrderContentWidget(
+                                              backGroundColor:
+                                                  AppColors.iconBGColor,
+                                              borderCoder:
+                                                  AppColors.lightBorderColor,
+                                              flexValue: 5,
+                                              maxLine: 2,
+                                              columnPadding: 7,
+                                              title: AppLocalizations.of(context)!
+                                                  .delivery_date,
+                                              value: (state.orderBySupplierProduct
+                                                          .orderDeliveryDate) !=
+                                                      ''
+                                                  ? '${state.orderBySupplierProduct.orderDeliveryDate?.toString()}'
+                                                  : AppLocalizations.of(context)
+                                                      !.delivery_date_value,
+                                              titleColor: AppColors.mainColor,
+                                              valueColor: AppColors.blackColor,
+                                              valueTextSize:13,
+                                               //   AppConstants.font_14,
+                                              valueTextWeight: FontWeight.w500,
+                                              // columnPadding: AppConstants.padding_5,
+                                            ):Container(),
+                                            5.width,
+                                            CommonOrderContentWidget(
+                                              backGroundColor:
+                                                  AppColors.iconBGColor,
+                                              borderCoder:
+                                                  AppColors.lightBorderColor,
+                                              flexValue: 3,
+                                              title: AppLocalizations.of(context)!
+                                                  .total_order,
+                                              value:
+                                                  '${formatNumber(value: state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal)}',
+                                              titleColor: AppColors.mainColor,
+                                              valueColor: AppColors.blackColor,
+                                              valueTextWeight: FontWeight.w500,
+                                              valueTextSize:
+                                                  AppConstants.smallFont,
+                                              // columnPadding: AppConstants.padding_5,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      state.orderData.orderstatus
-                                                  ?.orderStatusNumber ==
-                                              onTheWayStatus
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                bloc.add(ProductDetailsEvent
-                                                    .checkAllEvent());
-                                              },
-                                              child: Container(
-                                                  padding: EdgeInsets.all(
-                                                      AppConstants.padding_5),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius
-                                                          .all(Radius.circular(
-                                                              AppConstants
-                                                                  .padding_3)),
-                                                      color: state.isAllCheck
-                                                          ? AppColors.mainColor
-                                                          : AppColors
-                                                              .lightBorderColor,
-                                                      border: Border.all(
+                                        15.height,
+                                        RichText(
+                                          text: TextSpan(
+                                            text: AppLocalizations.of(context)!
+                                                .supplier_order_number,
+                                            style: AppStyles.rkRegularTextStyle(
+                                              color: AppColors.blackColor,
+                                              size: AppConstants.font_14,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                      '${' : '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
+                                                  style: AppStyles
+                                                      .rkRegularTextStyle(
                                                           color: AppColors
-                                                              .lightGreyColor)),
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .check_all,
-                                                    style: AppStyles
-                                                        .rkRegularTextStyle(
-                                                            size: AppConstants
-                                                                .font_14,
-                                                            color: state
-                                                                    .isAllCheck
-                                                                ? AppColors
-                                                                    .whiteColor
-                                                                : AppColors
-                                                                    .blackColor),
-                                                  )),
-                                            )
-                                          : SizedBox()
-                                      //: 0.width
-                                    ],
+                                                              .blackColor,
+                                                          size: AppConstants
+                                                              .font_14,
+                                                          fontWeight:
+                                                              FontWeight.w700)),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 85),
-                                  child: ListView.builder(
-                                    itemCount: state.orderBySupplierProduct
-                                            .products?.length ??
-                                        0,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    physics: NeverScrollableScrollPhysics(),
+                                  Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical: AppConstants.padding_5),
-                                    itemBuilder: (context, index) =>
-                                        productListItem(
-                                      index: index,
-                                      context: context,
-                                      statusNumber: state.orderData.orderstatus
-                                              ?.orderStatusNumber ??
-                                          0,
-                                      issue: state.orderBySupplierProduct
-                                              .products?[index].issue ??
+                                        vertical: AppConstants.padding_5,
+                                        horizontal: AppConstants.padding_15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .order_products_list,
+                                          style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.smallFont,
+                                            color: AppColors.blackColor,
+                                          ),
+                                        ),
+                                        state.orderData.orderstatus
+                                                    ?.orderStatusNumber ==
+                                                onTheWayStatus
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  bloc.add(ProductDetailsEvent
+                                                      .checkAllEvent());
+                                                },
+                                                child: Container(
+                                                    padding: EdgeInsets.all(
+                                                        AppConstants.padding_5),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius
+                                                            .all(Radius.circular(
+                                                                AppConstants
+                                                                    .padding_3)),
+                                                        color: state.isAllCheck
+                                                            ? AppColors.mainColor
+                                                            : AppColors
+                                                                .lightBorderColor,
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .lightGreyColor)),
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .check_all,
+                                                      style: AppStyles
+                                                          .rkRegularTextStyle(
+                                                              size: AppConstants
+                                                                  .font_14,
+                                                              color: state
+                                                                      .isAllCheck
+                                                                  ? AppColors
+                                                                      .whiteColor
+                                                                  : AppColors
+                                                                      .blackColor),
+                                                    )),
+                                              )
+                                            : SizedBox()
+                                        //: 0.width
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 85),
+                                    child: ListView.builder(
+                                      itemCount: state.orderBySupplierProduct
+                                              .products?.length ?? 0,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: AppConstants.padding_5),
+                                      itemBuilder: (context, index) =>
+                                          productListItem(
+                                        index: index,
+                                        context: context,
+                                        statusNumber: state.orderData.orderstatus
+                                                ?.orderStatusNumber ??
+                                            0,
+                                        issue: state.orderBySupplierProduct
+                                                .products?[index].issue ??
+                                            '',
+                                        isIssue: state.orderBySupplierProduct
+                                                .products?[index].isIssue ??
+                                            false,
+                                        missingQuantity: state
+                                                .orderBySupplierProduct
+                                                .products?[index]
+                                                .missingQuantity ??
+                                            0,
+                                        issueStatus: state
+                                                .orderBySupplierProduct
+                                                .products?[index]
+                                                .issueStatus!
+                                                .statusName
+                                                .toString()
+                                                .toTitleCase() ??
+                                            '',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
+                    ),
+              bottomSheet: state.orderData.orderstatus?.orderStatusNumber ==
+                      onTheWayStatus
+                  ? Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_20,
+                          horizontal: AppConstants.padding_30),
+                      color: AppColors.pageColor,
+                      child: CustomButtonWidget(
+                        onPressed: () {
+                        Navigator.pushNamed(context,
+                                  RouteDefine.shipmentVerificationScreen.name,
+                                  arguments: {
+                                      AppStrings.supplierNameString: state
+                                              .orderBySupplierProduct.supplierName
+                                              ?.toString() ??
                                           '',
-                                      isIssue: state.orderBySupplierProduct
-                                              .products?[index].isIssue ??
-                                          false,
-                                      missingQuantity: state
-                                              .orderBySupplierProduct
-                                              .products?[index]
-                                              .missingQuantity ??
-                                          0,
-                                      issueStatus: state
-                                              .orderBySupplierProduct
-                                              .products?[index]
-                                              .issueStatus!
-                                              .statusName
+                                      AppStrings.deliveryStatusString: state
+                                              .orderData.orderstatus?.statusName
                                               .toString()
                                               .toTitleCase() ??
                                           '',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )),
+                                      AppStrings.totalOrderString: state
+                                              .orderData.totalVatAmount
+                                              ?.toStringAsFixed(2) ??
+                                          '0',
+                                      AppStrings.deliveryDateString: '-',
+                                      AppStrings.quantityString: state
+                                              .orderBySupplierProduct
+                                              .products
+                                              ?.length
+                                              .toString() ??
+                                          '',
+                                      AppStrings.totalAmountString: state
+                                              .orderData.totalVatAmount
+                                              ?.toStringAsFixed(2) ??
+                                          0,
+                                      AppStrings.orderIdString: widget.orderId,
+                                      AppStrings.supplierIdString:
+                                          state.orderBySupplierProduct.id,
+                                      AppStrings.supplierOrderNumberString: state
+                                              .orderBySupplierProduct
+                                              .supplierOrderNumber ??
+                                          0,
+                                      AppStrings.orderStatusNo: state.orderData
+                                              .orderstatus?.orderStatusNumber ??
+                                          2,
+                                    });
+                        },
+                        buttonText: AppLocalizations.of(context)!.next,
+                        bGColor: AppColors.mainColor,
                       ),
-                    ),
-                  ),
-            bottomSheet: state.orderData.orderstatus?.orderStatusNumber ==
-                    onTheWayStatus
-                ? Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_20,
-                        horizontal: AppConstants.padding_30),
-                    color: AppColors.pageColor,
-                    child: CustomButtonWidget(
-                      onPressed: () {
-                      Navigator.pushNamed(context,
-                                RouteDefine.shipmentVerificationScreen.name,
-                                arguments: {
-                                    AppStrings.supplierNameString: state
-                                            .orderBySupplierProduct.supplierName
-                                            ?.toString() ??
-                                        '',
-                                    AppStrings.deliveryStatusString: state
-                                            .orderData.orderstatus?.statusName
-                                            .toString()
-                                            .toTitleCase() ??
-                                        '',
-                                    AppStrings.totalOrderString: state
-                                            .orderData.totalVatAmount
-                                            ?.toStringAsFixed(2) ??
-                                        '0',
-                                    AppStrings.deliveryDateString: '-',
-                                    AppStrings.quantityString: state
-                                            .orderBySupplierProduct
-                                            .products
-                                            ?.length
-                                            .toString() ??
-                                        '',
-                                    AppStrings.totalAmountString: state
-                                            .orderData.totalVatAmount
-                                            ?.toStringAsFixed(2) ??
-                                        0,
-                                    AppStrings.orderIdString: widget.orderId,
-                                    AppStrings.supplierIdString:
-                                        state.orderBySupplierProduct.id,
-                                    AppStrings.supplierOrderNumberString: state
-                                            .orderBySupplierProduct
-                                            .supplierOrderNumber ??
-                                        0,
-                                    AppStrings.orderStatusNo: state.orderData
-                                            .orderstatus?.orderStatusNumber ??
-                                        2,
-                                  });
-                      },
-                      buttonText: AppLocalizations.of(context)!.next,
-                      bGColor: AppColors.mainColor,
-                    ),
-                  )
-                : 0.width,
+                    )
+                  : 0.width,
+            ),
           );
         },
       ),
@@ -549,15 +558,6 @@ class _ProductDetailsScreenWidgetState
                               alignment: Alignment.center,
                               child:
                                   Image.asset(AppImagePath.imageNotAvailable5)
-                              /*Text(
-                              AppStrings
-                                  .failedToLoadString,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants
-                                      .font_14,
-                                  color:
-                                  AppColors.textColor),
-                            ),*/
                               );
                         },
                       )
@@ -576,7 +576,7 @@ class _ProductDetailsScreenWidgetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,
                       child: Text(
                         state
                             .orderBySupplierProduct.products![index].productName
@@ -606,10 +606,7 @@ class _ProductDetailsScreenWidgetState
                     statusNumber == onTheWayStatus
                         ? GestureDetector(
                       onTap: () {
-                        /* (isIssue! ||
-                                state.productListIndex
-                                    .contains(index))
-                                ?*/ ProductProblemBottomSheet(
+                         ProductProblemBottomSheet(
                             radioValue: isIssue == true
                                 ? ((issue ?? '') ==
                                 AppLocalizations.of(context)!
@@ -705,21 +702,20 @@ class _ProductDetailsScreenWidgetState
                       ),
                     )
                         : SizedBox(),
-
                     (isIssue ?? false)
-                        ? Text(
-                      '${issueStatus.toString()}',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.blackColor,
-                          size: AppConstants.font_14,
-                          fontWeight: FontWeight.w400),
-                    )
+                        ? Container(
+                      width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,
+                          child: Text(
+                            '${issue.toString()}',
+                            maxLines: 2,
+                            style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                            fontWeight: FontWeight.w400)),
+                        )
                         : SizedBox(),
-
                   ],
                 ),
-
-
                 10.width,
                 // : SizedBox(),
               ],

@@ -18,13 +18,11 @@ import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
 as InsertCartModel;
-import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
@@ -83,9 +81,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         }
 
       } else if (event is _ChangeCategoryDetailsEvent) {
+        print('categoryName   ${state.categoryName}');
         emit(state.copyWith(
             isSubCategory: state.isSubCategory,
-            categoryId: event.categoryId ,
+            categoryId: event.categoryId,
             categoryName: event.categoryName,
            // subCategoryList: [],
             planoGramsList : [],
@@ -113,7 +112,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
         }
       }
-      else if (event is _GetProductCategoriesListEvent) {
+     /* else if (event is _GetProductCategoriesListEvent) {
         try {
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(
@@ -148,7 +147,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } catch (exc) {
           emit(state.copyWith(isSearching: false));
         }
-      }
+      }*/
       else if (event is _ChangeSubCategoryDetailsEvent) {
         debugPrint(
             'sub category ${event.subCategoryId}(${event.subCategoryName})');
@@ -204,7 +203,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 subCategoryPageNum: state.subCategoryPageNum + 1,
                 isSubCategoryShimmering: false,
                 isLoadMore: false,
-                categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : ''
+                categoryName: response.data?.subCategories?.length != 0 ? (response.data?.subCategories?[0].parentCategoryName ?? '' ) : state.categoryName,
             ) );
             emit(state.copyWith(
                 isBottomOfSubCategory:

@@ -63,6 +63,7 @@ class AppStrings {
   static const orderBySupplierId = 'orderSupplierId';
   static const getCartListString = 'getCartListString';
   static const isSubCategory = 'false';
+  static const issueString = 'issue';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

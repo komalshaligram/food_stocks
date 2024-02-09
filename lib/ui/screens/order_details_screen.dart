@@ -55,6 +55,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
         builder: (context, state) {
+          print('BUILD');
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
@@ -116,7 +117,6 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context, required GetOrderByIdModel orderByIdList}) {
         return GestureDetector(
           onTap: () {
-
             Navigator.push(context,   PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(orderNumber: orderNumber,orderId: orderId,isNavigateToProductDetailString: false,
               productData: orderByIdList.data!.ordersBySupplier![index],

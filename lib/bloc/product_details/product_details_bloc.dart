@@ -2,18 +2,17 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/create_issue/create_issue_req_model.dart'
     as create;
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 part 'product_details_event.dart';
 
 part 'product_details_state.dart';
@@ -30,10 +29,10 @@ class ProductDetailsBloc
       if (event is _getOrderByIdEvent) {
         debugPrint('token___${preferencesHelper.getAuthToken()}');
         debugPrint('orderid___${event.orderId}');
-        emit(state.copyWith(isShimmering: true));
+        emit(state.copyWith(isShimmering: true, isLoading: true));
         try {
           final res = await DioClient(event.context).get(
-            path: '${AppUrls.getOrderById}${event.orderId}',
+            path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
           );
 
           debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
@@ -48,8 +47,10 @@ class ProductDetailsBloc
                         OrdersBySupplier(),
                 orderData: response.data?.orderData?.first ??
                     OrderDatum(),
-                isShimmering: false));
+                isShimmering: false ,isLoading: false ,isRefresh: !state.isRefresh));
           } else {
+            emit(state.copyWith(
+                isShimmering: false ,isLoading: false));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
@@ -58,13 +59,23 @@ class ProductDetailsBloc
                     event.context),
                 type: SnackBarType.SUCCESS);
           }
-        } on ServerException {}
+        } on ServerException {emit(state.copyWith(
+            isShimmering: false ,isLoading: false));}
+        catch(e){
+          emit(state.copyWith(
+              isShimmering: false ,isLoading: false));
+          CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: e.toString(),
+              type: SnackBarType.SUCCESS);
+        }
       }
 
       if (event is _getProductDataEvent) {
         emit(state.copyWith(
             orderBySupplierProduct: event.orderBySupplierProduct,orderData: event.orderData));
-      } else if (event is _productProblemEvent) {
+      }
+      else if (event is _productProblemEvent) {
         List<int> index = [];
         bool isAllCheck = false;
         index = [...state.productListIndex];
@@ -111,7 +122,8 @@ class ProductDetailsBloc
         }
 
 
-      } else if (event is _createIssueEvent) {
+      }
+      else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));
         if (event.issue != '') {
           create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(
@@ -136,11 +148,15 @@ class ProductDetailsBloc
             debugPrint('createIssue Req  = $reqMap');
             debugPrint('[order Id ] = ${event.orderId}');
             if (response['status'] == 201) {
+
+              add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferencesHelper.getOrderId()));
               emit(state.copyWith(isLoading: false));
+              if(!state.isShimmering){
+                Navigator.pop(event.BottomSheetContext,{AppStrings.issueString : event.issue});
+               // Navigator.pushReplacementNamed(event.context, RouteDefine.productDetailsScreen.name);
+              }
 
-                Navigator.pop(event.BottomSheetContext);
                // Navigator.pop(event.context);
-
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
