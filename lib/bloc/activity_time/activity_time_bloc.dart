@@ -622,10 +622,10 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
                   OperationTime(Sunday: sundayList),
               OperationTime(Monday: mondayList),
               OperationTime(Tuesday: tuesdayList),
-              OperationTime(Wednesday: wednesdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Thursday: thursdayList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Friday: fridayAndHolidayEvesList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
-              OperationTime(Saturday: saturdayAndHolidaysList?? [Day(from:AppStrings.timeString  ,until: AppStrings.timeString )]),
+              OperationTime(Wednesday: wednesdayList),
+              OperationTime(Thursday: thursdayList),
+              OperationTime(Friday: fridayAndHolidayEvesList),
+              OperationTime(Saturday: saturdayAndHolidaysList),
             ]));
 
 

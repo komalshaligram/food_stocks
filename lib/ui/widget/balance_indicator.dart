@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_styles.dart';
