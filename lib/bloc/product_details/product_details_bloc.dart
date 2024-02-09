@@ -90,7 +90,6 @@ class ProductDetailsBloc
           emit(state.copyWith(
               quantity: event.messingQuantity.round() + 1,
               isRefresh: !state.isRefresh,
-
           ));
         }
         else {
@@ -109,7 +108,6 @@ class ProductDetailsBloc
           missingQuantity: event.messingQuantity.round() - 1
           ));
         }
-
 
       } else if (event is _createIssueEvent) {
         emit(state.copyWith(isLoading: true));

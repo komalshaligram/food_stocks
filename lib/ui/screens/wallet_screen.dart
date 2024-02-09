@@ -286,7 +286,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                             state.isGraphProcess
                                 ? WalletScreenShimmerWidget()
                                 : Padding(
-                                    padding: const EdgeInsets.all(4.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     child: SizedBox(
                                       height: getScreenHeight(context) * 0.21,
                                       width: double.maxFinite,
