@@ -29,6 +29,7 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import '../widget/supplier_products_screen_shimmer_widget.dart';
 
 class StoreCategoryRoute {
   static Widget get route => const StoreCategoryScreen();
@@ -253,7 +254,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             header: RefreshWidget(),
                             footer: CustomFooter(
                               builder: (context, mode) =>
-                                  StoreCategoryScreenPlanoGramShimmerWidget(),
+                                  SupplierProductsScreenShimmerWidget(),
                             ),
                             enablePullUp: !state.isBottomOfPlanoGrams,
                             onRefresh: () {
@@ -276,9 +277,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
                                 children: [
-                                  state.isPlanogramShimmering
-                                      ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                      : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty
+                                  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty
+                                      ? SupplierProductsScreenShimmerWidget()
+                                      : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering
                                       ? Container(
                                     height:
                                     getScreenHeight(context) -
@@ -338,8 +339,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               fontWeight: FontWeight.w600
                                           ),),
                                       ) : SizedBox(),
-                                      state.isPlanogramShimmering
-                                          ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                       state.isPlanogramProductShimmering && state.planogramProductList.isEmpty
+                                          ? SupplierProductsScreenShimmerWidget()
                                           : state.planogramProductList.isEmpty
                                           ? SizedBox()
                                           : Container(

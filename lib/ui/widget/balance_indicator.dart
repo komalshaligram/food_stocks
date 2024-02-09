@@ -16,8 +16,8 @@ class BalanceIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80,
-      width: 80,
+      height: 100,
+      width: 100,
       child: SfRadialGauge(
         backgroundColor: Colors.transparent,
         axes: [
@@ -37,9 +37,9 @@ class BalanceIndicator extends StatelessWidget {
               GaugeAnnotation(
                 angle: 180,
                 widget: Text(
-                  context.rtl?'% ${expense.toString()}':'${expense.toString()} %',
+                  context.rtl?'% ${expense.toString()}':'${expense.toString()}%',
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
+                      size: AppConstants.font_12,
                       color: AppColors.blackColor,
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,

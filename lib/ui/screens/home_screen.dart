@@ -375,13 +375,12 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: formatter(
-                                                    state.balance.toString()),
+                                                pendingBalance: formatNumber(value: state.balance.toString(),local: AppStrings.hebrewLocal),
                                                 expense: state.expensePercentage,
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${AppLocalizations.of(context)?.currency}${state.balance.toString()}',
+                                              '${formatNumber(value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
                                               style: AppStyles.rkRegularTextStyle(
                                                   size: AppConstants.font_14,
                                                   fontWeight: FontWeight.bold,
@@ -406,7 +405,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
+                                                        '${formatNumber(value: state.totalCredit.toString(),local: AppStrings.hebrewLocal)}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -417,7 +416,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
+                                                        '${formatNumber(value: state.thisMonthExpense.toString(),local: AppStrings.hebrewLocal)}'),
                                               ),
                                             ],
                                           ),
@@ -427,24 +426,26 @@ class HomeScreenWidget extends StatelessWidget {
                                               Flexible(
                                                 child: DashBoardStatsWidget(
                                                     context: context,
-                                                    image: AppImagePath.expense,
+                                                    image: AppImagePath.orders,
                                                     title: AppLocalizations.of(
-                                                            context)!
-                                                        .last_months_expenses,
+                                                        context)!
+                                                        .this_months_orders,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
+                                                    '${state.orderThisMonth}'),
                                               ),
                                               10.width,
                                               Flexible(
                                                 child: DashBoardStatsWidget(
                                                     context: context,
-                                                    image: AppImagePath.orders,
+                                                    image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
                                                             context)!
-                                                        .this_months_orders,
+                                                        .last_months_expenses,
                                                     value:
-                                                        '${state.orderThisMonth}'),
+                                                        '${formatNumber(value: state.lastMonthExpense.toString(),local:  AppStrings.hebrewLocal)}'),
                                               ),
+
+
                                             ],
                                           ),
                                         ],
