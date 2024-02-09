@@ -371,17 +371,20 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: formatNumber(value: state.balance.toString(),local: AppStrings.hebrewLocal),
-                                                expense: state.expensePercentage,
+                                                pendingBalance: ( state.balance.toString()),
+                                                expense: state.expensePercentage.round(),
                                                 totalBalance: 100),
                                             6.height,
-                                            Text(
-                                              '${formatNumber(value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
-                                              style: AppStyles.rkRegularTextStyle(
-                                                  size: AppConstants.font_14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: AppColors.blackColor),
-                                              textAlign: TextAlign.center,
+                                            Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: Text(
+                                                '${AppLocalizations.of(context)!.currency}${state.balance.toString()}',
+                                                style: AppStyles.rkRegularTextStyle(
+                                                    size: AppConstants.font_14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors.blackColor),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ),
                                           ],
                                         )),
@@ -401,7 +404,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${formatNumber(value: state.totalCredit.toString(),local: AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -412,7 +415,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${formatNumber(value: state.thisMonthExpense.toString(),local: AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
                                               ),
                                             ],
                                           ),
@@ -438,10 +441,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${formatNumber(value: state.lastMonthExpense.toString(),local:  AppStrings.hebrewLocal)}'),
+                                                        '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
                                               ),
-
-
                                             ],
                                           ),
                                         ],

@@ -62,7 +62,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
                   isLoadMore: false,
                   orderList: response
               ));
-
               emit(state.copyWith(
                   isBottomOfProducts: orderList.length ==
                           (response.metaData?.totalFilteredCount ?? 0)

@@ -231,6 +231,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               15.height,
                               profileMenuTiles(
                                   title: AppLocalizations.of(context)!
+                                      .my_orders,
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, RouteDefine.orderScreen.name,
+                                       );
+                                  }),
+                              profileMenuTiles(
+                                  title: AppLocalizations.of(context)!
                                       .business_details,
                                   onTap: () {
                                     Navigator.pushNamed(
@@ -273,10 +281,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               profileMenuTiles(
                                   title: AppLocalizations.of(context)!.log_out,
                                   onTap: () {
-                                    LogOutDialog(
+                                    !state.isLogOutProcess ? LogOutDialog(
                                       context: context,
                                         directionality : state.language
-                                    );
+                                    ) : CupertinoActivityIndicator();
 
                                   }),
                               menuSwitchTile(
@@ -412,6 +420,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             return AbsorbPointer(
           absorbing: state.isLogOutProcess ? true : false,
           child: CommonAlertDialog(
+            isLogOutProcess: state.isLogOutProcess,
             directionality: directionality,
             title: '${AppLocalizations.of(context)!.log_out}',
             subTitle: '${AppLocalizations.of(context)!.are_you_sure}',

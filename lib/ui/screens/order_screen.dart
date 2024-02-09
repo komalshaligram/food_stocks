@@ -10,6 +10,8 @@ import 'package:food_stock/ui/widget/common_order_content_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 
 import '../utils/themes/app_constants.dart';
@@ -45,10 +47,11 @@ class OrderScreenWidget extends StatefulWidget {
 }
 
 class _OrderScreenWidgetState extends State<OrderScreenWidget> {
-  @override
+
 
   int onTheWayStatus = 6;
   int deliveryStatus = 5;
+  int cancelStatus = 4;
   void initState() {
     super.initState();
 
@@ -168,8 +171,15 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
   Widget orderListItem({required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
         return DelayedWidget(
           child: GestureDetector(
-            onTap: () {
-              if ((orderDetailsList[index].suppliers ?? 0) > 1) {
+            onTap: () async {
+              SharedPreferencesHelper preferencesHelper =
+              SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+              preferencesHelper.setOrderId(productOrderId:  orderDetailsList[index].id ?? '');
+
+              if(orderDetailsList[index].status?.orderStatusNo == cancelStatus){
+
+              }
+             else if ((orderDetailsList[index].suppliers ?? 0) > 1) {
                 Navigator.pushNamed(
                     context, RouteDefine.orderDetailsScreen.name,
                     arguments: {

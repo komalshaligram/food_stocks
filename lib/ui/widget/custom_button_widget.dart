@@ -16,6 +16,7 @@ class CustomButtonWidget extends StatelessWidget {
   final bool isLoading;
   final Color borderColor;
   final bool isFromConnectScreen;
+  final double width;
 
   CustomButtonWidget(
       {super.key,
@@ -29,18 +30,20 @@ class CustomButtonWidget extends StatelessWidget {
       this.height,
       this.radius,
       this.borderColor = Colors.white,
-      this.loadingColor = Colors.white});
+      this.loadingColor = Colors.white,
+        this.width = double.maxFinite,
+      });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height ?? AppConstants.buttonHeight,
-      width: double.maxFinite,
+      width:width,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
           // border: Border.all(color: AppColors.mainColor),
           //color: bGColor,
-          gradient: isFromConnectScreen?LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
+          gradient: isFromConnectScreen ? LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]):AppColors.appMainGradientColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
               Radius.circular(radius ?? AppConstants.radius_10))),

@@ -361,8 +361,8 @@
   "this_company_has_no_product": "Currently this company has no products",
   "out_of_stock1": "Out of stock",
   "account_not_approve": "account not approve",
-  "rivchit_credentials_not_set": "Rivchit credentials not set",
-  "comax_invoice_not_found": "Comax invoice not found",
+  "rivchitcredentialsnotset": "Rivchit credentials not set",
+  "comaxinvoicenotfound": "Comax invoice not found",
   "total_amount_cant_be_zero": "Total amount can't be zero",
   "sale_not_exists": "Sale does not exist",
   "comax_order_error": "Something went wrong.",
@@ -379,6 +379,11 @@
   "vat": "VAT",
   "close": "Close",
   "read_condition":"Read condition",
-  "please_provide_valid_time" :"Please provide valid time"
+  "please_provide_valid_time" :"Please provide valid time",
+  "please_enter_city" : "Please enter city",
+  "remove" : "remove",
+  "issueremoved" : "Issue removed successfully."
+
+
 
 }

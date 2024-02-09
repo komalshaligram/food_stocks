@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -28,6 +29,7 @@ class ProductDetailsRoute {
 
 class ProductDetailsScreen extends StatelessWidget {
   String orderId;
+  String issue;
 
   String orderNumber;
 
@@ -42,10 +44,13 @@ class ProductDetailsScreen extends StatelessWidget {
       this.orderNumber = '',
       this.isNavigateToProductDetailString = false,
       this.productData = const OrdersBySupplier(),
-      this.orderData = const OrderDatum()});
+      this.orderData = const OrderDatum(),
+      this.issue = ''
+      });
 
   @override
   Widget build(BuildContext context) {
+    print('issue_____${issue}');
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(isNavigateToProductDetailString
@@ -120,9 +125,9 @@ class _ProductDetailsScreenWidgetState
                 },
               ),
             ),
-            body: state.isShimmering
-                ? ProductDetailsScreenShimmerWidget()
-                : SingleChildScrollView(
+            body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.length == 0)
+                ? ProductDetailsScreenShimmerWidget():
+            SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
                     child: SafeArea(
                       child: AnimationLimiter(
@@ -228,7 +233,7 @@ class _ProductDetailsScreenWidgetState
                                                 AppColors.lightBorderColor,
                                             flexValue: 5,
                                             maxLine: 2,
-                                            columnPadding: 5,
+                                            columnPadding: 7,
                                             title: AppLocalizations.of(context)!
                                                 .delivery_date,
                                             value: (state.orderBySupplierProduct
@@ -355,8 +360,7 @@ class _ProductDetailsScreenWidgetState
                                   padding: const EdgeInsets.only(bottom: 85),
                                   child: ListView.builder(
                                     itemCount: state.orderBySupplierProduct
-                                            .products?.length ??
-                                        0,
+                                            .products?.length ?? 0,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
                                     physics: NeverScrollableScrollPhysics(),
@@ -549,15 +553,6 @@ class _ProductDetailsScreenWidgetState
                               alignment: Alignment.center,
                               child:
                                   Image.asset(AppImagePath.imageNotAvailable5)
-                              /*Text(
-                              AppStrings
-                                  .failedToLoadString,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants
-                                      .font_14,
-                                  color:
-                                  AppColors.textColor),
-                            ),*/
                               );
                         },
                       )
@@ -576,7 +571,7 @@ class _ProductDetailsScreenWidgetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,
                       child: Text(
                         state
                             .orderBySupplierProduct.products![index].productName
@@ -606,10 +601,7 @@ class _ProductDetailsScreenWidgetState
                     statusNumber == onTheWayStatus
                         ? GestureDetector(
                       onTap: () {
-                        /* (isIssue! ||
-                                state.productListIndex
-                                    .contains(index))
-                                ?*/ ProductProblemBottomSheet(
+                         ProductProblemBottomSheet(
                             radioValue: isIssue == true
                                 ? ((issue ?? '') ==
                                 AppLocalizations.of(context)!
@@ -651,7 +643,7 @@ class _ProductDetailsScreenWidgetState
                             missingQuantity: missingQuantity,
                             quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
                             isDeliver: (state.orderBySupplierProduct.orderDeliveryDate != '') ? true : false);
-                        //: SizedBox();
+
                         bloc.add(
                             ProductDetailsEvent.radioButtonEvent(
                                 selectRadioTile: isIssue == true
@@ -694,9 +686,9 @@ class _ProductDetailsScreenWidgetState
                           AppLocalizations.of(context)!
                               .product_issue,
                           style: AppStyles.rkRegularTextStyle(
-                              color: (isIssue ?? false) /*||
+                              color: (isIssue ?? false) ||
                                       state.productListIndex
-                                          .contains(index)*/
+                                          .contains(index)
                                   ? AppColors.whiteColor
                                   : AppColors.blackColor,
                               size: AppConstants.font_12,
@@ -705,21 +697,20 @@ class _ProductDetailsScreenWidgetState
                       ),
                     )
                         : SizedBox(),
-
                     (isIssue ?? false)
-                        ? Text(
-                      '${issueStatus.toString()}',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.blackColor,
-                          size: AppConstants.font_14,
-                          fontWeight: FontWeight.w400),
-                    )
+                        ? Container(
+                      width: MediaQuery.of(context).size.width > 370 ?  MediaQuery.of(context).size.width / 2 : 160,
+                          child: Text(
+                            '${issue.toString()}',
+                            maxLines: 2,
+                            style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor,
+                            size: AppConstants.font_12,
+                            fontWeight: FontWeight.w400)),
+                        )
                         : SizedBox(),
-
                   ],
                 ),
-
-
                 10.width,
                 // : SizedBox(),
               ],
@@ -804,7 +795,7 @@ class _ProductDetailsScreenWidgetState
                                 ),
                                 GestureDetector(
                                     onTap: () {
-                                      Navigator.pop(context1);
+                                      Navigator.pop(context1,{AppStrings.issueString : ''});
                                     },
                                     child: Icon(Icons.close)),
                               ],
@@ -967,49 +958,80 @@ class _ProductDetailsScreenWidgetState
                               note: issue,
                               bottomSheetContext: context1),
                           10.height,
-                          GestureDetector(
-                            onTap: () async {
-                              context.read<ProductDetailsBloc>().add(
-                                  ProductDetailsEvent.createIssueEvent(
-                                      context: context,
-                                      BottomSheetContext: context1,
-                                      supplierId: supplierId,
-                                      productId: productId,
-                                      issue: state.selectedRadioTile == 1
-                                          ? AppLocalizations.of(context)!
-                                              .the_product_did_not_arrive_at_all
-                                          : state.selectedRadioTile == 2
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  context.read<ProductDetailsBloc>().add(
+                                      ProductDetailsEvent.createIssueEvent(
+                                          context: context,
+                                          BottomSheetContext: context1,
+                                          supplierId: supplierId,
+                                          productId: productId,
+                                          issue: state.selectedRadioTile == 1
                                               ? AppLocalizations.of(context)!
-                                                  .product_arrived_damaged
+                                              .the_product_did_not_arrive_at_all
+                                              : state.selectedRadioTile == 2
+                                              ? AppLocalizations.of(context)!
+                                              .product_arrived_damaged
                                               : state.selectedRadioTile == 3
-                                                  ? AppLocalizations.of(
-                                                          context)!
-                                                      .the_product_arrived_missing
-                                                  : state.selectedRadioTile == 4
-                                                      ? '${state.addNoteController.text.toString()}'
-                                                      : '',
-                                      missingQuantity:
+                                              ? AppLocalizations.of(
+                                              context)!
+                                              .the_product_arrived_missing
+                                              : state.selectedRadioTile == 4
+                                              ? '${state.addNoteController.text.toString()}'
+                                              : '',
+                                          missingQuantity:
                                           state.selectedRadioTile == 3
                                               ? state.quantity
                                               : 0,
-                                      orderId: widget.orderId,
-                                      isDeliver: isDeliver));
-                            },
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_20,
-                                    horizontal: AppConstants.padding_30),
-                                child: CustomButtonWidget(
-                                  buttonText:
-                                      AppLocalizations.of(context)!.save,
-                                  bGColor: AppColors.mainColor,
-                                  isLoading: state.isLoading,
+                                          orderId: widget.orderId,
+                                          isDeliver: isDeliver
+                                      ));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: AppConstants.padding_20,
+                                      horizontal: AppConstants.padding_30),
+                                  child: CustomButtonWidget(
+                                    width:  issue != '' ? 120 : MediaQuery.of(context).size.width * 0.8,
+                                    buttonText:
+                                    AppLocalizations.of(context)!.save,
+                                    bGColor: AppColors.mainColor,
+                                    isLoading: state.isLoading,
+                                  ),
                                 ),
                               ),
-                            ),
+
+                             issue != '' ?  GestureDetector(
+                               onTap: (){
+                                 context.read<ProductDetailsBloc>().add(ProductDetailsEvent.removeIssueEvent(
+                                     context: context, supplierId: supplierId, orderId: widget.orderId, Product: [productId],
+                                   BottomSheetContext: context1
+                                 ));
+                               },
+                               child: Container(
+                                 padding: EdgeInsets.symmetric(
+                                     vertical: AppConstants.padding_20,
+                                     horizontal: AppConstants.padding_30),
+                                 child: CustomButtonWidget(
+                                   isFromConnectScreen: true,
+                                   width:120,
+                                   buttonText:
+                                   AppLocalizations.of(context)!.remove,
+                                   bGColor: AppColors.redColor,
+                                   isLoading: state.isRemoveProcess,
+                                   fontColors: AppColors.redColor,
+                                   borderColor: AppColors.redColor,
+                                   loadingColor: AppColors.mainColor,
+                                 ),
+                               ),
+                             ): 0.height,
+                            ],
                           ),
+
                         ],
                       ),
                     ),
@@ -1020,7 +1042,12 @@ class _ProductDetailsScreenWidgetState
           },
         );
       },
-    );
+    ).then((value) {
+      if(value[AppStrings.issueString] != ''){
+        context.read<ProductDetailsBloc>().add(ProductDetailsEvent.getOrderByIdEvent(context: context, orderId: widget.orderId));
+      }
+
+    });
   }
 
   Widget RadioButtonWidget({
@@ -1047,7 +1074,9 @@ class _ProductDetailsScreenWidgetState
         builder: (context, state) {
           quantity =
               (state.quantity == 0 ? missingQuantity : state.quantity) ?? 0;
+          print('value_____$groupValue');
           return Container(
+
             height: value == 4 ? 165 : 60,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(
