@@ -354,19 +354,21 @@ class AppStrings {
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.account_not_approve;
       case 'rivchitcredentialsnotset':
-        return AppLocalizations.of(context)!.rivchit_credentials_not_set;
+        return AppLocalizations.of(context)!.rivchitcredentialsnotset;
       case 'comaxinvoicenotfound':
-        return AppLocalizations.of(context)!.comax_invoice_not_found;
+        return AppLocalizations.of(context)!.comaxinvoicenotfound;
       case 'totalamountcantbezero':
         return AppLocalizations.of(context)!.total_amount_cant_be_zero;
       case 'comaxinvoicenotfound':
-        return AppLocalizations.of(context)!.comax_invoice_not_found;
-      case 'salenotexists':
+        return AppLocalizations.of(context)!.comaxinvoicenotfound;
+      case 'salenotexistssalenotexists':
         return AppLocalizations.of(context)!.sale_not_exists;
         case 'comaxordererror':
       return AppLocalizations.of(context)!.comax_order_error;
       case 'comaxclienterror':
         return AppLocalizations.of(context)!.comax_client_error;
+      case 'issueremoved':
+        return AppLocalizations.of(context)!.issueremoved;
     }
     return key;
   }

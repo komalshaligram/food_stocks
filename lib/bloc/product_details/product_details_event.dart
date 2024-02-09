@@ -1,9 +1,7 @@
 part of 'product_details_bloc.dart';
 
 @freezed
-class ProductDetailsEvent with _$ProductDetailsEvent{
-
-
+class ProductDetailsEvent with _$ProductDetailsEvent {
   const factory ProductDetailsEvent.productProblemEvent({
     required bool isProductProblem,
     required int index,
@@ -18,7 +16,6 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required int listIndex,
     required BuildContext context,
     required int messingQuantity,
-
   }) = _productIncrementEvent;
 
   const factory ProductDetailsEvent.productDecrementEvent({
@@ -28,26 +25,23 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required BuildContext context,
   }) = _productDecrementEvent;
 
-  const factory ProductDetailsEvent.getProductDataEvent({
-    required BuildContext context,
-    required String orderId,
-    required OrdersBySupplier orderBySupplierProduct,
-    required OrderDatum orderData
-  }) = _getProductDataEvent;
+  const factory ProductDetailsEvent.getProductDataEvent(
+      {required BuildContext context,
+      required String orderId,
+      required OrdersBySupplier orderBySupplierProduct,
+      required OrderDatum orderData}) = _getProductDataEvent;
 
-  const factory ProductDetailsEvent.createIssueEvent({
-    required BuildContext BottomSheetContext,
-    required BuildContext context,
-    required String supplierId,
-    required String productId,
-    required String issue,
-    required int missingQuantity,
-    required String orderId,
-    required bool isDeliver
-  }) = _createIssueEvent;
+  const factory ProductDetailsEvent.createIssueEvent(
+      {required BuildContext BottomSheetContext,
+      required BuildContext context,
+      required String supplierId,
+      required String productId,
+      required String issue,
+      required int missingQuantity,
+      required String orderId,
+      required bool isDeliver}) = _createIssueEvent;
 
-  const factory ProductDetailsEvent.checkAllEvent(
-  ) = _checkAllEvent;
+  const factory ProductDetailsEvent.checkAllEvent() = _checkAllEvent;
 
   const factory ProductDetailsEvent.getOrderByIdEvent({
     required BuildContext context,
@@ -58,6 +52,11 @@ class ProductDetailsEvent with _$ProductDetailsEvent{
     required String note,
   }) = _getBottomSheetDataEvent;
 
-  const factory ProductDetailsEvent.removeIssue({required BuildContext context,required String supplierId,required String orderId,required List<String> Product })= _removeIssue;
+  const factory ProductDetailsEvent.removeIssueEvent(
+      {required BuildContext context,
+      required String supplierId,
+      required String orderId,
+      required List<String> Product,
+        required BuildContext BottomSheetContext,
+      }) = _removeIssueEvent;
 }
-
