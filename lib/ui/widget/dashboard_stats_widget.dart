@@ -55,15 +55,12 @@ class DashBoardStatsWidget extends StatelessWidget {
             ],
           ),
           10.height,
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text(
-              value,
-              style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.blackColor),
-            ),
+          Text(
+            value,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont,
+                fontWeight: FontWeight.bold,
+                color: AppColors.blackColor),
           ),
         ],
       ),

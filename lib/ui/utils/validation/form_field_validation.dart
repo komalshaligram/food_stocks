@@ -144,4 +144,14 @@ class FormFieldValidation {
     }
     return null;
   }
+
+  String? cityNameField(String value,BuildContext context) {
+    if (value.isEmpty) {
+      return '${AppLocalizations.of(context)!.please_enter_owner_name}';
+    }
+    return null;
+  }
+
+
+
 }

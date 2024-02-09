@@ -380,7 +380,8 @@
   "vat": "מע\"מ",
   "close": "סגור",
   "read_condition":"מצב קריאה",
-  "please_provide_valid_time" : "אנא הזן שעה תקינה"
+  "please_provide_valid_time" : "אנא הזן שעה תקינה",
+  "please_enter_city" : "נא להיכנס לעיר"
 
 
 

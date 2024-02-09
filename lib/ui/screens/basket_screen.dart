@@ -422,17 +422,14 @@ class BasketScreenWidget extends StatelessWidget {
               color: AppColors
                   .blackColor),
         ),
-        Directionality(
-          textDirection: TextDirection.ltr,
-          child: Text(
-           amount,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.mediumFont,
-                color: AppColors
-                    .blackColor,
-            fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
-            overflow: TextOverflow.ellipsis,
-          ),
+        Text(
+         amount,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.mediumFont,
+              color: AppColors
+                  .blackColor,
+          fontWeight: isTitle ?FontWeight.w700:FontWeight.w300),
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -684,15 +681,12 @@ class BasketScreenWidget extends StatelessWidget {
                               ),
                               5.height,
 
-                              Directionality(
-                                textDirection: TextDirection.ltr,
-                                child: Text(
-                                    '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
-                                  style: TextStyle(
-                                      color: AppColors.blackColor,
-                                      fontSize: AppConstants.smallFont,
-                                      fontWeight: FontWeight.w700),
-                                ),
+                              Text(
+                                  '${formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal)}',
+                                style: TextStyle(
+                                    color: AppColors.blackColor,
+                                    fontSize: AppConstants.smallFont,
+                                    fontWeight: FontWeight.w700),
                               ),
                               10.height,
                               Row(

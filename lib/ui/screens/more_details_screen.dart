@@ -780,13 +780,19 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-                                            if (_formKey.currentState
-                                                    ?.validate() ??
-                                                false) {
-                                              bloc.add(MoreDetailsEvent
-                                                  .registrationApiEvent(
-                                                      context: context));
-                                            }
+                                      if(state.selectCity != ''){
+                                        if (_formKey.currentState?.validate() ?? false) {
+                                          bloc.add(MoreDetailsEvent
+                                              .registrationApiEvent(
+                                              context: context));
+                                        }
+                                      }
+                                      else{
+                                        CustomSnackBar.showSnackBar(
+                                            context: context,
+                                            title: '${AppLocalizations.of(context)!.please_enter_city}',
+                                            type: SnackBarType.FAILURE);
+                                      }
                                           },
                                     fontColors: AppColors.whiteColor,
                                   ),

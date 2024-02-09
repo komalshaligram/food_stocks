@@ -73,6 +73,8 @@ class AppStrings {
   static const faxValString = 'faxVal';
   static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
+  static const cityValString = 'cityVal';
+
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
 
   //page parameters strings

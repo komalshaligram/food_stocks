@@ -154,19 +154,16 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                                       : AppConstants.mediumFont,
                                             ),
                                           ),
-                                          Directionality(
-                                            textDirection: TextDirection.ltr,
-                                            child: Text(
-                                                '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
-                                                style:
-                                                    AppStyles.rkRegularTextStyle(
-                                                        color:
-                                                            AppColors.whiteColor,
-                                                        size: AppConstants
-                                                            .normalFont,
-                                                        fontWeight:
-                                                            FontWeight.w700)),
-                                          ),
+                                          Text(
+                                              '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                      color:
+                                                          AppColors.whiteColor,
+                                                      size: AppConstants
+                                                          .normalFont,
+                                                      fontWeight:
+                                                          FontWeight.w700)),
                                         ],
                                       )
                                       ),
