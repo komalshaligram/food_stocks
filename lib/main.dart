@@ -66,26 +66,8 @@ class _MyAppState extends State<MyApp> {
       await AppConfig.initializeAppConfig(context);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
-    // Get the current patch number and print it to the console. It will be
-    // null if no patches are installed.
-  /*  shorebirdCodePush
-        .currentPatchNumber()
-        .then((value) => print('current patch number is $value'));
-    _checkForUpdates();*/
     super.initState();
   }
-
-/*
-
-  Future<void> _checkForUpdates() async {
-    // Check whether a patch is available to install.
-    final isUpdateAvailable = await shorebirdCodePush.isNewPatchAvailableForDownload();
-    if (isUpdateAvailable) {
-      // Download the new patch if it's available.
-      await shorebirdCodePush.downloadUpdateIfAvailable();
-    }
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
