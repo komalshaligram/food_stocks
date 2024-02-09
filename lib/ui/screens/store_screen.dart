@@ -343,7 +343,19 @@ class StoreScreenWidget extends StatelessWidget {
                                                                         .companiesList[
                                                                             index]
                                                                         .id ??
-                                                                    ''
+                                                                    '',
+                                                                AppStrings
+                                                                    .companyLogo: state
+                                                                    .companiesList[
+                                                                index]
+                                                                    .brandLogo ??
+                                                                    '',
+                                                                AppStrings
+                                                                    .companyName: state
+                                                                    .companiesList[
+                                                                index]
+                                                                    .brandName ??
+                                                                    '',
                                                               });
                                                         });
                                                   },

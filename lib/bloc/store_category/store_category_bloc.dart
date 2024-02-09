@@ -126,8 +126,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           debugPrint('product categories = ${response.data?.categories}');
           if (response.status == 200) {
             List<SearchModel> searchList = [];
-
-
             searchList.addAll(response.data?.categories?.map((category) =>
                 SearchModel(
                     searchId: category.id ?? '',
