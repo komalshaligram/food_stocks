@@ -380,7 +380,9 @@
   "vat": "מע\"מ",
   "close": "סגור",
   "read_condition":"מצב קריאה",
-  "bottle_deposit": "פקדון בקבוק"
+  "please_provide_valid_time" : "אנא הזן שעה תקינה"
+
+
 
 
 

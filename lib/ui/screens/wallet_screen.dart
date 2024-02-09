@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,10 +14,8 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/wallet_screen_shimmer_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/app_utils.dart';
-
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
-
 import '../utils/themes/app_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widget/balance_indicator.dart';
@@ -38,7 +35,6 @@ class WalletScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => WalletBloc()
         ..add(WalletEvent.getYearListEvent())
-        /*    ..add(WalletEvent.getWalletRecordEvent(context: context))*/
         ..add(WalletEvent.getOrderCountEvent(context: context))
         ..add(WalletEvent.checkLanguage()),
       child: WalletScreenWidget(),
@@ -184,7 +180,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 totalBalance: 100),
                                             6.height,
                                             Text(
-                                              '${AppLocalizations.of(context)!.currency}${state.balance.toString()}',
+                                              '${formatNumber(value: state.balance.toString() ,local: AppStrings.hebrewLocal)}',
                                               style:
                                                   AppStyles.rkRegularTextStyle(
                                                       size:
@@ -213,7 +209,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .total_credit,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString()}'),
+                                                        '${formatNumber(value: state.totalCredit.toString() , local:  AppStrings.hebrewLocal)}'),
                                               ),
                                               10.width,
                                               Flexible(
@@ -224,7 +220,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
+                                                        '${formatNumber(value: state.thisMonthExpense.toString(),local: AppStrings.hebrewLocal)}'),
                                               ),
                                             ],
                                           ),
@@ -234,23 +230,23 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                               Flexible(
                                                 child: DashBoardStatsWidget(
                                                     context: context,
-                                                    image: AppImagePath.expense,
+                                                    image: AppImagePath.orders,
                                                     title: AppLocalizations.of(
-                                                            context)!
-                                                        .last_months_expenses,
+                                                        context)!
+                                                        .this_months_orders,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${formatter(state.lastMonthExpense.toString())}'),
+                                                    '${state.orderThisMonth}'),
                                               ),
                                               10.width,
                                               Flexible(
                                                 child: DashBoardStatsWidget(
                                                     context: context,
-                                                    image: AppImagePath.orders,
+                                                    image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
                                                             context)!
-                                                        .this_months_orders,
+                                                        .last_months_expenses,
                                                     value:
-                                                        '${state.orderThisMonth}'),
+                                                        '${formatNumber(value: state.lastMonthExpense.toString() ,local: AppStrings.hebrewLocal)}'),
                                               ),
                                             ],
                                           ),
@@ -774,16 +770,24 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   ),
                 ],
               ),
+              //  10.width,
+
+              //  10.width,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.order
-                        ? '${formatNumber(value:state.walletTransactionsList[listIndex].amount ?? '0', local: AppStrings.hebrewLocal,isNegativePossible: true)}'
-                        : '${formatNumber(value: state.walletTransactionsList[listIndex].amount ?? '', local: AppStrings.hebrewLocal)}',
+                    getType(state.walletTransactionsList[listIndex].type
+                                .toString()) ==
+                            AppLocalizations.of(context)!.order
+                       ? '${'-'}${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].amount ?? '0').toString(), local: AppStrings.hebrewLocal)}'
+                        : '${formatNumber(value: (double.parse(state.walletTransactionsList[listIndex].amount ?? '').toString()), local: AppStrings.hebrewLocal)}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
-                        color: getType(state.walletTransactionsList[listIndex].type.toString()) == AppLocalizations.of(context)!.monthly_credit
+                        color: getType(state
+                                    .walletTransactionsList[listIndex].type
+                                    .toString()) ==
+                                AppLocalizations.of(context)!.monthly_credit
                             ? AppColors.mainColor
                             : AppColors.redColor,
                         fontWeight: FontWeight.w600),
@@ -791,7 +795,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   3.height,
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
-                      buttonValue: '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
+                      buttonValue:
+                          '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
                 ],
               ),
             ],

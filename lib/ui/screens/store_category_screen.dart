@@ -15,7 +15,6 @@ import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/common_search_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:food_stock/ui/widget/store_category_screen_planogram_shimmer_widget.dart';
 import 'package:food_stock/ui/widget/store_category_screen_subcategory_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -29,6 +28,7 @@ import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import '../widget/supplier_products_screen_shimmer_widget.dart';
 
 class StoreCategoryRoute {
   static Widget get route => const StoreCategoryScreen();
@@ -253,7 +253,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             header: RefreshWidget(),
                             footer: CustomFooter(
                               builder: (context, mode) =>
-                                  StoreCategoryScreenPlanoGramShimmerWidget(),
+                                  SupplierProductsScreenShimmerWidget(),
                             ),
                             enablePullUp: !state.isBottomOfPlanoGrams,
                             onRefresh: () {
@@ -276,9 +276,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
                                 children: [
-                                  state.isPlanogramShimmering
-                                      ? StoreCategoryScreenPlanoGramShimmerWidget()
-                                      : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty
+                                  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty
+                                      ? SupplierProductsScreenShimmerWidget()
+                                      : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering
                                       ? Container(
                                     height:
                                     getScreenHeight(context) -
@@ -338,8 +338,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               fontWeight: FontWeight.w600
                                           ),),
                                       ) : SizedBox(),
-                                      state.isPlanogramShimmering
-                                          ? StoreCategoryScreenPlanoGramShimmerWidget()
+                                       state.isPlanogramProductShimmering && state.planogramProductList.isEmpty
+                                          ? SupplierProductsScreenShimmerWidget()
                                           : state.planogramProductList.isEmpty
                                           ? SizedBox()
                                           : Container(

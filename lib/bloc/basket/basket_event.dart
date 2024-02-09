@@ -33,6 +33,10 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.updateImageIndexEvent({required int index}) =_updateImageIndexEvent;
   const factory BasketEvent.refreshListEvent({required BuildContext context}) =_refreshListEvent;
 
+  const factory BasketEvent.orderSendEvent({
+    required BuildContext context,
+  }) = _orderSendEvent;
+
 
 
 }

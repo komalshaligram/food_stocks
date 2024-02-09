@@ -8,6 +8,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:getwidget/getwidget.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 
@@ -166,17 +167,14 @@ String formatter(String currentBalance) {
   return '';
 }
 
-String splitNumber(String price,{bool isNegativePossible = false}) {
+String splitNumber(String price) {
   var splitPrice = price.split(".");
   if (splitPrice[1] == "00") {
     return splitPrice[0];
-    //return isNegativePossible?'${splitPrice[0]}-':splitPrice[0];
   } else {
     return price.toString();
-    //return !isNegativePossible?price.toString():'${price.toString()}-';
   }
 }
-
 
 extension StringCasingExtension on String {
   String toCapitalized() =>
@@ -191,12 +189,14 @@ extension StringCasingExtension on String {
 }
 
 
-String formatNumber({required String value, required String local,bool isNegativePossible = false}){
+String formatNumber({required String value, required String local , String symbol = ''}){
   String result = (NumberFormat.simpleCurrency(locale: local,).format(double.parse(value)));
-  debugPrint('result:$result');
- String result1 =  splitNumber(result,isNegativePossible:isNegativePossible);
-  return result1;
+ // String result = (NumberFormat.compactCurrency(locale: local,symbol: '₪', name: '-').format(double.parse(value)));
+
+ String result1 =  splitNumber(result);
+  return '${result1}${symbol}';
 }
+
 
 double vatCalculation({required double price , required double vat}){
  double result = price + ((price * vat)/100);
@@ -207,3 +207,4 @@ double saleCalculation({required double price , required double salePer}){
   double result = price - (price * (salePer/100));
   return result;
 }
+
