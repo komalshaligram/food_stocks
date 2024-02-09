@@ -130,7 +130,9 @@ class CompanyScreenWidget extends StatelessWidget {
                                                 AppStrings.companyIdString:
                                                     state.companiesList[index]
                                                             .id ??
-                                                        ''
+                                                        '',
+                                                AppStrings.companyName: state.companiesList[index].brandName??'',
+                                                AppStrings.companyLogo : state.companiesList[index].brandLogo??''
                                               });
                                         }),
                               ),

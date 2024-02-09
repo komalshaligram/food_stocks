@@ -48,6 +48,8 @@ class AppStrings {
   static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
   static const companyIdString = 'companyId';
+  static const companyName = 'companyName';
+  static const companyLogo = 'companyLogo';
   static const ascendingString = 'asc';
   static const descendingString = 'desc';
   static const planogramSortFieldString = 'planogramName';
