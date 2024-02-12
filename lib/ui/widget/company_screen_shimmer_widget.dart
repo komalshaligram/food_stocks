@@ -15,7 +15,7 @@ class CompanyScreenShimmerWidget extends StatelessWidget {
           itemCount: AppConstants.companyPageLimit,
           padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,childAspectRatio:0.9 ),
           itemBuilder: (context, index) =>
               buildCompanyListItem(context: context)),
     );

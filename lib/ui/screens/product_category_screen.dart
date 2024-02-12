@@ -128,7 +128,9 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                       horizontal: AppConstants.padding_10),
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3),
+                                          crossAxisCount: 3,
+                                      childAspectRatio: 0.9
+                                      ),
                                   itemBuilder: (context, index) =>
                                       buildProductCategoryListItem(
                                           index: index,
@@ -242,7 +244,8 @@ class ProductCategoryScreenWidget extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.symmetric(
             vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
+            horizontal: AppConstants.padding_5
+        ),
         decoration: BoxDecoration(
           borderRadius:
               BorderRadius.all(Radius.circular(AppConstants.radius_10)),
@@ -260,43 +263,48 @@ class ProductCategoryScreenWidget extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: Image.network(
-                  "${AppUrls.baseFileUrl}$categoryImage",
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.center,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress?.cumulativeBytesLoaded !=
-                        loadingProgress?.expectedTotalBytes) {
-                      return CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft:
-                                Radius.circular(AppConstants.radius_10),
-                                topRight:
-                                Radius.circular(AppConstants.radius_10)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(AppConstants.radius_10),topRight: Radius.circular(AppConstants.radius_10)
+          ),
+                  child: Image.network(
+                    "${AppUrls.baseFileUrl}$categoryImage",
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress?.cumulativeBytesLoaded !=
+                          loadingProgress?.expectedTotalBytes) {
+                        return CommonShimmerWidget(
+                          child: Container(
+                            height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft:
+                                  Radius.circular(AppConstants.radius_10),
+                                  topRight:
+                                  Radius.circular(AppConstants.radius_10)),
+                            ),
                           ),
+                        );
+                      }
+                      return child;
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      // debugPrint('product category list image error : $error');
+                      return Container(
+                        height: getScreenHeight(context),
+                        width: getScreenWidth(context),
+                        color: AppColors.whiteColor,
+                        // padding: EdgeInsets.only(bottom: AppConstants.padding_20),
+                        child: Image.asset(
+                          AppImagePath.imageNotAvailable5,
+                          fit: BoxFit.cover,
                         ),
                       );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    // debugPrint('product category list image error : $error');
-                    return Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      // padding: EdgeInsets.only(bottom: AppConstants.padding_20),
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -316,7 +324,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                   child: Text(
                     categoryName,
                     style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
+                        size: AppConstants.font_14,
                         color: AppColors.whiteColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

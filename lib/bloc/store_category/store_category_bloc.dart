@@ -53,9 +53,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
   String parentCategoryId = '';
   StoreCategoryBloc() : super(StoreCategoryState.initial()) {
     on<StoreCategoryEvent>((event, emit) async {
-
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _isCategoryEvent) {
-        emit(state.copyWith(isSubCategory: event.isSubCategory));
+        emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView()));
       }
       if (event is _ChangeCategoryExpansionEvent) {
 
@@ -551,8 +552,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               }
             }
             try {
-              SharedPreferencesHelper preferences = SharedPreferencesHelper(
-                  prefs: await SharedPreferences.getInstance());
+
               final res = await DioClient(event.context).post(
                   '${AppUrls.getAllCartUrl}${preferences.getCartId()}',
                   options: Options(headers: {
@@ -1233,6 +1233,13 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         catch(e){
           emit(state.copyWith(isLoadMore: false,isPlanogramProductShimmering: false));
         }
+      }
+
+      else if(event is _changeGridToListViewEvent){
+        preferences.setIsGridView(isGridView: !state.isGridView);
+        emit(state.copyWith(isGridView: !state.isGridView));
+
+
       }
     });
   }

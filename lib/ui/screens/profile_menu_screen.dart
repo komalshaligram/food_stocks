@@ -70,9 +70,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    15.height,
+                    10.height,
                     Container(
-                      height: 90,
+                      height: 110,
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
                       child: Row(
@@ -149,7 +149,12 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   state.UserCompanyLogoUrl.isEmpty
-                                      ? 0.width
+                                      ? SvgPicture.asset(
+                                AppImagePath.splashLogo,
+                                fit: BoxFit.cover,
+                                    height: 60,
+                                    width: 60,
+                              )
                                       : Expanded(
                                           child: CachedNetworkImage(
                                             placeholder: (context, url) => Container(
@@ -200,7 +205,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                             },
                                           ),
                                         ),
-                                  10.height,
+                                  5.height,
                                   Text(
                                     state.userName,
                                     style: AppStyles.rkRegularTextStyle(

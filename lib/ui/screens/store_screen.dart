@@ -196,7 +196,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: state.isCatVisible? 110:0,
+                                                height: state.isCatVisible? 125:0,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .productCategoryList
@@ -303,7 +303,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height:   state.isCompanyVisible?110:0,
+                                                height:   state.isCompanyVisible?125:0,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .companiesList.length,
@@ -374,12 +374,17 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              state.isSupplierVisible? buildListTitles(
+                                              state.isSupplierVisible ? buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
                                                       .suppliers,
-                                                  subTitle:
+                                                  subTitle: /*(state.suppliersList.data
+                                              ?.length ??
+                                              0) <
+                                              6
+                                              ? ''
+                                              : */
                                                       AppLocalizations.of(
                                                               context)!
                                                           .all_suppliers,
@@ -392,7 +397,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height:state.isSupplierVisible?  110:0,
+                                                height:state.isSupplierVisible?  125:0,
                                                 child: ListView.builder(
                                                   itemCount: state.suppliersList
                                                       .data?.length,
@@ -410,10 +415,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 .data?[index]
                                                                 .logo ??
                                                             '',
-                                                      /*  isHomePreference: state
+                                                    /*    isHomePreference:  (state.suppliersList.data != null )  ?  (state
                                                             .suppliersList.data?[index]
-                                                            . supplierDetail?.isHomePreference??
-                                                            false,*/
+                                                            .supplierDetail?.isHomePreference ??
+                                                            false) : false,*/
                                                         companyName: state
                                                                 .suppliersList
                                                                 .data?[index]
@@ -429,7 +434,10 @@ class StoreScreenWidget extends StatelessWidget {
                                                               arguments: {
                                                                 AppStrings
                                                                     .supplierIdString: state
-                                                                        .suppliersList.data?[index].id ??
+                                                                        .suppliersList
+                                                                        .data?[
+                                                                            index]
+                                                                        .id ??
                                                                     ''
                                                               });
                                                         });
@@ -472,7 +480,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 190,
+                                                height: 180,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .productSalesList.length,
@@ -598,7 +606,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 170,
+                                                height: 175,
                                                 child: ListView.builder(
                                                     itemCount: state
                                                         .recommendedProductsList
@@ -619,7 +627,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                                       index]
                                                                   .productStock ??
                                                               0,
-                                                          height: 150,
+                                                          height: 160,
                                                           width: 140,
                                                           productImage: state
                                                                   .recommendedProductsList[
@@ -726,7 +734,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 170,
+                                                height: 175,
                                                 child: ListView.builder(
                                                     itemCount: state
                                                         .previousOrderProductsList
@@ -742,7 +750,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     itemBuilder: (context,
                                                             index) =>
                                                         CommonProductItemWidget(
-                                                          height: 150,
+                                                          height: 160,
                                                           width: 140,
                                                           productStock: state
                                                                   .previousOrderProductsList[
@@ -782,39 +790,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                                     '');
                                                           },
                                                         )
-                                                    // buildRecommendationAndPreviousOrderProductsListItem(
-                                                    //                                 context: context,
-                                                    //                                 productImage: state
-                                                    //                                     .previousOrderProductsList[
-                                                    //                                 index]
-                                                    //                                     .mainImage ??
-                                                    //                                     '',
-                                                    //                                 productName: state
-                                                    //                                     .previousOrderProductsList[
-                                                    //                                 index]
-                                                    //                                     .productName ??
-                                                    //                                     '',
-                                                    //                                 totalSale: state
-                                                    //                                     .previousOrderProductsList[
-                                                    //                                 index]
-                                                    //                                     .totalSale ??
-                                                    //                                     0,
-                                                    //                                 price: state
-                                                    //                                     .previousOrderProductsList[
-                                                    //                                 index]
-                                                    //                                     .productPrice
-                                                    //                                     ?.toDouble() ??
-                                                    //                                     0.0,
-                                                    //                                 onButtonTap: () {
-                                                    //                                   showProductDetails(
-                                                    //                                       context: context,
-                                                    //                                       productId: state
-                                                    //                                           .previousOrderProductsList[
-                                                    //                                       index]
-                                                    //                                           .id ??
-                                                    //                                           '');
-                                                    //                                 },
-                                                    //                               )
                                                     ),
                                               ),
                                             ],
@@ -840,8 +815,11 @@ class StoreScreenWidget extends StatelessWidget {
                         bloc.add(StoreEvent.changeCategoryExpansion());
                       },
                       onSearchTap: () {
-                   //     bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
-                    /*    bloc.add(
+                    if(state.searchController.text != ''){
+                      bloc.add(StoreEvent.changeCategoryExpansion(isOpened: true));
+                    }
+
+                      /* bloc.add(
                             StoreEvent.globalSearchEvent(context: context));*/
                       },
                       onSearch: (String search) {
@@ -1249,10 +1227,13 @@ class StoreScreenWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont, color: AppColors.blackColor),
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+            ),
           ),
           GestureDetector(
             onTap: onTap,
@@ -1274,8 +1255,8 @@ class StoreScreenWidget extends StatelessWidget {
     return !isHomePreference
         ? 0.width
         : Container(
-      height: 90,
-      width: 90,
+      height: 150,
+      width: 105,
       margin: EdgeInsets.symmetric(
           horizontal: AppConstants.padding_5,
           vertical: AppConstants.padding_10),
@@ -1297,45 +1278,48 @@ class StoreScreenWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                top: AppConstants.padding_5,
-                left: AppConstants.padding_5,
-                right: AppConstants.padding_5,
-                bottom: AppConstants.padding_20,
+               // top: AppConstants.padding_5,
+               // left: AppConstants.padding_5,
+              //  right: AppConstants.padding_5,
+               // bottom: AppConstants.padding_20,
               ),
-              child: CachedNetworkImage(
-                imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
-                fit: BoxFit.contain,
-                height: 65,
-                width: 80,
-                alignment: Alignment.center,
-                placeholder: (context, url) {
-                  return CommonShimmerWidget(
-                    child: Container(
-                      height: 90,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(AppConstants.padding_10)),
+                child: CachedNetworkImage(
+                  imageUrl: "${AppUrls.baseFileUrl}$categoryImage",
+                  fit: BoxFit.cover,
+                  height: 140,
+                  width: 105,
+                  alignment: Alignment.center,
+                  placeholder: (context, url) {
+                    return CommonShimmerWidget(
+                      child: Container(
+                        height: 140,
+                        width: 105,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                        ),
+                        // alignment: Alignment.center,
+                        // child: CupertinoActivityIndicator(
+                        //   color: AppColors.blackColor,
+                        // ),
                       ),
-                      // alignment: Alignment.center,
-                      // child: CupertinoActivityIndicator(
-                      //   color: AppColors.blackColor,
-                      // ),
-                    ),
-                  );
-                },
-                errorWidget: (context, error, stackTrace) {
-                  // debugPrint('product category list image error : $error');
-                  return Container(
-                    // padding: EdgeInsets.only(
-                    //     bottom: AppConstants.padding_10, top: 0),
-                    child: Image.asset(
-                      AppImagePath.imageNotAvailable5,
-                      fit: BoxFit.cover,
-                      width: 90,
-                      height: 90,
-                    ),
-                  );
-                },
+                    );
+                  },
+                  errorWidget: (context, error, stackTrace) {
+                    // debugPrint('product category list image error : $error');
+                    return Container(
+                      // padding: EdgeInsets.only(
+                      //     bottom: AppConstants.padding_10, top: 0),
+                      child: Image.asset(
+                        AppImagePath.imageNotAvailable5,
+                        fit: BoxFit.cover,
+                        width: 140,
+                        height: 110,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Positioned(
@@ -1363,7 +1347,7 @@ class StoreScreenWidget extends StatelessWidget {
                   child: Text(
                     categoryName,
                     style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
+                        size: AppConstants.font_14,
                         color: AppColors.whiteColor),
                     maxLines: 2,
                     textAlign: TextAlign.center,
@@ -1598,8 +1582,8 @@ class StoreScreenWidget extends StatelessWidget {
     return !(isHomePreference ?? true)
         ? 0.width
         : Container(
-      height: 90,
-      width: 90,
+      height: 125,
+      width: 105,
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.symmetric(
           vertical: AppConstants.padding_10,
@@ -1626,13 +1610,13 @@ class StoreScreenWidget extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                 fit: BoxFit.scaleDown,
-                height: 70,
-                width: 90,
+                height: 105,
+                width: 105,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
-                      height: 90,
-                      width: 90,
+                      height: 105,
+                      width: 105,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
                       ),
@@ -1645,8 +1629,8 @@ class StoreScreenWidget extends StatelessWidget {
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
-                      width: 90,
-                      height: 90,
+                      width: 105,
+                      height: 105,
                     ),
                   );
                 },
@@ -1657,7 +1641,7 @@ class StoreScreenWidget extends StatelessWidget {
               left: 0,
               right: 0,
               child: Container(
-                height: 20,
+                height: 25,
                 // width: 90,
                 alignment: Alignment.center,
                 // margin:
@@ -1680,7 +1664,7 @@ class StoreScreenWidget extends StatelessWidget {
                   child: Text(
                     companyName,
                     style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_12,
+                        size: AppConstants.font_14,
                         color: AppColors.whiteColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -209,8 +209,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           gridDelegate:
                           SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              childAspectRatio: AppConstants
-                                  .productGridAspectRatio),
+                              childAspectRatio:   MediaQuery.of(context).size.width > 370 ?AppConstants
+                                  .productGridAspectRatio: AppConstants
+                                  .productGridAspectRatio1
+                          ),
                           itemBuilder: (context, index) =>
                               DelayedWidget(
                                 child: CommonProductItemWidget(

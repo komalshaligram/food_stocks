@@ -29,7 +29,7 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.productName,
       required this.totalSaleCount,
       required this.price,
-      required this.onButtonTap, this.productStock = 1});
+      required this.onButtonTap, this.productStock = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class CommonProductItemWidget extends StatelessWidget {
             Center(
               child: CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$productImage",
-                height: 70,
+                height: 69,
                 fit: BoxFit.fitHeight,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
@@ -91,22 +91,13 @@ class CommonProductItemWidget extends StatelessWidget {
             Text(
               productName,
               style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
+                  size: AppConstants.smallFont,
                   color: AppColors.blackColor,
                   fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            5.height,
-            (productStock.toString()) !='0' ? 0.width :Text(
-              AppLocalizations.of(context)!
-                  .out_of_stock1,
-              style: AppStyles.rkBoldTextStyle(
-                  size: AppConstants.font_12,
-                  color: AppColors.redColor,
-                  fontWeight: FontWeight.w400),
-            ),
-
+            2.height,
             Expanded(
               child: totalSaleCount == 0
                   ? 0.width
@@ -116,21 +107,30 @@ class CommonProductItemWidget extends StatelessWidget {
                           size: AppConstants.font_10,
                           color: AppColors.saleRedColor,
                           fontWeight: FontWeight.w600),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                     ),
             ),
-           // 5.height,
+            (productStock) != 0 ? 0.width :Text(
+              AppLocalizations.of(context)!
+                  .out_of_stock1,
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_12,
+                  color: AppColors.redColor,
+                  fontWeight: FontWeight.w400),
+            ),
+            3.height,
             Center(
               child: CommonProductButtonWidget(
+                width: 110,
                 title:
                     "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",
                 onPressed: onButtonTap,
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,
-                textSize: AppConstants.font_12,
+                textSize: AppConstants.font_14,
               ),
             )
           ],

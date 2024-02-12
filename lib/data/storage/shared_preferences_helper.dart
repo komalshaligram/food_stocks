@@ -20,6 +20,7 @@ class SharedPreferencesHelper {
   static const String apiPram = 'apiPram';
   static const String isCelebrationAnimation = 'isCelebrationAnimation';
   static const String orderId = 'orderId';
+  static const String gridView = 'gridView';
 
 
   final SharedPreferences prefs;
@@ -131,6 +132,9 @@ class SharedPreferencesHelper {
   Future<void> setOrderId({required String productOrderId}) async {
     await prefs.setString(orderId, productOrderId);
   }
+  Future<void> setIsGridView({required bool isGridView}) async {
+    await prefs.setBool(gridView, isGridView);
+  }
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
@@ -203,6 +207,9 @@ class SharedPreferencesHelper {
 
   String getOrderId() {
     return prefs.getString(orderId) ?? '';
+  }
+  bool getIsGridView() {
+    return prefs.getBool(gridView) ?? true;
   }
 
 

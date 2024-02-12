@@ -45,7 +45,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required List<PlanogramDatum> subCatPlanoGramsList,
     required bool isBottomOfProducts,
     required bool isPlanogramProductShimmering,
-
+    required bool isGridView,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -90,6 +90,7 @@ class StoreCategoryState with _$StoreCategoryState {
       subPlanogramPageNum:0,
       subPlanoGramsList:[],
     subProductPageNum: 0,
-      isPlanogramProductShimmering:false
+      isPlanogramProductShimmering:false,
+    isGridView: true
       );
 }
