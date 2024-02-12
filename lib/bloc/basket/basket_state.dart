@@ -17,6 +17,8 @@ class BasketState with _$BasketState {
     required bool isRemoveProcess,
     required double vatPercentage,
     required int supplierCount,
+    required double bottleTax,
+    required int? bottleQty,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -31,8 +33,10 @@ class BasketState with _$BasketState {
      language: 'he',
      cartCount: 0,
      isRemoveProcess: false,
-     vatPercentage: 1,
-     supplierCount: 1
+     vatPercentage: 0,
+     supplierCount: 1,
+     bottleQty: 0,
+     bottleTax: 0
 
 );
 }

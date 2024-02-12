@@ -92,8 +92,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                             color: AppColors.whiteColor.withOpacity(0.95),
                             boxShadow: [
                               BoxShadow(
-                                  color:
-                                      AppColors.shadowColor.withOpacity(0.20),
+                                  color: AppColors.shadowColor.withOpacity(0.20),
                                   blurRadius: AppConstants.blur_10),
                             ],
                             borderRadius: BorderRadius.all(
@@ -155,7 +154,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                              '${formatNumber(value: vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
+                                              '${formatNumber(value:vatCalculation(price: state.orderSummaryList.data?.cart?.first.totalAmount?? 0,vat: state.orderSummaryList.data?.vatPercentage ?? 0).toStringAsFixed(2),local: AppStrings.hebrewLocal)}',
                                               style:
                                                   AppStyles.rkRegularTextStyle(
                                                       color:

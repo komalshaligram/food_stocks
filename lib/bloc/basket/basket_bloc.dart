@@ -24,7 +24,6 @@ part 'basket_bloc.freezed.dart';
 class BasketBloc extends Bloc<BasketEvent, BasketState> {
   BasketBloc() : super(BasketState.initial()) {
     on<BasketEvent>((event, emit) async {
-
       SharedPreferencesHelper preferencesHelper =
           SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
@@ -51,7 +50,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 totalQuantity: element.totalQuantity,
                 productName: element.productDetails?.productName ?? '',
                 mainImage: element.productDetails?.mainImage ?? '',
-                totalPayment: double.parse(element.totalAmount?.toString() ?? '0'),
+                totalPayment:
+                    double.parse(element.totalAmount?.toString() ?? '0'),
                 cartProductId: element.cartProductId ?? '',
                 scales: element.productDetails?.scales ?? '',
                 weight: element.productDetails?.itemsWeight ?? 0,
@@ -63,10 +63,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     ? preferencesHelper.getCartCount()
                     : temp.length);
             emit(state.copyWith(
-               vatPercentage: response.data?.vatPercentage ?? 1,
-                basketProductList: temp,
-                isRefresh: !state.isRefresh,
-                totalPayment: response.data?.cart?.first.totalAmount ?? 0,
+              vatPercentage: response.data?.vatPercentage ?? 0,
+              bottleQty: response.data?.cart?.first.bottleQuantities,
+              bottleTax: response.data?.bottleTax ?? 0,
+              basketProductList: temp,
+              isRefresh: !state.isRefresh,
+              totalPayment: response.data?.cart?.first.totalAmount ?? 0,
               supplierCount: response.data?.cart?.first.suppliers ?? 1,
             ));
           } else {
@@ -134,13 +136,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message?.toLocalization() ?? response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
           }
-
-        } on ServerException {    emit(state.copyWith(isLoading: false));}
+        } on ServerException {
+          emit(state.copyWith(isLoading: false));
+        }
       } else if (event is _removeCartProductEvent) {
         emit(state.copyWith(isRemoveProcess: true));
         try {
@@ -158,12 +160,11 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             list = [...state.basketProductList];
             list.removeAt(event.listIndex);
             emit(state.copyWith(
-                basketProductList: list,
-                isRefresh: !state.isRefresh,
-                totalPayment: state.totalPayment - event.totalAmount,
+              basketProductList: list,
+              isRefresh: !state.isRefresh,
+              totalPayment: state.totalPayment - event.totalAmount,
               isRemoveProcess: false,
             ));
-
           } else {
             Navigator.pop(event.dialogContext);
             emit(state.copyWith(
@@ -174,9 +175,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(
             isRemoveProcess: false,
           ));
-          Navigator.pop(event.dialogContext);}
-      }
-      else if (event is _clearCartEvent) {
+          Navigator.pop(event.dialogContext);
+        }
+      } else if (event is _clearCartEvent) {
         emit(state.copyWith(isRemoveProcess: true));
         try {
           final res = await DioClient(event.context)
@@ -188,7 +189,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             list.clear();
             Navigator.pop(event.context);
             emit(state.copyWith(
-                basketProductList: list, isRefresh: !state.isRefresh,isRemoveProcess: false));
+                basketProductList: list,
+                isRefresh: !state.isRefresh,
+                isRemoveProcess: false));
           } else {
             Navigator.pop(event.context);
             emit(state.copyWith(isRemoveProcess: false));
@@ -197,20 +200,16 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           Navigator.pop(event.context);
           emit(state.copyWith(isRemoveProcess: false));
         }
-      }
-      else if (event is _SetCartCountEvent) {
-
+      } else if (event is _SetCartCountEvent) {
         await preferencesHelper.setCartCount(
-            count: event.isClearCart ? 0 : preferencesHelper.getCartCount() - 1);
-
-      }
-      else if (event is _updateImageIndexEvent) {
+            count:
+                event.isClearCart ? 0 : preferencesHelper.getCartCount() - 1);
+      } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(productImageIndex: event.index));
+      } else if (event is _refreshListEvent) {
+        Navigator.pop(event.context);
+        emit(state.copyWith(CartItemList: state.CartItemList));
       }
-     else if(event is _refreshListEvent) {
-       Navigator.pop(event.context);
-     emit(state.copyWith(CartItemList: state.CartItemList));
-}
 
       if (event is _orderSendEvent) {
         List<Product> ProductReqMap = [];
@@ -256,8 +255,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ??
-                      response.message!,
+                  response.message?.toLocalization() ?? response.message!,
                   event.context),
               type: SnackBarType.FAILURE,
             );
@@ -266,8 +264,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
+                    response.message?.toLocalization() ?? response.message!,
                     event.context),
                 type: SnackBarType.FAILURE);
             emit(state.copyWith(isLoading: false));
@@ -276,7 +273,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           emit(state.copyWith(isLoading: false));
         }
       }
-
-});
+    });
   }
 }

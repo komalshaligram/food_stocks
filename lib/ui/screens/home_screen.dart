@@ -110,7 +110,7 @@ class HomeScreenWidget extends StatelessWidget {
                                   height: 60,
                                   width: 60,
                                   decoration: BoxDecoration(
-                                    color: AppColors.whiteColor ,
+                                    //color: AppColors.whiteColor ,
                                     border: Border.all(
                                         color: AppColors.whiteColor,
                                         width: 0.5),
@@ -130,8 +130,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             placeholder: (context, url) => Center(
                                                 child:
                                                     const CupertinoActivityIndicator()),
-                                            imageUrl:
-                                                '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                            imageUrl: '${AppUrls.baseFileUrl}${state.UserImageUrl}',
                                             fit: BoxFit.cover,
                                             errorWidget: (context, url, error) {
                                               return Container(

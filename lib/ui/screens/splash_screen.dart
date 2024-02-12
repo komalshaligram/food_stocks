@@ -86,7 +86,7 @@ void appFlyerSetup() {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if(Platform.isAndroid){
-        //  appFlyerSetup();
+        // appFlyerSetup();
         }
         if (state.isRedirected) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
@@ -121,8 +121,8 @@ void appFlyerSetup() {
                     duration: Duration(milliseconds: 600),
                     child: SvgPicture.asset(
                       AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.19,
-                      width: getScreenWidth(context) * 0.54,
+                      height: getScreenHeight(context) * 0.30,
+                      width: getScreenWidth(context) * 0.65,
                     ),
                   ),
                 ),
