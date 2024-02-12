@@ -81,61 +81,20 @@ class SupplierDetail with _$SupplierDetail {
     @JsonKey(name: "categoriesIds") List<String?>? categoriesIds,
     @JsonKey(name: "suplierPolicy") List<SuplierPolicy>? suplierPolicy,
     @JsonKey(name: "hasDistributionPolicy") bool? hasDistributionPolicy,
-    @JsonKey(name: "distributionDetails")
-    DistributionDetails? distributionDetails,
+    @JsonKey(name: "isHomePreference") bool? isHomePreference,
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "createdAt") DateTime? createdAt,
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "totalIncome") int? totalIncome,
     @JsonKey(name: "incomeByThisMonth") int? incomeByThisMonth,
-    @JsonKey(name: "orders") int? orders,
-    @JsonKey(name:"isHomePreference") bool? isHomePreference
+
+
   }) = _SupplierDetail;
 
   factory SupplierDetail.fromJson(Map<String, dynamic> json) =>
       _$SupplierDetailFromJson(json);
 }
 
-@freezed
-class DistributionDetails with _$DistributionDetails {
-  const factory DistributionDetails({
-    @JsonKey(name: "center") A1? center,
-    @JsonKey(name: "north") A1? north,
-    @JsonKey(name: "south") A1? south,
-    @JsonKey(name: "judea") A1? judea,
-    @JsonKey(name: "west") A1? west,
-    @JsonKey(name: "east") A1? east,
-    @JsonKey(name: "A1") A1? a1,
-  }) = _DistributionDetails;
-
-  factory DistributionDetails.fromJson(Map<String, dynamic> json) =>
-      _$DistributionDetailsFromJson(json);
-}
-
-@freezed
-class A1 with _$A1 {
-  const factory A1({
-    @JsonKey(name: "Sunday") Day? sunday,
-    @JsonKey(name: "Monday") Day? monday,
-    @JsonKey(name: "Tuesday") Day? tuesday,
-    @JsonKey(name: "Wednesday") Day? wednesday,
-    @JsonKey(name: "Thursday") Day? thursday,
-    @JsonKey(name: "Friday") Day? friday,
-    @JsonKey(name: "Saturday") Day? saturday,
-  }) = _A1;
-
-  factory A1.fromJson(Map<String, dynamic> json) => _$A1FromJson(json);
-}
-
-@freezed
-class Day with _$Day {
-  const factory Day({
-    @JsonKey(name: "startTime") String? startTime,
-    @JsonKey(name: "endTime") String? endTime,
-  }) = _Day;
-
-  factory Day.fromJson(Map<String, dynamic> json) => _$DayFromJson(json);
-}
 
 @freezed
 class SuplierPolicy with _$SuplierPolicy {

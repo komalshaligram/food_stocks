@@ -34,11 +34,11 @@ class ConnectScreen extends StatelessWidget {
                   ),
                   SvgPicture.asset(
                     AppImagePath.splashLogo,
-                    height: getScreenHeight(context) * 0.12,
-                    width: getScreenWidth(context) * 0.47,
+                    height: getScreenHeight(context) * 0.18,
+                    width: getScreenWidth(context) * 0.48,
                   ),
                   SizedBox(
-                    height: getScreenHeight(context) * 0.07,
+                    height: getScreenHeight(context) * 0.01,
                   ),
                   CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.register,
