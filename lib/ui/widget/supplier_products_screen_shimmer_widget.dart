@@ -16,7 +16,7 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, childAspectRatio: 9 / 11),
+                crossAxisCount: 3, childAspectRatio: 0.9),
             itemBuilder: (context, index) =>
                 buildSupplierProductsListItem(context: context)),
       ),

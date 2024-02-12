@@ -202,7 +202,12 @@ class HomeScreenWidget extends StatelessWidget {
                                           );
                                         },
                                       )
-                                    : SizedBox(),
+                                    : SvgPicture.asset(
+                                  AppImagePath.splashLogo,
+                                  fit: BoxFit.cover,
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ],
                             ),
                           ),
@@ -553,7 +558,7 @@ class HomeScreenWidget extends StatelessWidget {
                                         }),
                                     SizedBox(
                                       width: getScreenWidth(context),
-                                      height: 170,
+                                      height: 190,
                                       child: ListView.builder(
                                           itemCount: state
                                               .recommendedProductsList
@@ -574,7 +579,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                 index]
                                                     .productStock ??
                                                     0,
-                                                height: 150,
+                                                height: 160,
                                                 width: 140,
                                                 productImage: state
                                                     .recommendedProductsList[
@@ -866,10 +871,13 @@ class HomeScreenWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont, color: AppColors.blackColor),
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
+            ),
           ),
           GestureDetector(
             onTap: onTap,

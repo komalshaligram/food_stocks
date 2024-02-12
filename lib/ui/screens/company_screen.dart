@@ -110,7 +110,9 @@ class CompanyScreenWidget extends StatelessWidget {
                                     horizontal: AppConstants.padding_10),
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3),
+                                        crossAxisCount: 3,
+                                        childAspectRatio: 0.9
+                                    ),
                                 itemBuilder: (context, index) =>
                                     buildCompanyListItem(
                                         index: index,
@@ -233,7 +235,7 @@ class CompanyScreenWidget extends StatelessWidget {
                 child: Text(
                   companyName,
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12, color: AppColors.whiteColor),
+                      size: AppConstants.font_14, color: AppColors.whiteColor),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,

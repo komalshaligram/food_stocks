@@ -221,7 +221,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           debugPrint('suppliers = ${response.data}');
           if (response.status == 200) {
-            bool productVisible = response.data!.any((element) => element.supplierDetail?.isHomePreference==true)??true;
+            bool productVisible = response.data?.any((element) => element.supplierDetail?.isHomePreference==true)??true;
             emit(state.copyWith(isSupplierVisible: productVisible));
 //            print('supplier visible:$productVisible');
             emit(state.copyWith(suppliersList: response, isShimmering: false));

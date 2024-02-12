@@ -98,4 +98,9 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
     required BuildContext context,
   }) = _getSubCategoryProductEvent;
 
+  const factory StoreCategoryEvent.changeGridToListViewEvent({
+    required bool isGridView,
+  }) = _changeGridToListViewEvent;
+
+
 }

@@ -87,6 +87,7 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     String? productNumber,
   double? productPrice,
   double? totalSale,
+    int? productStock,
 
   }) = _PlanogramAllProduct;
 

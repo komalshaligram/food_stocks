@@ -1,7 +1,7 @@
 class AppConstants{
 
   static const double buttonHeight = 50;
-  static const double buttonHeightSmall = 24;
+  static const double buttonHeightSmall = 27;
   static const double containerHeight = 40;
   static const double appBarHeight = 56;
   static const double containerHeight_80 = 80;
@@ -75,6 +75,7 @@ class AppConstants{
 
   //product grid aspect ratio
   static const double productGridAspectRatio = 9 / 13;
+  static const double productGridAspectRatio1 = 8 / 13;
   static const double saleProductAspectRatio = 8 / 13;
 
   //bottom nav space
