@@ -25,6 +25,7 @@ class GetAllCartResModel with _$GetAllCartResModel {
 class Data with _$Data {
   const factory Data({
     double? vatPercentage,
+    double? bottleTax,
     @JsonKey(name: "cart")
     List<Cart>? cart,
     @JsonKey(name: "data")
@@ -42,6 +43,7 @@ class Cart with _$Cart {
     @JsonKey(name: "totalAmount")
     double? totalAmount,
     int? suppliers,
+    int? bottleQuantities,
 
   }) = _Cart;
 

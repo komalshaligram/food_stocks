@@ -374,17 +374,12 @@ class StoreScreenWidget extends StatelessWidget {
                                               getScreenWidth(context).width,
                                           secondChild: Column(
                                             children: [
-                                              state.isSupplierVisible?   buildListTitles(
+                                              state.isSupplierVisible? buildListTitles(
                                                   context: context,
                                                   title: AppLocalizations.of(
                                                           context)!
                                                       .suppliers,
-                                                  subTitle: /*(state.suppliersList.data
-                                              ?.length ??
-                                              0) <
-                                              6
-                                              ? ''
-                                              : */
+                                                  subTitle:
                                                       AppLocalizations.of(
                                                               context)!
                                                           .all_suppliers,
@@ -415,9 +410,9 @@ class StoreScreenWidget extends StatelessWidget {
                                                                 .data?[index]
                                                                 .logo ??
                                                             '',
-                                                       /* isHomePreference: state
+                                                      /*  isHomePreference: state
                                                             .suppliersList.data?[index]
-                                                            .isHomePreference ??
+                                                            . supplierDetail?.isHomePreference??
                                                             false,*/
                                                         companyName: state
                                                                 .suppliersList
@@ -434,10 +429,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                               arguments: {
                                                                 AppStrings
                                                                     .supplierIdString: state
-                                                                        .suppliersList
-                                                                        .data?[
-                                                                            index]
-                                                                        .id ??
+                                                                        .suppliersList.data?[index].id ??
                                                                     ''
                                                               });
                                                         });
