@@ -480,7 +480,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 180,
+                                                height: 190,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .productSalesList.length,
@@ -493,7 +493,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemBuilder:
                                                       (context, index) {
                                                     return CommonProductSaleItemWidget(
-                                                        height: 170,
+                                                        height: 180,
                                                         width: 140,
                                                         productName: state.productSalesList[index].productName??'',
                                                         saleImage: state

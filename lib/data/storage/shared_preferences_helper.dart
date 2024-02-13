@@ -21,6 +21,7 @@ class SharedPreferencesHelper {
   static const String isCelebrationAnimation = 'isCelebrationAnimation';
   static const String orderId = 'orderId';
   static const String gridView = 'gridView';
+  static const String emailId = 'userEmailId';
 
 
   final SharedPreferences prefs;
@@ -136,6 +137,11 @@ class SharedPreferencesHelper {
     await prefs.setBool(gridView, isGridView);
   }
 
+  Future<void> setEmailId({required String userEmailId}) async {
+    await prefs.setString(emailId, userEmailId);
+  }
+
+
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
   }
@@ -211,6 +217,8 @@ class SharedPreferencesHelper {
   bool getIsGridView() {
     return prefs.getBool(gridView) ?? true;
   }
-
+  String getEmailId() {
+    return prefs.getString(emailId) ?? '';
+  }
 
 }

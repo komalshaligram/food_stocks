@@ -383,7 +383,8 @@
   "please_provide_valid_time" :"Please provide valid time",
   "please_enter_city" : "Please enter city",
   "remove" : "remove",
-  "issueremoved" : "Issue removed successfully."
+  "issueremoved" : "Issue removed successfully.",
+  "wallet_information_sent_to_your_email" : "The wallet information was sent to your email"
 
 
 

@@ -25,8 +25,9 @@ class WalletState with _$WalletState {
     required bool isProcess,
     required List<String> graphDataList,
     required bool isGraphProcess,
-
-
+    required bool isExportComplete,
+    required String userEmail,
+    required DateTime firstDateOfMonth,
   }) = _WalletState;
 
   factory WalletState.initial() => WalletState(
@@ -51,7 +52,11 @@ class WalletState with _$WalletState {
     expensePercentage: 0,
     isProcess: false,
     graphDataList: ["0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0",],
-    isGraphProcess: false
+    isGraphProcess: false,
+    isExportComplete: false,
+    userEmail: '',
+    firstDateOfMonth: DateTime.utc(DateTime.now().year, DateTime.now().month, 1)
+
       );
 }
 

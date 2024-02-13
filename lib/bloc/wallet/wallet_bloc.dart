@@ -26,6 +26,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_urls.dart';
+import '../../ui/widget/common_alert_dialog.dart';
 
 part 'wallet_event.dart';
 
@@ -45,9 +46,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
       DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(Duration(days: 1));
       if (event is _checkLanguage) {
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage()));
+        emit(state.copyWith(language: preferencesHelper.getAppLanguage(),isExportComplete: false));
       } else if (event is _getYearListEvent) {
-        emit(state.copyWith(isShimmering: true));
+        emit(state.copyWith(isShimmering: true, firstDateOfMonth: firstDayCurrentMonth));
         int formattedYear = dateParse.year.toInt();
         List<int> temp = [
           formattedYear,
@@ -172,7 +173,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         try {
           emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
-              isLoadMore: state.pageNum == 0 ? false : true));
+              isLoadMore: state.pageNum == 0 ? false : true,
+          ));
           AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
               userId: preferencesHelper.getUserId(),
               pageNum: state.pageNum + 1,
@@ -223,7 +225,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
         } on ServerException {
           emit(state.copyWith(isLoadMore: false, isShimmering: false));
         }
-      } else if (event is _getDateRangeEvent) {
+      }
+      else if (event is _getDateRangeEvent) {
         if (event.range != state.selectedDateRange) {
           List<Datum> temp =
               state.walletTransactionsList.toList(growable: true);
@@ -248,9 +251,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               isLoadMore: false,
               isShimmering: false));
         }
-      } else if (event is _getDropDownElementEvent) {
+      }
+      else if (event is _getDropDownElementEvent) {
         emit(state.copyWith(year: event.year));
-      } else if (event is _exportWalletTransactionEvent) {
+      }
+      else if (event is _exportWalletTransactionEvent) {
         emit(state.copyWith(isExportShimmering: true));
         try {
           File file;
@@ -280,25 +285,27 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
 
           ExportWalletTransactionsResModel response =
               ExportWalletTransactionsResModel.fromJson(res);
-          //   debugPrint('ExportWalletTransactions response  = ${response}');
+             debugPrint('ExportWalletTransactions response  = ${response}');
           if (response.status == 200) {
-            emit(state.copyWith(isExportShimmering: false));
+            emit(state.copyWith(isExportShimmering: false,isExportComplete: true,userEmail: preferencesHelper.getEmailId()));
             Uint8List pdf = base64.decode(response.data.toString());
             filePath =
                 '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
             file = File(filePath);
             // debugPrint('[path]   ${filePath}');
             await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-              CustomSnackBar.showSnackBar(
+          /*    CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
                         response.message!,
                     event.context),
                 type: SnackBarType.SUCCESS,
-              );
+              );*/
             });
-          } else {
+
+          }
+          else {
             emit(state.copyWith(isExportShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -319,7 +326,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           );
           emit(state.copyWith(isExportShimmering: false));
         }
-      } else if (event is _getOrderCountEvent) {
+      }
+
+      else if (event is _getOrderCountEvent) {
         try {
           int daysInMonth(DateTime date) => DateTimeRange(
                   start: DateTime(date.year, date.month, 1),
@@ -347,7 +356,13 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             emit(state.copyWith(orderThisMonth: response.data!.toInt()));
           }
         } on ServerException {
-        } catch (e) {}
+        } catch (e) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: e.toString(),
+            type: SnackBarType.FAILURE,
+          );
+        }
       }
     });
   }

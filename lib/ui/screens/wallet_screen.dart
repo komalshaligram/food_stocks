@@ -92,7 +92,65 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
     };
 
     return BlocListener<WalletBloc, WalletState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state.isExportComplete){
+          showDialog(
+            context:context,
+            builder: (context1) {
+              return Directionality(
+                textDirection:  state.language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
+                child: AlertDialog(
+                  title:  RichText(
+                    text: TextSpan(
+                      text: '${AppLocalizations.of(context)!.wallet_information_sent_to_your_email}' ' : ',
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.blackColor,),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text:
+                            '${state.userEmail}',
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.blackColor, size: AppConstants.smallFont,
+                              fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  actions: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context1),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                        alignment: Alignment.center,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            gradient: AppColors.appMainGradientColor,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Text(
+                          AppLocalizations.of(context)!.close,
+                          style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.whiteColor,
+                              size: AppConstants.font_14),
+                        ),
+                      ),
+                    ),
+                  )
+                  ],
+                ),
+              );
+            },).then((value) {
+
+            context.read<WalletBloc>().add(WalletEvent.checkLanguage());
+
+          });
+        }
+
+      },
       child: BlocBuilder<WalletBloc, WalletState>(
         builder: (context, state) {
           WalletBloc bloc = context.read<WalletBloc>();
@@ -469,7 +527,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                                 .exportWalletTransactionEvent(
                                                 context: context,
                                                 startDate:
-                                                    startDate ?? DateTime.now(),
+                                                    startDate ?? state.firstDateOfMonth,
                                                 endDate:
                                                     endDate ?? DateTime.now(),
                                               ))
