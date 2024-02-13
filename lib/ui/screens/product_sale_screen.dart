@@ -113,8 +113,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3,
-                                          childAspectRatio: AppConstants
-                                              .productGridAspectRatio),
+                                          childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                                          .productGridAspectRatio1: AppConstants
+                                          .productGridAspectRatio2
+                                      ),
                                   itemBuilder: (context, index) {
                                     return buildProductSaleListItem(
                                       index: index,

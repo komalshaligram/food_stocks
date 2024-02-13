@@ -196,6 +196,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               emit(state.copyWith(isLoading: false,companyLogo: preferencesHelper.getUserCompanyLogoUrl()));
               preferencesHelper.setUserCompanyLogoUrl(
                   logoUrl: response.data!.client!.logo.toString());
+              preferencesHelper.setEmailId(
+                  userEmailId: response.data?.client?.email ?? '');
+              preferencesHelper.setUserName(
+                  name: response
+                      .data?.client?.clientDetail?.ownerName ??
+                      '');
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -286,6 +292,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                       '');
               preferencesHelper.setUserId(
                   id: profileResModel.data?.client?.clientData?.id ?? '');
+              preferencesHelper.setEmailId(
+                  userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamed(
                 event.context,
