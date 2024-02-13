@@ -378,8 +378,8 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            basketRow('${AppLocalizations.of(context)!.bottle_deposit} X ${state.bottleQty.toString()}', '${(formatNumber(value:bottleDepositCalculation(deposit:state.bottleTax,qty: state.bottleQty?.toDouble()??0).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
-            Divider(),
+            state.bottleQty! >0? basketRow('${AppLocalizations.of(context)!.bottle_deposit} X ${state.bottleQty.toString()}', '${(formatNumber(value:bottleDepositCalculation(deposit:state.bottleTax,qty: state.bottleQty?.toDouble()??0).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'):Container(),
+            state.bottleQty! >0? Divider():Container(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.vat}', '${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
@@ -419,6 +419,7 @@ class BasketScreenWidget extends StatelessWidget {
       children: [
         Text(
          title,
+          textDirection: TextDirection.rtl,
           style: AppStyles.rkRegularTextStyle(
               size: AppConstants.font_14,
               color: AppColors
