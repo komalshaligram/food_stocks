@@ -35,19 +35,34 @@ class CircularButtonWidget extends StatelessWidget {
             width: 1,
           ),
         ),
-        child:
-        Row(
+     child:
+    /*  Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('${buttonName} : ',
+            Text('${buttonName}:',
               style: TextStyle(
                   color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
             ),
-            Text('${buttonValue}',
+            Text(buttonValue,
                 style: TextStyle(
                     color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)
             )
           ],
-        )
+        ),
+*/
+        RichText(
+          text: TextSpan(
+            text: '${buttonName}',
+            style: TextStyle(
+                color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w400),
+            children: <TextSpan>[
+              TextSpan(
+                  text:':${buttonValue}',
+                  style: TextStyle(
+                      color: AppColors.whiteColor, fontSize: AppConstants.font_14,fontWeight: FontWeight.w700)),
+            ],
+          ),
+        ),
       ),
     );
   }

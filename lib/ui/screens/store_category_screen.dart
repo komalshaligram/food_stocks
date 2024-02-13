@@ -377,10 +377,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             itemBuilder: (context, index) =>
                                                 DelayedWidget(
                                                   child: CommonProductItemWidget(
-                                                      productStock: (
-                                                          state
-                                                              .planogramProductList[index]
-                                                              .productStock ??
+                                                      productStock:
+                                                         int.parse(state.planogramProductList[index].productStock.toString()??
                                                               '0'),
                                                       productImage: state
                                                           .planogramProductList[index]
@@ -1626,7 +1624,7 @@ Widget buildSubCategoryListItem({required int index,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        '${AppLocalizations.of(context)!.price} : ${AppLocalizations
+                                        '${AppLocalizations.of(context)!.price}:${AppLocalizations
                                             .of(context)!
                                             .currency}${state
                                             .productSupplierList
@@ -1667,7 +1665,7 @@ Widget buildSubCategoryListItem({required int index,
                                       ),
                                       2.height,
                                       Text(
-                                        '${AppLocalizations.of(context)!.price}  :${AppLocalizations.of(context)!.currency} ${state
+                                        '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency} ${state
                                             .productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)
@@ -1891,7 +1889,7 @@ Widget buildSubCategoryListItem({required int index,
                                               MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  '${AppLocalizations.of(context)!.price} :${AppLocalizations
+                                                  '${AppLocalizations.of(context)!.price}:${AppLocalizations
                                                       .of(context)!.currency} ${state
                                                       .productSupplierList[index]
                                                       .basePrice
@@ -1989,7 +1987,7 @@ Widget buildSubCategoryListItem({required int index,
                                                 ),
                                                 2.height,
                                                 Text(
-                                                  '${AppLocalizations.of(context)!.price} :${AppLocalizations
+                                                  '${AppLocalizations.of(context)!.price}:${AppLocalizations
                                                       .of(context)!
                                                       .currency} ${state
                                                       .productSupplierList[index]

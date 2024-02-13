@@ -194,7 +194,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Text(
                           '${AppLocalizations.of(context)!.currently_this_Supplier_has_no_products}',
-
                           style: AppStyles.rkRegularTextStyle(
                               size: AppConstants.smallFont,
                               color: AppColors.textColor),
@@ -209,16 +208,14 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           gridDelegate:
                           SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              childAspectRatio:   MediaQuery.of(context).size.width > 370 ?AppConstants
+                              childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
                                   .productGridAspectRatio: AppConstants
                                   .productGridAspectRatio1
                           ),
-                          itemBuilder: (context, index) =>
-                              DelayedWidget(
+                          itemBuilder: (context, index) {
+                            return DelayedWidget(
                                 child: CommonProductItemWidget(
-                                    productStock: state
-                                        .productList[index]
-                                        .productStock.toString()??'',
+                                    productStock: int.parse(state.productList[index].productStock ?? 0),
                                             productImage: state
                                                     .productList[index]
                                                     .mainImage ??
@@ -240,7 +237,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                           .productId ??
                                                       '');
                                             }),
-                              )
+                              );
+                          }
                       ),
                     ],
                   ),
@@ -489,10 +487,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                     AppConstants.padding_30),
                                 alignment: Alignment.center,
                                 child: Text(
-                             '${AppLocalizations.of(context)!.suppliers_not_available}',
+                             '${AppLocalizations.of(context)!.out_of_stock1}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
+                                      color: AppColors.redColor),
                                 ),
                               )
                                   : buildSupplierSelection(
@@ -720,7 +718,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    '${AppLocalizations.of(context)!.price} : ${AppLocalizations
+                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations
                                                         .of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -749,7 +747,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    '${AppLocalizations.of(context)!.price} : ${AppLocalizations
+                                                    '${AppLocalizations.of(context)!.price}:${AppLocalizations
                                                         .of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -781,10 +779,10 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
-                      '${AppLocalizations.of(context)!.suppliers_not_available}',
+                      '${AppLocalizations.of(context)!.out_of_stock1}',
                         style: AppStyles.rkRegularTextStyle(
                             size: AppConstants.smallFont,
-                            color: AppColors.textColor),
+                            color: AppColors.redColor),
                       ),
                     )
                   : ConstrainedBox(

@@ -15,7 +15,6 @@ import 'package:food_stock/data/model/req_model/product_sales_req_model/product_
 import 'package:food_stock/data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
 import 'package:food_stock/data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import 'package:food_stock/data/model/res_model/company_res_model/company_res_model.dart';
-import 'package:food_stock/data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import 'package:food_stock/data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import 'package:food_stock/data/model/res_model/product_sales_res_model/product_sales_res_model.dart';

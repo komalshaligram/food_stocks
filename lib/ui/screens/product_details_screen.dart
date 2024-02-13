@@ -116,8 +116,9 @@ class _ProductDetailsScreenWidgetState
                       ? CupertinoActivityIndicator()
                       : CircularButtonWidget(
                           buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue:
-                              '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
+                          buttonValue: '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
+
+                    /*'${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}'*/,
                         ),
                 ),
                 onTap: () {
@@ -281,7 +282,7 @@ class _ProductDetailsScreenWidgetState
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                    '${' : '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
+                                                    '${': '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
                                                         color: AppColors
@@ -1020,7 +1021,7 @@ class _ProductDetailsScreenWidgetState
                                    isFromConnectScreen: true,
                                    width:120,
                                    buttonText:
-                                   AppLocalizations.of(context)!.remove,
+                                   AppLocalizations.of(context)!.issue_remove,
                                    bGColor: AppColors.redColor,
                                    isLoading: state.isRemoveProcess,
                                    fontColors: AppColors.redColor,

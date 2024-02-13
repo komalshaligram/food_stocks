@@ -97,51 +97,48 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
           showDialog(
             context:context,
             builder: (context1) {
-              return Directionality(
-                textDirection:  state.language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
-                child: AlertDialog(
-                  title:  RichText(
-                    text: TextSpan(
-                      text: '${AppLocalizations.of(context)!.wallet_information_sent_to_your_email}' ' : ',
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_14,
-                        color: AppColors.blackColor,),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text:
-                            '${state.userEmail}',
-                          style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.blackColor, size: AppConstants.smallFont,
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  actions: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context1),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                        alignment: Alignment.center,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            gradient: AppColors.appMainGradientColor,
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: Text(
-                          AppLocalizations.of(context)!.close,
-                          style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.whiteColor,
-                              size: AppConstants.font_14),
+              return AlertDialog(
+                title:  RichText(
+                  text: TextSpan(
+                    text: '${AppLocalizations.of(context)!.wallet_information_sent_to_your_email}' ':',
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.blackColor,),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text:
+                          '${state.userEmail}',
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.blackColor, size: AppConstants.smallFont,
+                            fontWeight: FontWeight.w600
                         ),
                       ),
-                    ),
-                  )
-                  ],
+                    ],
+                  ),
                 ),
+
+                actions: [
+                Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context1),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      alignment: Alignment.center,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          gradient: AppColors.appMainGradientColor,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        AppLocalizations.of(context)!.close,
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.whiteColor,
+                            size: AppConstants.font_14),
+                      ),
+                    ),
+                  ),
+                )
+                ],
               );
             },).then((value) {
 
@@ -819,7 +816,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   Text(
             getType(state.walletTransactionsList[listIndex].type
               .toString()) ==
-             AppLocalizations.of(context)!.order ? '${getType(state.walletTransactionsList[listIndex].type.toString())} : ${state.walletTransactionsList[listIndex].orderId}' :
+             AppLocalizations.of(context)!.order ? '${getType(state.walletTransactionsList[listIndex].type.toString())}:${state.walletTransactionsList[listIndex].orderId}' :
             '${getType(state.walletTransactionsList[listIndex].type.toString())}',
                     style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_12, color: AppColors.blueColor),
@@ -851,8 +848,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   3.height,
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
-                      buttonValue:
-                          '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
+          buttonValue: '${AppLocalizations.of(context)!.currency}${(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}',)
+
+          //    '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
                 ],
               ),
             ],
