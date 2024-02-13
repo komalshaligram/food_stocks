@@ -48,7 +48,7 @@ class CommonProductButtonWidget extends StatelessWidget {
         //  color: bgColor,
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(
-              Radius.circular(borderRadius ?? AppConstants.radius_10))),
+              Radius.circular(AppConstants.radius_7 ?? AppConstants.radius_10))),
       child: GestureDetector(
         onDoubleTap: onPressed,
         onTap: () {

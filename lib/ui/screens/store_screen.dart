@@ -303,7 +303,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height:   state.isCompanyVisible?125:0,
+                                                height:   state.isCompanyVisible ? 130:0,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .companiesList.length,
@@ -397,7 +397,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }):Container(),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height:state.isSupplierVisible?  125:0,
+                                                height:state.isSupplierVisible?  130:0,
                                                 child: ListView.builder(
                                                   itemCount: state.suppliersList
                                                       .data?.length,
@@ -856,6 +856,7 @@ class StoreScreenWidget extends StatelessWidget {
                         itemCount: state.searchList.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
+                          print('searchList______${state.searchList}');
                           return _buildSearchItem(
                               context: context,
                               searchName: state.searchList[index].name,
@@ -1582,7 +1583,7 @@ class StoreScreenWidget extends StatelessWidget {
     return !(isHomePreference ?? true)
         ? 0.width
         : Container(
-      height: 125,
+      height: 150,
       width: 105,
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.symmetric(
@@ -1610,12 +1611,12 @@ class StoreScreenWidget extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$companyLogo",
                 fit: BoxFit.scaleDown,
-                height: 105,
+                height: 110,
                 width: 105,
                 placeholder: (context, url) {
                   return CommonShimmerWidget(
                     child: Container(
-                      height: 105,
+                      height: 110,
                       width: 105,
                       decoration: BoxDecoration(
                         color: AppColors.whiteColor,
@@ -1629,7 +1630,7 @@ class StoreScreenWidget extends StatelessWidget {
                     child: Image.asset(
                       AppImagePath.imageNotAvailable5,
                       fit: BoxFit.cover,
-                      width: 105,
+                      width: 110,
                       height: 105,
                     ),
                   );
@@ -2078,7 +2079,7 @@ class StoreScreenWidget extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations
                                             .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex == -2)
@@ -2115,7 +2116,7 @@ class StoreScreenWidget extends StatelessWidget {
                                       ),
                                       2.height,
                                       Text(
-                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                        '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations
                                             .of(context)!.currency}${state.productSupplierList
                                             .firstWhere((supplier) =>
                                         supplier.selectedIndex >= 0)

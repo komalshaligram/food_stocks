@@ -383,7 +383,7 @@
   "bottle_deposit": "פקדון בקבוק",
   "please_provide_valid_time" : "אנא הזן שעה תקינה",
   "please_enter_city" : "נא להיכנס לעיר",
-  "remove" : "הסר",
+  "issue_remove" : "הסר",
   "issueremoved" : "הבעיה הוסרה בהצלחה",
   "wallet_information_sent_to_your_email" : "קובץ תנועות האנרק שלח נשלח למייל שלך"
 

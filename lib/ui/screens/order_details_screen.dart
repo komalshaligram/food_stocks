@@ -55,7 +55,6 @@ class OrderDetailsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
         builder: (context, state) {
-          print('BUILD');
           return Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
@@ -75,8 +74,9 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           ? SizedBox()
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
-                              buttonValue:
-                              '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                          buttonValue: '${AppLocalizations.of(context)!.currency}${(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0')}'
+
+                             // '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                             ),
                 ),
                 onTap: () {

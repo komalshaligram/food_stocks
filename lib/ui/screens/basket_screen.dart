@@ -378,7 +378,7 @@ class BasketScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            basketRow('${AppLocalizations.of(context)!.bottle_deposit} X ${state.bottleQty.toString()}', '${(formatNumber(value:bottleDepositCalculation(deposit:state.bottleTax,qty: state.bottleQty?.toDouble()??0).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
+            basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.bottleQty.toString()}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.bottleQty.toString()}${'X'}', '${(formatNumber(value:bottleDepositCalculation(deposit:state.bottleTax,qty: state.bottleQty?.toDouble()??0).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
