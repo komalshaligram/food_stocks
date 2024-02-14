@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -50,7 +49,6 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('issue_____${issue}');
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(isNavigateToProductDetailString
@@ -116,9 +114,10 @@ class _ProductDetailsScreenWidgetState
                       ? CupertinoActivityIndicator()
                       : CircularButtonWidget(
                           buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue: '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
+                          buttonValue:
+                        //  '${AppLocalizations.of(context)!.currency}${(state.orderData.totalVatAmount?.toStringAsFixed(2) ?? '0')}'
 
-                    /*'${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}'*/,
+                    '${formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(2)) ?? '0', local: AppStrings.hebrewLocal)}',
                         ),
                 ),
                 onTap: () {
@@ -232,7 +231,7 @@ class _ProductDetailsScreenWidgetState
                                                 AppColors.iconBGColor,
                                             borderCoder:
                                                 AppColors.lightBorderColor,
-                                            flexValue: 5,
+                                            flexValue: 4,
                                             maxLine: 2,
                                             columnPadding: 7,
                                             title: AppLocalizations.of(context)!
@@ -256,7 +255,7 @@ class _ProductDetailsScreenWidgetState
                                                 AppColors.iconBGColor,
                                             borderCoder:
                                                 AppColors.lightBorderColor,
-                                            flexValue: 3,
+                                            flexValue: 4,
                                             title: AppLocalizations.of(context)!
                                                 .total_order,
                                             value:
@@ -271,6 +270,12 @@ class _ProductDetailsScreenWidgetState
                                         ],
                                       ),
                                       15.height,
+
+
+                                      basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}'),
+                                      3.height,
+                                      basketRow('${AppLocalizations.of(context)!.vat}', '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}'),
+                                      5.height,
                                       RichText(
                                         text: TextSpan(
                                           text: AppLocalizations.of(context)!
@@ -282,15 +287,15 @@ class _ProductDetailsScreenWidgetState
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                    '${': '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
+                                                '${': '}${state.orderBySupplierProduct.supplierOrderNumber ?? '0'}',
                                                 style: AppStyles
                                                     .rkRegularTextStyle(
-                                                        color: AppColors
-                                                            .blackColor,
-                                                        size: AppConstants
-                                                            .font_14,
-                                                        fontWeight:
-                                                            FontWeight.w700)),
+                                                    color: AppColors
+                                                        .blackColor,
+                                                    size: AppConstants
+                                                        .font_14,
+                                                    fontWeight:
+                                                    FontWeight.w700)),
                                           ],
                                         ),
                                       ),
@@ -472,7 +477,7 @@ class _ProductDetailsScreenWidgetState
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
-        return Container(
+        return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ? Container(
           margin: EdgeInsets.all(AppConstants.padding_10),
           padding: EdgeInsets.symmetric(
               vertical: AppConstants.padding_5,
@@ -666,7 +671,7 @@ class _ProductDetailsScreenWidgetState
                                     : 4
                                     : 0));
                       },
-                      child: Container(
+                      child:  Container(
                         //margin: EdgeInsets.all(AppConstants.padding_10),
                         padding: EdgeInsets.symmetric(
                             vertical: AppConstants.padding_5,
@@ -717,7 +722,7 @@ class _ProductDetailsScreenWidgetState
               ],
             ),
           ),
-        );
+        ) : 0.width;
       },
     );
   }
@@ -1255,6 +1260,33 @@ class _ProductDetailsScreenWidgetState
           );
         },
       ),
+    );
+  }
+
+  Widget basketRow(String title,String amount,{bool isTitle = false}){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.mediumFont,
+              color: AppColors
+                  .blackColor,
+          fontWeight: FontWeight.bold),
+        ),
+        20.width,
+        Text(
+          amount,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.mediumFont,
+              color: AppColors
+                  .blackColor,
+              fontWeight:  FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+
+        ),
+      ],
     );
   }
 }

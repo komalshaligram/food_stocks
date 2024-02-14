@@ -601,7 +601,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               SupplierProductsEvent
                                   .changeSupplierSelectionExpansionEvent());
                         },
-                        child: Row(
+                        child: state.productSupplierList.length > 1 ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -617,7 +617,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             )
                           ],
-                        ),
+                        ) : 0.width,
                       ),
                     ),
                     state.productSupplierList

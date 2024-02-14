@@ -526,7 +526,7 @@ class ReorderScreenWidget extends StatelessWidget {
                           context.read<ReorderBloc>().add(ReorderEvent
                               .changeSupplierSelectionExpansionEvent());
                         },
-                        child: Row(
+                        child: state.productSupplierList.length > 1 ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -542,7 +542,7 @@ class ReorderScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             )
                           ],
-                        ),
+                        ) : 0.width,
                       ),
                     ),
                     state.productSupplierList

@@ -10,7 +10,7 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: AppConstants.productSubCategoryPageLimit,
+      itemCount: 10,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {

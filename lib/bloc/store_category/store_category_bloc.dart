@@ -1067,6 +1067,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 searchId: supplier.productId ?? '',
                 name: supplier.productName ?? '',
                 searchType: SearchTypes.product,
+               productStock:  int.parse(supplier.productStock ?? 0.toString()),
                 image: supplier.mainImage ?? ''))
                 .toList() ??
                 []);

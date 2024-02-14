@@ -384,7 +384,11 @@
   "please_enter_city" : "Please enter city",
   "issue_remove" : "Remove",
   "issueremoved" : "Issue removed successfully.",
-  "wallet_information_sent_to_your_email" : "The wallet information was sent to your email"
+  "wallet_information_sent_to_your_email" : "The wallet information was sent to your email",
+  "form_date" : "From Date",
+  "until_date" : "Until Date",
+
+
 
 
 

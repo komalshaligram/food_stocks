@@ -382,9 +382,9 @@ class BasketScreenWidget extends StatelessWidget {
             Divider(),
             basketRow('${AppLocalizations.of(context)!.sub_total}', '${(formatNumber(value: (state.totalPayment.toStringAsFixed(2)), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.vat}', '${(formatNumber(value: (state.totalPayment.toDouble() * state.vatPercentage/100).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
+            basketRow('${AppLocalizations.of(context)!.vat}', '${(formatNumber(value: totalVatAmountCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}'),
             Divider(),
-            basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble()??0,deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
+            basketRow('${AppLocalizations.of(context)!.total}', '${(formatNumber(value: vatCalculation(price: state.totalPayment, vat:state.vatPercentage,qty: state.bottleQty?.toDouble() ?? 0, deposit: state.bottleTax).toStringAsFixed(2), local: AppStrings.hebrewLocal))}',isTitle: true),
             Divider(),
             CustomButtonWidget(
               buttonText: AppLocalizations.of(context)!.submit,

@@ -8,6 +8,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/search_model/search_model.dart';
+import 'package:food_stock/main.dart';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -59,7 +60,9 @@ class StoreScreen extends StatelessWidget {
 }
 
 class StoreScreenWidget extends StatelessWidget {
-  const StoreScreenWidget({Key? key}) : super(key: key);
+   StoreScreenWidget({Key? key}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -493,6 +496,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemBuilder:
                                                       (context, index) {
                                                     return CommonProductSaleItemWidget(
+
                                                         height: 180,
                                                         width: 140,
                                                         productName: state.productSalesList[index].productName??'',
@@ -855,9 +859,9 @@ class StoreScreenWidget extends StatelessWidget {
                           : ListView.builder(
                         itemCount: state.searchList.length,
                         shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          print('searchList______${state.searchList}');
+                        itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                            productStock : state.searchList[index].productStock,
                               context: context,
                               searchName: state.searchList[index].name,
                               searchImage: state.searchList[index].image,
@@ -1082,7 +1086,7 @@ class StoreScreenWidget extends StatelessWidget {
     required bool isMoreResults,
     required void Function() onTap,
     required void Function() onSeeAllTap,
-    bool? isLastItem,
+    bool? isLastItem, required int productStock,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1118,6 +1122,7 @@ class StoreScreenWidget extends StatelessWidget {
                           color: AppColors.blackColor,
                           fontWeight: FontWeight.w500),
                     ),
+
               isMoreResults
                   ? GestureDetector(
                 onTap: onSeeAllTap,
@@ -1136,7 +1141,7 @@ class StoreScreenWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-            height: 35,
+            height: (productStock) != 0 ? 35 : 50,
             decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 border: Border(
@@ -1196,17 +1201,32 @@ class StoreScreenWidget extends StatelessWidget {
                   ),
                 ),
                 10.width,
-                Expanded(
-                  child: Text(
-                    searchName,
-                    style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_12,
-                      color: AppColors.blackColor,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        searchName,
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.blackColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    (productStock) != 0 ? 0.width : Text(
+                      AppLocalizations.of(context)!
+                          .out_of_stock1,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_12,
+                          color: AppColors.redColor,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
                 ),
+
               ],
             ),
           ),
@@ -1732,200 +1752,198 @@ class StoreScreenWidget extends StatelessWidget {
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocProvider.value(
-                  value: context.read<StoreBloc>(),
-                  child: BlocBuilder<StoreBloc, StoreState>(
-                    builder: (context, state) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppConstants.radius_30),
-                            topRight: Radius.circular(AppConstants.radius_30),
-                          ),
-                          color: AppColors.whiteColor,
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                                  ? Center(
-                                      child: Text(
-                                          AppLocalizations.of(context)!.no_data,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.normalFont,
-                                            color: AppColors.greyColor,
-                                            fontWeight: FontWeight.w500,
-                                          )),
-                                    )
-                                  : CommonProductDetailsWidget(
-                                      context: context,
-                                      productImageIndex: state.imageIndex,
-                                      onPageChanged: (index, p1) {
-                                        context.read<StoreBloc>().add(
-                                            StoreEvent.updateImageIndexEvent(
-                                                index: index));
-                                      },
-                                      productImages: [
-                                        state.productDetails.first.mainImage ??
-                                            '',
-                                        ...state.productDetails.first.images
-                                                ?.map((image) =>
-                                                    image.imageUrl ?? '') ??
-                                            []
-                                      ],
-                                      productPerUnit: state.productDetails.first
+              return BlocBuilder<StoreBloc, StoreState>(
+                builder: (context, state) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppConstants.radius_30),
+                        topRight: Radius.circular(AppConstants.radius_30),
+                      ),
+                      color: AppColors.whiteColor,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Scaffold(
+                      body: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                              ? Center(
+                                  child: Text(
+                                      AppLocalizations.of(context)!.no_data,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.greyColor,
+                                        fontWeight: FontWeight.w500,
+                                      )),
+                                )
+                              : CommonProductDetailsWidget(
+                                  context: context,
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context.read<StoreBloc>().add(
+                                        StoreEvent.updateImageIndexEvent(
+                                            index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ??
+                                        '',
+                                    ...state.productDetails.first.images
+                                            ?.map((image) =>
+                                                image.imageUrl ?? '') ??
+                                        []
+                                  ],
+                                  productPerUnit: state.productDetails.first
+                                          .numberOfUnit ??
+                                      0,
+                                  productUnitPrice: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .totalPrice,
+                                  productName: state.productDetails.first
+                                          .productName ??
+                                      '',
+                                  productCompanyName: state
+                                          .productDetails.first.brandName ??
+                                      '',
+                                  productDescription: parse(state
+                                                  .productDetails
+                                                  .first
+                                                  .productDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  productSaleDescription: parse(state
+                                                  .productDetails
+                                                  .first
+                                                  .productDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  productPrice: state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .quantity *
+                                      (state.productDetails.first
                                               .numberOfUnit ??
-                                          0,
-                                      productUnitPrice: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice,
-                                      productName: state.productDetails.first
-                                              .productName ??
-                                          '',
-                                      productCompanyName: state
-                                              .productDetails.first.brandName ??
-                                          '',
-                                      productDescription: parse(state
-                                                      .productDetails
-                                                      .first
-                                                      .productDescription ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      productSaleDescription: parse(state
-                                                      .productDetails
-                                                      .first
-                                                      .productDescription ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      productPrice: state
-                                              .productStockList[
-                                                  state.productStockUpdateIndex]
-                                              .totalPrice *
-                                          state
-                                              .productStockList[
-                                                  state.productStockUpdateIndex]
-                                              .quantity *
-                                          (state.productDetails.first
-                                                  .numberOfUnit ??
-                                              0),
-                                      productScaleType: state.productDetails
-                                              .first.scales?.scaleType ??
-                                          '',
-                                      productWeight: state
-                                              .productDetails.first.itemsWeight
-                                              ?.toDouble() ??
-                                          0.0,
-                                      isNoteOpen: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .isNoteOpen,
-                                      onNoteToggleChanged: () {
-                                        context.read<StoreBloc>().add(
-                                            StoreEvent.toggleNoteEvent(
-                                                isBarcode: isBarcode ?? false));
-                                      },
-                                      supplierWidget: state
-                                              .productSupplierList.isEmpty
-                                          ? Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      top: BorderSide(
-                                                          color: AppColors
-                                                              .borderColor
-                                                              .withOpacity(0.5),
-                                                          width: 1))),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: AppConstants
-                                                          .padding_30),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                '${AppLocalizations.of(context)!.out_of_stock}',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .smallFont,
-                                                        color:
-                                                            AppColors.redColor),
-                                              ),
-                                            )
-                                          : buildSupplierSelection(
-                                              context: context),
-                                      productStock: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .stock,
-                                      isRTL: context.rtl,
-                                      isSupplierAvailable:
-                                          state.productSupplierList.isEmpty
-                                              ? false
-                                              : true,
-                                      scrollController: scrollController,
-                                      productQuantity: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .quantity,
-                                      onQuantityChanged: (quantity) {
-                                        context.read<StoreBloc>().add(
-                                            StoreEvent.updateQuantityOfProduct(
-                                                context: context1,
-                                                quantity: quantity));
-                                      },
-                                      onQuantityIncreaseTap: () {
-                                        context.read<StoreBloc>().add(StoreEvent
-                                            .increaseQuantityOfProduct(
-                                                context: context1));
-                                      },
-                                      onQuantityDecreaseTap: () {
-                                        context.read<StoreBloc>().add(StoreEvent
-                                            .decreaseQuantityOfProduct(
-                                                context: context1));
-                                      },
-                                      noteController: state.noteController,
-                                      // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                      onNoteChanged: (newNote) {
-                                        context.read<StoreBloc>().add(
-                                            StoreEvent.changeNoteOfProduct(
-                                                newNote: newNote));
-                                      },
-                                      // isLoading: state.isLoading,
-                                      /*onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context.read<StoreBloc>().add(
-                                    StoreEvent.addToCartProductEvent(
-                                        context: context1));
-                              }*/
-                                    ),
-                          bottomNavigationBar: state.isProductLoading
-                              ? 0.height
-                              : CommonProductDetailsButton(
-                                  isLoading: state.isLoading,
-                                  isSupplierAvailable:
-                                      state.productSupplierList.isEmpty
-                                          ? false
-                                          : true,
+                                          0),
+                                  productScaleType: state.productDetails
+                                          .first.scales?.scaleType ??
+                                      '',
+                                  productWeight: state
+                                          .productDetails.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
+                                  isNoteOpen: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context.read<StoreBloc>().add(
+                                        StoreEvent.toggleNoteEvent(
+                                            isBarcode: isBarcode ?? false));
+                                  },
+                                  supplierWidget: state
+                                          .productSupplierList.isEmpty
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: AppColors
+                                                          .borderColor
+                                                          .withOpacity(0.5),
+                                                      width: 1))),
+                                          padding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: AppConstants
+                                                      .padding_30),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.out_of_stock}',
+                                            style: AppStyles
+                                                .rkRegularTextStyle(
+                                                    size: AppConstants
+                                                        .smallFont,
+                                                    color:
+                                                        AppColors.redColor),
+                                          ),
+                                        )
+                                      : buildSupplierSelection(
+                                          context: context),
                                   productStock: state
                                       .productStockList[
                                           state.productStockUpdateIndex]
                                       .stock,
-                                  onAddToOrderPressed: state.isLoading
-                                      ? null
-                                      : () {
-                                          context.read<StoreBloc>().add(
-                                              StoreEvent.addToCartProductEvent(
-                                                  context: context1));
-                                        }),
-                        ),
-                      );
-                    },
-                  ));
+                                  isRTL: context.rtl,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  scrollController: scrollController,
+                                  productQuantity: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .quantity,
+                                  onQuantityChanged: (quantity) {
+                                    context.read<StoreBloc>().add(
+                                        StoreEvent.updateQuantityOfProduct(
+                                            context: context1,
+                                            quantity: quantity));
+                                  },
+                                  onQuantityIncreaseTap: () {
+                                    context.read<StoreBloc>().add(StoreEvent
+                                        .increaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  onQuantityDecreaseTap: () {
+                                    context.read<StoreBloc>().add(StoreEvent
+                                        .decreaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<StoreBloc>().add(
+                                        StoreEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<StoreBloc>().add(
+                                StoreEvent.addToCartProductEvent(
+                                    context: context1));
+                          }*/
+                                ),
+                      bottomNavigationBar: state.isProductLoading
+                          ? 0.height
+                          : CommonProductDetailsButton(
+                              isLoading: state.isLoading,
+                              isSupplierAvailable:
+                                  state.productSupplierList.isEmpty
+                                      ? false
+                                      : true,
+                              productStock: state
+                                  .productStockList[
+                                      state.productStockUpdateIndex]
+                                  .stock,
+                              onAddToOrderPressed: state.isLoading
+                                  ? null
+                                  : () {
+                                      context.read<StoreBloc>().add(
+                                          StoreEvent.addToCartProductEvent(
+                                              context: context1));
+                                    }),
+                    ),
+                  );
+                },
+              );
             },
           ),
         );
@@ -1960,10 +1978,10 @@ class StoreScreenWidget extends StatelessWidget {
                           context.read<StoreBloc>().add(StoreEvent
                               .changeSupplierSelectionExpansionEvent());
                         },
-                        child: Row(
+                        child:  state.productSupplierList.length > 1 ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                             Text(
                               AppLocalizations.of(context)!.suppliers,
                               style: AppStyles.rkRegularTextStyle(
                                   size: AppConstants.smallFont,
@@ -1976,7 +1994,7 @@ class StoreScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             )
                           ],
-                        ),
+                        ) : 0.width,
                       ),
                     ),
                     state.productSupplierList
