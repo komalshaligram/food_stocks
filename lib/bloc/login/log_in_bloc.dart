@@ -31,6 +31,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
 
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
+        preferencesHelper.setIsGuestUser(isGuestUser: false);
         try {
           LoginReqModel reqMap = LoginReqModel(
               contact: event.contactNumber, isRegistration: state.isRegister);
@@ -52,6 +53,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             await SmsAutoFill().listenForCode();
             print('getAppSignature_______${SmsAutoFill().getAppSignature}');
             preferencesHelper.setUserId(id: response.user?.id ?? '');
+            preferencesHelper.setIsGuestUser(isGuestUser: false);
             preferencesHelper.setPhoneNumber(
                 userPhoneNumber: event.contactNumber);
             Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {

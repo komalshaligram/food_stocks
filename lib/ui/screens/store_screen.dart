@@ -46,16 +46,14 @@ class StoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-
-        return StoreBloc()
+      create: (context) =>
+      StoreBloc()
         ..add(StoreEvent.getProductCategoriesListEvent(context: context))..add(
           StoreEvent.getCompaniesListEvent(context: context))..add(
           StoreEvent.getSuppliersListEvent(context: context))..add(
           StoreEvent.getProductSalesListEvent(context: context))..add(
-          StoreEvent.getRecommendationProductsListEvent(context: context))..
-      add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
-      },
+          StoreEvent.getRecommendationProductsListEvent(context: context))..add(
+          StoreEvent.getPreviousOrderProductsListEvent(context: context)),
       child: StoreScreenWidget(),
     );
   }

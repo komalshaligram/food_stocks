@@ -34,6 +34,7 @@ class ConnectScreen extends StatelessWidget {
 class ConnectScreenWidget extends StatelessWidget {
    ConnectScreenWidget({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     ConnectBloc bloc = context.read<ConnectBloc>();
@@ -65,6 +66,7 @@ class ConnectScreenWidget extends StatelessWidget {
                     buttonText: AppLocalizations.of(context)!.register,
                     bGColor: AppColors.mainColor,
                     onPressed: () {
+
                       Navigator.pushNamed(context, RouteDefine.loginScreen.name,
                           arguments: {AppStrings.isRegisterString: true});
                     },
@@ -76,6 +78,7 @@ class ConnectScreenWidget extends StatelessWidget {
                     borderColor: AppColors.mainColor,
                     isFromConnectScreen: true,
                     onPressed: () {
+
                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
                           arguments: {AppStrings.isRegisterString: false});
                     },

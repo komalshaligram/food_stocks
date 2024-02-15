@@ -1016,6 +1016,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(
             searchList: searchList, searchController: TextEditingController()));
       }
+      print('preferencesHelper.getGuestUser()   ${preferencesHelper.getGuestUser()}');
       if(!preferencesHelper.getGuestUser()){
         if (event is _GetPreviousOrderProductsListEvent) {
           try {
