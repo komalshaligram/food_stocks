@@ -41,6 +41,7 @@ class ConnectScreen extends StatelessWidget {
                   SizedBox(
                     height: getScreenHeight(context) * 0.01,
                   ),
+
                   CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.register,
                     bGColor: AppColors.mainColor,
