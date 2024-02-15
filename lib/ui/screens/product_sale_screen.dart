@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/widget/common_product_sale_item_widget.dart';
 import 'package:food_stock/ui/widget/common_sale_description_dialog.dart';
@@ -119,7 +120,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       ),
                                   itemBuilder: (context, index) {
                                     return buildProductSaleListItem(
-
+                                      isGuestUser: state.isGuestUser,
                                       index: index,
                                       context: context,
                                       saleImage: state.productSalesList[index]
@@ -142,16 +143,22 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           '0.0'),
                                       discountedPrice: state.productSalesList[index].discountedPrice ?? 0,
                                       onButtonTap: () {
-                                        showProductDetails(
-                                          context: context,
-                                          productId: state
-                                                  .productSalesList[index].id ??
-                                              '',
-                                          startDate : state
-                                              .productSalesList[index].fromDate.toString(),
-                                          endDate : state
-                                              .productSalesList[index].endDate.toString(),
-                                        );
+                                        if(!state.isGuestUser){
+                                          showProductDetails(
+                                            context: context,
+                                            productId: state
+                                                .productSalesList[index].id ??
+                                                '',
+                                            startDate : state
+                                                .productSalesList[index].fromDate.toString(),
+                                            endDate : state
+                                                .productSalesList[index].endDate.toString(),
+                                          );
+                                        }
+                                        else{
+                                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                        }
+
                                       },
                                     );
                                   },
@@ -191,9 +198,11 @@ class ProductSaleScreenWidget extends StatelessWidget {
     required String productName,
   required double discountedPrice,
     required void Function() onButtonTap,
+    required bool isGuestUser,
   }) {
     return DelayedWidget(
         child: CommonProductSaleItemWidget(
+          isGuestUser: isGuestUser,
             saleImage: saleImage,
             title: title,
 

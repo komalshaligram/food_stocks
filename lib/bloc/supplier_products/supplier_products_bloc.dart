@@ -49,12 +49,15 @@ class SupplierProductsBloc
 
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsIdEvent) {
         emit(
             state.copyWith(supplierId: event.supplierId, search: event.search));
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser()));
         if (state.isLoadMore) {
           return;
         }

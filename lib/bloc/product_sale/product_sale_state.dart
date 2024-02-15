@@ -19,6 +19,7 @@ class ProductSaleState with _$ProductSaleState {
     required int imageIndex,
     required TextEditingController noteController,
     required RefreshController refreshController,
+    required bool isGuestUser,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -38,5 +39,6 @@ class ProductSaleState with _$ProductSaleState {
         imageIndex: 0,
         noteController: TextEditingController(),
         refreshController: RefreshController(),
+      isGuestUser : false
       );
 }
