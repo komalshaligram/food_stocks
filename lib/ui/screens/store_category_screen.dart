@@ -355,84 +355,87 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ? SizedBox()
                                         : Container(
                                       color: AppColors.pageColor,
-                                      child:state.isGridView ? GridView.builder(
-                                          itemCount: state
-                                              .planogramProductList
-                                              .length,
-                                          shrinkWrap: true,
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: AppConstants
-                                                  .padding_5),
-                                          gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1
-                                          ),
-                                          itemBuilder: (context, index) =>
-                                              DelayedWidget(
-                                                child: CommonProductItemWidget(
-                                                    productStock:
-                                                       int.parse(state.planogramProductList[index].productStock.toString()??
-                                                            '0'),
-                                                    productImage: state
-                                                        .planogramProductList[index]
-                                                        .mainImage ??
-                                                        '',
-                                                    productName: state
-                                                        .planogramProductList[index]
-                                                        .productName ??
-                                                        '',
-                                                    totalSaleCount: state
-                                                        .planogramProductList[index]
-                                                        .totalSale?.toInt() ??
-                                                        0,
-                                                    price: state
-                                                        .planogramProductList[index]
-                                                        .productPrice ?? 0.0,
-                                                    onButtonTap: () {
-                                                      debugPrint("state.planogramProductList[index]:${index==0?(state
-                                                          .planogramProductList.length>1)?1:0:index}");
-                                                      showProductDetails(
-                                                          context: context,
-                                                          productId: state
-                                                              .planogramProductList[index]
-                                                              .id ??
-                                                              '',
-                                                          planoGramIndex: index==0?(state
-                                                              .planogramProductList.length>1)?1:0:index,
-                                                          isBarcode: false
-                                                      );
-                                                    }),
-                                              )
-                                        // buildCompanyProducts(
-                                        // context: context,
-                                        // index: index,
-                                        // productImage: state
-                                        //     .productList[index].mainImage ??
-                                        //     '',
-                                        // productName: state.productList[index]
-                                        //     .productName ??
-                                        //     '',
-                                        // productPrice: state.productList[index]
-                                        //     .productPrice ??
-                                        //     0.0,
-                                        // totalSale: state
-                                        //     .productList[index].totalSale ??
-                                        //     0,
-                                        // onPressed: () {
-                                        //   showProductDetails(
-                                        //       context: context,
-                                        //       productId:
-                                        //       state.productList[index].id ??
-                                        //           '');
-                                        // },
-                                        // isRTL: context.rtl),
+                                      child:state.isGridView ? SizedBox(
+                                        height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.38,
+                                        child: GridView.builder(
+                                            itemCount: state
+                                                .planogramProductList
+                                                .length,
+                                            shrinkWrap: true,
+                                            physics: AlwaysScrollableScrollPhysics(),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: AppConstants
+                                                    .padding_5),
+                                            gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 3,
+                                                childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                                                    .productGridAspectRatio: AppConstants
+                                                    .productGridAspectRatio1
+                                            ),
+                                            itemBuilder: (context, index) =>
+                                                DelayedWidget(
+                                                  child: CommonProductItemWidget(
+                                                      productStock:
+                                                         int.parse(state.planogramProductList[index].productStock.toString()??
+                                                              '0'),
+                                                      productImage: state
+                                                          .planogramProductList[index]
+                                                          .mainImage ??
+                                                          '',
+                                                      productName: state
+                                                          .planogramProductList[index]
+                                                          .productName ??
+                                                          '',
+                                                      totalSaleCount: state
+                                                          .planogramProductList[index]
+                                                          .totalSale?.toInt() ??
+                                                          0,
+                                                      price: state
+                                                          .planogramProductList[index]
+                                                          .productPrice ?? 0.0,
+                                                      onButtonTap: () {
+                                                        debugPrint("state.planogramProductList[index]:${index==0?(state
+                                                            .planogramProductList.length>1)?1:0:index}");
+                                                        showProductDetails(
+                                                            context: context,
+                                                            productId: state
+                                                                .planogramProductList[index]
+                                                                .id ??
+                                                                '',
+                                                            planoGramIndex: index==0?(state
+                                                                .planogramProductList.length>1)?1:0:index,
+                                                            isBarcode: false
+                                                        );
+                                                      }),
+                                                )
+                                          // buildCompanyProducts(
+                                          // context: context,
+                                          // index: index,
+                                          // productImage: state
+                                          //     .productList[index].mainImage ??
+                                          //     '',
+                                          // productName: state.productList[index]
+                                          //     .productName ??
+                                          //     '',
+                                          // productPrice: state.productList[index]
+                                          //     .productPrice ??
+                                          //     0.0,
+                                          // totalSale: state
+                                          //     .productList[index].totalSale ??
+                                          //     0,
+                                          // onPressed: () {
+                                          //   showProductDetails(
+                                          //       context: context,
+                                          //       productId:
+                                          //       state.productList[index].id ??
+                                          //           '');
+                                          // },
+                                          // isRTL: context.rtl),
+                                        ),
                                       )
                                        : SizedBox(
-                                        height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.5,
+                                        height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.38,
                                          child: ListView.builder(
                                           itemCount: state
                                               .planogramProductList

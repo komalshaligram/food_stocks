@@ -34,7 +34,6 @@ class ProductDetailsBloc
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
           );
-
           debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
        //   debugPrint('GetOrderById res  = $res');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);

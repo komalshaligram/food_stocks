@@ -27,6 +27,7 @@ class CommonSearchWidget extends StatelessWidget {
   final void Function() onSearchItemTap;
   final List<SearchModel> searchList;
   final TextEditingController controller;
+  final bool isFilterTap;
 
   const CommonSearchWidget({super.key,
     required this.isCategoryExpand,
@@ -41,7 +42,9 @@ class CommonSearchWidget extends StatelessWidget {
     required this.onSearch,
     required this.onSearchSubmit,
     required this.onSearchItemTap,
-    required this.searchList});
+    required this.searchList,
+    this.isFilterTap = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +104,7 @@ class CommonSearchWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      InkWell(
+                      isFilterTap ? 0.width :  InkWell(
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: onFilterTap,
