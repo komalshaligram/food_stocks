@@ -251,11 +251,22 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         AppLocalizations.of(context)!.log_out,
                                     onTap: () {
                                       !state.isLogOutProcess
-                                          ? LogOutDialog(
+                                          ? logOutDialog(
                                               context: context,
                                               directionality: state.language)
                                           : CupertinoActivityIndicator();
                                     }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .delete_account,
+                                    onTap: () {
+                                      deleteConfirmDialog(context: context,directionality: state.language);
+                                     /* Navigator.pushNamed(context,
+                                          RouteDefine.fileUploadScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });*/
+                                    },isDelete: true),
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!
                                         .app_language,
@@ -283,7 +294,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget profileMenuTiles({required title, required void Function() onTap}) {
+  Widget profileMenuTiles({required title, required void Function() onTap,bool isDelete = false}) {
     return DelayedWidget(
       child: Container(
         decoration: BoxDecoration(
@@ -309,11 +320,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   title,
                   style: AppStyles.rkRegularTextStyle(
                       size: AppConstants.smallFont,
-                      color: AppColors.blackColor),
+                      color: isDelete?AppColors.redColor:AppColors.blackColor),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColors.blackColor,
+                  isDelete?Icons.delete:Icons.arrow_forward_ios,
+                  color:  isDelete?AppColors.redColor:AppColors.blackColor,
                 ),
               ],
             ),
@@ -379,7 +390,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  void LogOutDialog({
+  void logOutDialog({
     required BuildContext context,
     required String directionality,
   }) {
@@ -410,6 +421,47 @@ class ProfileMenuScreenWidget extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  void deleteConfirmDialog({
+    required BuildContext context,
+    required String directionality,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context1) => CommonAlertDialog(
+        directionality: directionality,
+        title: '${AppLocalizations.of(context)!.delete_account}',
+        subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+        positiveTitle: '${AppLocalizations.of(context)!.yes}',
+        negativeTitle: '${AppLocalizations.of(context)!.no}',
+        negativeOnTap: () {
+          Navigator.pop(context);
+        },
+        positiveOnTap: () async {
+          Navigator.pop(context);
+          deleteDialog(context: context,directionality: directionality);
+        },
+      )
+    );
+  }
+
+  void deleteDialog({
+    required BuildContext context,
+    required String directionality,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context1) => CommonAlertDialog(
+        directionality: directionality,
+        title: '${AppLocalizations.of(context)!.delete_account}',
+        subTitle: '${AppLocalizations.of(context)!.delete_pop_up_msg}',
+        positiveTitle: '${AppLocalizations.of(context)!.close}',
+        positiveOnTap: () async {
+          Navigator.pop(context1);
+        },
+      )
     );
   }
 }

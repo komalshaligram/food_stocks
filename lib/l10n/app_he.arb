@@ -387,8 +387,10 @@
   "issueremoved" : "הבעיה הוסרה בהצלחה",
   "wallet_information_sent_to_your_email" : "קובץ תנועות האנרק שלח נשלח למייל שלך",
   "form_date" : "From Date",
-  "until_date" : "Until Date"
-
+  "until_date" : "Until Date",
+  "delete_account" : "מחיקת חשבון",
+  "delete_pop_up_msg": "קיבלנו את בקשת מחיקת החשבון שלך, אנו נטפל בזה בימים הקרובים.",
+  "login_as_guest": "כניסה כאורח"
 
 
 

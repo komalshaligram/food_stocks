@@ -52,27 +52,9 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-      /*  if (state.pushNotificationPath == 'storeScreen') {
-          Navigator.pushNamed(context, RouteDefine.storeScreen.name);
-        } else if (state.pushNotificationPath == 'companyProductsScreen') {
-          debugPrint('push companyProductsScreen');
-          Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name);
-        } else if (state.pushNotificationPath == 'productSaleScreen') {
-          debugPrint('push productSaleScreen');
-          Navigator.pushNamed(context, RouteDefine.productSaleScreen.name);
-        } else if (state.pushNotificationPath == 'supplierScreen') {
-          debugPrint('push supplierScreen');
-          Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
-        } else if (state.pushNotificationPath == 'supplierProductsScreen') {
-          debugPrint('push supplierProductsScreen');
-          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name);
-        } else if (state.pushNotificationPath == 'storeCategoryScreen') {
-          debugPrint('push storeCategoryScreen');
-          Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name);
-        } else if (state.pushNotificationPath == 'planogramProductScreen') {
-          debugPrint('push planogramProductScreen');
-          Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name);
-        }*/
+      if(state.isGuestUser){
+        debugPrint('Guest User');
+        }
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -86,8 +68,6 @@ class BottomNavScreenWidget extends StatelessWidget {
               }
             },
 
-
-
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.pageColor,
@@ -98,8 +78,6 @@ class BottomNavScreenWidget extends StatelessWidget {
                       color: AppColors.shadowColor.withOpacity(0.1),
                       blurRadius: AppConstants.blur_10)
                 ]),
-
-
                 child: CurvedNavigationBar(
                   key: _bottomNavigationKey,
                   index: storeScreen == '' ? state.index : 1,
@@ -211,9 +189,6 @@ class BottomNavScreenWidget extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               gradient: pos == (storeScreen == '' ? state.index : 1 )?AppColors.appMainGradientColor:LinearGradient(colors: [AppColors.whiteColor,AppColors.whiteColor]),
-              /*  color: pos == (storeScreen == '' ? state.index : 1 )
-                    ? AppColors.mainColor
-                    : AppColors.whiteColor,*/
                 borderRadius: const BorderRadius.all(
                     Radius.circular(AppConstants.radius_100))),
             child: Center(

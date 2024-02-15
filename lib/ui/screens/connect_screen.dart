@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
-import 'package:food_stock/ui/utils/themes/app_constants.dart';
+
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
+import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_img_path.dart';
@@ -48,9 +49,7 @@ class ConnectScreen extends StatelessWidget {
                           arguments: {AppStrings.isRegisterString: true});
                     },
                   ),
-                  const SizedBox(
-                    height: AppConstants.padding_20,
-                  ),
+                  20.height,
                   CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.login,
                     fontColors: AppColors.mainColor,
@@ -61,6 +60,13 @@ class ConnectScreen extends StatelessWidget {
                           arguments: {AppStrings.isRegisterString: false});
                     },
                   ),
+                  20.height,
+                  GestureDetector(
+                      onTap: (){
+                        Navigator.pushNamed(
+                            context, RouteDefine.bottomNavScreen.name);
+                      },
+                      child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.blueColor),))
                 ],
               ),
             ),

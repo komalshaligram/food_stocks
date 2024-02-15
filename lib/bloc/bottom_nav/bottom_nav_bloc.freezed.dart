@@ -1083,6 +1083,7 @@ mixin _$BottomNavState {
   String get pushNotificationPath => throw _privateConstructorUsedError;
   bool get duringCelebration => throw _privateConstructorUsedError;
   String get isStoreScreen => throw _privateConstructorUsedError;
+  bool get isGuestUser => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BottomNavStateCopyWith<BottomNavState> get copyWith =>
@@ -1101,7 +1102,8 @@ abstract class $BottomNavStateCopyWith<$Res> {
       bool isAnimation,
       String pushNotificationPath,
       bool duringCelebration,
-      String isStoreScreen});
+      String isStoreScreen,
+      bool isGuestUser});
 }
 
 /// @nodoc
@@ -1123,6 +1125,7 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
     Object? pushNotificationPath = null,
     Object? duringCelebration = null,
     Object? isStoreScreen = null,
+    Object? isGuestUser = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -1149,6 +1152,10 @@ class _$BottomNavStateCopyWithImpl<$Res, $Val extends BottomNavState>
           ? _value.isStoreScreen
           : isStoreScreen // ignore: cast_nullable_to_non_nullable
               as String,
+      isGuestUser: null == isGuestUser
+          ? _value.isGuestUser
+          : isGuestUser // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -1167,7 +1174,8 @@ abstract class _$$BottomNavStateImplCopyWith<$Res>
       bool isAnimation,
       String pushNotificationPath,
       bool duringCelebration,
-      String isStoreScreen});
+      String isStoreScreen,
+      bool isGuestUser});
 }
 
 /// @nodoc
@@ -1187,6 +1195,7 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
     Object? pushNotificationPath = null,
     Object? duringCelebration = null,
     Object? isStoreScreen = null,
+    Object? isGuestUser = null,
   }) {
     return _then(_$BottomNavStateImpl(
       index: null == index
@@ -1213,6 +1222,10 @@ class __$$BottomNavStateImplCopyWithImpl<$Res>
           ? _value.isStoreScreen
           : isStoreScreen // ignore: cast_nullable_to_non_nullable
               as String,
+      isGuestUser: null == isGuestUser
+          ? _value.isGuestUser
+          : isGuestUser // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1226,7 +1239,8 @@ class _$BottomNavStateImpl implements _BottomNavState {
       required this.isAnimation,
       required this.pushNotificationPath,
       required this.duringCelebration,
-      required this.isStoreScreen});
+      required this.isStoreScreen,
+      required this.isGuestUser});
 
   @override
   final int index;
@@ -1240,10 +1254,12 @@ class _$BottomNavStateImpl implements _BottomNavState {
   final bool duringCelebration;
   @override
   final String isStoreScreen;
+  @override
+  final bool isGuestUser;
 
   @override
   String toString() {
-    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen)';
+    return 'BottomNavState(index: $index, cartCount: $cartCount, isAnimation: $isAnimation, pushNotificationPath: $pushNotificationPath, duringCelebration: $duringCelebration, isStoreScreen: $isStoreScreen, isGuestUser: $isGuestUser)';
   }
 
   @override
@@ -1261,12 +1277,14 @@ class _$BottomNavStateImpl implements _BottomNavState {
             (identical(other.duringCelebration, duringCelebration) ||
                 other.duringCelebration == duringCelebration) &&
             (identical(other.isStoreScreen, isStoreScreen) ||
-                other.isStoreScreen == isStoreScreen));
+                other.isStoreScreen == isStoreScreen) &&
+            (identical(other.isGuestUser, isGuestUser) ||
+                other.isGuestUser == isGuestUser));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, index, cartCount, isAnimation,
-      pushNotificationPath, duringCelebration, isStoreScreen);
+      pushNotificationPath, duringCelebration, isStoreScreen, isGuestUser);
 
   @JsonKey(ignore: true)
   @override
@@ -1283,7 +1301,8 @@ abstract class _BottomNavState implements BottomNavState {
       required final bool isAnimation,
       required final String pushNotificationPath,
       required final bool duringCelebration,
-      required final String isStoreScreen}) = _$BottomNavStateImpl;
+      required final String isStoreScreen,
+      required final bool isGuestUser}) = _$BottomNavStateImpl;
 
   @override
   int get index;
@@ -1297,6 +1316,8 @@ abstract class _BottomNavState implements BottomNavState {
   bool get duringCelebration;
   @override
   String get isStoreScreen;
+  @override
+  bool get isGuestUser;
   @override
   @JsonKey(ignore: true)
   _$$BottomNavStateImplCopyWith<_$BottomNavStateImpl> get copyWith =>

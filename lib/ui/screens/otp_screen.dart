@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/otp/otp_bloc.dart';
-import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 import 'package:food_stock/ui/utils/themes/app_constants.dart';
@@ -52,7 +49,6 @@ class OTPScreenWidget extends StatefulWidget {
 class _OTPScreenWidgetState extends State<OTPScreenWidget> {
   String _code="";
   FocusNode inputNode = FocusNode();
-  // String otpCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +56,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) async {
         print("state:$state");
-
         await SmsAutoFill().listenForCode();
-
       },
       child: BlocBuilder<OtpBloc, OtpState>(
         builder: (context, state) {
