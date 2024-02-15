@@ -73,7 +73,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   children: [
                     10.height,
                     Container(
-                      height: 110,
+                      height: 100,
                       width: double.maxFinite,
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
@@ -183,7 +183,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    15.height,
                     Expanded(
                       child: SingleChildScrollView(
                         child: AnimationLimiter(
@@ -256,17 +255,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                               directionality: state.language)
                                           : CupertinoActivityIndicator();
                                     }),
-                                profileMenuTiles(
-                                    title: AppLocalizations.of(context)!
-                                        .delete_account,
-                                    onTap: () {
-                                      deleteConfirmDialog(context: context,directionality: state.language);
-                                     /* Navigator.pushNamed(context,
-                                          RouteDefine.fileUploadScreen.name,
-                                          arguments: {
-                                            AppStrings.isUpdateParamString: true
-                                          });*/
-                                    },isDelete: true),
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!
                                         .app_language,
@@ -424,44 +412,4 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  void deleteConfirmDialog({
-    required BuildContext context,
-    required String directionality,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context1) => CommonAlertDialog(
-        directionality: directionality,
-        title: '${AppLocalizations.of(context)!.delete_account}',
-        subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-        positiveTitle: '${AppLocalizations.of(context)!.yes}',
-        negativeTitle: '${AppLocalizations.of(context)!.no}',
-        negativeOnTap: () {
-          Navigator.pop(context);
-        },
-        positiveOnTap: () async {
-          Navigator.pop(context);
-          deleteDialog(context: context,directionality: directionality);
-        },
-      )
-    );
-  }
-
-  void deleteDialog({
-    required BuildContext context,
-    required String directionality,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context1) => CommonAlertDialog(
-        directionality: directionality,
-        title: '${AppLocalizations.of(context)!.delete_account}',
-        subTitle: '${AppLocalizations.of(context)!.delete_pop_up_msg}',
-        positiveTitle: '${AppLocalizations.of(context)!.close}',
-        positiveOnTap: () async {
-          Navigator.pop(context1);
-        },
-      )
-    );
-  }
 }
