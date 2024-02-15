@@ -19,7 +19,7 @@ class CommonProductItemWidget extends StatelessWidget {
   final dynamic price;
   final int productStock;
   final void Function() onButtonTap;
-  final bool isGuestUser;
+
 
   const CommonProductItemWidget(
       {super.key,
@@ -30,7 +30,7 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.totalSaleCount,
       required this.price,
       required this.onButtonTap, this.productStock = 0,
-      this.isGuestUser = false
+
       });
 
   @override
@@ -123,7 +123,7 @@ class CommonProductItemWidget extends StatelessWidget {
                   fontWeight: FontWeight.w400),
             ),
             3.height,
-            !isGuestUser ?  Center(
+             Center(
               child: CommonProductButtonWidget(
                 width: 110,
                 title:
@@ -134,7 +134,7 @@ class CommonProductItemWidget extends StatelessWidget {
                 borderRadius: AppConstants.radius_3,
                 textSize: AppConstants.font_14,
               ),
-            ) : 0.width
+            )
           ],
         ),
       ),

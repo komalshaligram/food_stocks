@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/screens/basket_screen.dart';
 import 'package:food_stock/ui/screens/home_screen.dart';
 import 'package:food_stock/ui/screens/profile_menu_screen.dart';
@@ -33,7 +34,7 @@ class BottomNavScreen extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map?;
     debugPrint('bottom nav args = $args');
     return BlocProvider(
-      create: (context) => BottomNavBloc(),
+      create: (context) => BottomNavBloc()..add(BottomNavEvent.NavigateToStoreScreenEvent(context: context, storeScreen: '')),
       child: BottomNavScreenWidget(storeScreen: args?[AppStrings.pushNavigationString] ?? ''),
     );
   }
@@ -124,7 +125,14 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) {
                     storeScreen = '';
-                    bloc.add(BottomNavEvent.changePage(index: index));
+                    print('index____${index}');
+                    if(state.isGuestUser && index != 1){
+                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                    }
+                    else{
+                      bloc.add(BottomNavEvent.changePage(index: index));
+                    }
+
                   },
                   letIndexChange: (index) => true,
                 ),
@@ -140,7 +148,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                           screenHeight: getScreenHeight(context),
                           screenWidth: getScreenWidth(context),
                           state: state
-                      ),
+                      ) ,
                     ],
                   ),
                 ),
@@ -158,13 +166,15 @@ class BottomNavScreenWidget extends StatelessWidget {
       {required double screenHeight,
       required double screenWidth,
       required BottomNavState state}) {
+    print('gusujduser____${state.isGuestUser}');
+
     return Container(
       height: screenHeight,
       width: screenWidth,
       child: FadeIndexedStack(
         index: storeScreen == '' ? state.index : 1,
         children: [
-          HomeScreen(),
+          HomeScreen() ,
           StoreScreen(),
           BasketScreen(),
           WalletScreen(),

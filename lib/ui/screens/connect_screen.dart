@@ -8,6 +8,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../../bloc/connect_screen/connect_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
+import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../widget/custom_button_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -75,16 +76,27 @@ class ConnectScreenWidget extends StatelessWidget {
                     borderColor: AppColors.mainColor,
                     isFromConnectScreen: true,
                     onPressed: () {
-                      Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-                          arguments: {AppStrings.isRegisterString: false});
+                     /* Navigator.pushNamed(context, RouteDefine.loginScreen.name,
+                          arguments: {AppStrings.isRegisterString: false});*/
+
+                      Navigator.pushNamed(
+                          context, RouteDefine.loginScreen.name,
+                          arguments: {
+                            AppStrings.pushNavigationString : 'storeScreen'
+                          }
+                      );
                     },
                   ),
                   20.height,
-                 /* GestureDetector(
+                 GestureDetector(
                       onTap: (){
                         bloc.add(ConnectEvent.logInAsGuest(context: context));
                       },
-                      child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.blueColor),))*/
+                      child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.mainColor,
+                      fontSize: AppConstants.mediumFont
+                      )
+
+                        ,))
                 ],
               ),
             ),

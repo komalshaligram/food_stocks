@@ -483,7 +483,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   }),
                                               SizedBox(
                                                 width: getScreenWidth(context),
-                                                height: 190,
+                                                height: state.isGuestUser ? 180 :190 ,
                                                 child: ListView.builder(
                                                   itemCount: state
                                                       .productSalesList.length,
@@ -496,6 +496,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   itemBuilder:
                                                       (context, index) {
                                                     return CommonProductSaleItemWidget(
+                                                      isGuestUser: state.isGuestUser,
 
                                                         height: 180,
                                                         width: 140,
@@ -582,7 +583,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   : CrossFadeState.showSecond,
                                           duration:
                                               Duration(milliseconds: 300)),
-                                      AnimatedCrossFade(
+                                     state.isGuestUser ?  AnimatedCrossFade(
                                           firstChild:
                                               getScreenWidth(context).width,
                                           secondChild: Column(
@@ -710,8 +711,8 @@ class StoreScreenWidget extends StatelessWidget {
                                               ? CrossFadeState.showFirst
                                               : CrossFadeState.showSecond,
                                           duration:
-                                              Duration(milliseconds: 300)),
-                                      AnimatedCrossFade(
+                                              Duration(milliseconds: 300)) : 0.width,
+                                      state.isGuestUser ? AnimatedCrossFade(
                                           firstChild:
                                               getScreenWidth(context).width,
                                           secondChild: Column(
@@ -805,7 +806,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               ? CrossFadeState.showFirst
                                               : CrossFadeState.showSecond,
                                           duration:
-                                              Duration(milliseconds: 300)),
+                                              Duration(milliseconds: 300)) : 0.width,
                                       AppConstants.bottomNavSpace.height,
                                     ],
                                   ),

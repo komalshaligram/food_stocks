@@ -93,7 +93,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               Navigator.popUntil(event.context,
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name);
+                  event.context, RouteDefine.bottomNavScreen.name,
+               /*   arguments: {
+                    AppStrings.pushNavigationString : 'storeScreen'
+                  }*/
+              );
               CustomSnackBar.showSnackBar(
                   context: event.context,
                 title: AppStrings.getLocalizedStrings(
