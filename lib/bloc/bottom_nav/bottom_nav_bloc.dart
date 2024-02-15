@@ -19,6 +19,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           prefs: await SharedPreferences.getInstance());
       if (event is _ChangePageEvent) {
         bool isGuestUser = preferencesHelper.getGuestUser();
+        debugPrint("isGuestUser:$isGuestUser");
 
         if(!isGuestUser){
           emit(state.copyWith(index: event.index));
@@ -39,12 +40,6 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(duringCelebration:false,isAnimation: false));
         }
         debugPrint('cart count = ${state.cartCount}');
-      }
-      else if(event is _NavigateToStoreScreenEvent){
-        bool isGuestUser = preferencesHelper.getGuestUser();
-        if(isGuestUser){
-          emit(state.copyWith(index: 1,isGuestUser: isGuestUser));
-        }
       }
     });
   }

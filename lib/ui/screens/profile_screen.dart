@@ -42,13 +42,18 @@ class ProfileScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfileBloc()
         ..add(
-          ProfileEvent.getBusinessTypeListEvent(context: context),)
+          ProfileEvent.getBusinessTypeListEvent(context: context),
+        )
         ..add(
           ProfileEvent.getProfileDetailsEvent(
               context: context,
               isUpdate:
-                  args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
-              mobileNo: args?.containsKey(AppStrings.contactString) ?? false ? args![AppStrings.contactString] : ''),
+                  args?.containsKey(AppStrings.isUpdateParamString) ?? false
+                      ? true
+                      : false,
+              mobileNo: args?.containsKey(AppStrings.contactString) ?? false
+                  ? args![AppStrings.contactString]
+                  : ''),
         ),
       child: ProfileScreenWidget(),
     );
@@ -90,7 +95,8 @@ class ProfileScreenWidget extends StatelessWidget {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
-                alignment: context.rtl?Alignment.centerRight:Alignment.centerLeft,
+                alignment:
+                    context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.business_details,
                   style: AppStyles.rkRegularTextStyle(
@@ -104,7 +110,7 @@ class ProfileScreenWidget extends StatelessWidget {
               elevation: 0,
             ),
             body: state.isShimmering
-                ?  ProfileScreenShimmerWidget()
+                ? ProfileScreenShimmerWidget()
                 : Stack(
                     children: [
                       SafeArea(
@@ -270,7 +276,9 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       state.UserImageUrl.isEmpty
                                                           ? 0.width
                                                           : FileSelectionOptionWidget(
-                                                              title: AppLocalizations.of(context1)!.remove,
+                                                              title: AppLocalizations.of(
+                                                                      context1)!
+                                                                  .remove,
                                                               icon:
                                                                   Icons.delete,
                                                               iconColor:
@@ -286,7 +294,9 @@ class ProfileScreenWidget extends StatelessWidget {
                                                                   builder:
                                                                       (context2) =>
                                                                           CommonAlertDialog(
-                                                                            directionality: state.language,
+                                                                    directionality:
+                                                                        state
+                                                                            .language,
                                                                     title:
                                                                         '${AppLocalizations.of(context)!.remove}',
                                                                     subTitle:
@@ -344,106 +354,118 @@ class ProfileScreenWidget extends StatelessWidget {
                                                       : AppColors.mainColor
                                                           .withOpacity(0.1),
                                             ),
-                                            child: state.isUploadingProcess ? CupertinoActivityIndicator() :state.isUpdate
-                                                ? state.UserImageUrl.isNotEmpty
-                                                    ? state.image.path != ''
-                                                        ? SizedBox(
-                                                            height:
-                                                                getScreenHeight(
+                                            child: state.isUploadingProcess
+                                                ? CupertinoActivityIndicator()
+                                                : state.isUpdate
+                                                    ? state.UserImageUrl
+                                                            .isNotEmpty
+                                                        ? state.image.path != ''
+                                                            ? SizedBox(
+                                                                height: getScreenHeight(
                                                                         context) *
                                                                     0.18,
-                                                            width:
-                                                                getScreenWidth(
-                                                                    context),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          40),
-                                                              child: Image.file(
-                                                                state.image,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ))
-                                                        : ClipRRect(
+                                                                width:
+                                                                    getScreenWidth(
+                                                                        context),
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              40),
+                                                                  child: Image
+                                                                      .file(
+                                                                    state.image,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ))
+                                                            : ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            40),
+                                                                child: Image
+                                                                    .network(
+                                                                  '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                  loadingBuilder:
+                                                                      (context,
+                                                                          child,
+                                                                          loadingProgress) {
+                                                                    if (loadingProgress ==
+                                                                        null) {
+                                                                      return child;
+                                                                    } else {
+                                                                      return Center(
+                                                                        child:
+                                                                            CupertinoActivityIndicator(
+                                                                          color:
+                                                                              AppColors.blackColor,
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                  errorBuilder:
+                                                                      (context,
+                                                                          error,
+                                                                          stackTrace) {
+                                                                    return Container(
+                                                                        decoration: BoxDecoration(
+                                                                            color: AppColors
+                                                                                .whiteColor,
+                                                                            shape: BoxShape
+                                                                                .circle),
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .center,
+                                                                        child: SvgPicture
+                                                                            .asset(
+                                                                          AppImagePath
+                                                                              .placeholderProfile,
+                                                                          width:
+                                                                              80,
+                                                                          height:
+                                                                              80,
+                                                                          fit: BoxFit
+                                                                              .scaleDown,
+                                                                        ));
+                                                                  },
+                                                                ),
+                                                              )
+                                                        : SvgPicture.asset(
+                                                            AppImagePath
+                                                                .placeholderProfile,
+                                                            width: 80,
+                                                            height: 80,
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                          )
+                                                    : state.image.path != ''
+                                                        ? ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         40),
-                                                            child:
-                                                                Image.network(
-                                                              '${AppUrls.baseFileUrl}${state.UserImageUrl}',
+                                                            child: Image.file(
+                                                              File(state
+                                                                  .image.path),
                                                               fit: BoxFit
                                                                   .contain,
-                                                              loadingBuilder:
-                                                                  (context,
-                                                                      child,
-                                                                      loadingProgress) {
-                                                                if (loadingProgress ==
-                                                                    null) {
-                                                                  return child;
-                                                                } else {
-                                                                  return Center(
-                                                                    child: CupertinoActivityIndicator(
-                                                                      color: AppColors
-                                                                          .blackColor,
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                              errorBuilder:
-                                                                  (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                return Container(
-                                                                  decoration: BoxDecoration(
-                                                                      color: AppColors
-                                                                          .whiteColor,
-                                                                      shape: BoxShape
-                                                                          .circle),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child:SvgPicture.asset(
-                                                                    AppImagePath
-                                                                        .placeholderProfile,
-                                                                    width: 80,
-                                                                    height: 80,
-                                                                    fit: BoxFit.scaleDown,
-                                                                  )
-                                                                );
-                                                              },
                                                             ),
                                                           )
-                                                    : SvgPicture.asset(
-                                                        AppImagePath
-                                                            .placeholderProfile,
-                                                        width: 80,
-                                                        height: 80,
-                                                        fit: BoxFit.scaleDown,
-                                                      )
-                                                : state.image.path != ''
-                                                    ? ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(40),
-                                                        child: Image.file(
-                                                          File(
-                                                              state.image.path),
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                      )
-                                                    : SvgPicture.asset(
-                                                        AppImagePath
-                                                            .placeholderProfile,
-                                                        width: 80,
-                                                        height: 80,
-                                                        fit: BoxFit.scaleDown,
-                                                        // colorFilter: ColorFilter.mode(
-                                                        //     AppColors.mainColor,
-                                                        //     BlendMode.dstIn),
-                                                      ),
+                                                        : SvgPicture.asset(
+                                                            AppImagePath
+                                                                .placeholderProfile,
+                                                            width: 80,
+                                                            height: 80,
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            // colorFilter: ColorFilter.mode(
+                                                            //     AppColors.mainColor,
+                                                            //     BlendMode.dstIn),
+                                                          ),
                                           ),
                                           Positioned(
                                             right: context.rtl ? null : 1,
@@ -559,8 +581,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                       LengthLimitingTextInputFormatter(20)
                                     ],
                                     keyboardType: TextInputType.text,
-                                    hint:
-                                        "" ,
+                                    hint: "",
                                     fillColor: Colors.transparent,
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.businessNameValString,
@@ -677,6 +698,21 @@ class ProfileScreenWidget extends StatelessWidget {
                                           },
                                     fontColors: AppColors.whiteColor,
                                   ),
+                                  10.height,
+                                  CustomButtonWidget(
+                                    isFromConnectScreen: true,
+                                    fontColors: AppColors.mainColor,
+                                    borderColor: AppColors.mainColor,
+                                    buttonText: AppLocalizations.of(context)!
+                                        .delete_account
+                                        .toUpperCase(),
+                                    onPressed: () {
+                                      deleteConfirmDialog(
+                                          bloc: bloc,
+                                          context: context,
+                                          directionality: state.language);
+                                    },
+                                  ),
                                   20.height,
                                 ],
                               ),
@@ -701,5 +737,51 @@ class ProfileScreenWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void deleteConfirmDialog({
+    required ProfileBloc bloc,
+    required BuildContext context,
+    required String directionality,
+  }) {
+    showDialog(
+        context: context,
+        builder: (context1) => CommonAlertDialog(
+              directionality: directionality,
+              title: '${AppLocalizations.of(context)!.delete_account}',
+              subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+              positiveTitle: '${AppLocalizations.of(context)!.yes}',
+              negativeTitle: '${AppLocalizations.of(context)!.no}',
+              negativeOnTap: () {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
+                deleteDialog(
+                    context: context,
+                    directionality: directionality,
+                    bloc: bloc);
+              },
+            ));
+  }
+
+  void deleteDialog({
+    required ProfileBloc bloc,
+    required BuildContext context,
+    required String directionality,
+  }) {
+    showDialog(
+        context: context,
+        builder: (context1) => CommonAlertDialog(
+              directionality: directionality,
+              title: '${AppLocalizations.of(context)!.delete_account}',
+              subTitle: '${AppLocalizations.of(context)!.delete_pop_up_msg}',
+              positiveTitle: '${AppLocalizations.of(context)!.close}',
+              positiveOnTap: () async {
+                Navigator.pop(context1);
+                bloc.add(ProfileEvent.deleteAccountEvent(context: context));
+                //Navigator.pushAndRemoveUntil(context, Routes.lo, (route) => false);
+              },
+            ));
   }
 }
