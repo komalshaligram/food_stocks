@@ -24,6 +24,7 @@ import '../../data/model/req_model/get_order_count/get_order_count_req_model.dar
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
+import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/req_model/recommendation_products_req_model/recommendation_products_req_model.dart';
@@ -74,7 +75,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UserImageUrl: preferences.getUserImageUrl(),
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             messageCount: preferences.getMessageCount(),
-            cartCount: preferences.getCartCount()));
+            cartCount: preferences.getCartCount(),
+          isGuestUser: preferences.getGuestUser()
+
+
+        ));
       } else if (event is _GetCartCountEvent) {
         try {
           final res = await DioClient(event.context).post(
@@ -167,6 +172,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(state.copyWith(isProductSaleShimmering: false));
         }
       }
+
       else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
@@ -182,8 +188,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (response.status == 200) {
             int productStockUpdateIndex = state.productStockList.indexWhere(
                   (productStock) => productStock.productId == event.productId,);
-            debugPrint('productStockUpdateIndex:$productStockUpdateIndex');
-            if (productStockUpdateIndex == -1 ) {
+            if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
               productStockList[productStockList
@@ -375,9 +380,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           // emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
         } catch (e) {
-          Navigator.pop(event.context);
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: e.toString(),
+            type: SnackBarType.FAILURE,
+
+          );
+          //  Navigator.pop(event.context);
         }
       }
+
+
+
       else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
@@ -1134,6 +1148,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
       }
+
+      else if (event is _GetProductCategoriesListEvent) {
+        try {
+          emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).post(
+              AppUrls.getProductCategoriesUrl,
+              data: ProductCategoriesReqModel(
+                  pageNum: 1, pageLimit: 18)
+                  .toJson());
+          ProductCategoriesResModel response =
+          ProductCategoriesResModel.fromJson(res);
+          debugPrint('product categories = ${response.data?.categories!.length.toString()}');
+          if (response.status == 200) {
+            List<SearchModel> searchList = [];
+            searchList.addAll(response.data?.categories?.map((category) =>
+                SearchModel(
+                    searchId: category.id ?? '',
+                    name: category.categoryName ?? '',
+                    searchType: SearchTypes.category,
+                    image: category.categoryImage ?? '')) ??
+                []);
+            debugPrint('store search list = ${searchList.length}');
+            bool productVisible = response.data?.categories?.any((element) => element.isHomePreference==true)??true;
+            emit(state.copyWith(isCatVisible: productVisible));
+            emit(state.copyWith(
+
+                productCategoryList: response.data?.categories ?? [],
+                searchList: searchList,
+                isShimmering: false));
+          } else {
+            emit(state.copyWith(isShimmering: false));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ??
+                      response.message!,
+                  event.context),
+              type: SnackBarType.SUCCESS,
+
+            );
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
+      }
+
 
     });
   }

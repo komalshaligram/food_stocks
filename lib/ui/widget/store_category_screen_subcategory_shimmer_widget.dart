@@ -5,12 +5,15 @@ import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
 
 class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
-  const StoreCategoryScreenSubcategoryShimmerWidget({super.key});
+  int itemCount;
+   StoreCategoryScreenSubcategoryShimmerWidget({super.key,
+   this.itemCount = 18
+   });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 9,
+      itemCount: itemCount,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -34,7 +37,7 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
             horizontal: AppConstants.padding_10),
         padding: EdgeInsets.symmetric(
             horizontal: AppConstants.padding_10,
-            vertical: AppConstants.radius_5),
+            vertical: AppConstants.radius_10),
       ),
     );
   }

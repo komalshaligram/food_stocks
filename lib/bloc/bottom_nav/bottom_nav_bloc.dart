@@ -19,10 +19,12 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           prefs: await SharedPreferences.getInstance());
       if (event is _ChangePageEvent) {
         bool isGuestUser = preferencesHelper.getGuestUser();
+
         if(!isGuestUser){
-          emit(state.copyWith(index: event.index,isStoreScreen: ''));
-        }else{
-          emit(state.copyWith(isGuestUser:isGuestUser));
+          emit(state.copyWith(index: event.index));
+        }
+        else{
+          emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index ));
         }
       } else if (event is _UpdateCartCountEvent) {
      emit(state.copyWith(isAnimation: false));

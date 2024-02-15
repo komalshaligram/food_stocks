@@ -9,6 +9,7 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.getProductDetailsEvent(
       {required BuildContext context,
+        required bool isBarcode,
       required String productId}) = _GetProductDetailsEvent;
 
   const factory HomeEvent.increaseQuantityOfProduct(
@@ -68,7 +69,9 @@ class HomeEvent with _$HomeEvent {
     required List<String> messageIdList,
   }) = _UpdateMessageListEvent;
 
-  const factory HomeEvent.toggleNoteEvent() = _ToggleNoteEvent;
+  const factory HomeEvent.toggleNoteEvent({
+    required bool isBarcode,
+}) = _ToggleNoteEvent;
 
   const factory HomeEvent.getProfileDetailsEvent({
     required BuildContext context,
@@ -86,6 +89,9 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.updateGlobalSearchEvent(
       {required String search,
         required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+  const factory HomeEvent.getProductCategoriesListEvent(
+      {required BuildContext context}) = _GetProductCategoriesListEvent;
 
 
 
