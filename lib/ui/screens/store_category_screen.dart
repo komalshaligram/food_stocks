@@ -197,6 +197,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       itemBuilder:
                                           (context, index) {
                                         return buildPlanoGramItem(
+                                          isGuestUser: state.isGuestUser,
                                             context: context,
                                             list: state.planoGramsList,
                                             index: index,
@@ -312,6 +313,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           ? 0.width
                                           :*/
                                       buildPlanoGramItem(
+                                        isGuestUser: state.isGuestUser,
                                         context: context,
                                         list: state.subPlanoGramsList,
                                         index: index
@@ -379,6 +381,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             itemBuilder: (context, index) =>
                                                 DelayedWidget(
                                                   child: CommonProductItemWidget(
+                                                    isGuestUser: state.isGuestUser,
                                                       productStock: (state.planogramProductList[index].productStock ?? 0),
                                                       productImage: state
                                                           .planogramProductList[index]
@@ -398,41 +401,24 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       onButtonTap: () {
                                                         debugPrint("state.planogramProductList[index]:${index==0?(state
                                                             .planogramProductList.length>1)?1:0:index}");
-                                                        showProductDetails(
-                                                            context: context,
-                                                            productId: state
-                                                                .planogramProductList[index]
-                                                                .id ??
-                                                                '',
-                                                            planoGramIndex: index==0?(state
-                                                                .planogramProductList.length>1)?1:0:index,
-                                                            isBarcode: false
-                                                        );
+                                                        if(!state.isGuestUser){
+                                                          showProductDetails(
+                                                              context: context,
+                                                              productId: state
+                                                                  .planogramProductList[index]
+                                                                  .id ??
+                                                                  '',
+                                                              planoGramIndex: index==0?(state
+                                                                  .planogramProductList.length>1)?1:0:index,
+                                                              isBarcode: false
+                                                          );
+                                                        }
+                                                        else{
+                                                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                        }
+
                                                       }),
                                                 )
-                                          // buildCompanyProducts(
-                                          // context: context,
-                                          // index: index,
-                                          // productImage: state
-                                          //     .productList[index].mainImage ??
-                                          //     '',
-                                          // productName: state.productList[index]
-                                          //     .productName ??
-                                          //     '',
-                                          // productPrice: state.productList[index]
-                                          //     .productPrice ??
-                                          //     0.0,
-                                          // totalSale: state
-                                          //     .productList[index].totalSale ??
-                                          //     0,
-                                          // onPressed: () {
-                                          //   showProductDetails(
-                                          //       context: context,
-                                          //       productId:
-                                          //       state.productList[index].id ??
-                                          //           '');
-                                          // },
-                                          // isRTL: context.rtl),
                                         ),
                                       )
                                        : SizedBox(
@@ -450,6 +436,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 .planogramProductList[index]
                                                 .productStock}');
                                               return CommonProductListWidget(
+                                                isGuestUser: state.isGuestUser,
                                               productStock: state
                                                   .planogramProductList[index]
                                                   .productStock ?? 0,
@@ -469,19 +456,25 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   .planogramProductList[index]
                                                   .productPrice ?? 0.0,
                                               onButtonTap: () {
-                                                showProductDetails(
-                                                    context: context,
-                                                    productId: state
-                                                        .planogramProductList[index]
-                                                        .id ??
-                                                        '',
-                                                    planoGramIndex: index == 0
-                                                        ? (state
-                                                        .planogramProductList
-                                                        .length > 1) ? 1 : 0
-                                                        : index,
-                                                    isBarcode: false
-                                                );
+                                if(!state.isGuestUser) {
+                                  showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .planogramProductList[index]
+                                          .id ??
+                                          '',
+                                      planoGramIndex: index == 0
+                                          ? (state
+                                          .planogramProductList
+                                          .length > 1) ? 1 : 0
+                                          : index,
+                                      isBarcode: false
+                                  );
+                                }
+                                else{
+                                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+
+                                }
                                               }
                                               );
                                             },
@@ -575,6 +568,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (listViewContext, index) {
                         return _buildSearchItem(
+                          isGuestUser: state.isGuestUser,
                           productStock: state.searchList[index].productStock,
                             context: context,
                             searchName: state.searchList[index].name,
@@ -661,16 +655,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   .changeCategoryExpansionEvent());
                             },
                             onTap: () {
+                            if(!state.isGuestUser){
                               state.searchList[index].searchType ==
                                   SearchTypes.sale ||
-                                  state.searchList[index].searchType ==
-                                      SearchTypes.product
-                                  ? showProductDetails(
+                                  (state.searchList[index].searchType ==
+                                      SearchTypes.product  &&  !state.isGuestUser)
+                                  ?
+                              showProductDetails(
                                   context: context,
                                   productId: state
                                       .searchList[index].searchId,
                                   planoGramIndex: 0,
                                   isBarcode: true)
+
                                   : state.searchList[index].searchType ==
                                   SearchTypes.category
                                   ? bloc.add(StoreCategoryEvent
@@ -702,6 +699,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                   });
                               bloc.add(StoreCategoryEvent
                                   .changeCategoryExpansionEvent());
+                            }
+                            else{
+                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                            }
+
                             });
                       },
                     ),
@@ -714,11 +716,20 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       if (result != '-1') {
                         // -1 result for cancel scanning
                         debugPrint('result = $result');
-                        showProductDetails(
-                            context: context,
-                            productId: result,
-                            planoGramIndex: 0,
-                            isBarcode: true);
+                        if(!state.isGuestUser){
+                          showProductDetails(
+                              context: context,
+                              productId: result,
+                              planoGramIndex: 0,
+                              isBarcode: true);
+
+                        }
+                        else{
+                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                        }
+
+
+
                       } /*else {
                           showProductDetails(
                               context: context,
@@ -749,6 +760,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required void Function() onSeeAllTap,
     required int productStock,
     bool? isLastItem,
+    bool isGuestUser = false,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -817,7 +829,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Container(
                   height: 35,
                   width: 40,
-                  child: Image.network(
+                  child:  !isGuestUser ? Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
                     height: 35,
@@ -837,8 +849,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         width: 40,
                         height: 35,);
                     },
-                  ),
-                ),
+                  ):
+                  Image.asset(AppImagePath.imageNotAvailable5,
+                    fit: BoxFit.cover),
+                ) ,
                 10.width,
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -912,7 +926,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     required int index,
     required int subIndex,
     required double height,
-    required double width,required List<PlanogramDatum> list}) {
+    required double width,
+    required List<PlanogramDatum> list,
+    required bool isGuestUser
+  }) {
     return BlocProvider.value(
       value: context.read<StoreCategoryBloc>(),
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
@@ -941,19 +958,25 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                showProductDetails(
-                    context: context,
-                    productId:list[index]
-                        .planogramproducts?[subIndex].id ??
-                        '',
-                    planoGramIndex: 0);
+                if(!isGuestUser){
+                  showProductDetails(
+                      context: context,
+                      productId:list[index]
+                          .planogramproducts?[subIndex].id ??
+                          '',
+                      planoGramIndex: 0);
+                }
+                else{
+                  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                }
+
               },
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Center(
-                    child: Image.network(
+                    child:!isGuestUser ?Image.network(
                       "${AppUrls.baseFileUrl}${list[index]
                           .planogramproducts?[subIndex].mainImage}",
                       height: 70,
@@ -984,7 +1007,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               fit: BoxFit.cover),
                         );
                       },
-                    ),
+                    ):
+                    Image.asset(AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover,
+                      width: 70,
+                      height: 70,)
+                    ,
                   ),
                   5.height,
                   Text(
@@ -999,7 +1027,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   ),
                   2.height,
                   (list[index].planogramproducts?[subIndex]
-                      .productStock ?? 0) > 0 ? 0.width : Text(
+                      .productStock ?? 0) > 0 || isGuestUser ? 0.width : Text(
                     AppLocalizations.of(context)!
                         .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(
@@ -1027,7 +1055,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     ),
                   ),
                   5.height,
-                  Center(
+                  !isGuestUser ? Center(
                     child: CommonProductButtonWidget(
                       title:
                       "${AppLocalizations.of(
@@ -1048,7 +1076,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       borderRadius: AppConstants.radius_3,
                       textSize: AppConstants.font_12,
                     ),
-                  )
+                  ) : 0.width
                 ],
               ),
             ),
@@ -1367,7 +1395,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   }
 
 Widget buildPlanoGramItem(
-    {required BuildContext context, required int index,required List<PlanogramDatum> list}) {
+    {required BuildContext context, required int index,required List<PlanogramDatum> list,
+      required bool isGuestUser
+
+    }) {
   return BlocProvider.value(
     value: context.read<StoreCategoryBloc>(),
     child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
@@ -1426,6 +1457,7 @@ Widget buildPlanoGramItem(
                     shrinkWrap: true,
                     itemBuilder: (context, subIndex) {
                       return buildPlanoGramProductListItem(
+                        isGuestUser: isGuestUser,
                           context: context,
                           list: list,
                           index: index,

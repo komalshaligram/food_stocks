@@ -699,7 +699,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                     fontColors: AppColors.whiteColor,
                                   ),
                                   10.height,
-                                  CustomButtonWidget(
+                                 state.isUpdate ?  CustomButtonWidget(
                                     isFromConnectScreen: true,
                                     fontColors: AppColors.mainColor,
                                     borderColor: AppColors.mainColor,
@@ -712,7 +712,7 @@ class ProfileScreenWidget extends StatelessWidget {
                                           context: context,
                                           directionality: state.language);
                                     },
-                                  ),
+                                  ) : 0.width,
                                   20.height,
                                 ],
                               ),

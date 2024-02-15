@@ -19,6 +19,8 @@ class CommonProductListWidget extends StatelessWidget {
   final dynamic price;
   final dynamic productStock;
   final void Function() onButtonTap;
+  final bool isGuestUser;
+
    CommonProductListWidget({super.key,
      this.height,
      this.width,
@@ -26,12 +28,15 @@ class CommonProductListWidget extends StatelessWidget {
      required this.productName,
      required this.totalSaleCount,
      required this.price,
-     required this.onButtonTap, this.productStock = 0
+     required this.onButtonTap, this.productStock = 0,
+     this.isGuestUser = false
+
    });
 
   @override
   Widget build(BuildContext context) {
-    print('productStock___${productStock}');
+    print('productStock  ui___${productStock}');
+    print('isGuestUser___${isGuestUser}');
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
@@ -56,7 +61,7 @@ class CommonProductListWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CachedNetworkImage(
+            !isGuestUser ?  CachedNetworkImage(
               imageUrl: "${AppUrls.baseFileUrl}$productImage",
               height: 70,
               width: 70,
@@ -81,7 +86,9 @@ class CommonProductListWidget extends StatelessWidget {
                       height: 70, width: 70, fit: BoxFit.cover),
                 );
               },
-            ),
+            ) :
+            Image.asset(AppImagePath.imageNotAvailable5 , height: 90,
+              width: 90, ),
             Container(
               padding: EdgeInsets.symmetric(
                   vertical: AppConstants.padding_15,
@@ -101,7 +108,7 @@ class CommonProductListWidget extends StatelessWidget {
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  totalSaleCount == 0
+                  totalSaleCount == 0 || isGuestUser
                       ? 0.width
                       : Text(
                     "${totalSaleCount} ${AppLocalizations.of(context)!.discount}",
@@ -113,7 +120,7 @@ class CommonProductListWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  (productStock) != 0 ? 0.width :Text(
+                  (productStock) != 0 ||   isGuestUser ? 0.width :Text(
                     AppLocalizations.of(context)!
                         .out_of_stock1,
                     style: AppStyles.rkBoldTextStyle(
@@ -125,7 +132,7 @@ class CommonProductListWidget extends StatelessWidget {
               ),
             ),
 
-            CommonProductButtonWidget(
+            !isGuestUser ? CommonProductButtonWidget(
               title:
               "${AppLocalizations.of(context)!.currency}${price.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : price.toStringAsFixed(AppConstants.amountFrLength)}",
               onPressed: onButtonTap,
@@ -135,7 +142,7 @@ class CommonProductListWidget extends StatelessWidget {
               textSize: AppConstants.font_14,
               height: 32,
               width: 100,
-            ),
+            ) : 0.width,
           ],
         ),
       ),

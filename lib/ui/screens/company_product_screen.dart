@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
+import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -186,6 +187,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       ),
                                   itemBuilder: (context, index) => DelayedWidget(
                                         child: CommonProductItemWidget(
+                                          isGuestUser: state.isGuestUser,
                                           productStock: state.productList[index].productStock ?? 0,
                                             productImage: state.productList[index]
                                                     .mainImage ??
@@ -201,12 +203,18 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                     .productPrice ??
                                                 0.0,
                                             onButtonTap: () {
+                                            if(!state.isGuestUser){
                                               showProductDetails(
                                                   context: context,
                                                   productId: state
-                                                          .productList[index]
-                                                          .id ??
+                                                      .productList[index]
+                                                      .id ??
                                                       '');
+                                            }
+                                            else{
+                                              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                            }
+
                                             }),
                                       )
                                   // buildCompanyProducts(

@@ -583,7 +583,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                   : CrossFadeState.showSecond,
                                           duration:
                                               Duration(milliseconds: 300)),
-                                     state.isGuestUser ?  AnimatedCrossFade(
+                                     !state.isGuestUser ?  AnimatedCrossFade(
                                           firstChild:
                                               getScreenWidth(context).width,
                                           secondChild: Column(
@@ -712,7 +712,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               : CrossFadeState.showSecond,
                                           duration:
                                               Duration(milliseconds: 300)) : 0.width,
-                                      state.isGuestUser ? AnimatedCrossFade(
+                                      !state.isGuestUser ? AnimatedCrossFade(
                                           firstChild:
                                               getScreenWidth(context).width,
                                           secondChild: Column(
@@ -863,6 +863,7 @@ class StoreScreenWidget extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (listViewContext, index) {
                           return _buildSearchItem(
+                            isGuestUser: state.isGuestUser,
                             productStock : state.searchList[index].productStock,
                               context: context,
                               searchName: state.searchList[index].name,
@@ -972,27 +973,31 @@ class StoreScreenWidget extends StatelessWidget {
                                 }
                               },
                               onTap: () async {
-                                      if (state.searchList[index].searchType ==
-                                          SearchTypes.subCategory) {
-                                        CustomSnackBar.showSnackBar(
-                                          context: context,
-                                          title: AppStrings.getLocalizedStrings(
-                                              'Oops! in progress', context),
-                                          type: SnackBarType.SUCCESS,
-                                        );
-                                        return;
-                                      }
-                                      if (state.searchList[index].searchType ==
-                                              SearchTypes.sale ||
-                                          state.searchList[index].searchType ==
-                                              SearchTypes.product) {
-                                        print("tap 4");
-                                        showProductDetails(
-                                            context: context,
-                                            productId: state
-                                                .searchList[index].searchId,
-                                            isBarcode: true);
-                                      } else if (state
+                              if(!state.isGuestUser){
+                                if (state.searchList[index].searchType ==
+                                    SearchTypes.subCategory) {
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title: AppStrings.getLocalizedStrings(
+                                        'Oops! in progress', context),
+                                    type: SnackBarType.SUCCESS,
+                                  );
+                                  return;
+                                }
+                                if (state.searchList[index].searchType ==
+                                    SearchTypes.sale ||
+                                    state.searchList[index].searchType ==
+                                        SearchTypes.product ) {
+                                  print("tap 4");
+                                  showProductDetails(
+                                      context: context,
+                                      productId: state
+                                          .searchList[index].searchId,
+                                      isBarcode: true);
+                                }
+
+
+                                else if (state
                                     .searchList[index].searchType ==
                                     SearchTypes.category) {
                                   dynamic searchResult =
@@ -1044,6 +1049,11 @@ class StoreScreenWidget extends StatelessWidget {
                                 }
                                 bloc.add(
                                     StoreEvent.changeCategoryExpansion());
+                              }
+                              else{
+                                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                              }
+
                               });
                         },
                       ),
@@ -1056,10 +1066,16 @@ class StoreScreenWidget extends StatelessWidget {
                           // -1 result for cancel scanning
                           debugPrint('result = $scanResult');
                           print("tap 5");
-                          showProductDetails(
-                              context: context,
-                              productId: scanResult,
-                              isBarcode: true);
+                          if(!state.isGuestUser){
+                            showProductDetails(
+                                context: context,
+                                productId: scanResult,
+                                isBarcode: true);
+                          }
+                          else{
+                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                          }
+
                         } /*else {
                           showProductDetails(
                               context: context,
@@ -1089,6 +1105,7 @@ class StoreScreenWidget extends StatelessWidget {
     required void Function() onTap,
     required void Function() onSeeAllTap,
     bool? isLastItem, required int productStock,
+    bool isGuestUser = false
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1164,10 +1181,10 @@ class StoreScreenWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+              Container(
                   height: 35,
                   width: 40,
-                  child: Image.network(
+                  child: !isGuestUser?  Image.network(
                     '${AppUrls.baseFileUrl}$searchImage',
                     fit: BoxFit.scaleDown,
                     height: 35,
@@ -1200,7 +1217,8 @@ class StoreScreenWidget extends StatelessWidget {
                               height: 35,
                             );
                     },
-                  ),
+                  ) : Image.asset(AppImagePath.imageNotAvailable5,
+                       fit: BoxFit.cover),
                 ),
                 10.width,
                 Column(

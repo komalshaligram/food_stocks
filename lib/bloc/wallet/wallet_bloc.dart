@@ -45,256 +45,266 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
       DateTime firstDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month, 1);
 
       DateTime lastDayCurrentMonth = DateTime.utc(DateTime.now().year, DateTime.now().month + 1).subtract(Duration(days: 1));
-      if (event is _checkLanguage) {
-        emit(state.copyWith(language: preferencesHelper.getAppLanguage(),isExportComplete: false));
-      } else if (event is _getYearListEvent) {
-        emit(state.copyWith(isShimmering: true, firstDateOfMonth: firstDayCurrentMonth));
-        int formattedYear = dateParse.year.toInt();
-        List<int> temp = [
-          formattedYear,
-          formattedYear - 1,
-          formattedYear - 2,
-          formattedYear - 3
-        ];
-        emit(state.copyWith(
-          yearList: temp,
-          year: temp.first,
-        ));
-      } else if (event is _getWalletRecordEvent) {
-        emit(state.copyWith(isProcess: true));
-        try {
-          WalletRecordReqModel reqMap =
-              WalletRecordReqModel(userId: preferencesHelper.getUserId());
-          debugPrint('WalletRecordReqModel = $reqMap}');
-          final res = await DioClient(event.context).post(
-            AppUrls.walletRecordUrl,
-            data: reqMap,
-          );
-
-          debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
-          WalletRecordResModel response = WalletRecordResModel.fromJson(res);
-          //    debugPrint('WalletRecordResModel  = $response');
-
-          if (response.status == 200) {
-            emit(state.copyWith(
-                thisMonthExpense:
-                    response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
-                lastMonthExpense:
-                    response.data?.previousMonth?.totalExpenses?.toDouble() ??
-                        0,
-                balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage: double.parse(
-                    response.data?.currentMonth?.expensePercentage ?? ''),
-              isProcess: false
-            ));
-          } else {emit(state.copyWith(isProcess: false));}
-        } on ServerException {
-          emit(state.copyWith(isProcess: false));
-        } catch (e) {emit(state.copyWith(isProcess: false));}
-      } else if (event is _getTotalExpenseEvent) {
-        emit(state.copyWith(isGraphProcess: true));
-        try {
-          TotalExpenseReqModel reqMap = TotalExpenseReqModel(
-            userId: preferencesHelper.getUserId(),
-            year: event.year,
-          );
-
-          debugPrint('TotalExpenseReqModel = $reqMap}');
-          final res = await DioClient(event.context).post(
-            AppUrls.totalExpenseByYearUrl,
-            data: reqMap,
-          );
-
-          debugPrint(
-              'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
-          expense.TotalExpenseResModel response =
-              expense.TotalExpenseResModel.fromJson(res);
-          //  debugPrint('TotalExpenseResModel  = $response');
-
-          if (response.status == 200) {
-
-            List<FlSpot> temp = [];
-            List<int> number = List<int>.generate(12, (i) => i);
-            List<int> reverseList;
-            List<String> reverseList1;
-            if (preferencesHelper.getAppLanguage() == 'he') {
-              reverseList = number.reversed.toList();
-            } else {
-              reverseList = number.toList();
-            }
-
-            response.data?.forEach((element) {
-              temp.add(FlSpot(
-                  reverseList[element.month!.toInt() - 1].toDouble(),
-                  element.totalExpenses?.toDouble() ?? 0));
-            });
-            List<String>graphList = [];
-            response.data?.forEach((element) {
-              graphList.add((
-                  element.totalExpenses?.toStringAsFixed(2) ?? '0'));
-            });
-
-            if (preferencesHelper.getAppLanguage() == 'he') {
-              reverseList1 = graphList.reversed.toList();
-            } else {
-              reverseList1 = graphList.toList();
-            }
+      if(preferencesHelper.getGuestUser()){
 
 
-            emit(state.copyWith(monthlyExpenseList: temp,graphDataList: reverseList1));
-            emit(state.copyWith(isGraphProcess: false));
-          } else {
-            emit(state.copyWith(isGraphProcess: false));
+      }
+      else{
 
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ??
-                      response.message!,
-                  event.context),
-              type: SnackBarType.FAILURE,
+        if (event is _checkLanguage) {
+          emit(state.copyWith(language: preferencesHelper.getAppLanguage(),isExportComplete: false));
+        }
+        else if (event is _getYearListEvent) {
+          emit(state.copyWith(isShimmering: true, firstDateOfMonth: firstDayCurrentMonth));
+          int formattedYear = dateParse.year.toInt();
+          List<int> temp = [
+            formattedYear,
+            formattedYear - 1,
+            formattedYear - 2,
+            formattedYear - 3
+          ];
+          emit(state.copyWith(
+            yearList: temp,
+            year: temp.first,
+          ));
+        }
+        else if (event is _getWalletRecordEvent) {
+          emit(state.copyWith(isProcess: true));
+          try {
+            WalletRecordReqModel reqMap =
+            WalletRecordReqModel(userId: preferencesHelper.getUserId());
+            debugPrint('WalletRecordReqModel = $reqMap}');
+            final res = await DioClient(event.context).post(
+              AppUrls.walletRecordUrl,
+              data: reqMap,
             );
+
+            debugPrint('WalletRecord url  = ${AppUrls.walletRecordUrl}');
+            WalletRecordResModel response = WalletRecordResModel.fromJson(res);
+            //    debugPrint('WalletRecordResModel  = $response');
+
+            if (response.status == 200) {
+              emit(state.copyWith(
+                  thisMonthExpense:
+                  response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
+                  lastMonthExpense:
+                  response.data?.previousMonth?.totalExpenses?.toDouble() ??
+                      0,
+                  balance: response.data?.balanceAmount?.toDouble() ?? 0,
+                  totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                  expensePercentage: double.parse(
+                      response.data?.currentMonth?.expensePercentage ?? ''),
+                  isProcess: false
+              ));
+            } else {emit(state.copyWith(isProcess: false));}
+          } on ServerException {
+            emit(state.copyWith(isProcess: false));
+          } catch (e) {emit(state.copyWith(isProcess: false));}
+        }
+        else if (event is _getTotalExpenseEvent) {
+          emit(state.copyWith(isGraphProcess: true));
+          try {
+            TotalExpenseReqModel reqMap = TotalExpenseReqModel(
+              userId: preferencesHelper.getUserId(),
+              year: event.year,
+            );
+
+            debugPrint('TotalExpenseReqModel = $reqMap}');
+            final res = await DioClient(event.context).post(
+              AppUrls.totalExpenseByYearUrl,
+              data: reqMap,
+            );
+
+            debugPrint(
+                'totalExpenseByYearUrl url  = ${AppUrls.totalExpenseByYearUrl}');
+            expense.TotalExpenseResModel response =
+            expense.TotalExpenseResModel.fromJson(res);
+            //  debugPrint('TotalExpenseResModel  = $response');
+
+            if (response.status == 200) {
+
+              List<FlSpot> temp = [];
+              List<int> number = List<int>.generate(12, (i) => i);
+              List<int> reverseList;
+              List<String> reverseList1;
+              if (preferencesHelper.getAppLanguage() == 'he') {
+                reverseList = number.reversed.toList();
+              } else {
+                reverseList = number.toList();
+              }
+
+              response.data?.forEach((element) {
+                temp.add(FlSpot(
+                    reverseList[element.month!.toInt() - 1].toDouble(),
+                    element.totalExpenses?.toDouble() ?? 0));
+              });
+              List<String>graphList = [];
+              response.data?.forEach((element) {
+                graphList.add((
+                    element.totalExpenses?.toStringAsFixed(2) ?? '0'));
+              });
+
+              if (preferencesHelper.getAppLanguage() == 'he') {
+                reverseList1 = graphList.reversed.toList();
+              } else {
+                reverseList1 = graphList.toList();
+              }
+
+
+              emit(state.copyWith(monthlyExpenseList: temp,graphDataList: reverseList1));
+              emit(state.copyWith(isGraphProcess: false));
+            } else {
+              emit(state.copyWith(isGraphProcess: false));
+
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE,
+              );
+            }
+
+          } on ServerException {
+            emit(state.copyWith(isGraphProcess: false));
+
+          }
+        }
+        else if (event is _getAllWalletTransactionEvent) {
+          if (state.isLoadMore) {
+            return;
           }
 
-        } on ServerException {
-          emit(state.copyWith(isGraphProcess: false));
+          if (state.isBottomOfProducts) {
+            return;
+          }
 
-        }
-      } else if (event is _getAllWalletTransactionEvent) {
-        if (state.isLoadMore) {
-          return;
-        }
-
-        if (state.isBottomOfProducts) {
-          return;
-        }
-
-        try {
-          emit(state.copyWith(
+          try {
+            emit(state.copyWith(
               isShimmering: state.pageNum == 0 ? true : false,
               isLoadMore: state.pageNum == 0 ? false : true,
-          ));
-          AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
-              userId: preferencesHelper.getUserId(),
-              pageNum: state.pageNum + 1,
-              pageLimit: AppConstants.walletLimit,
-              startDate: event.startDate ?? firstDayCurrentMonth,
-              endDate: event.endDate ?? lastDayCurrentMonth);
-
-          debugPrint('AllWalletTransactionReqModel = $reqMap}');
-
-          final res = await DioClient(event.context).post(
-            AppUrls.getAllWalletTransactionUrl,
-            data: reqMap,
-          );
-
-          debugPrint(
-              'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
-          AllWalletTransactionResModel response =
-              AllWalletTransactionResModel.fromJson(res);
-          // debugPrint('AllWalletTransactionResModel  = $response');
-
-          if (response.status == 200) {
-            //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
-
-            List<Datum> temp =
-                state.walletTransactionsList.toList(growable: true);
-            if ((response.metaData?.totalFilteredCount ?? 1) >
-                state.walletTransactionsList.length) {
-              temp.addAll(response.data ?? []);
-              emit(state.copyWith(
-                balanceSheetList: response,
+            ));
+            AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
+                userId: preferencesHelper.getUserId(),
                 pageNum: state.pageNum + 1,
-                walletTransactionsList: temp,
-                isLoadMore: false,
-                isShimmering: false,
-              ));
+                pageLimit: AppConstants.walletLimit,
+                startDate: event.startDate ?? firstDayCurrentMonth,
+                endDate: event.endDate ?? lastDayCurrentMonth);
 
-              emit(state.copyWith(
-                  isBottomOfProducts: temp.length ==
-                          (response.metaData?.totalFilteredCount ?? 1)
-                      ? true
-                      : false));
+            debugPrint('AllWalletTransactionReqModel = $reqMap}');
+
+            final res = await DioClient(event.context).post(
+              AppUrls.getAllWalletTransactionUrl,
+              data: reqMap,
+            );
+
+            debugPrint(
+                'AllWalletTransaction url  = ${AppUrls.getAllWalletTransactionUrl}');
+            AllWalletTransactionResModel response =
+            AllWalletTransactionResModel.fromJson(res);
+            // debugPrint('AllWalletTransactionResModel  = $response');
+
+            if (response.status == 200) {
+              //   debugPrint('[filter count]     ${response.metaData?.totalFilteredCount}');
+
+              List<Datum> temp =
+              state.walletTransactionsList.toList(growable: true);
+              if ((response.metaData?.totalFilteredCount ?? 1) >
+                  state.walletTransactionsList.length) {
+                temp.addAll(response.data ?? []);
+                emit(state.copyWith(
+                  balanceSheetList: response,
+                  pageNum: state.pageNum + 1,
+                  walletTransactionsList: temp,
+                  isLoadMore: false,
+                  isShimmering: false,
+                ));
+
+                emit(state.copyWith(
+                    isBottomOfProducts: temp.length ==
+                        (response.metaData?.totalFilteredCount ?? 1)
+                        ? true
+                        : false));
+              } else {
+                emit(state.copyWith(isShimmering: false, isLoadMore: false));
+              }
             } else {
-              emit(state.copyWith(isShimmering: false, isLoadMore: false));
+              emit(state.copyWith(isLoadMore: false, isShimmering: false));
             }
-          } else {
+          } on ServerException {
             emit(state.copyWith(isLoadMore: false, isShimmering: false));
           }
-        } on ServerException {
-          emit(state.copyWith(isLoadMore: false, isShimmering: false));
         }
-      }
-      else if (event is _getDateRangeEvent) {
-        if (event.range != state.selectedDateRange) {
-          List<Datum> temp =
-              state.walletTransactionsList.toList(growable: true);
-          temp.clear();
-          emit(state.copyWith(
-            selectedDateRange: event.range,
-            walletTransactionsList: temp,
-            pageNum: 0,
-            isLoadMore: false,
-            isShimmering: false,
-          ));
-
-          emit(state.copyWith(
-              isBottomOfProducts: temp.length ==
-                      (state.balanceSheetList.metaData?.totalFilteredCount ?? 1)
-                  ? true
-                  : false));
-        } else {
-          emit(state.copyWith(
+        else if (event is _getDateRangeEvent) {
+          if (event.range != state.selectedDateRange) {
+            List<Datum> temp =
+            state.walletTransactionsList.toList(growable: true);
+            temp.clear();
+            emit(state.copyWith(
               selectedDateRange: event.range,
-              walletTransactionsList: state.walletTransactionsList,
+              walletTransactionsList: temp,
+              pageNum: 0,
               isLoadMore: false,
-              isShimmering: false));
-        }
-      }
-      else if (event is _getDropDownElementEvent) {
-        emit(state.copyWith(year: event.year));
-      }
-      else if (event is _exportWalletTransactionEvent) {
-        emit(state.copyWith(isExportShimmering: true));
-        try {
-          File file;
-          Directory dir;
-          String filePath = '';
-          if (defaultTargetPlatform == TargetPlatform.android) {
-            dir = Directory('/storage/emulated/0/Documents');
+              isShimmering: false,
+            ));
+
+            emit(state.copyWith(
+                isBottomOfProducts: temp.length ==
+                    (state.balanceSheetList.metaData?.totalFilteredCount ?? 1)
+                    ? true
+                    : false));
           } else {
-            dir = await getApplicationDocumentsDirectory();
+            emit(state.copyWith(
+                selectedDateRange: event.range,
+                walletTransactionsList: state.walletTransactionsList,
+                isLoadMore: false,
+                isShimmering: false));
           }
+        }
+        else if (event is _getDropDownElementEvent) {
+          emit(state.copyWith(year: event.year));
+        }
+        else if (event is _exportWalletTransactionEvent) {
+          emit(state.copyWith(isExportShimmering: true));
+          try {
+            File file;
+            Directory dir;
+            String filePath = '';
+            if (defaultTargetPlatform == TargetPlatform.android) {
+              dir = Directory('/storage/emulated/0/Documents');
+            } else {
+              dir = await getApplicationDocumentsDirectory();
+            }
 
-          ExportWalletTransactionsReqModel reqMap =
-              ExportWalletTransactionsReqModel(
-            userId: preferencesHelper.getUserId(),
-            exportType: AppStrings.pdfString,
-            responseType: AppStrings.jsonString,
-            startDate: event.startDate.toString(),
-            endDate: event.endDate.toString(),
-          );
+            ExportWalletTransactionsReqModel reqMap =
+            ExportWalletTransactionsReqModel(
+              userId: preferencesHelper.getUserId(),
+              exportType: AppStrings.pdfString,
+              responseType: AppStrings.jsonString,
+              startDate: event.startDate.toString(),
+              endDate: event.endDate.toString(),
+            );
 
-          debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
-          final res = await DioClient(event.context)
-              .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
+            debugPrint('ExportWalletTransactions  ReqModel = $reqMap}');
+            final res = await DioClient(event.context)
+                .post(AppUrls.exportWalletTransactionUrl, data: reqMap);
 
-          debugPrint(
-              'exportWalletTransaction url  = ${AppUrls.exportWalletTransactionUrl}');
+            debugPrint(
+                'exportWalletTransaction url  = ${AppUrls.exportWalletTransactionUrl}');
 
-          ExportWalletTransactionsResModel response =
-              ExportWalletTransactionsResModel.fromJson(res);
-             debugPrint('ExportWalletTransactions response  = ${response}');
-          if (response.status == 200) {
-            emit(state.copyWith(isExportShimmering: false,isExportComplete: true,userEmail: preferencesHelper.getEmailId()));
-            Uint8List pdf = base64.decode(response.data.toString());
-            filePath =
-                '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
-            file = File(filePath);
-            // debugPrint('[path]   ${filePath}');
-            await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
-          /*    CustomSnackBar.showSnackBar(
+            ExportWalletTransactionsResModel response =
+            ExportWalletTransactionsResModel.fromJson(res);
+            debugPrint('ExportWalletTransactions response  = ${response}');
+            if (response.status == 200) {
+              emit(state.copyWith(isExportShimmering: false,isExportComplete: true,userEmail: preferencesHelper.getEmailId()));
+              Uint8List pdf = base64.decode(response.data.toString());
+              filePath =
+              '${dir.path}/${preferencesHelper.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
+              file = File(filePath);
+              // debugPrint('[path]   ${filePath}');
+              await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {
+                /*    CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(
                     response.message?.toLocalization() ??
@@ -302,68 +312,70 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                     event.context),
                 type: SnackBarType.SUCCESS,
               );*/
-            });
+              });
 
-          }
-          else {
+            }
+            else {
+              emit(state.copyWith(isExportShimmering: false));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ??
+                        response.message!,
+                    event.context),
+                type: SnackBarType.FAILURE,
+              );
+            }
+          } on ServerException {
             emit(state.copyWith(isExportShimmering: false));
+          } catch (e) {
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ??
-                      response.message!,
-                  event.context),
+              title: e.toString(),
+              type: SnackBarType.FAILURE,
+            );
+            emit(state.copyWith(isExportShimmering: false));
+          }
+        }
+
+        else if (event is _getOrderCountEvent) {
+          try {
+            int daysInMonth(DateTime date) => DateTimeRange(
+                start: DateTime(date.year, date.month, 1),
+                end: DateTime(date.year, date.month + 1))
+                .duration
+                .inDays;
+
+            var now = DateTime.now();
+            GetOrderCountReqModel reqMap = GetOrderCountReqModel(
+              startDate: DateTime(now.year, now.month, 1),
+              endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
+            );
+
+            debugPrint('getOrdersCount reqMap = $reqMap}');
+
+            final res = await DioClient(event.context).post(
+              AppUrls.getOrdersCountUrl,
+              data: reqMap,
+            );
+
+            debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
+            GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
+            //   debugPrint('getOrdersCount response  = ${response}');
+            if (response.status == 200) {
+              emit(state.copyWith(orderThisMonth: response.data!.toInt()));
+            }
+          } on ServerException {
+          } catch (e) {
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: e.toString(),
               type: SnackBarType.FAILURE,
             );
           }
-        } on ServerException {
-          emit(state.copyWith(isExportShimmering: false));
-        } catch (e) {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: e.toString(),
-            type: SnackBarType.FAILURE,
-          );
-          emit(state.copyWith(isExportShimmering: false));
         }
       }
 
-      else if (event is _getOrderCountEvent) {
-        try {
-          int daysInMonth(DateTime date) => DateTimeRange(
-                  start: DateTime(date.year, date.month, 1),
-                  end: DateTime(date.year, date.month + 1))
-              .duration
-              .inDays;
-
-          var now = DateTime.now();
-          GetOrderCountReqModel reqMap = GetOrderCountReqModel(
-            startDate: DateTime(now.year, now.month, 1),
-            endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
-          );
-
-          debugPrint('getOrdersCount reqMap = $reqMap}');
-
-          final res = await DioClient(event.context).post(
-            AppUrls.getOrdersCountUrl,
-            data: reqMap,
-          );
-
-          debugPrint('getOrdersCountUrl url  = ${AppUrls.getOrdersCountUrl}');
-          GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
-          //   debugPrint('getOrdersCount response  = ${response}');
-          if (response.status == 200) {
-            emit(state.copyWith(orderThisMonth: response.data!.toInt()));
-          }
-        } on ServerException {
-        } catch (e) {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: e.toString(),
-            type: SnackBarType.FAILURE,
-          );
-        }
-      }
     });
   }
 }

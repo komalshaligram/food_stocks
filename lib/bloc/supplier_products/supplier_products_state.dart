@@ -20,7 +20,8 @@ class SupplierProductsState with _$SupplierProductsState {
     required int imageIndex,
     required TextEditingController noteController,
     required RefreshController refreshController,
-    required String searchType
+    required String searchType,
+    required bool isGuestUser,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -41,6 +42,7 @@ class SupplierProductsState with _$SupplierProductsState {
         imageIndex: 0,
         noteController: TextEditingController(),
         refreshController: RefreshController(),
-        searchType: ''
+        searchType: '',
+      isGuestUser:false,
       );
 }

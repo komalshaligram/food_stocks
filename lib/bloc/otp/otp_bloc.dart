@@ -94,7 +94,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                   (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name,
-               /*   arguments: {
+                /*  arguments: {
                     AppStrings.pushNavigationString : 'storeScreen'
                   }*/
               );
