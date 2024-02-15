@@ -62,7 +62,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             onFocusGained: () {
               bloc.add(ProfileMenuEvent.getPreferenceDataEvent());
               bloc.add(ProfileMenuEvent.getAppLanguage());
-              bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
+              bloc.add(
+                  ProfileMenuEvent.getProfileDetailsEvent(context: context));
             },
             child: Scaffold(
               backgroundColor: AppColors.pageColor,
@@ -73,9 +74,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     10.height,
                     Container(
                       height: 110,
+                      width: double.maxFinite,
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             height: 80,
@@ -89,10 +92,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   color: AppColors.whiteColor, width: 0.5),
                               boxShadow: [
                                 BoxShadow(
-                                    color: /* state.UserImageUrl.isNotEmpty
-                                        ? */
-                                        AppColors.shadowColor.withOpacity(
-                                            0.1) /*: AppColors.whiteColor*/,
+                                    color: AppColors.shadowColor.withOpacity(
+                                            0.1) ,
                                     blurRadius: AppConstants.blur_10)
                               ],
                               shape: BoxShape.circle,
@@ -115,108 +116,70 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ),
                                   )
                                 : Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: AppColors.whiteColor,
-                                          width: 5),
-                                      borderRadius:
-                                          BorderRadius.circular(40)),
-                                  child: SvgPicture.asset(
-                                    AppImagePath.placeholderProfile,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.scaleDown,
-                                    // colorFilter: ColorFilter.mode(
-                                    //     AppColors.mainColor,
-                                    //     BlendMode.dstIn),
-                                  ),
-                                ), /*Image.asset(
-                                    AppImagePath.defaultProfileImage,
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.scaleDown,
-                                  ) */ /*Icon(
-                                    Icons.person,
-                                    size: 60,
-                                    color: AppColors.textColor,
-                                  )*/
-                          ),
-                          20.width,
-                          SizedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  state.UserCompanyLogoUrl.isEmpty
-                                      ? SvgPicture.asset(
-                                AppImagePath.splashLogo,
-                                fit: BoxFit.cover,
-                                    height: 60,
-                                    width: 60,
-                              )
-                                      : Expanded(
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) => Container(
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.whiteColor,
-                                                    border: Border.all(
-                                                        color: AppColors
-                                                            .borderColor
-                                                            .withOpacity(0.5),
-                                                        width: 1)),
-                                                alignment: Alignment.center,
-                                                child: Container(
-                                                    height: 50,
-                                                    width: getScreenWidth(
-                                                            context) *
-                                                        0.35,
-                                                    alignment: Alignment.center,
-                                                    child:
-                                                        const CupertinoActivityIndicator())),
-                                            imageUrl:
-                                                "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
-                                            height: 34,
-                                            width:
-                                                getScreenWidth(context) * 0.35,
-                                            fit: BoxFit.fitHeight,
-                                            alignment: context.rtl
-                                                ? Alignment.centerRight
-                                                : Alignment.centerLeft,
-                                            errorWidget: (context, url, error) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .whiteColor /*AppColors.mainColor
-                                                  .withOpacity(0.1)*/
-                                                  ,
-                                                  /*  border: Border.all(
-                                                    color: AppColors.borderColor
-                                                        .withOpacity(0.5),
-                                                    width: 0)*/
-                                                ),
-                                                /*child: Icon(
-                                              Icons
-                                                  .image_not_supported_outlined,
-                                              size: 25,
-                                              color: AppColors.textColor,
-                                            )*/
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                  5.height,
-                                  Text(
-                                    state.userName,
-                                    style: AppStyles.rkRegularTextStyle(
-                                      size: 20,
-                                      color: AppColors.blackColor,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.whiteColor,
+                                            width: 5),
+                                        borderRadius:
+                                            BorderRadius.circular(40)),
+                                    child: SvgPicture.asset(
+                                      AppImagePath.placeholderProfile,
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.scaleDown,
+                                      // colorFilter: ColorFilter.mode(
+                                      //     AppColors.mainColor,
+                                      //     BlendMode.dstIn),
                                     ),
                                   ),
-                                ],
-                              ),
+                          ),
+                          Text(
+                            state.userName,
+                            style: AppStyles.rkRegularTextStyle(
+                              size: 20,
+                              color: AppColors.blackColor,
                             ),
+                          ),
+                       /*   state.UserCompanyLogoUrl.isEmpty
+                              ? CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    border: Border.all(
+                                        color: AppColors.borderColor
+                                            .withOpacity(0.5),
+                                        width: 1)),
+                                alignment: Alignment.center,
+                                child: Container(
+                                    height: 50,
+                                    width: getScreenWidth(context) *
+                                        0.35,
+                                    alignment: Alignment.center,
+                                    child:
+                                    const CupertinoActivityIndicator())),
+                            imageUrl:
+                            "${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}",
+                            height: 80,
+                            width: 80,
+                            fit: BoxFit.contain,
+                            alignment: context.rtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            errorWidget: (context, url, error) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors
+                                      .whiteColor,
+                                ),
+                              );
+                            },
                           )
+                              :*/ SvgPicture.asset(
+                                  AppImagePath.splashLogo,
+                                  fit: BoxFit.cover,
+                                  height: 90,
+                                  width: 90,
+                                )
                         ],
                       ),
                     ),
@@ -228,81 +191,84 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             children: AnimationConfiguration.toStaggeredList(
                               duration: const Duration(seconds: 1),
                               childAnimationBuilder: (widget) => SlideAnimation(
-                                  duration: const Duration(seconds: 1) ,
-                                  verticalOffset: MediaQuery.of(context).size.height / 5,
-                                  child: FadeInAnimation(child: widget)
-                              ),
-                            children: [
-                              15.height,
-                              profileMenuTiles(
-                                  title: AppLocalizations.of(context)!
-                                      .my_orders,
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RouteDefine.orderScreen.name,
-                                       );
-                                  }),
-                              profileMenuTiles(
-                                  title: AppLocalizations.of(context)!
-                                      .business_details,
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RouteDefine.profileScreen.name,
-                                        arguments: {
-                                          AppStrings.isUpdateParamString: true
-                                        });
-                                  }),
-                              profileMenuTiles(
-                                  title:
-                                      AppLocalizations.of(context)!.more_details,
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.moreDetailsScreen.name,
-                                        arguments: {
-                                          AppStrings.isUpdateParamString: true
-                                        });
-                                  }),
-                              profileMenuTiles(
-                                  title:
-                                      AppLocalizations.of(context)!.activity_time,
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.activityTimeScreen.name,
-                                        arguments: {
-                                          AppStrings.isUpdateParamString: true
-                                        });
-                                  }),
-                              profileMenuTiles(
-                                  title:
-                                      AppLocalizations.of(context)!.forms_files,
-                                  onTap: () {
-
-                                    Navigator.pushNamed(context,
-                                        RouteDefine.fileUploadScreen.name,
-                                        arguments: {
-                                          AppStrings.isUpdateParamString: true
-                                        });
-                                  }),
-                              profileMenuTiles(
-                                  title: AppLocalizations.of(context)!.log_out,
-                                  onTap: () {
-                                    !state.isLogOutProcess ? LogOutDialog(
-                                      context: context,
-                                        directionality : state.language
-                                    ) : CupertinoActivityIndicator();
-
-                                  }),
-                              menuSwitchTile(
-                                  title:
-                                      AppLocalizations.of(context)!.app_language,
-                                  isHebrewLang: state.isHebrewLanguage,
-                                  onChanged: (bool value) {
-                                    context.read<ProfileMenuBloc>().add(
-                                        ProfileMenuEvent.changeAppLanguageEvent(
-                                            context: context));
-                                  }),
-                              AppConstants.bottomNavSpace.height,
-                            ],),
+                                  duration: const Duration(seconds: 1),
+                                  verticalOffset:
+                                      MediaQuery.of(context).size.height / 5,
+                                  child: FadeInAnimation(child: widget)),
+                              children: [
+                                15.height,
+                                profileMenuTiles(
+                                    title:
+                                        AppLocalizations.of(context)!.my_orders,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.orderScreen.name,
+                                      );
+                                    }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .business_details,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.profileScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });
+                                    }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .more_details,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.moreDetailsScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });
+                                    }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .activity_time,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.activityTimeScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });
+                                    }),
+                                profileMenuTiles(
+                                    title: AppLocalizations.of(context)!
+                                        .forms_files,
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          RouteDefine.fileUploadScreen.name,
+                                          arguments: {
+                                            AppStrings.isUpdateParamString: true
+                                          });
+                                    }),
+                                profileMenuTiles(
+                                    title:
+                                        AppLocalizations.of(context)!.log_out,
+                                    onTap: () {
+                                      !state.isLogOutProcess
+                                          ? LogOutDialog(
+                                              context: context,
+                                              directionality: state.language)
+                                          : CupertinoActivityIndicator();
+                                    }),
+                                menuSwitchTile(
+                                    title: AppLocalizations.of(context)!
+                                        .app_language,
+                                    isHebrewLang: state.isHebrewLanguage,
+                                    onChanged: (bool value) {
+                                      context.read<ProfileMenuBloc>().add(
+                                          ProfileMenuEvent
+                                              .changeAppLanguageEvent(
+                                                  context: context));
+                                    }),
+                                AppConstants.bottomNavSpace.height,
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -412,9 +378,11 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       ),
     );
   }
+
   void LogOutDialog({
-    required BuildContext context, required String directionality,
-    }){
+    required BuildContext context,
+    required String directionality,
+  }) {
     showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
@@ -423,28 +391,25 @@ class ProfileMenuScreenWidget extends StatelessWidget {
           builder: (context, state) {
             ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
             return AbsorbPointer(
-          absorbing: state.isLogOutProcess ? true : false,
-          child: CommonAlertDialog(
-            isLogOutProcess: state.isLogOutProcess,
-            directionality: directionality,
-            title: '${AppLocalizations.of(context)!.log_out}',
-            subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
-            positiveTitle: '${AppLocalizations.of(context)!.yes}',
-            negativeTitle: '${AppLocalizations.of(context)!.no}',
-            negativeOnTap: () {
-              Navigator.pop(context);
-            },
-            positiveOnTap: () async {
-              bloc.add(ProfileMenuEvent.logOutEvent(context: context));
-            },
-          ),
-        );
+              absorbing: state.isLogOutProcess ? true : false,
+              child: CommonAlertDialog(
+                isLogOutProcess: state.isLogOutProcess,
+                directionality: directionality,
+                title: '${AppLocalizations.of(context)!.log_out}',
+                subTitle: '${AppLocalizations.of(context)!.are_you_sure}',
+                positiveTitle: '${AppLocalizations.of(context)!.yes}',
+                negativeTitle: '${AppLocalizations.of(context)!.no}',
+                negativeOnTap: () {
+                  Navigator.pop(context);
+                },
+                positiveOnTap: () async {
+                  bloc.add(ProfileMenuEvent.logOutEvent(context: context));
+                },
+              ),
+            );
           },
         ),
       ),
     );
-    
   }
-  
 }
-

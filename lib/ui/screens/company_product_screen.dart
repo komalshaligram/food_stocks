@@ -682,7 +682,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Text(
-                                                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations
                                                         .of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -711,7 +711,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   ),
                                                   2.height,
                                                   Text(
-                                                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations
                                                         .of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
                                                     style: AppStyles
                                                         .rkRegularTextStyle(
@@ -923,7 +923,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             Text(
-                                                              '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} : ${AppLocalizations
+                                                              '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations
                                                                   .of(context)!.currency}${state.productSupplierList[index].basePrice.toStringAsFixed(AppConstants.amountFrLength)}',
                                                               style: AppStyles.rkRegularTextStyle(
                                                                   size: AppConstants

@@ -921,6 +921,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   'image = ${response.data?.clients?.first.profileImage}');
               preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
               preferences.setUserCompanyLogoUrl(logoUrl: response.data?.clients?.first.logo ?? '');
+              preferences.setEmailId(userEmailId: response.data?.clients?.first.email ?? '');
               emit(
                 state.copyWith(
                   UserImageUrl: response.data?.clients?.first.profileImage ?? '',

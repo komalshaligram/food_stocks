@@ -382,7 +382,7 @@
   "bottle_deposit": "Bottle Deposit",
   "please_provide_valid_time" :"Please provide valid time",
   "please_enter_city" : "Please enter city",
-  "remove" : "remove",
+  "issue_remove" : "Remove",
   "issueremoved" : "Issue removed successfully.",
   "wallet_information_sent_to_your_email" : "The wallet information was sent to your email"
 
