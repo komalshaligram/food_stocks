@@ -386,8 +386,10 @@
   "issueremoved" : "Issue removed successfully.",
   "wallet_information_sent_to_your_email" : "The wallet information was sent to your email",
   "form_date" : "From Date",
-  "until_date" : "Until Date"
-
+  "until_date" : "Until Date",
+  "delete_account" : "Delete account",
+  "delete_pop_up_msg": "We received your account deletion request and we will take care of it in a few days, thank you.",
+  "login_as_guest": "Login as guest"
 
 
 
