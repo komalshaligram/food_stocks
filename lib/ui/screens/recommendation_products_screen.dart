@@ -547,7 +547,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               RecommendationProductsEvent
                                   .changeSupplierSelectionExpansionEvent());
                         },
-                        child: Row(
+                        child: state.productSupplierList.length > 1 ?Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -563,7 +563,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             )
                           ],
-                        ),
+                        ) : 0.width,
                       ),
                     ),
                     state.productSupplierList

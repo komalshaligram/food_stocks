@@ -13,18 +13,22 @@ class DashBoardStatsWidget extends StatelessWidget {
   final String image;
   final String title;
   final String value;
+  final double fontSize;
 
   const DashBoardStatsWidget(
       {super.key,
       required this.context,
       required this.image,
       required this.title,
-      required this.value});
+      required this.value,
+       this.fontSize = 10,
+
+      });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: getScreenHeight(context) <= 730 ? 95 : 80,
+      height: getScreenHeight(context) <= 730 ? 115 : 90,
       decoration: BoxDecoration(
           borderRadius:
               const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
@@ -47,7 +51,7 @@ class DashBoardStatsWidget extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_10, color: AppColors.mainColor),
+                      size: fontSize, color: AppColors.mainColor),
                   maxLines: 2,
                   overflow: TextOverflow.visible,
                 ),
@@ -57,6 +61,7 @@ class DashBoardStatsWidget extends StatelessWidget {
           10.height,
           Text(
             value,
+            maxLines: 2,
             style: AppStyles.rkRegularTextStyle(
                 size: AppConstants.smallFont,
                 fontWeight: FontWeight.bold,

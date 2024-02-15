@@ -196,10 +196,16 @@ String formatNumber({required String value, required String local}){
 }
 
 
-double vatCalculation({required double price , required double vat, double qty=0,  double deposit=0}){
- double result = price + ((price * vat)/100) + (qty * deposit);
+double vatCalculation({required double price , required double vat, double qty = 0,  double deposit = 0}){
+ double result = price + ((price * vat)/100) + (qty * deposit) + ((qty * deposit * vat)/100) ;
   return result;
 }
+
+double totalVatAmountCalculation({required double price , required double vat, double qty = 0,  double deposit = 0}){
+  double result =  ((price * vat)/100) + ((qty * deposit * vat)/100) ;
+  return result;
+}
+
 
 double bottleDepositCalculation({required double qty, required double deposit}){
   double result = qty * deposit;

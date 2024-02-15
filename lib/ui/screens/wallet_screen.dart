@@ -228,7 +228,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             ),
                                             6.height,
                                             BalanceIndicator(
-                                                pendingBalance: '${state.balance.toString()}',
+                                                pendingBalance: formatNumber(
+                                                  value: state.balance.toString(),local: AppStrings.hebrewLocal),
                                                 expense:
                                                     state.expensePercentage.round(),
                                                 totalBalance: 100),
@@ -236,7 +237,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             Directionality(
                                               textDirection: TextDirection.rtl,
                                               child: Text(
-                                                '${AppLocalizations.of(context)!.currency}${(state.balance.toString())}',
+                                                '${formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
                                                 style: AppStyles.rkRegularTextStyle(
                                                     size: AppConstants.font_14,
                                                     fontWeight: FontWeight.bold,
@@ -256,24 +257,25 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             children: [
                                               Flexible(
                                                 child: DashBoardStatsWidget(
+                                                  fontSize:  AppConstants.font_14,
                                                     context: context,
                                                     image: AppImagePath.credits,
                                                     title: AppLocalizations.of(
-                                                            context)!
-                                                        .total_credit,
-                                                    value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.totalCredit.toString() }'),
+                                                            context)!.total_credit,
+                                                    value: '${formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal) }'),
                                               ),
                                               10.width,
                                               Flexible(
                                                 child: DashBoardStatsWidget(
+                                                    fontSize:  AppConstants.font_14,
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
                                                             context)!
                                                         .this_months_expenses,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
+                                                    '${formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal) }'),
+
                                               ),
                                             ],
                                           ),
@@ -282,24 +284,25 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                                             children: [
                                               Flexible(
                                                 child: DashBoardStatsWidget(
+                                                    fontSize:  AppConstants.font_14,
                                                     context: context,
                                                     image: AppImagePath.orders,
                                                     title: AppLocalizations.of(
                                                         context)!
                                                         .this_months_orders,
-                                                    value:
-                                                    '${state.orderThisMonth}'),
+                                                    value: state.orderThisMonth.toString()),
                                               ),
                                               10.width,
                                               Flexible(
                                                 child: DashBoardStatsWidget(
+                                                    fontSize:  AppConstants.font_14,
                                                     context: context,
                                                     image: AppImagePath.expense,
                                                     title: AppLocalizations.of(
                                                             context)!
                                                         .last_months_expenses,
                                                     value:
-                                                        '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
+                                                        '${formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)}'),
                                               ),
                                             ],
                                           ),
@@ -848,9 +851,10 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget>
                   3.height,
                   CircularButtonWidget(
                       buttonName: AppLocalizations.of(context)!.balance_status,
-          buttonValue: '${AppLocalizations.of(context)!.currency}${(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}',)
+          buttonValue:
+         // '${AppLocalizations.of(context)!.currency}${(double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString())}',)
 
-          //    '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
+             '${formatNumber(value: double.parse(state.walletTransactionsList[listIndex].balance.toString()).toString(), local: AppStrings.hebrewLocal)}'),
                 ],
               ),
             ],

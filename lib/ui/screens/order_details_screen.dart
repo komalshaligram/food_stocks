@@ -74,9 +74,10 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           ? SizedBox()
                           : CircularButtonWidget(
                               buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue: '${AppLocalizations.of(context)!.currency}${(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0')}'
+                          buttonValue:
+                        //  '${AppLocalizations.of(context)!.currency}${(state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0')}'
 
-                             // '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
+                             '${formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',local: AppStrings.hebrewLocal)}',
                             ),
                 ),
                 onTap: () {

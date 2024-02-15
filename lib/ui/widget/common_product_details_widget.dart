@@ -43,6 +43,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final bool isSupplierAvailable;
   final int productImageIndex;
   final dynamic Function(int, CarouselPageChangedReason)? onPageChanged;
+  final String saleDate;
+  final String startDate;
+  final String endDate;
 
   // final CarouselController carouselController = CarouselController();
 
@@ -76,6 +79,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.isSupplierAvailable,
     required this.productImageIndex,
     required this.onPageChanged,
+     this.saleDate = '',   this.startDate = '',this.endDate = ''
   });
 
   @override
@@ -289,6 +293,59 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           ],
                         ),
                       ),
+
+                   /*   startDate != '' ?  Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(AppLocalizations.of(context)!.from_time,
+                                  style:
+                                  AppStyles.rkRegularTextStyle(
+                                      size: AppConstants
+                                          .smallFont,
+                                      color:
+                                      AppColors.blackColor,
+                                  fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                                Text(startDate,
+                                  style:
+                                  AppStyles.rkRegularTextStyle(
+                                      size: AppConstants
+                                          .font_14,
+                                      color:
+                                      AppColors.blackColor),)
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(AppLocalizations.of(context)!.until_time,
+                                  style:
+                                  AppStyles.rkRegularTextStyle(
+                                      size: AppConstants
+                                          .smallFont,
+                                      color:
+                                      AppColors.blackColor,
+                                      fontWeight: FontWeight.w600
+                                  ),),
+                                Text(endDate,
+                                  style:
+                                  AppStyles.rkRegularTextStyle(
+                                      size: AppConstants
+                                          .font_14,
+                                      color:
+                                      AppColors.blackColor),)
+                              ],
+                            )
+                          ],
+                        ),
+                      ): 0.width,
+                      10.height,*/
                       /*false */ /*productStock == 0*/ /* ? 0.width : */
                       supplierWidget,
                       isSupplierAvailable

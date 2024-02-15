@@ -29,12 +29,11 @@ class ProductDetailsBloc
       if (event is _getOrderByIdEvent) {
         debugPrint('token___${preferencesHelper.getAuthToken()}');
         debugPrint('orderid___${event.orderId}');
-        emit(state.copyWith(isShimmering: true, isLoading: true));
+        emit(state.copyWith(isShimmering: true, isLoading: true , language:preferencesHelper.getAppLanguage()));
         try {
           final res = await DioClient(event.context).get(
             path: '${AppUrls.getOrderById}${preferencesHelper.getOrderId()}',
           );
-
           debugPrint('GetOrderById url   = ${AppUrls.getOrderById}${event.orderId}');
        //   debugPrint('GetOrderById res  = $res');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
@@ -73,7 +72,7 @@ class ProductDetailsBloc
 
       if (event is _getProductDataEvent) {
         emit(state.copyWith(
-            orderBySupplierProduct: event.orderBySupplierProduct,orderData: event.orderData));
+            orderBySupplierProduct: event.orderBySupplierProduct,orderData: event.orderData, language: preferencesHelper.getAppLanguage()));
       }
       else if (event is _productProblemEvent) {
         List<int> index = [];
