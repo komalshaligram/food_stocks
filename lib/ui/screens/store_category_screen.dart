@@ -343,8 +343,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             onTap: (){
                                               bloc.add(StoreCategoryEvent.changeGridToListViewEvent(isGridView: false));
                                             },
-                                            child: state.isGridView ? Icon(Icons.list,
-                                            ) :Icon(Icons.grid_view),
+                                            child: state.isGridView ? Icon(Icons.list,color: AppColors.blueColor,size: 24,)
+                                                :Icon(Icons.grid_view,color: AppColors.blueColor,size: 24,),
                                           ),
                                         ],
                                       ),
