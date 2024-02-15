@@ -355,6 +355,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ? SizedBox()
                                         : Container(
                                       color: AppColors.pageColor,
+
                                       child:state.isGridView ? SizedBox(
                                         height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.38,
                                         child: GridView.builder(
