@@ -779,7 +779,7 @@ class ProfileScreenWidget extends StatelessWidget {
               positiveTitle: '${AppLocalizations.of(context)!.close}',
               positiveOnTap: () async {
                 Navigator.pop(context1);
-                bloc.add(ProfileEvent.logOutEvent(context: context));
+                bloc.add(ProfileEvent.deleteAccountEvent(context: context));
                 //Navigator.pushAndRemoveUntil(context, Routes.lo, (route) => false);
               },
             ));

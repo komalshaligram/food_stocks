@@ -53,9 +53,6 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-      if(state.isGuestUser){
-        debugPrint('Guest User');
-        }
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
