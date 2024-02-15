@@ -256,17 +256,17 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                               directionality: state.language)
                                           : CupertinoActivityIndicator();
                                     }),
-                                profileMenuTiles(
+                             /*   profileMenuTiles(
                                     title: AppLocalizations.of(context)!
                                         .delete_account,
                                     onTap: () {
                                       deleteConfirmDialog(context: context,directionality: state.language);
-                                     /* Navigator.pushNamed(context,
+                                     *//* Navigator.pushNamed(context,
                                           RouteDefine.fileUploadScreen.name,
                                           arguments: {
                                             AppStrings.isUpdateParamString: true
-                                          });*/
-                                    },isDelete: true),
+                                          });*//*
+                                    },isDelete: true),*/
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!
                                         .app_language,

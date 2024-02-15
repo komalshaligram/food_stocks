@@ -84,7 +84,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isSelectSupplier = true;
+  print('productStock____-------${productStock}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

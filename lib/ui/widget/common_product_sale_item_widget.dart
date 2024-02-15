@@ -21,6 +21,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final double salePercentage;
   final double discountedPrice;
   final void Function() onButtonTap;
+  final bool isGuestUser;
 
   const CommonProductSaleItemWidget(
       {super.key,
@@ -33,6 +34,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
         required this.productName,
       required this.onButtonTap,
       required this.discountedPrice,
+        this.isGuestUser = false,
       });
 
   @override
@@ -65,7 +67,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: CachedNetworkImage(
+              child: !isGuestUser ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$saleImage",
                 height: 70,
                 fit: BoxFit.fitHeight,
@@ -93,6 +95,10 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
+              ) :
+              Image.asset(AppImagePath.imageNotAvailable5,
+                height: 70,
+                width: 70,
               ),
             ),
             5.height,
@@ -127,7 +133,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             5.height,
 
 
-            Center(
+            !isGuestUser ?  Center(
               child: CommonProductButtonWidget(
                 title:
                     "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}" ,
@@ -138,7 +144,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                 borderRadius: AppConstants.radius_3,
                 textSize: AppConstants.font_12,
               ),
-            )
+            ): 0.width
           ],
         ),
       ),

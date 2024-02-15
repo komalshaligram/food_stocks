@@ -76,7 +76,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             messageCount: preferences.getMessageCount(),
             cartCount: preferences.getCartCount(),
-          isGuestUser: preferences.getGuestUser()
+
 
 
         ));

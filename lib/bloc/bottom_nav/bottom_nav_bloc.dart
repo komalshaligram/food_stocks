@@ -24,7 +24,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           emit(state.copyWith(index: event.index));
         }
         else{
-          emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index ));
+          emit(state.copyWith(isGuestUser:isGuestUser ,index: event.index));
         }
       } else if (event is _UpdateCartCountEvent) {
      emit(state.copyWith(isAnimation: false));
@@ -41,7 +41,10 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         debugPrint('cart count = ${state.cartCount}');
       }
       else if(event is _NavigateToStoreScreenEvent){
-        emit(state.copyWith(isStoreScreen: event.storeScreen));
+        bool isGuestUser = preferencesHelper.getGuestUser();
+        if(isGuestUser){
+          emit(state.copyWith(index: 1,isGuestUser: isGuestUser));
+        }
       }
     });
   }

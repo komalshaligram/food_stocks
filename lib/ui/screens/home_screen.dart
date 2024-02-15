@@ -604,7 +604,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: state.isGuestUser ? 170 : 190,
+                                          height:  190,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList.length,
@@ -615,13 +615,13 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
-                                                    isGuestUser: state.isGuestUser,
+
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
                                                         .productStock ??
                                                         0,
-                                                    height: state.isGuestUser ? 140 : 160,
+                                                    height: 160,
                                                     width: 140,
                                                     productImage: state
                                                         .recommendedProductsList[
@@ -645,10 +645,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         ?.toDouble() ??
                                                         0.0,
                                                     onButtonTap: () {
-                                                      if(state.isGuestUser){
-                                                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                                                      }
-                                                      else{
+
                                                         showProductDetails(
                                                             context: context,
                                                             productId: state
@@ -656,7 +653,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                             index]
                                                                 .id ??
                                                                 '');
-                                                      }
+
 
                                                     },
                                                   )
