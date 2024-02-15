@@ -379,9 +379,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             itemBuilder: (context, index) =>
                                                 DelayedWidget(
                                                   child: CommonProductItemWidget(
-                                                      productStock:
-                                                         int.parse(state.planogramProductList[index].productStock.toString()??
-                                                              '0'),
+                                                      productStock: (state.planogramProductList[index].productStock ?? 0),
                                                       productImage: state
                                                           .planogramProductList[index]
                                                           .mainImage ??
@@ -448,12 +446,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           shrinkWrap: true,
                                           physics: AlwaysScrollableScrollPhysics(),
                                             itemBuilder: (context, index) {
+                                            print('planogramProductList___${state
+                                                .planogramProductList[index]
+                                                .productStock}');
                                               return CommonProductListWidget(
-                                              productStock: (
-                                              state
+                                              productStock: state
                                                   .planogramProductList[index]
-                                                  .productStock ??
-                                              '0'),
+                                                  .productStock ?? 0,
                                               productImage: state
                                                   .planogramProductList[index]
                                                   .mainImage ??

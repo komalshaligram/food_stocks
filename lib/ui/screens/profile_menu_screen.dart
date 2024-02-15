@@ -73,7 +73,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   children: [
                     10.height,
                     Container(
-                      height: 100,
+                      height: 110,
                       width: double.maxFinite,
                       padding: EdgeInsets.symmetric(
                           horizontal: AppConstants.padding_10),
