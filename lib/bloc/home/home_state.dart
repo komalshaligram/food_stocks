@@ -29,6 +29,12 @@ class HomeState with _$HomeState {
     required TextEditingController noteController,
     required List<RecommendationData> recommendedProductsList,
     required bool isShimmering,
+    required bool isCategoryExpand,
+    required bool isSearching,
+    required TextEditingController searchController,
+    required List<SearchModel> searchList,
+    required String search,
+    required List<Category> productCategoryList,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -57,7 +63,15 @@ class HomeState with _$HomeState {
         expensePercentage: 0,
         noteController: TextEditingController(),
         recommendedProductsList: [],
-    isShimmering: false
+    isShimmering: false,
+    isCategoryExpand: false,
+    isSearching: false,
+    searchController: TextEditingController(),
+    searchList: [],
+    search: '',
+    productCategoryList: []
+
+
 
       );
 }

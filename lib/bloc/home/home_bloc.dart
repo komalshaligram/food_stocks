@@ -21,6 +21,7 @@ import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/get_messages_req_model/get_messages_req_model.dart';
 import '../../data/model/req_model/get_order_count/get_order_count_req_model.dart';
+import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
     as InsertCartModel;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
@@ -29,12 +30,14 @@ import '../../data/model/req_model/recommendation_products_req_model/recommendat
 import '../../data/model/req_model/wallet_record_req/wallet_record_req_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_messages_res_model/get_messages_res_model.dart';
+import '../../data/model/res_model/global_search_res_model/global_search_res_model.dart';
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/wallet_record_res/wallet_record_res_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -42,6 +45,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_strings.dart';
 import '../../ui/utils/themes/app_urls.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
+import 'package:food_stock/data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'home_event.dart';
 
@@ -988,6 +992,149 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(state.copyWith(isShimmering: false));
         }
       }
+
+      if (event is _ChangeCategoryExpansion) {
+        if (event.isOpened != null) {
+          emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
+        } else {
+          emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
+        }
+      }
+      else if (event is _GlobalSearchEvent) {
+        emit(state.copyWith(search: state.searchController.text));
+        debugPrint('data1 = ${state.searchController.text}');
+        try {
+          GlobalSearchReqModel globalSearchReqModel =
+          GlobalSearchReqModel(search: state.searchController.text);
+          emit(state.copyWith(isSearching: true));
+          final res = await DioClient(event.context).post(
+              AppUrls.getGlobalSearchResultUrl,
+              data: globalSearchReqModel.toJson());
+          debugPrint('data1 = $res');
+          GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+          debugPrint('cat len = ${response.data?.categoryData?.length}');
+          debugPrint('sub cat len = ${response.data?.subCategoryData?.length}');
+          debugPrint('com len = ${response.data?.companyData?.length}');
+          debugPrint('sale len = ${response.data?.saleData?.length}');
+          debugPrint('sup len = ${response.data?.supplierData?.length}');
+          debugPrint(
+              'sup prod len = ${response.data?.supplierProductData?.length}');
+          if (state.searchController.text == '') {
+            List<SearchModel> searchList = [];
+            searchList.addAll(state.productCategoryList.map((category) =>
+                SearchModel(
+                    searchId: category.id ?? '',
+                    name: category.categoryName ?? '',
+                    searchType: SearchTypes.category,
+                    image: category.categoryImage ?? '')));
+            emit(state.copyWith(searchList: searchList, isSearching: false));
+            return;
+          }
+          debugPrint('store search list =${response.status}');
+          if (response.status == 200) {
+            List<SearchModel> searchList = [];
+            //category search result
+            searchList.addAll(response.data?.categoryData
+                ?.map((category) => SearchModel(
+                searchId: category.id ?? '',
+                name: category.categoryName ?? '',
+                searchType: SearchTypes.category,
+                image: category.categoryImage ?? ''))
+                .toList() ??
+                []);
+            //subcategory search result
+            searchList.addAll(response.data?.subCategoryData
+                ?.map((subCategory) => SearchModel(
+              searchId: subCategory.id ?? '',
+              name: subCategory.subCategoryName ?? '',
+              searchType: SearchTypes.subCategory,
+              image: '',
+              categoryId: subCategory.parentCategoryId ?? '',
+              categoryName: subCategory.parentCategoryName ?? '',
+
+            ))
+                .toList() ??
+                []);
+            //company search result
+            searchList.addAll(response.data?.companyData
+                ?.map((company) => SearchModel(
+              searchId: company.id ?? '',
+              name: company.brandName ?? '',
+              searchType: SearchTypes.company,
+              image: company.brandLogo ?? '',
+
+            ))
+                .toList() ??
+                []);
+            // supplier search result
+            searchList.addAll(response.data?.supplierData
+                ?.map((supplier) => SearchModel(
+              searchId: supplier.id ?? '',
+              name: supplier.supplierDetail?.companyName ?? '',
+              searchType: SearchTypes.supplier,
+              image: supplier.logo ?? '',
+            ))
+                .toList() ??
+                []);
+            //sale search result
+            searchList.addAll(response.data?.saleData
+                ?.map((sale) => SearchModel(
+              searchId: sale.id ?? '',
+              name: sale.productName ?? '',
+              searchType: SearchTypes.sale,
+              image: sale.mainImage ?? '',
+
+            ))
+                .toList() ??
+                []);
+            //supplier products result
+            searchList.addAll(response.data?.supplierProductData
+                ?.map((supplier) => SearchModel(
+                searchId: supplier.productId ?? '',
+                name: supplier.productName ?? '',
+                searchType: SearchTypes.product,
+                image: supplier.mainImage ?? '',
+                productStock: int.parse(supplier.productStock ?? 0.toString())
+            ))
+                .toList() ??
+                []);
+            debugPrint('store search list = ${searchList.length}');
+            emit(state.copyWith(
+                searchList: searchList,
+                search: state.searchController.text,
+                isSearching: false));
+          } else {
+            // emit(state.copyWith(searchList: []));
+            emit(state.copyWith(isSearching: false));
+            // CustomSnackBar.showSnackBar(
+            //     context: event.context,
+            //     title: response.message ?? AppStrings.somethingWrongString,
+            //     type: SnackBarType.SUCCESS);
+          }
+        } on ServerException {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title:
+            '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+            type: SnackBarType.FAILURE,
+          );
+          emit(state.copyWith(isSearching: false));
+        } catch (exc) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title:
+            '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+            type: SnackBarType.FAILURE,
+          );
+          emit(state.copyWith(isSearching: false));
+        }
+      }
+      else if (event is _UpdateGlobalSearchEvent) {
+        emit(state.copyWith(
+            searchController: TextEditingController(text: event.search),
+            searchList: event.searchList));
+      }
+
     });
   }
 }

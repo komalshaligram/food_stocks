@@ -13,6 +13,7 @@ class SearchModel with _$SearchModel {
     @Default('') String image,
     @Default('') String categoryId,
     @Default('') String categoryName,
+    @Default(1) int productStock,
   }) = _SearchModel;
 
   factory SearchModel.fromJson(Map<String, dynamic> json) =>

@@ -20,6 +20,7 @@ class ProductDetailsState with _$ProductDetailsState {
     required String note,
     required TextEditingController addNoteController,
     required bool isRemoveProcess,
+    required String language,
 
   }) = _ProductDetailsState;
 
@@ -40,7 +41,8 @@ class ProductDetailsState with _$ProductDetailsState {
      missingQuantity: 0,
     note: '',
     addNoteController: TextEditingController(),
-    isRemoveProcess: false
+    isRemoveProcess: false,
+    language: 'en'
 
 
   );

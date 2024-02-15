@@ -119,6 +119,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       ),
                                   itemBuilder: (context, index) {
                                     return buildProductSaleListItem(
+
                                       index: index,
                                       context: context,
                                       saleImage: state.productSalesList[index]
@@ -146,6 +147,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                           productId: state
                                                   .productSalesList[index].id ??
                                               '',
+                                          startDate : state
+                                              .productSalesList[index].fromDate.toString(),
+                                          endDate : state
+                                              .productSalesList[index].endDate.toString(),
                                         );
                                       },
                                     );
@@ -200,7 +205,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId}) async {
+      {required BuildContext context, required String productId, required String startDate, required String endDate}) async {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.getProductDetailsEvent(
         context: context, productId: productId));
     showModalBottomSheet(
@@ -242,6 +247,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
+                            startDate : startDate,
+                            endDate: endDate,
                               context: context,
                                   productImageIndex: state.imageIndex,
                               onPageChanged: (index, p1) {
@@ -300,10 +307,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                     AppConstants.padding_30),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
+                                  '${AppLocalizations.of(context)!.out_of_stock1}',
                                   style: AppStyles.rkRegularTextStyle(
                                       size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
+                                      color: AppColors.redColor),
                                 ),
                               )
                                   : buildSupplierSelection(context: context),
@@ -406,7 +413,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                           context.read<ProductSaleBloc>().add(ProductSaleEvent
                               .changeSupplierSelectionExpansionEvent());
                         },
-                        child: Row(
+                        child: state.productSupplierList.length > 1 ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -422,7 +429,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                               color: AppColors.blackColor,
                             )
                           ],
-                        ),
+                        ) : 0.width,
                       ),
                     ),
                     state.productSupplierList

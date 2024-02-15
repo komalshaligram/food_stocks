@@ -122,12 +122,15 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                 Expanded(
                                     flex: 1,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          AppLocalizations.of(context)!.balance_status,
-                                          style: AppStyles.rkRegularTextStyle(
+                                          AppLocalizations.of(context)!
+                                              .balance_status,
+                                          style:
+                                          AppStyles.rkRegularTextStyle(
                                             size: AppConstants.smallFont,
                                             color: AppColors.blackColor,
                                           ),
@@ -135,17 +138,22 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         ),
                                         6.height,
                                         BalanceIndicator(
-                                            pendingBalance: formatNumber(value: (state.balance.toString()),local: AppStrings.hebrewLocal),
-                                            expense: state.expensePercentage.round(),
+                                            pendingBalance: formatNumber(
+                                                value: state.balance.toString(),local: AppStrings.hebrewLocal),
+                                            expense:
+                                            state.expensePercentage.round(),
                                             totalBalance: 100),
                                         6.height,
-                                        Text(
-                                          '${AppLocalizations.of(context)!.currency}${state.balance.toString()}',
-                                          style: AppStyles.rkRegularTextStyle(
-                                              size: AppConstants.font_14,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.blackColor),
-                                          textAlign: TextAlign.center,
+                                        Directionality(
+                                          textDirection: TextDirection.rtl,
+                                          child: Text(
+                                            '${formatNumber( value: state.balance.toString(),local: AppStrings.hebrewLocal)}',
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_14,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.blackColor),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ],
                                     )),
@@ -159,22 +167,24 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         children: [
                                           Flexible(
                                             child: DashBoardStatsWidget(
+                                                fontSize:  AppConstants.font_14,
                                                 context: context,
-                                                image: AppImagePath.expense,
-                                                title: AppLocalizations.of(context)!
-                                                    .this_months_expenses,
-                                                value:
-                                                '${AppLocalizations.of(context)!.currency}${state.thisMonthExpense.toString()}'),
+                                                image: AppImagePath.credits,
+                                                title: AppLocalizations.of(
+                                                    context)!.total_credit,
+                                                value: '${formatNumber(value: state.totalCredit.toString() ,local: AppStrings.hebrewLocal) }'),
                                           ),
                                           10.width,
                                           Flexible(
                                             child: DashBoardStatsWidget(
+                                                fontSize:  AppConstants.font_14,
                                                 context: context,
-                                                image: AppImagePath.credits,
-                                                title: AppLocalizations.of(context)!
-                                                    .total_credit,
+                                                image: AppImagePath.expense,
+                                                title: AppLocalizations.of(
+                                                    context)!
+                                                    .this_months_expenses,
                                                 value:
-                                                '${AppLocalizations.of(context)!.currency}${ state.totalCredit.toString()}'),
+                                                '${formatNumber(value: state.thisMonthExpense.toString() ,local: AppStrings.hebrewLocal) }'),
 
                                           ),
                                         ],
@@ -184,21 +194,25 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                         children: [
                                           Flexible(
                                             child: DashBoardStatsWidget(
+                                                fontSize:  AppConstants.font_14,
                                                 context: context,
-                                                image: AppImagePath.expense,
-                                                title: AppLocalizations.of(context)!
-                                                    .last_months_expenses,
-                                                value:
-                                                    '${AppLocalizations.of(context)!.currency}${state.lastMonthExpense.toString()}'),
+                                                image: AppImagePath.orders,
+                                                title: AppLocalizations.of(
+                                                    context)!
+                                                    .this_months_orders,
+                                                value: state.orderThisMonth.toString()),
                                           ),
                                           10.width,
                                           Flexible(
                                             child: DashBoardStatsWidget(
+                                                fontSize:  AppConstants.font_14,
                                                 context: context,
-                                                image: AppImagePath.orders,
-                                                title: AppLocalizations.of(context)!
-                                                    .this_months_orders,
-                                                value: '${state.orderThisMonth}'),
+                                                image: AppImagePath.expense,
+                                                title: AppLocalizations.of(
+                                                    context)!
+                                                    .last_months_expenses,
+                                                value:
+                                                '${formatNumber(value: state.lastMonthExpense.toString(),local:AppStrings.hebrewLocal)}'),
                                           ),
                                         ],
                                       ),

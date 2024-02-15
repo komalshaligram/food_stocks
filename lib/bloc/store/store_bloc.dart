@@ -63,7 +63,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _ChangeSupplierSelectionExpansionEvent) {
+      }
+      else if (event is _ChangeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
@@ -482,7 +483,13 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           // emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
         } catch (e) {
-          Navigator.pop(event.context);
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: e.toString(),
+            type: SnackBarType.FAILURE,
+
+          );
+        //  Navigator.pop(event.context);
         }
       }
       else if (event is _IncreaseQuantityOfProduct) {
@@ -884,7 +891,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchType: SearchTypes.subCategory,
                         image: '',
                         categoryId: subCategory.parentCategoryId ?? '',
-                        categoryName: subCategory.parentCategoryName ?? ''))
+                        categoryName: subCategory.parentCategoryName ?? '',
+
+            ))
                     .toList() ??
                 []);
             //company search result
@@ -893,7 +902,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: company.id ?? '',
                         name: company.brandName ?? '',
                         searchType: SearchTypes.company,
-                        image: company.brandLogo ?? ''))
+                        image: company.brandLogo ?? '',
+
+            ))
                     .toList() ??
                 []);
             // supplier search result
@@ -902,7 +913,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: supplier.id ?? '',
                         name: supplier.supplierDetail?.companyName ?? '',
                         searchType: SearchTypes.supplier,
-                        image: supplier.logo ?? ''))
+                        image: supplier.logo ?? '',
+            ))
                     .toList() ??
                 []);
             //sale search result
@@ -911,7 +923,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: sale.id ?? '',
                         name: sale.productName ?? '',
                         searchType: SearchTypes.sale,
-                        image: sale.mainImage ?? ''))
+                        image: sale.mainImage ?? '',
+
+            ))
                     .toList() ??
                 []);
             //supplier products result
@@ -920,7 +934,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                         searchId: supplier.productId ?? '',
                         name: supplier.productName ?? '',
                         searchType: SearchTypes.product,
-                        image: supplier.mainImage ?? ''))
+                        image: supplier.mainImage ?? '',
+              productStock: int.parse(supplier.productStock ?? 0.toString())
+            ))
                     .toList() ??
                 []);
             debugPrint('store search list = ${searchList.length}');
@@ -953,13 +969,16 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           );
           emit(state.copyWith(isSearching: false));
         }
-      } else if (event is _UpdateImageIndexEvent) {
+      }
+      else if (event is _UpdateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      } else if (event is _UpdateGlobalSearchEvent) {
+      }
+      else if (event is _UpdateGlobalSearchEvent) {
         emit(state.copyWith(
             searchController: TextEditingController(text: event.search),
             searchList: event.searchList));
-      } else if (event is _ToggleNoteEvent) {
+      }
+      else if (event is _ToggleNoteEvent) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: true);
         if (event.isBarcode) {

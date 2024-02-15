@@ -77,5 +77,16 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getRecommendationProductsListEvent(
       {required BuildContext context}) = _GetRecommendationProductsListEvent;
 
+  const factory HomeEvent.changeCategoryExpansion({bool? isOpened}) =
+  _ChangeCategoryExpansion;
+
+  const factory HomeEvent.globalSearchEvent({required BuildContext context}) =
+  _GlobalSearchEvent;
+
+  const factory HomeEvent.updateGlobalSearchEvent(
+      {required String search,
+        required List<SearchModel> searchList}) = _UpdateGlobalSearchEvent;
+
+
 
 }

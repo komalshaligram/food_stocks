@@ -100,6 +100,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             );
           }
 
+          print('UpdateCart reqMap    ${reqMap}');
+
           final res = await DioClient(event.context).post(
             '${AppUrls.updateCartProductUrl}${preferencesHelper.getCartId()}',
             data: reqMap,
