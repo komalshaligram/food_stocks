@@ -147,14 +147,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         size: AppConstants.smallFont,
                         color: AppColors.blackColor),
                   ),
-               /*   Text(
-                    '${AppLocalizations.of(context)!.price} : ${productUnitPrice
-                        .toStringAsFixed(2)} ${AppLocalizations.of(context)!
-                        .per_unit}',
-                    style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor),
-                  ),*/
+                  Text(
+                    '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                    style: AppStyles
+                        .rkRegularTextStyle(
+                        size: AppConstants
+                            .font_14,
+                        color: AppColors
+                            .blackColor),
+                  ),
                 ],
               ),
               // Row(
@@ -347,7 +348,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ): 0.width,
                       10.height,*/
                       /*false */ /*productStock == 0*/ /* ? 0.width : */
-                      supplierWidget,
+                 //     supplierWidget,
                       isSupplierAvailable
                           ? Column(
                               mainAxisSize: MainAxisSize.min,

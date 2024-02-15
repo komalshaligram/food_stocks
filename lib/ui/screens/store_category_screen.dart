@@ -196,7 +196,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       const NeverScrollableScrollPhysics(),
                                       itemBuilder:
                                           (context, index) {
-                                        print('width_____${getScreenWidth(context).width}');
                                         return buildPlanoGramItem(
                                             context: context,
                                             list: state.planoGramsList,
@@ -275,7 +274,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               CrossAxisAlignment.start,
                               children: [
                                 state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
-                                    ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget()
+                                    ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :12 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
                                     : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering
                                     ? Container(
                                   height:
@@ -350,14 +349,17 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       
                                     ) : SizedBox(),
                                      state.isPlanogramProductShimmering && state.planogramProductList.isEmpty ? state.isGridView
-                                        ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget()
+                                        ? SupplierProductsScreenShimmerWidget(itemCount:  state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 12 :9) : (getScreenHeight(context) >= 750 ? 6 : 6)) :
+                                     StoreCategoryScreenSubcategoryShimmerWidget(itemCount : state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 10 : 7) : (getScreenHeight(context) >= 750 ? 6 : 5))
                                         : state.planogramProductList.isEmpty
                                         ? SizedBox()
                                         : Container(
                                       color: AppColors.pageColor,
 
                                       child:state.isGridView ? SizedBox(
-                                        height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.38,
+                                        height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.74 : getScreenHeight(context) * 0.71 ) :
+        ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.44 : getScreenHeight(context) * 0.38 ),
+
                                         child: GridView.builder(
                                             itemCount: state
                                                 .planogramProductList
@@ -436,7 +438,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         ),
                                       )
                                        : SizedBox(
-                                        height: state.subPlanoGramsList.length == 0 ?  MediaQuery.of(context).size.height * 0.7 : MediaQuery.of(context).size.height * 0.38,
+                                        height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.74 : getScreenHeight(context) * 0.70 ) :
+                                        ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.43 : getScreenHeight(context) * 0.38 )
+                                        ,
                                          child: ListView.builder(
                                           itemCount: state
                                               .planogramProductList

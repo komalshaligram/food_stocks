@@ -4,7 +4,10 @@ import 'package:food_stock/ui/widget/common_shimmer_widget.dart';
 import '../utils/themes/app_constants.dart';
 
 class SupplierProductsScreenShimmerWidget extends StatelessWidget {
-  const SupplierProductsScreenShimmerWidget({super.key});
+  int itemCount;
+   SupplierProductsScreenShimmerWidget({super.key,
+    this.itemCount = 18
+   });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,7 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: GridView.builder(
             shrinkWrap: true,
-            itemCount: 12,
+            itemCount: itemCount,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

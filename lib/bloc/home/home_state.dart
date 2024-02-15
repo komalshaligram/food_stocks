@@ -35,6 +35,8 @@ class HomeState with _$HomeState {
     required List<SearchModel> searchList,
     required String search,
     required List<Category> productCategoryList,
+    required bool isCatVisible,
+    required bool isGuestUser,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -69,9 +71,8 @@ class HomeState with _$HomeState {
     searchController: TextEditingController(),
     searchList: [],
     search: '',
-    productCategoryList: []
-
-
-
+    productCategoryList: [],
+    isCatVisible: false,
+    isGuestUser: false
       );
 }

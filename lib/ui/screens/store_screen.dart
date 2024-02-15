@@ -626,6 +626,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     itemBuilder: (context,
                                                             index) =>
                                                         CommonProductItemWidget(
+
                                                           productStock: state
                                                                   .recommendedProductsList[
                                                                       index]

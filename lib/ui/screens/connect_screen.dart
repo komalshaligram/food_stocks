@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/ui/utils/themes/app_colors.dart';
 
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
+import '../../bloc/connect_screen/connect_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_img_path.dart';
@@ -19,11 +21,28 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ConnectBloc(),
+
+      child: ConnectScreenWidget(),
+    );
+  }
+}
+
+
+class ConnectScreenWidget extends StatelessWidget {
+   ConnectScreenWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    ConnectBloc bloc = context.read<ConnectBloc>();
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);
       },
-      child: Scaffold(
+      child: BlocBuilder<ConnectBloc, ConnectState>(
+  builder: (context, state) {
+    return Scaffold(
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(left: 38, right: 38),
@@ -61,18 +80,19 @@ class ConnectScreen extends StatelessWidget {
                     },
                   ),
                   20.height,
-                  GestureDetector(
+                 /* GestureDetector(
                       onTap: (){
-                        Navigator.pushNamed(
-                            context, RouteDefine.bottomNavScreen.name);
+                        bloc.add(ConnectEvent.logInAsGuest(context: context));
                       },
-                      child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.blueColor),))
+                      child: Text(AppLocalizations.of(context)!.login_as_guest,style: TextStyle(color: AppColors.blueColor),))*/
                 ],
               ),
             ),
           ),
         ),
-      ),
+      );
+  },
+),
     );
   }
 }

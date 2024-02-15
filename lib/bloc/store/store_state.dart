@@ -29,6 +29,7 @@ class StoreState with _$StoreState {
     required bool isCatVisible,
     required bool isSupplierVisible,
     required bool isCompanyVisible,
+    required bool isGuestUser,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -58,6 +59,6 @@ class StoreState with _$StoreState {
         isCompanyVisible: true,
         isCatVisible: true,
         isSupplierVisible: true,
-
+        isGuestUser: false
       );
 }

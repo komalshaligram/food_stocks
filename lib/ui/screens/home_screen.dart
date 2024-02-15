@@ -34,23 +34,27 @@ import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
 
 class HomeRoute {
-  static Widget get route => const HomeScreen();
+  static Widget get route =>  HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+   HomeScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
+
+
     return BlocProvider(
       create: (context) => HomeBloc()
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
-        ..add(HomeEvent.getProductSalesListEvent(context: context))
+     //   ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
         ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
+       // ..add(HomeEvent.getProductCategoriesListEvent(context: context)),
       child: HomeScreenWidget(),
     );
   }
@@ -75,7 +79,7 @@ class HomeScreenWidget extends StatelessWidget {
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-                bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+               // bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
@@ -600,7 +604,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             }),
                                         SizedBox(
                                           width: getScreenWidth(context),
-                                          height: 190,
+                                          height: state.isGuestUser ? 170 : 190,
                                           child: ListView.builder(
                                               itemCount: state
                                                   .recommendedProductsList.length,
@@ -611,12 +615,13 @@ class HomeScreenWidget extends StatelessWidget {
                                                   AppConstants.padding_5),
                                               itemBuilder: (context, index) =>
                                                   CommonProductItemWidget(
+                                                    isGuestUser: state.isGuestUser,
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
                                                         .productStock ??
                                                         0,
-                                                    height: 160,
+                                                    height: state.isGuestUser ? 140 : 160,
                                                     width: 140,
                                                     productImage: state
                                                         .recommendedProductsList[
@@ -640,14 +645,19 @@ class HomeScreenWidget extends StatelessWidget {
                                                         ?.toDouble() ??
                                                         0.0,
                                                     onButtonTap: () {
-                                                      print("tap 2");
-                                                      showProductDetails(
-                                                          context: context,
-                                                          productId: state
-                                                              .recommendedProductsList[
-                                                          index]
-                                                              .id ??
-                                                              '');
+                                                      if(state.isGuestUser){
+                                                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                                      }
+                                                      else{
+                                                        showProductDetails(
+                                                            context: context,
+                                                            productId: state
+                                                                .recommendedProductsList[
+                                                            index]
+                                                                .id ??
+                                                                '');
+                                                      }
+
                                                     },
                                                   )
                                             // buildRecommendationAndPreviousOrderProductsListItem(
@@ -1310,6 +1320,8 @@ class HomeScreenWidget extends StatelessWidget {
     context.read<HomeBloc>().add(HomeEvent.getProductDetailsEvent(
           context: context,
           productId: productId,
+      isBarcode: isBarcode ?? false
+
         ));
     showModalBottomSheet(
       context: context,
@@ -1333,200 +1345,197 @@ class HomeScreenWidget extends StatelessWidget {
             //shouldCloseOnMinExtent: true,
             builder:
                 (BuildContext context1, ScrollController scrollController) {
-              return BlocProvider.value(
-                  value: context.read<HomeBloc>(),
-                  child: BlocBuilder<HomeBloc, HomeState>(
-                    builder: (context, state) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppConstants.radius_30),
-                            topRight: Radius.circular(AppConstants.radius_30),
-                          ),
-                          color: AppColors.whiteColor,
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: Scaffold(
-                          body: state.isProductLoading
-                              ? ProductDetailsShimmerWidget()
-                              : state.productDetails.isEmpty
-                                  ? Center(
-                                      child: Text(
-                                          AppLocalizations.of(context)!.no_data,
-                                          style: AppStyles.rkRegularTextStyle(
-                                            size: AppConstants.normalFont,
-                                            color: AppColors.greyColor,
-                                            fontWeight: FontWeight.w500,
-                                          )),
-                                    )
-                                  : CommonProductDetailsWidget(
-                                      context: context,
-                                      productImageIndex: state.imageIndex,
-                                      onPageChanged: (index, p1) {
-                                        context.read<HomeBloc>().add(
-                                            HomeEvent.updateImageIndexEvent(
-                                                index: index));
-                                      },
-                                      productImages: [
-                                        state.productDetails.first.mainImage ??
-                                            '',
-                                        ...state.productDetails.first.images
-                                                ?.map((image) =>
-                                                    image.imageUrl ?? '') ??
-                                            []
-                                      ],
-                                      productPerUnit: state.productDetails.first
+              return BlocBuilder<HomeBloc, HomeState>(
+                builder: (context, state) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppConstants.radius_30),
+                        topRight: Radius.circular(AppConstants.radius_30),
+                      ),
+                      color: AppColors.whiteColor,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Scaffold(
+                      body: state.isProductLoading
+                          ? ProductDetailsShimmerWidget()
+                          : state.productDetails.isEmpty
+                              ? Center(
+                                  child: Text(
+                                      AppLocalizations.of(context)!.no_data,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.normalFont,
+                                        color: AppColors.greyColor,
+                                        fontWeight: FontWeight.w500,
+                                      )),
+                                )
+                              : CommonProductDetailsWidget(
+                                  context: context,
+                                  productImageIndex: state.imageIndex,
+                                  onPageChanged: (index, p1) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.updateImageIndexEvent(
+                                            index: index));
+                                  },
+                                  productImages: [
+                                    state.productDetails.first.mainImage ??
+                                        '',
+                                    ...state.productDetails.first.images
+                                            ?.map((image) =>
+                                                image.imageUrl ?? '') ??
+                                        []
+                                  ],
+                                  productPerUnit: state.productDetails.first
+                                          .numberOfUnit ??
+                                      0,
+                                  productUnitPrice: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .totalPrice,
+                                  productName: state.productDetails.first
+                                          .productName ??
+                                      '',
+                                  productCompanyName: state
+                                          .productDetails.first.brandName ??
+                                      '',
+                                  productDescription: parse(state
+                                                  .productDetails
+                                                  .first
+                                                  .productDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  productSaleDescription: parse(state
+                                                  .productDetails
+                                                  .first
+                                                  .productDescription ??
+                                              '')
+                                          .body
+                                          ?.text ??
+                                      '',
+                                  productPrice: state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .totalPrice *
+                                      state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .quantity *
+                                      (state.productDetails.first
                                               .numberOfUnit ??
-                                          0,
-                                      productUnitPrice: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .totalPrice,
-                                      productName: state.productDetails.first
-                                              .productName ??
-                                          '',
-                                      productCompanyName: state
-                                              .productDetails.first.brandName ??
-                                          '',
-                                      productDescription: parse(state
-                                                      .productDetails
-                                                      .first
-                                                      .productDescription ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      productSaleDescription: parse(state
-                                                      .productDetails
-                                                      .first
-                                                      .productDescription ??
-                                                  '')
-                                              .body
-                                              ?.text ??
-                                          '',
-                                      productPrice: state
-                                              .productStockList[
-                                                  state.productStockUpdateIndex]
-                                              .totalPrice *
-                                          state
-                                              .productStockList[
-                                                  state.productStockUpdateIndex]
-                                              .quantity *
-                                          (state.productDetails.first
-                                                  .numberOfUnit ??
-                                              0),
-                                      productScaleType: state.productDetails
-                                              .first.scales?.scaleType ??
-                                          '',
-                                      productWeight: state
-                                              .productDetails.first.itemsWeight
-                                              ?.toDouble() ??
-                                          0.0,
-                                      isNoteOpen: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .isNoteOpen,
-                                      onNoteToggleChanged: () {
-                                        context
-                                            .read<HomeBloc>()
-                                            .add(HomeEvent.toggleNoteEvent());
-                                      },
-                                      supplierWidget: state
-                                              .productSupplierList.isEmpty
-                                          ? Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      top: BorderSide(
-                                                          color: AppColors
-                                                              .borderColor
-                                                              .withOpacity(0.5),
-                                                          width: 1))),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: AppConstants
-                                                          .padding_30),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                '${AppLocalizations.of(context)!.out_of_stock}',
-                                                style: AppStyles
-                                                    .rkRegularTextStyle(
-                                                        size: AppConstants
-                                                            .smallFont,
-                                                        color:
-                                                            AppColors.redColor),
-                                              ),
-                                            )
-                                          : buildSupplierSelection(
-                                              context: context),
-                                      productStock: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .stock,
-                                      isRTL: context.rtl,
-                                      isSupplierAvailable:
-                                          state.productSupplierList.isEmpty
-                                              ? false
-                                              : true,
-                                      scrollController: scrollController,
-                                      productQuantity: state
-                                          .productStockList[
-                                              state.productStockUpdateIndex]
-                                          .quantity,
-                                      onQuantityChanged: (quantity) {
-                                        context.read<HomeBloc>().add(
-                                            HomeEvent.updateQuantityOfProduct(
-                                                context: context1,
-                                                quantity: quantity));
-                                      },
-                                      onQuantityIncreaseTap: () {
-                                        context.read<HomeBloc>().add(
-                                            HomeEvent.increaseQuantityOfProduct(
-                                                context: context1));
-                                      },
-                                      onQuantityDecreaseTap: () {
-                                        context.read<HomeBloc>().add(
-                                            HomeEvent.decreaseQuantityOfProduct(
-                                                context: context1));
-                                      },
-                                      noteController: state.noteController,
-                                      // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                      onNoteChanged: (newNote) {
-                                        context.read<HomeBloc>().add(
-                                            HomeEvent.changeNoteOfProduct(
-                                                newNote: newNote));
-                                      },
-                                      // isLoading: state.isLoading,
-                                      /*onAddToOrderPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                context.read<HomeBloc>().add(
-                                    HomeEvent.addToCartProductEvent(
-                                        context: context1));
-                              }*/
-                                    ),
-                          bottomNavigationBar: state.isProductLoading
-                              ? 0.height
-                              : CommonProductDetailsButton(
-                                  isLoading: state.isLoading,
-                                  isSupplierAvailable:
-                                      state.productSupplierList.isEmpty
-                                          ? false
-                                          : true,
+                                          0),
+                                  productScaleType: state.productDetails
+                                          .first.scales?.scaleType ??
+                                      '',
+                                  productWeight: state
+                                          .productDetails.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
+                                  isNoteOpen: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context
+                                        .read<HomeBloc>()
+                                        .add(HomeEvent.toggleNoteEvent(isBarcode: isBarcode ?? false));
+                                  },
+                                  supplierWidget: state
+                                          .productSupplierList.isEmpty
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: AppColors
+                                                          .borderColor
+                                                          .withOpacity(0.5),
+                                                      width: 1))),
+                                          padding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: AppConstants
+                                                      .padding_30),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${AppLocalizations.of(context)!.out_of_stock}',
+                                            style: AppStyles
+                                                .rkRegularTextStyle(
+                                                    size: AppConstants
+                                                        .smallFont,
+                                                    color:
+                                                        AppColors.redColor),
+                                          ),
+                                        )
+                                      : buildSupplierSelection(
+                                          context: context),
                                   productStock: state
                                       .productStockList[
                                           state.productStockUpdateIndex]
                                       .stock,
-                                  onAddToOrderPressed: state.isLoading
-                                      ? null
-                                      : () {
-                                          context.read<HomeBloc>().add(
-                                              HomeEvent.addToCartProductEvent(
-                                                  context: context1));
-                                        }),
-                        ),
-                      );
-                    },
-                  ));
+                                  isRTL: context.rtl,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  scrollController: scrollController,
+                                  productQuantity: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .quantity,
+                                  onQuantityChanged: (quantity) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.updateQuantityOfProduct(
+                                            context: context1,
+                                            quantity: quantity));
+                                  },
+                                  onQuantityIncreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.increaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  onQuantityDecreaseTap: () {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.decreaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  noteController: state.noteController,
+                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<HomeBloc>().add(
+                                        HomeEvent.changeNoteOfProduct(
+                                            newNote: newNote));
+                                  },
+                                  // isLoading: state.isLoading,
+                                  /*onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<HomeBloc>().add(
+                                HomeEvent.addToCartProductEvent(
+                                    context: context1));
+                          }*/
+                                ),
+                      bottomNavigationBar: state.isProductLoading
+                          ? 0.height
+                          : CommonProductDetailsButton(
+                              isLoading: state.isLoading,
+                              isSupplierAvailable:
+                                  state.productSupplierList.isEmpty
+                                      ? false
+                                      : true,
+                              productStock: state
+                                  .productStockList[state.productStockUpdateIndex]
+                                  .stock,
+                              onAddToOrderPressed: state.isLoading
+                                  ? null
+                                  : () {
+                                      context.read<HomeBloc>().add(
+                                          HomeEvent.addToCartProductEvent(
+                                              context: context1));
+                                    }),
+                    ),
+                  );
+                },
+              );
             },
           ),
         );
@@ -2282,250 +2291,3 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 }
-/*CommonSearchWidget(
-                          isCategoryExpand: state.isCategoryExpand,
-                          isSearching: state.isSearching,
-                          onFilterTap: () {
-                            bloc.add(HomeEvent.changeCategoryExpansion());
-                          },
-                          onSearchTap: () {
-                            if(state.searchController.text != ''){
-                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
-                            }
-                          },
-                          onSearch: (String search) {
-                            if (search.length > 1) {
-                              bloc.add(HomeEvent.changeCategoryExpansion(isOpened: true));
-                              bloc.add(
-                                  HomeEvent.globalSearchEvent(context: context));
-                            }
-                          },
-                          onSearchSubmit: (String search) {
-                            bloc.add(
-                                HomeEvent.globalSearchEvent(context: context));
-                          },
-                          onOutSideTap: () {
-                            bloc.add(HomeEvent.changeCategoryExpansion(
-                                isOpened: false));
-                          },
-                          onSearchItemTap: () {
-                            bloc.add(HomeEvent.changeCategoryExpansion());
-                          },
-                          controller: state.searchController,
-                          searchList: state.searchList,
-                          searchResultWidget: state.searchList.isEmpty
-                              ? Center(
-                            child: Text(
-                              '${AppLocalizations.of(context)!
-                                  .search_result_not_found}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.textColor),
-                            ),
-                          )
-                              : ListView.builder(
-                            itemCount: state.searchList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (listViewContext, index) {
-                              return _buildSearchItem(
-                                  productStock : state.searchList[index].productStock,
-                                  context: context,
-                                  searchName: state.searchList[index].name,
-                                  searchImage: state.searchList[index].image,
-                                  searchType:
-                                  state.searchList[index].searchType,
-                                  isMoreResults: state.searchList
-                                      .where((search) =>
-                                  search.searchType ==
-                                      state.searchList[index]
-                                          .searchType)
-                                      .toList()
-                                      .length ==
-                                      10,
-                                  isLastItem:
-                                  state.searchList.length - 1 == index,
-                                  isShowSearchLabel: index == 0
-                                      ? true
-                                      : state.searchList[index].searchType !=
-                                      state.searchList[index - 1]
-                                          .searchType
-                                      ? true
-                                      : false,
-                                  onSeeAllTap: () async {
-                                    debugPrint("searchType: ${state.searchList[index].searchType}");
-                                    if (state.searchList[index].searchType ==
-                                        SearchTypes.category) {
-                                      dynamic searchResult =
-                                      await Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .productCategoryScreen.name,
-                                          arguments: {
-                                            AppStrings.searchString:
-                                            state.search,
-                                            AppStrings.reqSearchString:
-                                            state.search,
-                                            AppStrings.searchResultString:
-                                            state.searchList
-                                          });
-                                      if (searchResult != null) {
-                                        bloc.add(HomeEvent
-                                            .updateGlobalSearchEvent(
-                                            search: searchResult[
-                                            AppStrings.searchString],
-                                            searchList: searchResult[
-                                            AppStrings
-                                                .searchResultString]));
-                                      }
-                                    } else if (state
-                                        .searchList[index].searchType ==
-                                        SearchTypes.subCategory) {
-                                      dynamic searchResult =
-                                      await Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .storeCategoryScreen.name,
-                                          arguments: {
-                                            AppStrings.categoryIdString: state
-                                                .searchList[index].categoryId,
-                                            AppStrings.categoryNameString:
-                                            state.searchList[index]
-                                                .categoryName,
-                                            AppStrings.searchString:
-                                            state.search,
-                                            AppStrings.searchResultString:
-                                            state.searchList
-                                          });
-                                      if (searchResult != null) {
-                                        bloc.add(HomeEvent
-                                            .updateGlobalSearchEvent(
-                                            search: searchResult[
-                                            AppStrings.searchString],
-                                            searchList: searchResult[
-                                            AppStrings
-                                                .searchResultString]));
-                                      }
-                                    } else {
-                                      state.searchList[index].searchType ==
-                                          SearchTypes.company
-                                          ? Navigator.pushNamed(
-                                          context, RouteDefine.companyScreen.name,
-                                          arguments: {AppStrings.searchString: state.search})
-                                          : state.searchList[index].searchType ==
-                                          SearchTypes.supplier
-                                          ? Navigator.pushNamed(
-                                          context, RouteDefine.supplierScreen.name,
-                                          arguments: {
-                                            AppStrings.searchString:
-                                            state.search
-                                          })
-                                          : state.searchList[index].searchType ==
-                                          SearchTypes.sale
-                                          ? Navigator.pushNamed(
-                                          context,
-                                          RouteDefine.productSaleScreen.name,
-                                          arguments: {
-                                            AppStrings.searchString: state.search
-                                          })
-                                          : Navigator.pushNamed(
-                                          context,
-                                          RouteDefine.supplierProductsScreen.name,
-                                          arguments: {
-                                            AppStrings.searchString: state.search,
-                                            AppStrings.searchType : SearchTypes.product.toString()
-                                          });
-                                    }
-                                  },
-                                  onTap: () async {
-                                    if (state.searchList[index].searchType ==
-                                        SearchTypes.subCategory) {
-                                      CustomSnackBar.showSnackBar(
-                                        context: context,
-                                        title: AppStrings.getLocalizedStrings(
-                                            'Oops! in progress', context),
-                                        type: SnackBarType.SUCCESS,
-                                      );
-                                      return;
-                                    }
-                                    if (state.searchList[index].searchType ==
-                                        SearchTypes.sale ||
-                                        state.searchList[index].searchType ==
-                                            SearchTypes.product) {
-                                      print("tap 4");
-                                      showProductDetails(
-                                          context: context,
-                                          productId: state
-                                              .searchList[index].searchId,
-                                          isBarcode: true
-                                      );
-                                    } else if (state
-                                        .searchList[index].searchType ==
-                                        SearchTypes.category) {
-                                      dynamic searchResult =
-                                      await Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .storeCategoryScreen.name,
-                                          arguments: {
-                                            AppStrings.categoryIdString: state
-                                                .searchList[index].searchId,
-                                            AppStrings.categoryNameString:
-                                            state.searchList[index].name,
-                                            AppStrings.searchString:
-                                            state.searchController.text,
-                                            AppStrings.searchResultString:
-                                            state.searchList
-                                          });
-                                      if (searchResult != null) {
-                                        bloc.add(HomeEvent
-                                            .updateGlobalSearchEvent(
-                                            search: searchResult[
-                                            AppStrings.searchString],
-                                            searchList: searchResult[
-                                            AppStrings
-                                                .searchResultString]));
-                                      }
-                                    } else {
-                                      state.searchList[index].searchType ==
-                                          SearchTypes.company
-                                          ? Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .companyProductsScreen.name,
-                                          arguments: {
-                                            AppStrings.companyIdString:
-                                            state.searchList[index]
-                                                .searchId
-                                          })
-                                          : Navigator.pushNamed(
-                                          context,
-                                          RouteDefine
-                                              .supplierProductsScreen
-                                              .name,
-                                          arguments: {
-                                            AppStrings.supplierIdString:
-                                            state.searchList[index]
-                                                .searchId
-                                          });
-                                    }
-                                    bloc.add(
-                                        HomeEvent.changeCategoryExpansion());
-                                  });
-                            },
-                          ),
-                          onScanTap: () async {
-                            String scanResult = await scanBarcodeOrQRCode(
-                                context: context,
-                                cancelText: AppLocalizations.of(context)!.cancel,
-                                scanMode: ScanMode.BARCODE);
-                            if (scanResult != '-1') {
-                              // -1 result for cancel scanning
-                              debugPrint('result = $scanResult');
-                              print("tap 5");
-                              showProductDetails(
-                                  context: context,
-                                  productId: scanResult,
-                                  isBarcode: true);
-                            }
-                          },
-                        ),*/

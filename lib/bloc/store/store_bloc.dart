@@ -57,6 +57,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
   StoreBloc() : super(StoreState.initial()) {
     on<StoreEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _ChangeCategoryExpansion) {
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -69,7 +71,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             isSelectSupplier:
                 event.isSelectSupplier ?? !state.isSelectSupplier));
         debugPrint('supplier selection : ${state.isSelectSupplier}');
-      } else if (event is _GetProductCategoriesListEvent) {
+      }
+      else if (event is _GetProductCategoriesListEvent) {
+        emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser()));
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -492,6 +496,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         //  Navigator.pop(event.context);
         }
       }
+
+
       else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
