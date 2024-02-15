@@ -43,7 +43,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
   ProductSaleBloc() : super(ProductSaleState.initial()) {
     on<ProductSaleEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
+
       if (event is _GetProductSalesListEvent) {
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser()));
+
         if (state.isLoadMore) {
           return;
         }

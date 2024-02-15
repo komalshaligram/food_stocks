@@ -19,6 +19,8 @@ class CommonProductItemWidget extends StatelessWidget {
   final dynamic price;
   final int productStock;
   final void Function() onButtonTap;
+  final bool isGuestUser;
+
 
 
   const CommonProductItemWidget(
@@ -30,11 +32,13 @@ class CommonProductItemWidget extends StatelessWidget {
       required this.totalSaleCount,
       required this.price,
       required this.onButtonTap, this.productStock = 0,
-
+        this.isGuestUser = false
       });
 
   @override
   Widget build(BuildContext context) {
+    print('productStock  ui grid___${productStock}');
+    print('isGuestUser___${isGuestUser}');
     return Container(
       height: height,
       width: width,
@@ -63,7 +67,7 @@ class CommonProductItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: CachedNetworkImage(
+              child:!isGuestUser ? CachedNetworkImage(
                 imageUrl: "${AppUrls.baseFileUrl}$productImage",
                 height: 69,
                 fit: BoxFit.fitHeight,
@@ -87,7 +91,8 @@ class CommonProductItemWidget extends StatelessWidget {
                         height: 70, width: double.maxFinite, fit: BoxFit.cover),
                   );
                 },
-              ),
+              ) : Image.asset(AppImagePath.imageNotAvailable5 , height: 80,
+                width: 80, ),
             ),
             5.height,
             Text(
@@ -101,7 +106,7 @@ class CommonProductItemWidget extends StatelessWidget {
             ),
             2.height,
             Expanded(
-              child: totalSaleCount == 0
+              child: totalSaleCount == 0 || isGuestUser
                   ? 0.width
                   : Text(
                       "${totalSaleCount} ${AppLocalizations.of(context)!.discount}",
@@ -114,7 +119,7 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            (productStock) != 0 ? 0.width :Text(
+            (productStock) != 0 || isGuestUser ? 0.width :Text(
               AppLocalizations.of(context)!
                   .out_of_stock1,
               style: AppStyles.rkBoldTextStyle(
@@ -123,7 +128,7 @@ class CommonProductItemWidget extends StatelessWidget {
                   fontWeight: FontWeight.w400),
             ),
             3.height,
-             Center(
+            !isGuestUser? Center(
               child: CommonProductButtonWidget(
                 width: 110,
                 title:
@@ -134,7 +139,7 @@ class CommonProductItemWidget extends StatelessWidget {
                 borderRadius: AppConstants.radius_3,
                 textSize: AppConstants.font_14,
               ),
-            )
+            ):0.width
           ],
         ),
       ),

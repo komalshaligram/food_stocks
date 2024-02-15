@@ -45,8 +45,10 @@ class CompanyProductsBloc
 
   CompanyProductsBloc() : super(CompanyProductsState.initial()) {
     on<CompanyProductsEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _GetCompanyProductsIdEvent) {
-        emit(state.copyWith(companyId: event.companyId));
+        emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser() ));
         debugPrint('company id = ${state.companyId}');
       } else if (event is _GetCompanyProductsListEvent) {
         if (state.isLoadMore) {
