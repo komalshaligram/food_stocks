@@ -217,7 +217,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             return DelayedWidget(
                                 child: CommonProductItemWidget(
                                   isGuestUser: state.isGuestUser,
-                                    productStock: int.parse(state.productList[index].productStock ?? 0),
+                                    productStock: state.productList[index].productStock.toString() ?? '0',
                                             productImage: state
                                                     .productList[index]
                                                     .mainImage ??
@@ -232,7 +232,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                     .productPrice.toString() ??
                                                 "0.0"),
                                             onButtonTap: () {
-                                     if(state.isGuestUser){
+                                     if(!state.isGuestUser){
                                        showProductDetails(
                                            context: context,
                                            productId: state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state

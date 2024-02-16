@@ -189,7 +189,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   itemBuilder: (context, index) => DelayedWidget(
                                         child: CommonProductItemWidget(
                                           isGuestUser: state.isGuestUser,
-                                          productStock: state.productList[index].productStock ?? 0,
+                                          productStock: state.productList[index].productStock.toString() ?? '0',
                                             productImage: state.productList[index]
                                                     .mainImage ??
                                                 '',

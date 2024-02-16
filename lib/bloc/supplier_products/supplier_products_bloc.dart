@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import 'package:food_stock/data/model/req_model/supplier_products_req_model/supplier_products_req_model.dart';
-import 'package:food_stock/data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import 'package:food_stock/data/model/res_model/supplier_products_res_model/supplier_products_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -105,7 +104,7 @@ class SupplierProductsBloc
                 state.productStockList.toList(growable: true);
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
-                        productId:event.searchType == SearchTypes.product.toString()?product.id??'': product.productId ?? '',
+                        productId:event.searchType == SearchTypes.product.toString()?product.id ??'': product.productId ?? '',
                         stock:event.searchType == SearchTypes.product.toString()?product.productStock: int.parse(product.productStock ?? '0'))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');

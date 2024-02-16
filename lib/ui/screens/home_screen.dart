@@ -454,8 +454,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
-                                                        .productStock ??
-                                                        0,
+                                                        .productStock.toString() ??
+                                                        '0',
                                                     height: 160,
                                                     width: 140,
                                                     productImage: state
