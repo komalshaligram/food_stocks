@@ -89,7 +89,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             }
           },
           child: Scaffold(
-            floatingActionButtonLocation:
+        /*    floatingActionButtonLocation:
                 FloatingActionButtonLocation.endContained,
             floatingActionButton: FloatingActionButton(
               elevation: 0,
@@ -143,7 +143,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  /*  SizedBox(
+                  *//*  SizedBox(
                     height: 50,
                     width: 25,
                     child: Visibility(
@@ -157,7 +157,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),*/
+                  ),*//*
                 ],
               ),
               backgroundColor: Colors.transparent,
@@ -165,7 +165,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
                     arguments: {AppStrings.isBasketScreenString: 'true'});
               },
-            ),
+            ),*/
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Stack(
