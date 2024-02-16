@@ -41,7 +41,6 @@ class ReorderScreen extends StatelessWidget {
 }
 
 class ReorderScreenWidget extends StatelessWidget {
-
   const ReorderScreenWidget({super.key});
 
   @override
@@ -120,8 +119,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                 ),
                               )
                             : GridView.builder(
-                                itemCount:
-                                    state.previousOrderProductsList.length,
+                                itemCount: state
+                                    .previousOrderProductsList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 padding: EdgeInsets.symmetric(
@@ -129,13 +128,21 @@ class ReorderScreenWidget extends StatelessWidget {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
-                                            .productGridAspectRatio: AppConstants
-                                            .productGridAspectRatio1
-                                    ),
+                                        childAspectRatio:
+                                            MediaQuery.of(context).size.width >
+                                                    370
+                                                ? AppConstants
+                                                    .productGridAspectRatio
+                                                : AppConstants
+                                                    .productGridAspectRatio1),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
-                                        productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
+                                        productStock: state
+                                                .previousOrderProductsList[
+                                                    index]
+                                                .productStock
+                                                .toString() ??
+                                            '0',
                                         productImage: state
                                                 .previousOrderProductsList[
                                                     index]
@@ -257,7 +264,6 @@ class ReorderScreenWidget extends StatelessWidget {
                   if (loadingProgress?.cumulativeBytesLoaded !=
                       loadingProgress?.expectedTotalBytes) {
                     return CommonShimmerWidget(
-
                       child: Container(
                         height: 70,
                         width: 70,
@@ -351,7 +357,6 @@ class ReorderScreenWidget extends StatelessWidget {
                   value: context.read<ReorderBloc>(),
                   child: BlocBuilder<ReorderBloc, ReorderState>(
                     builder: (context, state) {
-
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -365,10 +370,10 @@ class ReorderScreenWidget extends StatelessWidget {
                           body: state.isProductLoading
                               ? ProductDetailsShimmerWidget()
                               : CommonProductDetailsWidget(
-                              context: context,
+                                  context: context,
 
                                   productImageIndex: state.imageIndex,
-                              onPageChanged: (index, p1) {
+                                  onPageChanged: (index, p1) {
                                     context.read<ReorderBloc>().add(
                                         ReorderEvent.updateImageIndexEvent(
                                             index: index));
@@ -399,66 +404,55 @@ class ReorderScreenWidget extends StatelessWidget {
                                           .first.productDescription ??
                                       '',
                                   productPrice: state
-                                          .productStockList[state.productStockUpdateIndex]
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
                                           .totalPrice *
-                                      state.productStockList[state.productStockUpdateIndex].quantity *
-                                      (state.productDetails.first.numberOfUnit ?? 0),
-                                  productScaleType: state.productDetails.first.scales?.scaleType ?? '',
-                                  productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context
-                                        .read<ReorderBloc>()
-                                        .add(ReorderEvent.toggleNoteEvent());
+                                      state
+                                          .productStockList[
+                                              state.productStockUpdateIndex]
+                                          .quantity *
+                                      (state.productDetails.first
+                                              .numberOfUnit ??
+                                          0),
+                                  productScaleType: state.productDetails.first
+                                          .scales?.scaleType ??
+                                      '',
+                                  productWeight: state
+                                          .productDetails.first.itemsWeight
+                                          ?.toDouble() ??
+                                      0.0,
+
+                                  productStock: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .stock,
+                                  isRTL: context.rtl,
+                                  isSupplierAvailable:
+                                      state.productSupplierList.isEmpty
+                                          ? false
+                                          : true,
+                                  scrollController: scrollController,
+                                  productQuantity: state
+                                      .productStockList[
+                                          state.productStockUpdateIndex]
+                                      .quantity,
+                                  onQuantityChanged: (quantity) {
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.updateQuantityOfProduct(
+                                            context: context1,
+                                            quantity: quantity));
                                   },
-                                  supplierWidget: state.productSupplierList.isEmpty
-                                  ? Container(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                            color: AppColors
-                                                .borderColor
-                                                .withOpacity(0.5),
-                                            width: 1))),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                    AppConstants.padding_30),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
-                                ),
-                              )
-                                  : buildSupplierSelection(context: context),
-                              productStock: state.productStockList[state.productStockUpdateIndex].stock,
-                              isRTL: context.rtl,
-                              isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
-                              scrollController: scrollController,
-                              productQuantity: state.productStockList[state.productStockUpdateIndex].quantity,
-                              onQuantityChanged: (quantity) {
-                                context.read<ReorderBloc>().add(
-                                    ReorderEvent.updateQuantityOfProduct(
-                                        context: context1,
-                                        quantity: quantity));
-                              },
-                              onQuantityIncreaseTap: () {
-                                context.read<ReorderBloc>().add(
-                                    ReorderEvent.increaseQuantityOfProduct(
-                                        context: context1));
-                              },
-                              onQuantityDecreaseTap: () {
+                                  onQuantityIncreaseTap: () {
+                                    context.read<ReorderBloc>().add(
+                                        ReorderEvent.increaseQuantityOfProduct(
+                                            context: context1));
+                                  },
+                                  onQuantityDecreaseTap: () {
                                     context.read<ReorderBloc>().add(
                                         ReorderEvent.decreaseQuantityOfProduct(
                                             context: context1));
                                   },
-                                  noteController: state.noteController,
-                                  onNoteChanged: (newNote) {
-                                    context.read<ReorderBloc>().add(
-                                        ReorderEvent.changeNoteOfProduct(
-                                            newNote: newNote));
-                                  },
+
                                   // isLoading: state.isLoading,
                                   /*onAddToOrderPressed: state.isLoading
                                   ? null
@@ -527,23 +521,26 @@ class ReorderScreenWidget extends StatelessWidget {
                           context.read<ReorderBloc>().add(ReorderEvent
                               .changeSupplierSelectionExpansionEvent());
                         },
-                        child: state.productSupplierList.length > 1 ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.suppliers,
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: AppConstants.smallFont,
-                                  color: AppColors.mainColor,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Icon(
-                              Icons.arrow_drop_down,
-                              size: 26,
-                              color: AppColors.blackColor,
-                            )
-                          ],
-                        ) : 0.width,
+                        child: state.productSupplierList.length > 1
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.suppliers,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.mainColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_drop_down,
+                                    size: 26,
+                                    color: AppColors.blackColor,
+                                  )
+                                ],
+                              )
+                            : 0.width,
                       ),
                     ),
                     state.productSupplierList
