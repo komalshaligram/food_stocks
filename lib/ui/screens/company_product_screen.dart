@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
@@ -9,6 +10,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
 import '../utils/themes/app_constants.dart';
@@ -62,12 +64,91 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
         return Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
+          floatingActionButton: FloatingActionButton(
+            elevation: 0,
+            child:  Stack(
+              children: [
+                Container(
+                  height: 50,
+                  width: 50,
+                  // margin: EdgeInsets.only(bottom: 10),
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.transparent,
+                          width: 1
+                      ),
+                      gradient: AppColors.appMainGradientColor,
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(AppConstants.radius_100))),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AppImagePath.cart,
+                      height: 26,
+                      width: 26,
+                      fit: BoxFit.cover,
+                      color: AppColors.whiteColor,
+                    ),),
+                ),
+                Positioned(
+                  top: 5,
+                  right: context.rtl ? null : 0,
+                  left: context.rtl ? 0 : null,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 18,
+                        width: 24,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.mainColor,
+                          //gradient:AppColors.appMainGradientColor,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(AppConstants.radius_100)),
+                          border: Border.all(
+                              color:  AppColors.whiteColor,
+                              width: 1),
+                        ),
+                        child: Text(
+                          '12',
+                          //'${state.cartCount}',
+                          style: AppStyles.rkRegularTextStyle(
+                              size: 10,
+                              color:  AppColors.whiteColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                /*  SizedBox(
+                    height: 50,
+                    width: 25,
+                    child: Visibility(
+                      visible:state.duringCelebration,
+                      child: IgnorePointer(
+                        child: Confetti(
+                          isStopped:!state.duringCelebration,
+                          snippingsCount: 10,
+                          snipSize: 3.0,
+                          colors:[AppColors.mainColor],
+                        ),
+                      ),
+                    ),
+                  ),*/
+              ],
+            ),
+            backgroundColor:Colors.transparent,
+            onPressed: () {
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+            },
+          ),
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-             title: state.productList.isNotEmpty ? state.productList.elementAt(0).brandId??'':companyName??'',
+             title: state.productList.isNotEmpty ? state.productList.elementAt(0).brandId ??'':companyName??'',
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -164,7 +245,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         ),
                                     itemBuilder: (context, index) => DelayedWidget(
                                           child: CommonProductItemWidget(
-                                            productStock: state.productList[index].productStock ?? 0,
+                                            productStock: state.productList[index].productStock.toString() ?? '0',
                                               productImage: state.productList[index]
                                                       .mainImage ??
                                                   '',
@@ -184,7 +265,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                     productId: state
                                                             .productList[index]
                                                             .id ??
-                                                        '');
+                                                        '',
+                                                  productStock: state.productList[index].productStock.toString() ?? '0',
+
+                                                );
                                               }),
                                         )
                                     // buildCompanyProducts(
@@ -330,7 +414,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId}) async {
+      {required BuildContext context, required String productId,
+        required String productStock
+      }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(
             context: context, productId: productId));
