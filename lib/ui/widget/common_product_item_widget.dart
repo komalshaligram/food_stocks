@@ -37,8 +37,6 @@ class CommonProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('productStock  ui grid___${productStock}');
-    print('isGuestUser___${isGuestUser}');
     return Container(
       height: height,
       width: width,
