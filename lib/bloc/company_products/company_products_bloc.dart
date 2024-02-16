@@ -494,7 +494,7 @@ class CompanyProductsBloc
                 productSaleId: '',
               );
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -633,6 +633,13 @@ class CompanyProductsBloc
                     .isNoteOpen);
         emit(state.copyWith(productStockList: productStockList));
       }
+
+      else if (event is _getCartCountEvent) {
+        emit(
+            state.copyWith(cartCount: preferences.getCartCount()));
+      }
+
+
     });
   }
 }

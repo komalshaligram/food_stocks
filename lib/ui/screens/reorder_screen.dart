@@ -131,7 +131,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                         crossAxisCount: 3,
                                         childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
                                             .productGridAspectRatio: AppConstants
-                                            .productGridAspectRatio1),
+                                            .productGridAspectRatio1
+                                    ),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
                                         productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',

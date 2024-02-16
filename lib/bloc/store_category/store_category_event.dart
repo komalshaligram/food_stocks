@@ -102,5 +102,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
     required bool isGridView,
   }) = _changeGridToListViewEvent;
 
-
+  const factory StoreCategoryEvent.getCartCountEvent(
+  ) = _getCartCountEvent;
 }
