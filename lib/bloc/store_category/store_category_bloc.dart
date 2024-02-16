@@ -396,6 +396,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
+
+          print('GetProductDetails_____${response}');
           if (response.status == 200) {
             // 0 planogram
             //1 product
@@ -1173,9 +1175,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-        //  if (state.isBottomOfPlanoGrams) {
-        //   return;
-        // }
+          if (state.isBottomOfProducts) {
+          return;
+         }
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1198,7 +1200,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 data: planogramReqModel
             );
              debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
-             debugPrint('req_____${planogramReqModel}');
+             debugPrint('getAllProductUrl req_____${planogramReqModel}');
           }
           else{
              res = await DioClient(event.context)
@@ -1206,7 +1208,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 data: planogramReqModel
             );
              debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductForGuestUserUrl}');
-             debugPrint('req_____${planogramReqModel}');
+             debugPrint('getAllProductUrl req_____${planogramReqModel}');
           }
 
   print('getAllProduct_____$res');

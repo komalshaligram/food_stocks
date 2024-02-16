@@ -104,7 +104,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             productName: productName,
             totalSaleCount: totalSale,
             price: productPrice,
-            productStock : productStock,
+            productStock : productStock.toString(),
             onButtonTap: onPressed)
         // Container(
         //   // height: 170,

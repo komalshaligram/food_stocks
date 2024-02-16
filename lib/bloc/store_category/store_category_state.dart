@@ -47,6 +47,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required bool isPlanogramProductShimmering,
     required bool isGridView,
     required bool isGuestUser,
+    required bool isBottomProducts,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -94,6 +95,7 @@ class StoreCategoryState with _$StoreCategoryState {
       isPlanogramProductShimmering:false,
     isGridView: true,
    isGuestUser : false,
+    isBottomProducts : false
 
       );
 }
