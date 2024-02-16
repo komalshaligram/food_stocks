@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
@@ -112,7 +111,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               width: 1),
                         ),
                         child: Text(
-                          '${state.cartCount}',
+                          '12',
+                          //'${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10,
                               color:  AppColors.whiteColor),
@@ -140,9 +140,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             ),
             backgroundColor:Colors.transparent,
             onPressed: () {
-              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
-                  arguments: {AppStrings.isBasketScreenString: 'true'}
-              );
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
             },
           ),
           backgroundColor: AppColors.pageColor,
@@ -157,155 +155,151 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               },
             ),
           ),
-          body: FocusDetector(
-             onFocusGained: (){
-               context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getCartCountEvent());
-             },
-            child: SafeArea(
-              child:
-                  // NotificationListener<ScrollNotification>(
-                  //   child:
-                  Column(
-                   // mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: CachedNetworkImage(
-                          imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
-                          fit: BoxFit.scaleDown,
-                          height: 100,
-                          alignment: Alignment.center,
-                          placeholder: (context, url) => CommonShimmerWidget(
-                            child: Container(
-                              height: getScreenHeight(context),
-                              width: getScreenWidth(context),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft:
-                                    Radius.circular(AppConstants.radius_10),
-                                    topRight:
-                                    Radius.circular(AppConstants.radius_10)),
-                              ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 100,
-                            //width: getScreenWidth(context),
-                            color: AppColors.whiteColor,
-                            child: Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              fit: BoxFit.cover,
+          body: SafeArea(
+            child:
+                // NotificationListener<ScrollNotification>(
+                //   child:
+                Column(
+                 // mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: CachedNetworkImage(
+                        imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
+                        fit: BoxFit.scaleDown,
+                        height: 100,
+                        alignment: Alignment.center,
+                        placeholder: (context, url) => CommonShimmerWidget(
+                          child: Container(
+                            height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft:
+                                  Radius.circular(AppConstants.radius_10),
+                                  topRight:
+                                  Radius.circular(AppConstants.radius_10)),
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: state.isShimmering
-                            ? SupplierProductsScreenShimmerWidget()
-                            : state.productList.isEmpty
-                                ? Container (
-                                    height: getScreenHeight(context) - 80,
-                                    width: getScreenWidth(context),
-                                    margin: EdgeInsets.only(top: 30),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!.this_company_has_no_product,
-                                      style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.smallFont,
-                                          color: AppColors.textColor),
-                                    ),
-                                  )
-                                : SmartRefresher(
-                          enablePullDown: true,
-                          controller: state.refreshController,
-                          header:
-                          RefreshWidget(),
-                          footer: CustomFooter(
-                            builder: (context, mode) =>
-                                SupplierProductsScreenShimmerWidget(),
+                        errorWidget: (context, url, error) => Container(
+                          height: 100,
+                          //width: getScreenWidth(context),
+                          color: AppColors.whiteColor,
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                            fit: BoxFit.cover,
                           ),
-                          enablePullUp: !state.isBottomOfProducts,
-                          onRefresh: () {
-                            context.read<CompanyProductsBloc>().add(
-                                CompanyProductsEvent.refreshListEvent(context: context));
-                          },
-                          onLoading: () {
-                            context.read<CompanyProductsBloc>().add(
-                                CompanyProductsEvent.getCompanyProductsListEvent(
-                                    context: context));
-                          },
-
-                                  child: GridView.builder(
-                                      itemCount: state.productList.length,
-                                      shrinkWrap: true,
-                                      physics: const AlwaysScrollableScrollPhysics(),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: AppConstants.padding_5),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                  .productGridAspectRatio: AppConstants
-                                                  .productGridAspectRatio1
-                                          ),
-                                      itemBuilder: (context, index) => DelayedWidget(
-                                            child: CommonProductItemWidget(
-                                              productStock: state.productList[index].productStock.toString() ?? '0',
-                                                productImage: state.productList[index]
-                                                        .mainImage ??
-                                                    '',
-                                                productName: state.productList[index]
-                                                        .productName ??
-                                                    '',
-                                                totalSaleCount: state
-                                                        .productList[index]
-                                                        .totalSale ??
-                                                    0,
-                                                price: state.productList[index]
-                                                        .productPrice ??
-                                                    0.0,
-                                                onButtonTap: () {
-                                                  showProductDetails(
-                                                      context: context,
-                                                      productId: state
-                                                              .productList[index]
-                                                              .id ??
-                                                          '',
-                                                    productStock: state.productList[index].productStock.toString() ?? '0',
-
-                                                  );
-                                                }),
-                                          )
-                                      // buildCompanyProducts(
-                                      // context: context,
-                                      // index: index,
-                                      // productImage: state
-                                      //     .productList[index].mainImage ??
-                                      //     '',
-                                      // productName: state.productList[index]
-                                      //     .productName ??
-                                      //     '',
-                                      // productPrice: state.productList[index]
-                                      //     .productPrice ??
-                                      //     0.0,
-                                      // totalSale: state
-                                      //     .productList[index].totalSale ??
-                                      //     0,
-                                      // onPressed: () {
-                                      //   showProductDetails(
-                                      //       context: context,
-                                      //       productId:
-                                      //       state.productList[index].id ??
-                                      //           '');
-                                      // },
-                                      // isRTL: context.rtl),
-                                      ),
-                                ),
+                        ),
                       ),
-                    ],
-                  ),
-            ),
+                    ),
+                    Expanded(
+                      child: state.isShimmering
+                          ? SupplierProductsScreenShimmerWidget()
+                          : state.productList.isEmpty
+                              ? Container (
+                                  height: getScreenHeight(context) - 80,
+                                  width: getScreenWidth(context),
+                                  margin: EdgeInsets.only(top: 30),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    AppLocalizations.of(context)!.this_company_has_no_product,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.smallFont,
+                                        color: AppColors.textColor),
+                                  ),
+                                )
+                              : SmartRefresher(
+                        enablePullDown: true,
+                        controller: state.refreshController,
+                        header:
+                        RefreshWidget(),
+                        footer: CustomFooter(
+                          builder: (context, mode) =>
+                              SupplierProductsScreenShimmerWidget(),
+                        ),
+                        enablePullUp: !state.isBottomOfProducts,
+                        onRefresh: () {
+                          context.read<CompanyProductsBloc>().add(
+                              CompanyProductsEvent.refreshListEvent(context: context));
+                        },
+                        onLoading: () {
+                          context.read<CompanyProductsBloc>().add(
+                              CompanyProductsEvent.getCompanyProductsListEvent(
+                                  context: context));
+                        },
+
+                                child: GridView.builder(
+                                    itemCount: state.productList.length,
+                                    shrinkWrap: true,
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AppConstants.padding_5),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                            childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
+                                                .productGridAspectRatio: AppConstants
+                                                .productGridAspectRatio1
+                                        ),
+                                    itemBuilder: (context, index) => DelayedWidget(
+                                          child: CommonProductItemWidget(
+                                            productStock: state.productList[index].productStock.toString() ?? '0',
+                                              productImage: state.productList[index]
+                                                      .mainImage ??
+                                                  '',
+                                              productName: state.productList[index]
+                                                      .productName ??
+                                                  '',
+                                              totalSaleCount: state
+                                                      .productList[index]
+                                                      .totalSale ??
+                                                  0,
+                                              price: state.productList[index]
+                                                      .productPrice ??
+                                                  0.0,
+                                              onButtonTap: () {
+                                              debugPrint('stockkkk : ${state.productList[index].productStock}');
+                                                showProductDetails(
+                                                    context: context,
+                                                    productId: state
+                                                            .productList[index]
+                                                            .id ??
+                                                        '',
+                                                  productStock: state.productList[index].productStock.toString() ?? '0',
+
+                                                );
+                                              }),
+                                        )
+                                    // buildCompanyProducts(
+                                    // context: context,
+                                    // index: index,
+                                    // productImage: state
+                                    //     .productList[index].mainImage ??
+                                    //     '',
+                                    // productName: state.productList[index]
+                                    //     .productName ??
+                                    //     '',
+                                    // productPrice: state.productList[index]
+                                    //     .productPrice ??
+                                    //     0.0,
+                                    // totalSale: state
+                                    //     .productList[index].totalSale ??
+                                    //     0,
+                                    // onPressed: () {
+                                    //   showProductDetails(
+                                    //       context: context,
+                                    //       productId:
+                                    //       state.productList[index].id ??
+                                    //           '');
+                                    // },
+                                    // isRTL: context.rtl),
+                                    ),
+                              ),
+                    ),
+                  ],
+                ),
           ),
         );
       },
@@ -483,10 +477,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                   productPerUnit:
                                       state.productDetails.first.numberOfUnit ??
                                           0,
-                                  productUnitPrice: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .totalPrice,
+
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -506,7 +497,38 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       (state.productDetails.first.numberOfUnit ?? 0),
                                   productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                              productStock: int.parse(state.productDetails[state.productStockUpdateIndex].supplierSales!.first.productStock.toString()),
+                               /*   isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
+                                  onNoteToggleChanged: () {
+                                    context.read<CompanyProductsBloc>().add(
+                                        CompanyProductsEvent.toggleNoteEvent());
+                                  },
+                                  supplierWidget: state.productSupplierList.isEmpty
+                                      ? Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        top: BorderSide(
+                                            color: AppColors
+                                                .borderColor
+                                                .withOpacity(0.5),
+                                            width: 1))),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical:
+                                    AppConstants.padding_30),
+                                alignment: Alignment.center,
+                                child: Text(
+                                '${AppLocalizations.of(context)!.out_of_stock}',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.smallFont,
+                                      color: AppColors.redColor),
+                                ),
+                              )*/
+                                  //: buildSupplierSelection(context: context),
+                            productUnitPrice: state
+                                .productStockList[state.productStockUpdateIndex]
+                                .totalPrice!=0?  state
+                                .productStockList[state.productStockUpdateIndex]
+                                .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
+                              productStock: productStock!='0'?state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
@@ -530,8 +552,14 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         .decreaseQuantityOfProduct(
                                                 context: context1));
                                   },
-
+                                 /* noteController: state.noteController,
                                   // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
+                                  onNoteChanged: (newNote) {
+                                    context.read<CompanyProductsBloc>().add(
+                                        CompanyProductsEvent
+                                            .changeNoteOfProduct(
+                                                newNote: newNote));
+                                  },*/
                                   // isLoading: state.isLoading,
                                   /*onAddToOrderPressed: state.isLoading
                                   ? null

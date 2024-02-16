@@ -1300,11 +1300,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     productPerUnit: state.productDetails.first
                                             .numberOfUnit ??
                                         0,
-                                    productUnitPrice: state
-                                        .productStockList[
-                                            state.planoGramUpdateIndex]
-                                            [state.productStockUpdateIndex]
-                                        .totalPrice,
+
                                     productName: state
                                             .productDetails.first.productName ??
                                         '',
@@ -1330,6 +1326,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         (state.productDetails.first
                                                 .numberOfUnit ??
                                             0),
+
                                     productScaleType: state.productDetails.first
                                             .scales?.scaleType ??
                                         '',
@@ -1338,10 +1335,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             ?.toDouble() ??
                                         0.0,
                                     productStock: state
-                                        .productStockList[
-                                            state.planoGramUpdateIndex]
-                                            [state.productStockUpdateIndex]
-                                        .stock,
+                                        .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock!=0? state
+                            .productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex]
+                          .stock:int.parse(state.productDetails.first.supplierSales!.first!.productStock.toString()),
+                          productUnitPrice:
+                          state
+                              .productStockList[
+                          state.planoGramUpdateIndex]
+                          [state.productStockUpdateIndex]
+                              .totalPrice!=0? state
+                              .productStockList[
+                          state.planoGramUpdateIndex]
+                          [state.productStockUpdateIndex]
+                              .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
                                     isRTL: context.rtl,
                                     isSupplierAvailable:
                                         state.productSupplierList.isEmpty
