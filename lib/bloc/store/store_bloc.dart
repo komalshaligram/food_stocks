@@ -121,7 +121,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       else if (event is _ChangeSearchListEvent) {
         emit(state.copyWith(searchList: event.newSearchList));
-      } else if (event is _GetProductSalesListEvent) {
+      }
+      else if (event is _GetProductSalesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -165,7 +166,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           emit(state.copyWith(isShimmering: false));
         }
       }
-      if(!preferencesHelper.getGuestUser()){
+      else if(!preferencesHelper.getGuestUser()){
        if (event is _GetRecommendationProductsListEvent) {
         try {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
@@ -217,7 +218,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       }
       }
 
-
       else if (event is _GetSuppliersListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -250,7 +250,9 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _GetCompaniesListEvent) {
+      }
+      else if (event is _GetCompaniesListEvent) {
+        debugPrint('koamalsakakldnakdnjknjks');
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -500,8 +502,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         //  Navigator.pop(event.context);
         }
       }
-
-
       else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
@@ -540,7 +540,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
           }
         }
-      } else if (event is _DecreaseQuantityOfProduct) {
+      }
+      else if (event is _DecreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -555,7 +556,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           } else {}
         }
-      } else if (event is _UpdateQuantityOfProduct) {
+      }
+      else if (event is _UpdateQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -1016,8 +1018,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         emit(state.copyWith(
             searchList: searchList, searchController: TextEditingController()));
       }
-      print('preferencesHelper.getGuestUser()   ${preferencesHelper.getGuestUser()}');
-      if(!preferencesHelper.getGuestUser()){
+
+      else if(!preferencesHelper.getGuestUser()){
         if (event is _GetPreviousOrderProductsListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));

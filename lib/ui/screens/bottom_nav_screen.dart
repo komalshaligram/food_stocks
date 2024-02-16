@@ -122,11 +122,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                   animationDuration: Duration(milliseconds: 600),
                   onTap: (index) {
                     storeScreen = '';
-                    print('index____${index}');
-                    if(state.isGuestUser && index != 1){
-                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                    }
-                    else{
+                    if(state.isGuestUser){
+                      Navigator.pushNamed(context,RouteDefine.connectScreen.name);
+                    }else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
 
