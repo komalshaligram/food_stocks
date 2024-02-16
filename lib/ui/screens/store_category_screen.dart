@@ -99,10 +99,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             }
           },
           child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
+           floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
             floatingActionButton: FloatingActionButton(
               child:  Padding(
-                padding: const EdgeInsets.only(bottom: 8.0,),
+                padding: const EdgeInsets.only(bottom: 3.0,),
                 child: Stack(
                   children: [
                     Container(
@@ -156,7 +156,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                  /*  SizedBox(
+                    SizedBox(
                       height: 50,
                       width: 25,
                       child: Visibility(
@@ -170,7 +170,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),*/
+                    ),
                   ],
                 ),
               ),
@@ -250,8 +250,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         : state.planoGramsList.isEmpty &&
                                         state.subCategoryList.isEmpty ? Container(
                                       height:
-                                     // getScreenHeight(context) -
-                                          160,
+                                      getScreenHeight(context) - 160,
                                       width:
                                       getScreenWidth(context),
                                       alignment: Alignment.center,
@@ -276,20 +275,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                       const NeverScrollableScrollPhysics(),
                                       itemBuilder:
                                           (context, index) {
-                                        return Container(
-                                          height: 100,
-                                          child: buildPlanoGramItem(
-                                            isGuestUser: state.isGuestUser,
-                                              context: context,
-                                              list: state.planoGramsList,
-                                              index: index,
-                                          ),
+                                        return buildPlanoGramItem(
+                                          isGuestUser: state.isGuestUser,
+                                            context: context,
+                                            list: state.planoGramsList,
+                                            index: index,
                                         );
                                       },
                                     ),
 
-                                    state.isSubCategoryShimmering
-                                        ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                    state.isSubCategoryShimmering ?StoreCategoryScreenSubcategoryShimmerWidget()
                                         : ListView.builder(
                                       itemCount: state
                                           .subCategoryList.length,
@@ -332,17 +327,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               ),
                             ),
                           )
-                              : Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                              : ListView(
+                           physics: AlwaysScrollableScrollPhysics(),
+                                shrinkWrap: true,
                                 children: [
-                                  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
-                                      ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :8 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
+                                  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ?
+                                       state.isGridView? SupplierProductsScreenShimmerWidget(itemCount: 3):  StoreCategoryScreenSubcategoryShimmerWidget(itemCount:9,)
                                       : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering
                                       ? Container(
                                     height:
-                                    //getScreenHeight(context) -
-                                        160,
+                                    getScreenHeight(context) - 160,
                                     width:
                                     getScreenWidth(context),
                                     alignment: Alignment.center,
@@ -362,8 +356,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     itemCount: state
                                         .subPlanoGramsList.length,
                                     shrinkWrap: true,
-                                    physics:
-                                    const NeverScrollableScrollPhysics(),
+                                    physics: NeverScrollableScrollPhysics(),
+                                  /*  state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty &&
+                                    state.isGridView?  ScrollPhysics() :const NeverScrollableScrollPhysics(),*/
                                     itemBuilder:
                                         (context, index) {
                                       return buildPlanoGramItem(
@@ -405,18 +400,19 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                                       ) :
                                       SizedBox(),
+                                       /*   state.isPlanogramShimmering  && state.subPlanoGramsList.isEmpty ? state.isGridView
+                                    ? SupplierProductsScreenShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 12 :12 ) : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: getScreenHeight(context) >= 750 ? 10 :8,)
+                                    : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering*/
                                        state.isPlanogramProductShimmering && state.planogramProductList.isEmpty ? state.isGridView
-                                          ? SupplierProductsScreenShimmerWidget(itemCount:  state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 9 :9) : (getScreenHeight(context) >= 750 ? 6 : 6)) :
-                                       StoreCategoryScreenSubcategoryShimmerWidget(itemCount : state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 10 : 7) : (getScreenHeight(context) >= 750 ? 6 : 5))
+                                          ? SupplierProductsScreenShimmerWidget(itemCount:  state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 12 :6) : 12) :
+                                       StoreCategoryScreenSubcategoryShimmerWidget(itemCount : state.subPlanoGramsList.length == 0 ? (getScreenHeight(context) >= 750 ? 9 : 6) : 6)
                                           : state.planogramProductList.isEmpty
                                           ? SizedBox()
                                           : Container(
                                         color: AppColors.pageColor,
-
                                         child:state.isGridView ? SizedBox(
                                           height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) *0.75 : getScreenHeight(context) * 0.71 ) :
                                    ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.44 : getScreenHeight(context) * 0.38 ),
-
                                           child: SmartRefresher(
                                             enablePullDown: true,
                                             controller: state.planogramRefreshController,
@@ -499,9 +495,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           ),
                                         )
                                          : SizedBox(
-                                          height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.74 : getScreenHeight(context) * 0.70 ) :
-                                          ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.43 : getScreenHeight(context) * 0.38 )
-                                          ,
+                                          height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.75 : getScreenHeight(context) * 0.71 ) :
+                                          ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.44 : getScreenHeight(context) * 0.38 ),
                                            child: SmartRefresher(
                                              enablePullDown: true,
                                              controller: state.planogramRefreshController,
@@ -1524,12 +1519,7 @@ Widget buildPlanoGramItem(
                             list[index]
                           });
                     },
-                    subTitle: (list[index].planogramproducts
-                        ?.length ??
-                        0) <
-                        6
-                        ? ''
-                        : AppLocalizations.of(context)!.see_all),
+                    subTitle: (list[index].planogramproducts?.length ?? 0) < 6 ? '' : AppLocalizations.of(context)!.see_all),
                 5.height,
                 SizedBox(
                   height: 175,
@@ -1545,12 +1535,8 @@ Widget buildPlanoGramItem(
                   )
                       : ListView.builder(
                     itemCount: (list[index]
-                        .planogramproducts?.length ??
-                        0) <
-                        6
-                        ? list[index]
-                        .planogramproducts?.length
-                        : 6,
+                        .planogramproducts?.length ?? 0) < 6
+                        ? list[index].planogramproducts?.length : 6,
                     padding: EdgeInsets.symmetric(
                         horizontal: AppConstants.padding_5),
                     scrollDirection: Axis.horizontal,
