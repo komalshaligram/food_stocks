@@ -255,7 +255,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             header: RefreshWidget(),
                             footer: CustomFooter(
                               builder: (context, mode) =>
-                                  state.isGridView ? SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget(),
+                                  state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
                             ),
                             enablePullUp: !state.isBottomOfPlanoGrams,
                             onRefresh: () {
@@ -360,7 +360,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
 
                                       child:state.isGridView ? SizedBox(
                                         height: state.subPlanoGramsList.length == 0 ? ( getScreenHeight(context) >= 750 ? getScreenHeight(context) * 0.74 : getScreenHeight(context) * 0.71 ) :
-        ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.44 : getScreenHeight(context) * 0.38 ),
+                                 ( getScreenHeight(context) >= 740 ? getScreenHeight(context) * 0.44 : getScreenHeight(context) * 0.38 ),
 
                                         child: GridView.builder(
                                             itemCount: state

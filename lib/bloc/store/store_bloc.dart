@@ -59,6 +59,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     on<StoreEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper =
       SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+
       if (event is _ChangeCategoryExpansion) {
         if (event.isOpened != null) {
           emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
@@ -73,6 +74,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         debugPrint('supplier selection : ${state.isSelectSupplier}');
       }
       else if (event is _GetProductCategoriesListEvent) {
+        print('getGuestUser_____${preferencesHelper.getGuestUser()}');
         emit(state.copyWith(isGuestUser: preferencesHelper.getGuestUser()));
         try {
           emit(state.copyWith(isShimmering: true));
@@ -166,56 +168,58 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           emit(state.copyWith(isShimmering: false));
         }
       }
-      else if(!preferencesHelper.getGuestUser()){
-       if (event is _GetRecommendationProductsListEvent) {
-        try {
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-              prefs: await SharedPreferences.getInstance());
-          emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context).post(
-              AppUrls.getRecommendationProductsUrl,
-              data: RecommendationProductsReqModel(
-                  pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
-                  .toJson(),
-              options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                  'Bearer ${preferencesHelper.getAuthToken()}',
-                },
-              ));
-          RecommendationProductsResModel response =
-          RecommendationProductsResModel.fromJson(res);
-          print('storeresponse____${response}');
-          if (response.status == 200) {
-            List<ProductStockModel> productStockList =
-            state.productStockList.toList(growable: true);
-            ProductStockModel barcodeStock = productStockList.removeLast();
-            productStockList.addAll(response.data?.map(
-                    (recommendationProduct) => ProductStockModel(
-                    productId: recommendationProduct.id ?? '',
-                    stock: recommendationProduct.productStock ?? 0)) ??
-                []);
-            productStockList.add(barcodeStock);
-            emit(state.copyWith(
-                recommendedProductsList: response.data ?? [],
-                productStockList: productStockList,
-                isShimmering: false));
-          } else {
-            emit(state.copyWith(isShimmering: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-              '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-              type: SnackBarType.SUCCESS,
 
-            );
+      else if (event is _GetRecommendationProductsListEvent) {
+        if(!preferencesHelper.getGuestUser()){
+          try {
+            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                prefs: await SharedPreferences.getInstance());
+            emit(state.copyWith(isShimmering: true));
+            final res = await DioClient(event.context).post(
+                AppUrls.getRecommendationProductsUrl,
+                data: RecommendationProductsReqModel(
+                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                    .toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                    'Bearer ${preferencesHelper.getAuthToken()}',
+                  },
+                ));
+            RecommendationProductsResModel response =
+            RecommendationProductsResModel.fromJson(res);
+            print('storeresponse____${response}');
+            if (response.status == 200) {
+              List<ProductStockModel> productStockList =
+              state.productStockList.toList(growable: true);
+              ProductStockModel barcodeStock = productStockList.removeLast();
+              productStockList.addAll(response.data?.map(
+                      (recommendationProduct) => ProductStockModel(
+                      productId: recommendationProduct.id ?? '',
+                      stock: recommendationProduct.productStock ?? 0)) ??
+                  []);
+              productStockList.add(barcodeStock);
+              emit(state.copyWith(
+                  recommendedProductsList: response.data ?? [],
+                  productStockList: productStockList,
+                  isShimmering: false));
+            } else {
+              emit(state.copyWith(isShimmering: false));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title:
+                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                type: SnackBarType.SUCCESS,
+
+              );
+            }
+          } on ServerException {
+            emit(state.copyWith(isShimmering: false));
+          } catch (exc) {
+            emit(state.copyWith(isShimmering: false));
           }
-        } on ServerException {
-          emit(state.copyWith(isShimmering: false));
-        } catch (exc) {
-          emit(state.copyWith(isShimmering: false));
         }
-      }
+
       }
 
       else if (event is _GetSuppliersListEvent) {
@@ -251,8 +255,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           emit(state.copyWith(isShimmering: false));
         }
       }
+
       else if (event is _GetCompaniesListEvent) {
-        debugPrint('koamalsakakldnakdnjknjks');
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -502,6 +506,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         //  Navigator.pop(event.context);
         }
       }
+
+
       else if (event is _IncreaseQuantityOfProduct) {
         List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
@@ -594,7 +600,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _ChangeNoteOfProduct) {
+      }
+      else if (event is _ChangeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           debugPrint('note changed');
           List<ProductStockModel> productStockList =
@@ -604,7 +611,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                   .copyWith(note: /*event.newNote*/ state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
-      } else if (event is _AddToCartProductEvent) {
+      }
+      else if (event is _AddToCartProductEvent) {
         if (state.productStockList[state.productStockUpdateIndex]
             .productSupplierIds.isEmpty) {
           CustomSnackBar.showSnackBar(
@@ -806,7 +814,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
           }
         }
-      } else if (event is _SetCartCountEvent) {
+      }
+      else if (event is _SetCartCountEvent) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
@@ -1007,7 +1016,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                       .isNoteOpen);
         }
         emit(state.copyWith(productStockList: productStockList));
-      } else if (event is _ResetGlobalSearchEvent) {
+      }
+      else if (event is _ResetGlobalSearchEvent) {
         List<SearchModel> searchList = [];
         searchList.addAll(state.productCategoryList.map((category) =>
             SearchModel(
@@ -1019,53 +1029,57 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             searchList: searchList, searchController: TextEditingController()));
       }
 
-      else if(!preferencesHelper.getGuestUser()){
-        if (event is _GetPreviousOrderProductsListEvent) {
-          try {
-            emit(state.copyWith(isShimmering: true));
-            final res = await DioClient(event.context).post(
-              AppUrls.getPreviousOrderProductsUrl,
-              data: PreviousOrderProductsReqModel(
-                  pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
-                  .toJson(),
-            );
-            PreviousOrderProductsResModel response =
-            PreviousOrderProductsResModel.fromJson(res);
-            if (response.status == 200) {
-              debugPrint(
-                  'previous order products len = ${response.previousProductData?.length}');
-              List<ProductStockModel> productStockList =
-              state.productStockList.toList(growable: true);
-              ProductStockModel barcodeStock = productStockList.removeLast();
-              productStockList.addAll(response.previousProductData?.map(
-                      (previousOrderProduct) => ProductStockModel(
-                      productId: previousOrderProduct.id ?? '',
-                      stock: previousOrderProduct.productStock ?? 0)) ??
-                  []);
-              productStockList.add(barcodeStock);
-              emit(state.copyWith(
-                  previousOrderProductsList: response.previousProductData ?? [],
-                  productStockList: productStockList,
-                  isShimmering: false));
-              debugPrint(
-                  'previous order products len = ${state.previousOrderProductsList.length}');
-            } else {
-              emit(state.copyWith(isShimmering: false));
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
-                type: SnackBarType.SUCCESS,
 
-              );
+          else  if (event is _GetPreviousOrderProductsListEvent) {
+
+            if(!preferencesHelper.getGuestUser()){
+              try {
+                emit(state.copyWith(isShimmering: true));
+                final res = await DioClient(event.context).post(
+                  AppUrls.getPreviousOrderProductsUrl,
+                  data: PreviousOrderProductsReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                      .toJson(),
+                );
+                PreviousOrderProductsResModel response =
+                PreviousOrderProductsResModel.fromJson(res);
+                if (response.status == 200) {
+                  debugPrint(
+                      'previous order products len = ${response.previousProductData?.length}');
+                  List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+                  ProductStockModel barcodeStock = productStockList.removeLast();
+                  productStockList.addAll(response.previousProductData?.map(
+                          (previousOrderProduct) => ProductStockModel(
+                          productId: previousOrderProduct.id ?? '',
+                          stock: previousOrderProduct.productStock ?? 0)) ??
+                      []);
+                  productStockList.add(barcodeStock);
+                  emit(state.copyWith(
+                      previousOrderProductsList: response.previousProductData ?? [],
+                      productStockList: productStockList,
+                      isShimmering: false));
+                  debugPrint(
+                      'previous order products len = ${state.previousOrderProductsList.length}');
+                } else {
+                  emit(state.copyWith(isShimmering: false));
+                  CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title:
+                    '${AppLocalizations.of(event.context)!.something_is_wrong_try_again}',
+                    type: SnackBarType.SUCCESS,
+
+                  );
+                }
+              } on ServerException {
+                emit(state.copyWith(isShimmering: false));
+              } catch (exc) {
+                emit(state.copyWith(isShimmering: false));
+              }
             }
-          } on ServerException {
-            emit(state.copyWith(isShimmering: false));
-          } catch (exc) {
-            emit(state.copyWith(isShimmering: false));
-          }
-        }
-      }
+
+            }
+
 
     });
   }
