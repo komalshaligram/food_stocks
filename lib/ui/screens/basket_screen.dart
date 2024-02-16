@@ -24,6 +24,7 @@ import '../utils/themes/app_img_path.dart';
 
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_shimmer_widget.dart';
 
 class BasketRoute {
@@ -988,7 +989,7 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required int index,
       required GetAllCartResModel CartItemList}) async {
- /*   showModalBottomSheet(
+/*   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -1048,106 +1049,55 @@ class BasketScreenWidget extends StatelessWidget {
                         productUnitPrice: CartItemList
                             .data
                             ?.data?[index]
-                            .productDetails,
-                        productName: state.productDetails.first
-                            .productName ??
+                            .productPrice??0,
+                        productName:CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.productName??'',
+                        productCompanyName: '',
+                        productDescription: '',
+                        productSaleDescription: '',
+                        productPrice:0,
+                        productScaleType:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.scales ??
                             '',
-                        productCompanyName: state
-                            .productDetails.first.brandName ??
-                            '',
-                        productDescription: parse(state
-                            .productDetails
-                            .first
-                            .productDescription ??
-                            '')
-                            .body
-                            ?.text ??
-                            '',
-                        productSaleDescription: parse(state
-                            .productDetails
-                            .first
-                            .productDescription ??
-                            '')
-                            .body
-                            ?.text ??
-                            '',
-                        productPrice: state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .totalPrice *
-                            state
-                                .productStockList[
-                            state.productStockUpdateIndex]
-                                .quantity *
-                            (state.productDetails.first
-                                .numberOfUnit ??
-                                0),
-                        productScaleType: state.productDetails
-                            .first.scales?.scaleType ??
-                            '',
-                        productWeight: state
-                            .productDetails.first.itemsWeight
-                            ?.toDouble() ??
+                        productWeight:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.itemsWeight ??
                             0.0,
-
-
-                        productStock: state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .stock,
+                        productStock:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productStock??0,
                         isRTL: context.rtl,
-                        isSupplierAvailable:
-                        state.productSupplierList.isEmpty
-                            ? false
-                            : true,
+                        isSupplierAvailable: true,
                         scrollController: scrollController,
-                        productQuantity: state
-                            .productStockList[
-                        state.productStockUpdateIndex]
-                            .quantity,
+                        productQuantity:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .totalQuantity??0,
                         onQuantityChanged: (quantity) {
-                          context.read<HomeBloc>().add(
-                              HomeEvent.updateQuantityOfProduct(
+                        *//*  context.read<BasketBloc>().add(
+                              BasketEvent.updateQuantityOfProduct(
                                   context: context1,
-                                  quantity: quantity));
+                                  quantity: quantity));*//*
                         },
                         onQuantityIncreaseTap: () {
-                          context.read<HomeBloc>().add(
-                              HomeEvent.increaseQuantityOfProduct(
-                                  context: context1));
+                          *//*context.read<BasketBloc>().add(
+                              BasketEvent.increaseQuantityOfProduct(
+                                  context: context1));*//*
                         },
                         onQuantityDecreaseTap: () {
-                          context.read<HomeBloc>().add(
-                              HomeEvent.decreaseQuantityOfProduct(
-                                  context: context1));
+                        *//*  context.read<BasketBloc>().add(
+                              BasketEvent.decreaseQuantityOfProduct(
+                                  context: context1));*//*
                         },
+
                         // isLoading: state.isLoading,
-                        *//*onAddToOrderPressed: state.isLoading
-                              ? null
-                              : () {
-                            context.read<HomeBloc>().add(
-                                HomeEvent.addToCartProductEvent(
-                                    context: context1));
-                          }*//*
                       ),
-                      bottomNavigationBar: state.isProductLoading
-                          ? 0.height
-                          : CommonProductDetailsButton(
-                          isLoading: state.isLoading,
-                          isSupplierAvailable:
-                          state.productSupplierList.isEmpty
-                              ? false
-                              : true,
-                          productStock: state
-                              .productStockList[state.productStockUpdateIndex]
-                              .stock,
-                          onAddToOrderPressed: state.isLoading
-                              ? null
-                              : () {
-                            context.read<HomeBloc>().add(
-                                HomeEvent.addToCartProductEvent(
-                                    context: context1));
-                          }),
                     ),
                   );
                 },

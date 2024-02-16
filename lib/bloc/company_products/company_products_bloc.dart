@@ -127,7 +127,8 @@ class CompanyProductsBloc
             isBottomOfProducts: false));
         add(CompanyProductsEvent.getCompanyProductsListEvent(
             context: event.context));
-      } else if (event is _GetProductDetailsEvent) {
+      }
+      else if (event is _GetProductDetailsEvent) {
         debugPrint('product details id = ${event.productId}');
         _isProductInCart = false;
         _cartProductId = '';

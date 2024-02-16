@@ -499,7 +499,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       (state.productDetails.first.numberOfUnit ?? 0),
                                   productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                              productStock: state.productStockList[state.productStockUpdateIndex].stock,
+                              productStock: int.parse(state.productDetails[state.productStockUpdateIndex].supplierSales!.first.productStock.toString()),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
