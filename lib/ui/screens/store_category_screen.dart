@@ -156,7 +156,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                   /* SizedBox(
                       height: 50,
                       width: 25,
                       child: Visibility(
@@ -170,7 +170,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
