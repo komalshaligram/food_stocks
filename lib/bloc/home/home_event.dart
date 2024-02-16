@@ -93,6 +93,9 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getProductCategoriesListEvent(
       {required BuildContext context}) = _GetProductCategoriesListEvent;
 
+  const factory HomeEvent.checkVersionOfAppEvent(
+      {required BuildContext context}) = _checkVersionOfAppEvent;
+
 
 
 }

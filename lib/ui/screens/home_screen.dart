@@ -51,11 +51,11 @@ class HomeScreen extends StatelessWidget {
       create: (context) => HomeBloc()
         ..add(HomeEvent.getCartCountEvent(context: context))
         ..add(HomeEvent.getPreferencesDataEvent())
-     //   ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(HomeEvent.getOrderCountEvent(context: context))
         ..add(HomeEvent.getWalletRecordEvent(context: context))
         ..add(HomeEvent.getMessageListEvent(context: context))
-        ..add(HomeEvent.getRecommendationProductsListEvent(context: context)),
+        ..add(HomeEvent.getRecommendationProductsListEvent(context: context))
+       ..add(HomeEvent.checkVersionOfAppEvent(context: context)),
        // ..add(HomeEvent.getProductCategoriesListEvent(context: context)),
       child: HomeScreenWidget(),
     );
