@@ -63,6 +63,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     return BlocBuilder<CompanyProductsBloc, CompanyProductsState>(
       builder: (context, state) {
         return Scaffold(
+
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),

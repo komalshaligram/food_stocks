@@ -1036,9 +1036,10 @@ class BasketScreenWidget extends StatelessWidget {
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           clipBehavior: Clip.hardEdge,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Row(
+                              Row (
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Expanded(child: 0.width),
@@ -1103,7 +1104,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Center(
                                         child: Stack(

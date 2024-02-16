@@ -64,8 +64,6 @@ class StoreScreen extends StatelessWidget {
 class StoreScreenWidget extends StatelessWidget {
    StoreScreenWidget({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     StoreBloc bloc = context.read<StoreBloc>();
