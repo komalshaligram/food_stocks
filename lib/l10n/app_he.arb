@@ -390,12 +390,7 @@
   "until_date" : "Until Date",
   "delete_account" : "מחיקת חשבון",
   "delete_pop_up_msg": "קיבלנו את בקשת מחיקת החשבון שלך, אנו נטפל בזה בימים הקרובים.",
-  "login_as_guest": "כניסה כאורח"
-
-
-
-
-
-
-
+  "login_as_guest": "כניסה כאורח",
+  "new_version_app_update": "קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה",
+  "update": "עדכן"
 }

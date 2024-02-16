@@ -27,27 +27,17 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final int productQuantity;
   final String productScaleType;
   final ScrollController scrollController;
-  final TextEditingController noteController;
-  // final void Function()? onAddToOrderPressed;
   final void Function() onQuantityIncreaseTap;
   final void Function() onQuantityDecreaseTap;
-  final void Function(String)? onNoteChanged;
   final void Function(String) onQuantityChanged;
-  final void Function() onNoteToggleChanged;
   final bool isRTL;
-
-  // final bool isLoading;
-  final bool isNoteOpen;
   final int productStock;
-  final Widget supplierWidget;
   final bool isSupplierAvailable;
   final int productImageIndex;
   final dynamic Function(int, CarouselPageChangedReason)? onPageChanged;
   final String saleDate;
   final String startDate;
   final String endDate;
-
-  // final CarouselController carouselController = CarouselController();
 
   const CommonProductDetailsWidget({
     super.key,
@@ -62,20 +52,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.productUnitPrice,
     required this.productPerUnit,
     required this.isRTL,
-    required this.isNoteOpen,
     required this.scrollController,
-    // this.onAddToOrderPressed,
-    required this.noteController,
     required this.productQuantity,
     required this.onQuantityIncreaseTap,
     required this.onQuantityDecreaseTap,
-    required this.onNoteToggleChanged,
-    this.onNoteChanged,
     required this.onQuantityChanged,
-    // required this.isLoading,
     required this.productStock,
     required this.productScaleType,
-    required this.supplierWidget,
     required this.isSupplierAvailable,
     required this.productImageIndex,
     required this.onPageChanged,
@@ -104,7 +87,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
           Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
+              Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(child: 0.width),
@@ -120,7 +103,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Expanded(
+              Expanded(
                     child: Container(
                       child: GestureDetector(
                         onTap: () {
@@ -158,31 +141,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Text(
-              //       '${productWeight.toStringAsFixed(1)}$productScaleType',
-              //       style: AppStyles.rkRegularTextStyle(
-              //           size: AppConstants.smallFont,
-              //           color: AppColors.blackColor),
-              //     ),
-              //     productCompanyName == ''
-              //         ? 0.height
-              //         : Text(
-              //             ' | ',
-              //             style: AppStyles.rkRegularTextStyle(
-              //                 size: AppConstants.smallFont,
-              //                 color: AppColors.blackColor),
-              //           ),
-              //     Text(
-              //       '$productCompanyName',
-              //       style: AppStyles.rkRegularTextStyle(
-              //           size: AppConstants.smallFont,
-              //           color: AppColors.blackColor),
-              //     ),
-              //   ],
-              // ),
               10.height,
               Expanded(
                 // fit: FlexFit.tight,
@@ -685,7 +643,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                           ],
                                         ),
                                 ),
-                                productStock == 0
+                               /* productStock == 0
                                     ? 0.width
                                     : Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -787,28 +745,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          // 90.height,
-                                      // Padding(
-                                      //   padding: const EdgeInsets.only(
-                                          //       top: 0,
-                                          //       left: AppConstants.padding_20,
-                                          //       right: AppConstants.padding_20,
-                                          //       bottom: AppConstants.padding_20),
-                                          //   child: CommonProductButtonWidget(
-                                          //     title: AppLocalizations.of(context)!
-                                          //         .add_to_order,
-                                          //     isLoading: isLoading,
-                                          //     onPressed: onAddToOrderPressed,
-                                          //     width: double.maxFinite,
-                                          //     height: AppConstants.buttonHeight,
-                                          //     borderRadius: AppConstants.radius_5,
-                                          //     textSize: AppConstants.normalFont,
-                                          //     textColor: AppColors.whiteColor,
-                                          //     bgColor: AppColors.mainColor,
-                                          //   ),
-                                          // ),
                                         ],
-                                      ),
+                                      ),*/
                           ],
                         )
                       : 0.width,

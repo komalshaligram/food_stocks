@@ -166,50 +166,6 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              // Container(
-              //   decoration: BoxDecoration(
-              //       border: Border(
-              //           bottom: BorderSide(
-              //               color: AppColors.borderColor.withOpacity(0.5),
-              //               width: 1))),
-              //   padding: const EdgeInsets.symmetric(
-              //       vertical: AppConstants.padding_10,
-              //       horizontal: AppConstants.padding_20),
-              //   child: Row(
-              //     children: [],
-              //   ),
-              // ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_20,
-                    horizontal: AppConstants.padding_20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildTextTitle(width: 70),
-                    10.height,
-                    CommonShimmerWidget(
-                      child: Container(
-                        height: 150,
-                        width: double.maxFinite,
-                        margin: EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_10),
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(AppConstants.radius_5)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(AppConstants.padding_20),
-                child: buildTextTitle(
-                    height: AppConstants.buttonHeight, width: double.maxFinite),
-              ),
-              // 160.height,
             ],
           ),
         ],

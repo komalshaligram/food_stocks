@@ -60,7 +60,7 @@ class CompanyDatum with _$CompanyDatum {
     @JsonKey(name: "scale") String? scale,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "totalSale") int? totalSale,
-    @JsonKey(name: "productStock") int? productStock,
+    @JsonKey(name: "productStock") dynamic productStock,
     @JsonKey(name: "productPrice") double? productPrice,
   }) = _CompanyDatum;
 
