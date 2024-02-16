@@ -13,6 +13,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -987,6 +988,175 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required int index,
       required GetAllCartResModel CartItemList}) async {
+ /*   showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      showDragHandle: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context1) {
+        return BlocProvider.value(
+          value: context.read<BasketBloc>(),
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            minChildSize: 0.4,
+            initialChildSize: AppConstants.bottomSheetInitHeight,
+            //shouldCloseOnMinExtent: true,
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocBuilder<BasketBloc, BasketState>(
+                builder: (context, state) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppConstants.radius_30),
+                        topRight: Radius.circular(AppConstants.radius_30),
+                      ),
+                      color: AppColors.whiteColor,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Scaffold(
+                      body:  CommonProductDetailsWidget(
+                        context: context,
+                        productImageIndex: 0,
+                        onPageChanged: (index, p1) {
+                        },
+                        productImages: [
+                          CartItemList
+                              .data
+                              ?.data?[index]
+                              .productDetails
+                              ?.mainImage ??
+                              '',
+                          ...?CartItemList
+                              .data
+                              ?.data?[index]
+                              .productDetails
+                              ?.images
+                              ?.map((image) =>
+                          image.imageUrl ??
+                              '')
+                        ],
+                        productPerUnit: 0,
+                      //  productPerUnit: CartItemList.data?.data?[index].productDetails?.price?? 0,
+                        productUnitPrice: CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails,
+                        productName: state.productDetails.first
+                            .productName ??
+                            '',
+                        productCompanyName: state
+                            .productDetails.first.brandName ??
+                            '',
+                        productDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productSaleDescription: parse(state
+                            .productDetails
+                            .first
+                            .productDescription ??
+                            '')
+                            .body
+                            ?.text ??
+                            '',
+                        productPrice: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .totalPrice *
+                            state
+                                .productStockList[
+                            state.productStockUpdateIndex]
+                                .quantity *
+                            (state.productDetails.first
+                                .numberOfUnit ??
+                                0),
+                        productScaleType: state.productDetails
+                            .first.scales?.scaleType ??
+                            '',
+                        productWeight: state
+                            .productDetails.first.itemsWeight
+                            ?.toDouble() ??
+                            0.0,
+
+
+                        productStock: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .stock,
+                        isRTL: context.rtl,
+                        isSupplierAvailable:
+                        state.productSupplierList.isEmpty
+                            ? false
+                            : true,
+                        scrollController: scrollController,
+                        productQuantity: state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity,
+                        onQuantityChanged: (quantity) {
+                          context.read<HomeBloc>().add(
+                              HomeEvent.updateQuantityOfProduct(
+                                  context: context1,
+                                  quantity: quantity));
+                        },
+                        onQuantityIncreaseTap: () {
+                          context.read<HomeBloc>().add(
+                              HomeEvent.increaseQuantityOfProduct(
+                                  context: context1));
+                        },
+                        onQuantityDecreaseTap: () {
+                          context.read<HomeBloc>().add(
+                              HomeEvent.decreaseQuantityOfProduct(
+                                  context: context1));
+                        },
+                        // isLoading: state.isLoading,
+                        *//*onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<HomeBloc>().add(
+                                HomeEvent.addToCartProductEvent(
+                                    context: context1));
+                          }*//*
+                      ),
+                      bottomNavigationBar: state.isProductLoading
+                          ? 0.height
+                          : CommonProductDetailsButton(
+                          isLoading: state.isLoading,
+                          isSupplierAvailable:
+                          state.productSupplierList.isEmpty
+                              ? false
+                              : true,
+                          productStock: state
+                              .productStockList[state.productStockUpdateIndex]
+                              .stock,
+                          onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<HomeBloc>().add(
+                                HomeEvent.addToCartProductEvent(
+                                    context: context1));
+                          }),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );*/
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,

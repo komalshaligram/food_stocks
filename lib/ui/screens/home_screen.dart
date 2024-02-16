@@ -1276,42 +1276,6 @@ class HomeScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                                  isNoteOpen: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context
-                                        .read<HomeBloc>()
-                                        .add(HomeEvent.toggleNoteEvent(isBarcode: isBarcode ?? false));
-                                  },
-                                  supplierWidget: state
-                                          .productSupplierList.isEmpty
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: AppColors
-                                                          .borderColor
-                                                          .withOpacity(0.5),
-                                                      width: 1))),
-                                          padding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: AppConstants
-                                                      .padding_30),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.out_of_stock}',
-                                            style: AppStyles
-                                                .rkRegularTextStyle(
-                                                    size: AppConstants
-                                                        .smallFont,
-                                                    color:
-                                                        AppColors.redColor),
-                                          ),
-                                        )
-                                      : buildSupplierSelection(
-                                          context: context),
                                   productStock: state
                                       .productStockList[
                                           state.productStockUpdateIndex]
@@ -1342,21 +1306,6 @@ class HomeScreenWidget extends StatelessWidget {
                                         HomeEvent.decreaseQuantityOfProduct(
                                             context: context1));
                                   },
-                                  noteController: state.noteController,
-                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                  onNoteChanged: (newNote) {
-                                    context.read<HomeBloc>().add(
-                                        HomeEvent.changeNoteOfProduct(
-                                            newNote: newNote));
-                                  },
-                                  // isLoading: state.isLoading,
-                                  /*onAddToOrderPressed: state.isLoading
-                              ? null
-                              : () {
-                            context.read<HomeBloc>().add(
-                                HomeEvent.addToCartProductEvent(
-                                    context: context1));
-                          }*/
                                 ),
                       bottomNavigationBar: state.isProductLoading
                           ? 0.height
