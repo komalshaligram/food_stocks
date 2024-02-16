@@ -545,7 +545,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                                 ? 1
                                                                                                 : 0
                                                                                             : index,
-                                                                                        isBarcode: false);
+                                                                                        isBarcode: false,
+                                                                                      productStock: (state.planogramProductList[index].productStock ?? 0),
+
+
+                                                                                    );
                                                                                   } else {
                                                                                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                                   }
@@ -1205,7 +1209,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           .planogramproducts?[subIndex]
                                           .id ??
                                       '',
-                                  planoGramIndex: 0);
+                                  planoGramIndex: 0,
+
+
+                              );
                             },
                             textColor: AppColors.whiteColor,
                             bgColor: AppColors.mainColor,
@@ -1227,6 +1234,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required String productId,
       required int planoGramIndex,
+         int productStock = 0,
       bool? isBarcode}) async {
     context.read<StoreCategoryBloc>().add(
         StoreCategoryEvent.getProductDetailsEvent(
@@ -1245,6 +1253,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       enableDrag: true,
       builder: (context1) {
         debugPrint('product id  ${productId}');
+
         return DraggableScrollableSheet(
           expand: true,
           maxChildSize: 1 -
@@ -1254,10 +1263,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           initialChildSize: AppConstants.bottomSheetInitHeight,
           //shouldCloseOnMinExtent: true,
           builder: (BuildContext context1, ScrollController scrollController) {
+
             return BlocProvider.value(
                 value: context.read<StoreCategoryBloc>(),
                 child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
                   builder: (context, state) {
+                    debugPrint('productSupplierList  ${state.productSupplierList.isEmpty}');
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -1342,6 +1353,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             state.planoGramUpdateIndex]
                                             [state.productStockUpdateIndex]
                                         .stock,
+                                 //productStock: productStock,
                                     isRTL: context.rtl,
                                     isSupplierAvailable:
                                         state.productSupplierList.isEmpty
@@ -1373,15 +1385,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   context: context1));
                                     },
 
-                                    // isLoading: state.isLoading,
-                                    /*onAddToOrderPressed: state.isLoading
-                                ? null
-                                : () {
-                              context.read<StoreCategoryBloc>().add(
-                                  StoreCategoryEvent
-                                      .addToCartProductEvent(
-                                      context: context1));
-                            }*/
                                   ),
                         bottomNavigationBar: state.isProductLoading
                             ? 0.height

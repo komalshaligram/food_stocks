@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/error/exceptions.dart';
@@ -117,40 +118,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           add(StoreCategoryEvent.getPlanogramByIdEvent(context: event.context));
         }
       }
-     /* else if (event is _GetProductCategoriesListEvent) {
-        try {
-          emit(state.copyWith(isSearching: true));
-          final res = await DioClient(event.context).post(
-              AppUrls.getProductCategoriesUrl,
-              data: ProductCategoriesReqModel(
-                  pageNum: 1, pageLimit: AppConstants.searchPageLimit)
-                  .toJson());
-          ProductCategoriesResModel response =
-          ProductCategoriesResModel.fromJson(res);
-          debugPrint('product categories = ${response.data?.categories}');
-          if (response.status == 200) {
-            List<SearchModel> searchList = [];
-            searchList.addAll(response.data?.categories?.map((category) =>
-                SearchModel(
-                    searchId: category.id ?? '',
-                    name: category.categoryName ?? '',
-                    searchType: SearchTypes.category,
-                    image: category.categoryImage ?? '')) ??
-                []);
-            debugPrint('store search list = ${searchList.length}');
-            emit(state.copyWith(
-                productCategoryList: response.data?.categories ?? [],
-                searchList: searchList,
-                isSearching: false));
-          } else {
-            emit(state.copyWith(isSearching: false));
-          }
-        } on ServerException {
-          emit(state.copyWith(isSearching: false));
-        } catch (exc) {
-          emit(state.copyWith(isSearching: false));
-        }
-      }*/
+
       else if (event is _ChangeSubCategoryDetailsEvent) {
         debugPrint(
             'sub category ${event.subCategoryId}(${event.subCategoryName})');
@@ -406,6 +374,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
              state.productStockList.toList(growable: true);
             int planoGramIndex  = event.planoGramIndex;
 
+            print('productStockList___${productStockList}');
+
             int productStockUpdateIndex = state.productStockList[planoGramIndex]
                 .indexWhere((productStock) =>
             productStock.productId == event.productId);
@@ -416,9 +386,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               productStockList.indexOf(productStockList.last)][0]
                   .copyWith(
                   quantity: 1,
-                  productId: response.product?.first.id ??
-                      '' /*,
-                  stock: response.product?.first.numberOfUnit ?? 0*/
+                  productId: response.product?.first.id ?? '' ,
+                  stock: int.parse(response.product?.first.supplierSales!.first.productStock.toString() ?? "0") ?? 0
               );
               emit(state.copyWith(productStockList: productStockList));
               debugPrint('new index = ${state.productStockList.last}');

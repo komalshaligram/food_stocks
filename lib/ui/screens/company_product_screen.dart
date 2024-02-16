@@ -272,7 +272,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                               .productList[index]
                                                               .id ??
                                                           '',
-                                                    productStock: state.productList[index].productStock.toString() ?? '0',
+
 
                                                   );
                                                 }),
@@ -422,7 +422,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
   void showProductDetails(
       {required BuildContext context, required String productId,
-        required String productStock
       }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(

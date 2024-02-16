@@ -67,7 +67,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  print('productStock____-------${productStock}');
+  print('productStock____-------${productUnitPrice }');
+  print('productStock___1_-------${productStock}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -306,9 +307,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       ): 0.width,
                       10.height,*/
                       /*false */ /*productStock == 0*/ /* ? 0.width : */
-                 //     supplierWidget,
-                      isSupplierAvailable
-                          ? Column(
+
+
+                      Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
@@ -327,7 +328,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConstants.padding_15,
                                       vertical: AppConstants.padding_20),
-                                  child: productStock == 0
+                                  child:/* productStock == 0 ||*/ productStock == 0
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -749,7 +750,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       ),*/
                           ],
                         )
-                      : 0.width,
+
                   // 160.height,
                 ],
               ),
