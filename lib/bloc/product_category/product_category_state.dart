@@ -13,6 +13,7 @@ class ProductCategoryState with _$ProductCategoryState {
     required String search,
     required String reqSearch,
     required RefreshController refreshController,
+    required int cartCount,
   }) = _ProductCategoryState;
 
   factory ProductCategoryState.initial() => ProductCategoryState(
@@ -26,5 +27,6 @@ class ProductCategoryState with _$ProductCategoryState {
         search: '',
         reqSearch: '',
         refreshController: RefreshController(),
+    cartCount: 0
       );
 }

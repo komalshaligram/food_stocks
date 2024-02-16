@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/bloc/company_products/company_products_bloc.dart';
 import 'package:food_stock/ui/widget/common_product_item_widget.dart';
 import 'package:food_stock/ui/widget/delayed_widget.dart';
@@ -111,8 +112,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               width: 1),
                         ),
                         child: Text(
-                          '12',
-                          //'${state.cartCount}',
+                          '${state.cartCount}',
                           style: AppStyles.rkRegularTextStyle(
                               size: 10,
                               color:  AppColors.whiteColor),
@@ -140,7 +140,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             ),
             backgroundColor:Colors.transparent,
             onPressed: () {
-              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                  arguments: {AppStrings.isBasketScreenString: 'true'}
+              );
             },
           ),
           backgroundColor: AppColors.pageColor,
@@ -155,150 +157,155 @@ class CompanyProductsScreenWidget extends StatelessWidget {
               },
             ),
           ),
-          body: SafeArea(
-            child:
-                // NotificationListener<ScrollNotification>(
-                //   child:
-                Column(
-                 // mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: CachedNetworkImage(
-                        imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
-                        fit: BoxFit.scaleDown,
-                        height: 100,
-                        alignment: Alignment.center,
-                        placeholder: (context, url) => CommonShimmerWidget(
-                          child: Container(
-                            height: getScreenHeight(context),
-                            width: getScreenWidth(context),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft:
-                                  Radius.circular(AppConstants.radius_10),
-                                  topRight:
-                                  Radius.circular(AppConstants.radius_10)),
+          body: FocusDetector(
+             onFocusGained: (){
+               context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getCartCountEvent());
+             },
+            child: SafeArea(
+              child:
+                  // NotificationListener<ScrollNotification>(
+                  //   child:
+                  Column(
+                   // mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CachedNetworkImage(
+                          imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
+                          fit: BoxFit.scaleDown,
+                          height: 100,
+                          alignment: Alignment.center,
+                          placeholder: (context, url) => CommonShimmerWidget(
+                            child: Container(
+                              height: getScreenHeight(context),
+                              width: getScreenWidth(context),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft:
+                                    Radius.circular(AppConstants.radius_10),
+                                    topRight:
+                                    Radius.circular(AppConstants.radius_10)),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            height: 100,
+                            //width: getScreenWidth(context),
+                            color: AppColors.whiteColor,
+                            child: Image.asset(
+                              AppImagePath.imageNotAvailable5,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          height: 100,
-                          //width: getScreenWidth(context),
-                          color: AppColors.whiteColor,
-                          child: Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: state.isShimmering
-                          ? SupplierProductsScreenShimmerWidget()
-                          : state.productList.isEmpty
-                              ? Container (
-                                  height: getScreenHeight(context) - 80,
-                                  width: getScreenWidth(context),
-                                  margin: EdgeInsets.only(top: 30),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.this_company_has_no_product,
-                                    style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.textColor),
-                                  ),
-                                )
-                              : SmartRefresher(
-                        enablePullDown: true,
-                        controller: state.refreshController,
-                        header:
-                        RefreshWidget(),
-                        footer: CustomFooter(
-                          builder: (context, mode) =>
-                              SupplierProductsScreenShimmerWidget(),
-                        ),
-                        enablePullUp: !state.isBottomOfProducts,
-                        onRefresh: () {
-                          context.read<CompanyProductsBloc>().add(
-                              CompanyProductsEvent.refreshListEvent(context: context));
-                        },
-                        onLoading: () {
-                          context.read<CompanyProductsBloc>().add(
-                              CompanyProductsEvent.getCompanyProductsListEvent(
-                                  context: context));
-                        },
-
-                                child: GridView.builder(
-                                    itemCount: state.productList.length,
-                                    shrinkWrap: true,
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppConstants.padding_5),
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 3,
-                                            childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
-                                                .productGridAspectRatio: AppConstants
-                                                .productGridAspectRatio1
-                                        ),
-                                    itemBuilder: (context, index) => DelayedWidget(
-                                          child: CommonProductItemWidget(
-                                            productStock: state.productList[index].productStock.toString() ?? '0',
-                                              productImage: state.productList[index]
-                                                      .mainImage ??
-                                                  '',
-                                              productName: state.productList[index]
-                                                      .productName ??
-                                                  '',
-                                              totalSaleCount: state
-                                                      .productList[index]
-                                                      .totalSale ??
-                                                  0,
-                                              price: state.productList[index]
-                                                      .productPrice ??
-                                                  0.0,
-                                              onButtonTap: () {
-                                                showProductDetails(
-                                                    context: context,
-                                                    productId: state
-                                                            .productList[index]
-                                                            .id ??
-                                                        '',
-                                                  productStock: state.productList[index].productStock.toString() ?? '0',
-
-                                                );
-                                              }),
-                                        )
-                                    // buildCompanyProducts(
-                                    // context: context,
-                                    // index: index,
-                                    // productImage: state
-                                    //     .productList[index].mainImage ??
-                                    //     '',
-                                    // productName: state.productList[index]
-                                    //     .productName ??
-                                    //     '',
-                                    // productPrice: state.productList[index]
-                                    //     .productPrice ??
-                                    //     0.0,
-                                    // totalSale: state
-                                    //     .productList[index].totalSale ??
-                                    //     0,
-                                    // onPressed: () {
-                                    //   showProductDetails(
-                                    //       context: context,
-                                    //       productId:
-                                    //       state.productList[index].id ??
-                                    //           '');
-                                    // },
-                                    // isRTL: context.rtl),
+                      Expanded(
+                        child: state.isShimmering
+                            ? SupplierProductsScreenShimmerWidget()
+                            : state.productList.isEmpty
+                                ? Container (
+                                    height: getScreenHeight(context) - 80,
+                                    width: getScreenWidth(context),
+                                    margin: EdgeInsets.only(top: 30),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      AppLocalizations.of(context)!.this_company_has_no_product,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.smallFont,
+                                          color: AppColors.textColor),
                                     ),
-                              ),
-                    ),
-                  ],
-                ),
+                                  )
+                                : SmartRefresher(
+                          enablePullDown: true,
+                          controller: state.refreshController,
+                          header:
+                          RefreshWidget(),
+                          footer: CustomFooter(
+                            builder: (context, mode) =>
+                                SupplierProductsScreenShimmerWidget(),
+                          ),
+                          enablePullUp: !state.isBottomOfProducts,
+                          onRefresh: () {
+                            context.read<CompanyProductsBloc>().add(
+                                CompanyProductsEvent.refreshListEvent(context: context));
+                          },
+                          onLoading: () {
+                            context.read<CompanyProductsBloc>().add(
+                                CompanyProductsEvent.getCompanyProductsListEvent(
+                                    context: context));
+                          },
+
+                                  child: GridView.builder(
+                                      itemCount: state.productList.length,
+                                      shrinkWrap: true,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              childAspectRatio:  MediaQuery.of(context).size.width > 370 ?AppConstants
+                                                  .productGridAspectRatio: AppConstants
+                                                  .productGridAspectRatio1
+                                          ),
+                                      itemBuilder: (context, index) => DelayedWidget(
+                                            child: CommonProductItemWidget(
+                                              productStock: state.productList[index].productStock.toString() ?? '0',
+                                                productImage: state.productList[index]
+                                                        .mainImage ??
+                                                    '',
+                                                productName: state.productList[index]
+                                                        .productName ??
+                                                    '',
+                                                totalSaleCount: state
+                                                        .productList[index]
+                                                        .totalSale ??
+                                                    0,
+                                                price: state.productList[index]
+                                                        .productPrice ??
+                                                    0.0,
+                                                onButtonTap: () {
+                                                  showProductDetails(
+                                                      context: context,
+                                                      productId: state
+                                                              .productList[index]
+                                                              .id ??
+                                                          '',
+                                                    productStock: state.productList[index].productStock.toString() ?? '0',
+
+                                                  );
+                                                }),
+                                          )
+                                      // buildCompanyProducts(
+                                      // context: context,
+                                      // index: index,
+                                      // productImage: state
+                                      //     .productList[index].mainImage ??
+                                      //     '',
+                                      // productName: state.productList[index]
+                                      //     .productName ??
+                                      //     '',
+                                      // productPrice: state.productList[index]
+                                      //     .productPrice ??
+                                      //     0.0,
+                                      // totalSale: state
+                                      //     .productList[index].totalSale ??
+                                      //     0,
+                                      // onPressed: () {
+                                      //   showProductDetails(
+                                      //       context: context,
+                                      //       productId:
+                                      //       state.productList[index].id ??
+                                      //           '');
+                                      // },
+                                      // isRTL: context.rtl),
+                                      ),
+                                ),
+                      ),
+                    ],
+                  ),
+            ),
           ),
         );
       },

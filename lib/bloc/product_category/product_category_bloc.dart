@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/themes/app_constants.dart';
@@ -23,6 +25,8 @@ class ProductCategoryBloc
     extends Bloc<ProductCategoryEvent, ProductCategoryState> {
   ProductCategoryBloc() : super(ProductCategoryState.initial()) {
     on<ProductCategoryEvent>((event, emit) async {
+      SharedPreferencesHelper preferencesHelper =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _GetProductCategoriesListEvent) {
         if (state.isLoadMore) {
           return;
@@ -87,6 +91,11 @@ class ProductCategoryBloc
         emit(
             state.copyWith(search: event.search, searchList: event.searchList));
       }
+      else if (event is _getCartCountEvent) {
+        emit(
+            state.copyWith(cartCount: preferencesHelper.getCartCount()));
+      }
+
     });
   }
 }

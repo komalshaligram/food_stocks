@@ -18,4 +18,7 @@ class ProductCategoryEvent with _$ProductCategoryEvent {
 
   const factory ProductCategoryEvent.refreshListEvent(
       {required BuildContext context}) = _RefreshListEvent;
+
+  const factory ProductCategoryEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
 }
