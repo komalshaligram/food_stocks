@@ -18,7 +18,9 @@ import 'package:food_stock/ui/utils/themes/app_img_path.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_styles.dart';
 import 'package:food_stock/ui/widget/fade_indexed_stack.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/bottom_nav/bottom_nav_bloc.dart';
+import '../../data/storage/shared_preferences_helper.dart';
 import '../widget/confetti.dart';
 
 class BottomNavRoute {
@@ -53,9 +55,6 @@ class BottomNavScreenWidget extends StatelessWidget {
     return BlocListener<BottomNavBloc, BottomNavState>(
       listenWhen: (previous, current) => current.pushNotificationPath != '',
       listener: (context, state) {
-      if(state.isGuestUser){
-        debugPrint('Guest User');
-        }
       },
       child: BlocBuilder<BottomNavBloc, BottomNavState>(
         builder: (context, state) {
@@ -123,15 +122,24 @@ class BottomNavScreenWidget extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   animationCurve: Curves.decelerate,
                   animationDuration: Duration(milliseconds: 600),
-                  onTap: (index) {
+                  onTap: (index) async {
                     storeScreen = '';
-                    print('index____${index}');
-                    if(state.isGuestUser && index != 1){
-                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                    }
-                    else{
+
+
+                    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                        prefs: await SharedPreferences.getInstance());
+                    if(preferencesHelper.getGuestUser()){
+                      if(index == 1){
+                        bloc.add(BottomNavEvent.changePage(index: index));
+                      }
+                      else{
+                        Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                      }
+
+                    }else{
                       bloc.add(BottomNavEvent.changePage(index: index));
                     }
+
 
                   },
                   letIndexChange: (index) => true,
@@ -166,7 +174,7 @@ class BottomNavScreenWidget extends StatelessWidget {
       {required double screenHeight,
       required double screenWidth,
       required BottomNavState state}) {
-    print('gusujduser____${state.isGuestUser}');
+
 
     return Container(
       height: screenHeight,

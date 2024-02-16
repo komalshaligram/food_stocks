@@ -138,8 +138,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                           productStock: state
                                                   .recommendationProductsList[
                                                       index]
-                                                  .productStock ??
-                                              0,
+                                                  .productStock.toString() ??
+                                              '0',
                                           productImage: state
                                                   .recommendationProductsList[
                                                       index]

@@ -14,6 +14,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:food_stock/ui/widget/supplier_products_screen_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../routes/app_routes.dart';
 import '../utils/themes/app_constants.dart';
 import '../utils/themes/app_img_path.dart';
 import '../utils/themes/app_styles.dart';
@@ -215,7 +216,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return DelayedWidget(
                                 child: CommonProductItemWidget(
-                                    productStock: int.parse(state.productList[index].productStock ?? 0),
+                                  isGuestUser: state.isGuestUser,
+                                    productStock: state.productList[index].productStock.toString() ?? '0',
                                             productImage: state
                                                     .productList[index]
                                                     .mainImage ??
@@ -230,12 +232,18 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                     .productPrice.toString() ??
                                                 "0.0"),
                                             onButtonTap: () {
-                                              showProductDetails(
-                                                  context: context,
-                                                  productId: state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
-                                                          .productList[index]
-                                                          .productId ??
-                                                      '');
+                                     if(!state.isGuestUser){
+                                       showProductDetails(
+                                           context: context,
+                                           productId: state.searchType==SearchTypes.product.toString()?state.productList[index].id??'':state
+                                               .productList[index]
+                                               .productId ??
+                                               '');
+                                     }
+                                     else{
+                                       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                                     }
+
                                             }),
                               );
                           }

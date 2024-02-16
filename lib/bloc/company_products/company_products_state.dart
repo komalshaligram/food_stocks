@@ -19,6 +19,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required int imageIndex,
     required TextEditingController noteController,
     required RefreshController refreshController,
+    required bool isGuestUser,
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -38,5 +39,6 @@ class CompanyProductsState with _$CompanyProductsState {
         imageIndex: 0,
         noteController: TextEditingController(),
         refreshController: RefreshController(),
+       isGuestUser : false
       );
 }

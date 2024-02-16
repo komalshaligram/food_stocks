@@ -32,6 +32,8 @@ import '../widget/common_product_item_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/dashboard_stats_widget.dart';
+import 'package:food_stock/ui/utils/push_notification_service.dart';
+
 
 class HomeRoute {
   static Widget get route =>  HomeScreen();
@@ -78,8 +80,8 @@ class HomeScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: FocusDetector(
               onFocusGained: () {
+                handleMessageOnBackground();
                 bloc.add(HomeEvent.getPreferencesDataEvent());
-               // bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(
                     context: context));
                 bloc.add(HomeEvent.getWalletRecordEvent(context: context));
@@ -92,127 +94,13 @@ class HomeScreenWidget extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: AppConstants.padding_10,
-                        bottom: AppConstants.padding_5,
+                        top: AppConstants.padding_5,
                         left: AppConstants.padding_10,
                         right: AppConstants.padding_10,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          /*     GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<BottomNavBloc>()
-                                  .add(BottomNavEvent.changePage(index: 4));
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    //color: AppColors.whiteColor ,
-                                    border: Border.all(
-                                        color: AppColors.whiteColor,
-                                        width: 0.5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppColors.shadowColor.withOpacity(0.1) ,
-                                          blurRadius: AppConstants.blur_10 )
-                                    ],
-                                    shape: BoxShape.circle,
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                  child: state.UserImageUrl.isNotEmpty
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) => Center(
-                                                child:
-                                                    const CupertinoActivityIndicator()),
-                                            imageUrl: '${AppUrls.baseFileUrl}${state.UserImageUrl}',
-                                            fit: BoxFit.cover,
-                                            errorWidget: (context, url, error) {
-                                              return Container(
-                                                color: AppColors.whiteColor,
-                                              );
-                                            },
-                                          ),
-                                        )
-                                      : Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColors.whiteColor,
-                                            width: 5),
-                                        borderRadius:
-                                        BorderRadius.circular(40)),
-                                    child: SvgPicture.asset(
-                                      AppImagePath.placeholderProfile,
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                  ),
-                                ),
-                                15.width,
-                                state.UserCompanyLogoUrl.isNotEmpty
-                                    ? CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            Container(
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.whiteColor,
-                                                    border: Border.all(
-                                                        color: AppColors
-                                                            .borderColor
-                                                            .withOpacity(0.5),
-                                                        width: 1),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: AppColors.shadowColor.withOpacity(0.15),
-                                                          blurRadius: AppConstants.blur_10)
-                                                    ]),
-                                                alignment: Alignment.center,
-                                                child: Container(
-                                                    height: 50,
-                                                    width: getScreenWidth(context) * 0.35,
-                                                    alignment: Alignment.center,
-                                                    child: const CupertinoActivityIndicator())),
-                                        imageUrl:
-                                            '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
-                                        height: 50,
-                                        width: getScreenWidth(context) * 0.35,
-                                        fit: BoxFit.fitHeight,
-                                        alignment: context.rtl
-                                            ? Alignment.centerRight
-                                            : Alignment.centerLeft,
-                                        errorWidget: (context, url, error) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                                color: AppColors.whiteColor,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: AppColors
-                                                          .shadowColor
-                                                          .withOpacity(0.15),
-                                                      blurRadius:
-                                                          AppConstants.blur_10)
-                                                ]),
-                                            alignment: Alignment.center,
-                                          );
-                                        },
-                                      )
-                                    : SvgPicture.asset(
-                                  AppImagePath.splashLogo,
-                                  fit: BoxFit.cover,
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              ],
-                            ),
-                          ),*/
                           GestureDetector(
                             onTap: () {
                               context
@@ -223,7 +111,6 @@ class HomeScreenWidget extends StatelessWidget {
                               height: 60,
                               width: 60,
                               decoration: BoxDecoration(
-                                //color: AppColors.whiteColor ,
                                 border: Border.all(
                                     color: AppColors.whiteColor, width: 0.5),
                                 boxShadow: [
@@ -268,59 +155,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     ),
                             ),
                           ),
-                     /*     state.UserCompanyLogoUrl.isNotEmpty
-                              ? GestureDetector(
-                                  onTap: () {
-                                    context.read<BottomNavBloc>().add(
-                                        BottomNavEvent.changePage(index: 4));
-                                  },
-                                  child: CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            border: Border.all(
-                                                color: AppColors.borderColor
-                                                    .withOpacity(0.5),
-                                                width: 1),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: AppColors.shadowColor
-                                                      .withOpacity(0.15),
-                                                  blurRadius:
-                                                      AppConstants.blur_10)
-                                            ]),
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                            height: 60,
-                                            width:60,
-                                            alignment: Alignment.center,
-                                            child:
-                                                const CupertinoActivityIndicator())),
-                                    imageUrl:
-                                        '${AppUrls.baseFileUrl}${state.UserCompanyLogoUrl}',
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.contain,
-                                    alignment: context.rtl
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    errorWidget: (context, url, error) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: AppColors.shadowColor
-                                                      .withOpacity(0.15),
-                                                  blurRadius:
-                                                      AppConstants.blur_10)
-                                            ]),
-                                        alignment: Alignment.center,
-                                      );
-                                    },
-                                  ),
-                                )
-                              :*/ SvgPicture.asset(
+                          SvgPicture.asset(
                                   AppImagePath.splashLogo,
                                   fit: BoxFit.cover,
                                   width: 100,
@@ -619,8 +454,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                     productStock: state
                                                         .recommendedProductsList[
                                                     index]
-                                                        .productStock ??
-                                                        0,
+                                                        .productStock.toString() ??
+                                                        '0',
                                                     height: 160,
                                                     width: 140,
                                                     productImage: state
@@ -1101,6 +936,18 @@ class HomeScreenWidget extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+
+  void handleMessageOnBackground() {
+    PushNotificationService().firebaseMessaging.getInitialMessage().then(
+          (remoteMessage) {
+        if (remoteMessage != null) {
+          debugPrint("onMessageClosedApp: ${remoteMessage.data}");
+          PushNotificationService().manageNavigation( true, remoteMessage.data['data']['message']['mainPage'], remoteMessage.data['data']['message']['subPage'] , remoteMessage.data['data']['message']['id']);
+        }
+      },
     );
   }
 

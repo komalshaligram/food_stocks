@@ -134,7 +134,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                             .productGridAspectRatio1),
                                 itemBuilder: (context, index) => DelayedWidget(
                                       child: CommonProductItemWidget(
-                                        productStock: state.previousOrderProductsList[index].productStock ?? 0,
+                                        productStock: state.previousOrderProductsList[index].productStock.toString() ?? '0',
                                         productImage: state
                                                 .previousOrderProductsList[
                                                     index]

@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:food_stock/data/error/exceptions.dart';
 import 'package:food_stock/data/model/req_model/planogram_req_model/planogram_req_model.dart';
 import 'package:food_stock/data/model/req_model/supplier_products_req_model/supplier_products_req_model.dart';
-import 'package:food_stock/data/model/res_model/get_planogram_product/get_planogram_product_model.dart';
 import 'package:food_stock/data/model/res_model/supplier_products_res_model/supplier_products_res_model.dart';
 import 'package:food_stock/repository/dio_client.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -49,12 +48,15 @@ class SupplierProductsBloc
 
   SupplierProductsBloc() : super(SupplierProductsState.initial()) {
     on<SupplierProductsEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(
+          prefs: await SharedPreferences.getInstance());
       if (event is _GetSupplierProductsIdEvent) {
         emit(
             state.copyWith(supplierId: event.supplierId, search: event.search));
         debugPrint(
             'supplier id = ${state.supplierId}, search = ${state.search}');
       } else if (event is _GetSupplierProductsListEvent) {
+        emit(state.copyWith(isGuestUser: preferences.getGuestUser()));
         if (state.isLoadMore) {
           return;
         }
@@ -102,7 +104,7 @@ class SupplierProductsBloc
                 state.productStockList.toList(growable: true);
             productStockList.addAll(response.data?.map((product) =>
                     ProductStockModel(
-                        productId:event.searchType == SearchTypes.product.toString()?product.id??'': product.productId ?? '',
+                        productId:event.searchType == SearchTypes.product.toString()?product.id ??'': product.productId ?? '',
                         stock:event.searchType == SearchTypes.product.toString()?product.productStock: int.parse(product.productStock ?? '0'))) ??
                 []);
             debugPrint('new product list len = ${productList.length}');

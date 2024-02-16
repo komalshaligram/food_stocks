@@ -136,8 +136,8 @@ class SharedPreferencesHelper {
   Future<void> setIsGridView({required bool isGridView}) async {
     await prefs.setBool(gridView, isGridView);
   }
-  Future<void> setIsGuestUser({required bool isGuestUser}) async {
-    await prefs.setBool(guestUser, false);
+  Future<void> setIsGuestUser({bool isGuestUser = false}) async {
+    await prefs.setBool(guestUser, isGuestUser);
   }
   Future<void> setEmailId({required String userEmailId}) async {
     await prefs.setString(emailId, userEmailId);
@@ -223,6 +223,6 @@ class SharedPreferencesHelper {
     return prefs.getString(emailId) ?? '';
   }
   bool getGuestUser() {
-    return prefs.getBool(guestUser) ?? true;
+    return prefs.getBool(guestUser) ?? false;
   }
 }

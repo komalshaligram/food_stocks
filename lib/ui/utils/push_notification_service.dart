@@ -24,10 +24,10 @@ class PushNotificationService {
   String _subPage = '';
   String _mainPage = '';
   String _id = '';
-
+   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -49,8 +49,7 @@ class PushNotificationService {
       },
     );
     if (Platform.isIOS) {
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
 
     enableIOSNotifications();

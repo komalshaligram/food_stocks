@@ -55,8 +55,12 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
     on<StoreCategoryEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
+
+      print('isGuestUser______${preferences.getGuestUser()}');
       if (event is _isCategoryEvent) {
-        emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView()));
+        emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
+          isGuestUser: preferences.getGuestUser()
+        ));
       }
       if (event is _ChangeCategoryExpansionEvent) {
 
@@ -385,11 +389,15 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         _productQuantity = 0;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+
           final res = await DioClient(event.context).post(
               AppUrls.getProductDetailsUrl,
               data: ProductDetailsReqModel(params: event.productId).toJson());
+
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
+
+          print('GetProductDetails_____${response}');
           if (response.status == 200) {
             // 0 planogram
             //1 product
@@ -1167,9 +1175,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-        //  if (state.isBottomOfPlanoGrams) {
-        //   return;
-        // }
+          if (state.isBottomOfProducts) {
+          return;
+         }
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1184,13 +1192,26 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             sortField: AppStrings.planogramSortFieldString,
           );
 
-          final res = await DioClient(event.context)
-              .post('${AppUrls.getPlanogramAllProductUrl}',
-              data: planogramReqModel
-          );
+          final res;
 
-          debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
-          debugPrint('req_____${planogramReqModel}');
+          if(!preferences.getGuestUser()){
+             res = await DioClient(event.context)
+                .post('${AppUrls.getPlanogramAllProductUrl}',
+                data: planogramReqModel
+            );
+             debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductUrl}');
+             debugPrint('getAllProductUrl req_____${planogramReqModel}');
+          }
+          else{
+             res = await DioClient(event.context)
+                .post('${AppUrls.getPlanogramAllProductForGuestUserUrl}',
+                data: planogramReqModel
+            );
+             debugPrint('getAllProductUrl_____${AppUrls.getPlanogramAllProductForGuestUserUrl}');
+             debugPrint('getAllProductUrl req_____${planogramReqModel}');
+          }
+
+  print('getAllProduct_____$res');
           GetPlanogramProductModel response = GetPlanogramProductModel.fromJson(res);
           debugPrint('getAllProduct response_____${response}');
 

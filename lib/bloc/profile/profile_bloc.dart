@@ -10,6 +10,7 @@ import 'package:food_stock/data/model/res_model/profile_details_res_model/profil
     as resGet;
 import 'package:food_stock/data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
     as reqUpdate;
+import 'package:food_stock/data/services/locale_provider.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
@@ -19,6 +20,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/req_model/remove_form_and_file_req_model/remove_form_and_file_req_model.dart';
 import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart'
@@ -127,7 +129,45 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             //     type: SnackBarType.FAILURE);
           }
         }
-      } else if (event is _getBusinessTypeListEvent) {
+      }   else if (event is _DeleteAccountEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+              '${AppUrls.deleteAccount}${state.userId}');
+          if(res[AppStrings.statusString]==200){
+            final response = await DioClient(event.context).put(
+                path: AppUrls.logOutUrl,
+                data: {"userId": preferences.getUserId()});
+
+            debugPrint('logOut url  = ${AppUrls.baseUrl}${AppUrls.logOutUrl}');
+
+            debugPrint('logOut response  = ${response}');
+
+            if (response[AppStrings.statusString] == 200) {
+              SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
+                  prefs: await SharedPreferences.getInstance());
+              await preferencesHelper.setUserLoggedIn();
+              Navigator.pop(event.context);
+              Navigator.popUntil(event.context,
+                      (route) => route.name == RouteDefine.bottomNavScreen.name);
+              Navigator.pushNamed(event.context, RouteDefine.connectScreen.name);
+            } else {
+              CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(
+                      response.message?.toLocalization() ??
+                          response.message!,
+                      event.context),
+                  type: SnackBarType.SUCCESS);
+              emit(state.copyWith());
+            }
+          }else{
+            debugPrint('${res.message}');
+          }
+        } on ServerException {
+          emit(state.copyWith());
+        }
+      }
+      else if (event is _getBusinessTypeListEvent) {
         try {
           emit(state.copyWith(isShimmering: true,language: preferences.getAppLanguage()));
           final res = await DioClient(event.context)
@@ -191,10 +231,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == 200) {
+
               debugPrint(
                   'image = ${response.data?.clients?.first.profileImage}');
               emit(
                 state.copyWith(
+                  userId: response.data!.clients!.first.id!,
                   isUpdating: false,
                   UserImageUrl:
                       response.data?.clients?.first.profileImage ?? '',
