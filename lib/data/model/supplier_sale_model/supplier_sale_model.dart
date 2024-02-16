@@ -13,6 +13,7 @@ class SupplierSaleModel with _$SupplierSaleModel {
     @Default(0.0) double saleDiscount,
     @Default('') String saleDescription,
     @Default(0) int quantity,
+    @Default(0) int productStock,
     // @Default(false) bool isSelected,
   }) = _SupplierSaleModel;
 
