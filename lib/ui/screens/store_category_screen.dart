@@ -101,82 +101,84 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           child: Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
             floatingActionButton: FloatingActionButton(
-              child:  Padding(
-                padding: const EdgeInsets.only(bottom: 8.0,),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                     // margin: EdgeInsets.only(bottom: 10),
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.transparent,
-                              width: 1),
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100))),
-                      child: Center(
-                          child: SvgPicture.asset(
-                            AppImagePath.cart,
-                            height: 26,
-                            width: 26,
-                            fit: BoxFit.cover,
-                            color: AppColors.whiteColor,
-                          ),),
-                    ),
-                     Positioned(
-                      top: 5,
-                    //  right: context.rtl ? null : 0,
-                     // left: context.rtl ? 0 : null,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: 18,
-                            width: 24,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: AppColors.mainColor,
-                              //gradient:AppColors.appMainGradientColor,
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_100)),
-                              border: Border.all(
-                                  color:  AppColors.whiteColor,
-                                  width: 1),
-                            ),
-                            child: Text(
-                              '12',
-                              //'${state.cartCount}',
-                              style: AppStyles.rkRegularTextStyle(
-                                  size: 10,
-                                  color:  AppColors.whiteColor),
-                            ),
+              elevation: 0,
+              child:  Stack(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                   // margin: EdgeInsets.only(bottom: 10),
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.transparent,
+                            width: 1
+                        ),
+                        gradient: AppColors.appMainGradientColor,
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppConstants.radius_100))),
+                    child: Center(
+                        child: SvgPicture.asset(
+                          AppImagePath.cart,
+                          height: 26,
+                          width: 26,
+                          fit: BoxFit.cover,
+                          color: AppColors.whiteColor,
+                        ),),
+                  ),
+                   Positioned(
+                    top: 5,
+                    right: context.rtl ? null : 0,
+                    left: context.rtl ? 0 : null,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 18,
+                          width: 24,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor,
+                            //gradient:AppColors.appMainGradientColor,
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(AppConstants.radius_100)),
+                            border: Border.all(
+                                color:  AppColors.whiteColor,
+                                width: 1),
                           ),
-                        ],
-                      ),
-                    ),
-                  /*  SizedBox(
-                      height: 50,
-                      width: 25,
-                      child: Visibility(
-                        visible:state.duringCelebration,
-                        child: IgnorePointer(
-                          child: Confetti(
-                            isStopped:!state.duringCelebration,
-                            snippingsCount: 10,
-                            snipSize: 3.0,
-                            colors:[AppColors.mainColor],
+                          child: Text(
+                            '12',
+                            //'${state.cartCount}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: 10,
+                                color:  AppColors.whiteColor),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                /*  SizedBox(
+                    height: 50,
+                    width: 25,
+                    child: Visibility(
+                      visible:state.duringCelebration,
+                      child: IgnorePointer(
+                        child: Confetti(
+                          isStopped:!state.duringCelebration,
+                          snippingsCount: 10,
+                          snipSize: 3.0,
+                          colors:[AppColors.mainColor],
+                        ),
                       ),
-                    ),*/
-                  ],
-                ),
+                    ),
+                  ),*/
+                ],
               ),
               backgroundColor:Colors.transparent,
               onPressed: () {
-                Navigator.pushNamed(context, RouteDefine.basketScreen.name);
+                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name,
+                    arguments: {AppStrings.isBasketScreenString: 'true'}
+
+                );
               },
             ),
             backgroundColor: AppColors.pageColor,

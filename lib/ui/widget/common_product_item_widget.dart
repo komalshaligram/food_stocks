@@ -37,6 +37,7 @@ class CommonProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       height: height,
       width: width,
@@ -117,7 +118,7 @@ class CommonProductItemWidget extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
             ),
-            (productStock) != '0' || isGuestUser ? 0.width :Text(
+            (productStock) != '0'    || isGuestUser ? 0.width :Text(
               AppLocalizations.of(context)!
                   .out_of_stock1,
               style: AppStyles.rkBoldTextStyle(
