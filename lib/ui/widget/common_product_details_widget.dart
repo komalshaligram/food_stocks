@@ -80,11 +80,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
           top: AppConstants.padding_10,
           bottom: MediaQuery.of(context).viewInsets.bottom),
       clipBehavior: Clip.hardEdge,
-      child:
-          // Stack(
-          //   fit: StackFit.passthrough,
-          //   children: [
-          Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
               Row(
