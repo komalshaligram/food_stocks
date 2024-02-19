@@ -11,6 +11,7 @@ class BasketEvent with _$BasketEvent {
     required String cartProductId,
     required double totalPayment,
     required String saleId,
+     required bool isFromCart
 
   }) = _productUpdateEvent;
 
@@ -53,4 +54,9 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.addToCartProductEvent(
       {required BuildContext context}) = _AddToCartProductEvent;
+
+  const factory BasketEvent.supplierSelectionEvent(
+      {required int supplierIndex,
+        required BuildContext context,
+        required int supplierSaleIndex}) = _SupplierSelectionEvent;
 }

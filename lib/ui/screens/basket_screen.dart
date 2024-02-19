@@ -610,6 +610,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.asset(
@@ -624,6 +625,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.network(
@@ -671,6 +673,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       index: index,
+                                      qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                       CartItemList: state.CartItemList);
                                 },
                                 child: Container(
@@ -710,6 +713,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           bloc.add(
                                               BasketEvent.productUpdateEvent(
                                             listIndex: index,
+                                            isFromCart: false,
                                             productWeight: state.basketProductList[index].totalQuantity! +
                                                 1,
                                             context: context,
@@ -796,6 +800,7 @@ class BasketScreenWidget extends StatelessWidget {
                                           bloc.add(
                                               BasketEvent.productUpdateEvent(
                                             listIndex: index,
+                                            isFromCart: false,
                                             productWeight: state
                                                     .basketProductList[index]
                                                     .totalQuantity! -
@@ -988,7 +993,16 @@ class BasketScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required int index,
+        required int qty,
       required GetAllCartResModel CartItemList}) async {
+    context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
+        context: context,
+        productId: CartItemList
+            .data
+            ?.data?[index]
+            .productDetails
+            ?.id??'', isBarcode: false
+    ));
    showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1056,7 +1070,11 @@ class BasketScreenWidget extends StatelessWidget {
                         productCompanyName: '',
                         productDescription: '',
                         productSaleDescription: '',
-                        productPrice:0,
+                        productPrice:(CartItemList
+                            .data
+                            ?.data?[index]
+                            .productPrice?.toDouble()??0)*
+                            (CartItemList.data?.data?[index].productDetails?.numberOfUnit?.toDouble()?? 0)*(qty?? 0),
                         productScaleType:  CartItemList
                             .data
                             ?.data?[index]
@@ -1074,11 +1092,12 @@ class BasketScreenWidget extends StatelessWidget {
                         isRTL: context.rtl,
                         isSupplierAvailable: true,
                         scrollController: scrollController,
-                        productQuantity:  CartItemList
-                            .data
-                            ?.data?[index]
-                            .totalQuantity??0,
+                        productQuantity:state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity,
                         onQuantityChanged: (quantity) {
+
                           context.read<BasketBloc>().add(
                               BasketEvent.updateQuantityOfProduct(
                                   context: context1,
@@ -1094,7 +1113,6 @@ class BasketScreenWidget extends StatelessWidget {
                               BasketEvent.decreaseQuantityOfProduct(
                                   context: context1));
                         },
-
                         // isLoading: state.isLoading,
                       ),
                       bottomNavigationBar: CommonProductDetailsButton(
@@ -1106,9 +1124,54 @@ class BasketScreenWidget extends StatelessWidget {
                           onAddToOrderPressed: state.isLoading
                               ? null
                               : () {
-                            context.read<BasketBloc>().add(
+                            context.read<BasketBloc>().add(BasketEvent.productUpdateEvent(
+                              listIndex: index,
+                              isFromCart: true,
+                              productWeight: state.basketProductList[index].totalQuantity! +
+                                  1,
+                              context: context,
+                              productId: state
+                                  .CartItemList
+                                  .data
+                                  ?.data?[index]
+                                  .productDetails
+                                  ?.id ??
+                                  '',
+                              supplierId: state
+                                  .CartItemList
+                                  .data
+                                  ?.data?[index]
+                                  .suppliers
+                                  ?.first
+                                  .id ??
+                                  '',
+                              cartProductId: state
+                                  .CartItemList
+                                  .data
+                                  ?.data?[index]
+                                  .cartProductId ??
+                                  '',
+                              totalPayment: state.totalPayment,
+                              saleId: ((state
+                                  .CartItemList
+                                  .data
+                                  ?.data?[index]
+                                  .sales
+                                  ?.length ==
+                                  0)
+                                  ? ''
+                                  : (state
+                                  .CartItemList
+                                  .data
+                                  ?.data?[index]
+                                  .sales
+                                  ?.first
+                                  .id ??
+                                  '')),
+                            ));
+                           /* context.read<BasketBloc>().add(
                                 BasketEvent.addToCartProductEvent(
-                                    context: context1));
+                                    context: context1));*/
                           }),
                     ),
                   );
