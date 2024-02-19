@@ -11,6 +11,7 @@ class BasketEvent with _$BasketEvent {
     required String cartProductId,
     required double totalPayment,
     required String saleId,
+     required bool isFromCart
 
   }) = _productUpdateEvent;
 

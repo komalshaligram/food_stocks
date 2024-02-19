@@ -143,6 +143,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
 
             if (response.status == 201) {
+
               add(BasketEvent.getAllCartEvent(context: event.context));
               List<ProductDetailsModel> list = [];
               list = [...state.basketProductList];
@@ -175,6 +176,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       event.context),
                   type: SnackBarType.FAILURE);
             }
+            if(event.isFromCart){
+              Navigator.pop(event.context);
+            }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           }
@@ -182,10 +186,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _IncreaseQuantityOfProduct) {
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
-          if (state.productStockUpdateIndex != -1) {
+       //   if (state.productStockUpdateIndex != -1) {
             if (productStockList[state.productStockUpdateIndex].quantity <
                 productStockList[state.productStockUpdateIndex].stock) {
-              if (productStockList[state.productStockUpdateIndex]
+            /*  if (productStockList[state.productStockUpdateIndex]
                   .productSupplierIds
                   .isEmpty) {
                 CustomSnackBar.showSnackBar(
@@ -195,7 +199,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                         .please_select_supplier}',
                     type: SnackBarType.FAILURE);
                 return;
-              }
+              }*/
               productStockList[state.productStockUpdateIndex] =
                   productStockList[state.productStockUpdateIndex].copyWith(
                       quantity: productStockList[state.productStockUpdateIndex]
@@ -216,7 +220,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   // '${AppLocalizations.of(event.context)!.you_have_reached_maximum_quantity}',
                   type: SnackBarType.FAILURE);
             }
-          }
+          //}
         }
         else if (event is _SupplierSelectionEvent) {
           debugPrint(
@@ -257,12 +261,12 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 'selected supplier[${event
                     .supplierIndex}] = ${supplierList[event.supplierIndex]}');
             emit(state.copyWith(
-               // productSupplierList: supplierList,
+                productSupplierList: supplierList,
                 productStockList: productStockList));
           }
         }
-        else if (event is _AddToCartProductEvent) {
-          if (state.productStockList[state.productStockUpdateIndex]
+      /*  else if (event is _AddToCartProductEvent) {
+        *//*  if (state.productStockList[state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -270,7 +274,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 '${AppLocalizations.of(event.context)!.please_select_supplier}',
                 type: SnackBarType.FAILURE);
             return;
-          }
+          }*//*
           if (state.productStockList[state.productStockUpdateIndex].quantity ==
               0) {
             CustomSnackBar.showSnackBar(
@@ -284,8 +288,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           // List<String> cartProductQuantityList =
           //     preferences.getCartProductQuantityList();
           //update or insert cart API
-          if (_isProductInCart /*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*/
+          if (_isProductInCart *//*cartProductList.contains(
+            state.productStockList[state.productStockUpdateIndex].productId)*//*
           ) {
             debugPrint('update cart');
             try {
@@ -307,10 +311,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity +
-                    _productQuantity /*int.parse(cartProductQuantityList[lastQuantityIndex])*/,
+                    _productQuantity *//*int.parse(cartProductQuantityList[lastQuantityIndex])*//*,
                 cartProductId:
-                _cartProductId /*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*/
+                _cartProductId *//*cartProductIdList[cartProductList.indexOf(state
+                  .productStockList[state.productStockUpdateIndex].productId)]*//*
                 ,
               );
               final res = await DioClient(event.context).post(
@@ -465,7 +469,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(isLoading: false));
             }
           }
-        }
+        }*/
         else if (event is _GetProductDetailsEvent) {
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
@@ -490,7 +494,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     .indexOf(productStockList.last)] = productStockList[
                 productStockList.indexOf(productStockList.last)]
                     .copyWith(
-                  quantity: 1,
+                  quantity: 12,
                   productId: response.product?.first.id ?? '',
                   stock: response.product?.first.numberOfUnit ?? 0,
                   productSaleId: '',
@@ -602,9 +606,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   if (supplier.selectedIndex != -1) {
                     isSupplierSelected = true;
                     return;
-                  }else{
-                  //  supplier.selectedIndex = 0;
-
                   }
                 });
                 debugPrint('isSupplierSelected = $isSupplierSelected');
@@ -635,10 +636,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   debugPrint('cheapest = $cheapestPrice');
                   debugPrint('supplier index = $supplierIndex');
                   debugPrint('supplier sale index = $supplierSaleIndex');
-                /*  add(BasketEvent.supplierSelectionEvent(
+                  add(BasketEvent.supplierSelectionEvent(
                       supplierIndex: supplierIndex,
                       context: event.context,
-                      supplierSaleIndex: supplierSaleIndex));*/
+                      supplierSaleIndex: supplierSaleIndex));
                 }
               }
               try {
@@ -653,6 +654,15 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == 200) {
                   debugPrint('cart before = ${response.data}');
+                  List<ProductStockModel> productStockList =
+                  state.productStockList.toList(growable: true);
+                  /*ProductStockModel barcodeStock = productStockList.removeLast();*/
+                  productStockList.addAll(response.data?.data?.map(
+                          (recommendationProduct) =>
+                          ProductStockModel(
+                              productId: recommendationProduct.id ?? '',
+                              stock: recommendationProduct.productStock ?? 0)) ??
+                      []);
                   response.data?.data?.forEach((cartProduct) {
                     if (cartProduct.id ==
                         state.productStockList[state.productStockUpdateIndex]
@@ -663,6 +673,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       return;
                     }
                   });
+                  emit(state.copyWith(productStockList: productStockList));
                   debugPrint(
                       '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
                 }
