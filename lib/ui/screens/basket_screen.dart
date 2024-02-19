@@ -989,7 +989,7 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required int index,
       required GetAllCartResModel CartItemList}) async {
-/*   showModalBottomSheet(
+   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -1044,8 +1044,7 @@ class BasketScreenWidget extends StatelessWidget {
                           image.imageUrl ??
                               '')
                         ],
-                        productPerUnit: 0,
-                      //  productPerUnit: CartItemList.data?.data?[index].productDetails?.price?? 0,
+                        productPerUnit: CartItemList.data?.data?[index].productDetails?.numberOfUnit?? 0,
                         productUnitPrice: CartItemList
                             .data
                             ?.data?[index]
@@ -1080,24 +1079,37 @@ class BasketScreenWidget extends StatelessWidget {
                             ?.data?[index]
                             .totalQuantity??0,
                         onQuantityChanged: (quantity) {
-                        *//*  context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.updateQuantityOfProduct(
                                   context: context1,
-                                  quantity: quantity));*//*
+                                  quantity: quantity));
                         },
                         onQuantityIncreaseTap: () {
-                          *//*context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.increaseQuantityOfProduct(
-                                  context: context1));*//*
+                                  context: context1));
                         },
                         onQuantityDecreaseTap: () {
-                        *//*  context.read<BasketBloc>().add(
+                          context.read<BasketBloc>().add(
                               BasketEvent.decreaseQuantityOfProduct(
-                                  context: context1));*//*
+                                  context: context1));
                         },
 
                         // isLoading: state.isLoading,
                       ),
+                      bottomNavigationBar: CommonProductDetailsButton(
+                          isLoading: state.isLoading,
+                          isSupplierAvailable: true,
+                          productStock: state
+                              .productStockList[state.productStockUpdateIndex]
+                              .stock,
+                          onAddToOrderPressed: state.isLoading
+                              ? null
+                              : () {
+                            context.read<BasketBloc>().add(
+                                BasketEvent.addToCartProductEvent(
+                                    context: context1));
+                          }),
                     ),
                   );
                 },
@@ -1106,8 +1118,8 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );*/
-    showModalBottomSheet(
+    );
+  /*  showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -1522,6 +1534,6 @@ class BasketScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    );*/
   }
 }

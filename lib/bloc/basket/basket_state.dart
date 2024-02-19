@@ -19,6 +19,11 @@ class BasketState with _$BasketState {
     required int supplierCount,
     required double bottleTax,
     required int? bottleQty,
+    required List<ProductStockModel> productStockList,
+    required int productStockUpdateIndex,
+    required bool isCartCountChange,
+    required List<Product> productDetails,
+    required bool isProductLoading,
   }) = _BasketState;
 
    factory BasketState.initial ()=>BasketState(
@@ -36,7 +41,11 @@ class BasketState with _$BasketState {
      vatPercentage: 0,
      supplierCount: 1,
      bottleQty: 0,
-     bottleTax: 0
+     bottleTax: 0,
+     productStockUpdateIndex: 0,
+     productStockList: [], isCartCountChange: false,
+     productDetails: [],
+     isProductLoading: false
 
 );
 }

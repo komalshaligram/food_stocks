@@ -29,6 +29,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required String search,
     required List<Category> productCategoryList,
     required bool isCatVisible,
+    required bool isGridView,
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -58,6 +60,7 @@ class CompanyProductsState with _$CompanyProductsState {
     search: '',
     productCategoryList: [],
     isCatVisible: false,
-
+        isGridView: false,
+        cartCount: 0
       );
 }
