@@ -68,40 +68,20 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             preferredSize: Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-             title: state.productList.isNotEmpty?state.productList.elementAt(0).brandId??'':companyName??'',
+             title: state.productList.isNotEmpty?state.productList.elementAt(0).brandId ?? '' :companyName??'',
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
               },
+                trailingWidget : Icon(Icons.list)
             ),
           ),
           body: SafeArea(
             child:
-                // NotificationListener<ScrollNotification>(
-                //   child:
                 SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
-              header: /*BezierHeader(
-                  bezierColor: AppColors.shadowColor.withOpacity(0.15),
-                  dismissType: BezierDismissType.ScaleToCenter,
-                  child: Center(
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: AppColors.shadowColor.withOpacity(0.1),
-                            blurRadius: AppConstants.blur_10)
-                      ], color: AppColors.whiteColor, shape: BoxShape.circle),
-                      child: CupertinoActivityIndicator(
-                        color: AppColors.mainColor,
-                        radius: 10,
-                      ),
-                    ),
-                  ),
-                )*/
-                  RefreshWidget(),
+              header: RefreshWidget(),
               footer: CustomFooter(
                 builder: (context, mode) =>
                     SupplierProductsScreenShimmerWidget(),
@@ -217,29 +197,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
                                             }),
                                       )
-                                  // buildCompanyProducts(
-                                  // context: context,
-                                  // index: index,
-                                  // productImage: state
-                                  //     .productList[index].mainImage ??
-                                  //     '',
-                                  // productName: state.productList[index]
-                                  //     .productName ??
-                                  //     '',
-                                  // productPrice: state.productList[index]
-                                  //     .productPrice ??
-                                  //     0.0,
-                                  // totalSale: state
-                                  //     .productList[index].totalSale ??
-                                  //     0,
-                                  // onPressed: () {
-                                  //   showProductDetails(
-                                  //       context: context,
-                                  //       productId:
-                                  //       state.productList[index].id ??
-                                  //           '');
-                                  // },
-                                  // isRTL: context.rtl),
                                   ),
                     ),
                   ),

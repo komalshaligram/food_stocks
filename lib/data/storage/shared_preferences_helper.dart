@@ -23,6 +23,7 @@ class SharedPreferencesHelper {
   static const String gridView = 'gridView';
   static const String emailId = 'userEmailId';
   static const String guestUser = 'guestUser';
+  static const String CompanyGridView = 'CompanyGridView';
 
   final SharedPreferences prefs;
 
@@ -142,7 +143,9 @@ class SharedPreferencesHelper {
   Future<void> setEmailId({required String userEmailId}) async {
     await prefs.setString(emailId, userEmailId);
   }
-
+  Future<void> setCompanyGridView({required bool isCompanyGridView}) async {
+    await prefs.setBool(CompanyGridView, isCompanyGridView);
+  }
 
   String getAppLanguage() {
     return prefs.getString(lang) ?? 'he';
@@ -224,5 +227,9 @@ class SharedPreferencesHelper {
   }
   bool getGuestUser() {
     return prefs.getBool(guestUser) ?? false;
+  }
+
+  bool getCompanyGridView() {
+    return prefs.getBool(CompanyGridView) ?? true;
   }
 }
