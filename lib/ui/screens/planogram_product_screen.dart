@@ -294,10 +294,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   productPerUnit:
                                       state.productDetails.first.numberOfUnit ??
                                           0,
-                                  productUnitPrice: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .totalPrice,
+                                  productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
                                   productName:
                                       state.productDetails.first.productName ??
                                           '',
@@ -310,6 +307,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                   productSaleDescription: state.productDetails
                                           .first.productDescription ??
                                       '',
+
                                   productPrice: state
                                           .productStockList[state.productStockUpdateIndex]
                                           .totalPrice *
