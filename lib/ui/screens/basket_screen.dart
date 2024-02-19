@@ -610,7 +610,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                  //  qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.asset(
@@ -625,7 +625,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                   // qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.network(
@@ -673,7 +673,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       index: index,
-                                  //    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                      qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                       CartItemList: state.CartItemList);
                                 },
                                 child: Container(
@@ -993,6 +993,7 @@ class BasketScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required int index,
+        required int qty,
       required GetAllCartResModel CartItemList}) async {
     context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
         context: context,
@@ -1072,6 +1073,9 @@ class BasketScreenWidget extends StatelessWidget {
                             (CartItemList.data?.data?[index].productDetails?.numberOfUnit?.toDouble()?? 0)*(state
                             .productStockList[
                         state.productStockUpdateIndex]
+                            .quantity==1?qty:state
+                            .productStockList[
+                        state.productStockUpdateIndex]
                             .quantity?? 0),
                         productScaleType:  CartItemList
                             .data
@@ -1091,6 +1095,9 @@ class BasketScreenWidget extends StatelessWidget {
                         isSupplierAvailable: true,
                         scrollController: scrollController,
                         productQuantity:state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity==1?qty:state
                             .productStockList[
                         state.productStockUpdateIndex]
                             .quantity,
@@ -1117,7 +1124,7 @@ class BasketScreenWidget extends StatelessWidget {
                         },
                         onQuantityDecreaseTap: () {
                           if(state
-                              .productStockList[state.productStockUpdateIndex].quantity>1){
+                              .productStockList[state.productStockUpdateIndex].quantity>0){
                             context.read<BasketBloc>().add(
                                 BasketEvent.decreaseQuantityOfProduct(
                                     context: context1));
