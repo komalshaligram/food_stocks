@@ -162,7 +162,7 @@ class CompanyProductsBloc
                   .indexOf(productStockList.last)] = productStockList[
               productStockList.indexOf(productStockList.last)]
                   .copyWith(
-                quantity: state.productStockList[productStockUpdateIndex].quantity,
+                quantity: 1,
                 productId: response.product?.first.id ?? '',
                 stock: response.product?.first.numberOfUnit ?? 0,
                 productSaleId: '',
