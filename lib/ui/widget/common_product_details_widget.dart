@@ -511,7 +511,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                         maxLines: 1,
                                                         textInputAction:
                                                             TextInputAction
-                                                                .done,
+                                                                .next,
                                                         keyboardType:
                                                             TextInputType
                                                                 .number,

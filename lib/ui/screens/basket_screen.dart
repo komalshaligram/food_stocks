@@ -995,13 +995,8 @@ class BasketScreenWidget extends StatelessWidget {
       required int index,
         required int qty,
       required GetAllCartResModel CartItemList}) async {
-    context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
+    context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
         context: context,
-        productId: CartItemList
-            .data
-            ?.data?[index]
-            .productDetails
-            ?.id??'', isBarcode: false
     ));
    showModalBottomSheet(
       context: context,
@@ -1037,7 +1032,7 @@ class BasketScreenWidget extends StatelessWidget {
                     ),
                     clipBehavior: Clip.hardEdge,
                     child: Scaffold(
-                      body:  CommonProductDetailsWidget(
+                      body: CommonProductDetailsWidget(
                         context: context,
                         productImageIndex: 0,
                         onPageChanged: (index, p1) {
@@ -1074,7 +1069,10 @@ class BasketScreenWidget extends StatelessWidget {
                             .data
                             ?.data?[index]
                             .productPrice?.toDouble()??0)*
-                            (CartItemList.data?.data?[index].productDetails?.numberOfUnit?.toDouble()?? 0)*(qty?? 0),
+                            (CartItemList.data?.data?[index].productDetails?.numberOfUnit?.toDouble()?? 0)*(state
+                            .productStockList[
+                        state.productStockUpdateIndex]
+                            .quantity?? 0),
                         productScaleType:  CartItemList
                             .data
                             ?.data?[index]
@@ -1097,21 +1095,34 @@ class BasketScreenWidget extends StatelessWidget {
                         state.productStockUpdateIndex]
                             .quantity,
                         onQuantityChanged: (quantity) {
-
                           context.read<BasketBloc>().add(
                               BasketEvent.updateQuantityOfProduct(
                                   context: context1,
                                   quantity: quantity));
                         },
                         onQuantityIncreaseTap: () {
-                          context.read<BasketBloc>().add(
-                              BasketEvent.increaseQuantityOfProduct(
-                                  context: context1));
+
+                          if ((state
+                              .CartItemList
+                              .data
+                              ?.data?[index]
+                              .productStock ??
+                              0) >=
+                              state.basketProductList[index]
+                                  .totalQuantity! +
+                                  1){
+                            context.read<BasketBloc>().add(
+                                BasketEvent.increaseQuantityOfProduct(
+                                    context: context1));
+                          }
                         },
                         onQuantityDecreaseTap: () {
-                          context.read<BasketBloc>().add(
-                              BasketEvent.decreaseQuantityOfProduct(
-                                  context: context1));
+                          if(state
+                              .productStockList[state.productStockUpdateIndex].quantity>1){
+                            context.read<BasketBloc>().add(
+                                BasketEvent.decreaseQuantityOfProduct(
+                                    context: context1));
+                          }
                         },
                         // isLoading: state.isLoading,
                       ),
@@ -1124,54 +1135,69 @@ class BasketScreenWidget extends StatelessWidget {
                           onAddToOrderPressed: state.isLoading
                               ? null
                               : () {
-                            context.read<BasketBloc>().add(BasketEvent.productUpdateEvent(
-                              listIndex: index,
-                              isFromCart: true,
-                              productWeight: state.basketProductList[index].totalQuantity! +
-                                  1,
-                              context: context,
-                              productId: state
-                                  .CartItemList
-                                  .data
-                                  ?.data?[index]
-                                  .productDetails
-                                  ?.id ??
-                                  '',
-                              supplierId: state
-                                  .CartItemList
-                                  .data
-                                  ?.data?[index]
-                                  .suppliers
-                                  ?.first
-                                  .id ??
-                                  '',
-                              cartProductId: state
-                                  .CartItemList
-                                  .data
-                                  ?.data?[index]
-                                  .cartProductId ??
-                                  '',
-                              totalPayment: state.totalPayment,
-                              saleId: ((state
-                                  .CartItemList
-                                  .data
-                                  ?.data?[index]
-                                  .sales
-                                  ?.length ==
-                                  0)
-                                  ? ''
-                                  : (state
-                                  .CartItemList
-                                  .data
-                                  ?.data?[index]
-                                  .sales
-                                  ?.first
-                                  .id ??
-                                  '')),
-                            ));
-                           /* context.read<BasketBloc>().add(
-                                BasketEvent.addToCartProductEvent(
-                                    context: context1));*/
+                            if (!state.isLoading) {
+                              if ((state.productStockList[state.productStockUpdateIndex]
+                                  .stock ??
+                                  0) >=
+                                  state
+                                      .productStockList[state.productStockUpdateIndex].quantity) {
+                                context.read<BasketBloc>().add(
+                                    BasketEvent.productUpdateEvent(
+                                      listIndex: index,
+                                      isFromCart: true,
+                                      productWeight:state
+                                          .productStockList[
+                                      state.productStockUpdateIndex]
+                                          .quantity,
+                                      context: context,
+                                      productId: state
+                                          .CartItemList
+                                          .data
+                                          ?.data?[index]
+                                          .productDetails
+                                          ?.id ??
+                                          '',
+                                      supplierId: state
+                                          .CartItemList
+                                          .data
+                                          ?.data?[index]
+                                          .suppliers
+                                          ?.first
+                                          .id ??
+                                          '',
+                                      cartProductId: state
+                                          .CartItemList
+                                          .data
+                                          ?.data?[index]
+                                          .cartProductId ??
+                                          '',
+                                      totalPayment: state.totalPayment,
+                                      saleId: ((state
+                                          .CartItemList
+                                          .data
+                                          ?.data?[index]
+                                          .sales
+                                          ?.length ==
+                                          0)
+                                          ? ''
+                                          : (state
+                                          .CartItemList
+                                          .data
+                                          ?.data?[index]
+                                          .sales
+                                          ?.first
+                                          .id ??
+                                          '')),
+                                    ));
+                              } else {
+                                CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title:
+                                    '${AppLocalizations.of(context)!.out_of_stock}',
+                                    type: SnackBarType.FAILURE);
+                              }
+                            }
+
                           }),
                     ),
                   );
