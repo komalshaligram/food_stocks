@@ -65,7 +65,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
             return Future.value(false);
           },
           child: Scaffold(
-          /*  floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endContained ,
             floatingActionButton: FloatingActionButton(
               elevation: 0,
               child:  Stack(
@@ -121,7 +121,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  *//*  SizedBox(
+                  /*  SizedBox(
                     height: 50,
                     width: 25,
                     child: Visibility(
@@ -135,7 +135,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),*//*
+                  ),*/
                 ],
               ),
               backgroundColor:Colors.transparent,
@@ -144,7 +144,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
         arguments: {AppStrings.isBasketScreenString: 'true'}
                 );
               },
-            ),*/
+            ),
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(AppConstants.appBarHeight),

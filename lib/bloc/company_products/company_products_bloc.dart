@@ -52,7 +52,7 @@ class CompanyProductsBloc
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
       if (event is _GetCompanyProductsIdEvent) {
-        emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid() ));
+        emit(state.copyWith(companyId: event.companyId, isGuestUser: preferences.getGuestUser(),isCompanyProductGrid: preferences.getCompanyProductGrid()));
         debugPrint('company id = ${state.companyId}');
       } else if (event is _GetCompanyProductsListEvent) {
         if (state.isLoadMore) {
@@ -702,7 +702,7 @@ class CompanyProductsBloc
       }
 
       else if (event is _getGridListView) {
-        preferences.setIsGridView(isGridView: !state.isCompanyProductGrid);
+        preferences.setCompanyGridListView(isCompanyProductGrid: !state.isCompanyProductGrid);
         emit(state.copyWith(isCompanyProductGrid: !state.isCompanyProductGrid));
       }
 

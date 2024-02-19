@@ -61,6 +61,6 @@ class CompanyProductsState with _$CompanyProductsState {
     productCategoryList: [],
     isCatVisible: false,
         isGridView: false,
-        cartCount: 0
+
       );
 }

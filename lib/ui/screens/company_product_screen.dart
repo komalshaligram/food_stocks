@@ -13,6 +13,7 @@ import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
+import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/themes/app_colors.dart';
@@ -172,48 +173,47 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getCartCountEvent());
              },
             child: SafeArea(
-              child:
-                  // NotificationListener<ScrollNotification>(
-                  //   child:
-                  Column(
-                   // mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
                     children: [
-                      Center(
-                        child: CachedNetworkImage(
-                          imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
-                          fit: BoxFit.scaleDown,
-                          height: 100,
-                          alignment: Alignment.center,
-                          placeholder: (context, url) => CommonShimmerWidget(
-                            child: Container(
-                              height: getScreenHeight(context),
-                              width: getScreenWidth(context),
-                              decoration: BoxDecoration(
+                      Column(
+                        children: [
+                          100.height,
+                          Center(
+                            child: CachedNetworkImage(
+                              imageUrl: state.productList.isNotEmpty?"${AppUrls.baseFileUrl}${state.productList.elementAt(0).brandLogo}":companyLogo??'',
+                              fit: BoxFit.scaleDown,
+                              height: 100,
+                              alignment: Alignment.center,
+                              placeholder: (context, url) => CommonShimmerWidget(
+                                child: Container(
+                                  height: getScreenHeight(context),
+                                  width: getScreenWidth(context),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft:
+                                        Radius.circular(AppConstants.radius_10),
+                                        topRight:
+                                        Radius.circular(AppConstants.radius_10)),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                height: 100,
+                                //width: getScreenWidth(context),
                                 color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft:
-                                    Radius.circular(AppConstants.radius_10),
-                                    topRight:
-                                    Radius.circular(AppConstants.radius_10)),
+                                child: Image.asset(
+                                  AppImagePath.imageNotAvailable5,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 100,
-                            //width: getScreenWidth(context),
-                            color: AppColors.whiteColor,
-                            child: Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: state.isShimmering
-                            ? SupplierProductsScreenShimmerWidget()
-                            : state.productList.isEmpty
+                          Expanded(
+                            child: state.isShimmering
+                                ? state.isCompanyProductGrid ? SupplierProductsScreenShimmerWidget() :
+                            StoreCategoryScreenSubcategoryShimmerWidget()
+                                : state.productList.isEmpty
                                 ? Container (
                                     height: getScreenHeight(context) - 80,
                                     width: getScreenWidth(context),
@@ -233,7 +233,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                           RefreshWidget(),
                           footer: CustomFooter(
                             builder: (context, mode) =>
-                                SupplierProductsScreenShimmerWidget(),
+                               state.isCompanyProductGrid ? SupplierProductsScreenShimmerWidget() :StoreCategoryScreenSubcategoryShimmerWidget(),
                           ),
                           enablePullUp: !state.isBottomOfProducts,
                           onRefresh: () {
@@ -246,7 +246,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     context: context));
                           },
 
-                                  child: GridView.builder(
+                                  child: state.isCompanyProductGrid ? GridView.builder(
                                       itemCount: state.productList.length,
                                       shrinkWrap: true,
                                       physics: const AlwaysScrollableScrollPhysics(),
@@ -287,36 +287,296 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   );
                                                 }),
                                           )
-                                      // buildCompanyProducts(
-                                      // context: context,
-                                      // index: index,
-                                      // productImage: state
-                                      //     .productList[index].mainImage ??
-                                      //     '',
-                                      // productName: state.productList[index]
-                                      //     .productName ??
-                                      //     '',
-                                      // productPrice: state.productList[index]
-                                      //     .productPrice ??
-                                      //     0.0,
-                                      // totalSale: state
-                                      //     .productList[index].totalSale ??
-                                      //     0,
-                                      // onPressed: () {
-                                      //   showProductDetails(
-                                      //       context: context,
-                                      //       productId:
-                                      //       state.productList[index].id ??
-                                      //           '');
-                                      // },
-                                      // isRTL: context.rtl),
-                                      ),
+                                      )
+                              :ListView.builder(
+                                      itemCount: state.productList.length,
+                                      shrinkWrap: true,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: AppConstants.padding_5),
+                                      itemBuilder: (context, index) => DelayedWidget(
+                                          child: CommonProductListWidget(
+                                              productStock: state.productList[index].productStock ?? 0,
+                                              productImage: state.productList[index]
+                                                  .mainImage ??
+                                                  '',
+                                              productName: state.productList[index]
+                                                  .productName ??
+                                                  '',
+                                              totalSaleCount: state
+                                                  .productList[index]
+                                                  .totalSale ??
+                                                  0,
+                                              price: state.productList[index]
+                                                  .productPrice ??
+                                                  0.0,
+                                              onButtonTap: () {
+                                                showProductDetails(
+                                                  context: context,
+                                                  productId: state
+                                                      .productList[index]
+                                                      .id ??
+                                                      '',
+                                                  productStock: state.productList[index].productStock.toString() ?? '0',
+
+                                                );
+                                              }),
+                                  ),
                                 ),
-                      ),
+                      ),),
                     ],
                   ),
+                      CommonSearchWidget(
+                        isFilterTap: true,
+                        isCategoryExpand: state.isCategoryExpand,
+                        isSearching: state.isSearching,
+                        onFilterTap: () {
+                          bloc.add(CompanyProductsEvent.changeCategoryExpansion());
+                        },
+                        onSearchTap: () {
+                          if(state.searchController.text != ''){
+                            bloc.add(CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
+                          }
+                        },
+                        onSearch: (String search) {
+                          if (search.length > 1) {
+                            bloc.add(CompanyProductsEvent.changeCategoryExpansion(isOpened: true));
+                            bloc.add(
+                                CompanyProductsEvent.globalSearchEvent(context: context));
+                          }
+                        },
+                        onSearchSubmit: (String search) {
+                          bloc.add(
+                              CompanyProductsEvent.globalSearchEvent(context: context));
+                        },
+                        onOutSideTap: () {
+                          bloc.add(CompanyProductsEvent.changeCategoryExpansion(
+                              isOpened: false));
+                        },
+                        onSearchItemTap: () {
+                          bloc.add(CompanyProductsEvent.changeCategoryExpansion());
+                        },
+                        controller: state.searchController,
+                        searchList: state.searchList,
+                        searchResultWidget: state.searchList.isEmpty
+                            ? Center(
+                          child: Text(
+                            '${AppLocalizations.of(context)!
+                                .search_result_not_found}',
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.smallFont,
+                                color: AppColors.textColor),
+                          ),
+                        )
+                            : ListView.builder(
+                          itemCount: state.searchList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (listViewContext, index) {
+                            return _buildSearchItem(
+                                productStock : state.searchList[index].productStock,
+                                context: context,
+                                searchName: state.searchList[index].name,
+                                searchImage: state.searchList[index].image,
+                                searchType:
+                                state.searchList[index].searchType,
+                                isMoreResults: state.searchList
+                                    .where((search) =>
+                                search.searchType ==
+                                    state.searchList[index]
+                                        .searchType)
+                                    .toList()
+                                    .length ==
+                                    10,
+                                isLastItem:
+                                state.searchList.length - 1 == index,
+                                isShowSearchLabel: index == 0
+                                    ? true
+                                    : state.searchList[index].searchType !=
+                                    state.searchList[index - 1]
+                                        .searchType
+                                    ? true
+                                    : false,
+                                onSeeAllTap: () async {
+                                  debugPrint("searchType: ${state.searchList[index].searchType}");
+                                  if (state.searchList[index].searchType ==
+                                      SearchTypes.category) {
+                                    dynamic searchResult =
+                                    await Navigator.pushNamed(
+                                        context,
+                                        RouteDefine
+                                            .productCategoryScreen.name,
+                                        arguments: {
+                                          AppStrings.searchString:
+                                          state.search,
+                                          AppStrings.reqSearchString:
+                                          state.search,
+                                          AppStrings.searchResultString:
+                                          state.searchList
+                                        });
+                                    if (searchResult != null) {
+                                      bloc.add(CompanyProductsEvent
+                                          .updateGlobalSearchEvent(
+                                          search: searchResult[
+                                          AppStrings.searchString],
+                                          searchList: searchResult[
+                                          AppStrings
+                                              .searchResultString]));
+                                    }
+                                  } else if (state
+                                      .searchList[index].searchType ==
+                                      SearchTypes.subCategory) {
+                                    dynamic searchResult =
+                                    await Navigator.pushNamed(
+                                        context,
+                                        RouteDefine
+                                            .storeCategoryScreen.name,
+                                        arguments: {
+                                          AppStrings.categoryIdString: state
+                                              .searchList[index].categoryId,
+                                          AppStrings.categoryNameString:
+                                          state.searchList[index]
+                                              .categoryName,
+                                          AppStrings.searchString:
+                                          state.search,
+                                          AppStrings.searchResultString:
+                                          state.searchList
+                                        });
+                                    if (searchResult != null) {
+                                      bloc.add(CompanyProductsEvent
+                                          .updateGlobalSearchEvent(
+                                          search: searchResult[
+                                          AppStrings.searchString],
+                                          searchList: searchResult[
+                                          AppStrings
+                                              .searchResultString]));
+                                    }
+                                  } else {
+                                    state.searchList[index].searchType ==
+                                        SearchTypes.company
+                                        ? Navigator.pushNamed(
+                                        context, RouteDefine.companyScreen.name,
+                                        arguments: {AppStrings.searchString: state.search})
+                                        : state.searchList[index].searchType ==
+                                        SearchTypes.supplier
+                                        ? Navigator.pushNamed(
+                                        context, RouteDefine.supplierScreen.name,
+                                        arguments: {
+                                          AppStrings.searchString:
+                                          state.search
+                                        })
+                                        : state.searchList[index].searchType ==
+                                        SearchTypes.sale
+                                        ? Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.productSaleScreen.name,
+                                        arguments: {
+                                          AppStrings.searchString: state.search
+                                        })
+                                        : Navigator.pushNamed(
+                                        context,
+                                        RouteDefine.supplierProductsScreen.name,
+                                        arguments: {
+                                          AppStrings.searchString: state.search,
+                                          AppStrings.searchType : SearchTypes.product.toString()
+                                        });
+                                  }
+                                },
+                                onTap: () async {
+                                  if (state.searchList[index].searchType ==
+                                      SearchTypes.subCategory) {
+                                    CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      title: AppStrings.getLocalizedStrings(
+                                          'Oops! in progress', context),
+                                      type: SnackBarType.SUCCESS,
+                                    );
+                                    return;
+                                  }
+                                  if (state.searchList[index].searchType ==
+                                      SearchTypes.sale ||
+                                      state.searchList[index].searchType ==
+                                          SearchTypes.product) {
+                                    print("tap 4");
+                                    showProductDetails(
+                                        context: context,
+                                        productId: state
+                                            .searchList[index].searchId,
+                                        isBarcode: true
+                                    );
+                                  } else if (state
+                                      .searchList[index].searchType ==
+                                      SearchTypes.category) {
+                                    dynamic searchResult =
+                                    await Navigator.pushNamed(
+                                        context,
+                                        RouteDefine
+                                            .storeCategoryScreen.name,
+                                        arguments: {
+                                          AppStrings.categoryIdString: state
+                                              .searchList[index].searchId,
+                                          AppStrings.categoryNameString:
+                                          state.searchList[index].name,
+                                          AppStrings.searchString:
+                                          state.searchController.text,
+                                          AppStrings.searchResultString:
+                                          state.searchList
+                                        });
+                                    if (searchResult != null) {
+                                      bloc.add(CompanyProductsEvent
+                                          .updateGlobalSearchEvent(
+                                          search: searchResult[
+                                          AppStrings.searchString],
+                                          searchList: searchResult[
+                                          AppStrings
+                                              .searchResultString]));
+                                    }
+                                  } else {
+                                    state.searchList[index].searchType ==
+                                        SearchTypes.company
+                                        ? Navigator.pushNamed(
+                                        context,
+                                        RouteDefine
+                                            .companyProductsScreen.name,
+                                        arguments: {
+                                          AppStrings.companyIdString:
+                                          state.searchList[index]
+                                              .searchId
+                                        })
+                                        : Navigator.pushNamed(
+                                        context,
+                                        RouteDefine
+                                            .supplierProductsScreen
+                                            .name,
+                                        arguments: {
+                                          AppStrings.supplierIdString:
+                                          state.searchList[index]
+                                              .searchId
+                                        });
+                                  }
+                                  bloc.add(
+                                      CompanyProductsEvent.changeCategoryExpansion());
+                                });
+                          },
+                        ),
+                        onScanTap: () async {
+                          String scanResult = await scanBarcodeOrQRCode(
+                              context: context,
+                              cancelText: AppLocalizations.of(context)!.cancel,
+                              scanMode: ScanMode.BARCODE);
+                          if (scanResult != '-1') {
+                            // -1 result for cancel scanning
+                            debugPrint('result = $scanResult');
+                            print("tap 5");
+                            showProductDetails(
+                                context: context,
+                                productId: scanResult,
+                                isBarcode: true);
+                          }
+                        },
+                      ),
+              ]
             ),
-          ),
+          ),),
         );
       },
     );
@@ -431,7 +691,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId,  bool? isBarcode,
+      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '-1',
       }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(
@@ -545,7 +805,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 .totalPrice!=0?  state
                                 .productStockList[state.productStockUpdateIndex]
                                 .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
-                              productStock: productStock!='0'?state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
+                              productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
