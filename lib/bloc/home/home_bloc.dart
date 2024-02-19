@@ -1023,7 +1023,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
         }
 
-        if (event is _ChangeCategoryExpansion) {
+        else if (event is _ChangeCategoryExpansion) {
           if (event.isOpened != null) {
             emit(state.copyWith(isCategoryExpand: event.isOpened ?? false));
           } else {
