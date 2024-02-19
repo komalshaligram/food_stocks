@@ -67,7 +67,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  print('productStock____-------${productStock}');
+    print('scrrenquantity___${productQuantity}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

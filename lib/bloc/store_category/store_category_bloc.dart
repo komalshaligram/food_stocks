@@ -827,8 +827,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSaleId: '',
               );
               emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+                  isLoading: false, productStockList: productStockList,duringCelebration: true));
               Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
+              await Future.delayed(const Duration(milliseconds: 2000));
+              emit(state.copyWith(duringCelebration: false));
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -916,6 +918,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == 201) {
+              Vibration.vibrate();
               List<List<ProductStockModel>> productStockList =
               state.productStockList.toList(growable: true);
               productStockList[state.planoGramUpdateIndex]
@@ -931,8 +934,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 productSaleId: '',
               );
               add(StoreCategoryEvent.setCartCountEvent());
-              emit(state.copyWith(
-                  isLoading: false, productStockList: productStockList));
+              emit(state.copyWith(isLoading: false, productStockList: productStockList , duringCelebration: true));
+              await Future.delayed(const Duration(milliseconds: 2000));
+              emit(state.copyWith(duringCelebration: false));
               Navigator.pop(event.context);
               CustomSnackBar.showSnackBar(
                   context: event.context,

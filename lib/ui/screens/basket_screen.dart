@@ -1013,6 +1013,7 @@ class BasketScreenWidget extends StatelessWidget {
                 (BuildContext context1, ScrollController scrollController) {
               return BlocBuilder<BasketBloc, BasketState>(
                 builder: (context, state) {
+                  print('state.productStockUpdateIndex${state.productStockUpdateIndex}');
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
