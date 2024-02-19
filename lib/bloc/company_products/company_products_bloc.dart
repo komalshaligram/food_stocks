@@ -99,6 +99,7 @@ class CompanyProductsBloc
               debugPrint('ids = ${element.productId}');
               return true;
             })}}');
+
             emit(state.copyWith(
                 productList: productList,
                 productStockList: productStockList,
@@ -148,6 +149,7 @@ class CompanyProductsBloc
           ProductDetailsResModel response =
           ProductDetailsResModel.fromJson(res);
           print('ProductDetailsResModel______${response}');
+          print('_productQuantity______${_productQuantity}');
           if (response.status == 200) {
             int productStockUpdateIndex = state.productStockList.indexWhere(
                   (productStock) =>
@@ -160,7 +162,7 @@ class CompanyProductsBloc
                   .indexOf(productStockList.last)] = productStockList[
               productStockList.indexOf(productStockList.last)]
                   .copyWith(
-                quantity: 1,
+                quantity: state.productStockList[productStockUpdateIndex].quantity,
                 productId: response.product?.first.id ?? '',
                 stock: response.product?.first.numberOfUnit ?? 0,
                 productSaleId: '',
@@ -341,18 +343,6 @@ class CompanyProductsBloc
                 });
                 debugPrint(
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
-                List<ProductStockModel> productStockList = state.productStockList.toList(growable: false);
-                response.data?.data?.forEach((cartProduct){
-                  if (cartProduct.id ==
-                      state.productStockList[state.productStockUpdateIndex]
-                          .productId){
-                    productStockList[state.productStockUpdateIndex].quantity == cartProduct.totalQuantity;
-                    return;
-                  };
-                });
-                print('state.productStockUpdateIndex${state.productStockUpdateIndex}');
-                emit(state.copyWith(productStockList: productStockList));
-
               }
             } on ServerException {}
           } else {
@@ -497,7 +487,7 @@ class CompanyProductsBloc
                           .supplierSales[event.supplierSaleIndex]
                           .salePrice,
                   stock: supplierList[event.supplierIndex].stock,
-                  quantity: 1,
+                  quantity:  /*productStockList[state.productStockUpdateIndex].quantity*/1,
                   productSaleId: event.supplierSaleIndex == -2
                       ? ''
                       : supplierList[event.supplierIndex]
@@ -569,7 +559,8 @@ class CompanyProductsBloc
                   productStockList[state.productStockUpdateIndex].copyWith(
                 note: '',
                 isNoteOpen: false,
-                quantity: 0,
+                quantity: state.productStockList[state.productStockUpdateIndex]
+                    .quantity + _productQuantity,
                 productSupplierIds: '',
                 totalPrice: 0.0,
                 productSaleId: '',
@@ -661,7 +652,7 @@ class CompanyProductsBloc
                   productStockList[state.productStockUpdateIndex].copyWith(
                     note: '',
                 isNoteOpen: false,
-                quantity: 0,
+                quantity: state.productStockList[state.productStockUpdateIndex].quantity,
                 productSupplierIds: '',
                 totalPrice: 0.0,
                 productSaleId: '',
