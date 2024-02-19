@@ -22,6 +22,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required bool isGuestUser,
     required int cartCount,
     required bool isGridView,
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
