@@ -42,8 +42,7 @@ class CompanyProductsState with _$CompanyProductsState {
         noteController: TextEditingController(),
         refreshController: RefreshController(),
         isGuestUser : false,
-        isGridView: false
-       isGuestUser : false,
-    cartCount: 0
+        isGridView: false,
+        cartCount: 0
       );
 }
