@@ -307,8 +307,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       10.height,*/
                       /*false */ /*productStock == 0*/ /* ? 0.width : */
                  //     supplierWidget,
-                      isSupplierAvailable
-                          ? Column(
+                     Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
@@ -749,7 +748,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       ),*/
                           ],
                         )
-                      : 0.width,
+
                   // 160.height,
                 ],
               ),

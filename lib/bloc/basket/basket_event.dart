@@ -36,7 +36,21 @@ class BasketEvent with _$BasketEvent {
   const factory BasketEvent.orderSendEvent({
     required BuildContext context,
   }) = _orderSendEvent;
+  const factory BasketEvent.increaseQuantityOfProduct(
+      {required BuildContext context}) = _IncreaseQuantityOfProduct;
 
+  const factory BasketEvent.decreaseQuantityOfProduct(
+      {required BuildContext context}) = _DecreaseQuantityOfProduct;
 
+  const factory BasketEvent.updateQuantityOfProduct(
+      {required BuildContext context,
+        required String quantity}) = _UpdateQuantityOfProduct;
 
+  const factory BasketEvent.getProductDetailsEvent(
+      {required BuildContext context,
+        required bool isBarcode,
+        required String productId}) = _GetProductDetailsEvent;
+
+  const factory BasketEvent.addToCartProductEvent(
+      {required BuildContext context}) = _AddToCartProductEvent;
 }

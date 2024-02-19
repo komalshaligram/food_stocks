@@ -4,7 +4,7 @@ part of 'company_products_bloc.dart';
 class CompanyProductsState with _$CompanyProductsState {
   const factory CompanyProductsState({
     required String companyId,
-    required List<CompanyDatum> productList,
+    required List<CompanyData> productList,
     required bool isShimmering,
     required bool isLoading,
     required bool isProductLoading,
@@ -21,6 +21,16 @@ class CompanyProductsState with _$CompanyProductsState {
     required RefreshController refreshController,
     required bool isGuestUser,
     required int cartCount,
+    required bool isCompanyProductGrid,
+    required bool isCategoryExpand,
+    required bool isSearching,
+    required TextEditingController searchController,
+    required List<SearchModel> searchList,
+    required String search,
+    required List<Category> productCategoryList,
+    required bool isCatVisible,
+    required bool isGridView,
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -41,6 +51,16 @@ class CompanyProductsState with _$CompanyProductsState {
         noteController: TextEditingController(),
         refreshController: RefreshController(),
        isGuestUser : false,
-    cartCount: 0
+       cartCount: 0,
+   isCompanyProductGrid : true,
+    isCategoryExpand: false,
+    isSearching: false,
+    searchController: TextEditingController(),
+    searchList: [],
+    search: '',
+    productCategoryList: [],
+    isCatVisible: false,
+        isGridView: false,
+
       );
 }
