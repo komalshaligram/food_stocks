@@ -989,6 +989,14 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required int index,
       required GetAllCartResModel CartItemList}) async {
+    context.read<BasketBloc>().add(BasketEvent.getProductDetailsEvent(
+        context: context,
+        productId:   CartItemList
+            .data
+            ?.data?[index]
+            .productDetails
+            ?.id??'', isBarcode: false
+    ));
    showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1097,7 +1105,7 @@ class BasketScreenWidget extends StatelessWidget {
 
                         // isLoading: state.isLoading,
                       ),
-                      bottomNavigationBar: CommonProductDetailsButton(
+                   /*   bottomNavigationBar: CommonProductDetailsButton(
                           isLoading: state.isLoading,
                           isSupplierAvailable: true,
                           productStock: state
@@ -1109,7 +1117,7 @@ class BasketScreenWidget extends StatelessWidget {
                             context.read<BasketBloc>().add(
                                 BasketEvent.addToCartProductEvent(
                                     context: context1));
-                          }),
+                          }),*/
                     ),
                   );
                 },

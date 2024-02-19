@@ -493,14 +493,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           }
         }
-       /* else if (event is _ChangeNoteOfProduct) {
+        else if (event is _ChangeNoteOfProduct) {
           if (state.productStockUpdateIndex != -1) {
             List<ProductStockModel> productStockList =
             state.productStockList.toList(growable: false);
             productStockList[state.productStockUpdateIndex] =
                 productStockList[state.productStockUpdateIndex]
                     .copyWith(
-                    note: *//*event.newNote*//* state.noteController.text);
+                    note: /*event.newNote*/ state.noteController.text);
             emit(state.copyWith(productStockList: productStockList));
           }
         }
@@ -552,7 +552,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 productSupplierList: supplierList,
                 productStockList: productStockList));
           }
-        }*/
+        }
         else if (event is _AddToCartProductEvent) {
           if (state.productStockList[state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
