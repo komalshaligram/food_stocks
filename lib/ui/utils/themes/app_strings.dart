@@ -64,6 +64,8 @@ class AppStrings {
   static const getCartListString = 'getCartListString';
   static const isSubCategory = 'false';
   static const issueString = 'issue';
+  static const isBasketScreenString = 'basketScreen';
+  static const isCartCountString = 'true';
 
   //validation strings
   static const businessNameValString = 'businessNameVal';

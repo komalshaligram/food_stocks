@@ -20,6 +20,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required TextEditingController noteController,
     required RefreshController refreshController,
     required bool isGuestUser,
+    required int cartCount,
     required bool isGridView,
   }) = _CompanyProductsState;
 
@@ -42,5 +43,7 @@ class CompanyProductsState with _$CompanyProductsState {
         refreshController: RefreshController(),
         isGuestUser : false,
         isGridView: false
+       isGuestUser : false,
+    cartCount: 0
       );
 }

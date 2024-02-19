@@ -63,6 +63,8 @@ class Datum with _$Datum {
     List<Supplier>? suppliers,
     @JsonKey(name: "productStock")
     int? productStock,
+    @JsonKey(name: "productPrice")
+    double? productPrice,
     @JsonKey(name: "sales")
     List<Sale>? sales,
     @JsonKey(name: "totalQuantity")
@@ -91,6 +93,8 @@ class ProductDetails with _$ProductDetails {
     List<Image>? images,
     @JsonKey(name: "scales")
     String? scales,
+    @JsonKey(name: "numberOfUnit")
+    int? numberOfUnit,
   }) = _ProductDetails;
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) => _$ProductDetailsFromJson(json);

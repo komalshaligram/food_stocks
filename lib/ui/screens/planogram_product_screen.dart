@@ -65,7 +65,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, childAspectRatio: 8 / 11.5),
+                crossAxisCount: 3,
+                childAspectRatio: MediaQuery.of(context).size.width > 370 ?AppConstants
+                    .productGridAspectRatio: AppConstants
+                    .productGridAspectRatio1
+            ),
             itemBuilder: (context, index) => buildPlanoGramProductItem(
                 productImage: state.planogramProductList[index].mainImage ?? '',
                 productName:
@@ -313,33 +317,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       (state.productDetails.first.numberOfUnit ?? 0),
                                   productScaleType: state.productDetails.first.scales?.scaleType ?? '',
                                   productWeight: state.productDetails.first.itemsWeight?.toDouble() ?? 0.0,
-                                  isNoteOpen: state.productStockList[state.productStockUpdateIndex].isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context.read<PlanogramProductBloc>().add(
-                                        PlanogramProductEvent
-                                            .toggleNoteEvent());
-                                  },
-                                  supplierWidget: state.productSupplierList.isEmpty
-                                  ? Container(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                            color: AppColors
-                                                .borderColor
-                                                .withOpacity(0.5),
-                                            width: 1))),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                    AppConstants.padding_30),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '${AppLocalizations.of(context)!.suppliers_not_available}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.smallFont,
-                                      color: AppColors.textColor),
-                                ),
-                              )
-                                  : buildSupplierSelection(context: context),
                               productStock: state.productStockList[state.productStockUpdateIndex].stock,
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
@@ -363,14 +340,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     PlanogramProductEvent
                                         .decreaseQuantityOfProduct(
                                                 context: context1));
-                                  },
-                                  noteController: state.noteController,
-                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                  onNoteChanged: (newNote) {
-                                    context.read<PlanogramProductBloc>().add(
-                                        PlanogramProductEvent
-                                            .changeNoteOfProduct(
-                                                newNote: newNote));
                                   },
                                   // isLoading: state.isLoading,
                                   /*onAddToOrderPressed: state.isLoading

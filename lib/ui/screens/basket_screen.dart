@@ -13,6 +13,7 @@ import 'package:food_stock/ui/utils/themes/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/utils/themes/app_strings.dart';
 import 'package:food_stock/ui/utils/themes/app_urls.dart';
+import 'package:food_stock/ui/widget/common_product_details_widget.dart';
 import 'package:food_stock/ui/widget/custom_button_widget.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -23,6 +24,7 @@ import '../utils/themes/app_img_path.dart';
 
 import '../utils/themes/app_styles.dart';
 import '../widget/basket_screen_shimmer_widget.dart';
+import '../widget/common_product_details_button.dart';
 import '../widget/common_shimmer_widget.dart';
 
 class BasketRoute {
@@ -987,6 +989,124 @@ class BasketScreenWidget extends StatelessWidget {
       {required BuildContext context,
       required int index,
       required GetAllCartResModel CartItemList}) async {
+/*   showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      isDismissible: true,
+      clipBehavior: Clip.hardEdge,
+      showDragHandle: true,
+      useSafeArea: true,
+      enableDrag: true,
+      builder: (context1) {
+        return BlocProvider.value(
+          value: context.read<BasketBloc>(),
+          child: DraggableScrollableSheet(
+            expand: true,
+            maxChildSize: 1 -
+                (MediaQuery.of(context).viewPadding.top /
+                    getScreenHeight(context)),
+            minChildSize: 0.4,
+            initialChildSize: AppConstants.bottomSheetInitHeight,
+            //shouldCloseOnMinExtent: true,
+            builder:
+                (BuildContext context1, ScrollController scrollController) {
+              return BlocBuilder<BasketBloc, BasketState>(
+                builder: (context, state) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppConstants.radius_30),
+                        topRight: Radius.circular(AppConstants.radius_30),
+                      ),
+                      color: AppColors.whiteColor,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Scaffold(
+                      body:  CommonProductDetailsWidget(
+                        context: context,
+                        productImageIndex: 0,
+                        onPageChanged: (index, p1) {
+                        },
+                        productImages: [
+                          CartItemList
+                              .data
+                              ?.data?[index]
+                              .productDetails
+                              ?.mainImage ??
+                              '',
+                          ...?CartItemList
+                              .data
+                              ?.data?[index]
+                              .productDetails
+                              ?.images
+                              ?.map((image) =>
+                          image.imageUrl ??
+                              '')
+                        ],
+                        productPerUnit: 0,
+                      //  productPerUnit: CartItemList.data?.data?[index].productDetails?.price?? 0,
+                        productUnitPrice: CartItemList
+                            .data
+                            ?.data?[index]
+                            .productPrice??0,
+                        productName:CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.productName??'',
+                        productCompanyName: '',
+                        productDescription: '',
+                        productSaleDescription: '',
+                        productPrice:0,
+                        productScaleType:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.scales ??
+                            '',
+                        productWeight:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productDetails?.itemsWeight ??
+                            0.0,
+                        productStock:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .productStock??0,
+                        isRTL: context.rtl,
+                        isSupplierAvailable: true,
+                        scrollController: scrollController,
+                        productQuantity:  CartItemList
+                            .data
+                            ?.data?[index]
+                            .totalQuantity??0,
+                        onQuantityChanged: (quantity) {
+                        *//*  context.read<BasketBloc>().add(
+                              BasketEvent.updateQuantityOfProduct(
+                                  context: context1,
+                                  quantity: quantity));*//*
+                        },
+                        onQuantityIncreaseTap: () {
+                          *//*context.read<BasketBloc>().add(
+                              BasketEvent.increaseQuantityOfProduct(
+                                  context: context1));*//*
+                        },
+                        onQuantityDecreaseTap: () {
+                        *//*  context.read<BasketBloc>().add(
+                              BasketEvent.decreaseQuantityOfProduct(
+                                  context: context1));*//*
+                        },
+
+                        // isLoading: state.isLoading,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );*/
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1036,9 +1156,10 @@ class BasketScreenWidget extends StatelessWidget {
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           clipBehavior: Clip.hardEdge,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Row(
+                              Row (
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Expanded(child: 0.width),
@@ -1103,7 +1224,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Center(
                                         child: Stack(

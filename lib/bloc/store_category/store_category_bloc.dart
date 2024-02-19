@@ -56,7 +56,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(
           prefs: await SharedPreferences.getInstance());
 
-      print('isGuestUser______${preferences.getGuestUser()}');
       if (event is _isCategoryEvent) {
         emit(state.copyWith(isSubCategory: event.isSubCategory ,isGridView: preferences.getIsGridView(),
           isGuestUser: preferences.getGuestUser()
@@ -88,6 +87,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       } else if (event is _ChangeCategoryDetailsEvent) {
         print('categoryName   ${state.categoryName}');
         emit(state.copyWith(
+          cartCount: preferences.getCartCount(),
             isSubCategory: state.isSubCategory,
             categoryId: event.categoryId,
             categoryName: event.categoryName,
@@ -859,7 +859,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               );
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));
-              Navigator.pop(event.context);
+              Navigator.pop(event.context,{AppStrings.isCartCountString : 'true'});
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
@@ -1175,9 +1175,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         if (state.isLoadMore) {
           return;
         }
-          if (state.isBottomOfProducts) {
-          return;
-         }
+         // if (state.isBottomOfProducts) {
+        //  return;
+       //  }
         debugPrint('Here');
         try{
           List<PlanogramAllProduct> planogramProductList =
@@ -1262,6 +1262,11 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         emit(state.copyWith(isGridView: !state.isGridView));
 
 
+      }
+
+      else if (event is _getCartCountEvent) {
+        emit(
+            state.copyWith(cartCount: preferences.getCartCount()));
       }
     });
   }

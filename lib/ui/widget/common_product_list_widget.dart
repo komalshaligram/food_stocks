@@ -35,8 +35,7 @@ class CommonProductListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('productStock  ui___${productStock}');
-    print('isGuestUser___${isGuestUser}');
+
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(

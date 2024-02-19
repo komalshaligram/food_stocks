@@ -64,8 +64,6 @@ class StoreScreen extends StatelessWidget {
 class StoreScreenWidget extends StatelessWidget {
    StoreScreenWidget({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     StoreBloc bloc = context.read<StoreBloc>();
@@ -1861,42 +1859,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           .productDetails.first.itemsWeight
                                           ?.toDouble() ??
                                       0.0,
-                                  isNoteOpen: state
-                                      .productStockList[
-                                          state.productStockUpdateIndex]
-                                      .isNoteOpen,
-                                  onNoteToggleChanged: () {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.toggleNoteEvent(
-                                            isBarcode: isBarcode ?? false));
-                                  },
-                                  supplierWidget: state
-                                          .productSupplierList.isEmpty
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: AppColors
-                                                          .borderColor
-                                                          .withOpacity(0.5),
-                                                      width: 1))),
-                                          padding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: AppConstants
-                                                      .padding_30),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.out_of_stock}',
-                                            style: AppStyles
-                                                .rkRegularTextStyle(
-                                                    size: AppConstants
-                                                        .smallFont,
-                                                    color:
-                                                        AppColors.redColor),
-                                          ),
-                                        )
-                                      : buildSupplierSelection(
-                                          context: context),
+
                                   productStock: state
                                       .productStockList[
                                           state.productStockUpdateIndex]
@@ -1926,13 +1889,6 @@ class StoreScreenWidget extends StatelessWidget {
                                     context.read<StoreBloc>().add(StoreEvent
                                         .decreaseQuantityOfProduct(
                                             context: context1));
-                                  },
-                                  noteController: state.noteController,
-                                  // TextEditingController(text: state.productStockList[state.productStockUpdateIndex].note)..selection = TextSelection.fromPosition(TextPosition(offset: state.productStockList[state.productStockUpdateIndex].note.length)),
-                                  onNoteChanged: (newNote) {
-                                    context.read<StoreBloc>().add(
-                                        StoreEvent.changeNoteOfProduct(
-                                            newNote: newNote));
                                   },
                                   // isLoading: state.isLoading,
                                   /*onAddToOrderPressed: state.isLoading

@@ -50,4 +50,8 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
 
   const factory CompanyProductsEvent.getGridOrListViewEvent(
       {required BuildContext context}) = _getGridOrListViewEvent;
+
+  const factory CompanyProductsEvent.getCartCountEvent(
+      ) = _getCartCountEvent;
+
 }

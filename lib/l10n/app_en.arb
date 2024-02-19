@@ -389,8 +389,9 @@
   "until_date" : "Until Date",
   "delete_account" : "Delete account",
   "delete_pop_up_msg": "We received your account deletion request and we will take care of it in a few days, thank you.",
-  "login_as_guest": "Login as guest"
-
+  "login_as_guest": "Login as guest",
+  "new_version_app_update": "There is a new version for the app please update the app",
+  "update": "Update"
 
 
 
