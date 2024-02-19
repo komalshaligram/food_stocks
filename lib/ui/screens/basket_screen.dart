@@ -610,7 +610,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                  //  qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.asset(
@@ -625,7 +625,7 @@ class BasketScreenWidget extends StatelessWidget {
                                 showProductDetails(
                                     context: context,
                                     index: index,
-                                    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                   // qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                     CartItemList: state.CartItemList);
                               },
                               child: Image.network(
@@ -673,7 +673,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   showProductDetails(
                                       context: context,
                                       index: index,
-                                      qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
+                                  //    qty: state.CartItemList.data?.data?.elementAt(index).totalQuantity??0,
                                       CartItemList: state.CartItemList);
                                 },
                                 child: Container(
@@ -993,7 +993,6 @@ class BasketScreenWidget extends StatelessWidget {
   void showProductDetails(
       {required BuildContext context,
       required int index,
-        required int qty,
       required GetAllCartResModel CartItemList}) async {
     context.read<BasketBloc>().add(BasketEvent.getAllCartEvent(
         context: context,
@@ -1101,7 +1100,6 @@ class BasketScreenWidget extends StatelessWidget {
                                   quantity: quantity));
                         },
                         onQuantityIncreaseTap: () {
-
                           if ((state
                               .CartItemList
                               .data

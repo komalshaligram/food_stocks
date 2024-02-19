@@ -68,7 +68,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> temp = [];
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
-              /*ProductStockModel barcodeStock = productStockList.removeLast();*/
+             // ProductStockModel barcodeStock = productStockList.removeLast();
+              productStockList.clear();
               productStockList.addAll(response.data?.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
@@ -78,6 +79,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   []);
               //productStockList.add(barcodeStock);
               state.CartItemList.data?.data?.forEach((element) {
+
                 temp.add(ProductDetailsModel(
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails?.productName ?? '',
