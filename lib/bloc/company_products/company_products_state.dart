@@ -21,6 +21,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required RefreshController refreshController,
     required bool isGuestUser,
     required int cartCount,
+    required bool isGridView,
+
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -40,7 +42,8 @@ class CompanyProductsState with _$CompanyProductsState {
         imageIndex: 0,
         noteController: TextEditingController(),
         refreshController: RefreshController(),
-       isGuestUser : false,
-    cartCount: 0
+        isGuestUser : false,
+        isGridView: false,
+        cartCount: 0
       );
 }
