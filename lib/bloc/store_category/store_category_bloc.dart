@@ -1229,8 +1229,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
       else if(event is _changeGridToListViewEvent){
         preferences.setIsGridView(isGridView: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
-
-
       }
 
       else if (event is _getCartCountEvent) {
