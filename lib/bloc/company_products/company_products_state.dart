@@ -30,6 +30,8 @@ class CompanyProductsState with _$CompanyProductsState {
     required List<Category> productCategoryList,
     required bool isCatVisible,
     required bool isGridView,
+    required bool duringCelebration,
+
 
   }) = _CompanyProductsState;
 
@@ -61,6 +63,7 @@ class CompanyProductsState with _$CompanyProductsState {
     productCategoryList: [],
     isCatVisible: false,
         isGridView: false,
+    duringCelebration: false
 
       );
 }

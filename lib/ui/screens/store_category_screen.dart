@@ -27,6 +27,7 @@ import '../widget/common_product_item_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
+import '../widget/confetti.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
@@ -134,8 +135,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                 color: AppColors.whiteColor, width: 1),
                           ),
                           child: Text(
-                            '12',
-                            //'${state.cartCount}',
+                            '${state.cartCount}',
                             style: AppStyles.rkRegularTextStyle(
                                 size: 10, color: AppColors.whiteColor),
                           ),
@@ -143,7 +143,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                 /*  SizedBox(
+                   SizedBox(
                     height: 50,
                     width: 25,
                     child: Visibility(
@@ -157,7 +157,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),*/
+                  ),
                 ],
               ),
               backgroundColor: Colors.transparent,
@@ -606,8 +606,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                     itemBuilder:
                                                                         (context,
                                                                             index) {
-                                                                      print(
-                                                                          'planogramProductList___${state.planogramProductList[index].productStock}');
                                                                       return CommonProductListWidget(
                                                                           isGuestUser: state
                                                                               .isGuestUser,
@@ -1420,7 +1418,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           },
         );
       },
-    );
+    ).then((value) {
+      context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getCartCountEvent());
+    });
   }
 
   Widget buildTopNavigation(
