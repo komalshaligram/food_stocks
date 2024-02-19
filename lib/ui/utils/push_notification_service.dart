@@ -81,6 +81,7 @@ class PushNotificationService {
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
+
     );
     String? fcmToken = '';
 
@@ -164,7 +165,7 @@ class PushNotificationService {
                 channelId,
                 channelName,
                 channelDescription: channelDesc,
-                icon: androidIcon??'',
+                icon: androidIcon ??'',
                 styleInformation: BigPictureStyleInformation(
                   FilePathAndroidBitmap(fileName),
                   hideExpandedLargeIcon: false,
@@ -175,6 +176,7 @@ class PushNotificationService {
                 channelName,
                 channelDescription: channelDesc,
                 icon: androidIcon??'',
+               channelShowBadge: true
               ),
       ):flutter_local_notifications.NotificationDetails(
       iOS: fileName != null
@@ -182,6 +184,7 @@ class PushNotificationService {
           attachments: [DarwinNotificationAttachment(fileName)])
           : DarwinNotificationDetails(),
     ),
+
       // payload: message.data.toString(),
     );
     if(fileName != null){
@@ -302,5 +305,7 @@ class PushNotificationService {
         description:
             'This channel is used for important notifications.', // description
         importance: Importance.max,
+        showBadge: true,
+
       );
 }

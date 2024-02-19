@@ -30,6 +30,7 @@ import '../widget/common_product_list_widget.dart';
 import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
+import '../widget/confetti.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
@@ -127,7 +128,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                /*  SizedBox(
+                  SizedBox(
                     height: 50,
                     width: 25,
                     child: Visibility(
@@ -141,7 +142,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),*/
+                  ),
               ],
             ),
             backgroundColor:Colors.transparent,
@@ -170,7 +171,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           ),
           body: FocusDetector(
              onFocusGained: (){
-               context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getCartCountEvent());
+               bloc.add(CompanyProductsEvent.getCartCountEvent());
              },
             child: SafeArea(
               child: Stack(
@@ -280,8 +281,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       context: context,
                                                       productId: state
                                                               .productList[index]
-                                                              .id ??
-                                                          '',
+                                                              .id ?? '',
                                                     productStock: state.productList[index].productStock.toString() ?? '0',
 
                                                   );
@@ -871,7 +871,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
+    ).then((value){
+      context.read<CompanyProductsBloc>().add(CompanyProductsEvent.getCartCountEvent());
+    });
   }
 
   Widget buildSupplierSelection({required BuildContext context}) {
