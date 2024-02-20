@@ -33,10 +33,13 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
   const factory CompanyProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
       required BuildContext context,
-      required int supplierSaleIndex}) = _SupplierSelectionEvent;
+      required int supplierSaleIndex,
+      }) = _SupplierSelectionEvent;
 
   const factory CompanyProductsEvent.addToCartProductEvent(
-      {required BuildContext context}) = _AddToCartProductEvent;
+      {required BuildContext context,
+      required String productId
+      }) = _AddToCartProductEvent;
 
   const factory CompanyProductsEvent.setCartCountEvent() = _SetCartCountEvent;
 
