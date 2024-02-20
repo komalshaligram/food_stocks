@@ -1343,27 +1343,27 @@ class HomeScreenWidget extends StatelessWidget {
     required String dateTime,
     required void Function() onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(context.rtl ? pi : 0),
-            child: SvgPicture.asset(
-              AppImagePath.message,
-              fit: BoxFit.scaleDown,
-              height: 16,
-              width: 16,
-              colorFilter:
-                  ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: SvgPicture.asset(
+                AppImagePath.message,
+                fit: BoxFit.scaleDown,
+                height: 16,
+                width: 16,
+                colorFilter:
+                    ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn),
+              ),
             ),
-          ),
-          10.width,
-          Expanded(
-            child: GestureDetector(
-              onTap: onTap,
+            10.width,
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -1404,8 +1404,8 @@ class HomeScreenWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

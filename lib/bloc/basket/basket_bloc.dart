@@ -68,15 +68,18 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               List<ProductDetailsModel> temp = [];
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: true);
-              /*ProductStockModel barcodeStock = productStockList.removeLast();*/
+             // ProductStockModel barcodeStock = productStockList.removeLast();
+              productStockList.clear();
               productStockList.addAll(response.data?.data?.map(
                       (recommendationProduct) =>
                       ProductStockModel(
+                        quantity: recommendationProduct.totalQuantity??0,
                           productId: recommendationProduct.id ?? '',
                           stock: recommendationProduct.productStock ?? 0)) ??
                   []);
               //productStockList.add(barcodeStock);
               state.CartItemList.data?.data?.forEach((element) {
+
                 temp.add(ProductDetailsModel(
                   totalQuantity: element.totalQuantity,
                   productName: element.productDetails?.productName ?? '',
@@ -265,8 +268,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 productStockList: productStockList));
           }
         }
-      /*  else if (event is _AddToCartProductEvent) {
-        *//*  if (state.productStockList[state.productStockUpdateIndex]
+        else if (event is _AddToCartProductEvent) {
+        /*  if (state.productStockList[state.productStockUpdateIndex]
               .productSupplierIds.isEmpty) {
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -274,7 +277,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 '${AppLocalizations.of(event.context)!.please_select_supplier}',
                 type: SnackBarType.FAILURE);
             return;
-          }*//*
+          }*/
           if (state.productStockList[state.productStockUpdateIndex].quantity ==
               0) {
             CustomSnackBar.showSnackBar(
@@ -288,8 +291,8 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           // List<String> cartProductQuantityList =
           //     preferences.getCartProductQuantityList();
           //update or insert cart API
-          if (_isProductInCart *//*cartProductList.contains(
-            state.productStockList[state.productStockUpdateIndex].productId)*//*
+          if (_isProductInCart /*cartProductList.contains(
+            state.productStockList[state.productStockUpdateIndex].productId)*/
           ) {
             debugPrint('update cart');
             try {
@@ -311,10 +314,10 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     .productSaleId,
                 quantity: state.productStockList[state.productStockUpdateIndex]
                     .quantity +
-                    _productQuantity *//*int.parse(cartProductQuantityList[lastQuantityIndex])*//*,
+                    _productQuantity /*int.parse(cartProductQuantityList[lastQuantityIndex])*/,
                 cartProductId:
-                _cartProductId *//*cartProductIdList[cartProductList.indexOf(state
-                  .productStockList[state.productStockUpdateIndex].productId)]*//*
+                _cartProductId /*cartProductIdList[cartProductList.indexOf(state
+                  .productStockList[state.productStockUpdateIndex].productId)]*/
                 ,
               );
               final res = await DioClient(event.context).post(
@@ -469,7 +472,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(isLoading: false));
             }
           }
-        }*/
+        }
         else if (event is _GetProductDetailsEvent) {
           debugPrint('product details id = ${event.productId}');
           _isProductInCart = false;
@@ -494,7 +497,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     .indexOf(productStockList.last)] = productStockList[
                 productStockList.indexOf(productStockList.last)]
                     .copyWith(
-                  quantity: 12,
+                  quantity: 1,
                   productId: response.product?.first.id ?? '',
                   stock: response.product?.first.numberOfUnit ?? 0,
                   productSaleId: '',
@@ -723,7 +726,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         else if (event is _UpdateQuantityOfProduct) {
           List<ProductStockModel> productStockList =
           state.productStockList.toList(growable: false);
-          if (state.productStockUpdateIndex != -1) {
+        //  if (state.productStockUpdateIndex != -1) {
             String quantityString = event.quantity;
             if (quantityString.length == 2 && quantityString.startsWith('0')) {
               quantityString = quantityString.substring(1);
@@ -760,7 +763,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(productStockList: productStockList));
             }
-          }
+         // }
         }
         else if (event is _removeCartProductEvent) {
           emit(state.copyWith(isRemoveProcess: true));

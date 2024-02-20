@@ -319,7 +319,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                       '',
                                                   productStock: state.productList[index].productStock.toString() ?? '0',
 
-
                                                 );
                                               }),
                                   ),
@@ -500,10 +499,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                     print("tap 4");
                                     showProductDetails(
                                         context: context,
+                                        productStock: state.searchList[index].productStock.toString(),
                                         productId: state
                                             .searchList[index].searchId,
-                                        isBarcode: true,
-                                      productStock: state.searchList[index].productStock.toString()
+                                        isBarcode: true
                                     );
                                   } else if (state
                                       .searchList[index].searchType ==
@@ -571,9 +570,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             print("tap 5");
                             showProductDetails(
                                 context: context,
+                                productStock: '1',
                                 productId: scanResult,
-                                isBarcode: true,
-                            );
+                                isBarcode: true);
                           }
                         },
                       ),
@@ -694,7 +693,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   }
 
   void showProductDetails(
-      {required BuildContext context, required String productId,  bool? isBarcode,   String? productStock,
+      {required BuildContext context, required String productId,  bool? isBarcode,   String productStock = '-1',
       }) async {
     context.read<CompanyProductsBloc>().add(
         CompanyProductsEvent.getProductDetailsEvent(
@@ -711,8 +710,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       useSafeArea: true,
       enableDrag: true,
       builder: (context1) {
-        print('stock___________${productStock}');
-        print('stock___________${productStock == '0'}');
         return BlocProvider.value(
           value: context.read<CompanyProductsBloc>(),
           child: DraggableScrollableSheet(
@@ -809,8 +806,8 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 .productStockList[state.productStockUpdateIndex]
                                 .totalPrice!=0?  state
                                 .productStockList[state.productStockUpdateIndex]
-                                .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString()??'0'),
-                              productStock: productStock != '0' || productStock == null ? (state.productStockList[state.productStockUpdateIndex].stock) :int.parse(productStock ?? '0'),
+                                .totalPrice:  double.parse(state.productDetails.first.supplierSales?.first?.productPrice.toString()??'0'),
+                              productStock: productStock != '0' ? state.productStockList[state.productStockUpdateIndex].stock:int.parse(productStock),
                               isRTL: context.rtl,
                               isSupplierAvailable: state.productSupplierList.isEmpty ? false : true,
                               scrollController: scrollController,
@@ -1214,7 +1211,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                                     context:
                                                                         context,
                                                                     supplierSaleIndex:
-                                                                        -2,));
+                                                                        -2));
                                                         context
                                                             .read<
                                                                 CompanyProductsBloc>()

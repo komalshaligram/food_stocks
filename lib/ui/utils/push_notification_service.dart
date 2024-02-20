@@ -166,6 +166,7 @@ class PushNotificationService {
                 channelName,
                 channelDescription: channelDesc,
                 icon: androidIcon ??'',
+                channelShowBadge: true,
                 styleInformation: BigPictureStyleInformation(
                   FilePathAndroidBitmap(fileName),
                   hideExpandedLargeIcon: false,
@@ -184,7 +185,6 @@ class PushNotificationService {
           attachments: [DarwinNotificationAttachment(fileName)])
           : DarwinNotificationDetails(),
     ),
-
       // payload: message.data.toString(),
     );
     if(fileName != null){
@@ -212,12 +212,11 @@ class PushNotificationService {
   }
 
   void manageNavigation(bool isAppOpen, String mainPage, String subPage , String id) {
-
     debugPrint('main   = ${mainPage}');
     debugPrint('subPage   = ${subPage}');
     debugPrint('id = ${id}');
     debugPrint('isAppOpen = ${isAppOpen}');
-    if (isAppOpen) {
+  //  if (isAppOpen) {
       debugPrint('subPage  1 = ${subPage}');
       if(subPage == ''){
         if (mainPage == 'companyScreen') {
@@ -268,14 +267,17 @@ class PushNotificationService {
                 AppStrings.isSubCategory : 'false',
               });
         }
+      else{
+          AppRouting.generateRoute(RouteSettings(
+            name: RouteDefine.splashScreen.name,
+          ));
+        }
       }
-
-
-    } else {
-      AppRouting.generateRoute(RouteSettings(
+   // } else {
+      /*AppRouting.generateRoute(RouteSettings(
           name: RouteDefine.splashScreen.name,
-         ));
-    }
+         ));*/
+    //}
   }
 
   @pragma('vm:entry-point')
@@ -286,7 +288,6 @@ class PushNotificationService {
     _subPage = message.data['data']['message']['subPage'];
     _id = message.data['data']['message']['id'];
     manageNavigation( true, _mainPage, _subPage , _id);
-
   }
 
   Future<void> enableIOSNotifications() async {
@@ -306,6 +307,5 @@ class PushNotificationService {
             'This channel is used for important notifications.', // description
         importance: Importance.max,
         showBadge: true,
-
       );
 }

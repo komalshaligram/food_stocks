@@ -194,7 +194,6 @@ class CompanyProductsBloc
             if (productStockUpdateIndex == -1 && (event.isBarcode ?? false)) {
               List<ProductStockModel> productStockList =
               state.productStockList.toList(growable: false);
-              print('productStockList____${productStockList}');
               productStockList[productStockList
                   .indexOf(productStockList.last)] = productStockList[
               productStockList.indexOf(productStockList.last)]
@@ -236,9 +235,8 @@ class CompanyProductsBloc
                     .productSupplierIds}');
 
             supplierList.addAll(response.product?.first.supplierSales
-                ?.map((supplier) {
-                  print('supplier.productStock___${supplier.productStock}');
-                  return ProductSupplierModel(
+                ?.map((supplier) =>
+                ProductSupplierModel(
                   supplierId: supplier.supplierId ?? '',
                   companyName: supplier.supplierCompanyName ?? '',
                   basePrice:
@@ -291,8 +289,7 @@ class CompanyProductsBloc
                               sale.discountPercentage ?? '0.0')))
                       .toList() ??
                       [],
-                );
-                })
+                ))
                 .toList() ??
                 []);
             supplierList.removeWhere((supplier) => supplier.stock == 0);
@@ -308,7 +305,6 @@ class CompanyProductsBloc
                 productStockUpdateIndex
                 ? ''
                 : state.productStockList[productStockUpdateIndex].note;
-
             emit(state.copyWith(
                 productStockList: state.productStockList,
                 productDetails: response.product ?? [],
@@ -380,8 +376,8 @@ class CompanyProductsBloc
                     _productQuantity = cartProduct.totalQuantity ?? 0;
                     return;
                   }
-                });
 
+                });
                 debugPrint(
                     '1)exist = $_isProductInCart\n2)id = $_cartProductId\n3) quan = $_productQuantity');
               }
@@ -608,8 +604,10 @@ class CompanyProductsBloc
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount()));
               Navigator.pop(event.context);
-              emit(state.copyWith(duringCelebration: true));
-              await Future.delayed(const Duration(milliseconds: 2000));
+              emit(state.copyWith(
+                  isLoading: false, productStockList: productStockList,cartCount: preferences.getCartCount(),duringCelebration: true));
+
+              await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
 
               CustomSnackBar.showSnackBar(
@@ -637,12 +635,14 @@ class CompanyProductsBloc
         } else {
           try {
             emit(state.copyWith(isLoading: true));
-            print('productid____${event.productId}');
             InsertCartModel.InsertCartReqModel insertCartReqModel =
                 InsertCartModel.InsertCartReqModel(products: [
               InsertCartModel.Product(
-                  productId: event.productId,
-                  quantity: state.productStockList[state.productStockUpdateIndex].quantity,
+                  productId: state
+                      .productStockList[state.productStockUpdateIndex]
+                      .productId,
+                  quantity: state
+                      .productStockList[state.productStockUpdateIndex].quantity,
                   supplierId: state
                       .productStockList[state.productStockUpdateIndex]
                       .productSupplierIds,
@@ -700,6 +700,7 @@ class CompanyProductsBloc
               Navigator.pop(event.context);
               emit(state.copyWith(
                   isLoading: false, productStockList: productStockList));
+
               CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(
